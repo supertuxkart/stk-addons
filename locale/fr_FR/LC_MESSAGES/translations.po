@@ -1,0 +1,35 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: xapantu <xapantu@users.sourceforge.net>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Home"
+msgstr "Accueil"
+
+msgid "Tracks"
+msgstr "Pistes"
+
+msgid "Login"
+msgstr "Se connecter"
+
+msgid "Name :"
+msgstr "Nom :"
+
+msgid "Description :"
+msgstr "Description :"
+
+msgid "Image, it must be a .png :"
+msgstr "L'image, cela doit être un .png  :"
+
+msgid "Icon (kart only), it must be a .png :"
+msgstr "L'icon (seulement pour les karts), cela doit être un .png  :"
+
+msgid "Addon's file, it must be a .zip :"
+msgstr "Le fichier de l'extensions, cela doit être un .zip :"
+

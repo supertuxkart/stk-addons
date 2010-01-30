@@ -1,0 +1,285 @@
+body {
+	font-family: Verdana,Geneva,sans-serif;
+	font-size: 13.5px;
+	background-repeat:no-repeat;
+	background-position: top left;
+	padding:0px;
+	margin:0px;
+	color:black;
+	
+}
+#top
+{
+	background-color:transparent;
+	float:left;
+	color:black;
+	width:840px;
+	padding-top:10px;
+	padding-right:20px;
+	padding-left:10px;
+	height:37px;
+	background-image:url("../image/background-top.png");
+	background-position:top left;
+	background-repeat:no-repeat;
+}
+
+#languages
+{
+    float:right;
+}
+a
+{
+	color:black;
+	text-decoration:none;
+}
+a:hover
+{
+	color:grey;
+}
+#top a
+{
+	color:black;
+	margin-left:25px;
+	text-decoration:underline;
+}
+#top a:hover
+{
+	color:grey;
+}
+#global
+{
+background-color:white;
+	margin:auto;
+	width:1000px;
+	background-image:url("../image/background.png");
+	background-repeat:no-repeat;
+    height:623px;
+}
+#content
+{
+	filter:alpha(opacity=65);
+   -moz-opacity:0.65;
+   opacity: 0.65;
+   background-color:white;
+   clear:both;
+}
+.preview
+{
+width:300px;
+}
+#logo_center
+{
+    display:block;
+    float:left;
+}
+#old_site{
+width:273px;
+    float:left;
+    clear:both;
+    background-image:url("../image/background-old_site.png");
+    height:22px;
+    padding-top:3px;
+    text-align:center;
+    margin-left:10px;
+}
+#news_div{
+    width:216px;
+    float:left;
+    margin-left:33px;
+}
+#news_top, #news_center, #news_bottom{
+width:100%;
+display:block;
+min-height:12px;
+}
+#news_top
+{
+    background-image:url("../image/background-news-top.png");
+}
+#news_center
+{
+    background-image:url("../image/background-news-center.png");
+}
+#news_bottom
+{
+    background-image:url("../image/background-news-bottom.png");
+}
+
+h1
+{
+    clear:both;
+    font-size:23px;
+	font-family: Tahoma, Verdana,Geneva,sans-serif;
+	font-weight:normal;
+}
+h1 .left
+{
+    width:14px;
+min-height:44px;
+    background-image:url("../image/h1-left.png");
+    float:left;
+    display:block;
+}
+h1 .center
+{
+
+min-height:44px;
+    background-image:url("../image/h1-center.png");
+    float:left;
+    display:block;
+}
+h1 .right
+{
+    width:14px;
+min-height:44px;
+    background-image:url("../image/h1-right.png");
+    float:left;
+    display:block;
+}
+#add-ons-for
+{
+    width:400px;
+    margin:auto;
+}
+#add-ons-type
+{
+    clear:both;
+    padding-top:20px;
+}
+.addons
+{
+    float:left;
+    margin-left:160px;
+    text-align:center;
+}
+
+h2
+{
+    clear:both;
+    font-size:15px;
+	font-family: Tahoma, Verdana,Geneva,sans-serif;
+	font-weight:normal;
+}
+h2 .left
+{
+    width:7px;
+min-height:22px;
+    background-image:url("../image/h2-left.png");
+    float:left;
+    display:block;
+}
+h2 .center
+{
+
+min-height:22px;
+    background-image:url("../image/h2-center.png");
+    float:left;
+    display:block;
+    
+}
+h2 .right
+{
+    width:7px;
+min-height:22px;
+    background-image:url("../image/h2-right.png");
+    float:right;
+    display:block;
+}
+h2.menu
+{
+    width:65px;
+    margin:auto;
+    text-decoration:none;
+}
+h2.menu .center
+{
+    width:51px;
+}
+a img 
+{
+    border:none;
+}
+#list-addons
+{
+    clear:both;
+    margin:0px;
+    padding:0px;
+    font-size:20px;
+    list-style-type:none;
+    overflow:scroll;
+    height:500px;
+    padding:5px;
+    margin-left:0px;
+    margin-right:10px;
+    overflow-x:hidden;
+    padding-left:0px;
+}
+#list-addons li
+{
+
+}
+#select-addons
+{
+    float:left;
+    margin-top:20px;
+    
+}
+#disAddon_content
+{
+    float:left;
+    margin-left:50px;
+    background-image:url("../image/disAddon.png");
+    padding:20px;
+    margin-top:30px;
+}
+#disAddon
+{
+    
+    width:580px;
+    height:456px;
+    overflow:scroll;
+    overflow-x:hidden;
+}
+#select-addons{
+    width:250px;
+    float:left;
+    margin-left:33px;
+}
+#select-addons_top, #select-addons_center, #select-addons_bottom{
+width:100%;
+display:block;
+min-height:10px;
+}
+#select-addons_top
+{
+    background-image:url("../image/select-top.png");
+}
+#select-addons_center
+{
+    background-image:url("../image/background-news-center.png");
+}
+#select-addons_bottom
+{
+    background-image:url("../image/select-bottom.png");
+}
+.icon
+{
+    height:25px;
+    margin-left:2px;
+    margin-right:10px;
+}
+.menu-addons:hover
+{
+    background-color:black;
+    color:white;
+}
+.menu-addons
+{
+    display:block;
+    padding:2px;
+    margin-bottom:2px;
+}
+.unavailable
+{
+color:red;
+}
