@@ -15,8 +15,7 @@
                                                                               
  You should have received a copy of the GNU General Public License along with 
  stkaddons.  If not, see <http://www.gnu.org/licenses/>.   */
-?>
- <?php
+?><?php
 // éditez les 2 variables ci-dessous en fonction du résultat souhaité :
 $largeur = "100"; // correspond à la largeur de l'image souhaitée
 $hauteur ="100"; // correspond à la hauteur de l'image souhaitée

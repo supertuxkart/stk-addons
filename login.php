@@ -75,8 +75,8 @@ if($auth == false)
 				<body>
 					<?php include("menu.php"); ?>
 					<div id="content">
-					Welcome <?php echo $_SESSION["login"] ?> :)
-					You will be redirected to the home page.
+					<?php echo _("Welcome"); echo $_SESSION["login"] ?> :)
+					<?php echo _("You will be redirected to the home page."); ?>
 					</div>
 					<?php include("footer.php"); ?>
 				</body>
@@ -92,7 +92,7 @@ if($auth == false)
 						<body>
 							<?php include("menu.php"); ?>
 					<div id="content">
-							Authentification failed.
+							<?php echo _("Authentification failed."); ?>
 							<form action="login.php" method="POST">
 								<input type="text" name="login" />
 								<input type="password" name="pass" />
@@ -113,13 +113,13 @@ if($auth == false)
 						<body>
 							<?php include("menu.php"); ?>
 					<div id="content">
-							You must be logged in to access this page.<br />
+					        <?php echo _("You must be logged in to access this page."); ?><br />
 							<form action="login.php" method="POST">
 								<input type="text" name="login" />
 								<input type="password" name="pass" />
 								<input type="submit" value="Submit" />
 							</form>
-							<a href="createAccount.php">Create an account</a>
+							<a href="createAccount.php"><?php echo _("Create an account."); ?></a>
 							</div>
 							<?php include("footer.php"); ?>
 						</body>

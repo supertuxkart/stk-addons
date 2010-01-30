@@ -45,7 +45,7 @@ $upload = new menu();
 	            <label><input  onclick="document.getElementById('kart_icon').disabled = false" type="radio" name="addons_type" value="karts" checked="checked"/>Kart</label>
 	            <label><input onclick="document.getElementById('kart_icon').disabled = true" type="radio" name="addons_type" value="tracks" />Tracks<br /></label>
 	            <label><?php echo _("Name :"); ?><br /><input type="text" name="name"/><br /></label>
-	            <label><?php echo _("Description :"); ?><br /><textarea name="description"></textarea><br /></label>
+	            <label><?php echo _("Description, it must be in english :"); ?><br /><textarea name="description"></textarea><br /></label>
 	            <label><?php echo _("Image, it must be a .png :"); ?><br /><input type="file" name="image"/><br /></label>
 	            <label><?php echo _("Icon (kart only), it must be a .png :"); ?><br /><input type="file" id="kart_icon" name="icon"/><br /></label>
 	            <label><?php echo _("Addon's file, it must be a .zip :"); ?><br /><input type="file" name="file_addon"/><br /></label>

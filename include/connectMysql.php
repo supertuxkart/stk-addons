@@ -27,7 +27,7 @@ Description: page to connect to mysql
 
 ***************************************************************************/
 include("config.php");
-mysql_connect('localhost', 'login', 'password');
+mysql_connect('localhost', 'root', 'lucmat');
 
 mysql_select_db($base)or die(mysql_error());
 ?>

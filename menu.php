@@ -34,7 +34,7 @@ Description: menu
 	<?php
 	if(isset($_SESSION["login"]))
 	{
-		echo "Welcome ".$_SESSION["login"];
+		echo _("Welcome ").$_SESSION["login"];
 	}
 	echo '<a href="index.php">';
 	echo _("Home");

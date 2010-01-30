@@ -27,7 +27,6 @@ Description: index page
 
 ***************************************************************************/
 $security ="";
-$title = "Supertuxkart Addon Manager";
 include("include/security.php");
 include("include/top.php");
 include("include/config.php");
@@ -53,12 +52,12 @@ include("include/config.php");
 		</div>
 		<div id="news_bottom">
 		</div></div>
-		<div id="add-ons-for"><h1><div class="left"></div><div class="center">Add-ons for Supertuxkart 0.7</div><div class="right"></div></h1></div>
+		<div id="add-ons-for"><h1><div class="left"></div><div class="center"><?php echo _("Add-ons for Supertuxkart 0.7"); ?></div><div class="right"></div></h1></div>
 		<div id="add-ons-type">
 		    <div class="addons">
 		        <a href="addon-view.php?addons=karts" />
 		        <img src="image/karts.png" />
-		        <h2 class="menu"><div class="left"></div><div class="center">Karts</div><div class="right"></div></h2>
+		        <h2 class="menu"><div class="left"></div><div class="center"><?php echo _("Karts"); ?></div><div class="right"></div></h2>
 		    </div><div class="addons">
 		        <a href="addon-view.php?addons=tracks" />
 		        <img src="image/tracks.png" />
@@ -66,7 +65,7 @@ include("include/config.php");
 		    </div><div class="addons">
 		        <a href="addon-view.php?addons=help" />
 		        <img src="image/help.png" />
-		        <h2 class="menu"><div class="left"></div><div class="center">Help</div><div class="right"></div></h2>
+		        <h2 class="menu"><div class="left"></div><div class="center"><?php echo _("Help"); ?></div><div class="right"></div></h2>
 		    </div>
 		</div>
 		<?php

@@ -15,7 +15,8 @@
                                                                               
  You should have received a copy of the GNU General Public License along with 
  stkaddons.  If not, see <http://www.gnu.org/licenses/>.   */
-?><?php
+?>
+<?php
 $base="stkbase";
 $dirUpload = "/media/serveur/stk/upload/";
 $dirDownload = "http://127.0.0.1/stk/upload/";
