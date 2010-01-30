@@ -127,7 +127,7 @@ include("include/config.php");
 			}
 			echo '
 		</div>';
-			 include("footer.php"); ?>
+			 include("include/footer.php"); ?>
 	</body>
 </html>
 <?php

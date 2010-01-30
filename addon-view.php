@@ -52,7 +52,7 @@ include("include/config.php");
         <div id="disAddon_content">
         <div id="disAddon"></div></div>
         <?php
-        include("footer.php"); ?>
+        include("include/footer.php"); ?>
     </body>
 </html>
 <?php

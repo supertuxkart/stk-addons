@@ -20,17 +20,12 @@
 /***************************************************************************
 Project: STK Addon Manager
 
-File: addon.php
+File: topphp
 Version: 1
 Licence: GPLv3
-Description: page who is called in ajax and who give kart and track informations
+Description: top of all page
 
 ***************************************************************************/
-$security ="";
-include("include/security.php");
-include("include/connectMysql.php");
-include("include/coreAddon.php");
-include("include/coreHelp.php");
 
 if(!isset($_COOKIE['lang']))
 {
@@ -59,52 +54,20 @@ setlocale(LC_ALL, $_COOKIE['lang'].'.UTF-8');
 bindtextdomain('translations', 'locale');
 textdomain('translations');
 bind_textdomain_codeset('translations', 'UTF-8');
-
-$type= mysql_real_escape_string($_GET['type']);
-$id = mysql_real_escape_string($_GET['id']);
-$action = mysql_real_escape_string($_GET['action']);
-if($type=="help")
+$nom_page = $_SERVER['PHP_SELF']."?";
+foreach($_GET as $cle => $element)
 {
-$addon = new coreHelp($type);
+    if($cle != "lang") $nom_page = $nom_page.$cle."=".$element."&amp;";
 }
-else
-{
-$addon = new coreAddon($type);
-}
-$addon->selectById($id);
-
-if($action == "available")
-{
-	$addon->setAvailable();
-	$addon->selectById($id);
-}
-if($action == "description")
-{
-$value = mysql_real_escape_string($_GET['value']);
-	$addon->setDescription($value);
-	$addon->selectById($id);
-}
-if($action == "remove")
-{
-	$addon->remove();
-	exit();
-}
-
-if($action == "stkVersion")
-{
-	$addon->setStkVersion(mysql_real_escape_string($_GET['value']));
-}
-if($action == "file")
-{
-	?>
-	<html>
-	<head>
-	<meta http-equiv="refresh" content="0;URL=index.php?title=<?php echo $type.$addon->addonCurrent['name'];?>">
-	</head>
-	</html>
-	<?php
-	$addon->setFile($action);
-	exit();
-}
-$addon->viewInformations();
+if(!isset($title))$title="SuperTuxKart Add-ons";
 ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+		<title><?php echo $title;?></title>
+		<link href="css/view.css" rel="stylesheet" media="all" type="text/css" /> 
+		<link href="css/page.css" rel="stylesheet" media="all" type="text/css" /> 
+		<script type="text/javascript" src="js/view.js"></script>
+

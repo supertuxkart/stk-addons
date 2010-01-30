@@ -62,6 +62,6 @@ include("include/top.php");
 			$users ->addSub($allUser->userCurrent['login'], 'javascript:addonRequest(\'user.php?action=none\', '.$allUser->userCurrent['id'].')', "users");
 		}
 		$users -> affiche();
-		include("footer.php"); ?>
+		include("include/footer.php"); ?>
 	</body>
 </html>

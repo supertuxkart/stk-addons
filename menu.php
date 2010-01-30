@@ -34,16 +34,16 @@ Description: menu
 	<?php
 	if(isset($_SESSION["login"]))
 	{
-		echo _("Welcome ").$_SESSION["login"];
+		echo _("Welcome")." ".$_SESSION["login"];
 	}
 	echo '<a href="index.php">';
 	echo _("Home");
 	echo '</a>';
 	if(isset($_SESSION["login"]))
 	{
-		echo'<a href="unlogin.php">Log out</a>';
-		echo'<a href="manageAccount.php">User</a>';
-		echo'<a href="upload.php">Upload</a>';
+		echo'<a href="unlogin.php">'._("Log out").'</a>';
+		echo'<a href="manageAccount.php">'._("Users").'</a>';
+		echo'<a href="upload.php">'._("Upload").'</a>';
 	}
 	else
 	{

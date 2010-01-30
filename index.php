@@ -69,6 +69,6 @@ include("include/config.php");
 		    </div>
 		</div>
 		<?php
-		include("footer.php"); ?>
+		include("include/footer.php"); ?>
 	</body>
 </html>

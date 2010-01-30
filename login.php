@@ -78,7 +78,7 @@ if($auth == false)
 					<?php echo _("Welcome"); echo $_SESSION["login"] ?> :)
 					<?php echo _("You will be redirected to the home page."); ?>
 					</div>
-					<?php include("footer.php"); ?>
+					<?php include("include/footer.php"); ?>
 				</body>
 			</html>
 			<?php
@@ -99,7 +99,7 @@ if($auth == false)
 								<input type="submit" value="Submit" />
 							</form>
 							</div>
-							<?php include("footer.php"); ?>
+							<?php include("include/footer.php"); ?>
 						</body>
 					</html>
 			<?php
@@ -113,7 +113,7 @@ if($auth == false)
 						<body>
 							<?php include("menu.php"); ?>
 					<div id="content">
-					        <?php echo _("You must be logged in to access this page."); ?><br />
+					        <?php if(!ereg("login.php",$_SERVER['PHP_SELF'])) echo _("You must be logged in to access this page.")."<br />"; ?>
 							<form action="login.php" method="POST">
 								<input type="text" name="login" />
 								<input type="password" name="pass" />
@@ -121,10 +121,16 @@ if($auth == false)
 							</form>
 							<a href="createAccount.php"><?php echo _("Create an account."); ?></a>
 							</div>
-							<?php include("footer.php"); ?>
+							<?php include("include/footer.php"); ?>
 						</body>
 					</html>
 			<?php
+			exit();
 		}
 }
 ?>
+				<meta http-equiv="refresh" content="0;URL=index.php">
+				</head>
+				<body>
+				</body>
+			</html>

@@ -3,115 +3,107 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: stkaddons 0.1\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-01-30 19:15+0100\n"
-"PO-Revision-Date: 2010-01-30 19:20+0100\n"
-"Last-Translator: xapantu <xapantu@users.sourceforge.net>\n"
-"Language-Team: xapantu <xapantu@gmail.com>\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Poedit-Language: French\n"
-"X-Poedit-Country: FRANCE\n"
-"X-Poedit-SourceCharset: utf-8\n"
 
-#: coreAddon.php:118
-#: upload.php:47
+#: coreAddon.php:118 upload.php:47
 msgid "Name :"
-msgstr "Nom :"
+msgstr ""
 
 #: coreAddon.php:122
 msgid "Description :"
-msgstr "Description :"
+msgstr ""
 
 #: coreAddon.php:126
 msgid "Version :"
-msgstr "Version :"
+msgstr ""
 
 #: coreAddon.php:129
 msgid "Version of STK :"
-msgstr "Version de STK :"
+msgstr ""
 
 #: coreAddon.php:133
 msgid "Author :"
-msgstr "Auteur :"
+msgstr ""
 
 #: index.php:55
 msgid "Add-ons for Supertuxkart 0.7"
-msgstr "Extensions pour SuperTuxKart 0.7"
+msgstr ""
 
 #: index.php:60
 msgid "Karts"
-msgstr "Karts"
+msgstr ""
 
 #: index.php:64
 msgid "Tracks"
-msgstr "Pistes"
+msgstr ""
 
 #: index.php:68
 msgid "Help"
-msgstr "Aide"
+msgstr ""
 
-#: login.php:78
-#: menu.php:37
+#: login.php:78 menu.php:37
 msgid "Welcome"
-msgstr "Bienvenue"
+msgstr ""
 
 #: login.php:79
 msgid "You will be redirected to the home page."
-msgstr "Vous allez être redirigé à la page d'accueil."
+msgstr ""
 
 #: login.php:95
 msgid "Authentification failed."
-msgstr "Identifiant et/ou mot de passe incorrect."
+msgstr ""
 
 #: login.php:116
 msgid "You must be logged in to access this page."
-msgstr "Vous devez être identifié pour accéder à cette page."
+msgstr ""
 
 #: login.php:122
 msgid "Create an account."
-msgstr "Créer un compte."
+msgstr ""
 
 #: menu.php:40
 msgid "Home"
-msgstr "Accueil"
+msgstr ""
 
 #: menu.php:44
 msgid "Log out"
-msgstr "Sortir"
+msgstr ""
 
 #: menu.php:45
 msgid "Users"
-msgstr "Utilisateurs"
+msgstr ""
 
 #: menu.php:46
 msgid "Upload"
-msgstr "Ajouter"
+msgstr ""
 
 #: menu.php:52
 msgid "Login"
-msgstr "Se connecter"
+msgstr ""
 
 #: upload.php:48
 msgid "Description, it must be in english :"
-msgstr "Description, elle doit être en anglais :"
+msgstr ""
 
 #: upload.php:49
 msgid "Image, it must be a .png :"
-msgstr "Image, ce doit être un .png :"
+msgstr ""
 
 #: upload.php:50
 msgid "Icon (kart only), it must be a .png :"
-msgstr "Icon (seulement pour les karts), ce doit être un .png :"
+msgstr ""
 
 #: upload.php:51
 msgid "Addon's file, it must be a .zip :"
-msgstr "Fichier de l'extension, ce doit être un .zip :"
-
-#~ msgid "Welcome "
-#~ msgstr "Bienvenue "
-
+msgstr ""

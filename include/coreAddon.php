@@ -115,22 +115,22 @@ class coreAddon
 		echo '<div>';
 		//write image
 		echo '<img class="preview" src="image.php?type=big&amp;pic='.$dirUpload.'image/'.$this->addonCurrent['image'].'" />';
-		echo '<table><tr><td><b>Name : </b></td><td>';
+		echo '<table><tr><td><b>'._("Name :").' </b></td><td>';
 		//write name
 		echo $this->addonCurrent['name'];
 
-		echo '</td></tr><tr><td><b>Description : </b></td><td>';
+		echo '</td></tr><tr><td><b>'._("Description :").' </b></td><td>';
 		// write description
 		echo $this->addonCurrent['description'];
 
-		echo '</td></tr><tr><td><b>Version : </b></td><td>';
+		echo '</td></tr><tr><td><b>'._("Version :").' </b></td><td>';
 
 		echo $this->addonCurrent['version'];
-		echo '</td></tr><tr><td><b>Version of STK : </b></td><td>';
+		echo '</td></tr><tr><td><b>'._("Version of STK :").' </b></td><td>';
 		echo $this->addonCurrent['versionStk'];
 		$user = new coreUser();
 		$user->selectById($this->addonCurrent['user']);
-		echo '</td></tr><tr><td><b>Author : </b></td><td>'.$user->userCurrent['login'].'</td></tr>';
+		echo '</td></tr><tr><td><b>'._("Author :").' </b></td><td>'.$user->userCurrent['login'].'</td></tr>';
 		echo '</table></div>';
 		echo '<a href="'.$dirDownload.'file/'.$this->addonCurrent['file'].'"><img src="image/download.png" alt="Download" title="Download" /></a>';
 
