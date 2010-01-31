@@ -54,8 +54,12 @@ Description: menu
 	}
 	//echo '<a href="upload.php">'._("Upload")'.</a>';
 	 ?>
-	 <div id="languages">
-	     <a href="<?php echo $nom_page.'&amp;lang=fr'; ?>">French</a>
-	     <a href="<?php echo $nom_page.'&amp;lang=en'; ?>">English</a>
-	 </div>
+	     <div class="container">
+<a class="menu_head"><?php echo _("Languages");?></a>
+<ul class="menu_body">
+<li><a href="<?php echo $nom_page.'&amp;lang=nl'; ?>"><img src="image/flag/nl.png" /></a></li>
+<li><a href="<?php echo $nom_page.'&amp;lang=fr'; ?>"><img src="image/flag/fr.png" /></a></li>
+<li><a href="<?php echo $nom_page.'&amp;lang=en'; ?>"><img src="image/flag/en.png" /></a></li>
+</ul>
+</div>
 </div>

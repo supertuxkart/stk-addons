@@ -1,0 +1,106 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: STKaddons\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-01-30 19:15+0100\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Asciimonster <asciimonster@myrealbox.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: coreAddon.php:118
+#: upload.php:47
+msgid "Name :"
+msgstr "Naam :"
+
+#: coreAddon.php:122
+msgid "Description :"
+msgstr "Omschrijving :"
+
+#: coreAddon.php:126
+msgid "Version :"
+msgstr "Versie :"
+
+#: coreAddon.php:129
+msgid "Version of STK :"
+msgstr "STK versie :"
+
+#: coreAddon.php:133
+msgid "Author :"
+msgstr "Auteur :"
+
+#: index.php:55
+msgid "Add-ons for Supertuxkart 0.7"
+msgstr "Add-ons voor Supertuxkart 0.7"
+
+#: index.php:60
+msgid "Karts"
+msgstr "Karts"
+
+#: index.php:64
+msgid "Tracks"
+msgstr "Circuits"
+
+#: index.php:68
+msgid "Help"
+msgstr "Hulp"
+
+#: login.php:78
+#: menu.php:37
+msgid "Welcome"
+msgstr "Welkom"
+
+#: login.php:79
+msgid "You will be redirected to the home page."
+msgstr "Je wordt doorverwezen naar de hoofdpagina"
+
+#: login.php:95
+msgid "Authentification failed."
+msgstr "Toegang gewijgerd."
+
+#: login.php:116
+msgid "You must be logged in to access this page."
+msgstr "Inloggen is verplicht voor deze pagina."
+
+#: login.php:122
+msgid "Create an account."
+msgstr "Maak een account."
+
+#: menu.php:40
+msgid "Home"
+msgstr "Hoofdpagina"
+
+#: menu.php:44
+msgid "Log out"
+msgstr "Uitloggen"
+
+#: menu.php:45
+msgid "Users"
+msgstr "Gebruikers"
+
+#: menu.php:46
+msgid "Upload"
+msgstr "Uploaden"
+
+#: menu.php:52
+msgid "Login"
+msgstr "Inloggen"
+
+#: upload.php:48
+msgid "Description, it must be in english :"
+msgstr "Omschrijving, in het ENGELS :"
+
+#: upload.php:49
+msgid "Image, it must be a .png :"
+msgstr "Plaatje, in png formaat :"
+
+#: upload.php:50
+msgid "Icon (kart only), it must be a .png :"
+msgstr "Icoon (enkel voor karts), in png formaat : "
+
+#: upload.php:51
+msgid "Addon's file, it must be a .zip :"
+msgstr "Addon bestand, verpakt als zip bestand :"
+

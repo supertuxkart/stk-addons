@@ -30,6 +30,9 @@ $security ="";
 include("include/security.php");
 include("include/top.php");
 include("include/config.php");
+
+// define possibly undefined variables
+$_GET['action'] = (isset($_GET['action'])) ? $_GET['action'] : NULL;
 ?>
 
 	</head>

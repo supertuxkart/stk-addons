@@ -32,6 +32,10 @@ session_start();
 include("include/connectMysql.php");
 include("include/top.php");
 
+// define possibly undefined variables
+$_POST['login'] = (isset($_POST['login'])) ? $_POST['login'] : NULL;
+$_POST['pass'] = (isset($_POST['pass'])) ? $_POST['pass'] : NULL;
+
 // protect sql
 $loginSubmit = mysql_real_escape_string($_POST['login']);
 $passSubmit = mysql_real_escape_string($_POST['pass']);

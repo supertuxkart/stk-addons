@@ -1,0 +1,21 @@
+@charset "utf-8";
+/* CSS Document */
+
+ul, li{margin:0; padding:0; list-style:none;}
+
+.menu_head{border:1px solid #998675;}
+
+.menu_body {display:none;}
+.menu_body li a{color:#FFFFFF; text-decoration:none; padding:0px; display:block;}
+.menu_body li a:hover{padding:0px; font-weight:bold;}.container{
+position:absolute;
+z-index:10;
+right:50%;
+margin-right:-300px;
+top:15px;
+background-color:white;
+
+	filter:alpha(opacity=85);
+   -moz-opacity:0.85;
+   opacity: 0.85;
+}
