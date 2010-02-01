@@ -43,6 +43,28 @@ $upload = new menu();
 		<?php
 			include("menu.php");
 		?>
+		<?php
+			if($_GET['action'] == "submit")
+			{
+				$kartName = mysql_real_escape_string($_POST['name']);
+				$kartDescription = mysql_real_escape_string($_POST['description']);
+				$new = new coreAddon($_POST['addons_type']);
+				if($kartName != "")
+				{
+				    
+				    $new->addAddon($kartName, $kartDescription);
+				    echo '<div id="content">';
+				    if($kartDescription=="")
+				    {
+				    echo _("Please add a description of your add-ons")."<br />";
+				    }
+				    $new->viewInformations(False);
+				}
+				echo '</div>';
+			}
+			else
+			{
+			?>
 	    <div id="content">
 	        <form id="formKart" enctype="multipart/form-data" action="upload.php?action=submit" method="POST">
 	            <label><input  onclick="document.getElementById('kart_icon').disabled = false" type="radio" name="addons_type" value="karts" checked="checked"/>Kart</label>
@@ -50,23 +72,11 @@ $upload = new menu();
 	            <label><?php echo _("Name :"); ?><br /><input type="text" name="name"/><br /></label>
 	            <label><?php echo _("Description, it must be in english :"); ?><br /><textarea name="description"></textarea><br /></label>
 	            <label><?php echo _("Image, it must be a .png :"); ?><br /><input type="file" name="image"/><br /></label>
-	            <label><?php echo _("Icon (kart only), it must be a .png :"); ?><br /><input type="file" id="kart_icon" name="icon"/><br /></label>
+	            <label><?php echo _("Icon (kart only), it must be a .png :"); ?><br /><input type="file" id="icon" name="icon"/><br /></label>
 	            <label><?php echo _("Addon's file, it must be a .zip :"); ?><br /><input type="file" name="file_addon"/><br /></label>
 	            <input type="submit" />
 	        </form>
 	    </div>
-		<?php
-			if($_GET['action'] == "submit")
-			{
-				$kartName = mysql_real_escape_string($_POST['name']);
-				$kartDescription = mysql_real_escape_string($_POST['description']);
-				$new = new coreAddon($_POST['addons_type']);
-				$new->addAddon($kartName, $kartDescription);
-				echo '<div id="content">';
-				$new->viewInformations();
-				echo '</div>';
-			}
-			?>
-	<?php include("include/footer.php"); ?>
+	<?php } include("include/footer.php"); ?>
 	</body>
 </html>

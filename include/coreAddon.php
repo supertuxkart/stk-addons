@@ -71,7 +71,7 @@ class coreAddon
 		global $base;
 		if($_SESSION['range']['manageaddons'] == true|| $this->addonCurrent['user'] == $_SESSION['id'])
 		{
-			mysql_query("UPDATE `".$base."`.`".$this->addonType."` SET `description` = '".$newDesc."' WHERE `".$this->addonType."`.`id` =".$this->addonCurrent['id']." LIMIT 1 ;");
+			mysql_query("UPDATE `".$base."`.`".$this->addonType."` SET `Description` = '".$newDesc."' WHERE `".$this->addonType."`.`id` =".$this->addonCurrent['id']." LIMIT 1 ;");
 		}
 	}
 	
@@ -97,7 +97,7 @@ class coreAddon
 		global $base;
 		if($_SESSION['range']['manageaddons'] == true|| $this->addonCurrent['user'] == $_SESSION['id'])
 		{
-			mysql_query("UPDATE `".$base."`.`".$this->addonType."` SET `versionStk` = '".$version."' WHERE `".$this->addonType."`.`id` =".$this->addonCurrent['id']." LIMIT 1 ;");
+			mysql_query("UPDATE `".$base."`.`".$this->addonType."` SET `STKVersion` = '".$version."' WHERE `".$this->addonType."`.`id` =".$this->addonCurrent['id']." LIMIT 1 ;");
 		}
 	}
 	function remove()
@@ -108,7 +108,7 @@ class coreAddon
 			mysql_query("DELETE FROM `".$base."`.`".$this->addonType."` WHERE `".$this->addonType."`.`id` = ".$this->addonCurrent['id']." LIMIT 1");
 		}
 	}
-	function viewInformations()
+	function viewInformations($config=True)
 	{
 		global $dirDownload, $dirUpload;
 		echo '<div id="accordion">';
@@ -121,13 +121,13 @@ class coreAddon
 
 		echo '</td></tr><tr><td><b>'._("Description :").' </b></td><td>';
 		// write description
-		echo $this->addonCurrent['description'];
+		echo $this->addonCurrent['Description'];
 
 		echo '</td></tr><tr><td><b>'._("Version :").' </b></td><td>';
 
 		echo $this->addonCurrent['version'];
 		echo '</td></tr><tr><td><b>'._("Version of STK :").' </b></td><td>';
-		echo $this->addonCurrent['versionStk'];
+		echo $this->addonCurrent['STKVersion'];
 		$user = new coreUser();
 		$user->selectById($this->addonCurrent['user']);
 		echo '</td></tr><tr><td><b>'._("Author :").' </b></td><td>'.$user->userCurrent['login'].'</td></tr>';
@@ -135,30 +135,46 @@ class coreAddon
 		echo '<a href="'.$dirDownload.'file/'.$this->addonCurrent['file'].'"><img src="image/download.png" alt="Download" title="Download" /></a>';
 
 
-		if($_SESSION['range']['manageaddons']|| $this->addonCurrent['user'] == $_SESSION['id'])
+		if(($_SESSION['range']['manageaddons']|| $this->addonCurrent['user'] == $_SESSION['id']) and $config)
 		{
-			echo '<hr /><h3>Configuration</h3><div>';
-			echo '<form action="#" method="GET" >';
-			echo '<textarea id="kartDescription">'.$this->addonCurrent['description'].'</textarea><br />';
-			echo '<input onclick="addonRequest(\'addon.php?type='.$this->addonType.'&amp;action=description&amp;value=\'+document.getElementById(\'kartDescription\').value, '.$this->addonCurrent['id'].')" value="Change description" type="button" /><br /><br />';
-			
-			echo 'STK version : ';
-			echo '<select onchange="addonRequest(\'addon.php?type='.$this->addonType.'&amp;action=stkVersion&value=\'+this.value, '.$this->addonCurrent['id'].')">
-			<option value="0.6">0.6 or 0.6.2</option>
-			';
-			echo '<option value="0.7"';
-			if($this->addonCurrent['versionStk']=="0.7") echo 'selected="selected" ';
-			echo '>0.7 (irrlicht)</option>
-			</select>';
-			echo '</form>';
-			echo '<form id="formKart" enctype="multipart/form-data" action="addon.php?action=file&amp;type='.$this->addonType.'&amp;id='.$this->addonCurrent['id'].'" method="POST">
-			<select name="fileType">
-				<option value="file">Add-ons</option>';
-				if($this->addonType != "tracks")echo '				<option value="icon">Icon</option>';
-			echo '	<option value="image">Image</option>
-			</select>
+		    echo '<hr /><h3>Configuration</h3>';
+		    echo '<form action="#" method="GET" >';
+		    $propertie_sql = mysql_query("SELECT * FROM properties WHERE `properties`.`type` = '".$this->addonType."' AND `properties`.`lock` != 1;");
+		    $file_str = "";
+		    while($propertie = mysql_fetch_array($propertie_sql))
+		    {
+		        if($propertie['typefield'] == "textarea")
+		        {
+		            echo "<br />".$propertie['name']." :<br />";
+                    echo '<textarea id="'.str_replace(" ", "", $propertie['name']).'">'.$this->addonCurrent[str_replace(" ", "", $propertie['name'])].'</textarea><br />';
+                    echo '<input onclick="addonRequest(\'addon.php?type='.$this->addonType.'&amp;action='.str_replace(" ", "", $propertie['name']).'&amp;value=\'+document.getElementById(\''.str_replace(" ", "", $propertie['name']).'\').value, '.$this->addonCurrent['id'].')" value="Change '.$propertie['name'].'" type="button" />';
+		        }
+		        elseif($propertie['typefield'] == "enum")
+		        {
+		            echo "<br />".$propertie['name']." :<br />";
+                    echo '<select onchange="addonRequest(\'addon.php?type='.$this->addonType.'&amp;action='.str_replace(" ", "", $propertie['name']).'&value=\'+this.value, '.$this->addonCurrent['id'].')">';
+                    
+                    $values =explode("\n", $propertie['default']);
+                    foreach($values as $value)
+                    {
+                        echo '<option value="'.$value.'"';
+                        if($this->addonCurrent[str_replace(" ", "", $propertie['name'])]==$value) echo 'selected="selected" ';
+                        echo '>'.$value.'</option>';
+                    }
+                    echo '</select>';
+			    }
+		        elseif($propertie['typefield'] == "file")
+		        {
+		            $file_str .='<option value="'.strtolower(str_replace(" ", "", $propertie['name'])).'">'.$propertie['name'].'</option>';
+		        }
+		    }
+		    echo '</form>';
+		    echo '<form id="formKart" enctype="multipart/form-data" action="addon.php?action=file&amp;type='.$this->addonType.'&amp;id='.$this->addonCurrent['id'].'" method="POST">
+			<select name="fileType">';
+			echo $file_str;
+			echo '</select>
 			<input type="file" name="fileSend"/>
-			<input type="submit" value="Submit" />
+			<input type="submit"/>
 			</form>';
 			if($_SESSION['range']['manageaddons'])
 			{
@@ -170,7 +186,6 @@ class coreAddon
 				echo '/><label for="available">Available</label><br />';
 				echo '<input type="button" onclick="verify(\'addonRequest(\\\'addon.php?type='.$this->addonType.'&amp;action=remove\\\', '.$this->addonCurrent['id'].')\')" value="Remove" /><br /></form>';
 			}
-			echo '</div>';
 		}
 	}
 	
@@ -180,40 +195,43 @@ class coreAddon
 	{   
 		global $base, $dirUpload;
 		echo '<div id="content">';
-		$existSql= mysql_query("SELECT * FROM `karts` WHERE `karts`.`name` = '".$kartName."'");
+		$existSql= mysql_query("SELECT * FROM `".$this->addonType."` WHERE `".$this->addonType."`.`name` = '".$kartName."'");
 		$exist =true;
 		$sql =  mysql_fetch_array($existSql) or $exist = false;
 		if($exist == false && $kartName != null)
 		{
-			mysql_query("INSERT INTO `".$base."`.`".$this->addonType."` (`user` ,`name` ,`description` ,`file` ,`image` ,`icon` ,`date` ,`available` ,`version`, `versionStk`) 
+			mysql_query("INSERT INTO `".$base."`.`".$this->addonType."` (`user` ,`name` ,`Description` ,`file` ,`image` ,`icon` ,`date` ,`available` ,`version`, `STKVersion`) 
 			VALUES ('".$_SESSION["id"]."', '".$kartName."', '".$kartDescription."', '".$kartName.".zip"."', '".$kartName.".png"."', '".$kartName.".png"."', '".date("Y-m-d")."', '0', '1', '0.7');") or die(mysql_error());
 			if (isset($_FILES['icon']) && $_FILES['icon']['type'] == "image/png") {
 				$chemin_destination = $dirUpload.'icon/';
-				move_uploaded_file($_FILES['kartIcon']['tmp_name'], $chemin_destination.$kartName.".png");
+				move_uploaded_file($_FILES['icon']['tmp_name'], $chemin_destination.$kartName.".png");
 
 			}
-			else
+			elseif($this->addonType=="karts")
 			{
-				echo "Please re-upload your icon. It must be a png.";
+				echo _("Please re-upload your icon. It must be a png.")."<br />";
 			}
 			if (isset($_FILES['image']) && $_FILES['image']['type'] == "image/png") {
 				$chemin_destination = $dirUpload.'image/';
-				move_uploaded_file($_FILES['kartImage']['tmp_name'], $chemin_destination.$kartName.".png");
+				move_uploaded_file($_FILES['image']['tmp_name'], $chemin_destination.$kartName.".png");
 			}
 			else
 			{
-				echo "Please re-upload your image. It must be a png.";
+				echo _("Please re-upload your image. It must be a png.")."<br />";
 			}
-			if (isset($_FILES['file_addon'])) {
+			if (isset($_FILES['file_addon']) and $_FILES['file_addon']['type'] == "application/zip") {
 				$chemin_destination = $dirUpload.'file/';
 				move_uploaded_file($_FILES['file_addon']['tmp_name'], $chemin_destination.$kartName.".zip");
 			}
-			echo "Successful, your kart will appear when a moderator will valid it.";
+			else
+			{
+			    echo _("Please re-upload your file. It must be a zip.")."<br />";
+			}
+			echo _("Successful, your kart will appear when a moderator will valid it.")."<br />";
 			
 			$this->reqSql = mysql_query("SELECT * FROM ".$this->addonType." WHERE `".$this->addonType."`.`name` ='".$kartName."' LIMIT 1 ;");
 		}
 		echo '</div>';
-		echo $this->reqSql;
 		$this->addonCurrent = mysql_fetch_array($this->reqSql);
 	}
 }

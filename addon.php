@@ -78,7 +78,7 @@ if($action == "available")
 	$addon->setAvailable();
 	$addon->selectById($id);
 }
-if($action == "description")
+if($action == "Description")
 {
 $value = mysql_real_escape_string($_GET['value']);
 	$addon->setDescription($value);
@@ -90,7 +90,7 @@ if($action == "remove")
 	exit();
 }
 
-if($action == "stkVersion")
+if($action == "STKVersion")
 {
 	$addon->setStkVersion(mysql_real_escape_string($_GET['value']));
 }
@@ -99,7 +99,7 @@ if($action == "file")
 	?>
 	<html>
 	<head>
-	<meta http-equiv="refresh" content="0;URL=index.php?title=<?php echo $type.$addon->addonCurrent['name'];?>">
+	<meta http-equiv="efresh" content="0;URL=index.php?title=<?php echo $type.$addon->addonCurrent['name'];?>">
 	</head>
 	</html>
 	<?php
