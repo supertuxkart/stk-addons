@@ -68,11 +68,17 @@ function loadAddons()
         {
     		if($addonLoader->addonCurrent['available'] == 1)
 		    {
-		        echo '<li><a class="menu-addons" href="javascript:loadAddon('.$addonLoader->addonCurrent['id'].',\'addon.php?type='.$_GET['addons'].'\')"><img class="icon"  src="image.php?type=small&amp;pic='.$dirUpload.'icon/'.$addonLoader->addonCurrent['icon'].'" />'.$addonLoader->addonCurrent['name']."</a></li>";
+		        echo '<li><a class="menu-addons" href="javascript:loadAddon('.$addonLoader->addonCurrent['id'].',\'addon.php?type='.$_GET['addons'].'\')">';
+		        if($_GET['addons'] != "tracks") echo '<img class="icon"  src="image.php?type=small&amp;pic='.$dirUpload.'icon/'.$addonLoader->addonCurrent['icon'].'" />';
+		        else echo '<img class="icon"  src="'.$dirDownload.'/icon/icon.png" />';
+		        echo $addonLoader->addonCurrent['name']."</a></li>";
 		    }
 	        elseif($_SESSION['range']['manageaddons'] == true||$_SESSION['id']==$addonLoader->addonCurrent['user'])
 		    {
-            echo '<li><a class="menu-addons unavailable" href="javascript:loadAddon('.$addonLoader->addonCurrent['id'].',\'addon.php?type='.$_GET['addons'].'\')"><img class="icon"  src="image.php?type=small&amp;pic='.$dirUpload.'icon/'.$addonLoader->addonCurrent['icon'].'" />'.$addonLoader->addonCurrent['name']."</a></li>";
+		        echo '<li><a class="menu-addons unavailable" href="javascript:loadAddon('.$addonLoader->addonCurrent['id'].',\'addon.php?type='.$_GET['addons'].'\')">';
+		        if($_GET['addons'] != "tracks") echo '<img class="icon"  src="image.php?type=small&amp;pic='.$dirUpload.'icon/'.$addonLoader->addonCurrent['icon'].'" />';
+		        else echo '<img class="icon"  src="'.$dirDownload.'/icon/icon.png" />';
+		        echo $addonLoader->addonCurrent['name']."</a></li>";
             }
         }
         echo "</ul>";
