@@ -84,6 +84,7 @@ class coreAddon
 			if($_POST['fileType']!="icon" || $this->addonType!="tracks")
 			{
 			if (isset($_FILES['fileSend'])) {
+			echo $_POST['fileType'];
 				$chemin_destination = $dirUpload.$_POST['fileType'].'/';
 				unlink($chemin_destination.$this->addonCurrent[$_POST['fileType']]);
 				move_uploaded_file($_FILES['fileSend']['tmp_name'], $chemin_destination.$this->addonCurrent[$_POST['fileType']]);
@@ -133,7 +134,7 @@ class coreAddon
 		echo '</td></tr><tr><td><b>'._("Author :").' </b></td><td>'.$user->userCurrent['login'].'</td></tr>';
 		echo '</table></div>';
 		echo '<a href="'.$dirDownload.'file/'.$this->addonCurrent['file'].'"><img src="image/download.png" alt="Download" title="Download" /></a>';
-
+        echo '<br /><br /><b>Permalink :</b> http://'.$_SERVER['SERVER_NAME'].str_replace("addon.php", "addon-view.php", $_SERVER['SCRIPT_NAME']).'?addons='.$this->addonType.'&amp;title='.$this->addonCurrent['name'];
 
 		if(($_SESSION['range']['manageaddons']|| $this->addonCurrent['user'] == $_SESSION['id']) and $config)
 		{

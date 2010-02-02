@@ -99,7 +99,7 @@ if($action == "file")
 	?>
 	<html>
 	<head>
-	<meta http-equiv="efresh" content="0;URL=index.php?title=<?php echo $type.$addon->addonCurrent['name'];?>">
+	<meta http-equiv="refresh" content="0;URL=addon-view.php?addons=<?php echo $type.'&amp;title='.$addon->addonCurrent['name'];?>">
 	</head>
 	</html>
 	<?php

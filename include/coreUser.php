@@ -150,7 +150,7 @@ class coreUser
 		echo '<ul>';
 		while($mykart->next())
 		{
-			echo'<li><a href="index.php?title=karts'.$mykart->addonCurrent['name'].'">';
+			echo'<li><a href="index.php?addons=karts&amp;title='.$mykart->addonCurrent['name'].'">';
 			echo $mykart->addonCurrent['name'];
 			echo'</a></li>';
 		}
@@ -162,7 +162,7 @@ class coreUser
 		echo '<ul>';
 		while($mytrack->next())
 		{
-			echo'<li><a href="index.php?title=tracks'.$mytrack->addonCurrent['name'].'">';
+			echo'<li><a href="addon-view.php?addons=tracks&amp;title='.$mytrack->addonCurrent['name'].'">';
 			echo $mytrack->addonCurrent['name'];
 			echo'</a></li>';
 		}

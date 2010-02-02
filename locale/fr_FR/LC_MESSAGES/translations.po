@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: stkaddons 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-01-30 19:15+0100\n"
-"PO-Revision-Date: 2010-01-30 19:20+0100\n"
+"POT-Creation-Date: 2010-02-01 19:55+0100\n"
+"PO-Revision-Date: 2010-02-01 19:59+0100\n"
 "Last-Translator: xapantu <xapantu@users.sourceforge.net>\n"
 "Language-Team: xapantu <xapantu@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -19,7 +19,7 @@ msgstr ""
 "X-Poedit-SourceCharset: utf-8\n"
 
 #: coreAddon.php:118
-#: upload.php:47
+#: upload.php:72
 msgid "Name :"
 msgstr "Nom :"
 
@@ -39,6 +39,22 @@ msgstr "Version de STK :"
 msgid "Author :"
 msgstr "Auteur :"
 
+#: coreAddon.php:212
+msgid "Please re-upload your icon. It must be a png."
+msgstr "Pourriez-vous remettre en ligne votre icône  ? Ce doit être un png."
+
+#: coreAddon.php:220
+msgid "Please re-upload your image. It must be a png."
+msgstr "Pourriez-vous remettre en ligne votre image ? Ce doit être un png."
+
+#: coreAddon.php:228
+msgid "Please re-upload your file. It must be a zip."
+msgstr "Pourriez-vous remettre en ligne votre fichier ? Ce doit être un zip."
+
+#: coreAddon.php:230
+msgid "Successful, your kart will appear when a moderator will valid it."
+msgstr "Succès, votre extension apparaîtra quand un modérateur l'aura validé."
+
 #: index.php:55
 msgid "Add-ons for Supertuxkart 0.7"
 msgstr "Extensions pour SuperTuxKart 0.7"
@@ -55,24 +71,24 @@ msgstr "Pistes"
 msgid "Help"
 msgstr "Aide"
 
-#: login.php:78
+#: login.php:82
 #: menu.php:37
 msgid "Welcome"
 msgstr "Bienvenue"
 
-#: login.php:79
+#: login.php:83
 msgid "You will be redirected to the home page."
 msgstr "Vous allez être redirigé à la page d'accueil."
 
-#: login.php:95
+#: login.php:99
 msgid "Authentification failed."
 msgstr "Identifiant et/ou mot de passe incorrect."
 
-#: login.php:116
+#: login.php:120
 msgid "You must be logged in to access this page."
 msgstr "Vous devez être identifié pour accéder à cette page."
 
-#: login.php:122
+#: login.php:126
 msgid "Create an account."
 msgstr "Créer un compte."
 
@@ -96,19 +112,31 @@ msgstr "Ajouter"
 msgid "Login"
 msgstr "Se connecter"
 
-#: upload.php:48
+#: menu.php:57
+msgid "About"
+msgstr "A propos"
+
+#: menu.php:61
+msgid "Languages"
+msgstr "Langues"
+
+#: upload.php:59
+msgid "Please add a description of your add-ons"
+msgstr "Pourriez-vous une description de votre extension ?"
+
+#: upload.php:73
 msgid "Description, it must be in english :"
 msgstr "Description, elle doit être en anglais :"
 
-#: upload.php:49
+#: upload.php:74
 msgid "Image, it must be a .png :"
 msgstr "Image, ce doit être un .png :"
 
-#: upload.php:50
+#: upload.php:75
 msgid "Icon (kart only), it must be a .png :"
 msgstr "Icon (seulement pour les karts), ce doit être un .png :"
 
-#: upload.php:51
+#: upload.php:76
 msgid "Addon's file, it must be a .zip :"
 msgstr "Fichier de l'extension, ce doit être un .zip :"
 

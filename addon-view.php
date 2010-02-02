@@ -44,6 +44,7 @@ include("include/config.php");
 		</div>
 		<div id="select-addons_center">
 		<?php
+        $js = "";
         loadAddons();
 		?>
 		</div>
@@ -52,13 +53,16 @@ include("include/config.php");
         <div id="disAddon_content">
         <div id="disAddon"></div></div>
         <?php
+        echo '<script type="text/javascript">';
+        echo $js;
+        echo '</script>';
         include("include/footer.php"); ?>
     </body>
 </html>
 <?php
 function loadAddons()
 {
-    global $addon, $dirDownload, $dirUpload;
+    global $addon, $dirDownload, $dirUpload, $js;
     if($_GET['addons'] == "karts" or $_GET['addons'] == "tracks"  or $_GET['addons'] == "file"  or $_GET['addons'] == "help")
     {
         $addonLoader = new coreAddon($_GET['addons']);
@@ -80,6 +84,7 @@ function loadAddons()
 		        else echo '<img class="icon"  src="'.$dirDownload.'/icon/icon.png" />';
 		        echo $addonLoader->addonCurrent['name']."</a></li>";
             }
+	        if($addonLoader->addonCurrent['name'] == $_GET['title']) $js.= 'loadAddon('.$addonLoader->addonCurrent['id'].',\'addon.php?type='.$_GET['addons'].'\')';
         }
         echo "</ul>";
     }

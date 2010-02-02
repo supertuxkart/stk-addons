@@ -53,8 +53,10 @@ Description: menu
 	echo '</a>';
 	}
 	//echo '<a href="upload.php">'._("Upload")'.</a>';
+	 	echo'<a href="about.php">';
+	echo _('About');
+	echo '</a>';
 	 ?>
-	 <a href="about.php">About</a>
 	     <div class="container">
 <a class="menu_head"><?php echo _("Languages");?></a>
 <ul class="menu_body">
