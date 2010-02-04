@@ -1,0 +1,107 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: stk addons\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-01-30 19:15+0100\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Aaron Kearns <ajkearns6@gmail.com>\n"
+"Language-Team: Aaron Kearns <ajkearns6@gmail.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: ga\n"
+
+#: coreAddon.php:118
+#: upload.php:47
+msgid "Name :"
+msgstr "Ainm :"
+
+#: coreAddon.php:122
+msgid "Description :"
+msgstr "Tuairisc :"
+
+#: coreAddon.php:126
+msgid "Version :"
+msgstr "Leagan :"
+
+#: coreAddon.php:129
+msgid "Version of STK :"
+msgstr "Leagan STK :"
+
+#: coreAddon.php:133
+msgid "Author :"
+msgstr "Údar :"
+
+#: index.php:55
+msgid "Add-ons for Supertuxkart 0.7"
+msgstr "Forlíontáin do SuperTuxKart 0.7"
+
+#: index.php:60
+msgid "Karts"
+msgstr "Cairtíní"
+
+#: index.php:64
+msgid "Tracks"
+msgstr "Raonta"
+
+#: index.php:68
+msgid "Help"
+msgstr "Cabhair"
+
+#: login.php:78
+#: menu.php:37
+msgid "Welcome"
+msgstr "Fáilte"
+
+#: login.php:79
+msgid "You will be redirected to the home page."
+msgstr "Beidh tú atreoraithe chun an leathanach baile."
+
+#: login.php:95
+msgid "Authentification failed."
+msgstr "Fíordheimhniú teipthe."
+
+#: login.php:116
+msgid "You must be logged in to access this page."
+msgstr "Caithfidh go bhfuil tú logáilte isteach rochtain an leathanach seo."
+
+#: login.php:122
+msgid "Create an account."
+msgstr "Cruthaigh cuntas."
+
+#: menu.php:40
+msgid "Home"
+msgstr "Baile"
+
+#: menu.php:44
+msgid "Log out"
+msgstr "Logáil amach"
+
+#: menu.php:45
+msgid "Users"
+msgstr "Úsáideoirí"
+
+#: menu.php:46
+msgid "Upload"
+msgstr "Uaslódáil"
+
+#: menu.php:52
+msgid "Login"
+msgstr "Logáil isteach"
+
+#: upload.php:48
+msgid "Description, it must be in english :"
+msgstr "Tuairisc, caithfidh go bhfuil as Béarla :"
+
+#: upload.php:49
+msgid "Image, it must be a .png :"
+msgstr "Íomhá, caithfidh go bhfuil .png :"
+
+#: upload.php:50
+msgid "Icon (kart only), it must be a .png :"
+msgstr "Deilbhín, caithfidh go bhfuil .png :"
+
+#: upload.php:51
+msgid "Addon's file, it must be a .zip :"
+msgstr "Comhad, caithfidh go bhfuil .zip :"
+

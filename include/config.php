@@ -22,4 +22,5 @@ $dirUpload = "/media/serveur/stk/upload/";
 $dirDownload = "http://127.0.0.1/stk/upload/";
 $db_user = 'root';
 $db_pass = 'lucmat';
+$style="default";
 ?>

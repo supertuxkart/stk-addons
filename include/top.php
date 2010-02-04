@@ -46,6 +46,9 @@ if (isset($_GET['lang'])) { // Si l'utilisateur a choisi une langue
 		case 'de':
 			setcookie('lang', 'de_DE', $timestamp_expire);
 			break;
+		case 'ga':
+			setcookie('lang', 'ga', $timestamp_expire);
+			break;
 		default:
 			setcookie('lang', 'en_EN', $timestamp_expire);
 			break;
@@ -71,7 +74,8 @@ if(!isset($title))$title="SuperTuxKart Add-ons";
         <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
         <title><?php echo $title;?></title>
         <link href="css/view.css" rel="stylesheet" media="all" type="text/css" /> 
-        <link href="css/page.css" rel="stylesheet" media="all" type="text/css" /> 
+        <link href="css/skin_<?php echo $style;?>.css" rel="stylesheet" media="all" type="text/css" /> 
+        <link href="css/menu_<?php echo $style;?>.css" rel="stylesheet" media="all" type="text/css" /> 
         <script type="text/javascript" src="js/view.js"></script>
         <script type="text/javascript" src="js/jquery.js"></script>
         <link href="css/style_jquery.css" rel="stylesheet" type="text/css" />
