@@ -3,7 +3,6 @@
 
 ul, li{margin:0; padding:0; list-style:none;}
 
-.menu_head{border:1px solid #998675;}
 
 .menu_body {display:none;}
 .menu_body li a{color:#FFFFFF; text-decoration:none; padding:0px; display:block;}
@@ -15,7 +14,7 @@ margin-right:-300px;
 top:15px;
 background-color:white;
 
-	filter:alpha(opacity=85);
-   -moz-opacity:0.85;
-   opacity: 0.85;
+	filter:alpha(opacity=90);
+   -moz-opacity:0.90;
+   opacity: 0.90;
 }

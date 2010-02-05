@@ -47,7 +47,7 @@ if (isset($_GET['lang'])) { // Si l'utilisateur a choisi une langue
 			setcookie('lang', 'de_DE', $timestamp_expire);
 			break;
 		case 'ga':
-			setcookie('lang', 'ga', $timestamp_expire);
+			setcookie('lang', 'ga_IE', $timestamp_expire);
 			break;
 		default:
 			setcookie('lang', 'en_EN', $timestamp_expire);

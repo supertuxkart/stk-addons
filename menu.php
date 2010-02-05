@@ -63,6 +63,7 @@ Description: menu
 <li><a href="<?php echo $nom_page.'&amp;lang=nl'; ?>"><img src="image/flag/nl.png" /></a></li>
 <li><a href="<?php echo $nom_page.'&amp;lang=fr'; ?>"><img src="image/flag/fr.png" /></a></li>
 <li><a href="<?php echo $nom_page.'&amp;lang=en'; ?>"><img src="image/flag/en.png" /></a></li>
+<li><a href="<?php echo $nom_page.'&amp;lang=ga'; ?>"><img src="image/flag/ga.png" /></a></li>
 </ul>
 </div>
 </div>

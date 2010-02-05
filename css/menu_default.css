@@ -149,3 +149,10 @@ overflow-x:hidden;
 	display:block;
 	width:476px !important;
 }
+
+.container img
+{
+    padding-top:15px;
+    margin-left:-15px;
+    margin-right:10px;
+}
