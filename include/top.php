@@ -27,6 +27,11 @@ Description: top of all page
 
 ***************************************************************************/
 
+$nom_page = $_SERVER['PHP_SELF']."?";
+foreach($_GET as $cle => $element)
+{
+    if($cle != "lang") $nom_page = $nom_page.$cle."=".$element."&amp;";
+}
 $timestamp_expire = time() + 365*24*3600;
 if(!isset($_COOKIE['lang']))
 {
@@ -53,6 +58,14 @@ if (isset($_GET['lang'])) { // Si l'utilisateur a choisi une langue
 			setcookie('lang', 'en_EN', $timestamp_expire);
 			break;
 	}
+	?>
+	<html>
+	<head>
+		<meta http-equiv="refresh" content="0;URL=<?php echo $nom_page; ?>">
+	</head>
+	</html>
+	<?php
+	exit();
 
 }
 setlocale(LC_ALL, $_COOKIE['lang'].'.UTF-8');
@@ -60,11 +73,6 @@ setlocale(LC_ALL, $_COOKIE['lang'].'.UTF-8');
 bindtextdomain('translations', 'locale');
 textdomain('translations');
 bind_textdomain_codeset('translations', 'UTF-8');
-$nom_page = $_SERVER['PHP_SELF']."?";
-foreach($_GET as $cle => $element)
-{
-    if($cle != "lang") $nom_page = $nom_page.$cle."=".$element."&amp;";
-}
 if(!isset($title))$title="SuperTuxKart Add-ons";
 ?>
 
@@ -76,20 +84,6 @@ if(!isset($title))$title="SuperTuxKart Add-ons";
         <link href="css/view.css" rel="stylesheet" media="all" type="text/css" /> 
         <link href="css/skin_<?php echo $style;?>.css" rel="stylesheet" media="all" type="text/css" /> 
         <link href="css/menu_<?php echo $style;?>.css" rel="stylesheet" media="all" type="text/css" /> 
-        <script type="text/javascript" src="js/view.js"></script>
         <script type="text/javascript" src="js/jquery.js"></script>
+        <script type="text/javascript" src="js/script.js"></script>
         <link href="css/style_jquery.css" rel="stylesheet" type="text/css" />
-        <script type="text/javascript">
-        $(document).ready(function () {
-            $("ul.menu_body li:even").addClass("alt");
-            $('a.menu_head').click(function () {
-            $('ul.menu_body').slideToggle('medium');
-            });
-            $('ul.menu_body li a').mouseover(function () {
-            $(this).animate({ fontSize: "12px", paddingLeft: "5px" }, 50 );
-            });
-            $('ul.menu_body li a').mouseout(function () {
-            $(this).animate({ fontSize: "12px", paddingLeft: "0px" }, 50 );
-            });
-        });
-        </script>

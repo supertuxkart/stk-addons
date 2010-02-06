@@ -27,6 +27,7 @@ Description: page to connect to mysql
 
 ***************************************************************************/
 include("config.php");
+include_once("bbcode.php");
 mysql_connect('localhost', $db_user, $db_pass);
 
 mysql_select_db($base)or die(mysql_error());

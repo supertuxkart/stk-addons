@@ -37,23 +37,6 @@ if(!isset($_COOKIE['lang']))
     $timestamp_expire = time() + 365*24*3600;
     setcookie('lang', 'en_EN', $timestamp_expire);
 }
-if (isset($_GET['lang'])) { // Si l'utilisateur a choisi une langue
-	switch ($_GET['lang']) { // En fonction de la langue, on crée une variable $langage qui contient le code
-		case 'fr':
-			setcookie('lang', 'fr_FR', $timestamp_expire);
-			break;
-		case 'en':
-			setcookie('lang', 'en_EN', $timestamp_expire);
-			break;
-		case 'de':
-			setcookie('lang', 'de_DE', $timestamp_expire);
-			break;
-		default:
-			setcookie('lang', 'en_EN', $timestamp_expire);
-			break;
-	}
-
-}
 setlocale(LC_ALL, $_COOKIE['lang'].'.UTF-8');
 
 bindtextdomain('translations', 'locale');
@@ -61,9 +44,18 @@ textdomain('translations');
 bind_textdomain_codeset('translations', 'UTF-8');
 
 $type= mysql_real_escape_string($_GET['type']);
-$id = mysql_real_escape_string($_GET['id']);
 $action = mysql_real_escape_string($_GET['action']);
-$value = mysql_real_escape_string($_GET['value']);
+if($action=="file")
+{
+    $value = mysql_real_escape_string($_GET['value']);
+    $id = mysql_real_escape_string($_GET['id']);
+}
+else
+{
+    $value = mysql_real_escape_string($_POST['value']);
+    $id = mysql_real_escape_string($_POST['id']);
+}
+
 if($type=="help")
 {
 $addon = new coreHelp($type);

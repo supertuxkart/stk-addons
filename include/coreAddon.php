@@ -151,7 +151,7 @@ class coreAddon
         echo '</td></tr><tr><td><b>'._("Description :").' </b></td><td>';
         
         // write description
-        echo $this->addonCurrent['Description'];
+        echo bbc($this->addonCurrent['Description']);
         
         //write revision
         echo '</td></tr><tr><td><b>'._("Revision :").' </b></td><td>';
@@ -182,7 +182,7 @@ class coreAddon
         {
             echo '<tr><td><b>';
             echo _("Author :");
-            echo ' </b></td><td>'.$this->addonCurrent['Author'].'</td></tr>';
+            echo ' </b></td><td>'.bbc($this->addonCurrent['Author']).'</td></tr>';
         }
         echo '</table></div>';
         
@@ -197,21 +197,26 @@ class coreAddon
         if(($_SESSION['range']['manageaddons']|| $this->addonCurrent['user'] == $_SESSION['id']) and $config)
         {
             echo '<hr /><h3>Configuration</h3>';
+            ?>
+            <div class="help-hidden"><span class="help-hidden">Help</span><div>BBCode : 
+            <br />strong : [b]....[/b]
+            <br />italic : [i]....[/i]</div></div>
+            <?php
             echo '<form action="#" method="GET" >';
             $propertie_sql = mysql_query("SELECT * FROM properties WHERE `properties`.`type` = '".$this->addonType."' AND `properties`.`lock` != 1;");
             $file_str = "";
             while($propertie = mysql_fetch_array($propertie_sql))
             {
+                $cible = 'addonRequest(\'addon.php?type='.$this->addonType.'&amp;action='.str_replace(" ", "", $propertie['name']).'\', '.$this->addonCurrent['id'].',document.getElementById(\''.str_replace(" ", "", $propertie['name']).'\').value)';
                 if($propertie['typefield'] == "textarea")
                 {
                     echo "<br />".$propertie['name']." :<br />";
-                    echo '<textarea id="'.str_replace(" ", "", $propertie['name']).'">'.$this->addonCurrent[str_replace(" ", "", $propertie['name'])].'</textarea><br />';
-                    echo '<input onclick="addonRequest(\'addon.php?type='.$this->addonType.'&amp;action='.str_replace(" ", "", $propertie['name']).'&amp;value=\'+document.getElementById(\''.str_replace(" ", "", $propertie['name']).'\').value, '.$this->addonCurrent['id'].')" value="Change '.$propertie['name'].'" type="button" />';
+                    echo '<textarea cols="75" rows="8" id="'.str_replace(" ", "", $propertie['name']).'">'.$this->addonCurrent[str_replace(" ", "", $propertie['name'])].'</textarea><br />';
+                    echo '<input onclick="'.$cible.'" value="Change '.$propertie['name'].'" type="button" />';
                 }
                 elseif($propertie['typefield'] == "text")
                 {
                     echo "<br />".$propertie['name']." :<br />";
-                    $cible = 'addonRequest(\'addon.php?type='.$this->addonType.'&amp;action='.str_replace(" ", "", $propertie['name']).'&amp;value=\'+document.getElementById(\''.str_replace(" ", "", $propertie['name']).'\').value, '.$this->addonCurrent['id'].')';
                     echo '<form action="javascript:'.$cible.'" method="GET" >';
                     echo '<input type="text" id="'.str_replace(" ", "", $propertie['name']).'" value="'.$this->addonCurrent[str_replace(" ", "", $propertie['name'])].'" ><br />';
                     echo '<input onclick="'.$cible.'" value="Change '.$propertie['name'].'" type="button" />';
@@ -221,7 +226,7 @@ class coreAddon
                 elseif($propertie['typefield'] == "enum")
                 {
                     echo "<br />".$propertie['name']." :<br />";
-                    echo '<select onchange="addonRequest(\'addon.php?type='.$this->addonType.'&amp;action='.str_replace(" ", "", $propertie['name']).'&value=\'+this.value, '.$this->addonCurrent['id'].')">';
+                    echo '<select onchange="addonRequest(\'addon.php?type='.$this->addonType.'&amp;action='.str_replace(" ", "", $propertie['name']).'\', '.$this->addonCurrent['id'].'; this.value)">';
                     
                     $values =explode("\n", $propertie['default']);
                     foreach($values as $value)

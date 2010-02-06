@@ -301,3 +301,21 @@ min-height:10px;
 {
 color:red;
 }
+.help-hidden div
+{
+    display:none;
+}
+span.help-hidden
+{
+color:white;
+background-color:black;
+width:250px;
+display:block;
+font-weight:bold;
+text-align:center;
+}
+div.help-hidden
+{
+    border:1px solid grey;
+    width:250px;
+}
