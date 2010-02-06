@@ -20,7 +20,7 @@
    id="svg2"
    sodipodi:version="0.32"
    inkscape:version="0.47pre4 r22446"
-   sodipodi:docname="flags2.svg"
+   sodipodi:docname="flags.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    sodipodi:modified="true">
   <defs
@@ -2400,7 +2400,7 @@
        fx="5.8773785"
        fy="3.2173183"
        r="9"
-       gradientTransform="matrix(1.3191802,-0.08023743,0.04443719,0.73058996,544.6359,625.89249)"
+       gradientTransform="matrix(1.3191802,-0.07834504,0.04443719,0.71335906,544.6359,625.82433)"
        gradientUnits="userSpaceOnUse" />
     <inkscape:perspective
        id="perspective3679"
@@ -2447,7 +2447,7 @@
        x2="589.06555"
        y2="629.70007"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.56512503,0,0,1.3668951,303.55047,-1437.0872)" />
+       gradientTransform="matrix(0.55525108,0,0,1.3668951,309.14812,-1437.0872)" />
     <inkscape:perspective
        id="perspective4522"
        inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
@@ -2651,7 +2651,7 @@
        x2="589.06555"
        y1="629.70007"
        x1="566.91132"
-       gradientTransform="matrix(0.56512503,0,0,1.3668951,303.6687,-1521.4252)"
+       gradientTransform="matrix(0.5228081,0,0,1.3668951,327.65864,-1521.4252)"
        gradientUnits="userSpaceOnUse"
        id="linearGradient4664"
        xlink:href="#linearGradient4440-8-3-2-1"
@@ -2917,7 +2917,7 @@
        x2="589.06555"
        y1="629.70007"
        x1="566.91132"
-       gradientTransform="matrix(0.57640955,0,0,1.3668951,329.39639,-1563.0502)"
+       gradientTransform="matrix(0.51716584,0,0,1.3668951,362.98231,-1563.0502)"
        gradientUnits="userSpaceOnUse"
        id="linearGradient4664-0"
        xlink:href="#linearGradient4440-8-3-2-2"
@@ -2930,9 +2930,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="7.9999996"
-     inkscape:cx="63.6787"
-     inkscape:cy="32.785304"
+     inkscape:zoom="15.999999"
+     inkscape:cx="32.87074"
+     inkscape:cy="41.938931"
      inkscape:document-units="mm"
      inkscape:current-layer="layer9"
      showgrid="false"
@@ -3243,9 +3243,9 @@
        inkscape:label="Calque 1"
        transform="matrix(0.1756093,0,0,0.1756093,546.56642,624.06549)"
        clip-path="url(#clipPath148123)"
-       inkscape:export-filename="/home/yekcim/Desktop/uk.png"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90">
+       inkscape:export-filename="/media/serveur/stk-3/image/flag/en.png"
+       inkscape:export-xdpi="248.92928"
+       inkscape:export-ydpi="248.92928">
       <rect
          style="opacity:1;color:#000000;fill:#171384;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.77700001;stroke-linecap:round;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible"
          id="rect154072"
@@ -3388,9 +3388,9 @@
        id="g154110"
        inkscape:label="Calque 1"
        transform="matrix(0.1756093,0,0,0.1756093,567.58797,624.06549)"
-       inkscape:export-filename="/home/yekcim/Desktop/fr.png"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90">
+       inkscape:export-filename="/media/serveur/stk-3/image/flag/fr.png"
+       inkscape:export-xdpi="248.9292"
+       inkscape:export-ydpi="248.9292">
       <rect
          style="opacity:1;color:#000000;fill:#ececec;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.77700001;stroke-linecap:round;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible"
          id="rect154112"
@@ -3474,8 +3474,9 @@
        id="g154134"
        inkscape:label="Calque 1"
        transform="matrix(0.1756093,0,0,0.1756093,651.67417,624.06549)"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90">
+       inkscape:export-xdpi="246.00066"
+       inkscape:export-ydpi="246.00066"
+       inkscape:export-filename="/media/serveur/stk-3/image/flag/nl.png">
       <rect
          style="opacity:1;color:#000000;fill:#ececec;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.77700001;stroke-linecap:round;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible"
          id="rect154136"
@@ -5240,7 +5241,7 @@
        style="fill:url(#radialGradient4448);fill-opacity:1;stroke:none"
        id="rect3658"
        width="18"
-       height="13.25"
+       height="12.9375"
        x="546.40479"
        y="623.00262" />
     <g
@@ -5248,9 +5249,9 @@
        id="g154126-4"
        inkscape:label="Calque 1"
        transform="matrix(0.1756093,0,0,0.1756093,693.52623,656.34587)"
-       inkscape:export-filename="/home/yekcim/Desktop/it.png"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90">
+       inkscape:export-filename="/media/serveur/stk-3/image/flag/ga.png"
+       inkscape:export-xdpi="246.00066"
+       inkscape:export-ydpi="246.00066">
       <rect
          style="color:#000000;fill:#ececec;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.77700001;marker:none;visibility:visible;display:inline;overflow:visible"
          id="rect154128-3"
@@ -5276,7 +5277,7 @@
     <rect
        style="fill:url(#linearGradient4512);fill-opacity:1;stroke:none;display:inline"
        id="rect3658-0"
-       width="12.519923"
+       width="12.301173"
        height="18.111361"
        x="623.92621"
        y="-585.40894"
@@ -5308,7 +5309,7 @@
     <rect
        style="fill:url(#linearGradient4664);fill-opacity:1;stroke:none;display:inline"
        id="rect3658-0-3-5-6"
-       width="12.519923"
+       width="11.582423"
        height="18.111361"
        x="624.04443"
        y="-669.74713"
@@ -5364,7 +5365,7 @@
     <rect
        style="fill:url(#linearGradient4664-0);fill-opacity:1;stroke:none;display:inline"
        id="rect3658-0-3-5-41"
-       width="12.769923"
+       width="11.457423"
        height="18.111361"
        x="656.16943"
        y="-711.37213"

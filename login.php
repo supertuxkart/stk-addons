@@ -86,6 +86,7 @@ if($auth == false)
 				</body>
 			</html>
 			<?php
+			exit();
 		}
 		
 		
@@ -107,6 +108,7 @@ if($auth == false)
 						</body>
 					</html>
 			<?php
+			exit();
 		}
 		
 		
