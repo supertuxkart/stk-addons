@@ -63,6 +63,7 @@ bind_textdomain_codeset('translations', 'UTF-8');
 $type= mysql_real_escape_string($_GET['type']);
 $id = mysql_real_escape_string($_GET['id']);
 $action = mysql_real_escape_string($_GET['action']);
+$value = mysql_real_escape_string($_GET['value']);
 if($type=="help")
 {
 $addon = new coreHelp($type);
@@ -72,27 +73,20 @@ else
 $addon = new coreAddon($type);
 }
 $addon->selectById($id);
-
 if($action == "available")
 {
 	$addon->setAvailable();
 	$addon->selectById($id);
 }
-if($action == "Description")
+elseif($action != "")
 {
-$value = mysql_real_escape_string($_GET['value']);
-	$addon->setDescription($value);
+	$addon->setInformation($action, $value);
 	$addon->selectById($id);
 }
 if($action == "remove")
 {
 	$addon->remove();
 	exit();
-}
-
-if($action == "STKVersion")
-{
-	$addon->setStkVersion(mysql_real_escape_string($_GET['value']));
 }
 if($action == "file")
 {

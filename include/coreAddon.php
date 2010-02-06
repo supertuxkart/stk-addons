@@ -104,6 +104,28 @@ class coreAddon
         }
     }
     
+    function setInformation($info, $value)
+    {
+        global $base;
+        if($_SESSION['range']['manageaddons'] == true || $this->addonCurrent['user'] == $_SESSION['id'])
+        {
+            $exist = True;
+            $propertie_sql = mysql_query("SELECT * FROM properties WHERE `properties`.`type` = '".$this->addonType."' AND `properties`.`lock` != 1;");
+            $propertie = mysql_fetch_array($propertie_sql) or $exist = false;
+            if($exist)
+            {
+                if($propertie['typefield'] == "file")
+                {
+                    $this->setFile();
+                }
+                else
+                {
+                    mysql_query("UPDATE `".$base."`.`".$this->addonType."` SET `".$info."` = '".$value."' WHERE `".$this->addonType."`.`id` =".$this->addonCurrent['id']." LIMIT 1 ;");
+                }
+            }
+        }
+    }
+    
     //this function is only available for moderators
     function remove()
     {
@@ -146,7 +168,22 @@ class coreAddon
         $user->selectById($this->addonCurrent['user']);
         
         //write author
-        echo '</td></tr><tr><td><b>'._("Author :").' </b></td><td>'.$user->userCurrent['login'].'</td></tr>';
+        echo '</td></tr><tr><td><b>';
+        if($this->addonCurrent['Author'] == "")
+        {
+            echo _("Author :");
+        }
+        else
+        {
+            echo _("Submiter :");
+        }
+        echo ' </b></td><td>'.$user->userCurrent['login'].'</td></tr>';
+        if($this->addonCurrent['Author'] != "")
+        {
+            echo '<tr><td><b>';
+            echo _("Author :");
+            echo ' </b></td><td>'.$this->addonCurrent['Author'].'</td></tr>';
+        }
         echo '</table></div>';
         
         //write download link
