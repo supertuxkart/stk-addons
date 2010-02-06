@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: stkaddons 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-02-01 19:55+0100\n"
-"PO-Revision-Date: 2010-02-01 19:59+0100\n"
+"POT-Creation-Date: 2010-02-06 12:44+0100\n"
+"PO-Revision-Date: 2010-02-06 12:46+0100\n"
 "Last-Translator: xapantu <xapantu@users.sourceforge.net>\n"
 "Language-Team: xapantu <xapantu@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -18,40 +18,46 @@ msgstr ""
 "X-Poedit-Country: FRANCE\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
-#: coreAddon.php:118
+#: coreAddon.php:147
 #: upload.php:72
 msgid "Name :"
 msgstr "Nom :"
 
-#: coreAddon.php:122
+#: coreAddon.php:151
 msgid "Description :"
 msgstr "Description :"
 
-#: coreAddon.php:126
-msgid "Version :"
+#: coreAddon.php:157
+#, fuzzy
+msgid "Revision :"
 msgstr "Version :"
 
-#: coreAddon.php:129
+#: coreAddon.php:161
 msgid "Version of STK :"
 msgstr "Version de STK :"
 
-#: coreAddon.php:133
+#: coreAddon.php:174
+#: coreAddon.php:184
 msgid "Author :"
 msgstr "Auteur :"
 
-#: coreAddon.php:212
+#: coreAddon.php:178
+msgid "Submiter :"
+msgstr "Envoyeur :"
+
+#: coreAddon.php:281
 msgid "Please re-upload your icon. It must be a png."
 msgstr "Pourriez-vous remettre en ligne votre icône  ? Ce doit être un png."
 
-#: coreAddon.php:220
+#: coreAddon.php:289
 msgid "Please re-upload your image. It must be a png."
 msgstr "Pourriez-vous remettre en ligne votre image ? Ce doit être un png."
 
-#: coreAddon.php:228
+#: coreAddon.php:297
 msgid "Please re-upload your file. It must be a zip."
 msgstr "Pourriez-vous remettre en ligne votre fichier ? Ce doit être un zip."
 
-#: coreAddon.php:230
+#: coreAddon.php:299
 msgid "Successful, your kart will appear when a moderator will valid it."
 msgstr "Succès, votre extension apparaîtra quand un modérateur l'aura validé."
 
@@ -80,15 +86,15 @@ msgstr "Bienvenue"
 msgid "You will be redirected to the home page."
 msgstr "Vous allez être redirigé à la page d'accueil."
 
-#: login.php:99
+#: login.php:100
 msgid "Authentification failed."
 msgstr "Identifiant et/ou mot de passe incorrect."
 
-#: login.php:120
+#: login.php:122
 msgid "You must be logged in to access this page."
 msgstr "Vous devez être identifié pour accéder à cette page."
 
-#: login.php:126
+#: login.php:128
 msgid "Create an account."
 msgstr "Créer un compte."
 

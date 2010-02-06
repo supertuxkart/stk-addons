@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-02-01 19:55+0100\n"
+"POT-Creation-Date: 2010-02-06 12:44+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,39 +16,43 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: coreAddon.php:118 upload.php:72
+#: coreAddon.php:147 upload.php:72
 msgid "Name :"
 msgstr ""
 
-#: coreAddon.php:122
+#: coreAddon.php:151
 msgid "Description :"
 msgstr ""
 
-#: coreAddon.php:126
-msgid "Version :"
+#: coreAddon.php:157
+msgid "Revision :"
 msgstr ""
 
-#: coreAddon.php:129
+#: coreAddon.php:161
 msgid "Version of STK :"
 msgstr ""
 
-#: coreAddon.php:133
+#: coreAddon.php:174 coreAddon.php:184
 msgid "Author :"
 msgstr ""
 
-#: coreAddon.php:212
+#: coreAddon.php:178
+msgid "Submiter :"
+msgstr ""
+
+#: coreAddon.php:281
 msgid "Please re-upload your icon. It must be a png."
 msgstr ""
 
-#: coreAddon.php:220
+#: coreAddon.php:289
 msgid "Please re-upload your image. It must be a png."
 msgstr ""
 
-#: coreAddon.php:228
+#: coreAddon.php:297
 msgid "Please re-upload your file. It must be a zip."
 msgstr ""
 
-#: coreAddon.php:230
+#: coreAddon.php:299
 msgid "Successful, your kart will appear when a moderator will valid it."
 msgstr ""
 
@@ -76,15 +80,15 @@ msgstr ""
 msgid "You will be redirected to the home page."
 msgstr ""
 
-#: login.php:99
+#: login.php:100
 msgid "Authentification failed."
 msgstr ""
 
-#: login.php:120
+#: login.php:122
 msgid "You must be logged in to access this page."
 msgstr ""
 
-#: login.php:126
+#: login.php:128
 msgid "Create an account."
 msgstr ""
 
