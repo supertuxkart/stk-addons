@@ -85,4 +85,10 @@ switch($loginSql['range'])
 		);
 		break;
 }
+//support for translations :
+_("root");
+_("supAdministrator");
+_("administrator");
+_("moderator");
+_("basicUser");
 ?>

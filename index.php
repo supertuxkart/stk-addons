@@ -47,7 +47,32 @@ include("include/config.php");
 		</div>
 		<div id="news_center">
 		<?php
-		echo "Supertuxkart 0.7 alpha 1 is out !";
+		echo "Supertuxkart 0.7 alpha 1 is out !<hr /><br />";
+		$reqSql = mysql_query("SELECT * FROM history LIMIT 7") or die(mysql_error());
+		while($history = mysql_fetch_array($reqSql))
+		{
+		    if($_SESSION['range']['manageaddons'] || $history['action'] == "add")
+		    {
+		        echo '<span class="news_home">';
+		        $action = explode(" ",$history['action']);
+		        switch($action[0])
+		        {
+		            case "add":
+		                $option = explode("\n",$history['option']);
+		                echo _("New " . $option[0]);
+		                break;
+	                case "change":
+		                $option = explode("\n",$history['option']);
+		                $user = new coreUser('users');
+		                $user->selectById($history['user']);
+		                $addon = new coreUser($option[0]);
+		                $addon->selectById($option[1]);
+		                echo $user->addonCurrent['login'];
+		                echo " "._("modified " . $addon->addonCurrent['name']);
+		        }
+		        echo '</span><br />';
+		    }
+		}
 		?>
 		</div>
 		<div id="news_bottom">

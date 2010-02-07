@@ -28,15 +28,11 @@ Description: page where people can add karts or tracks
 ***************************************************************************/
 $security = "addAddon";
 include("include/security.php");
-include("include/view.php");
 include("include/top.php");
-include("include/config.php");
-include("include/coreAddon.php");
 
 // define possibly undefined variables
 $_GET['action'] = (isset($_GET['action'])) ? $_GET['action'] : null;
 
-$upload = new menu();
 ?>
 	</head>
 	<body>

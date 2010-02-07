@@ -28,9 +28,6 @@ Description: page who is called in ajax and who give kart and track informations
 ***************************************************************************/
 $security ="";
 include("include/security.php");
-include("include/connectMysql.php");
-include("include/coreAddon.php");
-include("include/coreHelp.php");
 
 if(!isset($_COOKIE['lang']))
 {

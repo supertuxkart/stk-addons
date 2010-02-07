@@ -319,3 +319,8 @@ div.help-hidden
     border:1px solid grey;
     width:250px;
 }
+.avatar
+{
+max-width:150px;
+max-height:150px;
+}

@@ -26,8 +26,10 @@ Licence: GPLv3
 Description: page to connect to mysql
 
 ***************************************************************************/
-include("config.php");
+include_once("config.php");
 include_once("bbcode.php");
+include_once("coreAddon.php");
+include_once("coreUser.php");
 mysql_connect('localhost', $db_user, $db_pass);
 
 mysql_select_db($base)or die(mysql_error());

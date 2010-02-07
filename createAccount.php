@@ -69,11 +69,11 @@ $_GET['action'] = (isset($_GET['action'])) ? $_GET['action'] : NULL;
 						");
 						include("include/mail.php");
 						sendMail(mysql_real_escape_string($_POST['mail']), "newAccount", array($crypt, $_SERVER["PHP_SELF"], $login, $_POST['pass1']));
-						echo "Your request is succesful, an e-mail will be sent to you ta activate your account.";
+						echo _("Your request is succesful, an e-mail will be sent to you ta activate your account.");
 					}
 					else
 					{
-					echo "Your login is already used.<br /><br />";
+					echo _("Your login is already used.")."<br /><br />";
 					echo '		<form id="form" action="createAccount.php?action=submit" method="POST">
 		Your login : <br />
 		<input type="text" name="login" /><br />

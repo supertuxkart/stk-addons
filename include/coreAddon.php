@@ -121,7 +121,17 @@ class coreAddon
                 else
                 {
                     mysql_query("UPDATE `".$base."`.`".$this->addonType."` SET `".$info."` = '".$value."' WHERE `".$this->addonType."`.`id` =".$this->addonCurrent['id']." LIMIT 1 ;");
+
                 }
+                mysql_query("INSERT INTO `stkbase`.`history` (
+                `date` ,
+                `id` ,
+                `user` ,
+                `action` ,
+                `option`
+                )
+                VALUES (
+                '".date("Y-m-d G:i:s")."', NULL , '".$_SESSION['id']."', 'change ".$info."', '".$this->addonType."\n".$this->addonCurrent['id']."');");
             }
         }
     }
@@ -135,7 +145,7 @@ class coreAddon
             mysql_query("DELETE FROM `".$base."`.`".$this->addonType."` WHERE `".$this->addonType."`.`id` = ".$this->addonCurrent['id']." LIMIT 1");
         }
     }
-    function viewInformations($config=True)
+    function writeInformations()
     {
         global $dirDownload, $dirUpload;
         //div for jqery TODO:add jquery effects
@@ -162,7 +172,7 @@ class coreAddon
         echo $this->addonCurrent['STKVersion'];
         
         //load class user
-        $user = new coreUser();
+        $user = new coreUser('users');
         
         //select submiter of addons TODO:add author 
         $user->selectById($this->addonCurrent['user']);
@@ -177,7 +187,7 @@ class coreAddon
         {
             echo _("Submiter :");
         }
-        echo ' </b></td><td>'.$user->userCurrent['login'].'</td></tr>';
+        echo ' </b></td><td><a href="account.php?title='.$user->addonCurrent['login'].'">'.$user->addonCurrent['login'].'</a></td></tr>';
         if($this->addonCurrent['Author'] != "")
         {
             echo '<tr><td><b>';
@@ -192,11 +202,11 @@ class coreAddon
         //write permalink
         echo '<br /><br /><b>Permalink :</b> ';
         echo 'http://'.$_SERVER['SERVER_NAME'].str_replace("addon.php", "addon-view.php", $_SERVER['SCRIPT_NAME']).'?addons='.$this->addonType.'&amp;title='.$this->addonCurrent['name'];
-
-        //write configuration for the submiter and administrator
-        if(($_SESSION['range']['manageaddons']|| $this->addonCurrent['user'] == $_SESSION['id']) and $config)
-        {
-            echo '<hr /><h3>Configuration</h3>';
+    }
+    function writeConfig()
+    {
+        global $dirDownload, $dirUpload;
+        echo '<hr /><h3>Configuration</h3>';
             ?>
             <div class="help-hidden"><span class="help-hidden">Help</span><div>BBCode : 
             <br />strong : [b]....[/b]
@@ -216,7 +226,7 @@ class coreAddon
                 }
                 elseif($propertie['typefield'] == "text")
                 {
-                    echo "<br />".$propertie['name']." :<br />";
+                    echo "</form><br />".$propertie['name']." :<br />";
                     echo '<form action="javascript:'.$cible.'" method="GET" >';
                     echo '<input type="text" id="'.str_replace(" ", "", $propertie['name']).'" value="'.$this->addonCurrent[str_replace(" ", "", $propertie['name'])].'" ><br />';
                     echo '<input onclick="'.$cible.'" value="Change '.$propertie['name'].'" type="button" />';
@@ -226,7 +236,7 @@ class coreAddon
                 elseif($propertie['typefield'] == "enum")
                 {
                     echo "<br />".$propertie['name']." :<br />";
-                    echo '<select onchange="addonRequest(\'addon.php?type='.$this->addonType.'&amp;action='.str_replace(" ", "", $propertie['name']).'\', '.$this->addonCurrent['id'].'; this.value)">';
+                    echo '<select onchange="addonRequest(\'addon.php?type='.$this->addonType.'&amp;action='.str_replace(" ", "", $propertie['name']).'\', '.$this->addonCurrent['id'].', this.value)">';
                     
                     $values =explode("\n", $propertie['default']);
                     foreach($values as $value)
@@ -260,6 +270,15 @@ class coreAddon
                 echo '/><label for="available">Available</label><br />';
                 echo '<input type="button" onclick="verify(\'addonRequest(\\\'addon.php?type='.$this->addonType.'&amp;action=remove\\\', '.$this->addonCurrent['id'].')\')" value="Remove" /><br /></form>';
             }
+    }
+    function viewInformations($config=True)
+    {
+        global $dirDownload, $dirUpload;
+        $this->writeInformations();
+        //write configuration for the submiter and administrator
+        if(($_SESSION['range']['manageaddons']|| $this->addonCurrent['user'] == $_SESSION['id']) and $config)
+        {
+            $this->writeConfig();
         }
     }
     
@@ -307,6 +326,15 @@ class coreAddon
         }
         echo '</div>';
         $this->addonCurrent = mysql_fetch_array($this->reqSql);
+        mysql_query("INSERT INTO `stkbase`.`history` (
+        `date` ,
+        `id` ,
+        `user` ,
+        `action` ,
+        `option`
+        )
+        VALUES (
+        '".date("Y-m-d G:i:s")."', NULL , '".$_SESSION['id']."', 'add', '".$this->addonType."\n".$this->addonCurrent['id']."');");
     }
 }
 

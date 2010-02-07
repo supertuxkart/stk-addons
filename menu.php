@@ -42,7 +42,7 @@ Description: menu
 	if(isset($_SESSION["login"]))
 	{
 		echo'<a href="unlogin.php">'._("Log out").'</a>';
-		echo'<a href="manageAccount.php">'._("Users").'</a>';
+		echo'<a href="account.php">'._("Users").'</a>';
 		echo'<a href="upload.php">'._("Upload").'</a>';
 	}
 	else

@@ -20,16 +20,16 @@
 /***************************************************************************
 Project: STK Addon Manager
 
-File: index.php
+File: manageAccount.php
 Version: 1
 Licence: GPLv3
-Description: index page
+Description: people
 
 ***************************************************************************/
-$security ="";
-$title = "Supertuxkart Addon Manager";
+$security = "basicPage";
 include("include/security.php");
-include("include/view.php");
+
+$title = "SuperTuxKart Add-ons | Users";
 include("include/top.php");
 ?>
     </head>
@@ -43,7 +43,7 @@ include("include/top.php");
 		<div id="select-addons_center">
 		<?php
         $js = "";
-        loadAddons();
+        loadUsers();
 		?>
 		</div>
 		<div id="select-addons_bottom">
@@ -58,34 +58,30 @@ include("include/top.php");
     </body>
 </html>
 <?php
-function loadAddons()
+function loadUsers()
 {
-    global $addon, $dirDownload, $dirUpload, $js;
-    if($_GET['addons'] == "karts" or $_GET['addons'] == "tracks"  or $_GET['addons'] == "file"  or $_GET['addons'] == "help")
+    global $style, $js;
+    $addonLoader = new coreUser('users');
+    $addonLoader->loadAll();
+    echo '<ul id="list-addons">';
+    ?>
+    <li>
+        <a class="menu-addons" href="javascript:loadAddon(<?php echo $_SESSION['id']; ?>,'user.php')">
+            <img class="icon"  src="image/<?php echo $style; ?>/user.png" />
+            Me
+        </a>
+    </li>
+    <?php
+    while($addonLoader->next())
     {
-        $addonLoader = new coreAddon($_GET['addons']);
-        $addonLoader->loadAll();
-        echo '<ul id="list-addons">';
-        while($addonLoader->next())
-        {
-    		if($addonLoader->addonCurrent['available'] == 1)
-		    {
-		        echo '<li><a class="menu-addons" href="javascript:loadAddon('.$addonLoader->addonCurrent['id'].',\'addon.php?type='.$_GET['addons'].'\')">';
-		        if($_GET['addons'] != "tracks") echo '<img class="icon"  src="image.php?type=small&amp;pic='.$dirUpload.'icon/'.$addonLoader->addonCurrent['icon'].'" />';
-		        else echo '<img class="icon"  src="'.$dirDownload.'/icon/icon.png" />';
-		        echo $addonLoader->addonCurrent['name']."</a></li>";
-		    }
-	        elseif($_SESSION['range']['manageaddons'] == true||$_SESSION['id']==$addonLoader->addonCurrent['user'])
-		    {
-		        echo '<li><a class="menu-addons unavailable" href="javascript:loadAddon('.$addonLoader->addonCurrent['id'].',\'addon.php?type='.$_GET['addons'].'\')">';
-		        if($_GET['addons'] != "tracks") echo '<img class="icon"  src="image.php?type=small&amp;pic='.$dirUpload.'icon/'.$addonLoader->addonCurrent['icon'].'" />';
-		        else echo '<img class="icon"  src="'.$dirDownload.'/icon/icon.png" />';
-		        echo $addonLoader->addonCurrent['name']."</a></li>";
-            }
-	        if($addonLoader->addonCurrent['name'] == $_GET['title']) $js.= 'loadAddon('.$addonLoader->addonCurrent['id'].',\'addon.php?type='.$_GET['addons'].'\')';
-        }
-        echo "</ul>";
+        echo '<li><a class="menu-addons';
+        if($addonLoader->addonCurrent['available'] == 0) echo ' unavailable';
+        echo '" href="javascript:loadAddon('.$addonLoader->addonCurrent['id'].',\'user.php\')">';
+        echo '<img class="icon"  src="image/'.$style.'/user.png" />';
+        echo $addonLoader->addonCurrent['login']."</a></li>";
+        if($addonLoader->addonCurrent['login'] == $_GET['title']) $js.= 'loadAddon('.$addonLoader->addonCurrent['id'].',\'user.php\')';
     }
+    echo "</ul>";
 
 }
 ?>

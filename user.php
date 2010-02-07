@@ -23,40 +23,64 @@ Project: STK Addon Manager
 File: user.php
 Version: 1
 Licence: GPLv3
-Description: page who is called in ajax and who modify user information
+Description: page who is called in ajax and who give user informations
 
 ***************************************************************************/
-$security = "";
+$security ="";
 include("include/security.php");
-include("include/connectMysql.php");
-include_once("include/coreUser.php");
-$action= mysql_real_escape_string($_GET['action']);
-$id = mysql_real_escape_string($_GET['id']);
-$value = mysql_real_escape_string($_GET['value']);
-$user = new coreUser($type);
-$user->selectById($id);
-if($action=="available")$user->setAvailable();
-if($action=="range")$user->setRange($value);
-if($action=="homepage")
+
+if(!isset($_COOKIE['lang']))
 {
-echo '<form method="POST"  action="user.php?action=homepageSend&amp;id='.$user->userCurrent['id'].'">
-<input type="text" name="homepage" value="'.$user->userCurrent['homepage'].'" />
-<input type="submit"/>
-</form>
-';
-exit();
+    $timestamp_expire = time() + 365*24*3600;
+    setcookie('lang', 'en_EN', $timestamp_expire);
 }
-if($action=="homepageSend")
+setlocale(LC_ALL, $_COOKIE['lang'].'.UTF-8');
+
+bindtextdomain('translations', 'locale');
+textdomain('translations');
+bind_textdomain_codeset('translations', 'UTF-8');
+
+$type= mysql_real_escape_string($_GET['type']);
+$action = mysql_real_escape_string($_GET['action']);
+if($action=="file" or $action  == "password")
 {
-$user->setHomepage(mysql_real_escape_string($_POST['homepage']));
+    $value = mysql_real_escape_string($_GET['value']);
+    $id = mysql_real_escape_string($_GET['id']);
+}
+else
+{
+    $value = mysql_real_escape_string($_POST['value']);
+    $id = mysql_real_escape_string($_POST['id']);
+}
+
+$addon = new coreUser('users');
+$addon->selectById($id);
+if($action == "available")
+{
+	$addon->setAvailable();
+	$addon->selectById($id);
+}
+elseif($action != "")
+{
+	$addon->setInformation($action, $value);
+	$addon->selectById($id);
+}
+if($action == "remove")
+{
+	$addon->remove();
+	exit();
+}
+if($action == "file")
+{
 	?>
 	<html>
 	<head>
-	<meta http-equiv="refresh" content="0;URL=manageAccount.php?title=profileHomepage">
+	<meta http-equiv="refresh" content="0;URL=account.php?title=<? echo $addon->addonCurrent['login'];?>">
 	</head>
 	</html>
 	<?php
-exit();
+	$addon->setFile($action);
+	exit();
 }
 if($action == "password")
 {
@@ -64,12 +88,10 @@ if($action == "password")
 	echo '</head><body>';
 	include("menu.php");
 	echo '<div id="content">';
-	$user->setPass();
+	$addon->setPass();
 	echo '</div>';
-	include("footer.php");
+	include("include/footer.php");
 	exit();
 }
-$user->selectById($id);
-$user->viewInformations();
-
+$addon->viewInformations();
 ?>
