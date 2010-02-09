@@ -42,6 +42,7 @@ bind_textdomain_codeset('translations', 'UTF-8');
 
 $type= mysql_real_escape_string($_GET['type']);
 $action = mysql_real_escape_string($_GET['action']);
+
 if($action=="file")
 {
     $value = mysql_real_escape_string($_GET['value']);
@@ -53,21 +54,14 @@ else
     $id = mysql_real_escape_string($_POST['id']);
 }
 
-if($type=="help")
-{
-$addon = new coreHelp($type);
-}
-else
-{
 $addon = new coreAddon($type);
-}
 $addon->selectById($id);
 if($action == "available")
 {
 	$addon->setAvailable();
 	$addon->selectById($id);
 }
-elseif($action != "")
+elseif($action != "" && $action!="file")
 {
 	$addon->setInformation($action, $value);
 	$addon->selectById($id);
@@ -86,7 +80,7 @@ if($action == "file")
 	</head>
 	</html>
 	<?php
-	$addon->setFile($action);
+	$addon->setFile();
 	exit();
 }
 $addon->viewInformations();

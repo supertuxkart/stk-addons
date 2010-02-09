@@ -50,9 +50,12 @@ class coreUser extends coreAddon
 		echo '<ul>';
 		while($mykart->next())
 		{
+		    if($mykart->addonCurrent['available'] == 1)
+		    {
 			echo'<li><a href="addon-view.php?addons=karts&amp;title='.$mykart->addonCurrent['name'].'">';
 			echo $mykart->addonCurrent['name'];
 			echo'</a></li>';
+			}
 		}
 		echo '</ul>';
 		
@@ -62,9 +65,12 @@ class coreUser extends coreAddon
 		echo '<ul>';
 		while($mytrack->next())
 		{
+		    if($mytrack->addonCurrent['available'] == 1)
+		    {
 			echo'<li><a href="addon-view.php?addons=tracks&amp;title='.$mytrack->addonCurrent['name'].'">';
 			echo $mytrack->addonCurrent['name'];
 			echo'</a></li>';
+			}
 		}
 		echo '</ul>';
     }
@@ -190,6 +196,10 @@ class coreUser extends coreAddon
 		}
 		
 		return $succes;
+	}
+	function permalink()
+	{
+	    return 'account.php?title='.$this->addonCurrent['login'];
 	}
 }
 

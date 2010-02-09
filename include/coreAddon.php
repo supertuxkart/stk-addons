@@ -64,7 +64,19 @@ class coreAddon
         global $base;
         if($_SESSION['range']['manageaddons'] == true)
         {
-            if($this->addonCurrent['available'] == 0)  mysql_query("UPDATE `".$base."`.`".$this->addonType."` SET `available` = '1' WHERE `".$this->addonType."`.`id` =".$this->addonCurrent['id']." LIMIT 1 ;");
+            if($this->addonCurrent['available'] == 0)
+            {
+                mysql_query("UPDATE `".$base."`.`".$this->addonType."` SET `available` = '1' WHERE `".$this->addonType."`.`id` =".$this->addonCurrent['id']." LIMIT 1 ;");
+                mysql_query("INSERT INTO `".$base."`.`history` (
+                `date` ,
+                `id` ,
+                `user` ,
+                `action` ,
+                `option`
+                )
+                VALUES (
+                '".date("Y-m-d G:i:s")."', NULL , '".$this->addonCurrent['user']."', 'add', '".$this->addonType."\n".$this->addonCurrent['id']."');");
+            }
             else mysql_query("UPDATE `".$base."`.`".$this->addonType."` SET `available` = '0' WHERE `".$this->addonType."`.`id` =".$this->addonCurrent['id']." LIMIT 1 ;");
         }
     }
@@ -88,7 +100,10 @@ class coreAddon
             if (isset($_FILES['fileSend'])) {
             echo $_POST['fileType'];
                 $chemin_destination = $dirUpload.$_POST['fileType'].'/';
+        		if(file_exists($chemin_destination.$this->addonCurrent[$_POST['fileType']]))
+                {
                 unlink($chemin_destination.$this->addonCurrent[$_POST['fileType']]);
+                }
                 move_uploaded_file($_FILES['fileSend']['tmp_name'], $chemin_destination.$this->addonCurrent[$_POST['fileType']]);
             }
             }
@@ -110,7 +125,7 @@ class coreAddon
         if($_SESSION['range']['manageaddons'] == true || $this->addonCurrent['user'] == $_SESSION['id'])
         {
             $exist = True;
-            $propertie_sql = mysql_query("SELECT * FROM properties WHERE `properties`.`type` = '".$this->addonType."' AND `properties`.`lock` != 1;");
+            $propertie_sql = mysql_query("SELECT * FROM properties WHERE `properties`.`type` = '".$this->addonType."' AND `properties`.`lock` != 1 AND `properties`.`name` = '".$info."';");
             $propertie = mysql_fetch_array($propertie_sql) or $exist = false;
             if($exist)
             {
@@ -120,10 +135,10 @@ class coreAddon
                 }
                 else
                 {
-                    mysql_query("UPDATE `".$base."`.`".$this->addonType."` SET `".$info."` = '".$value."' WHERE `".$this->addonType."`.`id` =".$this->addonCurrent['id']." LIMIT 1 ;");
+                    mysql_query("UPDATE `".$base."`.`".$this->addonType."` SET `".$info."` = '".$value."' WHERE `".$this->addonType."`.`id` =".$this->addonCurrent['id']." LIMIT 1 ;") or die(mysql_error());
 
                 }
-                mysql_query("INSERT INTO `stkbase`.`history` (
+                mysql_query("INSERT INTO `".$base."`.`history` (
                 `date` ,
                 `id` ,
                 `user` ,
@@ -185,7 +200,7 @@ class coreAddon
         }
         else
         {
-            echo _("Submiter :");
+            echo _("Submitter :");
         }
         echo ' </b></td><td><a href="account.php?title='.$user->addonCurrent['login'].'">'.$user->addonCurrent['login'].'</a></td></tr>';
         if($this->addonCurrent['Author'] != "")
@@ -217,18 +232,18 @@ class coreAddon
             $file_str = "";
             while($propertie = mysql_fetch_array($propertie_sql))
             {
-                $cible = 'addonRequest(\'addon.php?type='.$this->addonType.'&amp;action='.str_replace(" ", "", $propertie['name']).'\', '.$this->addonCurrent['id'].',document.getElementById(\''.str_replace(" ", "", $propertie['name']).'\').value)';
+                $cible = 'addonRequest(\'addon.php?type='.$this->addonType.'&amp;action='.str_replace(" ", "", $propertie['name']).'\', '.$this->addonCurrent['id'].',document.getElementById(\''.strtolower(str_replace(" ", "", $propertie['name'])).'\').value)';
                 if($propertie['typefield'] == "textarea")
                 {
                     echo "<br />".$propertie['name']." :<br />";
-                    echo '<textarea cols="75" rows="8" id="'.str_replace(" ", "", $propertie['name']).'">'.$this->addonCurrent[str_replace(" ", "", $propertie['name'])].'</textarea><br />';
+                    echo '<textarea cols="65" rows="8" id="'.strtolower(str_replace(" ", "", $propertie['name'])).'">'.$this->addonCurrent[str_replace(" ", "", $propertie['name'])].'</textarea><br />';
                     echo '<input onclick="'.$cible.'" value="Change '.$propertie['name'].'" type="button" />';
                 }
                 elseif($propertie['typefield'] == "text")
                 {
                     echo "</form><br />".$propertie['name']." :<br />";
                     echo '<form action="javascript:'.$cible.'" method="GET" >';
-                    echo '<input type="text" id="'.str_replace(" ", "", $propertie['name']).'" value="'.$this->addonCurrent[str_replace(" ", "", $propertie['name'])].'" ><br />';
+                    echo '<input type="text" id="'.strtolower(str_replace(" ", "", $propertie['name'])).'" value="'.$this->addonCurrent[str_replace(" ", "", $propertie['name'])].'" ><br />';
                     echo '<input onclick="'.$cible.'" value="Change '.$propertie['name'].'" type="button" />';
                     echo "</form>";
                     echo '<form action="#" method="GET" >';
@@ -326,15 +341,10 @@ class coreAddon
         }
         echo '</div>';
         $this->addonCurrent = mysql_fetch_array($this->reqSql);
-        mysql_query("INSERT INTO `stkbase`.`history` (
-        `date` ,
-        `id` ,
-        `user` ,
-        `action` ,
-        `option`
-        )
-        VALUES (
-        '".date("Y-m-d G:i:s")."', NULL , '".$_SESSION['id']."', 'add', '".$this->addonType."\n".$this->addonCurrent['id']."');");
+    }
+    function permalink()
+    {
+        return 'addon-view.php?addons='.$this->addonType.'&amp;title='.$this->addonCurrent['name'];
     }
 }
 

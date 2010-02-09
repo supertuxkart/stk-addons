@@ -63,8 +63,8 @@ $_GET['action'] = (isset($_GET['action'])) ? $_GET['action'] : null;
 			?>
 	    <div id="content">
 	        <form id="formKart" enctype="multipart/form-data" action="upload.php?action=submit" method="POST">
-	            <label><input  onclick="document.getElementById('kart_icon').disabled = false" type="radio" name="addons_type" value="karts" checked="checked"/>Kart</label>
-	            <label><input onclick="document.getElementById('kart_icon').disabled = true" type="radio" name="addons_type" value="tracks" />Tracks<br /></label>
+	            <label><input  onclick="document.getElementById('icon').disabled = false" type="radio" name="addons_type" value="karts" checked="checked"/>Kart</label>
+	            <label><input onclick="document.getElementById('icon').disabled = true" type="radio" name="addons_type" value="tracks" />Tracks<br /></label>
 	            <label><?php echo _("Name :"); ?><br /><input type="text" name="name"/><br /></label>
 	            <label><?php echo _("Description, it must be in english :"); ?><br /><textarea name="description"></textarea><br /></label>
 	            <label><?php echo _("Image, it must be a .png :"); ?><br /><input type="file" name="image"/><br /></label>

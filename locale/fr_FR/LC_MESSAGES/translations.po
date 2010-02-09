@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: stkaddons 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-02-06 12:44+0100\n"
-"PO-Revision-Date: 2010-02-06 12:46+0100\n"
+"POT-Creation-Date: 2010-02-09 17:06+0100\n"
+"PO-Revision-Date: 2010-02-09 17:09+0100\n"
 "Last-Translator: xapantu <xapantu@users.sourceforge.net>\n"
 "Language-Team: xapantu <xapantu@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -18,62 +18,137 @@ msgstr ""
 "X-Poedit-Country: FRANCE\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
-#: coreAddon.php:147
-#: upload.php:72
+#: allow.php:89
+msgid "root"
+msgstr "root"
+
+#: allow.php:90
+msgid "supAdministrator"
+msgstr "Administrateur supérieur"
+
+#: allow.php:91
+msgid "administrator"
+msgstr "Administrateur"
+
+#: allow.php:92
+msgid "moderator"
+msgstr "Modérateur"
+
+#: allow.php:93
+msgid "basicUser"
+msgstr "Simple utilisateur"
+
+#: coreAddon.php:172
+#: upload.php:68
 msgid "Name :"
 msgstr "Nom :"
 
-#: coreAddon.php:151
+#: coreAddon.php:176
 msgid "Description :"
 msgstr "Description :"
 
-#: coreAddon.php:157
+#: coreAddon.php:182
 #, fuzzy
 msgid "Revision :"
 msgstr "Version :"
 
-#: coreAddon.php:161
+#: coreAddon.php:186
 msgid "Version of STK :"
 msgstr "Version de STK :"
 
-#: coreAddon.php:174
-#: coreAddon.php:184
+#: coreAddon.php:199
+#: coreAddon.php:209
 msgid "Author :"
 msgstr "Auteur :"
 
-#: coreAddon.php:178
-msgid "Submiter :"
+#: coreAddon.php:203
+#, fuzzy
+msgid "Submitter :"
 msgstr "Envoyeur :"
 
-#: coreAddon.php:281
+#: coreAddon.php:320
 msgid "Please re-upload your icon. It must be a png."
 msgstr "Pourriez-vous remettre en ligne votre icône  ? Ce doit être un png."
 
-#: coreAddon.php:289
+#: coreAddon.php:328
 msgid "Please re-upload your image. It must be a png."
 msgstr "Pourriez-vous remettre en ligne votre image ? Ce doit être un png."
 
-#: coreAddon.php:297
+#: coreAddon.php:336
 msgid "Please re-upload your file. It must be a zip."
 msgstr "Pourriez-vous remettre en ligne votre fichier ? Ce doit être un zip."
 
-#: coreAddon.php:299
+#: coreAddon.php:338
 msgid "Successful, your kart will appear when a moderator will valid it."
 msgstr "Succès, votre extension apparaîtra quand un modérateur l'aura validé."
 
-#: index.php:55
+#: coreUser.php:37
+#, fuzzy
+msgid "Login :"
+msgstr "Se connecter"
+
+#: coreUser.php:38
+msgid "Date Registered :"
+msgstr "Date d'enregistrement"
+
+#: coreUser.php:41
+#, fuzzy
+msgid "Avatar :"
+msgstr "Auteur :"
+
+#: coreUser.php:43
+#, fuzzy
+msgid "Range :"
+msgstr "Nom :"
+
+#: coreUser.php:44
+msgid "Homepage :"
+msgstr "Site :"
+
+#: createAccount.php:72
+msgid "Your request is succesful, an e-mail will be sent to you ta activate your account."
+msgstr "Vôtre requête a été prise en compte, un e-mail va vous être envoyé pour valider vôtre compte."
+
+#: createAccount.php:76
+msgid "Your login is already used."
+msgstr "Vôtre identifiant est déjà utilisé"
+
+#: index.php:68
+#, fuzzy
+msgid "New "
+msgstr "Nom :"
+
+#: index.php:72
+#, fuzzy
+msgid "kart"
+msgstr "Karts"
+
+#: index.php:75
+#, fuzzy
+msgid "track"
+msgstr "Pistes"
+
+#: index.php:82
+msgid "by"
+msgstr "par"
+
+#: index.php:96
+msgid "modified "
+msgstr "a modifié"
+
+#: index.php:108
 msgid "Add-ons for Supertuxkart 0.7"
 msgstr "Extensions pour SuperTuxKart 0.7"
 
-#: index.php:60
+#: index.php:113
 msgid "Karts"
 msgstr "Karts"
 
-#: index.php:64
+#: index.php:117
 msgid "Tracks"
 msgstr "Pistes"
 
-#: index.php:68
+#: index.php:121
 msgid "Help"
 msgstr "Aide"
 
@@ -126,23 +201,23 @@ msgstr "A propos"
 msgid "Languages"
 msgstr "Langues"
 
-#: upload.php:59
+#: upload.php:55
 msgid "Please add a description of your add-ons"
 msgstr "Pourriez-vous une description de votre extension ?"
 
-#: upload.php:73
+#: upload.php:69
 msgid "Description, it must be in english :"
 msgstr "Description, elle doit être en anglais :"
 
-#: upload.php:74
+#: upload.php:70
 msgid "Image, it must be a .png :"
 msgstr "Image, ce doit être un .png :"
 
-#: upload.php:75
+#: upload.php:71
 msgid "Icon (kart only), it must be a .png :"
 msgstr "Icon (seulement pour les karts), ce doit être un .png :"
 
-#: upload.php:76
+#: upload.php:72
 msgid "Addon's file, it must be a .zip :"
 msgstr "Fichier de l'extension, ce doit être un .zip :"
 

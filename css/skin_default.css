@@ -116,6 +116,10 @@ min-height:12px;
 {
     background-image:url("../image/background-news-center.png");
 }
+#news_center a
+{
+    font-weight:bold;
+}
 #news_bottom
 {
     background-image:url("../image/background-news-bottom.png");
@@ -323,4 +327,17 @@ div.help-hidden
 {
 max-width:150px;
 max-height:150px;
+}
+.newaddon
+{
+color:brown;
+}
+.news_home
+{
+    border-bottom:brown 1px solid;
+    padding-bottom:4px;
+}
+#news_div
+{
+margin-bottom:5px;
 }

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-02-06 12:44+0100\n"
+"POT-Creation-Date: 2010-02-09 17:06+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,59 +16,129 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: coreAddon.php:147 upload.php:72
+#: allow.php:89
+msgid "root"
+msgstr ""
+
+#: allow.php:90
+msgid "supAdministrator"
+msgstr ""
+
+#: allow.php:91
+msgid "administrator"
+msgstr ""
+
+#: allow.php:92
+msgid "moderator"
+msgstr ""
+
+#: allow.php:93
+msgid "basicUser"
+msgstr ""
+
+#: coreAddon.php:172 upload.php:68
 msgid "Name :"
 msgstr ""
 
-#: coreAddon.php:151
+#: coreAddon.php:176
 msgid "Description :"
 msgstr ""
 
-#: coreAddon.php:157
+#: coreAddon.php:182
 msgid "Revision :"
 msgstr ""
 
-#: coreAddon.php:161
+#: coreAddon.php:186
 msgid "Version of STK :"
 msgstr ""
 
-#: coreAddon.php:174 coreAddon.php:184
+#: coreAddon.php:199 coreAddon.php:209
 msgid "Author :"
 msgstr ""
 
-#: coreAddon.php:178
-msgid "Submiter :"
+#: coreAddon.php:203
+msgid "Submitter :"
 msgstr ""
 
-#: coreAddon.php:281
+#: coreAddon.php:320
 msgid "Please re-upload your icon. It must be a png."
 msgstr ""
 
-#: coreAddon.php:289
+#: coreAddon.php:328
 msgid "Please re-upload your image. It must be a png."
 msgstr ""
 
-#: coreAddon.php:297
+#: coreAddon.php:336
 msgid "Please re-upload your file. It must be a zip."
 msgstr ""
 
-#: coreAddon.php:299
+#: coreAddon.php:338
 msgid "Successful, your kart will appear when a moderator will valid it."
 msgstr ""
 
-#: index.php:55
-msgid "Add-ons for Supertuxkart 0.7"
+#: coreUser.php:37
+msgid "Login :"
 msgstr ""
 
-#: index.php:60
-msgid "Karts"
+#: coreUser.php:38
+msgid "Date Registered :"
 msgstr ""
 
-#: index.php:64
-msgid "Tracks"
+#: coreUser.php:41
+msgid "Avatar :"
+msgstr ""
+
+#: coreUser.php:43
+msgid "Range :"
+msgstr ""
+
+#: coreUser.php:44
+msgid "Homepage :"
+msgstr ""
+
+#: createAccount.php:72
+msgid ""
+"Your request is succesful, an e-mail will be sent to you ta activate your "
+"account."
+msgstr ""
+
+#: createAccount.php:76
+msgid "Your login is already used."
 msgstr ""
 
 #: index.php:68
+msgid "New "
+msgstr ""
+
+#: index.php:72
+msgid "kart"
+msgstr ""
+
+#: index.php:75
+msgid "track"
+msgstr ""
+
+#: index.php:82
+msgid "by"
+msgstr ""
+
+#: index.php:96
+msgid "modified "
+msgstr ""
+
+#: index.php:108
+msgid "Add-ons for Supertuxkart 0.7"
+msgstr ""
+
+#: index.php:113
+msgid "Karts"
+msgstr ""
+
+#: index.php:117
+msgid "Tracks"
+msgstr ""
+
+#: index.php:121
 msgid "Help"
 msgstr ""
 
@@ -120,22 +190,22 @@ msgstr ""
 msgid "Languages"
 msgstr ""
 
-#: upload.php:59
+#: upload.php:55
 msgid "Please add a description of your add-ons"
 msgstr ""
 
-#: upload.php:73
+#: upload.php:69
 msgid "Description, it must be in english :"
 msgstr ""
 
-#: upload.php:74
+#: upload.php:70
 msgid "Image, it must be a .png :"
 msgstr ""
 
-#: upload.php:75
+#: upload.php:71
 msgid "Icon (kart only), it must be a .png :"
 msgstr ""
 
-#: upload.php:76
+#: upload.php:72
 msgid "Addon's file, it must be a .zip :"
 msgstr ""

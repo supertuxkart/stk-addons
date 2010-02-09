@@ -37,9 +37,10 @@ include("include/config.php");
 		include("menu.php");
 		?>
 		<div id="old_site">
+		<a href="/0.6">
 		<?php
 		echo "Old site : 0.6";
-		?></div>
+		?></a></div>
 		<img id="logo_center" src="image/logo_large.png" />
 		
 		<div id="news_div">
@@ -53,24 +54,51 @@ include("include/config.php");
 		{
 		    if($_SESSION['range']['manageaddons'] || $history['action'] == "add")
 		    {
-		        echo '<span class="news_home">';
+		        echo '<div class="news_home">';
 		        $action = explode(" ",$history['action']);
 		        switch($action[0])
 		        {
 		            case "add":
 		                $option = explode("\n",$history['option']);
-		                echo _("New " . $option[0]);
+		                $user = new coreUser('users');
+		                $user->selectById($history['user']);
+		                $addon = new coreAddon($option[0]);
+		                $addon->selectById($option[1]);
+		                echo '<span class="newaddon">';
+		                echo _("New ");
+		                switch ($option[0])
+		                {
+		                    case 'karts':
+		                    echo _("kart");
+		                    break;
+		                    case 'tracks':
+		                    echo _("track");
+		                    break;
+		                }
+		                echo '</span>';
+		                echo ' <a href="'.$addon->permalink().'" >';
+		                echo $addon->addonCurrent['name'];
+		                echo '</a> ';
+		                echo _('by');
+		                echo ' <a href="'.$user->permalink().'">';
+		                echo $user->addonCurrent['login'];
+		                echo '</a>';
 		                break;
 	                case "change":
 		                $option = explode("\n",$history['option']);
 		                $user = new coreUser('users');
 		                $user->selectById($history['user']);
-		                $addon = new coreUser($option[0]);
+		                $addon = new coreAddon($option[0]);
 		                $addon->selectById($option[1]);
+		                echo ' <a href="'.$user->permalink().'">';
 		                echo $user->addonCurrent['login'];
-		                echo " "._("modified " . $addon->addonCurrent['name']);
+		                echo '</a>';
+		                echo " "._("modified ");
+		                echo ' <a href="'.$addon->permalink().'" >';
+		                echo $addon->addonCurrent['name'];
+		                echo '</a> ';
 		        }
-		        echo '</span><br />';
+		        echo '</div>';
 		    }
 		}
 		?>
@@ -88,7 +116,7 @@ include("include/config.php");
 		        <img src="image/tracks.png" />
 		        <h2 class="menu" ><div class="left"></div><div class="center"><?php echo _("Tracks"); ?></div><div class="right"></div></h2>
 		    </div><div class="addons">
-		        <a href="addon-view.php?addons=help" />
+		        <a href="http://supertuxkart.sourceforge.net/Category:Stkaddons" />
 		        <img src="image/help.png" />
 		        <h2 class="menu"><div class="left"></div><div class="center"><?php echo _("Help"); ?></div><div class="right"></div></h2>
 		    </div>
