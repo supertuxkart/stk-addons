@@ -9,15 +9,13 @@ Description: index page
 
 ***************************************************************************/
 include("../include/connectMysql.php");
-include("../include/coreAddon.php");
-$type = mysql_real_escape_string($_GET["type"]);
 echo "<?xml version=\"1.0\"?>\n";
 echo "<addons  xmlns='http://stkaddons.tuxfamily.org/'>\n";
-$addon  =new coreAddon($type);
+$addon  =new coreAddon('karts');
 $addon->loadAll();
 while($addon->next())
 {
-	echo "<".$type.">\n\t";
+	echo "<karts>\n\t";
 	echo "<name>";
 	echo $addon->addonCurrent["name"];
 	echo "</name>\n\t";
@@ -30,7 +28,32 @@ while($addon->next())
 	echo "<file>";
 	echo $addon->addonCurrent["file"];
 	echo "</file>\n";
-	echo "</".$type.">\n";
+	echo "<icon>";
+	echo 'http://stkaddons.tuxfamily.org/image.php?type=medium&pic=/data/repository/stkaddons/icon/'.$addon->addonCurrent["icon"];
+	echo "</icon>\n";
+	echo "</karts>\n";
+}
+$addon  =new coreAddon('tracks');
+$addon->loadAll();
+while($addon->next())
+{
+	echo "<tracks>\n\t";
+	echo "<name>";
+	echo $addon->addonCurrent["name"];
+	echo "</name>\n\t";
+	echo "<description>";
+	echo $addon->addonCurrent["description"];
+	echo "</description>\n\t";
+	echo "<version>";
+	echo $addon->addonCurrent["version"];
+	echo "</version>\n\t";
+	echo "<file>";
+	echo $addon->addonCurrent["file"];
+	echo "</file>\n";
+	echo "<icon>";
+	echo 'http://download.tuxfamily.org/stkaddons/icon/icon.png';
+	echo "</icon>\n";
+	echo "</tracks>\n";
 }
 echo "</addons>";
 ?>

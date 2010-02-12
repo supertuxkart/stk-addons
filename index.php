@@ -47,8 +47,17 @@ include("include/config.php");
 		<div id="news_top">
 		</div>
 		<div id="news_center">
+		STK development blog : 
 		<?php
-		echo "Supertuxkart 0.7 alpha 1 is out !<hr /><br />";
+		
+        if(!@fopen("rss", 'r'))
+        {
+            include("rss.php");
+        }
+        $fichier = fopen("rss", "r");
+        echo fgets($fichier);
+        fclose($fichier);
+        echo '<hr />';
 		$reqSql = mysql_query("SELECT * FROM history LIMIT 7") or die(mysql_error());
 		while($history = mysql_fetch_array($reqSql))
 		{

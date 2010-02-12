@@ -201,6 +201,18 @@ class coreUser extends coreAddon
 	{
 	    return 'account.php?title='.$this->addonCurrent['login'];
 	}
+    function setAvailable()
+    {
+        global $base;
+        if($_SESSION['range']['manageaddons'] == true)
+        {
+            if($this->addonCurrent['available'] == 0)
+            {
+                mysql_query("UPDATE `".$base."`.`".$this->addonType."` SET `available` = '1' WHERE `".$this->addonType."`.`id` =".$this->addonCurrent['id']." LIMIT 1 ;");
+            }
+            else mysql_query("UPDATE `".$base."`.`".$this->addonType."` SET `available` = '0' WHERE `".$this->addonType."`.`id` =".$this->addonCurrent['id']." LIMIT 1 ;");
+        }
+    }
 }
 
 

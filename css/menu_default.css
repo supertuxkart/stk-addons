@@ -153,6 +153,15 @@ overflow-x:hidden;
 .container img
 {
     padding-top:15px;
-    margin-left:-15px;
+    margin-left:10px;
     margin-right:10px;
+}
+.container a
+{
+    margin-left:0px !important;
+}
+.menu_body
+{
+    position:relative;
+    background-color:white;
 }

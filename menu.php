@@ -57,8 +57,10 @@ Description: menu
 	echo _('About');
 	echo '</a>';
 	 ?>
+
+<a class="container"><?php echo _("STK Homepage");?></a>
 	     <div class="container">
-<a class="menu_head"><?php echo _("Languages");?></a>
+<a class="menu_head" href="#" ><?php echo _("Languages");?></a>
 <ul class="menu_body">
 <li><a href="<?php echo $nom_page.'&amp;lang=nl'; ?>"><img src="image/flag/nl.png" /></a></li>
 <li><a href="<?php echo $nom_page.'&amp;lang=fr'; ?>"><img src="image/flag/fr.png" /></a></li>

@@ -21,18 +21,23 @@ $largeur = "100"; // correspond à la largeur de l'image souhaitée
 $hauteur ="100"; // correspond à la hauteur de l'image souhaitée
 
 // et voici la création de la miniature...
-header("Content-Type: image/jpeg");
+header("Content-Type: image/png");
 reduitimage($_GET['pic']);
 function reduitImage($entryname)
 {
 	global $fichier;
-	$source = imagecreatefrompng($entryname);
+	if(@fopen($entryname, 'r'))
+	{	$source = imagecreatefrompng($entryname); 
 		// Les fonctions imagesx et imagesy renvoient la largeur et la hauteur d'une image
 		$largeur_source = imagesx($source);
 		$hauteur_source = imagesy($source);
 	    if($_GET['type'] == "big")
 		    {
 		    $size=300;
+		    }
+	    if($_GET['type'] == "medium")
+		    {
+		    $size=75;
 		    }
 	    if($_GET['type'] == "small")
 		    {
@@ -53,7 +58,39 @@ function reduitImage($entryname)
 		// On crée la miniature
 		imagecopyresampled($destination, $source, 0, 0, 0, 0, $largeur_destination, $hauteur_destination, $largeur_source, $hauteur_source);
 
-		imagepng($destination);
+		imagepng($destination);}
+		
+	else{ $source = imagecreatefrompng('/data/repository/stkaddons/icon/icon.png'); // Les fonctions imagesx et imagesy renvoient la largeur et la hauteur d'une image
+		$largeur_source = imagesx($source);
+		$hauteur_source = imagesy($source);
+	    if($_GET['type'] == "big")
+		    {
+		    $size=300;
+		    }
+		    	    if($_GET['type'] == "medium")
+		    {
+		    $size=75;
+		    }
+	    if($_GET['type'] == "small")
+		    {
+		    $size=25;
+		    }
+		if($largeur_source > $hauteur_source)
+		{
+
+			$largeur_destination = $size;
+			$hauteur_destination = $size*$hauteur_source/$largeur_source;
+		}
+		if($largeur_source <= $hauteur_source)
+		{
+			$hauteur_destination = $size;
+			$largeur_destination = $size*$largeur_source/$hauteur_source;
+		}
+		$destination = imagecreatetruecolor($largeur_destination, $hauteur_destination); // On crée la miniature vide
+		// On crée la miniature
+		imagecopyresampled($destination, $source, 0, 0, 0, 0, $largeur_destination, $hauteur_destination, $largeur_source, $hauteur_source);
+
+		imagepng($destination);}
 		
 	
 }

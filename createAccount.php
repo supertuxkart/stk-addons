@@ -46,7 +46,7 @@ $_GET['action'] = (isset($_GET['action'])) ? $_GET['action'] : NULL;
 				if($_POST['pass1'] == $_POST['pass2'])
 				{
 					$login = $_POST['login'];
-					$existSql= mysql_query("SELECT * FROM `users` WHERE `users`.`login` = '".$login."'");
+					$existSql= mysql_query("SELECT * FROM `users` WHERE `users`.`login` = '".mysql_real_escape_string($login)."'");
 					$exist =true;
 					$sql =  mysql_fetch_array($existSql) or $exist = false;
 					if($exist == false && $login != null)
