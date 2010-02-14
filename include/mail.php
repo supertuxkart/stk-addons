@@ -35,12 +35,16 @@ $passage_ligne = "\n";
 			$message_html = "<html><head></head><body>Thank you for subscribing to the SuperTuxKart Add-Ons Manager. Please click <a href=\"http://".$_SERVER["SERVER_NAME"].$option[1]."?action=valid&amp;num=$option[0]\">here</a> to confirm your account<br />Login : ".$option[2]."<br />Password : ".$option[3]."</body></html>";
 			$sujet = "New Account at ".$_SERVER["SERVER_NAME"];
 			break;
+		case "bug":
+			$message_html = "<html><head></head><body>Bug report :<br />User : ".$option[0]."<br />Description :".$option[1]." <br /><br /></body></html>";
+			$sujet = "stkaddons : bug report";
+			break;
 	}
 
 	$boundary = "-----=".md5(rand());
 
 	$header = "From: \"stkaddons@tuxfamily.org\"<stkaddons@tuxfamily.org>".$passage_ligne;
-	$header.= "Reply-to: \"lucmat77@free.fr\" <lucmat77@free.fr>".$passage_ligne;
+	$header.= "Reply-to: \"xapantu@gmail.com\" <xapantu@gmail.com>".$passage_ligne;
 	$header.= "MIME-Version: 1.0".$passage_ligne;
 	$header.= "Content-Type: multipart/alternative;".$passage_ligne." boundary=\"$boundary\"".$passage_ligne;
 	$message.= $passage_ligne."--".$boundary.$passage_ligne;

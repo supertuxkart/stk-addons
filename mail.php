@@ -17,11 +17,30 @@
  stkaddons.  If not, see <http://www.gnu.org/licenses/>.   */
 ?>
 <?php
-$base="stkbase";
-$dirUpload = "/media/serveur/stk/upload/";
-$dirDownload = "http://127.0.0.1/stk/upload/";
-$db_user = 'root';
-$db_pass = 'lucmat';
-$style="default";
-$admin = "xapantu@gmail.com";
-?>
+/***************************************************************************
+Project: STK Addon Manager
+
+File: index.php
+Version: 1
+Licence: GPLv3
+Description: index page
+
+***************************************************************************/
+$security ="basicPage";
+$title = "Report a bug";
+include("include/security.php");
+include("include/view.php");
+include("include/top.php");
+include("include/mail.php");
+?>    </head>
+    <body>
+        <?php 
+        include("menu.php");
+        if($_GET['action'] = "bug") sendMail($admin, "bug", array($_SESSION["login"],$_POST['bug']));
+        ?>
+		<div id="content">
+        Thanks for your report !
+        </div>
+	<?php include("include/footer.php"); ?>
+	</body>
+</html>

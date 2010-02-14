@@ -104,7 +104,7 @@ class coreUser extends coreAddon
             elseif($propertie['typefield'] == "enum")
             {
                 echo "<br />".$propertie['name']." :<br />";
-                echo '<select onchange="addonRequest(\'user.php?type='.$this->addonType.'&amp;action='.str_replace(" ", "", $propertie['name']).'\', '.$this->addonCurrent['id'].', this.value)">';
+                echo '<select onchange="addonRequest(\'user.php?type='.$this->addonType.'&amp;action='.$propertie['name'].'\', '.$this->addonCurrent['id'].', this.value)">';
                 
                 $values =explode("\n", $propertie['default']);
                 foreach($values as $value)
@@ -213,6 +213,15 @@ class coreUser extends coreAddon
             else mysql_query("UPDATE `".$base."`.`".$this->addonType."` SET `available` = '0' WHERE `".$this->addonType."`.`id` =".$this->addonCurrent['id']." LIMIT 1 ;");
         }
     }
+	function setRange($range)
+	{
+	
+		global $base;
+		if($_SESSION['range']['manage'.$this->addonCurrent['range'].'s'] == true && $_SESSION['range']['manage'.$range.'s'] == true)
+		{
+			mysql_query("UPDATE `".$base."`.`users` SET `range` = '".$range."' WHERE `users`.`id` =".$this->addonCurrent['id']." LIMIT 1 ;");
+		}
+	}
 }
 
 

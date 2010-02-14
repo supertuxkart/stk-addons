@@ -27,13 +27,95 @@ Description: menu
 
 ***************************************************************************/
 
+
 ?>
 
+<?php
+if(isset($_SESSION["login"]))
+{
+echo '<div id="advanced">
+<a href="#" id="advance_button"><img src="image/'.$style.'/plus.png" /></a>
+<div id="content_advanced">';
+if($_SESSION['range']['manageaddons'] || $_SERVER['PHP_SELF'] != "index.php")
+{
+    if(ereg("index.php", $_SERVER['PHP_SELF']))	$reqSql = mysql_query("SELECT * FROM history WHERE `history`.`action` != 'add' LIMIT 7;") or die(mysql_error());
+    else $reqSql = mysql_query("SELECT * FROM history LIMIT 7") or die(mysql_error());
+	while($history = mysql_fetch_array($reqSql))
+	{
+	    if($_SESSION['range']['manageaddons'] || $history['action'] == "add")
+	    {
+            echo '<div class="news_home">';
+            $action = explode(" ",$history['action']);
+            switch($action[0])
+            {
+                case "add":
+                    $option = explode("\n",$history['option']);
+                    $user = new coreUser('users');
+                    $user->selectById($history['user']);
+                    $addon = new coreAddon($option[0]);
+                    $addon->selectById($option[1]);
+                    echo '<span class="newaddon">';
+                    echo _("New ");
+                    switch ($option[0])
+                    {
+                        case 'karts':
+                        echo _("kart");
+                        break;
+                        case 'tracks':
+                        echo _("track");
+                        break;
+                    }
+                    echo '</span>';
+                    echo ' <a href="'.$addon->permalink().'" >';
+                    echo $addon->addonCurrent['name'];
+                    echo '</a> ';
+                    echo _('by');
+                    echo ' <a href="'.$user->permalink().'">';
+                    echo $user->addonCurrent['login'];
+                    echo '</a>';
+                    break;
+                case "change":
+                    $option = explode("\n",$history['option']);
+                    $user = new coreUser('users');
+                    $user->selectById($history['user']);
+                    $addon = new coreAddon($option[0]);
+                    $addon->selectById($option[1]);
+                    echo ' <a href="'.$user->permalink().'">';
+                    echo $user->addonCurrent['login'];
+                    echo '</a>';
+                    echo " "._("modified ");
+                    echo ' <a href="'.$addon->permalink().'" >';
+                    echo $addon->addonCurrent['name'];
+	                    echo '</a> ';
+            }
+            echo '</div>';
+        }
+    }
+}
+?>
+<br />
+<br />
+<br />
+<div class="news_home">
+<a href="addon-view.php?addons=blender">Blender files</a>
+</div>
+<div class="news_home">
+<form method="POST" action="mail.php?action=bug">
+<textarea name="bug">
+</textarea>
+<input type="submit" />
+</form>
+</div>
+<?php
+echo '</div>';
+echo '</div>';
+}
+?>
 <div id="global">
 <div id="top">
 	<?php
 	if(isset($_SESSION["login"]))
-	{
+    {
 		echo _("Welcome")." ".$_SESSION["login"];
 	}
 	echo '<a href="index.php">';
@@ -57,8 +139,7 @@ Description: menu
 	echo _('About');
 	echo '</a>';
 	 ?>
-
-<a class="container"><?php echo _("STK Homepage");?></a>
+<a class="container" href="http://supertuxkart.sf.net"> <?php echo _("STK Homepage");?></a>
 	     <div class="container">
 <a class="menu_head" href="#" ><?php echo _("Languages");?></a>
 <ul class="menu_body">

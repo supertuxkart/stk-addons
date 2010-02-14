@@ -127,6 +127,7 @@ class coreAddon
             $exist = True;
             $propertie_sql = mysql_query("SELECT * FROM properties WHERE `properties`.`type` = '".$this->addonType."' AND `properties`.`lock` != 1 AND `properties`.`name` = '".$info."';");
             $propertie = mysql_fetch_array($propertie_sql) or $exist = false;
+            $info =str_replace(" ", "", $info);
             if($exist)
             {
                 if($propertie['typefield'] == "file")
@@ -251,7 +252,7 @@ class coreAddon
                 elseif($propertie['typefield'] == "enum")
                 {
                     echo "<br />".$propertie['name']." :<br />";
-                    echo '<select onchange="addonRequest(\'addon.php?type='.$this->addonType.'&amp;action='.str_replace(" ", "", $propertie['name']).'\', '.$this->addonCurrent['id'].', this.value)">';
+                    echo '<select onchange="addonRequest(\'addon.php?type='.$this->addonType.'&amp;action='.$propertie['name'].'\', '.$this->addonCurrent['id'].', this.value)">';
                     
                     $values =explode("\n", $propertie['default']);
                     foreach($values as $value)
@@ -308,8 +309,10 @@ class coreAddon
         $sql =  mysql_fetch_array($existSql) or $exist = false;
         if($exist == false && $kartName != null)
         {
-            mysql_query("INSERT INTO `".$base."`.`".$this->addonType."` (`user` ,`name` ,`Description` ,`file` ,`image` ,`icon` ,`date` ,`available` ,`version`, `STKVersion`) 
+            if($this->addonType!="blender") mysql_query("INSERT INTO `".$base."`.`".$this->addonType."` (`user` ,`name` ,`Description` ,`file` ,`image` ,`icon` ,`date` ,`available` ,`version`, `STKVersion`) 
             VALUES ('".$_SESSION["id"]."', '".$kartName."', '".$kartDescription."', '".$kartName.".zip"."', '".$kartName.".png"."', '".$kartName.".png"."', '".date("Y-m-d")."', '0', '1', '0.7');") or die(mysql_error());
+            else mysql_query("INSERT INTO `".$base."`.`".$this->addonType."` (`user` ,`name` ,`Description` ,`file`,`date` ,`available`) 
+            VALUES ('".$_SESSION["id"]."', '".$kartName."', '".$kartDescription."', '".$kartName.".zip"."', '".date("Y-m-d")."', '1');") or die(mysql_error());
             if (isset($_FILES['icon']) && $_FILES['icon']['type'] == "image/png") {
                 $chemin_destination = $dirUpload.'icon/';
                 move_uploaded_file($_FILES['icon']['tmp_name'], $chemin_destination.$kartName.".png");
@@ -323,7 +326,7 @@ class coreAddon
                 $chemin_destination = $dirUpload.'image/';
                 move_uploaded_file($_FILES['image']['tmp_name'], $chemin_destination.$kartName.".png");
             }
-            else
+            elseif($this->addonType!="blender")
             {
                 echo _("Please re-upload your image. It must be a png.")."<br />";
             }

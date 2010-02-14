@@ -61,7 +61,7 @@ include("include/top.php");
 function loadAddons()
 {
     global $addon, $dirDownload, $dirUpload, $js;
-    if($_GET['addons'] == "karts" or $_GET['addons'] == "tracks"  or $_GET['addons'] == "file"  or $_GET['addons'] == "help")
+    if($_GET['addons'] == "karts" or $_GET['addons'] == "tracks"  or $_GET['addons'] == "file"  or $_GET['addons'] == "blender")
     {
         $addonLoader = new coreAddon($_GET['addons']);
         $addonLoader->loadAll();

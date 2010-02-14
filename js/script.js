@@ -97,6 +97,12 @@ $(document).ready(function () {
     $('ul.menu_body li a').mouseout(function () {
     $(this).animate({ fontSize: "12px", paddingLeft: "0px" }, 50 );
     });
+    $('#advance_button').click(function () {
+    //if($("#advanced").css("margin-right")!= "279px") $("#advanced").animate({ marginRight: "279px" }, 150 );
+    //else  $("#advanced").animate({ marginRight: "1px" }, 150 );
+    if($("#content_advanced").css("width")!= "300px") $("#content_advanced").animate({ width: "300px" }, 150 );
+    else  $("#content_advanced").animate({ width: "0px" }, 150 );
+    });
 });
 
 function load_jquery()

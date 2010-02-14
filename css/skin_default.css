@@ -342,3 +342,39 @@ color:brown;
 {
 margin-bottom:5px;
 }
+
+
+/*********** Menu advanced **************/
+#advanced
+{
+    position:absolute;
+    right:0px;
+    top:50px;
+    margin-right:0px;
+}
+#content_advanced
+{
+    width:0px;
+    background-color:black;
+    height:500px;
+    position:relative;
+    float:right;
+    color:white;
+    overflow:hidden;
+}
+#advanced a {
+color:#b50404;
+font-weight:bold;
+}
+#advanced a:hover {
+color:white;
+}
+#advanced .news_home
+{
+    width:300px;
+}
+/********** Disbale border for links *******************/
+#advanced a:focus {
+    outline:0;
+    border:none;
+}

@@ -58,7 +58,7 @@ include("include/config.php");
         echo fgets($fichier);
         fclose($fichier);
         echo '<hr />';
-		$reqSql = mysql_query("SELECT * FROM history LIMIT 7") or die(mysql_error());
+		$reqSql = mysql_query("SELECT * FROM history WHERE `history`.`action` = 'add' LIMIT 7") or die(mysql_error());
 		while($history = mysql_fetch_array($reqSql))
 		{
 		    if($_SESSION['range']['manageaddons'] || $history['action'] == "add")
