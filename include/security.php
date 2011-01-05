@@ -60,7 +60,7 @@ if($security != "")
 	if($USER_LOGGED == false)
 	{
 		include("login.php");
-	exit();
+	    exit();
 	}
 }
 ?>

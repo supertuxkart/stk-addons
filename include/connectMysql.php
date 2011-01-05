@@ -15,22 +15,12 @@
                                                                               
  You should have received a copy of the GNU General Public License along with 
  stkaddons.  If not, see <http://www.gnu.org/licenses/>.   */
-?>
-<?php
-/***************************************************************************
-Project: STK Addon Manager
 
-File: connnectMysql.php
-Version: 1
-Licence: GPLv3
-Description: page to connect to mysql
+/* This file is deprecated and shouldn't be used anymore. */
 
-***************************************************************************/
 include_once("config.php");
 include_once("bbcode.php");
 include_once("coreAddon.php");
 include_once("coreUser.php");
-mysql_connect('localhost', $db_user, $db_pass);
-
-mysql_select_db($base)or die(mysql_error());
+include_once("sql.php");
 ?>

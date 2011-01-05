@@ -29,18 +29,13 @@ Description: index page
 $security ="";
 include("include/security.php");
 include("include/top.php");
-include("config.php");
+include_once("config.php");
 ?>
 	</head>
 	<body>
 		<?php 
 		include("menu.php");
 		?>
-		<div id="old_site">
-		<a href="/0.6">
-		<?php
-		echo "Old site : 0.6";
-		?></a></div>
 		<img id="logo_center" src="image/logo_large.png" />
 		
 		<div id="news_div">

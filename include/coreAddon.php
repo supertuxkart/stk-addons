@@ -38,27 +38,34 @@ class coreAddon
     {
         $this->addonType = $type;
     }
+
     function selectById($id)
     {
         $this->reqSql = mysql_query("SELECT * FROM ".$this->addonType." WHERE `".$this->addonType."`.`id` =".$id." LIMIT 1 ;");
         $this->addonCurrent = mysql_fetch_array($this->reqSql);
     }
+
     function selectByUser($id)
     {
         $this->reqSql = mysql_query("SELECT * FROM ".$this->addonType." WHERE `".$this->addonType."`.`user` =".$id." ;");
     }
+
     function loadAll()
     {
-        $this->reqSql = mysql_query("SELECT * FROM ".$this->addonType) or die(mysql_error());
+        $this->reqSql = getAllFromTable($this->addonType);
     }
+
     function next()
     {
         $succes = true;
-        $this->addonCurrent = mysql_fetch_array($this->reqSql) or $succes = false;
+        $this->addonCurrent = sql_next($this->reqSql);
+        if(!$this->addonCurrent)
+        {
+            $succes = false;
+        }
         return $succes;
     }
-    
-    //TODO : remove all function set* and replace them by a function setInformation($value, $type)
+
     function setAvailable()
     {
         global $base;
@@ -80,6 +87,7 @@ class coreAddon
             else mysql_query("UPDATE `".$base."`.`".$this->addonType."` SET `available` = '0' WHERE `".$this->addonType."`.`id` =".$this->addonCurrent['id']." LIMIT 1 ;");
         }
     }
+
     function setDescription($newDesc)
     {
         global $base;
@@ -88,7 +96,7 @@ class coreAddon
             mysql_query("UPDATE `".$base."`.`".$this->addonType."` SET `Description` = '".$newDesc."' WHERE `".$this->addonType."`.`id` =".$this->addonCurrent['id']." LIMIT 1 ;");
         }
     }
-    
+
     function setFile()
     {
         global $base, $dirUpload;
@@ -97,19 +105,23 @@ class coreAddon
         {
             if($_POST['fileType']!="icon" || $this->addonType!="tracks")
             {
-            if (isset($_FILES['fileSend'])) {
-            echo $_POST['fileType'];
-                $chemin_destination = $dirUpload.$_POST['fileType'].'/';
-        		if(file_exists($chemin_destination.$this->addonCurrent[$_POST['fileType']]))
+                if (isset($_FILES['fileSend']))
                 {
-                unlink($chemin_destination.$this->addonCurrent[$_POST['fileType']]);
+                    echo $_POST['fileType'];
+                    $chemin_destination = $dirUpload.$_POST['fileType'].'/';
+            		if(file_exists($chemin_destination.$this->addonCurrent[$_POST['fileType']]))
+                    {
+                        /* Remove the existing file before copy the new one. */
+                        /* FIXME: is it really needed? */
+                        unlink($chemin_destination.$this->addonCurrent[$_POST['fileType']]);
+                    }
+                    /* Move the file which has been sent to it permanent location. */
+                    move_uploaded_file($_FILES['fileSend']['tmp_name'], $chemin_destination.$this->addonCurrent[$_POST['fileType']]);
                 }
-                move_uploaded_file($_FILES['fileSend']['tmp_name'], $chemin_destination.$this->addonCurrent[$_POST['fileType']]);
-            }
             }
         }
     }
-    
+
     function setStkVersion($version)
     {
         global $base;
@@ -118,7 +130,7 @@ class coreAddon
             mysql_query("UPDATE `".$base."`.`".$this->addonType."` SET `STKVersion` = '".$version."' WHERE `".$this->addonType."`.`id` =".$this->addonCurrent['id']." LIMIT 1 ;");
         }
     }
-    
+
     function setInformation($info, $value)
     {
         global $base;
@@ -151,7 +163,7 @@ class coreAddon
             }
         }
     }
-    
+
     //this function is only available for moderators
     function remove()
     {
@@ -161,6 +173,7 @@ class coreAddon
             mysql_query("DELETE FROM `".$base."`.`".$this->addonType."` WHERE `".$this->addonType."`.`id` = ".$this->addonCurrent['id']." LIMIT 1");
         }
     }
+
     function writeInformations()
     {
         global $dirDownload, $dirUpload;
@@ -219,6 +232,7 @@ class coreAddon
         echo '<br /><br /><b>Permalink :</b> ';
         echo 'http://'.$_SERVER['SERVER_NAME'].str_replace("addon.php", "addon-view.php", $_SERVER['SCRIPT_NAME']).'?addons='.$this->addonType.'&amp;title='.$this->addonCurrent['name'];
     }
+
     function writeConfig()
     {
         global $dirDownload, $dirUpload;
@@ -287,6 +301,7 @@ class coreAddon
                 echo '<input type="button" onclick="verify(\'addonRequest(\\\'addon.php?type='.$this->addonType.'&amp;action=remove\\\', '.$this->addonCurrent['id'].')\')" value="Remove" /><br /></form>';
             }
     }
+
     function viewInformations($config=True)
     {
         global $dirDownload, $dirUpload, $USER_LOGGED;
@@ -297,9 +312,7 @@ class coreAddon
             $this->writeConfig();
         }
     }
-    
-    
-    
+
     function addAddon($kartName, $kartDescription)
     {   
         global $base, $dirUpload;
@@ -309,11 +322,10 @@ class coreAddon
         $sql =  mysql_fetch_array($existSql) or $exist = false;
         if($exist == false && $kartName != null)
         {
-            if($this->addonType!="blender") mysql_query("INSERT INTO `".$base."`.`".$this->addonType."` (`user` ,`name` ,`Description` ,`file` ,`image` ,`icon` ,`date` ,`available` ,`version`, `STKVersion`) 
-            VALUES ('".$_SESSION["id"]."', '".$kartName."', '".$kartDescription."', '".$kartName.".zip"."', '".$kartName.".png"."', '".$kartName.".png"."', '".date("Y-m-d")."', '0', '1', '0.7');") or die(mysql_error());
-            else mysql_query("INSERT INTO `".$base."`.`".$this->addonType."` (`user` ,`name` ,`Description` ,`file`,`date` ,`available`) 
-            VALUES ('".$_SESSION["id"]."', '".$kartName."', '".$kartDescription."', '".$kartName.".zip"."', '".date("Y-m-d")."', '1');") or die(mysql_error());
-            if (isset($_FILES['icon']) && $_FILES['icon']['type'] == "image/png") {
+            mysql_query("INSERT INTO `".$base."`.`".$this->addonType."` (`user` ,`name` ,`Description` ,`file`,`date` ,`available`) 
+                         VALUES ('".$_SESSION["id"]."', '".$kartName."', '".$kartDescription."', '".$kartName.".zip"."', '".date("Y-m-d")."', '1');") or die(mysql_error());
+            if (isset($_FILES['icon']) && $_FILES['icon']['type'] == "image/png")
+            {
                 $chemin_destination = $dirUpload.'icon/';
                 move_uploaded_file($_FILES['icon']['tmp_name'], $chemin_destination.$kartName.".png");
 
@@ -322,7 +334,8 @@ class coreAddon
             {
                 echo _("Please re-upload your icon. It must be a png.")."<br />";
             }
-            if (isset($_FILES['image']) && $_FILES['image']['type'] == "image/png") {
+            if (isset($_FILES['image']) && $_FILES['image']['type'] == "image/png")
+            {
                 $chemin_destination = $dirUpload.'image/';
                 move_uploaded_file($_FILES['image']['tmp_name'], $chemin_destination.$kartName.".png");
             }
@@ -345,6 +358,8 @@ class coreAddon
         echo '</div>';
         $this->addonCurrent = mysql_fetch_array($this->reqSql);
     }
+
+    /** To get the permanent link of the current addon */ 
     function permalink()
     {
         return 'addon-view.php?addons='.$this->addonType.'&amp;title='.$this->addonCurrent['name'];

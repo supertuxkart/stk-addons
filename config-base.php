@@ -17,11 +17,13 @@
  stkaddons.  If not, see <http://www.gnu.org/licenses/>.   */
 ?>
 <?php
-$base="stkbase";
 $dirUpload = "/media/serveur/stkaddons/upload/";
 $dirDownload = "http://127.0.0.1/stkaddons/upload/";
-$db_user = 'root';
-$db_pass = 'dbpassword';
 $style="default";
 $admin = "yourname@example.com";
+
+define("DB_USER", 'root');
+define("DB_PASSWORD", 'pass');
+define("DB_NAME", 'stkbase');
+define("DB_HOST", 'localhost');
 ?>
