@@ -18,10 +18,10 @@
 ?>
 <?php
 $base="stkbase";
-$dirUpload = "/media/serveur/stk/upload/";
-$dirDownload = "http://127.0.0.1/stk/upload/";
+$dirUpload = "/media/serveur/stkaddons/upload/";
+$dirDownload = "http://127.0.0.1/stkaddons/upload/";
 $db_user = 'root';
-$db_pass = 'lucmat';
+$db_pass = 'dbpassword';
 $style="default";
-$admin = "xapantu@gmail.com";
+$admin = "yourname@example.com";
 ?>
