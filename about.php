@@ -30,7 +30,7 @@ Description: credits page
 $security ="";
 include("include/security.php");
 include("include/top.php");
-include("include/config.php");
+include("config.php");
 ?>
 	</head>
 	<body>

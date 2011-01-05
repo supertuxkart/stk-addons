@@ -26,7 +26,7 @@ Licence: GPLv3
 Description: file where all fonctions are
 
 ***************************************************************************/
-include("config.php");
+include_once("../config.php");
 include_once("coreUser.php");
 class coreAddon
 {
