@@ -21,25 +21,33 @@ along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
 mysql_connect(DB_HOST, DB_USER, DB_PASSWORD);
 mysql_select_db(DB_NAME) or die(mysql_error());
 
-function getAllFromTable($table)
+function sql_get_all($table)
 {
     return mysql_query("SELECT * FROM ".$table);
 }
-function getAllFromTableWhere($table, $property, $value)
+
+function sql_get_all_where($table, $property, $value)
 {
-    return mysql_query("SELECT * FROM ".DB_PREFIX.$table." WHERE `$property` = '$value'");
+    return mysql_query("SELECT * FROM ".$table." WHERE `$property` = '$value'");
 }
-function nextItem($sql_query)
+
+function sql_update($table, $property_select, $value_select, $property_change, $new_value)
 {
-    return mysql_fetch_array($sql_query);
-}
-function update($table, $property_select, $value_select, $property_change, $new_value)
-{
-    return mysql_query("UPDATE `".DB_NAME."`.`".DB_PREFIX.$table."`
+    $request = "UPDATE `".DB_NAME."`.`".$table."`
                         SET `$property_change` =  '$new_value'
-                        WHERE `".DB_PREFIX.$table."`.`$property_select` = $value_select;") or die(mysql_error());
+                        WHERE `".$table."`.`$property_select` = $value_select;";
+    //echo $request;
+    return mysql_query($request) or die(mysql_error());
 }
-function insert($table, $properties, $values)
+
+function sql_remove_where($table, $property, $value)
+{
+    $request = "DELETE FROM ".$table." WHERE `$property` = '$value'";
+    //echo $request;
+    return mysql_query($request) or die(mysql_error());
+}
+
+function sql_insert($table, $properties, $values)
 {
     $field = "";
     $first= true;

@@ -28,15 +28,16 @@ Description: security
 ***************************************************************************/
 session_start();
 include("connectMysql.php");
-$USER_LOGGED = false;
+$auth = false;
+$USER_LOGGED = isset($_SESSION["login"]);
 if($security != "")
 {
-	$USER_LOGGED = false;
+	$aut = false;
 	if(isset($_SESSION["login"]))
 	{
-		if($_SESSION["range"][$security] == true)
+		if($_SESSION["range"][$security] ==true)
 		{
-			$USER_LOGGED = true;
+			$auth=true;
 		}
 		else
 		{
@@ -57,10 +58,10 @@ if($security != "")
 			<?php
 		}
 	}
-	if($USER_LOGGED == false)
+	if($auth ==false)
 	{
 		include("login.php");
-	    exit();
+	exit();
 	}
 }
 ?>

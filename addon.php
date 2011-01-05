@@ -67,7 +67,7 @@ elseif($action != "" && $action != "file")
 	$addon->setInformation($action, $value);
 	$addon->selectById($id);
 }
-elseif($action == "remove")
+if($action == "remove")
 {
 	$addon->remove();
 }

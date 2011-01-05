@@ -23,4 +23,5 @@ include_once("bbcode.php");
 include_once("coreAddon.php");
 include_once("coreUser.php");
 include_once("sql.php");
+
 ?>

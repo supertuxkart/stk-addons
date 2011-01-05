@@ -34,6 +34,7 @@ class coreAddon
     var $addonType;
     var $reqSql;
     var $addonCurrent;
+
     function coreAddon($type)
     {
         $this->addonType = $type;
@@ -41,18 +42,18 @@ class coreAddon
 
     function selectById($id)
     {
-        $this->reqSql = mysql_query("SELECT * FROM ".$this->addonType." WHERE `".$this->addonType."`.`id` =".$id." LIMIT 1 ;");
-        $this->addonCurrent = mysql_fetch_array($this->reqSql);
+        $this->reqSql = sql_get_all_where($this->addonType, 'id', $id);
+        $this->addonCurrent = sql_next($this->reqSql);
     }
 
     function selectByUser($id)
     {
-        $this->reqSql = mysql_query("SELECT * FROM ".$this->addonType." WHERE `".$this->addonType."`.`user` =".$id." ;");
+        $this->reqSql = sql_get_all_where($this->addonType, "user", $id);
     }
 
     function loadAll()
     {
-        $this->reqSql = getAllFromTable($this->addonType);
+        $this->reqSql = sql_get_all($this->addonType);
     }
 
     function next()
@@ -68,79 +69,55 @@ class coreAddon
 
     function setAvailable()
     {
-        global $base;
-        if($_SESSION['range']['manageaddons'] == true)
+        if($USER_LOGGED && $_SESSION['range']['manageaddons'] == true)
         {
-            if($this->addonCurrent['available'] == 0)
-            {
-                mysql_query("UPDATE `".$base."`.`".$this->addonType."` SET `available` = '1' WHERE `".$this->addonType."`.`id` =".$this->addonCurrent['id']." LIMIT 1 ;");
-                mysql_query("INSERT INTO `".$base."`.`history` (
-                `date` ,
-                `id` ,
-                `user` ,
-                `action` ,
-                `option`
-                )
-                VALUES (
-                '".date("Y-m-d G:i:s")."', NULL , '".$this->addonCurrent['user']."', 'add', '".$this->addonType."\n".$this->addonCurrent['id']."');");
-            }
-            else mysql_query("UPDATE `".$base."`.`".$this->addonType."` SET `available` = '0' WHERE `".$this->addonType."`.`id` =".$this->addonCurrent['id']." LIMIT 1 ;");
-        }
-    }
-
-    function setDescription($newDesc)
-    {
-        global $base;
-        if($_SESSION['range']['manageaddons'] == true|| $this->addonCurrent['user'] == $_SESSION['id'])
-        {
-            mysql_query("UPDATE `".$base."`.`".$this->addonType."` SET `Description` = '".$newDesc."' WHERE `".$this->addonType."`.`id` =".$this->addonCurrent['id']." LIMIT 1 ;");
+            /* if the addons is already available, we want to deactivate it :
+                $is_available = abs(1 - 1) = 0
+               else, it isn't and we want to activate it:
+                $is_available = abs(0 - 1) = 1
+             */
+            $is_available = abs($this->addonCurrent['available'] - 1);
+            sql_update($this->addonType, "id",
+                       $this->addonCurrent['id'],
+                       "available",
+                       $is_available);
         }
     }
 
     function setFile()
     {
-        global $base, $dirUpload;
-        echo $type;
-        if($_SESSION['range']['manageaddons'] == true|| $this->addonCurrent['user'] == $_SESSION['id'])
+        if($_SESSION['range']['manageaddons'] == true || $this->addonCurrent['user'] == $_SESSION['id'])
         {
-            if($_POST['fileType']!="icon" || $this->addonType!="tracks")
+            if (isset($_FILES['fileSend']))
             {
-                if (isset($_FILES['fileSend']))
+                echo $_POST['fileType'];
+                $file_path = UP_LOCATION.$_POST['fileType'].'/'.$this->addonCurrent[post('fileType')];
+        		if(file_exists($file_path))
                 {
-                    echo $_POST['fileType'];
-                    $chemin_destination = $dirUpload.$_POST['fileType'].'/';
-            		if(file_exists($chemin_destination.$this->addonCurrent[$_POST['fileType']]))
-                    {
-                        /* Remove the existing file before copy the new one. */
-                        /* FIXME: is it really needed? */
-                        unlink($chemin_destination.$this->addonCurrent[$_POST['fileType']]);
-                    }
-                    /* Move the file which has been sent to it permanent location. */
-                    move_uploaded_file($_FILES['fileSend']['tmp_name'], $chemin_destination.$this->addonCurrent[$_POST['fileType']]);
+                    /* Remove the existing file before copy the new one. */
+                    /* FIXME: is it really needed? */
+                    unlink($file_path);
                 }
+                /* Move the file which has been sent to it permanent location. */
+                move_uploaded_file($_FILES['fileSend']['tmp_name'], $file_path);
             }
         }
     }
 
-    function setStkVersion($version)
-    {
-        global $base;
-        if($_SESSION['range']['manageaddons'] == true|| $this->addonCurrent['user'] == $_SESSION['id'])
-        {
-            mysql_query("UPDATE `".$base."`.`".$this->addonType."` SET `STKVersion` = '".$version."' WHERE `".$this->addonType."`.`id` =".$this->addonCurrent['id']." LIMIT 1 ;");
-        }
-    }
-
+    /** Set an information of the addon.
+        \param $info The name of the information (e.g. 'name', 'version')
+        \param $value The new value of the information (e.g. 'Tux', 'Adiumy')
+    */
     function setInformation($info, $value)
     {
-        global $base;
         if($_SESSION['range']['manageaddons'] == true || $this->addonCurrent['user'] == $_SESSION['id'])
         {
-            $exist = True;
-            $propertie_sql = mysql_query("SELECT * FROM properties WHERE `properties`.`type` = '".$this->addonType."' AND `properties`.`lock` != 1 AND `properties`.`name` = '".$info."';");
-            $propertie = mysql_fetch_array($propertie_sql) or $exist = false;
-            $info =str_replace(" ", "", $info);
-            if($exist)
+            $propertie_sql = mysql_query("SELECT *
+                                          FROM properties
+                                          WHERE `properties`.`type` = '".$this->addonType."'
+                                          AND `properties`.`lock` != 1
+                                          AND `properties`.`name` = '".$info."';");
+            if($propertie = mysql_fetch_array($propertie_sql))
             {
                 if($propertie['typefield'] == "file")
                 {
@@ -148,101 +125,140 @@ class coreAddon
                 }
                 else
                 {
-                    mysql_query("UPDATE `".$base."`.`".$this->addonType."` SET `".$info."` = '".$value."' WHERE `".$this->addonType."`.`id` =".$this->addonCurrent['id']." LIMIT 1 ;") or die(mysql_error());
+                    sql_update($this->addonType, "id", $this->addonCurrent['id'], $propertie['name'], $value);
 
                 }
-                mysql_query("INSERT INTO `".$base."`.`history` (
-                `date` ,
-                `id` ,
-                `user` ,
-                `action` ,
-                `option`
-                )
-                VALUES (
-                '".date("Y-m-d G:i:s")."', NULL , '".$_SESSION['id']."', 'change ".$info."', '".$this->addonType."\n".$this->addonCurrent['id']."');");
+            }
+            else
+            {
+                echo "Error, I can't find this property.<br />";
             }
         }
     }
 
-    //this function is only available for moderators
+    /** Remove the selected addons. */
     function remove()
     {
         global $base;
         if($_SESSION['range']['manageaddons'] == true)
         {
-            mysql_query("DELETE FROM `".$base."`.`".$this->addonType."` WHERE `".$this->addonType."`.`id` = ".$this->addonCurrent['id']." LIMIT 1");
+            sql_remove_where($this->addonType, "id", $this->addonCurrent['id']);
         }
     }
 
+    /** Print the information of the addon, it name, it description, it
+      * version...
+      */
     function writeInformations()
     {
         global $dirDownload, $dirUpload;
         //div for jqery TODO:add jquery effects
-        echo '<div id="accordion">';
-        echo '<div>';
-        
-        //write image
-        echo '<img class="preview" src="image.php?type=big&amp;pic='.$dirUpload.'image/'.$this->addonCurrent['image'].'" />';
-        echo '<table><tr><td><b>'._("Name :").' </b></td><td>';
-        
-        //write name
-        echo $this->addonCurrent['name'];
-        echo '</td></tr><tr><td><b>'._("Description :").' </b></td><td>';
-        
-        // write description
-        echo bbc($this->addonCurrent['Description']);
-        
-        //write revision
-        echo '</td></tr><tr><td><b>'._("Revision :").' </b></td><td>';
-        echo $this->addonCurrent['version'];
-        
-        //write version of STK
-        echo '</td></tr><tr><td><b>'._("Version of STK :").' </b></td><td>';
-        echo $this->addonCurrent['STKVersion'];
-        
-        //load class user
-        $user = new coreUser('users');
-        
-        //select submiter of addons TODO:add author 
-        $user->selectById($this->addonCurrent['user']);
-        
-        //write author
-        echo '</td></tr><tr><td><b>';
-        if($this->addonCurrent['Author'] == "")
-        {
-            echo _("Author :");
-        }
-        else
-        {
-            echo _("Submitter :");
-        }
-        echo ' </b></td><td><a href="account.php?title='.$user->addonCurrent['login'].'">'.$user->addonCurrent['login'].'</a></td></tr>';
-        if($this->addonCurrent['Author'] != "")
-        {
-            echo '<tr><td><b>';
-            echo _("Author :");
-            echo ' </b></td><td>'.bbc($this->addonCurrent['Author']).'</td></tr>';
-        }
-        echo '</table></div>';
-        
-        //write download link
-        echo '<a href="'.$dirDownload.'file/'.$this->addonCurrent['file'].'"><img src="image/download.png" alt="Download" title="Download" /></a>';
-        
-        //write permalink
-        echo '<br /><br /><b>Permalink :</b> ';
-        echo 'http://'.$_SERVER['SERVER_NAME'].str_replace("addon.php", "addon-view.php", $_SERVER['SCRIPT_NAME']).'?addons='.$this->addonType.'&amp;title='.$this->addonCurrent['name'];
+        ?>
+        <div id="accordion">
+        <div>
+        <img class="preview" src="image.php?type=big&amp;pic=<?=UP_LOCATION.'image/'.$this->addonCurrent['image']?>" />
+        <table>
+            <tr>
+                <td>
+                    <span id="addons_informations_name">
+                        <?=_("Name :")?>
+                    </span>
+                </td>
+                <td>
+                    <?=$this->addonCurrent['name']?>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span id="addons_informations_description">
+                        <?=_("Description :")?>
+                    </span>
+                </td>
+                <td>
+                    <?=bbc($this->addonCurrent['Description'])?>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span id="addons_informations_revision">
+                        <?=_("Revision :")?>
+                    </span>
+                </td>
+                <td>
+                    <?=$this->addonCurrent['version']?>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span id="addons_informations_stkversion">
+                        <?=_("Version of STK :")?>
+                    </span>
+                </td>
+                <td>
+                    <?=$this->addonCurrent['STKVersion']?>
+                    <?php
+                    //load class user
+                    $user = new coreUser('users');
+                    
+                    //select submiter of addons TODO:add author 
+                    $user->selectById($this->addonCurrent['user']);
+                    
+                    ?>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span id="addons_informations_name">
+                        <?php
+                        if($this->addonCurrent['Author'] == "")
+                        {
+                            echo _("Author :");
+                        }
+                        else
+                        {
+                            echo _("Submitter :");
+                        }
+                        ?>
+                    </span>
+                </td>
+                <td>
+                    <a href="account.php?title=<?=$user->addonCurrent['login']?>"><?=$user->addonCurrent['login']?></a>
+                </td>
+            </tr>
+            <?php
+            if($this->addonCurrent['Author'] != "")
+            {
+                echo '<tr><td><b>';
+                echo _("Author :");
+                echo ' </b></td><td>'.bbc($this->addonCurrent['Author']).'</td></tr>';
+            }
+            ?>
+        </table>
+        </div>
+
+        <a href="<?=DOWN_LOCATION.'file/'.$this->addonCurrent['file']?>"><img src="image/download.png" alt="Download" title="Download" /></a>
+
+        <br /><br /><b>Permalink :</b>
+        http://<?=$_SERVER['SERVER_NAME'].str_replace("addon.php", "addon-view.php", $_SERVER['SCRIPT_NAME']).'?addons='.$this->addonType.'&amp;title='.$this->addonCurrent['name']?>
+        <?php
     }
 
+    /* FIXME: this function needs a lot of cleanup. */
     function writeConfig()
     {
         global $dirDownload, $dirUpload;
         echo '<hr /><h3>Configuration</h3>';
             ?>
-            <div class="help-hidden"><span class="help-hidden">Help</span><div>BBCode : 
-            <br />strong : [b]....[/b]
-            <br />italic : [i]....[/i]</div></div>
+            <div class="help-hidden">
+                <span class="help-hidden">Help</span>
+                <div>
+                    BBCode:
+                    <br />strong : [b]....[/b]
+                    <br />italic : [i]....[/i]
+                </div>
+            </div>
+            <form action="#" method="GET" >
             <?php
-            echo '<form action="#" method="GET" >';
             $propertie_sql = mysql_query("SELECT * FROM properties WHERE `properties`.`type` = '".$this->addonType."' AND `properties`.`lock` != 1;");
             $file_str = "";
             while($propertie = mysql_fetch_array($propertie_sql))
@@ -304,7 +320,7 @@ class coreAddon
 
     function viewInformations($config=True)
     {
-        global $dirDownload, $dirUpload, $USER_LOGGED;
+        global $USER_LOGGED;
         $this->writeInformations();
         //write configuration for the submiter and administrator
         if($USER_LOGGED && ($_SESSION['range']['manageaddons']|| $this->addonCurrent['user'] == $_SESSION['id']) and $config)
@@ -313,6 +329,7 @@ class coreAddon
         }
     }
 
+    /* FIXME: please cleanup me! */
     function addAddon($kartName, $kartDescription)
     {   
         global $base, $dirUpload;

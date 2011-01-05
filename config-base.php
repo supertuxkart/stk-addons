@@ -26,4 +26,6 @@ define("DB_USER", 'root');
 define("DB_PASSWORD", 'pass');
 define("DB_NAME", 'stkbase');
 define("DB_HOST", 'localhost');
+define("UP_LOCATION", $dirUpload);
+define("DOWN_LOCATION", $dirDownload);
 ?>
