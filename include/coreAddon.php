@@ -26,7 +26,7 @@ Licence: GPLv3
 Description: file where all fonctions are
 
 ***************************************************************************/
-include_once("../config.php");
+include_once("config.php");
 include_once("coreUser.php");
 class coreAddon
 {
@@ -289,10 +289,10 @@ class coreAddon
     }
     function viewInformations($config=True)
     {
-        global $dirDownload, $dirUpload;
+        global $dirDownload, $dirUpload, $USER_LOGGED;
         $this->writeInformations();
         //write configuration for the submiter and administrator
-        if(($_SESSION['range']['manageaddons']|| $this->addonCurrent['user'] == $_SESSION['id']) and $config)
+        if($USER_LOGGED && ($_SESSION['range']['manageaddons']|| $this->addonCurrent['user'] == $_SESSION['id']) and $config)
         {
             $this->writeConfig();
         }

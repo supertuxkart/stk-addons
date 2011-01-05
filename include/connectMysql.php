@@ -26,7 +26,7 @@ Licence: GPLv3
 Description: page to connect to mysql
 
 ***************************************************************************/
-include_once("../config.php");
+include_once("config.php");
 include_once("bbcode.php");
 include_once("coreAddon.php");
 include_once("coreUser.php");

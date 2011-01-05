@@ -28,6 +28,7 @@ Description: page who is called in ajax and who give kart and track informations
 ***************************************************************************/
 $security ="";
 include("include/security.php");
+include_once("include/var.php");
 
 if(!isset($_COOKIE['lang']))
 {
@@ -40,18 +41,18 @@ bindtextdomain('translations', 'locale');
 textdomain('translations');
 bind_textdomain_codeset('translations', 'UTF-8');
 
-$type= mysql_real_escape_string($_GET['type']);
-$action = mysql_real_escape_string($_GET['action']);
+$type = get('type');
+$action = get('action');
 
-if($action=="file")
+if($action == "file")
 {
-    $value = mysql_real_escape_string($_GET['value']);
-    $id = mysql_real_escape_string($_GET['id']);
+    $value = get('value');
+    $id = get('id');
 }
 else
 {
-    $value = mysql_real_escape_string($_POST['value']);
-    $id = mysql_real_escape_string($_POST['id']);
+    $value = post('value');
+    $id = post('id');
 }
 
 $addon = new coreAddon($type);
@@ -61,17 +62,16 @@ if($action == "available")
 	$addon->setAvailable();
 	$addon->selectById($id);
 }
-elseif($action != "" && $action!="file")
+elseif($action != "" && $action != "file")
 {
 	$addon->setInformation($action, $value);
 	$addon->selectById($id);
 }
-if($action == "remove")
+elseif($action == "remove")
 {
 	$addon->remove();
-	exit();
 }
-if($action == "file")
+elseif($action == "file")
 {
 	?>
 	<html>
@@ -83,5 +83,7 @@ if($action == "file")
 	$addon->setFile();
 	exit();
 }
-$addon->viewInformations();
-?>
+else
+{
+    $addon->viewInformations();
+}?>
