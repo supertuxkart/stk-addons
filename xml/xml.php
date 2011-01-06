@@ -45,7 +45,7 @@ $addon->loadAll();
 while($addon->next())
 {
 ?>
-    <track>
+    <track
         name="<?=$addon->addonCurrent["name"]?>"
         description="<?=$addon->addonCurrent["Description"]?>"
         version="<?=$addon->addonCurrent["version"]?>"
@@ -53,7 +53,7 @@ while($addon->next())
         file="<?=str_replace(" ", "%20", 'file/'.$addon->addonCurrent["file"])?>"
         testing="<?=$addon->addonCurrent["available"]?>"
         icon="<?=str_replace(" ", "%20", 'icon/'.$addon->addonCurrent["icon"])?>"
-    </track>
+    />
 <?php
 }
 echo "</addons>";
