@@ -339,8 +339,8 @@ class coreAddon
         $sql =  mysql_fetch_array($existSql) or $exist = false;
         if($exist == false && $kartName != null)
         {
-            mysql_query("INSERT INTO `".$base."`.`".$this->addonType."` (`user` ,`name` ,`Description` ,`file`,`date` ,`available`) 
-                         VALUES ('".$_SESSION["id"]."', '".$kartName."', '".$kartDescription."', '".$kartName.".zip"."', '".date("Y-m-d")."', '1');") or die(mysql_error());
+            mysql_query("INSERT INTO `".DB_NAME."`.`".$this->addonType."` (`user` ,`name` ,`Description` ,`file`, `icon`, `image`, `date` ,`available`) 
+                         VALUES ('".$_SESSION["id"]."', '".$kartName."', '".$kartDescription."', '".$kartName.".zip"."', '".$kartName.".png"."', '".$kartName.".png"."', '".date("Y-m-d")."', '1');") or die(mysql_error());
             if (isset($_FILES['icon']) && $_FILES['icon']['type'] == "image/png")
             {
                 $chemin_destination = $dirUpload.'icon/';
