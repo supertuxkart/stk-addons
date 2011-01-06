@@ -29,15 +29,15 @@ $addon->loadAll();
 while($addon->next())
 {
 ?>
-    <kart>
-        <name><?=$addon->addonCurrent["name"]?></name>
-        <description><?=$addon->addonCurrent["Description"]?></description>
-        <version><?=$addon->addonCurrent["version"]?></version>
-        <stkversion><?=$addon->addonCurrent["STKVersion"]?></stkversion>
-        <file><?=DOWN_LOCATION.$addon->addonCurrent["file"]?></file>
-        <testing><?=$addon->addonCurrent["available"]?></testing>
-        <icon><?=SITE_ROOT.'/image.php?type=medium&pic=/data/repository/stkaddons/icon/'.$addon->addonCurrent["icon"]?></icon>
-    </kart>
+    <kart
+        name="<?=$addon->addonCurrent["name"]?>"
+        description="<?=$addon->addonCurrent["Description"]?>"
+        version="<?=$addon->addonCurrent["version"]?>"
+        stkversion="<?=$addon->addonCurrent["STKVersion"]?>"
+        file="<?=DOWN_LOCATION.$addon->addonCurrent["file"]?>"
+        testing="<?=$addon->addonCurrent["available"]?>"
+        icon="<?='../icon/'.$addon->addonCurrent["icon"]?>"
+    />
 <?php
 }
 $addon  = new coreAddon('tracks');
@@ -46,13 +46,13 @@ while($addon->next())
 {
 ?>
     <track>
-        <name><?=$addon->addonCurrent["name"]?></name>
-        <description><?=$addon->addonCurrent["Description"]?></description>
-        <version><?=$addon->addonCurrent["version"]?></version>
-        <stkversion><?=$addon->addonCurrent["STKVersion"]?></stkversion>
-        <file><?=DOWN_LOCATION.$addon->addonCurrent["file"]?></file>
-        <testing><?=$addon->addonCurrent["available"]?></testing>
-        <icon><?=SITE_ROOT.'/image.php?type=medium&pic=/data/repository/stkaddons/icon/'.$addon->addonCurrent["icon"]?></icon>
+        name="<?=$addon->addonCurrent["name"]?>"
+        description="<?=$addon->addonCurrent["Description"]?>"
+        version="<?=$addon->addonCurrent["version"]?>"
+        stkversion="<?=$addon->addonCurrent["STKVersion"]?>"
+        file="<?=DOWN_LOCATION.$addon->addonCurrent["file"]?>"
+        testing"<?=$addon->addonCurrent["available"]?>"
+        icon="<?='../icon/'.$addon->addonCurrent["icon"]?>"
     </track>
 <?php
 }
