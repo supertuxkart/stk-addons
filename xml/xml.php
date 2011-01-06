@@ -34,9 +34,9 @@ while($addon->next())
         description="<?=$addon->addonCurrent["Description"]?>"
         version="<?=$addon->addonCurrent["version"]?>"
         stkversion="<?=$addon->addonCurrent["STKVersion"]?>"
-        file="<?='file/'.$addon->addonCurrent["file"]?>"
+        file="<?=str_replace(" ", "%20", 'file/'.$addon->addonCurrent["file"])?>"
         testing="<?=$addon->addonCurrent["available"]?>"
-        icon="<?='icon/'.$addon->addonCurrent["icon"]?>"
+        icon="<?=str_replace(" ", "%20", 'icon/'.$addon->addonCurrent["icon"])?>"
     />
 <?php
 }
@@ -50,9 +50,9 @@ while($addon->next())
         description="<?=$addon->addonCurrent["Description"]?>"
         version="<?=$addon->addonCurrent["version"]?>"
         stkversion="<?=$addon->addonCurrent["STKVersion"]?>"
-        file="<?='file/'.$addon->addonCurrent["file"]?>"
+        file="<?=str_replace(" ", "%20", 'file/'.$addon->addonCurrent["file"])?>"
         testing="<?=$addon->addonCurrent["available"]?>"
-        icon="<?='icon/'.$addon->addonCurrent["icon"]?>"
+        icon="<?=str_replace(" ", "%20", 'icon/'.$addon->addonCurrent["icon"])?>"
     </track>
 <?php
 }
