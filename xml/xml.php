@@ -29,7 +29,7 @@ $addon->loadAll();
 while($addon->next())
 {
 ?>
-    <karts>
+    <kart>
         <name><?=$addon->addonCurrent["name"]?></name>
         <description><?=$addon->addonCurrent["Description"]?></description>
         <version><?=$addon->addonCurrent["version"]?></version>
@@ -37,7 +37,7 @@ while($addon->next())
         <file><?=DOWN_LOCATION.$addon->addonCurrent["file"]?></file>
         <testing><?=$addon->addonCurrent["available"]?></testing>
         <icon><?=SITE_ROOT.'/image.php?type=medium&pic=/data/repository/stkaddons/icon/'.$addon->addonCurrent["icon"]?></icon>
-    </karts>
+    </kart>
 <?php
 }
 $addon  = new coreAddon('tracks');
@@ -45,7 +45,7 @@ $addon->loadAll();
 while($addon->next())
 {
 ?>
-    <tracks>
+    <track>
         <name><?=$addon->addonCurrent["name"]?></name>
         <description><?=$addon->addonCurrent["Description"]?></description>
         <version><?=$addon->addonCurrent["version"]?></version>
@@ -53,7 +53,7 @@ while($addon->next())
         <file><?=DOWN_LOCATION.$addon->addonCurrent["file"]?></file>
         <testing><?=$addon->addonCurrent["available"]?></testing>
         <icon><?=SITE_ROOT.'/image.php?type=medium&pic=/data/repository/stkaddons/icon/'.$addon->addonCurrent["icon"]?></icon>
-    </tracks>
+    </track>
 <?php
 }
 echo "</addons>";
