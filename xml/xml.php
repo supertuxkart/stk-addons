@@ -34,9 +34,9 @@ while($addon->next())
         description="<?=$addon->addonCurrent["Description"]?>"
         version="<?=$addon->addonCurrent["version"]?>"
         stkversion="<?=$addon->addonCurrent["STKVersion"]?>"
-        file="<?=DOWN_LOCATION.$addon->addonCurrent["file"]?>"
+        file="<?='file/'.$addon->addonCurrent["file"]?>"
         testing="<?=$addon->addonCurrent["available"]?>"
-        icon="<?='../icon/'.$addon->addonCurrent["icon"]?>"
+        icon="<?='icon/'.$addon->addonCurrent["icon"]?>"
     />
 <?php
 }
@@ -50,9 +50,9 @@ while($addon->next())
         description="<?=$addon->addonCurrent["Description"]?>"
         version="<?=$addon->addonCurrent["version"]?>"
         stkversion="<?=$addon->addonCurrent["STKVersion"]?>"
-        file="<?=DOWN_LOCATION.$addon->addonCurrent["file"]?>"
-        testing"<?=$addon->addonCurrent["available"]?>"
-        icon="<?='../icon/'.$addon->addonCurrent["icon"]?>"
+        file="<?='file/'.$addon->addonCurrent["file"]?>"
+        testing="<?=$addon->addonCurrent["available"]?>"
+        icon="<?='icon/'.$addon->addonCurrent["icon"]?>"
     </track>
 <?php
 }
