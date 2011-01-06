@@ -28,8 +28,6 @@ $addon  = new coreAddon('karts');
 $addon->loadAll();
 while($addon->next())
 {
-    if($addon->addonCurrent["available"] > 0)
-    {
 ?>
     <karts>
         <name><?=$addon->addonCurrent["name"]?></name>
@@ -41,14 +39,11 @@ while($addon->next())
         <icon><?=SITE_ROOT.'/image.php?type=medium&pic=/data/repository/stkaddons/icon/'.$addon->addonCurrent["icon"]?></icon>
     </karts>
 <?php
-    }
 }
 $addon  = new coreAddon('tracks');
 $addon->loadAll();
 while($addon->next())
 {
-    if($addon->addonCurrent["available"] == 1)
-    {
 ?>
     <tracks>
         <name><?=$addon->addonCurrent["name"]?></name>
@@ -60,7 +55,6 @@ while($addon->next())
         <icon><?=SITE_ROOT.'/image.php?type=medium&pic=/data/repository/stkaddons/icon/'.$addon->addonCurrent["icon"]?></icon>
     </tracks>
 <?php
-    }
 }
 echo "</addons>";
 ?>
