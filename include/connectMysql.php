@@ -18,10 +18,14 @@
 
 /* This file is deprecated and shouldn't be used anymore. */
 
-include_once("config.php");
-include_once("bbcode.php");
-include_once("coreAddon.php");
-include_once("coreUser.php");
-include_once("sql.php");
+if(!defined("ROOT"))
+{
+    define("ROOT", "");
+}
+include_once(ROOT."config.php");
+include_once(ROOT."include/bbcode.php");
+include_once(ROOT."include/coreAddon.php");
+include_once(ROOT."include/coreUser.php");
+include_once(ROOT."include/sql.php");
 
 ?>

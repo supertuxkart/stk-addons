@@ -53,7 +53,7 @@ $_GET['action'] = (isset($_GET['action'])) ? $_GET['action'] : NULL;
 					{
 						$crypt = cryptUrl(12);
 						mysql_query("
-						INSERT INTO `".$base."`.`users` (
+						INSERT INTO `".DB_NAME."`.`users` (
 						`login` ,
 						`pass` ,
 						`date` ,

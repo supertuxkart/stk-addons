@@ -26,8 +26,8 @@ Licence: GPLv3
 Description: file where all fonctions are
 
 ***************************************************************************/
-include_once("config.php");
-include_once("coreUser.php");
+include_once(ROOT."config.php");
+include_once(ROOT."include/coreUser.php");
 class coreAddon
 {
     //e.g. karts or tracks

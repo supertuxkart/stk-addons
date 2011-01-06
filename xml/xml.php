@@ -1,59 +1,64 @@
 <?
-/***************************************************************************
-Project: STK Addon Manager
+/* copyright 2009 Lucas Baudin <xapantu@gmail.com>                 
+                                                                              
+ This file is part of stkaddons.                                 
+                                                                              
+ stkaddons is free software: you can redistribute it and/or      
+ modify it under the terms of the GNU General Public License as published by  
+ the Free Software Foundation, either version 3 of the License, or (at your   
+ option) any later version.                                                   
+                                                                              
+ stkaddons is distributed in the hope that it will be useful, but
+ WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for    
+ more details.                                                                
+                                                                              
+ You should have received a copy of the GNU General Public License along with 
+ stkaddons.  If not, see <http://www.gnu.org/licenses/>.   */
 
-File: index.php
-Version: 1
-Licence: GPLv3
-Description: index page
-
-***************************************************************************/
+define ("ROOT", "../");
 include("../include/connectMysql.php");
 echo "<?xml version=\"1.0\"?>\n";
-echo "<addons  xmlns='http://stkaddons.tuxfamily.org/'>\n";
-$addon  =new coreAddon('karts');
+?>
+<addons  xmlns='http://stkaddons.tuxfamily.org/'>
+<?php
+$addon  = new coreAddon('karts');
 $addon->loadAll();
 while($addon->next())
 {
-	echo "<karts>\n\t";
-	echo "<name>";
-	echo $addon->addonCurrent["name"];
-	echo "</name>\n\t";
-	echo "<description>";
-	echo $addon->addonCurrent["description"];
-	echo "</description>\n\t";
-	echo "<version>";
-	echo $addon->addonCurrent["version"];
-	echo "</version>\n\t";
-	echo "<file>".DOWN_LOCATION;
-	echo $addon->addonCurrent["file"];
-	echo "</file>\n";
-	echo "<icon>";
-	echo 'http://stkaddons.tuxfamily.org/image.php?type=medium&pic=/data/repository/stkaddons/icon/'.$addon->addonCurrent["icon"];
-	echo "</icon>\n";
-	echo "</karts>\n";
+    if($addon->addonCurrent["available"] > 0)
+    {
+?>
+    <karts>
+        <name><?=$addon->addonCurrent["name"]?></name>
+        <description><?=$addon->addonCurrent["Description"]?></description>
+        <version><?=$addon->addonCurrent["version"]?></version>
+        <stkversion><?=$addon->addonCurrent["STKVersion"]?></stkversion>
+        <file><?=DOWN_LOCATION.$addon->addonCurrent["file"]?></file>
+        <testing><?=$addon->addonCurrent["available"]?></testing>
+        <icon><?=SITE_ROOT.'/image.php?type=medium&pic=/data/repository/stkaddons/icon/'.$addon->addonCurrent["icon"]?></icon>
+    </karts>
+<?php
+    }
 }
-$addon  =new coreAddon('tracks');
+$addon  = new coreAddon('tracks');
 $addon->loadAll();
 while($addon->next())
 {
-	echo "<tracks>\n\t";
-	echo "<name>";
-	echo $addon->addonCurrent["name"];
-	echo "</name>\n\t";
-	echo "<description>";
-	echo $addon->addonCurrent["description"];
-	echo "</description>\n\t";
-	echo "<version>";
-	echo $addon->addonCurrent["version"];
-	echo "</version>\n\t";
-	echo "<file>".DOWN_LOCATION;
-	echo $addon->addonCurrent["file"];
-	echo "</file>\n";
-	echo "<icon>";
-	echo 'http://download.tuxfamily.org/stkaddons/icon/icon.png';
-	echo "</icon>\n";
-	echo "</tracks>\n";
+    if($addon->addonCurrent["available"] == 1)
+    {
+?>
+    <tracks>
+        <name><?=$addon->addonCurrent["name"]?></name>
+        <description><?=$addon->addonCurrent["Description"]?></description>
+        <version><?=$addon->addonCurrent["version"]?></version>
+        <stkversion><?=$addon->addonCurrent["STKVersion"]?></stkversion>
+        <file><?=DOWN_LOCATION.$addon->addonCurrent["file"]?></file>
+        <testing><?=$addon->addonCurrent["available"]?></testing>
+        <icon><?=SITE_ROOT.'/image.php?type=medium&pic=/data/repository/stkaddons/icon/'.$addon->addonCurrent["icon"]?></icon>
+    </tracks>
+<?php
+    }
 }
 echo "</addons>";
 ?>

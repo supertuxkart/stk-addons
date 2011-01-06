@@ -27,8 +27,6 @@ Description: file where all fonctions are
 
 ***************************************************************************/
 
-
-
 class coreUser extends coreAddon
 {
     function writeInformations()

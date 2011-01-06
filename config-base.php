@@ -15,8 +15,7 @@
                                                                               
  You should have received a copy of the GNU General Public License along with 
  stkaddons.  If not, see <http://www.gnu.org/licenses/>.   */
-?>
-<?php
+
 $dirUpload = "/media/serveur/stkaddons/upload/";
 $dirDownload = "http://127.0.0.1/stkaddons/upload/";
 $style="default";
@@ -28,4 +27,5 @@ define("DB_NAME", 'stkbase');
 define("DB_HOST", 'localhost');
 define("UP_LOCATION", $dirUpload);
 define("DOWN_LOCATION", $dirDownload);
+define("SITE_ROOT", "http://stkaddons.tuxfamily.org/");
 ?>
