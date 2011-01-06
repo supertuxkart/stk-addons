@@ -21,6 +21,8 @@ include("../include/connectMysql.php");
 echo "<?xml version=\"1.0\"?>\n";
 ?>
 <addons  xmlns='http://stkaddons.tuxfamily.org/'>
+    <news>:)</news>
+    <redirect></redirect>
 <?php
 $addon  = new coreAddon('karts');
 $addon->loadAll();
