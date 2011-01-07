@@ -54,6 +54,7 @@ class coreAddon
     function loadAll()
     {
         $this->reqSql = sql_get_all($this->addonType);
+        return false != $this->reqSql;
     }
 
     function next()
@@ -69,6 +70,7 @@ class coreAddon
 
     function setAvailable()
     {
+        global $USER_LOGGED;
         if($USER_LOGGED && $_SESSION['range']['manageaddons'] == true)
         {
             /* if the addons is already available, we want to deactivate it :
@@ -81,6 +83,11 @@ class coreAddon
                        $this->addonCurrent['id'],
                        "available",
                        $is_available);
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 

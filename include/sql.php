@@ -23,7 +23,16 @@ mysql_select_db(DB_NAME) or die(mysql_error());
 
 function sql_get_all($table)
 {
-    return mysql_query("SELECT * FROM ".$table);
+    $error = true;
+    $sql = mysql_query("SELECT * FROM ".$table) or $error = false;
+    if(!$error)
+    {
+        return false;
+    }
+    else
+    {
+        return $sql;
+    }
 }
 
 function sql_get_all_where($table, $property, $value)
