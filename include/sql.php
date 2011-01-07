@@ -78,6 +78,15 @@ function sql_insert($table, $properties, $values)
 
 function sql_next($sql_query)
 {
-    return mysql_fetch_array($sql_query);
+    $exist = true;
+    $array = mysql_fetch_array($sql_query) or $exist = false;
+    if($exist)
+    {
+        return $array;
+    }
+    else
+    {
+        return false;
+    }
 }
 ?>

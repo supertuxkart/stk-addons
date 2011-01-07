@@ -326,14 +326,16 @@ class coreAddon
     }
 
     /* FIXME: please cleanup me! */
+    /* FIXME: this function needs a _lot_ of a tests. */
     function addAddon($kartName, $kartDescription)
     {   
         global $base, $dirUpload;
         echo '<div id="content">';
-        $existSql= mysql_query("SELECT * FROM `".$this->addonType."` WHERE `".$this->addonType."`.`name` = '".$kartName."'");
-        $exist =true;
-        $sql =  mysql_fetch_array($existSql) or $exist = false;
-        if($exist == false && $kartName != null)
+        $existSql = sql_get_all_where($this->addonType, "name", $kartName);
+
+        $sql =  sql_next($existSql);
+
+        if($sql != false && $kartName != null)
         {
             mysql_query("INSERT INTO `".DB_NAME."`.`".$this->addonType."` (`user` ,`name` ,`Description` ,`file`, `icon`, `image`, `date` ,`available`) 
                          VALUES ('".$_SESSION["id"]."', '".$kartName."', '".$kartDescription."', '".$kartName.".zip"."', '".$kartName.".png"."', '".$kartName.".png"."', '".date("Y-m-d")."', '1');") or die(mysql_error());
