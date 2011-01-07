@@ -160,8 +160,8 @@ class coreAddon
         <table>
             <tr>
                 <td>
-                    <span id="addons_informations_name">
-                        <?=_("Name :")?>
+                    <span class="addon_informations_field" id="addons_informations_name">
+                        <?=_("Name:")?>
                     </span>
                 </td>
                 <td>
@@ -170,8 +170,8 @@ class coreAddon
             </tr>
             <tr>
                 <td>
-                    <span id="addons_informations_description">
-                        <?=_("Description :")?>
+                    <span class="addon_informations_field" id="addons_informations_description">
+                        <?=_("Description:")?>
                     </span>
                 </td>
                 <td>
@@ -180,8 +180,8 @@ class coreAddon
             </tr>
             <tr>
                 <td>
-                    <span id="addons_informations_revision">
-                        <?=_("Revision :")?>
+                    <span class="addon_informations_field" id="addons_informations_revision">
+                        <?=_("Revision:")?>
                     </span>
                 </td>
                 <td>
@@ -190,8 +190,8 @@ class coreAddon
             </tr>
             <tr>
                 <td>
-                    <span id="addons_informations_stkversion">
-                        <?=_("Version of STK :")?>
+                    <span class="addon_informations_field" id="addons_informations_stkversion">
+                        <?=_("Version of STK:")?>
                     </span>
                 </td>
                 <td>
@@ -208,31 +208,27 @@ class coreAddon
             </tr>
             <tr>
                 <td>
-                    <span id="addons_informations_name">
-                        <?php
-                        if($this->addonCurrent['Author'] == "")
-                        {
-                            echo _("Author :");
-                        }
-                        else
-                        {
-                            echo _("Submitter :");
-                        }
-                        ?>
+                    <span class="addon_informations_field" id="addons_informations_name">
+                        <?=_("Author:")?>
                     </span>
                 </td>
+                    <?php
+                    if($this->addonCurrent['Author'] != "")
+                    {
+                    ?>
+                <td>
+                    <?=bbc($this->addonCurrent['Author'])?>
+                </td>
+            </tr>
+            <tr>
+                        <?php
+                        echo _("Submitter:");
+                    }
+                ?>
                 <td>
                     <a href="account.php?title=<?=$user->addonCurrent['login']?>"><?=$user->addonCurrent['login']?></a>
                 </td>
             </tr>
-            <?php
-            if($this->addonCurrent['Author'] != "")
-            {
-                echo '<tr><td><b>';
-                echo _("Author :");
-                echo ' </b></td><td>'.bbc($this->addonCurrent['Author']).'</td></tr>';
-            }
-            ?>
         </table>
         </div>
 
