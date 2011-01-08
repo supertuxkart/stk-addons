@@ -343,9 +343,11 @@ class coreAddon
             {
                 if(!defined("UNIT_TEST"))
                 {
-                    move_uploaded_file($_FILES['file_addon']['tmp_name'], $zip_path);
+                    move_uploaded_file($_FILES['file_addon']['tmp_name'], $zip_path."-uploaded.zip");
                 }
-                $info = read_info_from_zip($zip_path);
+                echo $zip_path."\n";
+                $info = read_info_from_zip($zip_path."-uploaded.zip");
+                repack_zip($zip_path."-uploaded.zip-extract", $zip_path);
                 sql_insert($this->addonType, array('user',
                                                    'name',
                                                    'Description',
@@ -392,7 +394,7 @@ function image_path($name)
 
 function zip_path($name)
 {
-    return UP_LOCATION."file/".$name.".png";
+    return UP_LOCATION."file/".$name.".zip";
 }
 
 function read_info_from_zip($path_zip)
@@ -476,7 +478,6 @@ function read_info_from_zip($path_zip)
                 }
             }
             $writer->flush();
-            repack_zip($path_zip."-extract");
             return $addon_information;
         }
         else
@@ -490,10 +491,10 @@ function read_info_from_zip($path_zip)
     }
 }
 
-function repack_zip($path_zip)
+function repack_zip($path_zip, $to)
 {
     $zip = new ZipArchive();
-    $filename = realpath($path_zip)."/addon.zip";
+    $filename = $to;
 
     if(file_exists($filename))
         unlink($filename);
