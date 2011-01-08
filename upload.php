@@ -15,20 +15,11 @@
                                                                               
  You should have received a copy of the GNU General Public License along with 
  stkaddons.  If not, see <http://www.gnu.org/licenses/>.   */
-?>
-<?php
-/***************************************************************************
-Project: STK Addon Manager
 
-File: upload.php
-Version: 2
-Licence: GPLv3
-Description: page where people can add karts or tracks
-
-***************************************************************************/
 $security = "addAddon";
 include("include/security.php");
 include("include/top.php");
+include_once("include/var.php");
 
 // define possibly undefined variables
 $_GET['action'] = (isset($_GET['action'])) ? $_GET['action'] : null;
@@ -44,15 +35,14 @@ $_GET['action'] = (isset($_GET['action'])) ? $_GET['action'] : null;
 			{
 				$kartName = mysql_real_escape_string($_POST['name']);
 				$kartDescription = mysql_real_escape_string($_POST['description']);
-				$new = new coreAddon($_POST['addons_type']);
+				$new = new coreAddon(post('addons_type'));
 				if($kartName != "")
 				{
-				    
 				    $new->addAddon($kartName, $kartDescription);
 				    echo '<div id="content">';
 				    if($kartDescription=="")
 				    {
-				    echo _("Please add a description of your add-ons")."<br />";
+				        echo _("Please add a description of your add-ons")."<br />";
 				    }
 				    $new->viewInformations(False);
 				}

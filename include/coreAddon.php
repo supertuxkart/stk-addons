@@ -334,18 +334,17 @@ class coreAddon
 
         if(!sql_exist($this->addonType, "name", $name) && $USER_LOGGED)
         {
-            $zip_path = zip_path($name);
-            if(defined("UNIT_TEST"))
-            {
-                $zip_path = "./test.zip";
-            }
             if(isset($_FILES['file_addon']) and $_FILES['file_addon']['type'] == "application/zip")
             {
+                $zip_path = zip_path($name);
+                if(defined("UNIT_TEST"))
+                {
+                    $zip_path = "./test.zip";
+                }
                 if(!defined("UNIT_TEST"))
                 {
                     move_uploaded_file($_FILES['file_addon']['tmp_name'], $zip_path."-uploaded.zip");
                 }
-                echo $zip_path."\n";
                 $info = read_info_from_zip($zip_path."-uploaded.zip");
                 repack_zip($zip_path."-uploaded.zip-extract", $zip_path);
                 sql_insert($this->addonType, array('user',
@@ -354,6 +353,8 @@ class coreAddon
                                                    'file',
                                                    'image',
                                                    'date',
+                                                   'STKVersion',
+                                                   'Author',
                                                    'available'),
                                              array($_SESSION["id"],
                                                    $info["name"],
@@ -361,7 +362,9 @@ class coreAddon
                                                    $info["name"].".zip",
                                                    $info["name"].".png",
                                                    date("Y-m-d"),
-                                                   1));
+                                                   $info["version"],
+                                                   $info["designer"],
+                                                   0));
                 $this->reqSql = sql_get_all_where($this->addonType, "name", $info["name"]);
                 $this->addonCurrent = sql_next($this->reqSql);
             }
