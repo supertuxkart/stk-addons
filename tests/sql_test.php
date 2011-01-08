@@ -21,28 +21,13 @@ along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
 define("ROOT", "../");
 include_once("../include/security.php");
 include_once("../include/connectMysql.php");
-class coreAddonTest extends PHPUnit_Framework_TestCase
+
+class SQLTest extends PHPUnit_Framework_TestCase
 {
     public function testPushAndPop()
     {
-        global $USER_LOGGED;
-        $stack = new coreAddon('karts');
-        $stack->loadAll();
-        $this->assertEquals(true, $stack->loadAll());
-        
-        /* We think our test DB has at least one kart. */
-        $this->assertEquals(true, $stack->next());
-
-        $this->assertEquals(false, $stack->setAvailable());
-
-        /* To set an addon available, the user need to be logged... */
-        $USER_LOGGED = true;
-        $_SESSION['range'] = array();
-        $_SESSION['range']["manageaddons"] = false;
-        $this->assertEquals(false, $stack->setAvailable());
-        /*... and to have enough rights. */
-        $_SESSION['range']["manageaddons"] = true;
-        $this->assertEquals(true, $stack->setAvailable());
+        $this->assertEquals(true, sql_exist("karts", "name", "test"));
+        $this->assertEquals(false, sql_exist("karts", "name", "test_not_exist"));
     }
 }
 ?>

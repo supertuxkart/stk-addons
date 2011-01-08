@@ -117,7 +117,8 @@ class coreAddon
     */
     function setInformation($info, $value)
     {
-        if($_SESSION['range']['manageaddons'] == true || $this->addonCurrent['user'] == $_SESSION['id'])
+        global $USER_LOGGED;
+        if($USER_LOGGED && $_SESSION['range']['manageaddons'] == true || $this->addonCurrent['user'] == $_SESSION['id'])
         {
             $propertie_sql = mysql_query("SELECT *
                                           FROM properties
@@ -135,21 +136,28 @@ class coreAddon
                     sql_update($this->addonType, "id", $this->addonCurrent['id'], $propertie['name'], $value);
 
                 }
+                return true;
             }
             else
             {
-                echo "Error, I can't find this property.<br />";
+                echo "Error, I can't find this property.";
+                return false;
             }
         }
+        return false;
     }
 
     /** Remove the selected addons. */
     function remove()
     {
-        global $base;
         if($_SESSION['range']['manageaddons'] == true)
         {
             sql_remove_where($this->addonType, "id", $this->addonCurrent['id']);
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 
@@ -326,7 +334,7 @@ class coreAddon
         global $USER_LOGGED;
         $this->writeInformations();
         //write configuration for the submiter and administrator
-        if($USER_LOGGED && ($_SESSION['range']['manageaddons']|| $this->addonCurrent['user'] == $_SESSION['id']) and $config)
+        if($USER_LOGGED && ($_SESSION['range']['manageaddons'] || $this->addonCurrent['user'] == $_SESSION['id']) and $config)
         {
             $this->writeConfig();
         }
@@ -334,51 +342,68 @@ class coreAddon
 
     /* FIXME: please cleanup me! */
     /* FIXME: this function needs a _lot_ of a tests. */
-    function addAddon($kartName, $kartDescription)
+    function addAddon($name, $description)
     {   
-        global $base, $dirUpload;
-        echo '<div id="content">';
-        $existSql = sql_get_all_where($this->addonType, "name", $kartName);
+        global $USER_LOGGED;
 
-        $sql =  sql_next($existSql);
-
-        if($sql != false && $kartName != null)
+        if(!sql_exist($this->addonType, "name", $name) && $USER_LOGGED)
         {
-            mysql_query("INSERT INTO `".DB_NAME."`.`".$this->addonType."` (`user` ,`name` ,`Description` ,`file`, `icon`, `image`, `date` ,`available`) 
-                         VALUES ('".$_SESSION["id"]."', '".$kartName."', '".$kartDescription."', '".$kartName.".zip"."', '".$kartName.".png"."', '".$kartName.".png"."', '".date("Y-m-d")."', '1');") or die(mysql_error());
-            if (isset($_FILES['icon']) && $_FILES['icon']['type'] == "image/png")
+            echo '<div id="content">';
+            $icon_path = icon_path($name);
+            $image_path = image_path($name);
+            $zip_path = zip_path($name);
+            sql_insert($this->addonType, array('user',
+                                               'name',
+                                               'Description',
+                                               'file',
+                                               'icon',
+                                               'image',
+                                               'date',
+                                               'available'),
+                                         array($_SESSION["id"],
+                                               $name,
+                                               $description,
+                                               $name.".zip",
+                                               $name.".png",
+                                               $name.".png",
+                                               date("Y-m-d"),
+                                               1));
+            if(isset($_FILES['icon']) && $_FILES['icon']['type'] == "image/png")
             {
-                $chemin_destination = $dirUpload.'icon/';
-                move_uploaded_file($_FILES['icon']['tmp_name'], $chemin_destination.$kartName.".png");
+                move_uploaded_file($_FILES['icon']['tmp_name'], $icon_path);
 
             }
-            elseif($this->addonType=="karts")
+            elseif($this->addonType == "karts")
             {
-                echo _("Please re-upload your icon. It must be a png.")."<br />";
+                echo _("Please re-upload your icon. It must be a png.")."<br />\n";
             }
-            if (isset($_FILES['image']) && $_FILES['image']['type'] == "image/png")
+            if(isset($_FILES['image']) && $_FILES['image']['type'] == "image/png")
             {
-                $chemin_destination = $dirUpload.'image/';
-                move_uploaded_file($_FILES['image']['tmp_name'], $chemin_destination.$kartName.".png");
+                move_uploaded_file($_FILES['image']['tmp_name'], $image_path);
             }
-            elseif($this->addonType!="blender")
+            elseif($this->addonType != "blender")
             {
-                echo _("Please re-upload your image. It must be a png.")."<br />";
+                echo _("Please re-upload your image. It must be a png.")."<br />\n";
             }
-            if (isset($_FILES['file_addon']) and $_FILES['file_addon']['type'] == "application/zip") {
-                $chemin_destination = $dirUpload.'file/';
-                move_uploaded_file($_FILES['file_addon']['tmp_name'], $chemin_destination.$kartName.".zip");
+            if (isset($_FILES['file_addon']) and $_FILES['file_addon']['type'] == "application/zip")
+            {
+                move_uploaded_file($_FILES['file_addon']['tmp_name'], $zip_path);
             }
             else
             {
-                echo _("Please re-upload your file. It must be a zip.")."<br />";
+                echo _("Please re-upload your file. It must be a zip.")."<br />\n";
             }
             echo _("Successful, your kart will appear when a moderator will valid it.")."<br />";
             
-            $this->reqSql = mysql_query("SELECT * FROM ".$this->addonType." WHERE `".$this->addonType."`.`name` ='".$kartName."' LIMIT 1 ;");
+            $this->reqSql = sql_get_all_where($this->addonType, "name", $name);
+            echo '</div>';
+            $this->addonCurrent = mysql_fetch_array($this->reqSql);
+            return true;
         }
-        echo '</div>';
-        $this->addonCurrent = mysql_fetch_array($this->reqSql);
+        else
+        {
+            return false;
+        }
     }
 
     /** To get the permanent link of the current addon */ 
@@ -386,6 +411,22 @@ class coreAddon
     {
         return 'addon-view.php?addons='.$this->addonType.'&amp;title='.$this->addonCurrent['name'];
     }
+}
+
+/* Utilities to generate paths */
+function icon_path($name)
+{
+    return UP_LOCATION."icon/".$name.".png";
+}
+
+function image_path($name)
+{
+    return UP_LOCATION."image/".$name.".png";
+}
+
+function zip_path($name)
+{
+    return UP_LOCATION."file/".$name.".png";
 }
 
 ?>

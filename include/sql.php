@@ -80,7 +80,7 @@ function sql_insert($table, $properties, $values)
         $field_ .= "'$value'";
         $first = false;
     }
-    $req = "INSERT INTO `".DB_NAME."`.`".DB_PREFIX.$table."` (
+    $req = "INSERT INTO `".DB_NAME."`.`".$table."` (
                         $field) VALUES($field_)";
     return mysql_query($req) or die(mysql_error());
 }
@@ -97,5 +97,12 @@ function sql_next($sql_query)
     {
         return false;
     }
+}
+function sql_exist($table, $property, $value)
+{
+    $error = true;
+    $sql = mysql_query("SELECT * FROM ".$table." WHERE `$property` = '$value'");
+    $request = mysql_fetch_array($sql) or $error = false;
+    return $error;
 }
 ?>
