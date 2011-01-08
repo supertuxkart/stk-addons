@@ -1,5 +1,5 @@
 <?php
-/* copyright 2009 Lucas Baudin <xapantu@gmail.com>                 
+/* copyright 2010 Lucas Baudin <xapantu@gmail.com>                 
                                                                               
  This file is part of stkaddons.                                 
                                                                               
@@ -15,17 +15,7 @@
                                                                               
  You should have received a copy of the GNU General Public License along with 
  stkaddons.  If not, see <http://www.gnu.org/licenses/>.   */
-?>
-<?php
-/***************************************************************************
-Project: STK Addon Manager
 
-File: coreAddon.php
-Version: 1
-Licence: GPLv3
-Description: file where all fonctions are
-
-***************************************************************************/
 include_once(ROOT."config.php");
 include_once(ROOT."include/coreUser.php");
 class coreAddon
@@ -91,14 +81,13 @@ class coreAddon
         }
     }
 
-    function setFile()
+    function setFile($filetype = "image")
     {
         if($_SESSION['range']['manageaddons'] == true || $this->addonCurrent['user'] == $_SESSION['id'])
         {
             if (isset($_FILES['fileSend']))
             {
-                echo $_POST['fileType'];
-                $file_path = UP_LOCATION.$_POST['fileType'].'/'.$this->addonCurrent[post('fileType')];
+                $file_path = UP_LOCATION.$_POST['fileType'].'/'.$this->addonCurrent[$filetype];
         		if(file_exists($file_path))
                 {
                     /* Remove the existing file before copy the new one. */
@@ -120,29 +109,26 @@ class coreAddon
         global $USER_LOGGED;
         if($USER_LOGGED && $_SESSION['range']['manageaddons'] == true || $this->addonCurrent['user'] == $_SESSION['id'])
         {
-            $propertie_sql = mysql_query("SELECT *
-                                          FROM properties
-                                          WHERE `properties`.`type` = '".$this->addonType."'
-                                          AND `properties`.`lock` != 1
-                                          AND `properties`.`name` = '".$info."';");
-            if($propertie = mysql_fetch_array($propertie_sql))
+            if(sql_exist("properties", "name", $info))
             {
-                if($propertie['typefield'] == "file")
+                $propertie_sql = sql_get_all_where("properties", "name", $info);
+                $propertie = sql_next($propertie_sql);
+                if($propertie["lock"] != 1)
                 {
-                    $this->setFile();
-                }
-                else
-                {
-                    sql_update($this->addonType, "id", $this->addonCurrent['id'], $propertie['name'], $value);
+                    if($propertie['typefield'] == "file")
+                    {
+                        $this->setFile(post('fileType'));
+                    }
+                    else
+                    {
+                        sql_update($this->addonType, "id", $this->addonCurrent['id'], $propertie['name'], $value);
 
+                    }
+                    return true;
                 }
-                return true;
             }
-            else
-            {
+            if(!defined("UNIT_TEST"))
                 echo "Error, I can't find this property.";
-                return false;
-            }
         }
         return false;
     }
@@ -259,74 +245,74 @@ class coreAddon
     {
         global $dirDownload, $dirUpload;
         echo '<hr /><h3>Configuration</h3>';
-            ?>
-            <div class="help-hidden">
-                <span class="help-hidden">Help</span>
-                <div>
-                    BBCode:
-                    <br />strong : [b]....[/b]
-                    <br />italic : [i]....[/i]
-                </div>
+        ?>
+        <div class="help-hidden">
+            <span class="help-hidden">Help</span>
+            <div>
+                BBCode:
+                <br />strong : [b]....[/b]
+                <br />italic : [i]....[/i]
             </div>
-            <form action="#" method="GET" >
-            <?php
-            $propertie_sql = mysql_query("SELECT * FROM properties WHERE `properties`.`type` = '".$this->addonType."' AND `properties`.`lock` != 1;");
-            $file_str = "";
-            while($propertie = mysql_fetch_array($propertie_sql))
+        </div>
+        <form action="#" method="GET" >
+        <?php
+        $propertie_sql = mysql_query("SELECT * FROM properties WHERE `properties`.`type` = '".$this->addonType."' AND `properties`.`lock` != 1;");
+        $file_str = "";
+        while($propertie = mysql_fetch_array($propertie_sql))
+        {
+            $cible = 'addonRequest(\'addon.php?type='.$this->addonType.'&amp;action='.str_replace(" ", "", $propertie['name']).'\', '.$this->addonCurrent['id'].',document.getElementById(\''.strtolower(str_replace(" ", "", $propertie['name'])).'\').value)';
+            if($propertie['typefield'] == "textarea")
             {
-                $cible = 'addonRequest(\'addon.php?type='.$this->addonType.'&amp;action='.str_replace(" ", "", $propertie['name']).'\', '.$this->addonCurrent['id'].',document.getElementById(\''.strtolower(str_replace(" ", "", $propertie['name'])).'\').value)';
-                if($propertie['typefield'] == "textarea")
-                {
-                    echo "<br />".$propertie['name']." :<br />";
-                    echo '<textarea cols="65" rows="8" id="'.strtolower(str_replace(" ", "", $propertie['name'])).'">'.$this->addonCurrent[str_replace(" ", "", $propertie['name'])].'</textarea><br />';
-                    echo '<input onclick="'.$cible.'" value="Change '.$propertie['name'].'" type="button" />';
-                }
-                elseif($propertie['typefield'] == "text")
-                {
-                    echo "</form><br />".$propertie['name']." :<br />";
-                    echo '<form action="javascript:'.$cible.'" method="GET" >';
-                    echo '<input type="text" id="'.strtolower(str_replace(" ", "", $propertie['name'])).'" value="'.$this->addonCurrent[str_replace(" ", "", $propertie['name'])].'" ><br />';
-                    echo '<input onclick="'.$cible.'" value="Change '.$propertie['name'].'" type="button" />';
-                    echo "</form>";
-                    echo '<form action="#" method="GET" >';
-                }
-                elseif($propertie['typefield'] == "enum")
-                {
-                    echo "<br />".$propertie['name']." :<br />";
-                    echo '<select onchange="addonRequest(\'addon.php?type='.$this->addonType.'&amp;action='.$propertie['name'].'\', '.$this->addonCurrent['id'].', this.value)">';
-                    
-                    $values =explode("\n", $propertie['default']);
-                    foreach($values as $value)
-                    {
-                        echo '<option value="'.$value.'"';
-                        if($this->addonCurrent[str_replace(" ", "", $propertie['name'])]==$value) echo 'selected="selected" ';
-                        echo '>'.$value.'</option>';
-                    }
-                    echo '</select>';
-                }
-                elseif($propertie['typefield'] == "file")
-                {
-                    $file_str .='<option value="'.strtolower(str_replace(" ", "", $propertie['name'])).'">'.$propertie['name'].'</option>';
-                }
+                echo "<br />".$propertie['name']." :<br />";
+                echo '<textarea cols="65" rows="8" id="'.strtolower(str_replace(" ", "", $propertie['name'])).'">'.$this->addonCurrent[str_replace(" ", "", $propertie['name'])].'</textarea><br />';
+                echo '<input onclick="'.$cible.'" value="Change '.$propertie['name'].'" type="button" />';
             }
-            echo '</form>';
-            echo '<form id="formKart" enctype="multipart/form-data" action="addon.php?action=file&amp;type='.$this->addonType.'&amp;id='.$this->addonCurrent['id'].'" method="POST">
-            <select name="fileType">';
-            echo $file_str;
-            echo '</select>
-            <input type="file" name="fileSend"/>
-            <input type="submit"/>
-            </form>';
-            if($_SESSION['range']['manageaddons'])
+            elseif($propertie['typefield'] == "text")
             {
-                echo '<form action="#"><input  onchange="addonRequest(\'addon.php?type='.$this->addonType.'&amp;action=available\', '.$this->addonCurrent['id'].')" type="checkbox" name="available" id="available"';
-                if($this->addonCurrent['available'] ==1)
-                {
-                    echo 'checked="checked" ';
-                }
-                echo '/><label for="available">Available</label><br />';
-                echo '<input type="button" onclick="verify(\'addonRequest(\\\'addon.php?type='.$this->addonType.'&amp;action=remove\\\', '.$this->addonCurrent['id'].')\')" value="Remove" /><br /></form>';
+                echo "</form><br />".$propertie['name']." :<br />";
+                echo '<form action="javascript:'.$cible.'" method="GET" >';
+                echo '<input type="text" id="'.strtolower(str_replace(" ", "", $propertie['name'])).'" value="'.$this->addonCurrent[str_replace(" ", "", $propertie['name'])].'" ><br />';
+                echo '<input onclick="'.$cible.'" value="Change '.$propertie['name'].'" type="button" />';
+                echo "</form>";
+                echo '<form action="#" method="GET" >';
             }
+            elseif($propertie['typefield'] == "enum")
+            {
+                echo "<br />".$propertie['name']." :<br />";
+                echo '<select onchange="addonRequest(\'addon.php?type='.$this->addonType.'&amp;action='.$propertie['name'].'\', '.$this->addonCurrent['id'].', this.value)">';
+                
+                $values = explode("\n", $propertie['default']);
+                foreach($values as $value)
+                {
+                    echo '<option value="'.$value.'"';
+                    if($this->addonCurrent[str_replace(" ", "", $propertie['name'])]==$value) echo 'selected="selected" ';
+                    echo '>'.$value.'</option>';
+                }
+                echo '</select>';
+            }
+            elseif($propertie['typefield'] == "file")
+            {
+                $file_str .='<option value="'.strtolower(str_replace(" ", "", $propertie['name'])).'">'.$propertie['name'].'</option>';
+            }
+        }
+        echo '</form>';
+        echo '<form id="formKart" enctype="multipart/form-data" action="addon.php?action=file&amp;type='.$this->addonType.'&amp;id='.$this->addonCurrent['id'].'" method="POST">
+        <select name="fileType">';
+        echo $file_str;
+        echo '</select>
+        <input type="file" name="fileSend"/>
+        <input type="submit"/>
+        </form>';
+        if($_SESSION['range']['manageaddons'])
+        {
+            echo '<form action="#"><input  onchange="addonRequest(\'addon.php?type='.$this->addonType.'&amp;action=available\', '.$this->addonCurrent['id'].')" type="checkbox" name="available" id="available"';
+            if($this->addonCurrent['available'] ==1)
+            {
+                echo 'checked="checked" ';
+            }
+            echo '/><label for="available">Available</label><br />';
+            echo '<input type="button" onclick="verify(\'addonRequest(\\\'addon.php?type='.$this->addonType.'&amp;action=remove\\\', '.$this->addonCurrent['id'].')\')" value="Remove" /><br /></form>';
+        }
     }
 
     function viewInformations($config=True)
@@ -348,56 +334,41 @@ class coreAddon
 
         if(!sql_exist($this->addonType, "name", $name) && $USER_LOGGED)
         {
-            echo '<div id="content">';
-            $icon_path = icon_path($name);
-            $image_path = image_path($name);
             $zip_path = zip_path($name);
-            sql_insert($this->addonType, array('user',
-                                               'name',
-                                               'Description',
-                                               'file',
-                                               'icon',
-                                               'image',
-                                               'date',
-                                               'available'),
-                                         array($_SESSION["id"],
-                                               $name,
-                                               $description,
-                                               $name.".zip",
-                                               $name.".png",
-                                               $name.".png",
-                                               date("Y-m-d"),
-                                               1));
-            if(isset($_FILES['icon']) && $_FILES['icon']['type'] == "image/png")
+            if(defined("UNIT_TEST"))
             {
-                move_uploaded_file($_FILES['icon']['tmp_name'], $icon_path);
-
+                $zip_path = "./test.zip";
             }
-            elseif($this->addonType == "karts")
+            if(isset($_FILES['file_addon']) and $_FILES['file_addon']['type'] == "application/zip")
             {
-                echo _("Please re-upload your icon. It must be a png.")."<br />\n";
-            }
-            if(isset($_FILES['image']) && $_FILES['image']['type'] == "image/png")
-            {
-                move_uploaded_file($_FILES['image']['tmp_name'], $image_path);
-            }
-            elseif($this->addonType != "blender")
-            {
-                echo _("Please re-upload your image. It must be a png.")."<br />\n";
-            }
-            if (isset($_FILES['file_addon']) and $_FILES['file_addon']['type'] == "application/zip")
-            {
-                move_uploaded_file($_FILES['file_addon']['tmp_name'], $zip_path);
+                if(!defined("UNIT_TEST"))
+                {
+                    move_uploaded_file($_FILES['file_addon']['tmp_name'], $zip_path);
+                }
+                $info = read_info_from_zip($zip_path);
+                sql_insert($this->addonType, array('user',
+                                                   'name',
+                                                   'Description',
+                                                   'file',
+                                                   'image',
+                                                   'date',
+                                                   'available'),
+                                             array($_SESSION["id"],
+                                                   $info["name"],
+                                                   $info["description"],
+                                                   $info["name"].".zip",
+                                                   $info["name"].".png",
+                                                   date("Y-m-d"),
+                                                   1));
+                $this->reqSql = sql_get_all_where($this->addonType, "name", $info["name"]);
+                $this->addonCurrent = sql_next($this->reqSql);
             }
             else
             {
                 echo _("Please re-upload your file. It must be a zip.")."<br />\n";
+                return false;
             }
-            echo _("Successful, your kart will appear when a moderator will valid it.")."<br />";
             
-            $this->reqSql = sql_get_all_where($this->addonType, "name", $name);
-            echo '</div>';
-            $this->addonCurrent = mysql_fetch_array($this->reqSql);
             return true;
         }
         else
@@ -414,11 +385,6 @@ class coreAddon
 }
 
 /* Utilities to generate paths */
-function icon_path($name)
-{
-    return UP_LOCATION."icon/".$name.".png";
-}
-
 function image_path($name)
 {
     return UP_LOCATION."image/".$name.".png";
@@ -429,4 +395,136 @@ function zip_path($name)
     return UP_LOCATION."file/".$name.".png";
 }
 
+function read_info_from_zip($path_zip)
+{
+    /*$zip = zip_open($path_zip);*/
+    $zip = new ZipArchive;
+    $addon_information = array();
+    $addon_information["description"] = "";
+    $attribute = array("name",
+                       "version",
+                       "groups",
+                       "model-file",
+                       "icon-file",
+                       "minimap-icon-file",
+                       "shadow-file",
+                       "rgb",
+                       "left",
+                       "right",
+                       "straight",
+                       "right",
+                       "start-winning",
+                       "end-winning",
+                       "start-losing",
+                       "start-losing-loop",
+                       "end-losing",
+                       "position",
+                       "model",
+                       "designer",
+                       "music",
+                       "screenshot");
+    if ($zip->open($path_zip) === TRUE)
+    {
+        if(!file_exists($path_zip."-extract"))
+            mkdir($path_zip."-extract");
+        $zip->extractTo($path_zip."-extract");
+        $zip->close();
+        if(file_exists($path_zip."-extract"."/kart.xml"))
+        {
+
+            $reader = new XMLReader();
+
+            $reader->open($path_zip."-extract"."/kart.xml");
+            $writer = new XMLWriter();
+            $writer->openURI('file://'.realpath($path_zip."-extract"."/kart.xml"));
+            $writer->startDocument("1.0");
+            $writer->setIndent(true);
+            while ($reader->read())
+            {
+                if ($reader->nodeType == XMLREADER::ELEMENT)
+                {
+                    $elm = $reader->name;
+                    $writer->startElement($elm);
+                    foreach($attribute as $attr)
+                    {
+                        $value = $reader->getAttribute($attr);
+                        if($reader->getAttribute($attr) == "groups")
+                        {
+                            $writer->startAttribute($attr);
+                            $writer->text("addons");
+                            $writer->endAttribute();
+                        }
+                        elseif($reader->getAttribute($attr) != "")
+                        {
+                            $writer->startAttribute($attr);
+                            $writer->text($reader->getAttribute($attr));
+                            $writer->endAttribute();
+                        }
+                        if($elm == "kart" or $elm == "track")
+                        {
+                            $addon_information[$attr] = $value;
+                        }
+                    }
+                    if(!($elm == "kart" or $elm == "track" or $elm == "wheels"))
+                    {
+                        $writer->endElement();
+                    }
+                }
+                elseif($reader->nodeType == XMLREADER::END_ELEMENT)
+                {
+                    $writer->endElement();
+                }
+            }
+            $writer->flush();
+            repack_zip($path_zip."-extract");
+            return $addon_information;
+        }
+        else
+        {
+            return null;
+        }
+    }
+    else
+    {
+        return null;
+    }
+}
+
+function repack_zip($path_zip)
+{
+    $zip = new ZipArchive();
+    $filename = realpath($path_zip)."/addon.zip";
+
+    if(file_exists($filename))
+        unlink($filename);
+
+    if ($zip->open($filename, ZIPARCHIVE::CREATE)!==TRUE)
+    {
+        echo("Cannot open <$filename>\n");
+        return false;
+    }
+    foreach(scandir($path_zip) as $file)
+    {
+        if($file != ".." and $file != ".")
+        {
+            if(!$zip->addFile($path_zip."/".$file, $file))
+            {
+                echo "Can't add this file: ".$file."\n";
+                return false;
+            }
+            if(!file_exists($path_zip."/".$file))
+            {
+                echo "Can't add this file (it doesn't exist): ".$file."\n";
+                return false;
+            }
+        }
+    }
+    $succes = $zip->close();
+    if(!$succes)
+    {
+        echo "Can't close the zip\n";
+        return false;
+    }   
+    return true;
+}
 ?>
