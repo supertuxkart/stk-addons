@@ -351,7 +351,7 @@ class coreAddon
                     else
                     {
                         $zip_path .= "_";
-                        $download_lin .= "_";
+                        $download_link .= "_";
                     }
                 }
                 /* Little hack for the unit test, forget that */
@@ -389,7 +389,7 @@ class coreAddon
                                              array($_SESSION["id"],
                                                    $info["name"],
                                                    $info["description"],
-                                                   $download_link,
+                                                   $download_link.".zip",
                                                    $info["name"].".png",
                                                    date("Y-m-d"),
                                                    $info["version"],
