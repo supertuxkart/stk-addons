@@ -24,7 +24,7 @@ mysql_select_db(DB_NAME) or die(mysql_error());
 function sql_get_all($table)
 {
     $error = true;
-    $sql = mysql_query("SELECT * FROM ".$table) or $error = false;
+    $sql = mysql_query("SELECT * FROM ".DB_PREFIX.$table) or $error = false;
     if(!$error)
     {
         return false;
@@ -37,12 +37,12 @@ function sql_get_all($table)
 
 function sql_get_all_where($table, $property, $value)
 {
-    return mysql_query("SELECT * FROM ".$table." WHERE `$property` = '$value'");
+    return mysql_query("SELECT * FROM ".DB_PREFIX.$table." WHERE `$property` = '$value'");
 }
 
 function sql_update($table, $property_select, $value_select, $property_change, $new_value)
 {
-    $request = "UPDATE `".DB_NAME."`.`".$table."`
+    $request = "UPDATE `".DB_NAME."`.`".DB_PREFIX.$table."`
                         SET `$property_change` =  '$new_value'
                         WHERE `".$table."`.`$property_select` = $value_select;";
     //echo $request;
@@ -51,7 +51,7 @@ function sql_update($table, $property_select, $value_select, $property_change, $
 
 function sql_remove_where($table, $property, $value)
 {
-    $request = "DELETE FROM ".$table." WHERE `$property` = '$value'";
+    $request = "DELETE FROM ".DB_PREFIX.$table." WHERE `$property` = '$value'";
     //echo $request;
     return mysql_query($request) or die(mysql_error());
 }
@@ -80,7 +80,7 @@ function sql_insert($table, $properties, $values)
         $field_ .= "'$value'";
         $first = false;
     }
-    $req = "INSERT INTO `".DB_NAME."`.`".$table."` (
+    $req = "INSERT INTO `".DB_NAME."`.`".DB_PREFIX.$table."` (
                         $field) VALUES($field_)";
     return mysql_query($req) or die(mysql_error());
 }
@@ -101,7 +101,7 @@ function sql_next($sql_query)
 function sql_exist($table, $property, $value)
 {
     $error = true;
-    $sql = mysql_query("SELECT * FROM ".$table." WHERE `$property` = '$value'");
+    $sql = mysql_query("SELECT * FROM ".DB_PREFIX.$table." WHERE `$property` = '$value'");
     $request = mysql_fetch_array($sql) or $error = false;
     return $error;
 }
