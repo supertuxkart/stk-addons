@@ -372,8 +372,8 @@ class coreAddon
 
                 /* Then, we repack it, the file repacked will be our nice addon
                  * package. */
-                $download_link = $info["name"].$download_link;
-                repack_zip($zip_path."-uploaded.zip-extract", $zip_path);
+                $download_link = $name.$download_link;
+                repack_zip($zip_path."-uploaded.zip-extract", zip_path($download_link));
     
                 /* And add a entry in the DB, to generate the xml files and the
                  * addons-view.php page. */
