@@ -55,11 +55,7 @@ $_GET['action'] = (isset($_GET['action'])) ? $_GET['action'] : null;
 	        <form id="formKart" enctype="multipart/form-data" action="upload.php?action=submit" method="POST">
 	            <label><input  onclick="document.getElementById('icon').disabled = false;  document.getElementById('image').disabled = false" type="radio" name="addons_type" value="karts" checked="checked"/>Kart</label>
 	            <label><input onclick="document.getElementById('icon').disabled = true;  document.getElementById('image').disabled = false" type="radio" name="addons_type" value="tracks" />Tracks<br /></label>
-	            <label><input onclick="document.getElementById('icon').disabled = true; document.getElementById('image').disabled = true" type="radio" name="addons_type" value="blender" />Blender file<br /></label>
 	            <label><?php echo _("Name :"); ?><br /><input type="text" name="name"/><br /></label>
-	            <label><?php echo _("Description, it must be in english :"); ?><br /><textarea name="description"></textarea><br /></label>
-	            <label><?php echo _("Image, it must be a .png :"); ?><br /><input type="file" name="image" id="image"/><br /></label>
-	            <label><?php echo _("Icon (kart only), it must be a .png :"); ?><br /><input type="file" id="icon" name="icon"/><br /></label>
 	            <label><?php echo _("Addon's file, it must be a .zip :"); ?><br /><input type="file" name="file_addon"/><br /></label>
 	            <input type="submit" />
 	        </form>
