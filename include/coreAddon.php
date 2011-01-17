@@ -338,6 +338,7 @@ class coreAddon
             if(isset($_FILES['file_addon']) and $_FILES['file_addon']['type'] == "application/zip")
             {
                 $zip_path = zip_path($name);
+                $download_link = "";
                 /* Add a _ until the file if not found. Because if the user upload
                  * a file with the same name but different content, we would
                  * have some problem. */
@@ -350,6 +351,7 @@ class coreAddon
                     else
                     {
                         $zip_path .= "_";
+                        $download_lin .= "_";
                     }
                 }
                 /* Little hack for the unit test, forget that */
@@ -370,6 +372,7 @@ class coreAddon
 
                 /* Then, we repack it, the file repacked will be our nice addon
                  * package. */
+                $download_link = $info["name"].$download_link;
                 repack_zip($zip_path."-uploaded.zip-extract", $zip_path);
     
                 /* And add a entry in the DB, to generate the xml files and the
@@ -386,7 +389,7 @@ class coreAddon
                                              array($_SESSION["id"],
                                                    $info["name"],
                                                    $info["description"],
-                                                   $info["name"].".zip",
+                                                   $download_link,
                                                    $info["name"].".png",
                                                    date("Y-m-d"),
                                                    $info["version"],
