@@ -240,7 +240,7 @@ class coreAddon
         <?php
     }
 
-    /* FIXME: this function needs a lot of cleanup. */
+    /* FIXME: this function needs a lot of cleanup / a rewrite. */
     function writeConfig()
     {
         global $dirDownload, $dirUpload;
@@ -334,19 +334,46 @@ class coreAddon
 
         if(!sql_exist($this->addonType, "name", $name) && $USER_LOGGED)
         {
+            /* We add a new addon only if the user uploaded a file and if it is a .zip */
             if(isset($_FILES['file_addon']) and $_FILES['file_addon']['type'] == "application/zip")
             {
                 $zip_path = zip_path($name);
+                /* Add a _ until the file if not found. Because if the user upload
+                 * a file with the same name but different content, we would
+                 * have some problem. */
+                while(true)
+                {
+                    if(!file_exists($zip_path))
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        $zip_path .= "_";
+                    }
+                }
+                /* Little hack for the unit test, forget that */
                 if(defined("UNIT_TEST"))
                 {
                     $zip_path = "./test.zip";
                 }
-                if(!defined("UNIT_TEST"))
+                else
                 {
                     move_uploaded_file($_FILES['file_addon']['tmp_name'], $zip_path."-uploaded.zip");
                 }
+
+                /* Read the information from the xml file (track.xml/kart.xml)
+                 * the name, the version of stk, etc...
+                 * This function modify alsor some fields, as the addon group.
+                 **/
                 $info = read_info_from_zip($zip_path."-uploaded.zip");
+
+                /* Then, we repack it, the file repacked will be our nice addon
+                 * package. */
                 repack_zip($zip_path."-uploaded.zip-extract", $zip_path);
+    
+                /* And add a entry in the DB, to generate the xml files and the
+                 * addons-view.php page. */
                 sql_insert($this->addonType, array('user',
                                                    'name',
                                                    'Description',
@@ -365,6 +392,8 @@ class coreAddon
                                                    $info["version"],
                                                    $info["designer"],
                                                    0));
+    
+                /* Then, we re-load it, to diaply it information in the upload page. */
                 $this->reqSql = sql_get_all_where($this->addonType, "name", $info["name"]);
                 $this->addonCurrent = sql_next($this->reqSql);
             }
@@ -389,7 +418,7 @@ class coreAddon
     }
 }
 
-/* Utilities to generate paths */
+/** Utilities to generate paths */
 function image_path($name)
 {
     return UP_LOCATION."image/".$name.".png";
@@ -402,10 +431,12 @@ function zip_path($name)
 
 function read_info_from_zip($path_zip)
 {
-    /*$zip = zip_open($path_zip);*/
     $zip = new ZipArchive;
     $addon_information = array();
     $addon_information["description"] = "";
+
+    /* FIXME: this list is hardcoded :( It shouldn't */
+    /* All attributes we can find if the xml files */
     $attribute = array("name",
                        "version",
                        "groups",
@@ -428,20 +459,28 @@ function read_info_from_zip($path_zip)
                        "designer",
                        "music",
                        "screenshot");
+
+    /* We open it, there souldn't be any error here, the file is really a .zip
+     * and exist. */
     if ($zip->open($path_zip) === TRUE)
     {
+        /* Make the directory only if it doesn't exist yet, ither wise, it causes
+         * an error. */
         if(!file_exists($path_zip."-extract"))
             mkdir($path_zip."-extract");
         $zip->extractTo($path_zip."-extract");
         $zip->close();
-        if(file_exists($path_zip."-extract"."/kart.xml"))
+
+        $path_xml = find_xml($path_zip."-extract");
+        /* If there is no track/kart .xml, error */
+        if($path_xml != false)
         {
 
             $reader = new XMLReader();
-
-            $reader->open($path_zip."-extract"."/kart.xml");
             $writer = new XMLWriter();
-            $writer->openURI('file://'.realpath($path_zip."-extract"."/kart.xml"));
+
+            $reader->open($path_xml);
+            $writer->openURI('file://'.realpath($path_xml));
             $writer->startDocument("1.0");
             $writer->setIndent(true);
             while ($reader->read())
@@ -483,6 +522,7 @@ function read_info_from_zip($path_zip)
             $writer->flush();
             return $addon_information;
         }
+        /* Wrong archive, no .xml in it */
         else
         {
             return null;
@@ -507,11 +547,27 @@ function repack_zip($path_zip, $to)
         echo("Cannot open <$filename>\n");
         return false;
     }
+    repack_internal($zip, $path_zip);
+    $succes = $zip->close();
+    if(!$succes)
+    {
+        echo "Can't close the zip\n";
+        return false;
+    }   
+    return true;
+}
+
+function repack_internal($zip, $path_zip)
+{
     foreach(scandir($path_zip) as $file)
     {
         if($file != ".." and $file != ".")
         {
-            if(!$zip->addFile($path_zip."/".$file, $file))
+            if(is_dir($path_zip."/".$file))
+            {
+                repack_internal($zip, $path_zip."/".$file);
+            }
+            else if(!$zip->addFile($path_zip."/".$file, $file))
             {
                 echo "Can't add this file: ".$file."\n";
                 return false;
@@ -523,12 +579,32 @@ function repack_zip($path_zip, $to)
             }
         }
     }
-    $succes = $zip->close();
-    if(!$succes)
+} 
+
+function find_xml($dir)
+{
+    if(is_dir($dir))
     {
-        echo "Can't close the zip\n";
-        return false;
-    }   
-    return true;
+        foreach(scandir($dir) as $file)
+        {
+            if(is_dir($dir."/".$file) && $file != "." && $file != "..")
+            {
+                $name = find_xml($dir."/".$file);
+                if($name != false)
+                {
+                    return $name;
+                }
+            }
+            else if(file_exists($dir."/kart.xml"))
+            {
+                return $dir."/kart.xml";
+            }
+            else if(file_exists($dir."/track.xml"))
+            {
+                return $dir."/track.xml";
+            }
+        }
+    }
+    return false;
 }
 ?>

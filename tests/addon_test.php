@@ -62,8 +62,10 @@ class coreAddonTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(true, $stack->setInformation("Description", "New description"));
         $this->assertEquals(false, $stack->setInformation("property_not_exist", "New description"));
 
-        $this->assertEquals(UP_LOCATION."file/test.png", zip_path("test"));
+        $this->assertEquals(UP_LOCATION."file/test.zip", zip_path("test"));
         $this->assertEquals(UP_LOCATION."image/test.png", image_path("test"));
+
+        $this->assertEquals("test2.zip-extract//bigbuckbunny/kart.xml", find_xml("test2.zip-extract/"));
 
         $USER_LOGGED = false;
         $this->assertEquals(false, $stack->addAddon("Test_addon", "this is a test description"));
@@ -73,13 +75,13 @@ class coreAddonTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(true, $stack->addAddon("Test_addon", "this is a test description"));
         $_SESSION['range']["manageaddons"] = true;
         $this->assertEquals(true, $stack->remove());
-        $path_zip = "./test.zip";
+        $path_zip = "./test2.zip";
         $info = read_info_from_zip($path_zip);
         $this->assertNotNull($info);
-        $this->assertEquals("chinchila", $info["name"]);
+        $this->assertEquals("bigbuckbunny", $info["name"]);
         $this->assertEquals("2", $info["version"]);
 
-        $this->assertEquals(true, repack_zip("./test.zip-extract"));
+        $this->assertEquals(true, repack_zip("./test2.zip-extract", "./test.zip-repack"));
     }
 }
 ?>
