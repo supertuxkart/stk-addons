@@ -32,7 +32,7 @@ $passage_ligne = "\n";
 	switch($subject)
 	{
 		case "newAccount":
-			$message_html = "<html><head></head><body>Thank you for subscribing to the SuperTuxKart Add-Ons Manager. Please click <a href=\"http://".$_SERVER["SERVER_NAME"].$option[1]."?action=valid&amp;num=$option[0]\">here</a> to confirm your account<br />Username : ".$option[2]."<br />Password : ".$option[3]."</body></html>";
+			$message_html = "<html><head></head><body>Thank you for registering an account on the SuperTuxKart Add-Ons Manager. Please click <a href=\"http://".$_SERVER["SERVER_NAME"].$option[1]."?action=valid&amp;num=$option[0]\">here</a> to activate your account.<br />Username: ".$option[2]."</body></html>";
 			$sujet = "New Account at ".$_SERVER["SERVER_NAME"];
 			break;
 		case "bug":
@@ -47,7 +47,7 @@ $passage_ligne = "\n";
 	$header.= "Reply-to: \"xapantu@gmail.com\" <xapantu@gmail.com>".$passage_ligne;
 	$header.= "MIME-Version: 1.0".$passage_ligne;
 	$header.= "Content-Type: multipart/alternative;".$passage_ligne." boundary=\"$boundary\"".$passage_ligne;
-	$message.= $passage_ligne."--".$boundary.$passage_ligne;
+	$message = $passage_ligne."--".$boundary.$passage_ligne;
 	$message.= "Content-Type: text/html; charset=\"ISO-8859-1\"".$passage_ligne;
 	$message.= "Content-Transfer-Encoding: 8bit".$passage_ligne;
 	$message.= $passage_ligne.$message_html.$passage_ligne;

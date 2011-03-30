@@ -86,7 +86,7 @@ elseif($_GET['action'] == "submit" && $_POST['pass1'] == $_POST['pass2'])
         if ($createSql)
         {
             include("include/mail.php");
-            sendMail(mysql_real_escape_string($_POST['mail']), "newAccount", array($crypt, $_SERVER["PHP_SELF"], $user, $_POST['pass1']));
+            sendMail(mysql_real_escape_string($_POST['mail']), "newAccount", array($crypt, $_SERVER["PHP_SELF"], $user));
             echo _("Account creation was successful. Please activate your account using the link emailed to you.");
         }
         else
