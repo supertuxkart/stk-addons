@@ -1,6 +1,6 @@
 <?php
 /**
- * copyright 2009 Lucas Baudin <xapantu@gmail.com>
+ * copyright 2011 Stephen Just <stephenjust@gmail.com>
  *
  * This file is part of stkaddons
  *
@@ -22,46 +22,22 @@
 /***************************************************************************
 Project: STK Addon Manager
 
-File: manageAccount.php
+File: security.php
 Version: 1
 Licence: GPLv3
-Description: people
+Description: security
 
 ***************************************************************************/
-$security = 'basicPage';
-define('ROOT','./');
-include('include.php');
 
-$_GET['title'] = (isset($_GET['title'])) ? $_GET['title'] : NULL;
-
-$title = _('SuperTuxKart Add-ons').' | '._('Users');
-include('include/top.php');
+include(ROOT.'include/top.php');
 ?>
-</head>
-<body>
-<?php 
-include(ROOT.'include/menu.php');
-?>
-<div id="select-addons">
-<div id="select-addons_top">
-</div>
-<div id="select-addons_center">
-<?php
-$js = "";
-loadUsers();
-?>
-</div>
-<div id="select-addons_bottom">
-</div></div>
-<div id="content-addon">
-    <div id="content-addon_top"></div>
-    <div id="content-addon_body"></div>
-    <div id="content-addon_bottom"></div>
-</div>
-<?php
-echo '<script type="text/javascript">';
-echo $js;
-echo '</script>';
-include("include/footer.php"); ?>
-</body>
-</html>
+        <meta http-equiv="refresh" content="3;URL=index.php" />
+    </head>
+    <body>
+        <?php include('include/menu.php'); ?>
+        <div id="content">
+            <span class="error">
+                <?php echo _('This page is currently disabled.'); ?><br />
+                <?php echo _('You will be redirected to the home page.'); ?>
+            </span>
+        <?php include("include/footer.php"); exit; ?>

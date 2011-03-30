@@ -27,65 +27,102 @@ Description: index page
 
 ***************************************************************************/
 $security ="";
+define('ROOT','./');
 $title = "Supertuxkart Addon Manager";
-include("include/security.php");
+include("include.php");
 include("include/view.php");
 include("include/top.php");
-include_once("include/var.php");
+
+// Validate addon-id parameter
+$_GET['title'] = (isset($_GET['title'])) ? addon_id_clean($_GET['title']) : NULL;
+$_GET['save'] = (isset($_GET['save'])) ? $_GET['save'] : NULL;
+$_GET['rev'] = (isset($_GET['rev'])) ? (int)$_GET['rev'] : NULL;
+
 ?>
-    </head>
-    <body>
-        <?php 
-        include("menu.php");
-        ?>
-		<div id="select-addons">
-		<div id="select-addons_top">
-		</div>
-		<div id="select-addons_center">
-		<?php
-        $js = "";
-        loadAddons();
-		?>
-		</div>
-		<div id="select-addons_bottom">
-		</div></div>
-        <div id="disAddon_content">
-        <div id="disAddon"></div></div>
-        <script type="text/javascript">
-            <?=$js?>
-        </script>
-        <?php include("include/footer.php"); ?>
-    </body>
-</html>
+</head>
+<body>
+<?php 
+include("include/menu.php");
+?>
+<div id="select-addons">
+<div id="select-addons_top">
+</div>
+<div id="select-addons_center">
 <?php
+$js = "";
+
+loadAddons();
+?>
+</div>
+<div id="select-addons_bottom">
+</div></div>
+<div id="content-addon">
+    <div id="content-addon_top"></div>
+    <div id="content-addon_status">
+<?php
+// Execute actions
+switch ($_GET['save'])
+{
+    default: break;
+    case 'desc':
+        if (!isset($_POST['description']))
+            break;
+        if (set_description($_GET['addons'], $_GET['title'], $_GET['rev'], $_POST['description']))
+            echo _('Saved description.').'<br />';
+        break;
+    case 'rev':
+        parseUpload($_FILES['file_addon'],true);
+        break;
+    case 'status':
+        if (!isset($_GET['addons']) || !isset($_GET['title']) || !isset($_POST['fields']))
+            break;
+        if (update_status($_GET['addons'],$_GET['title'],$_POST['fields']))
+            echo _('Saved status.').'<br />';
+        break;
+}
+?>
+    </div>
+    <div id="content-addon_body"></div>
+    <div id="content-addon_bottom"></div>
+</div>
+</div>
+<script type="text/javascript">
+<?php echo $js; ?>
+</script>
+<?php
+include("include/footer.php");
 function loadAddons()
 {
-    global $addon, $dirDownload, $dirUpload, $js, $USER_LOGGED;
-    if(get('addons') == "karts" or get('addons') == "tracks"  or $get('addons') == "file"  or get('addons') == "blender")
+    global $addon, $dirDownload, $dirUpload, $js, $user;
+    if($_GET['addons'] == "karts" ||
+            $_GET['addons'] == "tracks"  ||
+            $_GET['addons'] == "file"  ||
+            $_GET['addons'] == "blender")
     {
         $addonLoader = new coreAddon($_GET['addons']);
         $addonLoader->loadAll();
         echo '<ul id="list-addons">';
         while($addonLoader->next())
         {
-    		if($addonLoader->addonCurrent['available'] == 1)
-		    {
-		        echo '<li><a class="menu-addons" href="javascript:loadAddon('.$addonLoader->addonCurrent['id'].',\'addon.php?type='.$_GET['addons'].'\')">';
-		        if($_GET['addons'] != "tracks") echo '<img class="icon"  src="image.php?type=small&amp;pic='.$dirUpload.'icon/'.$addonLoader->addonCurrent['icon'].'" />';
-		        else echo '<img class="icon"  src="'.$dirDownload.'/icon/icon.png" />';
-		        echo $addonLoader->addonCurrent['name']."</a></li>";
-		    }
-	        elseif($USER_LOGGED && ($_SESSION['range']['manageaddons'] == true || $_SESSION['id'] == $addonLoader->addonCurrent['user']))
-		    {
-		        echo '<li><a class="menu-addons unavailable" href="javascript:loadAddon('.$addonLoader->addonCurrent['id'].',\'addon.php?type='.$_GET['addons'].'\')">';
-		        if($_GET['addons'] != "tracks") echo '<img class="icon"  src="image.php?type=small&amp;pic='.$dirUpload.'icon/'.$addonLoader->addonCurrent['icon'].'" />';
-		        else echo '<img class="icon"  src="'.$dirDownload.'/icon/icon.png" />';
-		        echo $addonLoader->addonCurrent['name']."</a></li>";
+            // Approved?
+            if(($addonLoader->addonCurrent['status'] & F_APPROVED) == F_APPROVED)
+            {
+                echo '<li><a class="menu-addons" href="javascript:loadAddon(\''.$addonLoader->addonCurrent['id'].'\',\'addon.php?type='.$_GET['addons'].'\')">';
+                if($_GET['addons'] != "tracks") echo '<img class="icon"  src="image.php?type=small&amp;pic='.$addonLoader->addonCurrent['image'].'" />';
+                else echo '<img class="icon"  src="image/track-icon.png" />';
+                echo $addonLoader->addonCurrent['name']."</a></li>";
             }
-	        if($addonLoader->addonCurrent['name'] == get('title')) $js.= 'loadAddon('.$addonLoader->addonCurrent['id'].',\'addon.php?type='.$_GET['addons'].'\')';
+            elseif($user->logged_in && ($_SESSION['role']['manageaddons'] == true || $_SESSION['userid'] == $addonLoader->addonCurrent['uploader']))
+            {
+                echo '<li><a class="menu-addons unavailable" href="javascript:loadAddon(\''.$addonLoader->addonCurrent['id'].'\',\'addon.php?type='.$_GET['addons'].'\')">';
+                if($_GET['addons'] != "tracks")
+                    echo '<img class="icon"  src="image.php?type=small&amp;pic='.$addonLoader->addonCurrent['image'].'" />';
+                else echo '<img class="icon"  src="image/track-icon.png" />';
+                echo $addonLoader->addonCurrent['name']."</a></li>";
+            }
+            if($addonLoader->addonCurrent['id'] == $_GET['title']) $js.= 'loadAddon(\''.$addonLoader->addonCurrent['id'].'\',\'addon.php?type='.$_GET['addons'].'\')';
         }
         echo "</ul>";
     }
-
 }
 ?>

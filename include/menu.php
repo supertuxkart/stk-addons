@@ -28,21 +28,21 @@ Description: menu
 ***************************************************************************/
 
 
-?>
-
-<?php
-if(isset($_SESSION["login"]))
+/*
+if($user->logged_in)
 {
 echo '<div id="advanced">
 <a href="#" id="advance_button"><img src="image/'.$style.'/plus.png" /></a>
 <div id="content_advanced">';
-if($_SESSION['range']['manageaddons'] || $_SERVER['PHP_SELF'] != "index.php")
+if($_SESSION['role']['manageaddons'] || $_SERVER['PHP_SELF'] != "index.php")
 {
-    if(ereg("index.php", $_SERVER['PHP_SELF']))	$reqSql = mysql_query("SELECT * FROM history WHERE `history`.`action` != 'add' LIMIT 7;") or die(mysql_error());
-    else $reqSql = mysql_query("SELECT * FROM history LIMIT 7") or die(mysql_error());
+    if(preg_match("/index\.php/i", $_SERVER['PHP_SELF']))
+        $reqSql = mysql_query("SELECT * FROM ".DB_PREFIX."history
+            WHERE `action` != 'add' LIMIT 7;") or die(mysql_error());
+    else $reqSql = mysql_query("SELECT * FROM ".DB_PREFIX."history LIMIT 7") or die(mysql_error());
 	while($history = mysql_fetch_array($reqSql))
 	{
-	    if($_SESSION['range']['manageaddons'] || $history['action'] == "add")
+	    if($_SESSION['role']['manageaddons'] || $history['action'] == "add")
 	    {
             echo '<div class="news_home">';
             $action = explode(" ",$history['action']);
@@ -91,8 +91,9 @@ if($_SESSION['range']['manageaddons'] || $_SERVER['PHP_SELF'] != "index.php")
             echo '</div>';
         }
     }
-}
+} */
 ?>
+<!--
 <br />
 <br />
 <br />
@@ -105,48 +106,50 @@ if($_SESSION['range']['manageaddons'] || $_SERVER['PHP_SELF'] != "index.php")
 </textarea>
 <input type="submit" />
 </form>
-</div>
-<?php
+</div> -->
+<?php /*
 echo '</div>';
 echo '</div>';
-}
+} */
 ?>
 <div id="global">
-<div id="top">
-	<?php
-	if(isset($_SESSION["login"]))
+<div id="top-menu">
+    <div id="top-menu-content">
+    <?php
+    if($user->logged_in)
     {
-		echo _("Welcome")." ".$_SESSION["login"];
-	}
-	echo '<a href="index.php">';
-	echo _("Home");
-	echo '</a>';
-	if(isset($_SESSION["login"]))
-	{
-		echo'<a href="unlogin.php">'._("Log out").'</a>';
-		echo'<a href="account.php">'._("Users").'</a>';
-		echo'<a href="upload.php">'._("Upload").'</a>';
-	}
-	else
-	{
-		
-	echo'<a href="login.php">';
-	echo _('Login');
-	echo '</a>';
-	}
-	//echo '<a href="upload.php">'._("Upload")'.</a>';
-	 	echo'<a href="about.php">';
-	echo _('About');
-	echo '</a>';
-	 ?>
-<a class="container" href="http://supertuxkart.sf.net"> <?php echo _("STK Homepage");?></a>
-	     <div class="container">
-<a class="menu_head" href="#" ><?php echo _("Languages");?></a>
-<ul class="menu_body">
-<li><a href="<?php echo $nom_page.'&amp;lang=nl'; ?>"><img src="image/flag/nl.png" /></a></li>
-<li><a href="<?php echo $nom_page.'&amp;lang=fr'; ?>"><img src="image/flag/fr.png" /></a></li>
-<li><a href="<?php echo $nom_page.'&amp;lang=en'; ?>"><img src="image/flag/en.png" /></a></li>
-<li><a href="<?php echo $nom_page.'&amp;lang=ga'; ?>"><img src="image/flag/ga.png" /></a></li>
-</ul>
-</div>
+        echo _('Welcome').' '.$_SESSION['real_name'].'&nbsp;&nbsp;&nbsp;';
+    }
+    echo '<a href="index.php">';
+    echo _("Home");
+    echo '</a>';
+    if($user->logged_in)
+    {
+        echo'<a href="login.php?action=logout">'._("Log out").'</a>';
+        echo'<a href="account.php">'._("Users").'</a>';
+        echo'<a href="upload.php">'._("Upload").'</a>';
+        if ($_SESSION['role']['managesettings'])
+            echo '<a href="manage.php">'._('Manage').'</a>';
+    }
+    else
+    {
+        echo'<a href="login.php">';
+        echo _('Login');
+        echo '</a>';
+    }
+    echo'<a href="about.php">';
+    echo _('About');
+    echo '</a>';
+     ?>
+    <a style="float: right;" href="http://supertuxkart.sourceforge.net"> <?php echo _("STK Homepage");?></a>
+    <div id="lang-menu">
+        <a class="menu_head" href="#"><?php echo _("Languages");?></a>
+        <ul class="menu_body">
+            <li><a href="<?php echo $nom_page.'&amp;lang=nl'; ?>"><img src="image/flag/nl.png" /></a></li>
+            <li><a href="<?php echo $nom_page.'&amp;lang=fr'; ?>"><img src="image/flag/fr.png" /></a></li>
+            <li><a href="<?php echo $nom_page.'&amp;lang=en'; ?>"><img src="image/flag/en.png" /></a></li>
+            <li><a href="<?php echo $nom_page.'&amp;lang=ga'; ?>"><img src="image/flag/ga.png" /></a></li>
+        </ul>
+    </div>
+    </div>
 </div>

@@ -1,20 +1,20 @@
 <?php
 /* copyright 2009 Lucas Baudin <xapantu@gmail.com>                 
-                                                                              
- This file is part of stkaddons.                                 
-                                                                              
- stkaddons is free software: you can redistribute it and/or      
- modify it under the terms of the GNU General Public License as published by  
- the Free Software Foundation, either version 3 of the License, or (at your   
- option) any later version.                                                   
-                                                                              
- stkaddons is distributed in the hope that it will be useful, but
- WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for    
- more details.                                                                
-                                                                              
- You should have received a copy of the GNU General Public License along with 
- stkaddons.  If not, see <http://www.gnu.org/licenses/>.   */
+ *
+ * This file is part of stkaddons.
+ * stkaddons is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or (at your
+ * option) any later version.
+ *
+ * stkaddons is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * stkaddons.  If not, see <http://www.gnu.org/licenses/>.
+ */
 ?>
 <?php
 /***************************************************************************
@@ -27,195 +27,203 @@ Description: file where all fonctions are
 
 ***************************************************************************/
 
-class coreUser extends coreAddon
+class coreUser
 {
-    function writeInformations()
+    var $reqSql;
+    var $userCurrent;
+
+    function selectById($id)
+    {
+        $querySql = 'SELECT *
+            FROM '.DB_PREFIX.'users
+            WHERE id = \''.$id.'\'';
+        $this->reqSql = sql_query($querySql);
+        $this->userCurrent = sql_next($this->reqSql);
+    }
+
+    function selectByUser($id)
+    {
+        $this->reqSql = sql_get_all_where('users', "user", $id);
+    }
+
+    function loadAll()
+    {
+        $querySql = 'SELECT *
+            FROM '.DB_PREFIX.'users
+            ORDER BY `user` ASC, `id` ASC';
+        $this->reqSql = sql_query($querySql);
+        return $this->reqSql;
+    }
+
+    function next()
+    {
+        $this->userCurrent = sql_next($this->reqSql);
+        if(!$this->userCurrent)
+            return false;
+        return true;
+    }
+
+    function viewInformation($config=True)
+    {
+        global $user;
+        if (!$user->logged_in)
+            return false;
+
+        $this->writeInformation();
+        //write configuration for the submiter and administrator
+        if(($_SESSION['role']['manage'.$this->userCurrent['role'].'s'] || $this->userCurrent['id'] == $_SESSION['userid']) && $config)
+        {
+            $this->writeConfig();
+        }
+    }
+
+    function writeInformation()
     {
         global $dirDownload, $dirUpload;
-		echo '<table><tr><td>'._("Login :").' </td><td>'.$this->addonCurrent['login'].'</td></tr>';
-		echo '<tr><td>'._("Date Registered :").'</td><td>'.$this->addonCurrent['date'].'</td></tr>';
-		if(file_exists($dirUpload.'/avatar/'.$this->addonCurrent['avatar']))
+		echo '<table><tr><td>'._('Username:').'</td><td>'.$this->userCurrent['user'].'</td></tr>';
+		echo '<tr><td>'._('Registration Date:').'</td><td>'.$this->userCurrent['reg_date'].'</td></tr>';
+                echo '<tr><td>'._('Real Name:').'</td><td>'.$this->userCurrent['name'].'</td></tr>';
+		if(file_exists(UP_LOCATION.'avatar/'.$this->userCurrent['avatar']) && $this->userCurrent['avatar'] != NULL)
 		{
-		echo '<tr><td>'._("Avatar :").'</td><td><img class="avatar" src="'.$dirDownload.'/avatar/'.$this->addonCurrent['avatar'].'" /></td></tr>';
+		echo '<tr><td>'._('Avatar:').'</td><td><img class="avatar" src="'.DOWN_LOCATION.'avatar/'.$this->userCurrent['avatar'].'" /></td></tr>';
 		}
-		echo '<tr><td>'._("Range :").'</td><td>'._($this->addonCurrent['range']).'</td></tr>';
-		echo '<tr><td>'._("Homepage :").'</td><td><a href="'.$this->addonCurrent['homepage'].'" >'.$this->addonCurrent['homepage'].'</a></td></tr></table>';
+		echo '<tr><td>'._('Role:').'</td><td>'._($this->userCurrent['role']).'</td></tr>';
+		echo '<tr><td>'._('Homepage:').'</td><td><a href="'.$this->userCurrent['homepage'].'" >'.$this->userCurrent['homepage'].'</a></td></tr></table>';
 		
 		
-		echo '<h3>My karts</h3>';
+		echo '<h3>'._('My Karts').'</h3>';
 		$mykart = new coreAddon("karts");
-		$mykart->selectByUser($this->addonCurrent['id']);
+		$mykart->selectByUser($this->userCurrent['id']);
 		echo '<ul>';
-		while($mykart->next())
+		while($mykart->addonCurrent)
 		{
-		    if($mykart->addonCurrent['available'] == 1)
-		    {
-			echo'<li><a href="addon-view.php?addons=karts&amp;title='.$mykart->addonCurrent['name'].'">';
-			echo $mykart->addonCurrent['name'];
-			echo'</a></li>';
-			}
+                    if ($mykart->addonCurrent['status'] & F_APPROVED || $mykart->addonCurrent['uploader'] == $this->userCurrent['id']) {
+                        echo'<li><a href="addon-view.php?addons=karts&amp;title='.$mykart->addonCurrent['id'].'">';
+                        echo $mykart->addonCurrent['name'];
+                        if (($mykart->addonCurrent['status'] & F_APPROVED) != F_APPROVED)
+                            echo ' ('._('Not approved').')';
+                        echo'</a></li>';
+                    }
+                    $mykart->next();
 		}
 		echo '</ul>';
 		
-		echo '<h3>My tracks</h3>';
+		echo '<h3>'._('My Tracks').'</h3>';
 		$mytrack = new coreAddon("tracks");
-		$mytrack->selectByUser($this->addonCurrent['id']);
+		$mytrack->selectByUser($this->userCurrent['id']);
 		echo '<ul>';
-		while($mytrack->next())
+		while($mytrack->addonCurrent)
 		{
-		    if($mytrack->addonCurrent['available'] == 1)
+		    if($mytrack->addonCurrent['status'] & F_APPROVED || $mytrack->addonCurrent['uploader'] == $this->userCurrent['id'])
 		    {
-			echo'<li><a href="addon-view.php?addons=tracks&amp;title='.$mytrack->addonCurrent['name'].'">';
+			echo'<li><a href="addon-view.php?addons=tracks&amp;title='.$mytrack->addonCurrent['id'].'">';
 			echo $mytrack->addonCurrent['name'];
+                        if (($mytrack->addonCurrent['status'] & F_APPROVED) != F_APPROVED)
+                            echo ' ('._('Not approved').')';
 			echo'</a></li>';
-			}
+                    }
+                    $mytrack->next();
 		}
 		echo '</ul>';
     }
+
     function writeConfig()
     {
         global $dirDownload, $dirUpload;
         echo '
         <hr />
         <h3>Configuration</h3>
-        <form action="#" method="GET" >';
-        $propertie_sql = mysql_query("SELECT * FROM properties WHERE `properties`.`type` = '".$this->addonType."' AND `properties`.`lock` != 1;");
-        $file_str = "";
-        while($propertie = mysql_fetch_array($propertie_sql))
+        <form enctype="multipart/form-data" action="?title='.$this->userCurrent['id'].'&amp;action=config" method="GET" >
+        <table>';
+        echo '<tr><td>'._('Homepage:').'</td><td><input type="text" name="homepage" value="'.$this->userCurrent['homepage'].'" /></td></tr>';
+        echo '<tr><td>'._('Avatar:').'</td><td><input type="file" name="avatar" /></td></tr>';
+        // Edit role if allowed
+        if($_SESSION['role']['manage'.$this->userCurrent['role'].'s'] == true || $_SESSION['userid'] == $this->userCurrent['id'])
         {
-            $cible = 'addonRequest(\'user.php?type='.$this->addonType.'&amp;action='.str_replace(" ", "", $propertie['name']).'\', '.$this->addonCurrent['id'].',document.getElementById(\''.str_replace(" ", "", $propertie['name']).'\').value)';
-            if($propertie['typefield'] == "textarea")
+            echo '<tr><td>'._('Role:').'</td><td>';
+            echo '<select name="range">';
+            echo '<option value="basicUser">Basic User</option>';
+            $range = array("moderator","administrator");
+            for($i=0;$i<2;$i++)
             {
-                echo "<br />".$propertie['name']." :<br />";
-                echo '<textarea cols="75" rows="8" id="'.str_replace(" ", "", $propertie['name']).'">'.$this->addonCurrent[str_replace(" ", "", $propertie['name'])].'</textarea><br />';
-                echo '<input onclick="'.$cible.'" value="Change '.$propertie['name'].'" type="button" />';
-            }
-            elseif($propertie['typefield'] == "text")
-            {
-                echo "</form><br />".$propertie['name']." :<br />";
-                echo '<form action="javascript:'.$cible.'" method="GET" >';
-                echo '<input type="text" id="'.str_replace(" ", "", $propertie['name']).'" value="'.$this->addonCurrent[str_replace(" ", "", $propertie['name'])].'" ><br />';
-                echo '<input onclick="'.$cible.'" value="Change '.$propertie['name'].'" type="button" />';
-                echo "</form>";
-                echo '<form action="#" method="GET" >';
-            }
-            elseif($propertie['typefield'] == "enum")
-            {
-                echo "<br />".$propertie['name']." :<br />";
-                echo '<select onchange="addonRequest(\'user.php?type='.$this->addonType.'&amp;action='.$propertie['name'].'\', '.$this->addonCurrent['id'].', this.value)">';
-                
-                $values =explode("\n", $propertie['default']);
-                foreach($values as $value)
+                if($_SESSION['role']['manage'.$range[$i].'s'] == true)
                 {
-                    echo '<option value="'.$value.'"';
-                    if($this->addonCurrent[str_replace(" ", "", $propertie['name'])]==$value) echo 'selected="selected" ';
-                    echo '>'.$value.'</option>';
+                    echo '<option value="'.$range[$i].'"';
+                    if($this->userCurrent['role'] == $range[$i]) echo 'selected="selected"';
+                    echo '>'.$range[$i].'</option>';
                 }
-                echo '</select>';
             }
-            elseif($propertie['typefield'] == "file")
+            echo '</select>';
+            echo '</td></tr><tr><td>'._('User Activated:').'</td><td>';
+            echo '<input type="checkbox" name="available" ';
+            if($this->userCurrent['active'] == 1)
             {
-                $file_str .='<option value="'.strtolower(str_replace(" ", "", $propertie['name'])).'">'.$propertie['name'].'</option>';
+                echo 'checked="checked" ';
             }
+            echo '/></td></tr>';
         }
-        echo '</form>';
-        echo '<form id="formKart" enctype="multipart/form-data" action="user.php?action=file&amp;type='.$this->addonType.'&amp;id='.$this->addonCurrent['id'].'" method="POST">
-        <select name="fileType">';
-        echo $file_str;
-        echo '</select>
-        <input type="file" name="fileSend"/>
-        <input type="submit"/>
-        </form>';
-		if($_SESSION['range']['manage'.$this->addonCurrent['range'].'s'] == true)
-		{
-			echo '<form action="#" method="GET">';
-			echo '<select onchange="addonRequest(\'user.php?action=range&value=\', '.$this->addonCurrent['id'].', this.value)" name="range" id="range'.$this->addonCurrent['id'].'">';
-			echo '<option value="basicUser">Basic User</option>';
-			$range = array("moderator","administrator");
-			for($i=0;$i<2;$i++)
-			{
-				if($_SESSION['range']['manage'.$range[$i].'s'] == true)
-				{
-					echo '<option value="'.$range[$i].'"';
-					if($this->addonCurrent['range'] == $range[$i]) echo 'selected="selected"';
-					echo '>'.$range[$i].'</option>';
-				}
-			}
-			echo '</select>';
-			echo '<input  onchange="addonRequest(\'user.php?action=available\', '.$this->addonCurrent['id'].')" type="checkbox" name="available" id="available" ';
-			if($this->addonCurrent['available'] ==1)
-			{
-				echo 'checked="checked" ';
-			}
-			echo '/> <label for="available">Available</label><br /></form>';
-		}
-		if($this->addonCurrent['id'] == $_SESSION['id'])
-		{
-		echo '<h3>Change password</h3>
-		<form action="user.php?id='.$this->addonCurrent['id'].'&amp;action=password" method="POST">
-		Old password :<br />
-		<input type="password" name="oldPass" /><br />
-		New password :<br />
-		<input type="password" name="newPass" /><br />
-		Please enter a second time your password : <br />
-		<input type="password" name="newPass2" /><br />
-		<input type="submit" value="Submit" />
-		</form>';
-		}
+        echo '<tr><td></td><td><input type="submit" value="'._('Save Configuration').'" disabled /></td></tr>';
+        echo '</table></form>';
+        if($this->userCurrent['id'] == $_SESSION['userid'])
+        {
+            echo '<h3>'._('Change Password').'</h3>
+            <form action="account.php?title='.$this->userCurrent['id'].'&amp;action=password" method="POST">
+            '._('Old Password:').'<br />
+            <input type="password" name="oldPass" /><br />
+            '._('New Password:').'<br />
+            <input type="password" name="newPass" /><br />
+            '._('New Password (Confirm):').'<br />
+            <input type="password" name="newPass2" /><br />
+            <input type="submit" value="'._('Change Password').'" />
+            </form>';
+            }
 	}
-	function setPass()
-	{
-	
-		global $base;
-		$newPass = mysql_real_escape_string($_POST['newPass']);
-		$succes =false;
-		if($newPass == $_POST['newPass2'])
-		{
-			if(md5($_POST['oldPass']) == $this->addonCurrent['pass'])
-			{
-				
-				if($_SESSION['id'] == $this->addonCurrent['id'])
-				{
-					mysql_query("UPDATE `".$base."`.`users` SET `pass` = '".md5($_POST['newPass'])."' WHERE `users`.`id` =".$this->addonCurrent['id']." LIMIT 1 ;");
-					echo '<div id="content">
-					Your password is changed.
-					</div>';
-					$succes=true;
-				}
-			}
-			else
-			{
-				echo "Wrong old password";
-			}
-		}
-		else
-		{
-			echo "Your passwords aren't same";
-		}
-		
-		return $succes;
-	}
-	function permalink()
-	{
-	    return 'account.php?title='.$this->addonCurrent['login'];
-	}
+ 
+    function setPass()
+    {
+        $newPass = mysql_real_escape_string($_POST['newPass']);
+        $succes =false;
+        if($newPass != $_POST['newPass2'])
+        {
+            echo '<span class="error">'._('Your passwords do not match.').'</span><br />';
+            return false;
+        }
+        if(hash('sha256',$_POST['oldPass']) != $this->addonCurrent['pass'])
+        {
+            echo '<span class="error">'._('Your old password is not correct.').'</span><br />';
+            return false;
+        }
+
+        if($_SESSION['userid'] == $this->addonCurrent['id'])
+        {
+                mysql_query("UPDATE `".DB_PREFIX."users` SET `pass` = '".hash('sha256',$_POST['newPass'])."' WHERE `id` =".$this->addonCurrent['id']." LIMIT 1 ;");
+                echo _('Your password is changed.').'<br />';
+                $succes=true;
+        }
+
+        return $succes;
+    }
+    function permalink()
+    {
+        return 'account.php?title='.$this->addonCurrent['name'];
+    }
     function setAvailable()
     {
         global $base;
-        if($_SESSION['range']['manageaddons'] == true)
+        if($_SESSION['role']['manageaddons'] == true)
         {
             if($this->addonCurrent['available'] == 0)
             {
-                mysql_query("UPDATE `".$base."`.`".$this->addonType."` SET `available` = '1' WHERE `".$this->addonType."`.`id` =".$this->addonCurrent['id']." LIMIT 1 ;");
+                mysql_query("UPDATE `".DB_PREFIX.$this->addonType."` SET `available` = '1' WHERE `id` =".$this->addonCurrent['id']." LIMIT 1 ;");
             }
-            else mysql_query("UPDATE `".$base."`.`".$this->addonType."` SET `available` = '0' WHERE `".$this->addonType."`.`id` =".$this->addonCurrent['id']." LIMIT 1 ;");
+            else mysql_query("UPDATE .`".DB_PREFIX.$this->addonType."` SET `available` = '0' WHERE `id` =".$this->addonCurrent['id']." LIMIT 1 ;");
         }
     }
 	function setRange($range)
 	{
 	
 		global $base;
-		if($_SESSION['range']['manage'.$this->addonCurrent['range'].'s'] == true && $_SESSION['range']['manage'.$range.'s'] == true)
+		if($_SESSION['role']['manage'.$this->addonCurrent['range'].'s'] == true && $_SESSION['role']['manage'.$range.'s'] == true)
 		{
 			mysql_query("UPDATE `".$base."`.`users` SET `range` = '".$range."' WHERE `users`.`id` =".$this->addonCurrent['id']." LIMIT 1 ;");
 		}
@@ -249,7 +257,7 @@ class coreUser
 	{
 	
 		global $base;
-		if($_SESSION['range']['manage'.$this->addonCurrent['range'].'s'] == true)
+		if($_SESSION['role']['manage'.$this->addonCurrent['range'].'s'] == true)
 		{
 			if($this->addonCurrent['available'] == 0) mysql_query("UPDATE `".$base."`.`users` SET `available` = '1' WHERE `users`.`id` =".$this->addonCurrent['id']." LIMIT 1 ;") or die(mysql_error());
 			if($this->addonCurrent['available'] == 1) mysql_query("UPDATE `".$base."`.`users` SET `available` = '0' WHERE `users`.`id` =".$this->addonCurrent['id']." LIMIT 1 ;")  or die(mysql_error());
@@ -259,7 +267,7 @@ class coreUser
 	{
 	
 		global $base;
-		if($_SESSION['range']['manage'.$this->addonCurrent['range'].'s'] == true && $_SESSION['range']['manage'.$range.'s'] == true)
+		if($_SESSION['role']['manage'.$this->addonCurrent['range'].'s'] == true && $_SESSION['role']['manage'.$range.'s'] == true)
 		{
 			mysql_query("UPDATE `".$base."`.`users` SET `range` = '".$range."' WHERE `users`.`id` =".$this->addonCurrent['id']." LIMIT 1 ;");
 		}
@@ -314,12 +322,12 @@ class coreUser
 		echo '<table><tr><td>Login : </td><td>'.$this->addonCurrent['login'].'</td></tr>';
 		echo '<tr><td>Date Registered:</td><td>'.$this->addonCurrent['date'].'</td></tr>';
 		echo '<tr><td>Homepage :</td><td>'.$this->addonCurrent['homepage'].'</td></tr>';
-		if($_SESSION['range']['manage'.$this->addonCurrent['range'].'s'] == true || $_SESSION['id'] == $this->addonCurrent['id'])
+		if($_SESSION['role']['manage'.$this->addonCurrent['range'].'s'] == true || $_SESSION['id'] == $this->addonCurrent['id'])
 		{
 			echo 'Mail : '.$this->addonCurrent['mail'].'';
 		}
 		echo '</table>';
-		if($_SESSION['range']['manage'.$this->addonCurrent['range'].'s'] == true)
+		if($_SESSION['role']['manage'.$this->addonCurrent['range'].'s'] == true)
 		{
 			echo '<form action="#" method="GET">';
 			echo '<select onchange="addonRequest(\'user.php?action=range&value=\'+this.value, '.$this->addonCurrent['id'].')" name="range" id="range'.$this->addonCurrent['id'].'">';
@@ -327,7 +335,7 @@ class coreUser
 			$range = array("moderator","administrator");
 			for($i=0;$i<2;$i++)
 			{
-				if($_SESSION['range']['manage'.$range[$i].'s'] == true)
+				if($_SESSION['role']['manage'.$range[$i].'s'] == true)
 				{
 					echo '<option value="'.$range[$i].'"';
 					if($this->addonCurrent['range'] == $range[$i]) echo 'selected="selected"';

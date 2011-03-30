@@ -32,7 +32,7 @@ $passage_ligne = "\n";
 	switch($subject)
 	{
 		case "newAccount":
-			$message_html = "<html><head></head><body>Thank you for subscribing to the SuperTuxKart Add-Ons Manager. Please click <a href=\"http://".$_SERVER["SERVER_NAME"].$option[1]."?action=valid&amp;num=$option[0]\">here</a> to confirm your account<br />Login : ".$option[2]."<br />Password : ".$option[3]."</body></html>";
+			$message_html = "<html><head></head><body>Thank you for subscribing to the SuperTuxKart Add-Ons Manager. Please click <a href=\"http://".$_SERVER["SERVER_NAME"].$option[1]."?action=valid&amp;num=$option[0]\">here</a> to confirm your account<br />Username : ".$option[2]."<br />Password : ".$option[3]."</body></html>";
 			$sujet = "New Account at ".$_SERVER["SERVER_NAME"];
 			break;
 		case "bug":

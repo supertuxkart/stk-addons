@@ -1,4 +1,4 @@
-<?
+<?php
 /* copyright 2009 Lucas Baudin <xapantu@gmail.com>                 
                                                                               
  This file is part of stkaddons.                                 

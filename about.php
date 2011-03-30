@@ -27,19 +27,21 @@ Description: credits page
 
 ***************************************************************************/
 
+define('ROOT','./');
 $security ="";
-include("include/security.php");
-include("include/top.php");
-include("config.php");
+include('include.php');
+include('include/top.php');
 ?>
 	</head>
 	<body>
 		<?php 
-		include("menu.php");
+		include('include/menu.php');
 		?>
 		<div id="content">
 		<?php
-		include ("CREDITS");
+		$credits = file_get_contents("CREDITS");
+                $credits = str_replace("\n",'<br />',$credits);
+                echo '<tt>'.$credits.'</tt>';
 		?>
 		</div>
 		<?php

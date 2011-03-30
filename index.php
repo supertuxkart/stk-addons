@@ -26,105 +26,64 @@ Licence: GPLv3
 Description: index page
 
 ***************************************************************************/
+define('ROOT','./');
 $security ="";
-include("include/security.php");
+require('include.php');
 include("include/top.php");
-include_once("config.php");
 ?>
 	</head>
 	<body>
 		<?php 
-		include("menu.php");
+		include(ROOT.'include/menu.php');
 		?>
-		<img id="logo_center" src="image/logo_large.png" />
-		
-		<div id="news_div">
-		<div id="news_top">
-		</div>
-		<div id="news_center">
-		STK development blog : 
-		<?php
-		
-        if(!@fopen("rss", 'r'))
-        {
-            include("rss.php");
-        }
-        $fichier = fopen("rss", "r");
-        echo fgets($fichier);
-        fclose($fichier);
-        echo '<hr />';
-		$reqSql = mysql_query("SELECT * FROM history WHERE `history`.`action` = 'add' LIMIT 7") or die(mysql_error());
-		while($history = mysql_fetch_array($reqSql))
-		{
-		    if($_SESSION['range']['manageaddons'] || $history['action'] == "add")
-		    {
-		        echo '<div class="news_home">';
-		        $action = explode(" ",$history['action']);
-		        switch($action[0])
-		        {
-		            case "add":
-		                $option = explode("\n",$history['option']);
-		                $user = new coreUser('users');
-		                $user->selectById($history['user']);
-		                $addon = new coreAddon($option[0]);
-		                $addon->selectById($option[1]);
-		                echo '<span class="newaddon">';
-		                echo _("New ");
-		                switch ($option[0])
-		                {
-		                    case 'karts':
-		                    echo _("kart");
-		                    break;
-		                    case 'tracks':
-		                    echo _("track");
-		                    break;
-		                }
-		                echo '</span>';
-		                echo ' <a href="'.$addon->permalink().'" >';
-		                echo $addon->addonCurrent['name'];
-		                echo '</a> ';
-		                echo _('by');
-		                echo ' <a href="'.$user->permalink().'">';
-		                echo $user->addonCurrent['login'];
-		                echo '</a>';
-		                break;
-	                case "change":
-		                $option = explode("\n",$history['option']);
-		                $user = new coreUser('users');
-		                $user->selectById($history['user']);
-		                $addon = new coreAddon($option[0]);
-		                $addon->selectById($option[1]);
-		                echo ' <a href="'.$user->permalink().'">';
-		                echo $user->addonCurrent['login'];
-		                echo '</a>';
-		                echo " "._("modified ");
-		                echo ' <a href="'.$addon->permalink().'" >';
-		                echo $addon->addonCurrent['name'];
-		                echo '</a> ';
-		        }
-		        echo '</div>';
-		    }
-		}
-		?>
-		</div>
-		<div id="news_bottom">
-		</div></div>
-		<div id="add-ons-for"><h1><div class="left"></div><div class="center"><?php echo _("Add-ons for Supertuxkart 0.7"); ?></div><div class="right"></div></h1></div>
-		<div id="add-ons-type">
+                <div style="text-align: center; width: 100%;"><img id="logo_center" src="image/logo_large.png" alt="SuperTuxKart Logo" /></div>
+
+		<div id="select-addon-panel">
 		    <div class="addons">
-		        <a href="addon-view.php?addons=karts" />
-		        <img src="image/karts.png" />
-		        <h2 class="menu"><div class="left"></div><div class="center"><?php echo _("Karts"); ?></div><div class="right"></div></h2>
-		    </div><div class="addons">
-		        <a href="addon-view.php?addons=tracks" />
-		        <img src="image/tracks.png" />
-		        <h2 class="menu" ><div class="left"></div><div class="center"><?php echo _("Tracks"); ?></div><div class="right"></div></h2>
-		    </div><div class="addons">
-		        <a href="http://supertuxkart.sourceforge.net/Category:Stkaddons" />
-		        <img src="image/help.png" />
-		        <h2 class="menu"><div class="left"></div><div class="center"><?php echo _("Help"); ?></div><div class="right"></div></h2>
+		        <a href="addon-view.php?addons=karts">
+                            <img src="image/karts.png" alt="<?php echo _('Karts'); ?>" />
+                            <h2 class="menu">
+                                <div class="left"></div>
+                                <div class="center"><?php echo _("Karts"); ?></div>
+                                <div class="right"></div>
+                            </h2>
+                        </a>
+		    </div>
+                    <div class="addons">
+		        <a href="addon-view.php?addons=tracks">
+                            <img src="image/tracks.png" alt="<?php echo _('Tracks'); ?>" />
+                            <h2 class="menu" >
+                                <div class="left"></div>
+                                <div class="center"><?php echo _("Tracks"); ?></div>
+                                <div class="right"></div>
+                            </h2>
+                        </a>
+		    </div>
+                    <div class="addons">
+		        <a href="http://supertuxkart.sourceforge.net/Category:Stkaddons">
+                            <img src="image/help.png" alt="<?php echo _('Help'); ?>" />
+                            <h2 class="menu">
+                                <div class="left"></div>
+                                <div class="center"><?php echo _("Help"); ?></div>
+                                <div class="right"></div>
+                            </h2>
+                        </a>
 		    </div>
 		</div>
+                <div id="news-panel">
+                    <ul id="news-messages">
+                        <?php
+                        $newsSql = 'SELECT * FROM `'.DB_PREFIX.'news`
+                            WHERE `active` = 1
+                            ORDER BY `date` DESC';
+                        $handle = sql_query($newsSql);
+                        for ($result = sql_next($handle); $result; $result = sql_next($handle))
+                        {
+                            echo '<li>'.htmlentities($result['content']).'</li>';
+                        }
+                        ?>
+                    </ul>
+                </div>
 		<?php
 		include("include/footer.php"); ?>
 	</body>

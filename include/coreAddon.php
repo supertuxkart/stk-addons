@@ -16,8 +16,6 @@
  You should have received a copy of the GNU General Public License along with 
  stkaddons.  If not, see <http://www.gnu.org/licenses/>.   */
 
-include_once(ROOT."config.php");
-include_once(ROOT."include/coreUser.php");
 class coreAddon
 {
     //e.g. karts or tracks
@@ -30,60 +28,113 @@ class coreAddon
         $this->addonType = $type;
     }
 
-    function selectById($id)
+    function selectById($id, $rev = NULL)
     {
-        $this->reqSql = sql_get_all_where($this->addonType, 'id', $id);
+        if ($rev == NULL) {
+            $querySql = 'SELECT a.*, r.id AS fileid, r.creation_date AS revision_timestamp,
+                    r.revision, r.format, r.image, r.status
+                FROM '.DB_PREFIX.$this->addonType.' a
+                LEFT JOIN '.DB_PREFIX.$this->addonType.'_revs r
+                ON a.id = r.addon_id
+                WHERE a.id = \''.$id.'\'
+                ORDER BY r.revision DESC';
+        }
+        else
+        {
+            $querySql = 'SELECT a.*, r.id AS fileid, r.creation_date AS revision_timestamp,
+                    r.revision, r.format, r.image, r.status
+                FROM '.DB_PREFIX.$this->addonType.' a
+                LEFT JOIN '.DB_PREFIX.$this->addonType.'_revs r
+                ON a.id = r.addon_id
+                WHERE a.id = \''.$id.'\'
+                AND r.revision = \''.$rev.'\'';
+        }
+        $this->reqSql = sql_query($querySql);
         $this->addonCurrent = sql_next($this->reqSql);
+        if ($this->addonCurrent)
+            $this->addonCurrent['permUrl'] = 'http://'.$_SERVER['SERVER_NAME'].
+                    str_replace("addon.php", "addon-view.php", $_SERVER['SCRIPT_NAME']).
+                    '?addons='.$this->addonType.'&amp;title='.$this->addonCurrent['id'];
     }
 
     function selectByUser($id)
     {
-        $this->reqSql = sql_get_all_where($this->addonType, "user", $id);
+        $querySql = 'SELECT a.*, r.id AS fileid,
+                r.creation_date AS revision_timestamp, r.revision,
+                r.format, r.image, r.status
+            FROM '.DB_PREFIX.$this->addonType.' a
+            LEFT JOIN '.DB_PREFIX.$this->addonType.'_revs r
+            ON a.id = r.addon_id
+            WHERE a.uploader = \''.$id.'\'';
+        $this->reqSql = sql_query($querySql);
+        $this->addonCurrent = sql_next($this->reqSql);
+        if ($this->addonCurrent)
+            $this->addonCurrent['permUrl'] = 'http://'.$_SERVER['SERVER_NAME'].
+                    str_replace("addon.php", "addon-view.php", $_SERVER['SCRIPT_NAME']).
+                    '?addons='.$this->addonType.'&amp;title='.$this->addonCurrent['id'];
     }
 
     function loadAll()
     {
-        $this->reqSql = sql_get_all($this->addonType);
-        return false != $this->reqSql;
+        $querySql = 'SELECT a.*, r.id AS fileid, r.revision, r.format, r.image, r.status
+            FROM '.DB_PREFIX.$this->addonType.' a
+            LEFT JOIN '.DB_PREFIX.$this->addonType.'_revs r
+            ON a.id = r.addon_id
+            WHERE r.status & '.F_LATEST.'
+            ORDER BY a.`name` ASC, a.`id` ASC';
+        $this->reqSql = sql_query($querySql);
+        return $this->reqSql;
     }
 
     function next()
     {
-        $succes = true;
         $this->addonCurrent = sql_next($this->reqSql);
         if(!$this->addonCurrent)
-        {
-            $succes = false;
-        }
-        return $succes;
+            return false;
+        $this->addonCurrent['permUrl'] = 'http://'.$_SERVER['SERVER_NAME'].
+                str_replace("addon.php", "addon-view.php", $_SERVER['SCRIPT_NAME']).
+                '?addons='.$this->addonType.'&amp;title='.$this->addonCurrent['id'];
+        return true;
     }
 
-    function setAvailable()
+    /**
+     * Change the approval value on the add-on revision
+     * @global user $user
+     * @return boolean Success
+     */
+    function approve()
     {
-        global $USER_LOGGED;
-        if($USER_LOGGED && $_SESSION['range']['manageaddons'] == true)
+        global $user;
+        if (!$user->logged_in)
+            return false;
+        if($_SESSION['role']['manageaddons'] != true)
+            return false;
+
+        /* if the addons is already available, we want to deactivate it :
+            $is_available = abs(1 - 1) = 0
+           else, it isn't and we want to activate it:
+            $is_available = abs(0 - 1) = 1
+         */
+        $current_status = bindec($this->addonCurrrent['status']);
+        if ($current_status & F_APPROVED)
         {
-            /* if the addons is already available, we want to deactivate it :
-                $is_available = abs(1 - 1) = 0
-               else, it isn't and we want to activate it:
-                $is_available = abs(0 - 1) = 1
-             */
-            $is_available = abs($this->addonCurrent['available'] - 1);
-            sql_update($this->addonType, "id",
-                       $this->addonCurrent['id'],
-                       "available",
-                       $is_available);
-            return true;
+            $current_status = $current_status - F_APPROVED;
         }
         else
         {
-            return false;
+            $current_status = $current_status + F_APPROVED;
         }
+        if (!sql_update($this->addonType.'_revs', "id",
+                   $this->addonCurrent['id'],
+                   "status",
+                   decbin($current_status)))
+            return false;
+        return true;
     }
 
     function setFile($filetype = "image")
     {
-        if($_SESSION['range']['manageaddons'] == true || $this->addonCurrent['user'] == $_SESSION['id'])
+        if($_SESSION['role']['manageaddons'] == true || $this->addonCurrent['user'] == $_SESSION['userid'])
         {
             if (isset($_FILES['fileSend']))
             {
@@ -106,221 +157,296 @@ class coreAddon
     */
     function setInformation($info, $value)
     {
-        global $USER_LOGGED;
-        if($USER_LOGGED && $_SESSION['range']['manageaddons'] == true || $this->addonCurrent['user'] == $_SESSION['id'])
-        {
-            if(sql_exist("properties", "name", $info))
-            {
-                $propertie_sql = sql_get_all_where("properties", "name", $info);
-                $propertie = sql_next($propertie_sql);
-                if($propertie["lock"] != 1)
-                {
-                    if($propertie['typefield'] == "file")
-                    {
-                        $this->setFile(post('fileType'));
-                    }
-                    else
-                    {
-                        sql_update($this->addonType, "id", $this->addonCurrent['id'], $propertie['name'], $value);
+        global $user;
+        if (!$user->logged_in)
+            return false;
 
-                    }
-                    return true;
+        if ($_SESSION['role']['manageaddons'] != true && $this->addonCurrent['uploader'] != $_SESSION['userid'])
+            return false;
+        if (sql_exist("properties", "name", $info))
+        {
+            $propertie_sql = sql_get_all_where("properties", "name", $info);
+            $propertie = sql_next($propertie_sql);
+            if($propertie["lock"] != 1)
+            {
+                if($propertie['typefield'] == "file")
+                {
+                    $this->setFile(post('fileType'));
                 }
+                else
+                {
+                    sql_update($this->addonType, "id", $this->addonCurrent['id'], $propertie['name'], $value);
+
+                }
+                return true;
             }
-            if(!defined("UNIT_TEST"))
-                echo "Error, I can't find this property.";
         }
-        return false;
     }
 
     /** Remove the selected addons. */
     function remove()
     {
-        if($_SESSION['range']['manageaddons'] == true)
-        {
-            sql_remove_where($this->addonType, "id", $this->addonCurrent['id']);
-            return true;
-        }
-        else
-        {
+        global $user;
+        if (!$user->logged_in)
             return false;
-        }
+        if($_SESSION['role']['manageaddons'] != true)
+            return false;
+        sql_remove_where($this->addonType, "id", $this->addonCurrent['id']);
+        return true;
     }
 
     /** Print the information of the addon, it name, it description, it
       * version...
       */
-    function writeInformations()
+    function writeInformation()
     {
-        global $dirDownload, $dirUpload;
+        $addonUser = new coreUser();
+        $addonUser->selectById($this->addonCurrent['uploader']);
+        if ($this->addonCurrent['designer'] == NULL)
+            $this->addonCurrent['designer'] = '<em>'._('Unknown').'</em>';
+        if ($this->addonCurrent['description'] == NULL)
+            $description = NULL;
+        else
+            $description = htmlentities ($this->addonCurrent['description']).'<br />';
+
         //div for jqery TODO:add jquery effects
-        ?>
-        <div id="accordion">
-        <div>
-        <img class="preview" src="image.php?type=big&amp;pic=<?=UP_LOCATION.'image/'.$this->addonCurrent['image']?>" />
+        echo '<div id="accordion"><div>
+        <h1>'.$this->addonCurrent['name'].'</h1>
+        <img class="preview" src="image.php?type=big&amp;pic=images/'.$this->addonCurrent['image'].'" style="float: right;" />
+        '.$description.'
         <table>
-            <tr>
-                <td>
-                    <span class="addon_informations_field" id="addons_informations_name">
-                        <?=_("Name:")?>
-                    </span>
-                </td>
-                <td>
-                    <?=$this->addonCurrent['name']?>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <span class="addon_informations_field" id="addons_informations_description">
-                        <?=_("Description:")?>
-                    </span>
-                </td>
-                <td>
-                    <?=bbc($this->addonCurrent['Description'])?>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <span class="addon_informations_field" id="addons_informations_revision">
-                        <?=_("Revision:")?>
-                    </span>
-                </td>
-                <td>
-                    <?=$this->addonCurrent['version']?>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <span class="addon_informations_field" id="addons_informations_stkversion">
-                        <?=_("Version of STK:")?>
-                    </span>
-                </td>
-                <td>
-                    <?=$this->addonCurrent['STKVersion']?>
-                    <?php
-                    //load class user
-                    $user = new coreUser('users');
-                    
-                    //select submiter of addons TODO:add author 
-                    $user->selectById($this->addonCurrent['user']);
-                    
-                    ?>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <span class="addon_informations_field" id="addons_informations_name">
-                        <?=_("Author:")?>
-                    </span>
-                </td>
-                    <?php
-                    if($this->addonCurrent['Author'] != "")
-                    {
-                    ?>
-                <td>
-                    <?=bbc($this->addonCurrent['Author'])?>
-                </td>
-            </tr>
-            <tr>
-                        <?php
-                        echo _("Submitter:");
-                    }
-                ?>
-                <td>
-                    <a href="account.php?title=<?=$user->addonCurrent['login']?>"><?=$user->addonCurrent['login']?></a>
-                </td>
-            </tr>
-        </table>
-        </div>
+        <tr><td><strong>'._('Designer:').'</strong></td><td>'.$this->addonCurrent['designer'].'</td></tr>
+        <tr><td><strong>'._('Upload date:').'</strong></td><td>'.$this->addonCurrent['revision_timestamp'].'</td></tr>
+        <tr><td><strong>'._('Submitted by:').'</strong></td><td><a href="account.php?title='.$addonUser->userCurrent['id'].'">'.$addonUser->userCurrent['name'].'</a></td></tr>
+        <tr><td><strong>'._('Revision:').'</strong></td><td>'.$this->addonCurrent['revision'].'</td></tr>
+        <tr><td><strong>'._('Compatible with:').'</strong></td><td>'.format_compat($this->addonCurrent['format'],$this->addonType).'</td></tr>
+        </table></div>
 
-        <a href="<?=DOWN_LOCATION.'file/'.$this->addonCurrent['file']?>"><img src="image/download.png" alt="Download" title="Download" /></a>
+        <a href="'.DOWN_LOCATION.$this->addonCurrent['fileid'].'.zip"><img src="image/download.png" alt="Download" title="Download" /></a>
 
-        <br /><br /><b>Permalink :</b>
-        http://<?=$_SERVER['SERVER_NAME'].str_replace("addon.php", "addon-view.php", $_SERVER['SCRIPT_NAME']).'?addons='.$this->addonType.'&amp;title='.$this->addonCurrent['name']?>
-        <?php
+        <br /><br /><strong>'._('Permalink:').'</strong><br />
+        '.$this->addonCurrent['permUrl'].'<br />';
+
+        $addonRevs = new coreAddon($this->addonType);
+        $addonRevs->selectById($this->addonCurrent['id']);
+        echo '<strong>'._('Revisions:').'</strong><br />';
+        echo '<table>';
+        while ($addonRevs->addonCurrent)
+        {
+            echo '<tr><td>'.$addonRevs->addonCurrent['revision_timestamp'].'</td>
+                <td><a href="'.DOWN_LOCATION.$addonRevs->addonCurrent['fileid'].'.zip">'._('Download revision').' '.$addonRevs->addonCurrent['revision'].'</a></td></tr>';
+            $addonRevs->next();
+        }
+        echo '</table>';
+
     }
 
     /* FIXME: this function needs a lot of cleanup / a rewrite. */
     function writeConfig()
     {
-        global $dirDownload, $dirUpload;
+        // Check permission
+        global $user;
+        if ($user->logged_in == false)
+            return false;
+        if ($_SESSION['role']['manageaddons'] == false && $this->addonCurrent['uploader'] != $_SESSION['userid'])
+            return false;
+
         echo '<hr /><h3>Configuration</h3>';
-        ?>
-        <div class="help-hidden">
-            <span class="help-hidden">Help</span>
-            <div>
-                BBCode:
-                <br />strong : [b]....[/b]
-                <br />italic : [i]....[/i]
-            </div>
-        </div>
-        <form action="#" method="GET" >
-        <?php
-        $propertie_sql = mysql_query("SELECT * FROM properties WHERE `properties`.`type` = '".$this->addonType."' AND `properties`.`lock` != 1;");
-        $file_str = "";
-        while($propertie = mysql_fetch_array($propertie_sql))
+        // Edit description
+        echo '<form name="changeDesc" action="'.$this->addonCurrent['permUrl'].'&amp;save=desc" method="POST">';
+        echo '<strong>'._('Description:').'</strong> ('._('Max 140 characters').')<br />';
+        echo '<textarea name="description" id="desc_field" rows="4" cols="60">'.$this->addonCurrent['description'].'</textarea><br />';
+        echo '<input type="submit" value="'._('Save Description').'" />';
+        echo '</form><br />';
+
+        // Add revision
+        if ($this->addonCurrent['uploader'] == $_SESSION['userid'])
         {
-            $cible = 'addonRequest(\'addon.php?type='.$this->addonType.'&amp;action='.str_replace(" ", "", $propertie['name']).'\', '.$this->addonCurrent['id'].',document.getElementById(\''.strtolower(str_replace(" ", "", $propertie['name'])).'\').value)';
-            if($propertie['typefield'] == "textarea")
+            echo '<strong>'._('Add revision:').'</strong><br />';
+            echo '<form name="addRevision" enctype="multipart/form-data" action="'.$this->addonCurrent['permUrl'].'&amp;save=rev" method="POST">';
+            echo '<strong>'._('File:').'</strong> <input type="file" name="file_addon" /><br />';
+            echo _('Supported file types are:').' .zip<br />';
+            echo '<input type="submit" value="'._('Upload File').'" /><br />';
+            echo '</form><br />';
+        }
+
+        // Set status flags
+        echo '<strong>'._('Status Flags:').'</strong><br />';
+        echo '<form method="POST" action="'.$this->addonCurrent['permUrl'].'&amp;save=status">';
+        echo '<table id="addon_flags"><tr><th></th>';
+        if ($_SESSION['role']['manageaddons'])
+            echo '<th>'.img_label(_('Approved')).'</th>';
+        echo '<th>'.img_label(_('Alpha')).'</th>
+            <th>'.img_label(_('Beta')).'</th>
+            <th>'.img_label(_('Release-Candidate')).'</th>
+            <th>'.img_label(_('Latest')).'</th>';
+        if ($_SESSION['role']['manageaddons'])
+            echo '<th>'.img_label(_('Fan-Made')).'</th>
+                <th>'.img_label(_('High-Quality')).'</th>
+                <th>'.img_label(_('DFSG Compliant')).'</th>
+                <th>'.img_label(_('Featured')).'</th>';
+        echo '<th>'.img_label(_('Invalid Textures')).'</th>';
+        echo '</tr>';
+        $addonRevs = new coreAddon($this->addonType);
+        $addonRevs->selectById($this->addonCurrent['id']);
+        $fields = array();
+        $fields[] = 'latest';
+        while ($addonRevs->addonCurrent)
+        {
+            echo '<tr><td style="text-align: center;">Rev '.$addonRevs->addonCurrent['revision'].'</td>';
+
+            // F_APPROVED
+            if ($_SESSION['role']['manageaddons'] == true)
             {
-                echo "<br />".$propertie['name']." :<br />";
-                echo '<textarea cols="65" rows="8" id="'.strtolower(str_replace(" ", "", $propertie['name'])).'">'.$this->addonCurrent[str_replace(" ", "", $propertie['name'])].'</textarea><br />';
-                echo '<input onclick="'.$cible.'" value="Change '.$propertie['name'].'" type="button" />';
-            }
-            elseif($propertie['typefield'] == "text")
-            {
-                echo "</form><br />".$propertie['name']." :<br />";
-                echo '<form action="javascript:'.$cible.'" method="GET" >';
-                echo '<input type="text" id="'.strtolower(str_replace(" ", "", $propertie['name'])).'" value="'.$this->addonCurrent[str_replace(" ", "", $propertie['name'])].'" ><br />';
-                echo '<input onclick="'.$cible.'" value="Change '.$propertie['name'].'" type="button" />';
-                echo "</form>";
-                echo '<form action="#" method="GET" >';
-            }
-            elseif($propertie['typefield'] == "enum")
-            {
-                echo "<br />".$propertie['name']." :<br />";
-                echo '<select onchange="addonRequest(\'addon.php?type='.$this->addonType.'&amp;action='.$propertie['name'].'\', '.$this->addonCurrent['id'].', this.value)">';
-                
-                $values = explode("\n", $propertie['default']);
-                foreach($values as $value)
+                echo '<td>';
+                if ($addonRevs->addonCurrent['status'] & F_APPROVED)
                 {
-                    echo '<option value="'.$value.'"';
-                    if($this->addonCurrent[str_replace(" ", "", $propertie['name'])]==$value) echo 'selected="selected" ';
-                    echo '>'.$value.'</option>';
+                    echo '<input type="checkbox" name="approved-'.$addonRevs->addonCurrent['revision'].'" checked />';
                 }
-                echo '</select>';
+                else
+                {
+                    echo '<input type="checkbox" name="approved-'.$addonRevs->addonCurrent['revision'].'" />';
+                }
+                echo '</td>';
+                $fields[] = 'approved-'.$addonRevs->addonCurrent['revision'];
             }
-            elseif($propertie['typefield'] == "file")
+
+            // F_ALPHA
+            echo '<td>';
+            if ($addonRevs->addonCurrent['status'] & F_ALPHA)
             {
-                $file_str .='<option value="'.strtolower(str_replace(" ", "", $propertie['name'])).'">'.$propertie['name'].'</option>';
+                echo '<input type="checkbox" name="alpha-'.$addonRevs->addonCurrent['revision'].'" checked />';
             }
+            else
+            {
+                echo '<input type="checkbox" name="alpha-'.$addonRevs->addonCurrent['revision'].'" />';
+            }
+            echo '</td>';
+            $fields[] = 'alpha-'.$addonRevs->addonCurrent['revision'];
+
+            // F_BETA
+            echo '<td>';
+            if ($addonRevs->addonCurrent['status'] & F_BETA)
+            {
+                echo '<input type="checkbox" name="beta-'.$addonRevs->addonCurrent['revision'].'" checked />';
+            }
+            else
+            {
+                echo '<input type="checkbox" name="beta-'.$addonRevs->addonCurrent['revision'].'" />';
+            }
+            echo '</td>';
+            $fields[] = 'beta-'.$addonRevs->addonCurrent['revision'];
+
+            // F_RC
+            echo '<td>';
+            if ($addonRevs->addonCurrent['status'] & F_RC)
+            {
+                echo '<input type="checkbox" name="rc-'.$addonRevs->addonCurrent['revision'].'" checked />';
+            }
+            else
+            {
+                echo '<input type="checkbox" name="rc-'.$addonRevs->addonCurrent['revision'].'" />';
+            }
+            echo '</td>';
+            $fields[] = 'rc-'.$addonRevs->addonCurrent['revision'];
+
+            // F_LATEST
+            echo '<td>';
+            if ($addonRevs->addonCurrent['status'] & F_LATEST)
+            {
+                echo '<input type="radio" name="latest" value="'.$addonRevs->addonCurrent['revision'].'" checked />';
+            }
+            else
+            {
+                echo '<input type="radio" name="latest" value="'.$addonRevs->addonCurrent['revision'].'" />';
+            }
+            echo '</td>';
+
+            if ($_SESSION['role']['manageaddons'])
+            {
+                // F_FANMADE
+                echo '<td>';
+                if ($addonRevs->addonCurrent['status'] & F_FANMADE)
+                {
+                    echo '<input type="checkbox" name="fanmade-'.$addonRevs->addonCurrent['revision'].'" checked />';
+                }
+                else
+                {
+                    echo '<input type="checkbox" name="fanmade-'.$addonRevs->addonCurrent['revision'].'" />';
+                }
+                echo '</td>';
+                $fields[] = 'fanmade-'.$addonRevs->addonCurrent['revision'];
+
+                // F_HQ
+                echo '<td>';
+                if ($addonRevs->addonCurrent['status'] & F_HQ)
+                {
+                    echo '<input type="checkbox" name="hq-'.$addonRevs->addonCurrent['revision'].'" checked />';
+                }
+                else
+                {
+                    echo '<input type="checkbox" name="hq-'.$addonRevs->addonCurrent['revision'].'" />';
+                }
+                echo '</td>';
+                $fields[] = 'hq-'.$addonRevs->addonCurrent['revision'];
+
+                // F_DFSG
+                echo '<td>';
+                if ($addonRevs->addonCurrent['status'] & F_DFSG)
+                {
+                    echo '<input type="checkbox" name="dfsg-'.$addonRevs->addonCurrent['revision'].'" checked />';
+                }
+                else
+                {
+                    echo '<input type="checkbox" name="dfsg-'.$addonRevs->addonCurrent['revision'].'" />';
+                }
+                echo '</td>';
+                $fields[] = 'dfsg-'.$addonRevs->addonCurrent['revision'];
+
+                // F_FEATURED
+                echo '<td>';
+                if ($addonRevs->addonCurrent['status'] & F_FEATURED)
+                {
+                    echo '<input type="checkbox" name="featured-'.$addonRevs->addonCurrent['revision'].'" checked />';
+                }
+                else
+                {
+                    echo '<input type="checkbox" name="featured-'.$addonRevs->addonCurrent['revision'].'" />';
+                }
+                echo '</td>';
+                $fields[] = 'featured-'.$addonRevs->addonCurrent['revision'];
+            }
+
+            // F_TEX_NOT_POWER_OF_2
+            echo '<td>';
+            if ($addonRevs->addonCurrent['status'] & F_TEX_NOT_POWER_OF_2)
+            {
+                echo '<input type="checkbox" name="texpower-'.$addonRevs->addonCurrent['revision'].'" checked disabled />';
+            }
+            else
+            {
+                echo '<input type="checkbox" name="texpower-'.$addonRevs->addonCurrent['revision'].'" disabled />';
+            }
+            echo '</td>';
+            
+            echo '</tr>';
+            $addonRevs->next();
         }
+        echo '</table>';
+        echo '<input type="hidden" name="fields" value="'.implode(',',$fields).'" />';
+        echo '<input type="submit" value="'._('Save Changes').'" />';
         echo '</form>';
-        echo '<form id="formKart" enctype="multipart/form-data" action="addon.php?action=file&amp;type='.$this->addonType.'&amp;id='.$this->addonCurrent['id'].'" method="POST">
-        <select name="fileType">';
-        echo $file_str;
-        echo '</select>
-        <input type="file" name="fileSend"/>
-        <input type="submit"/>
-        </form>';
-        if($_SESSION['range']['manageaddons'])
-        {
-            echo '<form action="#"><input  onchange="addonRequest(\'addon.php?type='.$this->addonType.'&amp;action=available\', '.$this->addonCurrent['id'].')" type="checkbox" name="available" id="available"';
-            if($this->addonCurrent['available'] ==1)
-            {
-                echo 'checked="checked" ';
-            }
-            echo '/><label for="available">Available</label><br />';
-            echo '<input type="button" onclick="verify(\'addonRequest(\\\'addon.php?type='.$this->addonType.'&amp;action=remove\\\', '.$this->addonCurrent['id'].')\')" value="Remove" /><br /></form>';
-        }
     }
 
-    function viewInformations($config=True)
+    function viewInformation($config=True)
     {
-        global $USER_LOGGED;
-        $this->writeInformations();
+        global $user;
+        if ($user->logged_in == false)
+            return false;
+
+        $this->writeInformation();
         //write configuration for the submiter and administrator
-        if($USER_LOGGED && ($_SESSION['range']['manageaddons'] || $this->addonCurrent['user'] == $_SESSION['id']) and $config)
+        if(($_SESSION['role']['manageaddons'] == true || $this->addonCurrent['uploader'] == $_SESSION['userid']) && $config)
         {
             $this->writeConfig();
         }
@@ -328,90 +454,64 @@ class coreAddon
 
     /* FIXME: please cleanup me! */
     /* FIXME: this function needs a _lot_ of a tests. */
-    function addAddon($name, $description)
-    {   
-        global $USER_LOGGED;
+    function addAddon($fileid, $addonid, $attributes)
+    {
+	global $user;
+        // Check if logged in
+        if (!$user->logged_in) {
+            return false;
+        }
 
-        if(!sql_exist($this->addonType, "name", $name) && $USER_LOGGED)
+        // Make sure no addon with this id exists
+        if(sql_exist($this->addonType.'s_revs', "id", $fileid))
         {
-            /* We add a new addon only if the user uploaded a file and if it is a .zip */
-            if(isset($_FILES['file_addon']) and $_FILES['file_addon']['type'] == "application/zip")
+            echo '<span class="error">'._('The add-on you are trying to create already exists.').'</span><br />';
+            return false;
+        }
+
+        // Check if we're creating a new add-on
+        if (!sql_exist($this->addonType.'s', 'id', $addonid))
+        {
+            echo _('Creating a new add-on...').'<br />';
+            $fields = array('id','name','uploader','designer');
+            $values = array($addonid,$attributes['name'],$_SESSION['userid'],$attributes['designer']);
+            if ($this->addonType == 'track')
             {
-                $zip_path = zip_path($name);
-                $download_link = "";
-                /* Add a _ until the file if not found. Because if the user upload
-                 * a file with the same name but different content, we would
-                 * have some problem. */
-                while(true)
-                {
-                    if(!file_exists($zip_path))
-                    {
-                        break;
-                    }
-                    else
-                    {
-                        $zip_path .= "_";
-                        $download_link .= "_";
-                    }
-                }
-                /* Little hack for the unit test, forget that */
-                if(defined("UNIT_TEST"))
-                {
-                    $zip_path = "./test.zip";
-                }
-                else
-                {
-                    move_uploaded_file($_FILES['file_addon']['tmp_name'], $zip_path."-uploaded.zip");
-                }
-
-                /* Read the information from the xml file (track.xml/kart.xml)
-                 * the name, the version of stk, etc...
-                 * This function modify alsor some fields, as the addon group.
-                 **/
-                $info = read_info_from_zip($zip_path."-uploaded.zip");
-
-                /* Then, we repack it, the file repacked will be our nice addon
-                 * package. */
-                $download_link = $name.$download_link;
-                repack_zip($zip_path."-uploaded.zip-extract", zip_path($download_link));
-    
-                /* And add a entry in the DB, to generate the xml files and the
-                 * addons-view.php page. */
-                sql_insert($this->addonType, array('user',
-                                                   'name',
-                                                   'Description',
-                                                   'file',
-                                                   'image',
-                                                   'date',
-                                                   'STKVersion',
-                                                   'Author',
-                                                   'available'),
-                                             array($_SESSION["id"],
-                                                   $info["name"],
-                                                   $info["description"],
-                                                   $download_link.".zip",
-                                                   $info["name"].".png",
-                                                   date("Y-m-d"),
-                                                   $info["version"],
-                                                   $info["designer"],
-                                                   0));
-    
-                /* Then, we re-load it, to diaply it information in the upload page. */
-                $this->reqSql = sql_get_all_where($this->addonType, "name", $info["name"]);
-                $this->addonCurrent = sql_next($this->reqSql);
+                $fields[] = 'arena';
+                $values[] = $attributes['arena'];
             }
-            else
-            {
-                echo _("Please re-upload your file. It must be a zip.")."<br />\n";
+            if (!sql_insert($this->addonType.'s',$fields,$values))
                 return false;
-            }
-            
-            return true;
         }
         else
         {
+            echo _('This add-on already exists. Adding revision...').'<br />';
+        }
+
+        // Add the new revision
+        $prevRevQuerySql = 'SELECT `revision` FROM '.DB_PREFIX.$this->addonType.'s_revs
+            WHERE `addon_id` = \''.$addonid.'\' ORDER BY `revision` DESC LIMIT 1';
+        $reqSql = sql_query($prevRevQuerySql);
+        if (!$reqSql)
+        {
+            echo '<span class="error">'._('Failed to check for previous add-on revisions.').'</span><br />';
             return false;
         }
+        if (mysql_num_rows($reqSql) == 0)
+        {
+            $rev = 1;
+        }
+        else
+        {
+            $result = mysql_fetch_assoc($reqSql);
+            $rev = $result['revision'] + 1;
+        }
+        // Add revision entry
+        $fields = array('id','addon_id','revision','format','image','status');
+        $values = array($fileid,$addonid,$rev,$attributes['version'],$attributes['image'],$attributes['status']);
+        if (!sql_insert($this->addonType.'s_revs',$fields,$values))
+            return false;
+        return true;
     }
 
     /** To get the permanent link of the current addon */ 
@@ -421,193 +521,137 @@ class coreAddon
     }
 }
 
-/** Utilities to generate paths */
-function image_path($name)
+function addon_id_clean($string)
 {
-    return UP_LOCATION."image/".$name.".png";
-}
-
-function zip_path($name)
-{
-    return UP_LOCATION."file/".$name.".zip";
-}
-
-function read_info_from_zip($path_zip)
-{
-    $zip = new ZipArchive;
-    $addon_information = array();
-    $addon_information["description"] = "";
-
-    /* FIXME: this list is hardcoded :( It shouldn't */
-    /* All attributes we can find if the xml files */
-    $attribute = array("name",
-                       "version",
-                       "groups",
-                       "model-file",
-                       "icon-file",
-                       "minimap-icon-file",
-                       "shadow-file",
-                       "rgb",
-                       "left",
-                       "right",
-                       "straight",
-                       "right",
-                       "start-winning",
-                       "end-winning",
-                       "start-losing",
-                       "start-losing-loop",
-                       "end-losing",
-                       "position",
-                       "model",
-                       "designer",
-                       "music",
-                       "screenshot");
-
-    /* We open it, there souldn't be any error here, the file is really a .zip
-     * and exist. */
-    if ($zip->open($path_zip) === TRUE)
-    {
-        /* Make the directory only if it doesn't exist yet, ither wise, it causes
-         * an error. */
-        if(!file_exists($path_zip."-extract"))
-            mkdir($path_zip."-extract");
-        $zip->extractTo($path_zip."-extract");
-        $zip->close();
-
-        $path_xml = find_xml($path_zip."-extract");
-        /* If there is no track/kart .xml, error */
-        if($path_xml != false)
-        {
-
-            $reader = new XMLReader();
-            $writer = new XMLWriter();
-
-            $reader->open($path_xml);
-            $writer->openURI('file://'.realpath($path_xml));
-            $writer->startDocument("1.0");
-            $writer->setIndent(true);
-            while ($reader->read())
-            {
-                if ($reader->nodeType == XMLREADER::ELEMENT)
-                {
-                    $elm = $reader->name;
-                    $writer->startElement($elm);
-                    foreach($attribute as $attr)
-                    {
-                        $value = $reader->getAttribute($attr);
-                        if($reader->getAttribute($attr) == "groups")
-                        {
-                            $writer->startAttribute($attr);
-                            $writer->text("addons");
-                            $writer->endAttribute();
-                        }
-                        elseif($reader->getAttribute($attr) != "")
-                        {
-                            $writer->startAttribute($attr);
-                            $writer->text($reader->getAttribute($attr));
-                            $writer->endAttribute();
-                        }
-                        if($elm == "kart" or $elm == "track")
-                        {
-                            $addon_information[$attr] = $value;
-                        }
-                    }
-                    if(!($elm == "kart" or $elm == "track" or $elm == "wheels"))
-                    {
-                        $writer->endElement();
-                    }
-                }
-                elseif($reader->nodeType == XMLREADER::END_ELEMENT)
-                {
-                    $writer->endElement();
-                }
-            }
-            $writer->flush();
-            return $addon_information;
-        }
-        /* Wrong archive, no .xml in it */
-        else
-        {
-            return null;
-        }
-    }
-    else
-    {
-        return null;
-    }
-}
-
-function repack_zip($path_zip, $to)
-{
-    $zip = new ZipArchive();
-    $filename = $to;
-
-    if(file_exists($filename))
-        unlink($filename);
-
-    if ($zip->open($filename, ZIPARCHIVE::CREATE)!==TRUE)
-    {
-        echo("Cannot open <$filename>\n");
+    if (!is_string($string))
         return false;
-    }
-    repack_internal($zip, $path_zip);
-    $succes = $zip->close();
-    if(!$succes)
-    {
-        echo "Can't close the zip\n";
+    $length = strlen($string);
+    if ($length == 0)
         return false;
-    }   
+    $string = strtolower($string);
+    // Validate all characters in addon id
+    // Rather than using str_replace, and removing bad characters,
+    // it makes more sense to only allow certain characters
+    for ($i = 0; $i<$length; $i++)
+    {
+        $substr = substr($string,$i,1);
+        if (!preg_match('/^[a-z0-9\-_]$/i',$substr))
+            $substr = '-';
+        $string = substr_replace($string,$substr,$i,1);
+    }
+    return $string;
+}
+
+function set_description($addon_type,$addon_id,$rev,$description)
+{
+    // Validate parameters
+    if ($addon_type != 'karts' && $addon_type != 'tracks')
+        return false;
+    $addon_id = addon_id_clean($addon_id);
+    if (!is_numeric($rev))
+        return false;
+    $rev = (int)$rev;
+    $description = mysql_escape_string($description);
+
+    // Check if addon exists, and permissions
+    $addon = new coreAddon($addon_type);
+    $addon->selectById($addon_id,$rev);
+    if (!$addon->addonCurrent)
+        return false;
+    if (!$_SESSION['role']['manageaddons'] && $_SESSION['userid'] != $addon->addonCurrent['uploader'])
+        return false;
+
+    $update_query = 'UPDATE `'.DB_PREFIX.$addon_type.'`
+        SET `description` = \''.$description.'\'
+        WHERE `id` = \''.$addon_id.'\'';
+    $reqSql = sql_query($update_query);
+    if (!$reqSql)
+        return false;
     return true;
 }
 
-function repack_internal($zip, $path_zip)
+function update_status($type,$addon_id,$fields)
 {
-    foreach(scandir($path_zip) as $file)
+    if ($type != 'karts' && $type != 'tracks')
+        return false;
+    $addon_id = addon_id_clean($addon_id);
+    $fields = explode(',',$fields);
+    $status = array();
+    foreach ($fields AS $field)
     {
-        if($file != ".." and $file != ".")
+        if (!isset($_POST[$field]))
+            $_POST[$field] = NULL;
+        if ($field == 'latest')
+            $fieldinfo = array('',(int)$_POST['latest']);
+        else
+            $fieldinfo = explode('-',$field);
+        // Initialize the status of the current revision if it has
+        // not been created yet.
+        if (!isset($status[$fieldinfo[1]]))
+            $status[$fieldinfo[1]] = 0;
+        if ($field == 'latest')
         {
-            if(is_dir($path_zip."/".$file))
+            $status[(int)$_POST['latest']] += F_LATEST;
+            continue;
+        }
+        // Update status values for all flags
+        if ($_POST[$field] == 'on')
+        {
+            $revision = (int)$fieldinfo[1];
+            switch ($fieldinfo[0])
             {
-                repack_internal($zip, $path_zip."/".$file);
-            }
-            else if(!$zip->addFile($path_zip."/".$file, $file))
-            {
-                echo "Can't add this file: ".$file."\n";
-                return false;
-            }
-            if(!file_exists($path_zip."/".$file))
-            {
-                echo "Can't add this file (it doesn't exist): ".$file."\n";
-                return false;
+                default: break;
+                case 'approved':
+                    $status[$revision] += F_APPROVED;
+                    break;
+                case 'alpha':
+                    $status[$revision] += F_ALPHA;
+                    break;
+                case 'beta':
+                    $status[$revision] += F_BETA;
+                    break;
+                case 'rc':
+                    $status[$revision] += F_RC;
+                    break;
+                case 'fanmade':
+                    $status[$revision] += F_FANMADE;
+                    break;
+                case 'hq':
+                    $status[$revision] += F_HQ;
+                    break;
+                case 'dfsg':
+                    $status[$revision] += F_DFSG;
+                    break;
+                case 'featured':
+                    $status[$revision] += F_FEATURED;
+                    break;
             }
         }
     }
-} 
-
-function find_xml($dir)
-{
-    if(is_dir($dir))
+    $error = 0;
+    foreach ($status AS $revision => $value)
     {
-        foreach(scandir($dir) as $file)
-        {
-            if(is_dir($dir."/".$file) && $file != "." && $file != "..")
-            {
-                $name = find_xml($dir."/".$file);
-                if($name != false)
-                {
-                    return $name;
-                }
-            }
-            else if(file_exists($dir."/kart.xml"))
-            {
-                return $dir."/kart.xml";
-            }
-            else if(file_exists($dir."/track.xml"))
-            {
-                return $dir."/track.xml";
-            }
-        }
+        // Check if F_TEX_NOT_POWER_OF_2 is set in database
+        $addon = new coreAddon($type);
+        $addon->selectById($addon_id,$revision);
+        if ($addon->addonCurrent['status'] & F_TEX_NOT_POWER_OF_2)
+            $value += F_TEX_NOT_POWER_OF_2;
+        $query = 'UPDATE `'.DB_PREFIX.$type.'_revs`
+            SET `status` = '.$value.'
+            WHERE `addon_id` = \''.$addon_id.'\'
+            AND `revision` = '.$revision;
+        $reqSql = sql_query($query);
+        if (!$reqSql)
+            $error = 1;
     }
+    if ($error != 1)
+        return true;
     return false;
+}
+
+function format_compat($format,$filetype)
+{
+    // FIXME: Stub
+    return 'Unknown';
 }
 ?>

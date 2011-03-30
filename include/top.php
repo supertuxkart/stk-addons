@@ -37,7 +37,7 @@ if(!isset($_COOKIE['lang']))
 {
 	setcookie('lang', 'en_EN', $timestamp_expire);
 }
-if (isset($_GET['lang'])) { // Si l'utilisateur a choisi une langue
+if (isset($_GET['lang'])) { // If the user has chosen a language
 	switch ($_GET['lang']) { // En fonction de la langue, on crée une variable $langage qui contient le code
 		case 'fr':
 			setcookie('lang', 'fr_FR', $timestamp_expire);
@@ -73,7 +73,8 @@ setlocale(LC_ALL, $_COOKIE['lang'].'.UTF-8');
 bindtextdomain('translations', 'locale');
 textdomain('translations');
 bind_textdomain_codeset('translations', 'UTF-8');
-if(!isset($title))$title="SuperTuxKart Add-ons";
+if(!isset($title))
+    $title="SuperTuxKart Add-ons";
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -81,9 +82,8 @@ if(!isset($title))$title="SuperTuxKart Add-ons";
     <head>
         <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
         <title><?php echo $title;?></title>
-        <link href="css/view.css" rel="stylesheet" media="all" type="text/css" /> 
-        <link href="css/skin_<?php echo $style;?>.css" rel="stylesheet" media="all" type="text/css" /> 
-        <link href="css/menu_<?php echo $style;?>.css" rel="stylesheet" media="all" type="text/css" /> 
+        <link href="css/skin_<?php echo $style;?>.css" rel="stylesheet" media="all" type="text/css" />
         <script type="text/javascript" src="js/jquery.js"></script>
+        <script type="text/javascript" src="js/jquery.newsticker.js"></script>
         <script type="text/javascript" src="js/script.js"></script>
         <link href="css/style_jquery.css" rel="stylesheet" type="text/css" />

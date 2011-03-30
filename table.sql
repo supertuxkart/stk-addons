@@ -1,21 +1,23 @@
--- phpMyAdmin SQL Dump
--- version 3.3.3
--- http://www.phpmyadmin.net
---
--- Serveur: localhost
--- Généré le : Jeu 06 Janvier 2011 à 17:35
--- Version du serveur: 5.1.41
--- Version de PHP: 5.3.1
-
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
--- --------------------------------------------------------
+CREATE TABLE `clients` (
+    `id` int(11) NOT NULL auto_increment PRIMARY KEY,
+    `agent_string` varchar(255) NOT NULL,
+    `stk_version` varchar(64) NOT NULL default 'latest',
+    `disabled` int(1) NOT NULL default 0
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
---
--- Structure de la table `help`
---
+CREATE TABLE `config` (
+    `name` varchar(256) NOT NULL UNIQUE,
+    `value` varchar(512) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS `help` (
+INSERT INTO `config`
+(`name`,`value`)
+VALUES
+('xml_frequency','172800');
+
+CREATE TABLE `help` (
   `user` int(11) NOT NULL,
   `name` tinytext NOT NULL,
   `description` mediumtext NOT NULL,
@@ -25,147 +27,117 @@ CREATE TABLE IF NOT EXISTS `help` (
   `date` date NOT NULL,
   `available` int(11) NOT NULL,
   `version` int(11) NOT NULL,
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL auto_increment,
   `versionStk` tinytext NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=27 ;
-
---
--- Contenu de la table `help`
---
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 
--- --------------------------------------------------------
-
---
--- Structure de la table `history`
---
-
-CREATE TABLE IF NOT EXISTS `history` (
+CREATE TABLE `history` (
   `date` date NOT NULL,
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL auto_increment,
   `user` tinytext NOT NULL,
   `action` tinytext NOT NULL,
   `option` tinytext NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
---
--- Contenu de la table `history`
---
-
-
--- --------------------------------------------------------
-
---
--- Structure de la table `karts`
---
-
-CREATE TABLE IF NOT EXISTS `karts` (
-  `user` int(11) NOT NULL,
-  `name` tinytext NOT NULL,
-  `Description` text NOT NULL,
-  `file` text NOT NULL,
-  `image` tinytext NOT NULL,
-  `icon` tinytext NOT NULL,
-  `date` date NOT NULL,
-  `available` int(11) NOT NULL,
-  `version` int(11) NOT NULL,
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `STKVersion` tinytext NOT NULL,
-  `Author` text NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=51 ;
-
-
--- --------------------------------------------------------
-
---
--- Structure de la table `properties`
---
-
-CREATE TABLE IF NOT EXISTS `properties` (
-  `type` text NOT NULL,
-  `lock` int(11) NOT NULL,
-  `typefield` text NOT NULL,
-  `default` text NOT NULL,
-  `name` text NOT NULL
+  PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
---
--- Contenu de la table `properties`
---
+
+CREATE TABLE `karts` (
+  `id` varchar(30) NOT NULL,
+  `name` tinytext NOT NULL,
+  `description` varchar(140),
+  `uploader` int(11) NOT NULL,
+  `creation_date` timestamp NOT NULL default CURRENT_TIMESTAMP,
+  `designer` tinytext NOT NULL,
+  UNIQUE KEY `id` (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE `karts_revs` (
+  `id` char(23) NOT NULL,
+  `addon_id` varchar(30) NOT NULL,
+  `creation_date` timestamp NOT NULL default CURRENT_TIMESTAMP,
+  `revision` tinyint(4) NOT NULL default '1',
+  `format` tinyint(4) NOT NULL,
+  `image` tinytext NOT NULL,
+  `status` mediumint(9) unsigned NOT NULL default '0',
+  UNIQUE KEY `id` (`id`),
+  KEY `track_id` (`addon_id`),
+  KEY `status` (`status`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE `news` (
+    `id` int(10) unsigned NOT NULL auto_increment,
+    `date` timestamp NOT NULL default CURRENT_TIMESTAMP,
+    `author_id` int(11) unsigned NOT NULL default '0',
+    `content` char(140) default NULL,
+    `condition` varchar(255) default NULL,
+    `active` tinyint(1) NOT NULL default '1',
+    PRIMARY KEY  (`id`),
+    KEY `date` (`date`,`active`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+CREATE TABLE `properties` (
+    `type` text NOT NULL,
+    `lock` int(11) NOT NULL,
+    `typefield` text NOT NULL,
+    `default` text NOT NULL,
+    `name` text NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 INSERT INTO `properties` (`type`, `lock`, `typefield`, `default`, `name`) VALUES
 ('karts', 1, 'text', '', 'name'),
-('karts', 0, 'textarea', '', 'Description'),
 ('karts', 1, 'text', '1', 'version'),
 ('karts', 0, 'file', '', 'File'),
 ('karts', 0, 'file', '', 'Icon'),
 ('karts', 0, 'file', '', 'Image'),
 ('karts', 0, 'enum', '0.7\r\n0.6', 'STK Version'),
 ('tracks', 1, 'text', '', 'name'),
-('tracks', 0, 'textarea', '', 'Description'),
 ('tracks', 0, 'text', '1', 'version'),
 ('tracks', 0, 'file', '', 'File'),
 ('tracks', 0, 'text', '', 'Author'),
 ('tracks', 0, 'file', '', 'Image'),
-('tracks', 0, 'enum', '0.7\r\n0.6', 'STK Version'),
-('users', 0, 'text', '', 'homepage'),
-('users', 0, 'file', '', 'avatar'),
-('karts', 0, 'text', '', 'Author');
+('tracks', 0, 'enum', '0.7\r\n0.6', 'STK Version')
 
--- --------------------------------------------------------
-
---
--- Structure de la table `tracks`
---
-
-CREATE TABLE IF NOT EXISTS `tracks` (
-  `user` int(11) NOT NULL,
+CREATE TABLE `tracks` (
+  `id` varchar(30) NOT NULL,
   `name` tinytext NOT NULL,
-  `Description` text NOT NULL,
-  `file` text NOT NULL,
-  `icon` tinytext NOT NULL,
-  `date` date NOT NULL,
-  `available` int(11) NOT NULL,
-  `version` int(11) NOT NULL,
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `image` text NOT NULL,
-  `STKVersion` text NOT NULL,
-  `Author` text NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=29 ;
+  `description` varchar(140),
+  `uploader` int(11) NOT NULL,
+  `creation_date` timestamp NOT NULL default CURRENT_TIMESTAMP,
+  `designer` tinytext NOT NULL,
+  `arena` tinyint(1) NOT NULL default '0',
+  UNIQUE KEY `id` (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
---
--- Contenu de la table `tracks`
---
+CREATE TABLE `tracks_revs` (
+  `id` char(23) NOT NULL,
+  `addon_id` varchar(30) NOT NULL,
+  `creation_date` timestamp NOT NULL default CURRENT_TIMESTAMP,
+  `revision` tinyint(4) NOT NULL default '1',
+  `format` tinyint(4) NOT NULL,
+  `image` tinytext NOT NULL,
+  `status` mediumint(9) unsigned NOT NULL default '0',
+  UNIQUE KEY `id` (`id`),
+  KEY `track_id` (`addon_id`),
+  KEY `status` (`status`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-
--- --------------------------------------------------------
-
---
--- Structure de la table `users`
---
-
-CREATE TABLE IF NOT EXISTS `users` (
-  `login` tinytext NOT NULL,
-  `pass` tinytext NOT NULL,
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `range` tinytext NOT NULL,
-  `mail` tinytext NOT NULL,
-  `available` int(11) NOT NULL,
+CREATE TABLE `users` (
+  `id` int(11) unsigned NOT NULL auto_increment,
+  `user` tinytext NOT NULL,
+  `pass` char(64) NOT NULL,
+  `name` tinytext NOT NULL,
+  `role` tinytext NOT NULL,
+  `email` tinytext NOT NULL,
+  `active` tinyint(1) NOT NULL,
+  `last_login` timestamp NOT NULL default CURRENT_TIMESTAMP,
   `verify` text NOT NULL,
-  `date` date NOT NULL,
-  `homepage` text NOT NULL,
-  `avatar` text NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
+  `reg_date` date NOT NULL,
+  `homepage` text,
+  `avatar` text,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
---
--- Contenu de la table `users`
---
-
-INSERT INTO `users` (`login`, `pass`, `id`, `range`, `mail`, `available`, `verify`, `date`, `homepage`, `avatar`) VALUES
-('admin', '5f4dcc3b5aa765d61d8327deb882cf99', 12, 'administrator', 'a@a.com', 1, '', '2011-01-06', '', '');
-
+INSERT INTO `users` (`user`, `pass`, `name`, `role`, `email`, `active`, `last_login`, `verify`, `reg_date`, `homepage`, `avatar`) VALUES
+('admin', 'd8fc1f6f58d1872be71a07ed0094b9bf715e5c9d90018c9ce82af0a0582ee868', 'Administrator', 'root', 'webmaster@localhost', 1, '2011-03-05 03:24:32', '', '2011-03-03', NULL, NULL);

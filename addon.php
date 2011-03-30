@@ -27,7 +27,8 @@ Description: page who is called in ajax and who give kart and track informations
 
 ***************************************************************************/
 $security ="";
-include("include/security.php");
+define('ROOT','./');
+include('include.php');
 include_once("include/var.php");
 
 if(!isset($_COOKIE['lang']))
@@ -41,8 +42,13 @@ bindtextdomain('translations', 'locale');
 textdomain('translations');
 bind_textdomain_codeset('translations', 'UTF-8');
 
-$type = get('type');
-$action = get('action');
+$type = (isset($_GET['type']))? $_GET['type'] : NULL;
+if ($type != 'tracks' && $type != 'karts' && $type != 'users')
+    die(_('This page cannot be loaded because an invalid add-on type was provided.'));
+if (!isset($_GET['action'])) $_GET['action'] = NULL;
+$action = $_GET['action'];
+if ($action != NULL && $action != 'file' && $action != 'remove' && $action != 'approve')
+    die(_('This page cannot be loaded because an invalid action was provided.'));
 
 if($action == "file")
 {
@@ -57,9 +63,9 @@ else
 
 $addon = new coreAddon($type);
 $addon->selectById($id);
-if($action == "available")
+if($action == "approve")
 {
-	$addon->setAvailable();
+	$addon->approve();
 	$addon->selectById($id);
 }
 elseif($action != "" && $action != "file")
@@ -85,5 +91,5 @@ elseif($action == "file")
 }
 else
 {
-    $addon->viewInformations();
+    $addon->viewInformation();
 }?>

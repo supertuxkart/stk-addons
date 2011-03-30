@@ -26,117 +26,89 @@ Licence: GPLv3
 Description: login page
 
 ***************************************************************************/
-session_start();
-
-// connect to mysql
-include("include/connectMysql.php");
-include("include/top.php");
+define('ROOT','./');
+$security = "";
+// Include basic files
+include(ROOT.'include.php');
 
 // define possibly undefined variables
-$_POST['login'] = (isset($_POST['login'])) ? $_POST['login'] : NULL;
+$_POST['user'] = (isset($_POST['user'])) ? $_POST['user'] : NULL;
 $_POST['pass'] = (isset($_POST['pass'])) ? $_POST['pass'] : NULL;
+$_GET['action'] = (isset($_GET['action'])) ? $_GET['action'] : NULL;
 
-// protect sql
-$loginSubmit = mysql_real_escape_string($_POST['login']);
-$passSubmit = mysql_real_escape_string($_POST['pass']);
-
-//add a variable to verify if the users is already connected
-$auth = false;
-if(isset($_SESSION["login"]))
+if ($_GET['action'] == 'logout')
 {
-	
-	$loginSearch = mysql_query("SELECT * FROM users WHERE login='".$_SESSION["login"]."'");
-	$loginSql = mysql_fetch_array($loginSearch);
-	if($loginSql['pass'] == md5($_SESSION["pass"]))
-		{
-			//The users is already connected
-			$auth=true;
-		}
+    $user->logout();
+    include(ROOT.'include/menu.php');
+    if ($user->logged_in === true)
+    {
+        include(ROOT.'include/top.php');
+        echo '</head><body><div id="content">';
+        echo '<span class="error">'._('Failed to logout.').'</span><br />';
+    }
+    else
+    {
+        include(ROOT.'include/top.php');
+        echo '<meta http-equiv="refresh" content="3;URL=index.php"></head><body>';
+        echo '<div id="content">';
+        echo _('You have been logged out.').'<br />';
+        echo _('Click <a href="index.php">here</a> if you do not automatically redirect.').'<br />';
+    }
+    include(ROOT.'include/footer.php');
+    exit;
 }
-//if the users isn't connected, start to try to connect it
-if($auth == false)
+
+if ($user->logged_in === true)
 {
-	//sql request
-	$loginSearch = mysql_query("SELECT * FROM users WHERE login='$loginSubmit'") or die(mysql_error());
-	$loginSql = mysql_fetch_array($loginSearch);
-	
-		//brute-forcing
-		sleep(1);
-		
-		
-		if($loginSql['pass'] == md5($passSubmit) && $loginSql['pass'] != ""  && $loginSql['available'] == 1)
-		{
-			//add sessions variable
-			$succes ="successful";
-			$_SESSION["login"] = $loginSubmit;
-			$_SESSION["level"] = $loginSql['level'];
-			$_SESSION["id"] = $loginSql["id"];
-			$_SESSION["pass"] = $passSubmit;
-			include("include/allow.php");
-			?>
-				<meta http-equiv="refresh" content="3;URL=index.php">
-				</head>
-				<body>
-					<?php include("menu.php"); ?>
-					<div id="content">
-					<?php echo _("Welcome"); echo $_SESSION["login"] ?> :)
-					<?php echo _("You will be redirected to the home page."); ?>
-					</div>
-					<?php include("include/footer.php"); ?>
-				</body>
-			</html>
-			<?php
-			exit();
-		}
-		
-		
-		elseif(isset($_POST['login']))
-		{
-			?>
-						</head>
-						<body>
-							<?php include("menu.php"); ?>
-					<div id="content">
-							<?php echo _("Authentification failed."); ?>
-							<form action="login.php" method="POST">
-								<input type="text" name="login" />
-								<input type="password" name="pass" />
-								<input type="submit" value="Submit" />
-							</form>
-							</div>
-							<?php include("include/footer.php"); ?>
-						</body>
-					</html>
-			<?php
-			exit();
-		}
-		
-		
-		else
-		{
-			?>
-						</head>
-						<body>
-							<?php include("menu.php"); ?>
-					<div id="content">
-					        <?php if(!ereg("login.php",$_SERVER['PHP_SELF'])) echo _("You must be logged in to access this page.")."<br />"; ?>
-							<form action="login.php" method="POST">
-								<input type="text" name="login" />
-								<input type="password" name="pass" />
-								<input type="submit" value="Submit" />
-							</form>
-							<a href="createAccount.php"><?php echo _("Create an account."); ?></a>
-							</div>
-							<?php include("include/footer.php"); ?>
-						</body>
-					</html>
-			<?php
-			exit();
-		}
+    include(ROOT.'include/top.php');
+    echo '<meta http-equiv="refresh" content="3;URL=index.php"></head><body>';
+    include(ROOT.'include/menu.php');
+    echo '<div id="content">';
+    echo _('You are already logged in.').' ';
+    echo _('Click <a href="index.php">here</a> if you do not automatically redirect.').'<br />';
+    include('include/footer.php');
+    exit;
+}
+
+if ($_GET['action'] == 'submit')
+{
+    // Variable validation is done by the function below
+    if ($user->login($_POST['user'],$_POST['pass']))
+    {
+        include(ROOT.'include/top.php');
+        echo '<meta http-equiv="refresh" content="3;URL=index.php">';
+    }
+    else
+    {
+        include(ROOT.'include/top.php');
+    }
+    echo '</head><body>';
+    include(ROOT.'include/menu.php');
+    echo '<div id="content">';
+    if ($user->logged_in === true)
+    {
+        echo _('Welcome').' '.$_SESSION['real_name'].'. ';
+        echo _('Click <a href="index.php">here</a> if you do not automatically redirect.').'<br />';
+        include('include/footer.php');
+        exit;
+    }
+    echo '<span class="error">'._('Authentication failed.').'</span><br />';
+}
+else
+{
+    include(ROOT.'include/top.php');
+    echo '</head><body>';
+    include(ROOT.'include/menu.php');
+    echo '<div id="content">';
 }
 ?>
-				<meta http-equiv="refresh" content="0;URL=index.php">
-				</head>
-				<body>
-				</body>
-			</html>
+<form action="login.php?action=submit" method="POST">
+    Username:<br />
+    <input type="text" name="user" /><br />
+    Password:<br />
+    <input type="password" name="pass" /><br />
+    <input type="submit" value="<?php echo _('Log In'); ?>" />
+</form>
+<a href="createAccount.php"><?php echo _('Create an account.'); ?></a>
+</div>
+<?php include("include/footer.php"); ?>

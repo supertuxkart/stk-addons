@@ -1,95 +1,247 @@
-/* copyright 2009 Lucas Baudin <xapantu@gmail.com>                 
-                                                                              
- This file is part of stkaddons.                                 
-                                                                              
- stkaddons is free software: you can redistribute it and/or      
- modify it under the terms of the GNU General Public License as published by  
- the Free Software Foundation, either version 3 of the License, or (at your   
- option) any later version.                                                   
-                                                                              
- stkaddons is distributed in the hope that it will be useful, but
- WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for    
- more details.                                                                
-                                                                              
- You should have received a copy of the GNU General Public License along with 
- stkaddons.  If not, see <http://www.gnu.org/licenses/>.   */
+/**
+ * copyright 2009 Lucas Baudin <xapantu@gmail.com>
+ *
+ * This file is part of stkaddons
+ *
+ * stkaddons is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * stkaddons is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
+ */
 body {
-	font-family: Verdana,Geneva,sans-serif;
-	font-size: 13.5px;
-	background-repeat:no-repeat;
-	background-position: top left;
-	padding:0px;
-	margin:0px;
-	color:black;
-	
-}
-#top
-{
-	background-color:transparent;
-	float:left;
-	color:black;
-	width:840px;
-	padding-top:10px;
-	padding-right:20px;
-	padding-left:10px;
-	height:37px;
-	background-image:url("../image/background-top.png");
-	background-position:top left;
-	background-repeat:no-repeat;
+    font-family: Verdana,Geneva,sans-serif;
+    font-size: 13.5px;
+    background-repeat:no-repeat;
+    background-position: top left;
+    padding:0px;
+    margin:0px;
+    color:black;
 }
 
-#languages
+#top-menu
 {
-    float:right;
+    display: block;
+    color: black;
+    width: 100%;
+    height: 35px;
+    background-image: url("../image/background-top.png");
 }
-a
+#top-menu-content
 {
-	color:black;
-	text-decoration:none;
+    padding-top: 8px;
+    margin: 0px 20px 0px 20px;
 }
-a:hover
+#top-menu a
 {
-	color:grey;
+    color:black;
+    padding-left: 10px;
+    padding-right: 10px;
+    text-decoration:underline;
 }
-#top a
+#top-menu a:hover
 {
-	color:black;
-	margin-left:25px;
-	text-decoration:underline;
+    color:grey;
 }
-#top a:hover
+
+#lang-menu
 {
-	color:grey;
+    display: block;
+    float: right;
 }
-#global
+#lang-menu img
 {
-background-color:white;
-	margin:auto;
+    padding: 5px 10px 5px 10px;
+}
+#lang-menu ul.menu_body
+{
+    background: #FFFFFF;
+    list-style: none;
+    position: absolute;
+    margin-left: 10px;
+}
+#lang-menu li a
+{
+    margin-left: 0px;
+}
+
+#logo_center
+{
+    padding-top: 15px;
+    display:inline;
+}
+
+.viewGlobal
+{
 	width:1000px;
-	background-image:url("../image/background.png");
-	background-repeat:no-repeat;
-    height:623px;
+	vertical-align:top;
+	border-collapse:collapse;
+	overflow:hidden;
+	clear:both;
 }
-#content
+.viewGlobal tr td
 {
+	vertical-align:top;
+	border-left:2px black solid;
+	border-right:2px black solid;
+}
+.viewGlobal tr table tr td
+{
+	vertical-align:top;
+	border-left:none;
+	border-right:none;
+	height:100%;
+}
+.viewGlobal tr
+{
+	vertical-align:top;
+	border-left:2px black solid;
+	border-right:2px black solid;
+	height:100%;
+}
+.root, .sub
+{
+	font-size:15px;
+	background-color:black;
+	color:white;
+	width:227px;
+	padding:3px;
+	clear:both;
+	float:left;
+	text-decoration:none !important;
+}
+.root:hover, .sub:hover
+{
+	font-weight:bold;
+	background-color:transparent;
+	color:black;
+	text-decoration:none !important;
+	background-image:url("../image/fleche.png");
+	background-position:right center;
+	background-repeat:no-repeat;
+}
+.rootSelected, .subSelected
+{
+	font-size:15px;
+	width:227px;
+	padding:3px;
+	font-weight:bold;
+	clear:both;
+	float:left;
+	text-decoration:none !important;
+	background-color:transparent;
+	color:black;
+	text-decoration:none !important;
+	background-image:url("../image/fleche.png");
+	background-position:right center;
+	background-repeat:no-repeat;
+}
+.root
+{
+
+	display:block;
+}
+.contentRoot
+{
+width:250px;
+display:block;
+float:left;
+height:100%;
+overflow:scroll;
+overflow-x:hidden;
+height:500px;
+
+}
+.contentSub
+{
+width:249px;
+display:block;
+float:left;
+height:100%;
+overflow:scroll;
+overflow-x:hidden;
+height:500px;
+}
+.divSub
+{
+display:none;
+}
+.dispDiv
+{
+	display:none;
+}
+.littleIcon
+{
+	height:20px;
+	border:none;
+}
+.rootSelected, .subSelected, .root:hover, .sub:hover
+{
+	
 	filter:alpha(opacity=65);
    -moz-opacity:0.65;
    opacity: 0.65;
    background-color:white;
-   clear:both;
+}
+.dispDiv
+{
+	padding:10px;
+	
+height:475px !important;
+overflow:scroll;
+overflow-x:hidden;
+
+}
+.thirdCol
+{
+	filter:alpha(opacity=92);
+   -moz-opacity:0.92;
+   opacity: 0.92;
+   background-color:white;
+   padding:3px;
+   
+	float:left;
+	display:block;
+	width:476px !important;
+}
+
+a
+{
+    color:black;
+    text-decoration:none;
+}
+a:hover
+{
+    color:grey;
+}
+#global
+{
+    background-color:white;
+    margin:auto;
+    width:1000px;
+    background-image:url("../image/background.png");
+    background-repeat:no-repeat;
+    height:623px;
+}
+#content
+{
+    padding: 5px;
+    background-image:url("../image/content.png");
+    clear:both;
 }
 .preview
 {
-width:300px;
-}
-#logo_center
-{
-    display:block;
-    float:left;
+    width:300px;
 }
 #old_site{
-width:273px;
+    width:273px;
     float:left;
     clear:both;
     background-image:url("../image/background-old_site.png");
@@ -104,9 +256,9 @@ width:273px;
     margin-left:33px;
 }
 #news_top, #news_center, #news_bottom{
-width:100%;
-display:block;
-min-height:12px;
+    width:100%;
+    display:block;
+    min-height:12px;
 }
 #news_top
 {
@@ -125,6 +277,44 @@ min-height:12px;
     background-image:url("../image/background-news-bottom.png");
 }
 
+#select-addon-panel
+{
+    clear:both;
+    padding-top:20px;
+    text-align: center;
+    width: 100%;
+}
+#select-addon-panel > div.addons
+{
+    display: inline-block;
+    margin: 0px 80px 0px 80px;
+    text-align:center;
+}
+
+#news-panel
+{
+    display: block;
+    clear: both;
+    background-image: url('../image/news-panel.png');
+    width: 1000px;
+    height: 125px;
+}
+#news-messages
+{
+    display: table;
+    list-style: none;
+    font-size: 1.8em;
+    width: 100%;
+    height: 100%;
+}
+#news-messages > li
+{
+    display: table-cell;
+    padding-top: 20px;
+    text-align: center;
+    vertical-align: middle;
+}
+
 h1
 {
     clear:both;
@@ -135,15 +325,14 @@ h1
 h1 .left
 {
     width:14px;
-min-height:44px;
+    min-height:44px;
     background-image:url("../image/h1-left.png");
     float:left;
     display:block;
 }
 h1 .center
 {
-
-min-height:44px;
+    min-height:44px;
     background-image:url("../image/h1-center.png");
     float:left;
     display:block;
@@ -152,27 +341,10 @@ min-height:44px;
 h1 .right
 {
     width:14px;
-min-height:44px;
+    min-height:44px;
     background-image:url("../image/h1-right.png");
     float:left;
     display:block;
-}
-#add-ons-for
-{
-    width:600px;
-    text-align:center;
-    margin:auto;
-}
-#add-ons-type
-{
-    clear:both;
-    padding-top:20px;
-}
-.addons
-{
-    float:left;
-    margin-left:160px;
-    text-align:center;
 }
 
 h2
@@ -221,6 +393,28 @@ a img
 {
     border:none;
 }
+span.error
+{
+    background: #FFCCCC;
+    border: 1px solid #CC0000;
+    color: #CC0000;
+    display: inline-block;
+    padding: 0px 2px 0px 2px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+}
+span.warning
+{
+    background: #FFFFCC;
+    border: 1px solid #FFCC00;
+    color: #996600;
+    display: inline-block;
+    padding: 0px 2px 0px 2px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+}
+
+/* In process of obseleting - do not use */
 #list-addons
 {
     clear:both;
@@ -246,21 +440,42 @@ a img
     margin-top:20px;
     
 }
-#disAddon_content
+
+#content-addon
 {
     float:left;
     margin-left:50px;
-    background-image:url("../image/disAddon.png");
-    padding:20px;
+    padding:0px;
     margin-top:30px;
+    width: 620px;
 }
-#disAddon
+#content-addon_top
 {
-    
+    background-image:url("../image/content-addon_top.png");
+    height: 10px;
+    width: 100%;
+}
+#content-addon_bottom
+{
+    background-image:url("../image/content-addon_bottom.png");
+    height: 10px;
+    width: 100%;
+}
+#content-addon_status
+{
+    background-image:url("../image/content-addon.png");
+    overflow-x: hidden;
+    width: 580px;
+    padding: 0px 20px 0px 20px;
+}
+#content-addon_body
+{
+    background-image:url("../image/content-addon.png");
     width:580px;
     height:456px;
-    overflow:scroll;
-    overflow-x:hidden;
+    padding: 0px 20px 0px 20px;
+    overflow-y:scroll;
+    overflow-x: hidden;
 }
 #select-addons{
     width:250px;
@@ -284,12 +499,95 @@ min-height:10px;
 {
     background-image:url("../image/select-bottom.png");
 }
+/* End obseleted section */
+
+/* Layout for panels */
+#left-menu
+{
+    float: left;
+    width: 250px;
+    padding: 30px;
+}
+#left-menu_top
+{
+    background-image: url('../image/left-menu_top.png');
+    height: 10px;
+    width: 100%;
+}
+#left-menu_body
+{
+    background-image: url('../image/left-menu.png');
+    overflow-x: hidden;
+    overflow-y: scroll;
+    width: 210px;
+    height: 456px;
+    padding: 0px 20px 0px 20px;
+}
+#left-menu_bottom
+{
+    background-image: url('../image/left-menu_bottom.png');
+    height: 10px;
+    width: 100%;
+}
+#left-menu_body .menu-item
+{
+    display:block;
+    padding:2px;
+    margin-bottom:2px;
+}
+#left-menu_body .menu-item:hover
+{
+    background-color:black;
+    color:white;
+}
+
+#right-content {
+    float: left;
+    width: 620px;
+    padding: 30px;
+}
+#right-content_top
+{
+    background-image:url("../image/content-addon_top.png");
+    height: 10px;
+    width: 100%;
+}
+#right-content_status
+{
+    background-image:url("../image/content-addon.png");
+    overflow-x: hidden;
+    width: 580px;
+    padding: 0px 20px 0px 20px;
+}
+#right-content_body
+{
+    background-image:url("../image/content-addon.png");
+    width:580px;
+    height:456px;
+    padding: 0px 20px 0px 20px;
+    overflow-y:scroll;
+    overflow-x: hidden;
+}
+#right-content_bottom
+{
+    background-image:url("../image/content-addon_bottom.png");
+    height: 10px;
+    width: 100%;
+}
+
+
+#addon_flags th
+{
+    vertical-align: bottom;
+}
+
 .icon
 {
     height:25px;
     margin-left:2px;
     margin-right:10px;
 }
+/* Obselete - do not use */
 .menu-addons:hover
 {
     background-color:black;
@@ -301,6 +599,7 @@ min-height:10px;
     padding:2px;
     margin-bottom:2px;
 }
+/* End obselete */
 .unavailable
 {
 color:red;
