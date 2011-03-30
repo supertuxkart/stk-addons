@@ -124,11 +124,29 @@ function news_message_panel()
 
 function clients_panel()
 {
+    echo '<h3>'._('Clients by User-Agent').'</h3>';
+    // Read recorded user-agents from database
+    $clientsSql = 'SELECT * FROM `'.DB_PREFIX.'clients`
+        ORDER BY `agent_string` ASC';
+    $clientsHandle = sql_query($clientsSql);
+    if (mysql_num_rows($clientsHandle) == 0)
+    {
+        echo _('There are currently no SuperTuxKart clients recorded. Your download script may not be configured properly.').'<br />';
+    }
+    else
+    {
+        echo '<table width="100%">';
+        echo '<tr><th>'._('User-Agent String:').'</th><th>'._('Game Version:').'</th></tr>';
+        for ($clientsResult = sql_next($clientsHandle); $clientsResult; $clientsResult = sql_next($clientsHandle))
+        {
+            echo '<tr><td>'.$clientsResult['agent_string'].'</td><td>'.$clientsResult['stk_version'].'</td></tr>';
+        }
+        echo '</table>';
+    }
     echo <<< EOL
 TODO:<br />
 <ol>
-    <li>Record different SuperTuxKart/? user-agent strings</li>
-    <li>Allow associating user-agent strings with versions of STK</li>
+    <li>Allow changing association of user-agent strings with versions of STK</li>
     <li>Allow setting various components of the generated XML for each different user-agent</li>
     <li>Make XML generating script generate files for each configuration set</li>
     <li>Make download script provide a certain file based on the user-agent</li>

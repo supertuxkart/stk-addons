@@ -103,9 +103,9 @@ else
 }
 ?>
 <form action="login.php?action=submit" method="POST">
-    Username:<br />
+    <?php echo _('Username:'); ?><br />
     <input type="text" name="user" /><br />
-    Password:<br />
+    <?php echo _('Password:'); ?><br />
     <input type="password" name="pass" /><br />
     <input type="submit" value="<?php echo _('Log In'); ?>" />
 </form>
