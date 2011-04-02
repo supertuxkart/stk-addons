@@ -171,7 +171,7 @@ class coreUser
             <form action="users.php?user='.$this->userCurrent['user'].'&amp;action=password" method="POST">
             '._('Old Password:').'<br />
             <input type="password" name="oldPass" /><br />
-            '._('New Password:').'<br />
+            '._('New Password:').' ('._('Must be at least 6 characters long.').')<br />
             <input type="password" name="newPass" /><br />
             '._('New Password (Confirm):').'<br />
             <input type="password" name="newPass2" /><br />
@@ -194,7 +194,11 @@ class coreUser
             echo '<span class="error">'._('Your old password is not correct.').'</span><br />';
             return false;
         }
-
+        if (strlen($_POST['newPass']) < 6)
+        {
+            echo '<span class="error">'._('Your password must be at least 6 characters long.').'</span><br />';
+            return false;
+        }
         if($_SESSION['userid'] == $this->userCurrent['id'])
         {
                 mysql_query("UPDATE `".DB_PREFIX."users` SET `pass` = '".hash('sha256',$_POST['newPass'])."' WHERE `id` =".$this->userCurrent['id']." LIMIT 1 ;");
