@@ -21,7 +21,6 @@
 define('ROOT','./');
 $security = 'addAddon';
 include('include.php');
-include('include/parseUpload.php');
 include('include/top.php');
 
 // define possibly undefined variables

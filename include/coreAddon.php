@@ -217,7 +217,7 @@ class coreAddon
         <table>
         <tr><td><strong>'._('Designer:').'</strong></td><td>'.$this->addonCurrent['designer'].'</td></tr>
         <tr><td><strong>'._('Upload date:').'</strong></td><td>'.$this->addonCurrent['revision_timestamp'].'</td></tr>
-        <tr><td><strong>'._('Submitted by:').'</strong></td><td><a href="account.php?title='.$addonUser->userCurrent['id'].'">'.$addonUser->userCurrent['name'].'</a></td></tr>
+        <tr><td><strong>'._('Submitted by:').'</strong></td><td><a href="users.php?title='.$addonUser->userCurrent['id'].'">'.$addonUser->userCurrent['name'].'</a></td></tr>
         <tr><td><strong>'._('Revision:').'</strong></td><td>'.$this->addonCurrent['revision'].'</td></tr>
         <tr><td><strong>'._('Compatible with:').'</strong></td><td>'.format_compat($this->addonCurrent['format'],$this->addonType).'</td></tr>
         </table></div>

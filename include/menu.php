@@ -115,6 +115,7 @@ echo '</div>';
 <div id="global">
 <div id="top-menu">
     <div id="top-menu-content">
+        <div class="left">
     <?php
     if($user->logged_in)
     {
@@ -126,7 +127,7 @@ echo '</div>';
     if($user->logged_in)
     {
         echo'<a href="login.php?action=logout">'._("Log out").'</a>';
-        echo'<a href="account.php">'._("Users").'</a>';
+        echo'<a href="users.php">'._("Users").'</a>';
         echo'<a href="upload.php">'._("Upload").'</a>';
         if ($_SESSION['role']['managesettings'])
             echo '<a href="manage.php">'._('Manage').'</a>';
@@ -141,15 +142,18 @@ echo '</div>';
     echo _('About');
     echo '</a>';
      ?>
-    <a style="float: right;" href="http://supertuxkart.sourceforge.net"> <?php echo _("STK Homepage");?></a>
-    <div id="lang-menu">
-        <a class="menu_head" href="#"><?php echo _("Languages");?></a>
-        <ul class="menu_body">
-            <li><a href="<?php echo $nom_page.'&amp;lang=nl'; ?>"><img src="image/flag/nl.png" /></a></li>
-            <li><a href="<?php echo $nom_page.'&amp;lang=fr'; ?>"><img src="image/flag/fr.png" /></a></li>
-            <li><a href="<?php echo $nom_page.'&amp;lang=en'; ?>"><img src="image/flag/en.png" /></a></li>
-            <li><a href="<?php echo $nom_page.'&amp;lang=ga'; ?>"><img src="image/flag/ga.png" /></a></li>
-        </ul>
-    </div>
+        </div>
+        <div class="right">
+            <div id="lang-menu">
+                <a class="menu_head" href="#"><?php echo _("Languages");?></a>
+                <ul class="menu_body">
+                    <li><a href="<?php echo $nom_page.'&amp;lang=nl'; ?>"><img src="image/flag/nl.png" /></a></li>
+                    <li><a href="<?php echo $nom_page.'&amp;lang=fr'; ?>"><img src="image/flag/fr.png" /></a></li>
+                    <li><a href="<?php echo $nom_page.'&amp;lang=en'; ?>"><img src="image/flag/en.png" /></a></li>
+                    <li><a href="<?php echo $nom_page.'&amp;lang=ga'; ?>"><img src="image/flag/ga.png" /></a></li>
+                </ul>
+            </div>
+        <a href="http://supertuxkart.sourceforge.net"> <?php echo _("STK Homepage");?></a>
+        </div>
     </div>
 </div>

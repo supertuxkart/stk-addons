@@ -22,7 +22,7 @@
 /***************************************************************************
 Project: STK Addon Manager
 
-File: user.php
+File: users-panel.php
 Version: 1
 Licence: GPLv3
 Description: page who is called in ajax and who give user informations
@@ -99,22 +99,11 @@ if($action == "file")
 	?>
 	<html>
 	<head>
-	<meta http-equiv="refresh" content="0;URL=account.php?title=<? echo $addon->userCurrent['user'];?>">
+	<meta http-equiv="refresh" content="0;URL=users.php?title=<? echo $addon->userCurrent['user'];?>">
 	</head>
 	</html>
 	<?php
 	$addon->setFile($action);
-	exit();
-}
-if($action == "password")
-{
-	include("include/top.php");
-	echo '</head><body>';
-	include("include/menu.php");
-	echo '<div id="content">';
-	$addon->setPass();
-	echo '</div>';
-	include("include/footer.php");
 	exit();
 }
 $addon->viewInformation();

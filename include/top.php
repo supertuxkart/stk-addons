@@ -68,7 +68,7 @@ if (isset($_GET['lang'])) { // If the user has chosen a language
 	exit();
 
 }
-setlocale(LC_ALL, $_COOKIE['lang'].'.UTF-8');
+if (isset($_COOKIE['lang'])) setlocale(LC_ALL, $_COOKIE['lang'].'.UTF-8');
 
 bindtextdomain('translations', 'locale');
 textdomain('translations');

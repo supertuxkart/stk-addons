@@ -134,26 +134,36 @@ class user
 
 function loadUsers()
 {
-    global $style, $js;
+    global $js;
     $userLoader = new coreUser();
     $userLoader->loadAll();
     echo <<< EOF
-<ul id="list-addons">
+<ul>
 <li>
-<a class="menu-addons" href="javascript:loadAddon({$_SESSION['userid']},'user.php')">
-<img class="icon"  src="image/$style/user.png" />
+<a class="menu-item" href="javascript:loadFrame({$_SESSION['userid']},'users-panel.php')">
+<img class="icon" src="image/user.png" />
 EOF;
     echo _('Me').'</a></li>';
     ?>
     <?php
     while($userLoader->next())
     {
-        echo '<li><a class="menu-addons';
-        if($userLoader->userCurrent['active'] == 0) echo ' unavailable';
-        echo '" href="javascript:loadAddon('.$userLoader->userCurrent['id'].',\'user.php\')">';
-        echo '<img class="icon"  src="image/'.$style.'/user.png" />';
-        echo $userLoader->userCurrent['user']."</a></li>";
-        if($userLoader->userCurrent['user'] == $_GET['title']) $js.= 'loadAddon('.$userLoader->userCurrent['id'].',\'user.php\')';
+        // Make sure that the user is active, or the viewer has permission to
+        // manage this type of user
+        if ($_SESSION['role']['manage'.$userLoader->userCurrent['role'].'s']
+                || $userLoader->userCurrent['active'] == 1)
+        {
+            echo '<li><a class="menu-item';
+            if($userLoader->userCurrent['active'] == 0) echo ' unavailable';
+            echo '" href="javascript:loadFrame('.$userLoader->userCurrent['id'].',\'users-panel.php\')">';
+            echo '<img class="icon"  src="image/user.png" />';
+            echo $userLoader->userCurrent['user']."</a></li>";
+            // When running for the list of users, check if we want to load this
+            // user's profile. Doing this here is more efficient than searching
+            // for the user name with another query. Also, leaving this here
+            // cause the lookup to fail if permissions were invalid.
+            if($userLoader->userCurrent['user'] == $_GET['user']) $js.= 'loadFrame('.$userLoader->userCurrent['id'].',\'users-panel.php\')';
+        }
     }
     echo "</ul>";
 

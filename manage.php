@@ -21,7 +21,11 @@
 define('ROOT','./');
 $security = 'managesettings';
 require('include.php');
+
+$title = _('SuperTuxKart Add-ons').' | '._('Manage');
+
 require('include/top.php');
+echo '</head><body>';
 require('include/menu.php');
 if (!isset($_GET['action'])) $_GET['action'] = NULL;
 ?>

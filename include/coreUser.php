@@ -44,6 +44,7 @@ class coreUser
     function selectByUser($id)
     {
         $this->reqSql = sql_get_all_where('users', "user", $id);
+        $this->userCurrent = sql_next($this->reqSql);
     }
 
     function loadAll()
@@ -167,7 +168,7 @@ class coreUser
         if($this->userCurrent['id'] == $_SESSION['userid'])
         {
             echo '<h3>'._('Change Password').'</h3>
-            <form action="account.php?title='.$this->userCurrent['id'].'&amp;action=password" method="POST">
+            <form action="users.php?user='.$this->userCurrent['user'].'&amp;action=password" method="POST">
             '._('Old Password:').'<br />
             <input type="password" name="oldPass" /><br />
             '._('New Password:').'<br />
@@ -188,16 +189,17 @@ class coreUser
             echo '<span class="error">'._('Your passwords do not match.').'</span><br />';
             return false;
         }
-        if(hash('sha256',$_POST['oldPass']) != $this->addonCurrent['pass'])
+        if(hash('sha256',$_POST['oldPass']) != $this->userCurrent['pass'])
         {
             echo '<span class="error">'._('Your old password is not correct.').'</span><br />';
             return false;
         }
 
-        if($_SESSION['userid'] == $this->addonCurrent['id'])
+        if($_SESSION['userid'] == $this->userCurrent['id'])
         {
-                mysql_query("UPDATE `".DB_PREFIX."users` SET `pass` = '".hash('sha256',$_POST['newPass'])."' WHERE `id` =".$this->addonCurrent['id']." LIMIT 1 ;");
+                mysql_query("UPDATE `".DB_PREFIX."users` SET `pass` = '".hash('sha256',$_POST['newPass'])."' WHERE `id` =".$this->userCurrent['id']." LIMIT 1 ;");
                 echo _('Your password is changed.').'<br />';
+                $_SESSION['pass'] = hash('sha256',$_POST['newPass']);
                 $succes=true;
         }
 
@@ -205,14 +207,14 @@ class coreUser
     }
     function permalink()
     {
-        return 'account.php?title='.$this->addonCurrent['name'];
+        return 'users.php?user='.$this->userCurrent['user'];
     }
     function setAvailable()
     {
         global $base;
         if($_SESSION['role']['manageaddons'] == true)
         {
-            if($this->addonCurrent['available'] == 0)
+            if($this->userCurrent['available'] == 0)
             {
                 mysql_query("UPDATE `".DB_PREFIX.$this->addonType."` SET `available` = '1' WHERE `id` =".$this->addonCurrent['id']." LIMIT 1 ;");
             }
@@ -223,7 +225,7 @@ class coreUser
 	{
 	
 		global $base;
-		if($_SESSION['role']['manage'.$this->addonCurrent['range'].'s'] == true && $_SESSION['role']['manage'.$range.'s'] == true)
+		if($_SESSION['role']['manage'.$this->userCurrent['range'].'s'] == true && $_SESSION['role']['manage'.$range.'s'] == true)
 		{
 			mysql_query("UPDATE `".$base."`.`users` SET `range` = '".$range."' WHERE `users`.`id` =".$this->addonCurrent['id']." LIMIT 1 ;");
 		}
@@ -330,7 +332,7 @@ class coreUser
 		if($_SESSION['role']['manage'.$this->addonCurrent['range'].'s'] == true)
 		{
 			echo '<form action="#" method="GET">';
-			echo '<select onchange="addonRequest(\'user.php?action=range&value=\'+this.value, '.$this->addonCurrent['id'].')" name="range" id="range'.$this->addonCurrent['id'].'">';
+			echo '<select onchange="addonRequest(\'users-panel.php?action=range&value=\'+this.value, '.$this->addonCurrent['id'].')" name="range" id="range'.$this->addonCurrent['id'].'">';
 			echo '<option value="basicUser">Basic User</option>';
 			$range = array("moderator","administrator");
 			for($i=0;$i<2;$i++)
@@ -343,7 +345,7 @@ class coreUser
 				}
 			}
 			echo '</select>';
-			echo '<input  onchange="addonRequest(\'user.php?action=available\', '.$this->addonCurrent['id'].')" type="checkbox" name="available" id="available" ';
+			echo '<input  onchange="addonRequest(\'users-panel.php?action=available\', '.$this->addonCurrent['id'].')" type="checkbox" name="available" id="available" ';
 			if($this->addonCurrent['available'] ==1)
 			{
 				echo 'checked="checked" ';

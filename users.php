@@ -22,7 +22,7 @@
 /***************************************************************************
 Project: STK Addon Manager
 
-File: manageAccount.php
+File: users.php
 Version: 1
 Licence: GPLv3
 Description: people
@@ -32,31 +32,41 @@ $security = 'basicPage';
 define('ROOT','./');
 include('include.php');
 
-$_GET['title'] = (isset($_GET['title'])) ? $_GET['title'] : NULL;
+$_GET['user'] = (isset($_GET['user'])) ? mysql_real_escape_string($_GET['user']) : NULL;
+$action = (isset($_GET['action'])) ? $_GET['action'] : NULL;
 
 $title = _('SuperTuxKart Add-ons').' | '._('Users');
+
 include('include/top.php');
-?>
-</head>
-<body>
-<?php 
+echo '</head><body>';
 include(ROOT.'include/menu.php');
 ?>
-<div id="select-addons">
-<div id="select-addons_top">
-</div>
-<div id="select-addons_center">
+
+<div id="left-menu">
+    <div id="left-menu_top"></div>
+    <div id="left-menu_body">
 <?php
 $js = "";
 loadUsers();
 ?>
+    </div>
+    <div id="left-menu_bottom"></div>
 </div>
-<div id="select-addons_bottom">
-</div></div>
-<div id="content-addon">
-    <div id="content-addon_top"></div>
-    <div id="content-addon_body"></div>
-    <div id="content-addon_bottom"></div>
+
+<div id="right-content">
+    <div id="right-content_top"></div>
+    <div id="right-content_status">
+<?php
+if($action == "password")
+{
+    $addon = new coreUser;
+    $addon->selectByUser($_GET['user']);
+    $addon->setPass();
+}
+?>
+    </div>
+    <div id="right-content_body"></div>
+    <div id="right-content_bottom"></div>
 </div>
 <?php
 echo '<script type="text/javascript">';

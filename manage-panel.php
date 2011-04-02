@@ -87,7 +87,7 @@ function news_message_panel()
     echo '<td>'._('Condition:').'</td><td><input type="text" name="condition" id="news_condition" size="60" maxlength="255" /></td></tr><tr>';
     echo '<td></td><td><input type="submit" value="'._('Create Message').'" /></td></tr></table>';
     echo '</form>';
-    echo 'Todo:<ol><li>Allow selecting from a list of conditions rather than typing. Too typo-prone.</li><li>Need to know syntax. Best option is likely semicolon-delimited expressions, e.g. <tt>stk-ver>=0.7.0; addonNotInstalled=={addonID};</tt>.</li><li>Allow editing in future, in case of goofs or changes.</li></ol>';
+    echo 'Todo:<ol><li>Allow selecting from a list of conditions rather than typing. Too typo-prone.</li><li>Type semicolon-delimited expressions, e.g. <tt>stkversion > 0.7.0;addonNotInstalled = {addonID};</tt>.</li><li>Allow editing in future, in case of goofs or changes.</li></ol>';
     echo '<br />';
 
     $reqSql = 'SELECT `n`.*, `u`.`user`

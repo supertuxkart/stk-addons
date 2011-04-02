@@ -39,9 +39,9 @@ include("include/top.php");
                 <div style="text-align: center; width: 100%;"><img id="logo_center" src="image/logo_large.png" alt="SuperTuxKart Logo" /></div>
 
 		<div id="select-addon-panel">
-		    <div class="addons">
-		        <a href="addon-view.php?addons=karts">
-                            <img src="image/karts.png" alt="<?php echo _('Karts'); ?>" />
+		    <div class="icon-container">
+                        <a href="addon-view.php?addons=karts">
+                            <img src="image/karts.png" alt="<?php echo _('Karts'); ?>" /><br />
                             <h2 class="menu">
                                 <div class="left"></div>
                                 <div class="center"><?php echo _("Karts"); ?></div>
@@ -49,9 +49,9 @@ include("include/top.php");
                             </h2>
                         </a>
 		    </div>
-                    <div class="addons">
-		        <a href="addon-view.php?addons=tracks">
-                            <img src="image/tracks.png" alt="<?php echo _('Tracks'); ?>" />
+                    <div class="icon-container">
+                        <a href="addon-view.php?addons=tracks">
+                            <img src="image/tracks.png" alt="<?php echo _('Tracks'); ?>" /><br />
                             <h2 class="menu" >
                                 <div class="left"></div>
                                 <div class="center"><?php echo _("Tracks"); ?></div>
@@ -59,9 +59,9 @@ include("include/top.php");
                             </h2>
                         </a>
 		    </div>
-                    <div class="addons">
-		        <a href="http://supertuxkart.sourceforge.net/Category:Stkaddons">
-                            <img src="image/help.png" alt="<?php echo _('Help'); ?>" />
+                    <div class="icon-container">
+                        <a href="http://supertuxkart.sourceforge.net/Category:Stkaddons">
+                            <img src="image/help.png" alt="<?php echo _('Help'); ?>" /><br />
                             <h2 class="menu">
                                 <div class="left"></div>
                                 <div class="center"><?php echo _("Help"); ?></div>
