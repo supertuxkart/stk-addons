@@ -68,7 +68,7 @@ class user
         if (strlen($username) < 4)
             return false;
         // Password must be 8 or more characters
-        if (strlen($password) < 8)
+        if (strlen($password) < 6)
             return false;
         // Username can only contain alphanumeric characters
         if (!preg_match('/^[a-z0-9]+$/i',$username))

@@ -39,9 +39,9 @@ $_GET['action'] = (isset($_GET['action'])) ? $_GET['action'] : NULL;
 // Login form
 $login_form =
     '<form id="form" action="createAccount.php?action=submit" method="POST">
-    '._('Username:').' <br />
+    '._('Username:').' ('._('Must be at least 4 characters long.').')<br />
     <input type="text" name="user" /><br />
-    '._('Password:').' <br />
+    '._('Password:').' ('._('Must be at least 6 characters long.').')<br />
     <input type="password" id="pass1" name="pass1" /><br />
     '._('Password (confirm):').' <br />
     <input type="password" id="pass2" name="pass2" /><br />
@@ -62,7 +62,17 @@ echo '
 //exit();
 if ($_GET['action'] == 'submit' && $_POST['pass1'] != $_POST['pass2'])
 {
-    echo '<span class="error>'._('Your passwords do not match.').'</span><br /><br />';
+    echo '<span class="error">'._('Your passwords do not match.').'</span><br /><br />';
+    echo $login_form;
+}
+elseif ($_GET['action'] == 'submit' && strlen($_POST['user']) < 4)
+{
+    echo '<span class="error">'._('Your username must be at least 4 characters long.').'</span><br /><br />';
+    echo $login_form;
+}
+elseif ($_GET['action'] == 'submit' && strlen($_POST['pass1']) < 6)
+{
+    echo '<span class="error">'._('Your password must be at least 6 characters long.').'</span><br /><br />';
     echo $login_form;
 }
 elseif($_GET['action'] == "submit" && $_POST['pass1'] == $_POST['pass2'])
