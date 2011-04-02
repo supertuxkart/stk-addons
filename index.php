@@ -75,6 +75,7 @@ include("include/top.php");
                         <?php
                         $newsSql = 'SELECT * FROM `'.DB_PREFIX.'news`
                             WHERE `active` = 1
+                            AND `web_display` = 1
                             ORDER BY `date` DESC';
                         $handle = sql_query($newsSql);
                         for ($result = sql_next($handle); $result; $result = sql_next($handle))

@@ -72,6 +72,7 @@ CREATE TABLE `news` (
     `author_id` int(11) unsigned NOT NULL default '0',
     `content` char(140) default NULL,
     `condition` varchar(255) default NULL,
+    `web_display` tinyint(1) NOT NULL default '1',
     `active` tinyint(1) NOT NULL default '1',
     PRIMARY KEY  (`id`),
     KEY `date` (`date`,`active`)

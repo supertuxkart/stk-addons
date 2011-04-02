@@ -8,21 +8,13 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-30 14:50-0600\n"
+"POT-Creation-Date: 2011-04-02 17:06-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
-
-#: account.php:37
-msgid "SuperTuxKart Add-ons"
-msgstr ""
-
-#: account.php:37 menu.php:129
-msgid "Users"
-msgstr ""
 
 #: addon-view.php:71
 msgid "Saved description."
@@ -112,11 +104,11 @@ msgstr ""
 msgid "Add revision:"
 msgstr ""
 
-#: coreAddon.php:267 upload.php:46
+#: coreAddon.php:267 upload.php:45
 msgid "File:"
 msgstr ""
 
-#: coreAddon.php:268 upload.php:47
+#: coreAddon.php:268 upload.php:46
 msgid "Supported file types are:"
 msgstr ""
 
@@ -188,76 +180,88 @@ msgstr ""
 msgid "Failed to check for previous add-on revisions."
 msgstr ""
 
-#: coreUser.php:83 createAccount.php:42 login.php:106
+#: coreUser.php:84 createAccount.php:42 login.php:106
 msgid "Username:"
 msgstr ""
 
-#: coreUser.php:84
+#: coreUser.php:85
 msgid "Registration Date:"
 msgstr ""
 
-#: coreUser.php:85
+#: coreUser.php:86
 msgid "Real Name:"
 msgstr ""
 
-#: coreUser.php:88 coreUser.php:139
+#: coreUser.php:89 coreUser.php:140
 msgid "Avatar:"
 msgstr ""
 
-#: coreUser.php:90 coreUser.php:143
+#: coreUser.php:91 coreUser.php:144
 msgid "Role:"
 msgstr ""
 
-#: coreUser.php:91 coreUser.php:138
+#: coreUser.php:92 coreUser.php:139
 msgid "Homepage:"
 msgstr ""
 
-#: coreUser.php:94
+#: coreUser.php:95
 msgid "My Karts"
 msgstr ""
 
-#: coreUser.php:104 coreUser.php:122
+#: coreUser.php:105 coreUser.php:123
 msgid "Not approved"
 msgstr ""
 
-#: coreUser.php:111
+#: coreUser.php:112
 msgid "My Tracks"
 msgstr ""
 
-#: coreUser.php:157
+#: coreUser.php:158
 msgid "User Activated:"
 msgstr ""
 
-#: coreUser.php:165
+#: coreUser.php:166
 msgid "Save Configuration"
 msgstr ""
 
-#: coreUser.php:169 coreUser.php:177
+#: coreUser.php:170 coreUser.php:178
 msgid "Change Password"
 msgstr ""
 
-#: coreUser.php:171
+#: coreUser.php:172
 msgid "Old Password:"
 msgstr ""
 
-#: coreUser.php:173
+#: coreUser.php:174
 msgid "New Password:"
 msgstr ""
 
-#: coreUser.php:175
+#: coreUser.php:174 createAccount.php:44
+msgid "Must be at least 6 characters long."
+msgstr ""
+
+#: coreUser.php:176
 msgid "New Password (Confirm):"
 msgstr ""
 
-#: coreUser.php:188 createAccount.php:65
+#: coreUser.php:189 createAccount.php:65
 msgid "Your passwords do not match."
 msgstr ""
 
-#: coreUser.php:193
+#: coreUser.php:194
 msgid "Your old password is not correct."
 msgstr ""
 
-#: coreUser.php:200
+#: coreUser.php:199 createAccount.php:75
+msgid "Your password must be at least 6 characters long."
+msgstr ""
+
+#: coreUser.php:205
 msgid "Your password is changed."
+msgstr ""
+
+#: createAccount.php:42
+msgid "Must be at least 4 characters long."
 msgstr ""
 
 #: createAccount.php:44 login.php:108
@@ -276,21 +280,25 @@ msgstr ""
 msgid "Email Address:"
 msgstr ""
 
-#: createAccount.php:90
+#: createAccount.php:70
+msgid "Your username must be at least 4 characters long."
+msgstr ""
+
+#: createAccount.php:100
 msgid ""
 "Account creation was successful. Please activate your account using the link "
 "emailed to you."
 msgstr ""
 
-#: createAccount.php:94
+#: createAccount.php:104
 msgid "An error occurred while creating your account."
 msgstr ""
 
-#: createAccount.php:99
+#: createAccount.php:109
 msgid "Your username has already been used."
 msgstr ""
 
-#: createAccount.php:111
+#: createAccount.php:121
 msgid "Your account has been activated."
 msgstr ""
 
@@ -331,7 +339,7 @@ msgstr ""
 msgid "You are already logged in."
 msgstr ""
 
-#: login.php:90 menu.php:121
+#: login.php:90 menu.php:122
 msgid "Welcome"
 msgstr ""
 
@@ -359,15 +367,15 @@ msgstr ""
 msgid "Invalid page. You may have followed a broken link."
 msgstr ""
 
-#: manage-panel.php:61 manage.php:35
+#: manage-panel.php:61 manage.php:39
 msgid "General Settings"
 msgstr ""
 
-#: manage-panel.php:65 manage.php:40
+#: manage-panel.php:65 manage.php:44
 msgid "News Messages"
 msgstr ""
 
-#: manage-panel.php:69 manage.php:45
+#: manage-panel.php:69 manage.php:49
 msgid "Client Versions"
 msgstr ""
 
@@ -379,102 +387,118 @@ msgstr ""
 msgid "Save Settings"
 msgstr ""
 
-#: manage-panel.php:86 manage-panel.php:107
+#: manage-panel.php:86 manage-panel.php:108
 msgid "Message:"
 msgstr ""
 
-#: manage-panel.php:87 manage-panel.php:109
+#: manage-panel.php:87 manage-panel.php:110
 msgid "Condition:"
 msgstr ""
 
 #: manage-panel.php:88
+msgid "Display on Website:"
+msgstr ""
+
+#: manage-panel.php:89
 msgid "Create Message"
 msgstr ""
 
-#: manage-panel.php:101
+#: manage-panel.php:102
 msgid "No news messages currently exist."
 msgstr ""
 
-#: manage-panel.php:106
+#: manage-panel.php:107
 msgid "Date:"
 msgstr ""
 
-#: manage-panel.php:108
+#: manage-panel.php:109
 msgid "Author:"
 msgstr ""
 
-#: manage-panel.php:110
+#: manage-panel.php:111
+msgid "Web:"
+msgstr ""
+
+#: manage-panel.php:112
 msgid "Actions:"
 msgstr ""
 
-#: manage-panel.php:127
+#: manage-panel.php:130
 msgid "Clients by User-Agent"
 msgstr ""
 
-#: manage-panel.php:134
+#: manage-panel.php:137
 msgid ""
 "There are currently no SuperTuxKart clients recorded. Your download script "
 "may not be configured properly."
 msgstr ""
 
-#: manage-panel.php:139
+#: manage-panel.php:142
 msgid "User-Agent String:"
 msgstr ""
 
-#: manage-panel.php:139
+#: manage-panel.php:142
 msgid "Game Version:"
 msgstr ""
 
-#: manage.php:63
-msgid "One or more fields has been left blank. Settings were not saved."
+#: manage.php:25 users.php:38
+msgid "SuperTuxKart Add-ons"
 msgstr ""
 
-#: manage.php:68
-msgid "XML Download Frequency value is invalid."
-msgstr ""
-
-#: manage.php:74
-msgid "Saved settings."
-msgstr ""
-
-#: manage.php:89
-msgid "Created message."
-msgstr ""
-
-#: manage.php:93
-msgid "Failed to create message."
-msgstr ""
-
-#: menu.php:124
-msgid "Home"
-msgstr ""
-
-#: menu.php:128
-msgid "Log out"
-msgstr ""
-
-#: menu.php:130
-msgid "Upload"
-msgstr ""
-
-#: menu.php:132
+#: manage.php:25 menu.php:133
 msgid "Manage"
 msgstr ""
 
-#: menu.php:137
+#: manage.php:67
+msgid "One or more fields has been left blank. Settings were not saved."
+msgstr ""
+
+#: manage.php:72
+msgid "XML Download Frequency value is invalid."
+msgstr ""
+
+#: manage.php:78
+msgid "Saved settings."
+msgstr ""
+
+#: manage.php:96
+msgid "Created message."
+msgstr ""
+
+#: manage.php:100
+msgid "Failed to create message."
+msgstr ""
+
+#: menu.php:125
+msgid "Home"
+msgstr ""
+
+#: menu.php:129
+msgid "Log out"
+msgstr ""
+
+#: menu.php:130 users.php:38
+msgid "Users"
+msgstr ""
+
+#: menu.php:131
+msgid "Upload"
+msgstr ""
+
+#: menu.php:138
 msgid "Login"
 msgstr ""
 
-#: menu.php:141
+#: menu.php:142
 msgid "About"
 msgstr ""
 
-#: menu.php:144
-msgid "STK Homepage"
+#: menu.php:148
+msgid "Languages"
 msgstr ""
 
-#: menu.php:146
-msgid "Languages"
+#: menu.php:156
+msgid "STK Homepage"
 msgstr ""
 
 #: parseUpload.php:25
@@ -578,15 +602,15 @@ msgstr ""
 msgid "You will be redirected to the login page."
 msgstr ""
 
-#: upload.php:44
+#: upload.php:43
 msgid "Please upload a kart or track."
 msgstr ""
 
-#: upload.php:45
+#: upload.php:44
 msgid "Do not use this form if you are updating an existing add-on."
 msgstr ""
 
-#: upload.php:48
+#: upload.php:47
 msgid "Upload file"
 msgstr ""
 

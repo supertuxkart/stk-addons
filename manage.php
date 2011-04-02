@@ -82,11 +82,14 @@ switch ($_GET['action'])
             break;
         if (strlen($_POST['message']) == 0)
             break;
+        if (!isset($_POST['web_display'])) $_POST['web_display'] = 0;
+        elseif ($_POST['web_display'] == 'on') $_POST['web_display'] = 1;
+        else $_POST['web_display'] = 1;
         $new_message = mysql_real_escape_string($_POST['message']);
         $reqSql = 'INSERT INTO `'.DB_PREFIX.'news`
-            (`author_id`,`content`,`condition`,`active`)
+            (`author_id`,`content`,`condition`,`web_display`,`active`)
             VALUES
-            ('.$_SESSION['userid'].',\''.$new_message.'\',\''.mysql_real_escape_string($_POST['condition']).'\',1)';
+            ('.$_SESSION['userid'].',\''.$new_message.'\',\''.mysql_real_escape_string($_POST['condition']).'\','.$_POST['web_display'].',1)';
         $handle = sql_query($reqSql);
         if ($handle)
         {
