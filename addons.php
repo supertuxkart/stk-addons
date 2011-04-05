@@ -44,21 +44,20 @@ $_GET['rev'] = (isset($_GET['rev'])) ? (int)$_GET['rev'] : NULL;
 <?php 
 include("include/menu.php");
 ?>
-<div id="select-addons">
-<div id="select-addons_top">
-</div>
-<div id="select-addons_center">
+<div id="left-menu">
+    <div id="left-menu_top"></div>
+    <div id="left-menu_body">
 <?php
 $js = "";
 
 loadAddons();
 ?>
+    </div>
+    <div id="left-menu_bottom"></div>
 </div>
-<div id="select-addons_bottom">
-</div></div>
-<div id="content-addon">
-    <div id="content-addon_top"></div>
-    <div id="content-addon_status">
+<div id="right-content">
+    <div id="right-content_top"></div>
+    <div id="right-content_status">
 <?php
 // Execute actions
 switch ($_GET['save'])
@@ -82,8 +81,8 @@ switch ($_GET['save'])
 }
 ?>
     </div>
-    <div id="content-addon_body"></div>
-    <div id="content-addon_bottom"></div>
+    <div id="right-content_body"></div>
+    <div id="right-content_bottom"></div>
 </div>
 </div>
 <script type="text/javascript">
@@ -94,35 +93,36 @@ include("include/footer.php");
 function loadAddons()
 {
     global $addon, $dirDownload, $dirUpload, $js, $user;
-    if($_GET['addons'] == "karts" ||
-            $_GET['addons'] == "tracks"  ||
-            $_GET['addons'] == "file"  ||
-            $_GET['addons'] == "blender")
+    if($_GET['type'] != "karts" &&
+        $_GET['type'] != "tracks"  &&
+        $_GET['type'] != "file"  &&
+        $_GET['type'] != "blender")
     {
-        $addonLoader = new coreAddon($_GET['addons']);
-        $addonLoader->loadAll();
-        echo '<ul id="list-addons">';
-        while($addonLoader->next())
-        {
-            // Approved?
-            if(($addonLoader->addonCurrent['status'] & F_APPROVED) == F_APPROVED)
-            {
-                echo '<li><a class="menu-addons" href="javascript:loadAddon(\''.$addonLoader->addonCurrent['id'].'\',\'addon.php?type='.$_GET['addons'].'\')">';
-                if($_GET['addons'] != "tracks") echo '<img class="icon"  src="image.php?type=small&amp;pic='.$addonLoader->addonCurrent['image'].'" />';
-                else echo '<img class="icon"  src="image/track-icon.png" />';
-                echo $addonLoader->addonCurrent['name']."</a></li>";
-            }
-            elseif($user->logged_in && ($_SESSION['role']['manageaddons'] == true || $_SESSION['userid'] == $addonLoader->addonCurrent['uploader']))
-            {
-                echo '<li><a class="menu-addons unavailable" href="javascript:loadAddon(\''.$addonLoader->addonCurrent['id'].'\',\'addon.php?type='.$_GET['addons'].'\')">';
-                if($_GET['addons'] != "tracks")
-                    echo '<img class="icon"  src="image.php?type=small&amp;pic='.$addonLoader->addonCurrent['image'].'" />';
-                else echo '<img class="icon"  src="image/track-icon.png" />';
-                echo $addonLoader->addonCurrent['name']."</a></li>";
-            }
-            if($addonLoader->addonCurrent['id'] == $_GET['title']) $js.= 'loadAddon(\''.$addonLoader->addonCurrent['id'].'\',\'addon.php?type='.$_GET['addons'].'\')';
-        }
-        echo "</ul>";
+        return;
     }
+    $addonLoader = new coreAddon($_GET['type']);
+    $addonLoader->loadAll();
+    echo '<ul>';
+    while($addonLoader->next())
+    {
+        // Approved?
+        if(($addonLoader->addonCurrent['status'] & F_APPROVED) == F_APPROVED)
+        {
+            echo '<li><a class="menu-item" href="javascript:loadFrame(\''.$addonLoader->addonCurrent['id'].'\',\'addons-panel.php?type='.$_GET['type'].'\')">';
+            if($_GET['type'] != "tracks") echo '<img class="icon"  src="image.php?type=small&amp;pic='.$addonLoader->addonCurrent['image'].'" />';
+            else echo '<img class="icon"  src="image/track-icon.png" />';
+            echo $addonLoader->addonCurrent['name']."</a></li>";
+        }
+        elseif($user->logged_in && ($_SESSION['role']['manageaddons'] == true || $_SESSION['userid'] == $addonLoader->addonCurrent['uploader']))
+        {
+            echo '<li><a class="menu-item unavailable" href="javascript:loadFrame(\''.$addonLoader->addonCurrent['id'].'\',\'addons-panel.php?type='.$_GET['type'].'\')">';
+            if($_GET['type'] != "tracks")
+                echo '<img class="icon"  src="image.php?type=small&amp;pic='.$addonLoader->addonCurrent['image'].'" />';
+            else echo '<img class="icon"  src="image/track-icon.png" />';
+            echo $addonLoader->addonCurrent['name']."</a></li>";
+        }
+        if($addonLoader->addonCurrent['id'] == $_GET['title']) $js.= 'loadFrame(\''.$addonLoader->addonCurrent['id'].'\',\'addons-panel.php?type='.$_GET['type'].'\')';
+    }
+    echo "</ul>";
 }
 ?>

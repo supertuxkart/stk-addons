@@ -98,7 +98,7 @@ if($_SESSION['role']['manageaddons'] || $_SERVER['PHP_SELF'] != "index.php")
 <br />
 <br />
 <div class="news_home">
-<a href="addon-view.php?addons=blender">Blender files</a>
+<a href="addons.php?addons=blender">Blender files</a>
 </div>
 <div class="news_home">
 <form method="POST" action="mail.php?action=bug">

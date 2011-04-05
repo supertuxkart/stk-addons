@@ -53,7 +53,7 @@ class coreAddon
         $this->addonCurrent = sql_next($this->reqSql);
         if ($this->addonCurrent)
             $this->addonCurrent['permUrl'] = 'http://'.$_SERVER['SERVER_NAME'].
-                    str_replace("addon.php", "addon-view.php", $_SERVER['SCRIPT_NAME']).
+                    str_replace("addons-panel.php", "addons.php", $_SERVER['SCRIPT_NAME']).
                     '?addons='.$this->addonType.'&amp;title='.$this->addonCurrent['id'];
     }
 
@@ -70,7 +70,7 @@ class coreAddon
         $this->addonCurrent = sql_next($this->reqSql);
         if ($this->addonCurrent)
             $this->addonCurrent['permUrl'] = 'http://'.$_SERVER['SERVER_NAME'].
-                    str_replace("addon.php", "addon-view.php", $_SERVER['SCRIPT_NAME']).
+                    str_replace("addons-panel.php", "addons.php", $_SERVER['SCRIPT_NAME']).
                     '?addons='.$this->addonType.'&amp;title='.$this->addonCurrent['id'];
     }
 
@@ -92,7 +92,7 @@ class coreAddon
         if(!$this->addonCurrent)
             return false;
         $this->addonCurrent['permUrl'] = 'http://'.$_SERVER['SERVER_NAME'].
-                str_replace("addon.php", "addon-view.php", $_SERVER['SCRIPT_NAME']).
+                str_replace("addons-panel.php", "addons.php", $_SERVER['SCRIPT_NAME']).
                 '?addons='.$this->addonType.'&amp;title='.$this->addonCurrent['id'];
         return true;
     }
@@ -517,7 +517,7 @@ class coreAddon
     /** To get the permanent link of the current addon */ 
     function permalink()
     {
-        return 'addon-view.php?addons='.$this->addonType.'&amp;title='.$this->addonCurrent['name'];
+        return 'addons.php?addons='.$this->addonType.'&amp;title='.$this->addonCurrent['name'];
     }
 }
 

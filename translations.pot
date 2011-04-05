@@ -16,11 +16,11 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: addon-view.php:71
+#: addons.php:71
 msgid "Saved description."
 msgstr ""
 
-#: addon-view.php:80
+#: addons.php:80
 msgid "Saved status."
 msgstr ""
 

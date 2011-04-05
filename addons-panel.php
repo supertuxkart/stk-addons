@@ -20,7 +20,7 @@
 /***************************************************************************
 Project: STK Addon Manager
 
-File: addon.php
+File: addons-panel.php
 Version: 1
 Licence: GPLv3
 Description: page who is called in ajax and who give kart and track informations
@@ -29,7 +29,6 @@ Description: page who is called in ajax and who give kart and track informations
 $security ="";
 define('ROOT','./');
 include('include.php');
-include_once("include/var.php");
 
 if(!isset($_COOKIE['lang']))
 {
@@ -42,6 +41,17 @@ bindtextdomain('translations', 'locale');
 textdomain('translations');
 bind_textdomain_codeset('translations', 'UTF-8');
 
+if (!isset($_GET['value']))
+    $_GET['value'] = NULL;
+if (!isset($_GET['id']))
+    $_GET['id'] = NULL;
+$_GET['id'] = (int)$_GET['id'];
+if (!isset($_POST['value']))
+    $_POST['value'] = NULL;
+if (!isset($_POST['id']))
+    $_POST['id'] = NULL;
+$_POST['id'] = (int)$_POST['id'];
+
 $type = (isset($_GET['type']))? $_GET['type'] : NULL;
 if ($type != 'tracks' && $type != 'karts' && $type != 'users')
     die(_('This page cannot be loaded because an invalid add-on type was provided.'));
@@ -52,13 +62,13 @@ if ($action != NULL && $action != 'file' && $action != 'remove' && $action != 'a
 
 if($action == "file")
 {
-    $value = get('value');
-    $id = get('id');
+    $value = mysql_real_escape_string($_GET['value']);
+    $id = mysql_real_escape_string($_GET['id']);
 }
 else
 {
-    $value = post('value');
-    $id = post('id');
+    $value = mysql_real_escape_string($_POST['value']);
+    $id = mysql_real_escape_string($_POST['id']);
 }
 
 $addon = new coreAddon($type);
@@ -82,7 +92,7 @@ elseif($action == "file")
 	?>
 	<html>
 	<head>
-	<meta http-equiv="refresh" content="0;URL=addon-view.php?addons=<?php echo $type.'&amp;title='.$addon->addonCurrent['name'];?>">
+	<meta http-equiv="refresh" content="0;URL=addons.php?addons=<?php echo $type.'&amp;title='.$addon->addonCurrent['name'];?>">
 	</head>
 	</html>
 	<?php

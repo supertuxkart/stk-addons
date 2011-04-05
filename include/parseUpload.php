@@ -194,7 +194,7 @@ function parseUpload($file,$revision = false)
     }
     rmdir_recursive(UP_LOCATION.'temp/'.$fileid);
     echo _('Successfully uploaded add-on.').'<br />';
-    echo '<span style="font-size: large"><a href="addon-view.php?addons='.$addon_type.'s&amp;title='.$addon_id.'">'._('Continue.').'</a></span><br />';
+    echo '<span style="font-size: large"><a href="addons.php?type='.$addon_type.'s&amp;title='.$addon_id.'">'._('Continue.').'</a></span><br />';
 }
 
 function find_xml($dir)
@@ -232,7 +232,7 @@ function read_xml($file,$type)
     // Remove whitespace at beginning and end of file
     $xmlContents = trim(file_get_contents($file));
     // Remove amperstands (&) because they cause problems
-    $xmlContents = str_replace('&','and',$xmlContents);
+    $xmlContents = str_replace('& ','&amp; ',$xmlContents);
 
     if (!xml_parse_into_struct($reader,$xmlContents,$vals,$index))
     {
@@ -276,7 +276,7 @@ function read_xml($file,$type)
                         $value = 'Add-Ons';
                     }
                 }
-                $writer->writeAttribute($attribute,$value);
+                $writer->writeAttribute(strtolower($attribute),$value);
             }
         }
         if ($val['type'] == 'complete')

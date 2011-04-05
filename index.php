@@ -40,7 +40,7 @@ include("include/top.php");
 
 		<div id="select-addon-panel">
 		    <div class="icon-container">
-                        <a href="addon-view.php?addons=karts">
+                        <a href="addons.php?type=karts">
                             <img src="image/karts.png" alt="<?php echo _('Karts'); ?>" /><br />
                             <h2 class="menu">
                                 <div class="left"></div>
@@ -50,7 +50,7 @@ include("include/top.php");
                         </a>
 		    </div>
                     <div class="icon-container">
-                        <a href="addon-view.php?addons=tracks">
+                        <a href="addons.php?type=tracks">
                             <img src="image/tracks.png" alt="<?php echo _('Tracks'); ?>" /><br />
                             <h2 class="menu" >
                                 <div class="left"></div>

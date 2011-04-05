@@ -99,7 +99,7 @@ class coreUser
 		while($mykart->addonCurrent)
 		{
                     if ($mykart->addonCurrent['status'] & F_APPROVED || $mykart->addonCurrent['uploader'] == $this->userCurrent['id']) {
-                        echo'<li><a href="addon-view.php?addons=karts&amp;title='.$mykart->addonCurrent['id'].'">';
+                        echo'<li><a href="addons.php?addons=karts&amp;title='.$mykart->addonCurrent['id'].'">';
                         echo $mykart->addonCurrent['name'];
                         if (($mykart->addonCurrent['status'] & F_APPROVED) != F_APPROVED)
                             echo ' ('._('Not approved').')';
@@ -117,7 +117,7 @@ class coreUser
 		{
 		    if($mytrack->addonCurrent['status'] & F_APPROVED || $mytrack->addonCurrent['uploader'] == $this->userCurrent['id'])
 		    {
-			echo'<li><a href="addon-view.php?addons=tracks&amp;title='.$mytrack->addonCurrent['id'].'">';
+			echo'<li><a href="addons.php?addons=tracks&amp;title='.$mytrack->addonCurrent['id'].'">';
 			echo $mytrack->addonCurrent['name'];
                         if (($mytrack->addonCurrent['status'] & F_APPROVED) != F_APPROVED)
                             echo ' ('._('Not approved').')';
@@ -375,7 +375,7 @@ class coreUser
 		echo '<ul>';
 		while($mytrack->next())
 		{
-			echo'<li><a href="addon-view.php?addons=tracks&amp;title='.$mytrack->addonCurrent['name'].'">';
+			echo'<li><a href="addons.php?addons=tracks&amp;title='.$mytrack->addonCurrent['name'].'">';
 			echo $mytrack->addonCurrent['name'];
 			echo'</a></li>';
 		}
