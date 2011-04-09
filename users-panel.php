@@ -59,9 +59,9 @@ bindtextdomain('translations', 'locale');
 textdomain('translations');
 bind_textdomain_codeset('translations', 'UTF-8');
 
-$type= mysql_real_escape_string($_GET['type']);
+$type = mysql_real_escape_string($_GET['type']);
 $action = mysql_real_escape_string($_GET['action']);
-if($action=="file" or $action  == "password")
+if($action=="file")
 {
     $value = mysql_real_escape_string($_GET['value']);
     $id = mysql_real_escape_string($_GET['id']);
@@ -72,7 +72,7 @@ else
     $id = mysql_real_escape_string($_POST['id']);
 }
 
-$addon = new coreUser('users');
+$addon = new coreUser;
 $addon->selectById($id);
 if($action == "available")
 {

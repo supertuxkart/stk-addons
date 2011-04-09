@@ -64,15 +64,18 @@ class coreUser
         return true;
     }
 
-    function viewInformation($config=True)
+    function viewInformation()
     {
         global $user;
         if (!$user->logged_in)
             return false;
 
         $this->writeInformation();
-        //write configuration for the submiter and administrator
-        if(($_SESSION['role']['manage'.$this->userCurrent['role'].'s'] || $this->userCurrent['id'] == $_SESSION['userid']) && $config)
+
+        // Allow current user to change own profile, and administrators
+        // to change all profiles
+        if($_SESSION['role']['manage'.$this->userCurrent['role'].'s']
+                || $this->userCurrent['id'] == $_SESSION['userid'])
         {
             $this->writeConfig();
         }
@@ -80,52 +83,94 @@ class coreUser
 
     function writeInformation()
     {
-        global $dirDownload, $dirUpload;
-		echo '<table><tr><td>'._('Username:').'</td><td>'.$this->userCurrent['user'].'</td></tr>';
-		echo '<tr><td>'._('Registration Date:').'</td><td>'.$this->userCurrent['reg_date'].'</td></tr>';
-                echo '<tr><td>'._('Real Name:').'</td><td>'.$this->userCurrent['name'].'</td></tr>';
-		if(file_exists(UP_LOCATION.'avatar/'.$this->userCurrent['avatar']) && $this->userCurrent['avatar'] != NULL)
-		{
-		echo '<tr><td>'._('Avatar:').'</td><td><img class="avatar" src="'.DOWN_LOCATION.'avatar/'.$this->userCurrent['avatar'].'" /></td></tr>';
-		}
-		echo '<tr><td>'._('Role:').'</td><td>'._($this->userCurrent['role']).'</td></tr>';
-		echo '<tr><td>'._('Homepage:').'</td><td><a href="'.$this->userCurrent['homepage'].'" >'.$this->userCurrent['homepage'].'</a></td></tr></table>';
-		
-		
-		echo '<h3>'._('My Karts').'</h3>';
-		$mykart = new coreAddon("karts");
-		$mykart->selectByUser($this->userCurrent['id']);
-		echo '<ul>';
-		while($mykart->addonCurrent)
-		{
-                    if ($mykart->addonCurrent['status'] & F_APPROVED || $mykart->addonCurrent['uploader'] == $this->userCurrent['id']) {
-                        echo'<li><a href="addons.php?addons=karts&amp;title='.$mykart->addonCurrent['id'].'">';
-                        echo $mykart->addonCurrent['name'];
-                        if (($mykart->addonCurrent['status'] & F_APPROVED) != F_APPROVED)
-                            echo ' ('._('Not approved').')';
-                        echo'</a></li>';
-                    }
-                    $mykart->next();
-		}
-		echo '</ul>';
-		
-		echo '<h3>'._('My Tracks').'</h3>';
-		$mytrack = new coreAddon("tracks");
-		$mytrack->selectByUser($this->userCurrent['id']);
-		echo '<ul>';
-		while($mytrack->addonCurrent)
-		{
-		    if($mytrack->addonCurrent['status'] & F_APPROVED || $mytrack->addonCurrent['uploader'] == $this->userCurrent['id'])
-		    {
-			echo'<li><a href="addons.php?addons=tracks&amp;title='.$mytrack->addonCurrent['id'].'">';
-			echo $mytrack->addonCurrent['name'];
-                        if (($mytrack->addonCurrent['status'] & F_APPROVED) != F_APPROVED)
-                            echo ' ('._('Not approved').')';
-			echo'</a></li>';
-                    }
-                    $mytrack->next();
-		}
-		echo '</ul>';
+        echo '<h1>'.$this->userCurrent['user'].'</h1>';
+        echo '<table><tr><td>'._('Username:').'</td><td>'.$this->userCurrent['user'].'</td></tr>';
+        echo '<tr><td>'._('Registration Date:').'</td><td>'.$this->userCurrent['reg_date'].'</td></tr>';
+        echo '<tr><td>'._('Real Name:').'</td><td>'.$this->userCurrent['name'].'</td></tr>';
+        if(file_exists(UP_LOCATION.'avatar/'.$this->userCurrent['avatar']) && $this->userCurrent['avatar'] != NULL)
+        {
+        echo '<tr><td>'._('Avatar:').'</td><td><img class="avatar" src="'.DOWN_LOCATION.'avatar/'.$this->userCurrent['avatar'].'" /></td></tr>';
+        }
+        echo '<tr><td>'._('Role:').'</td><td>'._($this->userCurrent['role']).'</td></tr>';
+        if (strlen($this->userCurrent['homepage'] > 0))
+        {
+            echo '<tr><td>'._('Homepage:').'</td><td><a href="'.$this->userCurrent['homepage'].'" >'.$this->userCurrent['homepage'].'</a></td></tr>';
+        }
+        echo '</table>';
+
+        // List of karts created by the current user
+        echo '<h3>'._('User\'s Karts').'</h3>';
+        $kartSql = 'SELECT `a`.*, `r`.`status`
+            FROM `'.DB_PREFIX.'karts` `a`
+            LEFT JOIN `'.DB_PREFIX.'karts_revs` `r`
+            ON `a`.`id` = `r`.`addon_id`
+            WHERE `a`.`uploader` = \''.$this->userCurrent['id'].'\'';
+        $kartHandle = sql_query($kartSql);
+        if (mysql_num_rows($kartHandle) == 0)
+        {
+            echo _('This user has not uploaded any karts.').'<br />';
+        }
+        else
+        {
+            // Print kart list
+            echo '<ul>';
+            for ($i = 0; $i < mysql_num_rows($kartHandle); $i++)
+            {
+                $kartResult = mysql_fetch_assoc($kartHandle);
+                if ($kartResult['status'] & F_APPROVED)
+                {
+                    echo '<li><a href="addons.php?type=karts&amp;name='.$kartResult['id'].'">'
+                        .$kartResult['name'].'</a></li>';
+                }
+                else
+                {
+                    if ($_SESSION['role']['manageaddons'] == false
+                            && $kartResult['uploader'] != $_SESSION['userid'])
+                        continue;
+                    echo '<li class="unavailable"><a href="addons.php?type=karts&amp;name='.$kartResult['id'].'">'
+                        .$kartResult['name'].'</a></li>';
+                }
+            }
+            echo '</ul>';
+        }
+
+        echo '<h3>'._('User\'s Tracks').'</h3>';
+        $trackSql = 'SELECT `a`.*, `r`.`status`
+            FROM `'.DB_PREFIX.'tracks` `a`
+            LEFT JOIN `'.DB_PREFIX.'tracks_revs` `r`
+            ON `a`.`id` = `r`.`addon_id`
+            WHERE `a`.`uploader` = \''.$this->userCurrent['id'].'\'';
+        $trackHandle = sql_query($trackSql);
+        if (mysql_num_rows($trackHandle) == 0)
+        {
+            echo _('This user has not uploaded any karts.').'<br />';
+        }
+        else
+        {
+            // Print kart list
+            echo '<ul>';
+            for ($i = 0; $i < mysql_num_rows($trackHandle); $i++)
+            {
+                $trackResult = mysql_fetch_assoc($trackHandle);
+                // Only list the latest revision of the track
+                if (!($trackResult['status'] & F_LATEST))
+                    continue;
+                if ($trackResult['status'] & F_APPROVED)
+                {
+                    echo '<li><a href="addons.php?type=karts&amp;name='.$trackResult['id'].'">'
+                        .$trackResult['name'].'</a></li>';
+                }
+                else
+                {
+                    if ($_SESSION['role']['manageaddons'] == false
+                            && $trackResult['uploader'] != $_SESSION['userid'])
+                        continue;
+                    echo '<li class="unavailable"><a href="addons.php?type=karts&amp;name='.$trackResult['id'].'">'
+                        .$trackResult['name'].'</a></li>';
+                }
+            }
+            echo '</ul>';
+        }
     }
 
     function writeConfig()
