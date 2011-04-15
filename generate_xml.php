@@ -25,15 +25,9 @@ include_once('include/xmlWrite.php');
 
 $xml = writeNewsXML();
 echo '<textarea rows="20" cols="60">'.$xml.'</textarea><br />';
-if (writeFile($xml, NEWS_XML_LOCAL)) {
-    echo 'Wrote file.<br />';
-}
 
 $xml = writeAssetXML();
 echo '<textarea rows="20" cols="60">'.$xml.'</textarea><br />';
-if (writeFile($xml, ASSET_XML_LOCAL)) {
-    echo 'Wrote file.<br />';
-}
 
 
 

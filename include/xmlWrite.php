@@ -78,7 +78,7 @@ function writeNewsXML()
     return writeFile(generateNewsXML(), NEWS_XML_LOCAL);
 }
 
-function writeAssetXML()
+function generateAssetXML()
 {
     $writer = new XMLWriter();
     // Output to memory
@@ -110,6 +110,11 @@ function writeAssetXML()
     $reqSql = sql_query($querySql);
     while($result = sql_next($reqSql))
     {
+        if (!file_exists(UP_LOCATION.$result['fileid'].'.zip'))
+        {
+            echo '<span class="warming">'._('The following file could not be found:').' '.$result['fileid'].'.zip</span><br />';
+            continue;
+        }
 	$writer->startElement('kart');
         $writer->writeAttribute('name',$result['name']);
         $writer->writeAttribute('file',DOWN_LOCATION.'assets/'.$result['fileid'].'.zip');
@@ -120,6 +125,7 @@ function writeAssetXML()
         $writer->writeAttribute('format',$result['format']);
         $writer->writeAttribute('revision',$result['revision']);
         $writer->writeAttribute('status',$result['status']);
+        $writer->writeAttribute('size',filesize(UP_LOCATION.$result['fileid'].'.zip'));
 	$writer->endElement();
     }
 
@@ -135,6 +141,11 @@ function writeAssetXML()
     $reqSql = sql_query($querySql);
     while($result = sql_next($reqSql))
     {
+        if (!file_exists(UP_LOCATION.$result['fileid'].'.zip'))
+        {
+            echo '<span class="warming">'._('The following file could not be found:').' '.$result['fileid'].'.zip</span><br />';
+            continue;
+        }
 	$writer->startElement('track');
         $writer->writeAttribute('name',$result['name']);
         $writer->writeAttribute('file',DOWN_LOCATION.'assets/'.$result['fileid'].'.zip');
@@ -146,6 +157,7 @@ function writeAssetXML()
         $writer->writeAttribute('format',$result['format']);
         $writer->writeAttribute('revision',$result['revision']);
         $writer->writeAttribute('status',$result['status']);
+        $writer->writeAttribute('size',filesize(UP_LOCATION.$result['fileid'].'.zip'));
 	$writer->endElement();
     }
 
@@ -157,6 +169,10 @@ function writeAssetXML()
     $return = $writer->flush();
 
     return $return;
+}
+function writeAssetXML()
+{
+    return writeFile(generateAssetXML(), ASSET_XML_LOCAL);
 }
 
 function writeFile($content,$file)
