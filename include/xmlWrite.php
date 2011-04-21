@@ -49,7 +49,8 @@ function generateNewsXML()
 	FROM '.DB_PREFIX.'news n
 	LEFT JOIN '.DB_PREFIX.'users u
 	ON (`n`.`author_id`=`u`.`id`)
-	WHERE `n`.`active` = \'1\'';
+	WHERE `n`.`active` = \'1\'
+        ORDER BY `date` DESC';
     $reqSql = sql_query($querySql);
     while($result = sql_next($reqSql))
     {
