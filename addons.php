@@ -66,8 +66,14 @@ switch ($_GET['save'])
     case 'desc':
         if (!isset($_POST['description']))
             break;
-        if (set_description($_GET['addons'], $_GET['title'], $_GET['rev'], $_POST['description']))
+        if (set_description($_GET['type'], $_GET['name'], $_POST['description']))
             echo _('Saved description.').'<br />';
+        break;
+    case 'designer':
+        if (!isset($_POST['designer']))
+            break;
+        if (set_description($_GET['type'], $_GET['name'], $_POST['designer']))
+            echo _('Saved designer.').'<br />';
         break;
     case 'rev':
         parseUpload($_FILES['file_addon'],true);

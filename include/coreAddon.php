@@ -60,7 +60,7 @@ class coreAddon
         if ($this->addonCurrent)
             $this->addonCurrent['permUrl'] = 'http://'.$_SERVER['SERVER_NAME'].
                     str_replace("addons-panel.php", "addons.php", $_SERVER['SCRIPT_NAME']).
-                    '?addons='.$this->addonType.'&amp;name='.$this->addonCurrent['id'];
+                    '?type='.$this->addonType.'&amp;name='.$this->addonCurrent['id'];
     }
 
     function selectByUser($id)
@@ -77,7 +77,7 @@ class coreAddon
         if ($this->addonCurrent)
             $this->addonCurrent['permUrl'] = 'http://'.$_SERVER['SERVER_NAME'].
                     str_replace("addons-panel.php", "addons.php", $_SERVER['SCRIPT_NAME']).
-                    '?addons='.$this->addonType.'&amp;name='.$this->addonCurrent['id'];
+                    '?type='.$this->addonType.'&amp;name='.$this->addonCurrent['id'];
     }
 
     function loadAll()
@@ -99,7 +99,7 @@ class coreAddon
             return false;
         $this->addonCurrent['permUrl'] = 'http://'.$_SERVER['SERVER_NAME'].
                 str_replace("addons-panel.php", "addons.php", $_SERVER['SCRIPT_NAME']).
-                '?addons='.$this->addonType.'&amp;name='.$this->addonCurrent['id'];
+                '?type='.$this->addonType.'&amp;name='.$this->addonCurrent['id'];
         return true;
     }
 
@@ -258,6 +258,15 @@ class coreAddon
             return false;
 
         echo '<hr /><h3>Configuration</h3>';
+        // Edit designer
+        echo '<form name="changeDesigner" action="'.$this->addonCurrent['permUrl'].'&amp;save=designer" method="POST">';
+        echo '<strong>'._('Designer:').'</strong><br />';
+        // FIXME: Find a cleaner way to check this
+        if ($this->addonCurrent['designer'] == '<em>'._('Unknown').'</em>')
+                $this->addonCurrent['designer'] = NULL;
+        echo '<input type="text" name="designer" id="designer_field" value="'.$this->addonCurrent['designer'].'" /><br />';
+        echo '<input type="submit" value="'._('Save Designer').'" />';
+        echo '</form><br />';
         // Edit description
         echo '<form name="changeDesc" action="'.$this->addonCurrent['permUrl'].'&amp;save=desc" method="POST">';
         echo '<strong>'._('Description:').'</strong> ('._('Max 140 characters').')<br />';
@@ -524,7 +533,7 @@ class coreAddon
     /** To get the permanent link of the current addon */ 
     function permalink()
     {
-        return 'addons.php?addons='.$this->addonType.'&amp;title='.$this->addonCurrent['name'];
+        return 'addons.php?type='.$this->addonType.'&amp;name='.$this->addonCurrent['name'];
     }
 }
 
@@ -549,27 +558,77 @@ function addon_id_clean($string)
     return $string;
 }
 
-function set_description($addon_type,$addon_id,$rev,$description)
+function set_description($addon_type,$addon_id,$description)
 {
     // Validate parameters
     if ($addon_type != 'karts' && $addon_type != 'tracks')
+    {
+        echo '<span class="error">'._('Invalid addon type.').'</span><br />';
         return false;
+    }
     $addon_id = addon_id_clean($addon_id);
-    if (!is_numeric($rev))
-        return false;
-    $rev = (int)$rev;
-    $description = mysql_escape_string($description);
+    $description = mysql_real_escape_string($description);
 
     // Check if addon exists, and permissions
     $addon = new coreAddon($addon_type);
-    $addon->selectById($addon_id,$rev);
+    $addon->selectById($addon_id);
     if (!$addon->addonCurrent)
+    {
+        echo '<span class="error">'._('The selected addon does not exist.').'</span><br />';
         return false;
+    }
     if (!$_SESSION['role']['manageaddons'] && $_SESSION['userid'] != $addon->addonCurrent['uploader'])
+    {
+        echo '<span class="error">'._('You do not have the necessary permissions to perform this action.').'</span><br />';
         return false;
+    }
+    if (strlen($description) == 0)
+    {
+        echo '<span class="error">'._('The description field was blank.').'</span><br />';
+        return false;
+    }
 
     $update_query = 'UPDATE `'.DB_PREFIX.$addon_type.'`
         SET `description` = \''.$description.'\'
+        WHERE `id` = \''.$addon_id.'\'';
+    $reqSql = sql_query($update_query);
+    if (!$reqSql)
+        return false;
+    return true;
+}
+
+function set_designer($addon_type,$addon_id,$designer)
+{
+    // Validate parameters
+    if ($addon_type != 'karts' && $addon_type != 'tracks')
+    {
+        echo '<span class="error">'._('Invalid addon type.').'</span><br />';
+        return false;
+    }
+    $addon_id = addon_id_clean($addon_id);
+    $designer = mysql_real_escape_string($designer);
+
+    // Check if addon exists, and permissions
+    $addon = new coreAddon($addon_type);
+    $addon->selectById($addon_id);
+    if (!$addon->addonCurrent)
+    {
+        echo '<span class="error">'._('The selected addon does not exist.').'</span><br />';
+        return false;
+    }
+    if (!$_SESSION['role']['manageaddons'] && $_SESSION['userid'] != $addon->addonCurrent['uploader'])
+    {
+        echo '<span class="error">'._('You do not have the necessary permissions to perform this action.').'</span><br />';
+        return false;
+    }
+    if (strlen($designer) == 0)
+    {
+        echo '<span class="error">'._('The designer field was blank.').'</span><br />';
+        return false;
+    }
+
+    $update_query = 'UPDATE `'.DB_PREFIX.$addon_type.'`
+        SET `designer` = \''.$designer.'\'
         WHERE `id` = \''.$addon_id.'\'';
     $reqSql = sql_query($update_query);
     if (!$reqSql)
