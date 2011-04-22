@@ -117,7 +117,7 @@ function loadAddons()
         {
             echo '<li><a class="menu-item unavailable" href="javascript:loadFrame(\''.$addonLoader->addonCurrent['id'].'\',\'addons-panel.php?type='.$_GET['type'].'\')">';
             if($_GET['type'] != "tracks")
-                echo '<img class="icon"  src="image.php?type=small&amp;pic='.$addonLoader->addonCurrent['image'].'" />';
+                echo '<img class="icon"  src="image.php?type=small&amp;pic=images/'.$addonLoader->addonCurrent['image'].'" />';
             else echo '<img class="icon"  src="image/track-icon.png" />';
             echo $addonLoader->addonCurrent['name']."</a></li>";
         }
