@@ -194,7 +194,7 @@ function parseUpload($file,$revision = false)
     }
     rmdir_recursive(UP_LOCATION.'temp/'.$fileid);
     echo _('Successfully uploaded add-on.').'<br />';
-    echo '<span style="font-size: large"><a href="addons.php?type='.$addon_type.'s&amp;title='.$addon_id.'">'._('Continue.').'</a></span><br />';
+    echo '<span style="font-size: large"><a href="addons.php?type='.$addon_type.'s&amp;name='.$addon_id.'">'._('Continue.').'</a></span><br />';
 }
 
 function find_xml($dir)

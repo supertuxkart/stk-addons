@@ -30,14 +30,15 @@ class coreAddon
 
     function selectById($id, $rev = NULL)
     {
-        if ($rev == NULL) {
+        if ($rev == NULL)
+        {
             $querySql = 'SELECT a.*, r.id AS fileid, r.creation_date AS revision_timestamp,
                     r.revision, r.format, r.image, r.status
                 FROM '.DB_PREFIX.$this->addonType.' a
                 LEFT JOIN '.DB_PREFIX.$this->addonType.'_revs r
                 ON a.id = r.addon_id
                 WHERE a.id = \''.$id.'\'
-                ORDER BY r.revision DESC';
+                AND r.status & '.F_LATEST;
         }
         else
         {
@@ -50,11 +51,16 @@ class coreAddon
                 AND r.revision = \''.$rev.'\'';
         }
         $this->reqSql = sql_query($querySql);
+        if (mysql_num_rows($this->reqSql) == 0)
+        {
+            echo _('The requested addon does not exist.').'<br />';
+        }
+
         $this->addonCurrent = sql_next($this->reqSql);
         if ($this->addonCurrent)
             $this->addonCurrent['permUrl'] = 'http://'.$_SERVER['SERVER_NAME'].
                     str_replace("addons-panel.php", "addons.php", $_SERVER['SCRIPT_NAME']).
-                    '?addons='.$this->addonType.'&amp;title='.$this->addonCurrent['id'];
+                    '?addons='.$this->addonType.'&amp;name='.$this->addonCurrent['id'];
     }
 
     function selectByUser($id)
@@ -71,7 +77,7 @@ class coreAddon
         if ($this->addonCurrent)
             $this->addonCurrent['permUrl'] = 'http://'.$_SERVER['SERVER_NAME'].
                     str_replace("addons-panel.php", "addons.php", $_SERVER['SCRIPT_NAME']).
-                    '?addons='.$this->addonType.'&amp;title='.$this->addonCurrent['id'];
+                    '?addons='.$this->addonType.'&amp;name='.$this->addonCurrent['id'];
     }
 
     function loadAll()
@@ -93,7 +99,7 @@ class coreAddon
             return false;
         $this->addonCurrent['permUrl'] = 'http://'.$_SERVER['SERVER_NAME'].
                 str_replace("addons-panel.php", "addons.php", $_SERVER['SCRIPT_NAME']).
-                '?addons='.$this->addonType.'&amp;title='.$this->addonCurrent['id'];
+                '?addons='.$this->addonType.'&amp;name='.$this->addonCurrent['id'];
         return true;
     }
 
@@ -440,11 +446,12 @@ class coreAddon
 
     function viewInformation($config=True)
     {
+        $this->writeInformation();
+
+
         global $user;
         if ($user->logged_in == false)
             return false;
-
-        $this->writeInformation();
         //write configuration for the submiter and administrator
         if(($_SESSION['role']['manageaddons'] == true || $this->addonCurrent['uploader'] == $_SESSION['userid']) && $config)
         {

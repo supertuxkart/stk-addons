@@ -34,7 +34,7 @@ include("include/view.php");
 include("include/top.php");
 
 // Validate addon-id parameter
-$_GET['title'] = (isset($_GET['title'])) ? addon_id_clean($_GET['title']) : NULL;
+$_GET['name'] = (isset($_GET['name'])) ? addon_id_clean($_GET['name']) : NULL;
 $_GET['save'] = (isset($_GET['save'])) ? $_GET['save'] : NULL;
 $_GET['rev'] = (isset($_GET['rev'])) ? (int)$_GET['rev'] : NULL;
 
@@ -121,7 +121,7 @@ function loadAddons()
             else echo '<img class="icon"  src="image/track-icon.png" />';
             echo $addonLoader->addonCurrent['name']."</a></li>";
         }
-        if($addonLoader->addonCurrent['id'] == $_GET['title']) $js.= 'loadFrame(\''.$addonLoader->addonCurrent['id'].'\',\'addons-panel.php?type='.$_GET['type'].'\')';
+        if($addonLoader->addonCurrent['id'] == $_GET['name']) $js.= 'loadFrame(\''.$addonLoader->addonCurrent['id'].'\',\'addons-panel.php?type='.$_GET['type'].'\')';
     }
     echo "</ul>";
 }

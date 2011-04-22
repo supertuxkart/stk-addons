@@ -45,12 +45,10 @@ if (!isset($_GET['value']))
     $_GET['value'] = NULL;
 if (!isset($_GET['id']))
     $_GET['id'] = NULL;
-$_GET['id'] = (int)$_GET['id'];
 if (!isset($_POST['value']))
     $_POST['value'] = NULL;
 if (!isset($_POST['id']))
     $_POST['id'] = NULL;
-$_POST['id'] = (int)$_POST['id'];
 
 $type = (isset($_GET['type']))? $_GET['type'] : NULL;
 if ($type != 'tracks' && $type != 'karts' && $type != 'users')
@@ -60,7 +58,7 @@ $action = $_GET['action'];
 if ($action != NULL && $action != 'file' && $action != 'remove' && $action != 'approve')
     die(_('This page cannot be loaded because an invalid action was provided.'));
 
-if($action == "file")
+if(isset($_GET['id']))
 {
     $value = mysql_real_escape_string($_GET['value']);
     $id = mysql_real_escape_string($_GET['id']);
@@ -73,33 +71,32 @@ else
 
 $addon = new coreAddon($type);
 $addon->selectById($id);
-if($action == "approve")
+switch ($action)
 {
+    default:
+        if ($action != NULL)
+        {
+            $addon->setInformation($action, $value);
+            $addon->selectById($id);
+        }
+        $addon->viewInformation();
+        break;
+    case 'approve':
 	$addon->approve();
 	$addon->selectById($id);
-}
-elseif($action != "" && $action != "file")
-{
-	$addon->setInformation($action, $value);
-	$addon->selectById($id);
-}
-if($action == "remove")
-{
-	$addon->remove();
-}
-elseif($action == "file")
-{
+        break;
+    case 'remove':
+        $addon->remove();
+        break;
+    case 'file':
 	?>
 	<html>
 	<head>
-	<meta http-equiv="refresh" content="0;URL=addons.php?addons=<?php echo $type.'&amp;title='.$addon->addonCurrent['name'];?>">
+	<meta http-equiv="refresh" content="0;URL=addons.php?addons=<?php echo $type.'&amp;name='.$addon->addonCurrent['name'];?>">
 	</head>
 	</html>
 	<?php
 	$addon->setFile();
 	exit();
 }
-else
-{
-    $addon->viewInformation();
-}?>
+?>
