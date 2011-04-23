@@ -118,7 +118,7 @@ function generateAssetXML()
         }
 	$writer->startElement('kart');
         $writer->writeAttribute('name',$result['name']);
-        $writer->writeAttribute('file',DOWN_LOCATION.'assets/'.$result['fileid'].'.zip');
+        $writer->writeAttribute('file',DOWN_LOCATION.$result['fileid'].'.zip');
 	$writer->writeAttribute('date',$result['date']);
 	$writer->writeAttribute('uploader',$result['user']);
         $writer->writeAttribute('designer',$result['designer']);
@@ -149,7 +149,7 @@ function generateAssetXML()
         }
 	$writer->startElement('track');
         $writer->writeAttribute('name',$result['name']);
-        $writer->writeAttribute('file',DOWN_LOCATION.'assets/'.$result['fileid'].'.zip');
+        $writer->writeAttribute('file',DOWN_LOCATION.$result['fileid'].'.zip');
         $writer->writeAttribute('arena',$result['arena']);
 	$writer->writeAttribute('date',$result['date']);
 	$writer->writeAttribute('uploader',$result['user']);

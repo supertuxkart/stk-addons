@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-02 17:06-0600\n"
+"POT-Creation-Date: 2011-04-22 18:09-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,20 +16,24 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: addons.php:71
-msgid "Saved description."
-msgstr ""
-
-#: addons.php:80
-msgid "Saved status."
-msgstr ""
-
-#: addon.php:47
+#: addons-panel.php:55
 msgid "This page cannot be loaded because an invalid add-on type was provided."
 msgstr ""
 
-#: addon.php:51
+#: addons-panel.php:59
 msgid "This page cannot be loaded because an invalid action was provided."
+msgstr ""
+
+#: addons.php:70
+msgid "Saved description."
+msgstr ""
+
+#: addons.php:76
+msgid "Saved designer."
+msgstr ""
+
+#: addons.php:85
+msgid "Saved status."
 msgstr ""
 
 #: allow.php:102
@@ -52,211 +56,240 @@ msgstr ""
 msgid "basicUser"
 msgstr ""
 
-#: coreAddon.php:206
+#: coreAddon.php:56
+msgid "The requested addon does not exist."
+msgstr ""
+
+#: coreAddon.php:214 coreAddon.php:267 coreAddon.php:734 coreAddon.php:744
+#: coreAddon.php:755 coreAddon.php:758
 msgid "Unknown"
 msgstr ""
 
-#: coreAddon.php:218
+#: coreAddon.php:226 coreAddon.php:265
 msgid "Designer:"
 msgstr ""
 
-#: coreAddon.php:219
+#: coreAddon.php:227
 msgid "Upload date:"
 msgstr ""
 
-#: coreAddon.php:220
+#: coreAddon.php:228
 msgid "Submitted by:"
 msgstr ""
 
-#: coreAddon.php:221
+#: coreAddon.php:229
 msgid "Revision:"
 msgstr ""
 
-#: coreAddon.php:222
+#: coreAddon.php:230
 msgid "Compatible with:"
 msgstr ""
 
-#: coreAddon.php:227
+#: coreAddon.php:235
 msgid "Permalink:"
 msgstr ""
 
-#: coreAddon.php:232
+#: coreAddon.php:240
 msgid "Revisions:"
 msgstr ""
 
-#: coreAddon.php:237
+#: coreAddon.php:245
 msgid "Download revision"
 msgstr ""
 
-#: coreAddon.php:257
-msgid "Description:"
-msgstr ""
-
-#: coreAddon.php:257
-msgid "Max 140 characters"
-msgstr ""
-
-#: coreAddon.php:259
-msgid "Save Description"
-msgstr ""
-
-#: coreAddon.php:265
-msgid "Add revision:"
-msgstr ""
-
-#: coreAddon.php:267 upload.php:45
-msgid "File:"
-msgstr ""
-
-#: coreAddon.php:268 upload.php:46
-msgid "Supported file types are:"
-msgstr ""
-
-#: coreAddon.php:269
-msgid "Upload File"
+#: coreAddon.php:270
+msgid "Save Designer"
 msgstr ""
 
 #: coreAddon.php:274
-msgid "Status Flags:"
+msgid "Description:"
 msgstr ""
 
-#: coreAddon.php:278
-msgid "Approved"
+#: coreAddon.php:274
+msgid "Max 140 characters"
 msgstr ""
 
-#: coreAddon.php:279
-msgid "Alpha"
-msgstr ""
-
-#: coreAddon.php:280
-msgid "Beta"
-msgstr ""
-
-#: coreAddon.php:281
-msgid "Release-Candidate"
+#: coreAddon.php:276
+msgid "Save Description"
 msgstr ""
 
 #: coreAddon.php:282
-msgid "Latest"
+msgid "Add revision:"
 msgstr ""
 
-#: coreAddon.php:284
-msgid "Fan-Made"
+#: coreAddon.php:284 upload.php:45
+msgid "File:"
 msgstr ""
 
-#: coreAddon.php:285
-msgid "High-Quality"
+#: coreAddon.php:285 upload.php:46
+msgid "Supported file types are:"
 msgstr ""
 
 #: coreAddon.php:286
+msgid "Upload File"
+msgstr ""
+
+#: coreAddon.php:291
+msgid "Status Flags:"
+msgstr ""
+
+#: coreAddon.php:295
+msgid "Approved"
+msgstr ""
+
+#: coreAddon.php:296
+msgid "Alpha"
+msgstr ""
+
+#: coreAddon.php:297
+msgid "Beta"
+msgstr ""
+
+#: coreAddon.php:298
+msgid "Release-Candidate"
+msgstr ""
+
+#: coreAddon.php:299
+msgid "Latest"
+msgstr ""
+
+#: coreAddon.php:301
+msgid "Fan-Made"
+msgstr ""
+
+#: coreAddon.php:302
+msgid "High-Quality"
+msgstr ""
+
+#: coreAddon.php:303
 msgid "DFSG Compliant"
 msgstr ""
 
-#: coreAddon.php:287
+#: coreAddon.php:304
 msgid "Featured"
 msgstr ""
 
-#: coreAddon.php:288
+#: coreAddon.php:305
 msgid "Invalid Textures"
 msgstr ""
 
-#: coreAddon.php:437
+#: coreAddon.php:454
 msgid "Save Changes"
 msgstr ""
 
-#: coreAddon.php:468
+#: coreAddon.php:486
 msgid "The add-on you are trying to create already exists."
 msgstr ""
 
-#: coreAddon.php:475
+#: coreAddon.php:493
 msgid "Creating a new add-on..."
 msgstr ""
 
-#: coreAddon.php:488
+#: coreAddon.php:506
 msgid "This add-on already exists. Adding revision..."
 msgstr ""
 
-#: coreAddon.php:497
+#: coreAddon.php:515
 msgid "Failed to check for previous add-on revisions."
 msgstr ""
 
-#: coreUser.php:84 createAccount.php:42 login.php:106
+#: coreAddon.php:570 coreAddon.php:611
+msgid "Invalid addon type."
+msgstr ""
+
+#: coreAddon.php:581 coreAddon.php:622
+msgid "The selected addon does not exist."
+msgstr ""
+
+#: coreAddon.php:586 coreAddon.php:627
+msgid "You do not have the necessary permissions to perform this action."
+msgstr ""
+
+#: coreAddon.php:591
+msgid "The description field was blank."
+msgstr ""
+
+#: coreAddon.php:632
+msgid "The designer field was blank."
+msgstr ""
+
+#: coreUser.php:87 createAccount.php:42 login.php:106
 msgid "Username:"
 msgstr ""
 
-#: coreUser.php:85
+#: coreUser.php:88
 msgid "Registration Date:"
 msgstr ""
 
-#: coreUser.php:86
+#: coreUser.php:89
 msgid "Real Name:"
 msgstr ""
 
-#: coreUser.php:89 coreUser.php:140
+#: coreUser.php:92 coreUser.php:185
 msgid "Avatar:"
 msgstr ""
 
-#: coreUser.php:91 coreUser.php:144
+#: coreUser.php:94 coreUser.php:189
 msgid "Role:"
 msgstr ""
 
-#: coreUser.php:92 coreUser.php:139
+#: coreUser.php:97 coreUser.php:184
 msgid "Homepage:"
 msgstr ""
 
-#: coreUser.php:95
-msgid "My Karts"
+#: coreUser.php:102
+msgid "User's Karts"
 msgstr ""
 
-#: coreUser.php:105 coreUser.php:123
-msgid "Not approved"
+#: coreUser.php:111 coreUser.php:146
+msgid "This user has not uploaded any karts."
 msgstr ""
 
-#: coreUser.php:112
-msgid "My Tracks"
+#: coreUser.php:137
+msgid "User's Tracks"
 msgstr ""
 
-#: coreUser.php:158
+#: coreUser.php:203
 msgid "User Activated:"
 msgstr ""
 
-#: coreUser.php:166
+#: coreUser.php:211
 msgid "Save Configuration"
 msgstr ""
 
-#: coreUser.php:170 coreUser.php:178
+#: coreUser.php:215 coreUser.php:223
 msgid "Change Password"
 msgstr ""
 
-#: coreUser.php:172
+#: coreUser.php:217
 msgid "Old Password:"
 msgstr ""
 
-#: coreUser.php:174
+#: coreUser.php:219
 msgid "New Password:"
 msgstr ""
 
-#: coreUser.php:174 createAccount.php:44
+#: coreUser.php:219 createAccount.php:44
 msgid "Must be at least 6 characters long."
 msgstr ""
 
-#: coreUser.php:176
+#: coreUser.php:221
 msgid "New Password (Confirm):"
 msgstr ""
 
-#: coreUser.php:189 createAccount.php:65
+#: coreUser.php:234 createAccount.php:65
 msgid "Your passwords do not match."
 msgstr ""
 
-#: coreUser.php:194
+#: coreUser.php:239
 msgid "Your old password is not correct."
 msgstr ""
 
-#: coreUser.php:199 createAccount.php:75
+#: coreUser.php:244 createAccount.php:75
 msgid "Your password must be at least 6 characters long."
 msgstr ""
 
-#: coreUser.php:205
+#: coreUser.php:250
 msgid "Your password is changed."
 msgstr ""
 
@@ -616,4 +649,8 @@ msgstr ""
 
 #: user.php:146
 msgid "Me"
+msgstr ""
+
+#: xmlWrite.php:116 xmlWrite.php:147
+msgid "The following file could not be found:"
 msgstr ""

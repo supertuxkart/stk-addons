@@ -135,6 +135,8 @@ class coreAddon
                    "status",
                    decbin($current_status)))
             return false;
+        writeAssetXML();
+        writeNewsXML();
         return true;
     }
 
@@ -527,6 +529,8 @@ class coreAddon
         $values = array($fileid,$addonid,$rev,$attributes['version'],$attributes['image'],$attributes['status']);
         if (!sql_insert($this->addonType.'s_revs',$fields,$values))
             return false;
+        writeAssetXML();
+        writeNewsXML();
         return true;
     }
 
@@ -592,6 +596,8 @@ function set_description($addon_type,$addon_id,$description)
         SET `description` = \''.$description.'\'
         WHERE `id` = \''.$addon_id.'\'';
     $reqSql = sql_query($update_query);
+    writeAssetXML();
+    writeNewsXML();
     if (!$reqSql)
         return false;
     return true;
@@ -631,6 +637,8 @@ function set_designer($addon_type,$addon_id,$designer)
         SET `designer` = \''.$designer.'\'
         WHERE `id` = \''.$addon_id.'\'';
     $reqSql = sql_query($update_query);
+    writeAssetXML();
+    writeNewsXML();
     if (!$reqSql)
         return false;
     return true;
@@ -710,6 +718,8 @@ function update_status($type,$addon_id,$fields)
         if (!$reqSql)
             $error = 1;
     }
+    writeAssetXML();
+    writeNewsXML();
     if ($error != 1)
         return true;
     return false;
