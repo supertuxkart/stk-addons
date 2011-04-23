@@ -717,7 +717,34 @@ function update_status($type,$addon_id,$fields)
 
 function format_compat($format,$filetype)
 {
-    // FIXME: Stub
-    return 'Unknown';
+    // FIXME: This should not be hardcoded
+    switch ($filetype)
+    {
+        default:
+            return _('Unknown');
+        case 'karts':
+            if ($format == 1)
+            {
+                return 'Pre-0.7';
+            }
+            if ($format == 2)
+            {
+                return '0.7 - 0.7.1b';
+            }
+            return _('Unknown');
+            break;
+        case 'tracks':
+            if ($format == 1 || $format == 2)
+            {
+                return 'Pre-0.7';
+            }
+            if ($format >= 3 && $format <= 5)
+            {
+                return '0.7 - 0.7.1b';
+            }
+            return _('Unknown');
+            break;
+    }
+    return _('Unknown');
 }
 ?>
