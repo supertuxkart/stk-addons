@@ -219,8 +219,25 @@ class coreAddon
 
         //div for jqery TODO:add jquery effects
         echo '<div id="accordion"><div>
-        <h1>'.$this->addonCurrent['name'].'</h1>
-        <img class="preview" src="image.php?type=big&amp;pic=images/'.$this->addonCurrent['image'].'" style="float: right;" />
+        <h1>'.$this->addonCurrent['name'].'</h1>';
+
+        // Display badges for status flags
+        if ($this->addonCurrent['status'] & F_FEATURED)
+                echo '<span class="f_featured">'._('Featured').'</span>';
+        if ($this->addonCurrent['status'] & F_ALPHA)
+                echo '<span class="f_alpha">'._('Alpha').'</span>';
+        if ($this->addonCurrent['status'] & F_BETA)
+                echo '<span class="f_beta">'._('Beta').'</span>';
+        if ($this->addonCurrent['status'] & F_RC)
+                echo '<span class="f_rc">'._('Release-Candidate').'</span>';
+        if ($this->addonCurrent['status'] & F_FANMADE)
+                echo '<span class="f_fanmade">'._('Fan-Made').'</span>';
+        if ($this->addonCurrent['status'] & F_HQ)
+                echo '<span class="f_hq">'._('High-Quality').'</span>';
+        if ($this->addonCurrent['status'] & F_DFSG)
+                echo '<span class="f_dfsg">'._('DFSG Compliant').'</span>';
+
+        echo '<br /><img class="preview" src="image.php?type=big&amp;pic=images/'.$this->addonCurrent['image'].'" style="float: right;" />
         '.$description.'
         <table>
         <tr><td><strong>'._('Designer:').'</strong></td><td>'.$this->addonCurrent['designer'].'</td></tr>
@@ -647,7 +664,10 @@ function set_designer($addon_type,$addon_id,$designer)
 function update_status($type,$addon_id,$fields)
 {
     if ($type != 'karts' && $type != 'tracks')
+    {
+        echo '<span class="error">'._('Invalid addon type.').'</span><br />';
         return false;
+    }
     $addon_id = addon_id_clean($addon_id);
     $fields = explode(',',$fields);
     $status = array();

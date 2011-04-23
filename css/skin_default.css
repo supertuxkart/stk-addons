@@ -421,6 +421,92 @@ span.warning
     -webkit-border-radius: 3px;
 }
 
+/* Flag Badges */
+span.f_featured
+{
+    display: inline-block;
+    background-color: #FFFFCC;
+    border: 1px solid #996600;
+    color: #996600;
+    margin: 1px;
+    padding: 3px;
+    white-space: nowrap;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+}
+span.f_alpha
+{
+    display: inline-block;
+    background-color: #CCCCFF;
+    border: 1px solid #000099;
+    color: #000099;
+    margin: 1px;
+    padding: 3px;
+    white-space: nowrap;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+}
+span.f_beta
+{
+    display: inline-block;
+    background-color: #CCFFFF;
+    border: 1px solid #009999;
+    color: #009999;
+    margin: 1px;
+    padding: 3px;
+    white-space: nowrap;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+}
+span.f_rc
+{
+    display: inline-block;
+    background-color: #CCFFCC;
+    border: 1px solid #009900;
+    color: #009900;
+    margin: 1px;
+    padding: 3px;
+    white-space: nowrap;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+}
+span.f_fanmade
+{
+    display: inline-block;
+    background-color: #FFCCCC;
+    border: 1px solid #990000;
+    color: #990000;
+    margin: 1px;
+    padding: 3px;
+    white-space: nowrap;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+}
+span.f_hq
+{
+    display: inline-block;
+    background-color: #FFCCFF;
+    border: 1px solid #990099;
+    color: #990099;
+    margin: 1px;
+    padding: 3px;
+    white-space: nowrap;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+}
+span.f_dfsg
+{
+    display: inline-block;
+    background-color: #CCCCCC;
+    border: 1px solid #000000;
+    color: #000000;
+    margin: 1px;
+    padding: 3px;
+    white-space: nowrap;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+}
+
 /* In process of obseleting - do not use */
 #select-addons
 {

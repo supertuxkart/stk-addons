@@ -122,6 +122,7 @@ function generateAssetXML()
 	$writer->writeAttribute('date',$result['date']);
 	$writer->writeAttribute('uploader',$result['user']);
         $writer->writeAttribute('designer',$result['designer']);
+        $writer->writeAttribute('description',$result['description']);
 	$writer->writeAttribute('image',DOWN_LOCATION.'images/'.$result['image']);
         $writer->writeAttribute('format',$result['format']);
         $writer->writeAttribute('revision',$result['revision']);
@@ -154,6 +155,7 @@ function generateAssetXML()
 	$writer->writeAttribute('date',$result['date']);
 	$writer->writeAttribute('uploader',$result['user']);
         $writer->writeAttribute('designer',$result['designer']);
+        $writer->writeAttribute('description',$result['description']);
 	$writer->writeAttribute('image',DOWN_LOCATION.'images/'.$result['image']);
         $writer->writeAttribute('format',$result['format']);
         $writer->writeAttribute('revision',$result['revision']);

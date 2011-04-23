@@ -79,9 +79,9 @@ switch ($_GET['save'])
         parseUpload($_FILES['file_addon'],true);
         break;
     case 'status':
-        if (!isset($_GET['addons']) || !isset($_GET['title']) || !isset($_POST['fields']))
+        if (!isset($_GET['type']) || !isset($_GET['name']) || !isset($_POST['fields']))
             break;
-        if (update_status($_GET['addons'],$_GET['title'],$_POST['fields']))
+        if (update_status($_GET['type'],$_GET['name'],$_POST['fields']))
             echo _('Saved status.').'<br />';
         break;
 }
