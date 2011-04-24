@@ -57,11 +57,20 @@ loadUsers();
     <div id="right-content_top"></div>
     <div id="right-content_status">
 <?php
-if($action == "password")
+switch ($action)
 {
-    $addon = new coreUser;
-    $addon->selectByUser($_GET['user']);
-    $addon->setPass();
+    default:
+        break;
+    case 'password':
+        $addon = new coreUser;
+        $addon->selectByUser($_GET['user']);
+        if ($_SESSION['user'] != $_GET['user']
+                && !$_SESSION['role']['manage'.$addon->userCurrent['role'].'s'])
+        {
+            echo '<span class="error">'._('You do not have the necessary permissions to perform this action.').'</span><br />';
+            break;
+        }
+        $addon->setPass();
 }
 ?>
     </div>
