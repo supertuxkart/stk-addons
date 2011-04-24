@@ -49,6 +49,41 @@ $login_form =
     <input type="text" id="name" name="name" /><br />
     '._('Email Address:').' <br />
     <input type="text" name="mail" /><br /><br />
+    '._('Terms:').'<br />
+    <textarea rows="10" cols="80">'._('
+=== STK Addons Terms and Conditions ===
+
+You must agree to these terms in order to upload content to the STK Addons site.
+
+The STK Addons service is designed to be a repository exclusively for Super Tux
+Kart addon content. As such, all uploaded content must be intended for this
+purpose. When you upload your content, it will be available publicly on the
+internet, and may be available in-game for download.
+
+Because Super Tux Kart aims to comply with the Debian Free Software Guidelines,
+and because the host for this web service requires it, you may not upload
+content which is locked down with a restrictive license. Licenses such as
+CC-NC-SA 3.0, or other DFSG-compliant licenses are required. As well, all
+content taken from third-party sources must be attributed properly, and must
+also be available under an open license. Licenses and attribution should be
+included in a "license.txt" file in each uploaded archive. Uploads without
+proper licenses or attribution may be deleted without warning.
+
+As well, even with valid licenses and attribution, content may not contain any
+of the following:
+    1. Profanity
+    2. Explicit images
+    3. Hateful messages and/or images
+    4. Any other content that may be unsuitable for children
+If any of your uploads are found to contain any of the above, your upload may
+be deleted, as well as your account, and any other content you may have
+uploaded.
+
+By checking the box below, you are signifying that you understand the contents
+of these terms. If you have any questions or comments regarding these terms, one
+of the members of the development team would gladly assist you.
+').'</textarea><br />
+    <input type="checkbox" name="terms" /> '._('I agree to the above terms').'<br />
     <input type="submit" value="Submit" />
     </form>';
 
@@ -59,7 +94,9 @@ $login_form =
 <?php include(ROOT.'include/menu.php');
 echo '
 <div id="content">';
-//exit();
+
+if (!isset($_POST['terms'])) $_POST['terms'] = NULL;
+
 if ($_GET['action'] == 'submit' && $_POST['pass1'] != $_POST['pass2'])
 {
     echo '<span class="error">'._('Your passwords do not match.').'</span><br /><br />';
@@ -73,6 +110,11 @@ elseif ($_GET['action'] == 'submit' && strlen($_POST['user']) < 4)
 elseif ($_GET['action'] == 'submit' && strlen($_POST['pass1']) < 6)
 {
     echo '<span class="error">'._('Your password must be at least 6 characters long.').'</span><br /><br />';
+    echo $login_form;
+}
+elseif ($_GET['action'] == 'submit' && $_POST['terms'] != 'on')
+{
+    echo '<span class="error">'._('You must agree to the terms to register.').'</span><br />';
     echo $login_form;
 }
 elseif($_GET['action'] == "submit" && $_POST['pass1'] == $_POST['pass2'])
