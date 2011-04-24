@@ -72,7 +72,7 @@ switch ($_GET['save'])
     case 'designer':
         if (!isset($_POST['designer']))
             break;
-        if (set_description($_GET['type'], $_GET['name'], $_POST['designer']))
+        if (set_designer($_GET['type'], $_GET['name'], $_POST['designer']))
             echo _('Saved designer.').'<br />';
         break;
     case 'rev':
@@ -115,7 +115,7 @@ function loadAddons()
         if(($addonLoader->addonCurrent['status'] & F_APPROVED) == F_APPROVED)
         {
             echo '<li><a class="menu-item" href="javascript:loadFrame(\''.$addonLoader->addonCurrent['id'].'\',\'addons-panel.php?type='.$_GET['type'].'\')">';
-            if($_GET['type'] != "tracks") echo '<img class="icon"  src="image.php?type=small&amp;pic='.$addonLoader->addonCurrent['image'].'" />';
+            if($_GET['type'] != "tracks") echo '<img class="icon"  src="image.php?type=small&amp;pic=images/'.$addonLoader->addonCurrent['image'].'" />';
             else echo '<img class="icon"  src="image/track-icon.png" />';
             echo $addonLoader->addonCurrent['name']."</a></li>";
         }
