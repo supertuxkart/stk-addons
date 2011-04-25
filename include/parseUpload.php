@@ -107,11 +107,11 @@ function parseUpload($file,$revision = false)
     // Define addon type
     if (preg_match('/kart\.xml$/',$xml_file))
     {
-        $addon_type = 'kart';
+        $addon_type = 'karts';
     }
     else
     {
-        $addon_type = 'track';
+        $addon_type = 'tracks';
     }
 
     // Read XML
@@ -129,8 +129,16 @@ function parseUpload($file,$revision = false)
     }
     fclose($fhandle);
 
+    // Check for valid license file
+    if (!find_license(UP_LOCATION.'temp/'.$fileid))
+    {
+        echo '<span class="error">'._('A valid License.txt file was not found. Please add a License.txt file to your archive and re-submit it.').'</span><br />';
+        rmdir_recursive(UP_LOCATION.'temp/'.$fileid);
+        return false;
+    }
+
     // Save addon icon or screenshot
-    if ($addon_type == 'track')
+    if ($addon_type == 'tracks')
     {
         $image_file = $xml_dir.'/'.$parsed_xml['attributes']['screenshot'];
     }
@@ -177,8 +185,8 @@ function parseUpload($file,$revision = false)
 
     // Get addon id
     $addon_id = NULL;
-    if (isset($_GET['title']))
-        $addon_id = addon_id_clean($_GET['title']);
+    if (isset($_GET['name']))
+        $addon_id = addon_id_clean($_GET['name']);
     if (!preg_match('/^[a-z0-9\-]+_?[0-9]*$/i',$addon_id) || $addon_id == NULL)
         $addon_id = generate_addon_id($addon_type,$parsed_xml['attributes']);
 
@@ -188,13 +196,33 @@ function parseUpload($file,$revision = false)
 
     // Create addon
     $addon = new coreAddon($addon_type);
+
+    // Make sure only the original uploader can make a new revision
+    if ($revision == true)
+    {
+        $addon->selectById($addon_id);
+        if (!$addon->addonCurrent)
+        {
+            echo '<span class="error">'._('You are trying to add a new revision of an addon that does not exist.').'</span><br />';
+            rmdir_recursive(UP_LOCATION.'temp/'.$fileid);
+            return false;
+        }
+        if ($_SESSION['userid'] != $addon->addonCurrent['uploader']
+                && !$_SESSION['role']['manageaddons'])
+        {
+            echo '<span class="error">'._('You do not have the necessary permissions to perform this action.').'</span><br />';
+            rmdir_recursive(UP_LOCATION.'temp/'.$fileid);
+            return false;
+        }
+    }
+
     if (!$addon->addAddon($fileid,$addon_id,$parsed_xml['attributes']))
     {
         echo '<span class="error">'._('Failed to create add-on.').'</span><br />';
     }
     rmdir_recursive(UP_LOCATION.'temp/'.$fileid);
     echo _('Successfully uploaded add-on.').'<br />';
-    echo '<span style="font-size: large"><a href="addons.php?type='.$addon_type.'s&amp;name='.$addon_id.'">'._('Continue.').'</a></span><br />';
+    echo '<span style="font-size: large"><a href="addons.php?type='.$addon_type.'&amp;name='.$addon_id.'">'._('Continue.').'</a></span><br />';
 }
 
 function find_xml($dir)
@@ -218,6 +246,31 @@ function find_xml($dir)
             else if(file_exists($dir."/track.xml"))
             {
                 return $dir."/track.xml";
+            }
+        }
+    }
+    return false;
+}
+
+function find_license($dir)
+{
+    if(is_dir($dir))
+    {
+        foreach(scandir($dir) as $file)
+        {
+            // Check recursively
+            if(is_dir($dir."/".$file) && $file != "." && $file != "..")
+            {
+                $name = find_license($dir."/".$file);
+                // The file was found in a recursive lookup
+                if($name != false)
+                {
+                    return $name;
+                }
+            }
+            else if(file_exists($dir."/License.txt"))
+            {
+                return $dir."/License.txt";
             }
         }
     }
@@ -263,7 +316,8 @@ function read_xml($file,$type)
         {
             foreach ($val['attributes'] AS $attribute => $value)
             {
-                if ($val['tag'] == strtoupper($type))
+                // XML parser returns tag names in all uppercase
+                if (strtolower($val['tag']).'s' == $type)
                 {
                     $attribute = strtolower($attribute);
                     if ($attribute != 'groups')

@@ -291,6 +291,8 @@ a:hover
     padding: 5px;
     background-image:url("../image/content.png");
     clear:both;
+    max-height: 575px;
+    overflow-y: scroll;
 }
 .preview
 {

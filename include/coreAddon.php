@@ -28,9 +28,9 @@ class coreAddon
         $this->addonType = $type;
     }
 
-    function selectById($id, $rev = NULL)
+    function selectById($id, $rev = false)
     {
-        if ($rev == NULL)
+        if (!$rev)
         {
             $querySql = 'SELECT a.*, r.id AS fileid, r.creation_date AS revision_timestamp,
                     r.revision, r.format, r.image, r.status
@@ -47,10 +47,13 @@ class coreAddon
                 FROM '.DB_PREFIX.$this->addonType.' a
                 LEFT JOIN '.DB_PREFIX.$this->addonType.'_revs r
                 ON a.id = r.addon_id
-                WHERE a.id = \''.$id.'\'
-                AND r.revision = \''.$rev.'\'';
+                WHERE a.id = \''.$id.'\'';
         }
         $this->reqSql = sql_query($querySql);
+        if (!$this->reqSql)
+        {
+            echo mysql_error();
+        }
         if (mysql_num_rows($this->reqSql) == 0)
         {
             echo _('The requested addon does not exist.').'<br />';
@@ -182,9 +185,11 @@ class coreAddon
             WHERE `id` = \''.$this->addonCurrent['id'].'\'';
         $updateSql = sql_query($updateQuery);
         
-        if ($updateSql)
-            return true;
-        return false;
+        if (!$updateSql)
+            return false;
+        writeAssetXML();
+        writeNewsXML();
+        return true;
     }
 
     /** Remove the selected addons. */
@@ -247,13 +252,34 @@ class coreAddon
 
         <br /><br /><strong>'._('Permalink:').'</strong><br />
         '.$this->addonCurrent['permUrl'].'<br />';
-
+        
         $addonRevs = new coreAddon($this->addonType);
-        $addonRevs->selectById($this->addonCurrent['id']);
+        $addonRevs->selectById($this->addonCurrent['id'],true);
         echo '<strong>'._('Revisions:').'</strong><br />';
         echo '<table>';
         while ($addonRevs->addonCurrent)
         {
+            // Don't list unapproved addons
+            global $user;
+            if (!$user->logged_in)
+            {
+                if (!($addonRevs->addonCurrent['status'] & F_APPROVED))
+                {
+                    $addonRevs->next();
+                    continue;
+                }
+            }
+            else
+            {
+                if (($addonRevs->addonCurrent['uploader'] != $_SESSION['userid']
+                        && !$_SESSION['role']['manageaddons'])
+                        && !($addonRevs->addonCurrent['status'] & F_APPROVED))
+                {
+                    $addonRevs->next();
+                    continue;
+                }
+            }
+
             echo '<tr><td>'.$addonRevs->addonCurrent['revision_timestamp'].'</td>
                 <td><a href="'.DOWN_LOCATION.$addonRevs->addonCurrent['fileid'].'.zip">'._('Download revision').' '.$addonRevs->addonCurrent['revision'].'</a></td></tr>';
             $addonRevs->next();
@@ -289,12 +315,8 @@ class coreAddon
         // Add revision
         if ($this->addonCurrent['uploader'] == $_SESSION['userid'])
         {
-            echo '<strong>'._('Add revision:').'</strong><br />';
-            echo '<form name="addRevision" enctype="multipart/form-data" action="'.$this->addonCurrent['permUrl'].'&amp;save=rev" method="POST">';
-            echo '<strong>'._('File:').'</strong> <input type="file" name="file_addon" /><br />';
-            echo _('Supported file types are:').' .zip<br />';
-            echo '<input type="submit" value="'._('Upload File').'" /><br />';
-            echo '</form><br />';
+            echo '<form method="POST" action="upload.php?type='.$this->addonType.'&amp;name='.$this->addonCurrent['id'].'">';
+            echo '<input type="submit" value="'._('Upload Revision').'" /></form><br />';
         }
 
         // Set status flags
@@ -315,7 +337,7 @@ class coreAddon
         echo '<th>'.img_label(_('Invalid Textures')).'</th>';
         echo '</tr>';
         $addonRevs = new coreAddon($this->addonType);
-        $addonRevs->selectById($this->addonCurrent['id']);
+        $addonRevs->selectById($this->addonCurrent['id'],true);
         $fields = array();
         $fields[] = 'latest';
         while ($addonRevs->addonCurrent)
@@ -465,10 +487,9 @@ class coreAddon
         echo '</form>';
     }
 
-    function viewInformation($config=True)
+    function viewInformation($config = true)
     {
         $this->writeInformation();
-
 
         global $user;
         if ($user->logged_in == false)
@@ -491,14 +512,14 @@ class coreAddon
         }
 
         // Make sure no addon with this id exists
-        if(sql_exist($this->addonType.'s_revs', "id", $fileid))
+        if(sql_exist($this->addonType.'_revs', "id", $fileid))
         {
             echo '<span class="error">'._('The add-on you are trying to create already exists.').'</span><br />';
             return false;
         }
 
         // Check if we're creating a new add-on
-        if (!sql_exist($this->addonType.'s', 'id', $addonid))
+        if (!sql_exist($this->addonType, 'id', $addonid))
         {
             echo _('Creating a new add-on...').'<br />';
             $fields = array('id','name','uploader','designer');
@@ -508,7 +529,7 @@ class coreAddon
                 $fields[] = 'arena';
                 $values[] = $attributes['arena'];
             }
-            if (!sql_insert($this->addonType.'s',$fields,$values))
+            if (!sql_insert($this->addonType,$fields,$values))
                 return false;
         }
         else
@@ -517,7 +538,7 @@ class coreAddon
         }
 
         // Add the new revision
-        $prevRevQuerySql = 'SELECT `revision` FROM '.DB_PREFIX.$this->addonType.'s_revs
+        $prevRevQuerySql = 'SELECT `revision` FROM '.DB_PREFIX.$this->addonType.'_revs
             WHERE `addon_id` = \''.$addonid.'\' ORDER BY `revision` DESC LIMIT 1';
         $reqSql = sql_query($prevRevQuerySql);
         if (!$reqSql)
@@ -537,7 +558,7 @@ class coreAddon
         // Add revision entry
         $fields = array('id','addon_id','revision','format','image','status');
         $values = array($fileid,$addonid,$rev,$attributes['version'],$attributes['image'],$attributes['status']);
-        if (!sql_insert($this->addonType.'s_revs',$fields,$values))
+        if (!sql_insert($this->addonType.'_revs',$fields,$values))
             return false;
         writeAssetXML();
         writeNewsXML();

@@ -74,10 +74,6 @@ switch ($_GET['save'])
                 && $edit_addon->setInformation('designer',$_POST['designer']))
             echo _('Saved properties.').'<br />';
         break;
-    case 'designer':
-        if (set_designer($_GET['type'], $_GET['name'], $_POST['designer']))
-            echo _('Saved designer.').'<br />';
-        break;
     case 'rev':
         parseUpload($_FILES['file_addon'],true);
         break;
