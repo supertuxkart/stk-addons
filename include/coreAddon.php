@@ -171,24 +171,20 @@ class coreAddon
 
         if ($_SESSION['role']['manageaddons'] != true && $this->addonCurrent['uploader'] != $_SESSION['userid'])
             return false;
-        if (sql_exist("properties", "name", $info))
-        {
-            $propertie_sql = sql_get_all_where("properties", "name", $info);
-            $propertie = sql_next($propertie_sql);
-            if($propertie["lock"] != 1)
-            {
-                if($propertie['typefield'] == "file")
-                {
-                    $this->setFile(post('fileType'));
-                }
-                else
-                {
-                    sql_update($this->addonType, "id", $this->addonCurrent['id'], $propertie['name'], $value);
-
-                }
-                return true;
-            }
-        }
+        
+        $info = mysql_real_escape_string($info);
+        $value = mysql_real_escape_string($value);
+        if (strlen($info) == 0)
+            return false;
+        
+        $updateQuery = 'UPDATE `'.DB_PREFIX.$this->addonType.'`
+            SET `'.$info.'` = \''.$value.'\'
+            WHERE `id` = \''.$this->addonCurrent['id'].'\'';
+        $updateSql = sql_query($updateQuery);
+        
+        if ($updateSql)
+            return true;
+        return false;
     }
 
     /** Remove the selected addons. */
@@ -278,19 +274,16 @@ class coreAddon
 
         echo '<hr /><h3>Configuration</h3>';
         // Edit designer
-        echo '<form name="changeDesigner" action="'.$this->addonCurrent['permUrl'].'&amp;save=designer" method="POST">';
+        echo '<form name="changeProps" action="'.$this->addonCurrent['permUrl'].'&amp;save=props" method="POST">';
         echo '<strong>'._('Designer:').'</strong><br />';
         // FIXME: Find a cleaner way to check this
         if ($this->addonCurrent['designer'] == '<em>'._('Unknown').'</em>')
                 $this->addonCurrent['designer'] = NULL;
         echo '<input type="text" name="designer" id="designer_field" value="'.$this->addonCurrent['designer'].'" /><br />';
-        echo '<input type="submit" value="'._('Save Designer').'" />';
-        echo '</form><br />';
-        // Edit description
-        echo '<form name="changeDesc" action="'.$this->addonCurrent['permUrl'].'&amp;save=desc" method="POST">';
+        echo '<br />';
         echo '<strong>'._('Description:').'</strong> ('._('Max 140 characters').')<br />';
         echo '<textarea name="description" id="desc_field" rows="4" cols="60">'.$this->addonCurrent['description'].'</textarea><br />';
-        echo '<input type="submit" value="'._('Save Description').'" />';
+        echo '<input type="submit" value="'._('Save Properties').'" />';
         echo '</form><br />';
 
         // Add revision
@@ -577,88 +570,6 @@ function addon_id_clean($string)
         $string = substr_replace($string,$substr,$i,1);
     }
     return $string;
-}
-
-function set_description($addon_type,$addon_id,$description)
-{
-    // Validate parameters
-    if ($addon_type != 'karts' && $addon_type != 'tracks')
-    {
-        echo '<span class="error">'._('Invalid addon type.').'</span><br />';
-        return false;
-    }
-    $addon_id = addon_id_clean($addon_id);
-    $description = mysql_real_escape_string($description);
-
-    // Check if addon exists, and permissions
-    $addon = new coreAddon($addon_type);
-    $addon->selectById($addon_id);
-    if (!$addon->addonCurrent)
-    {
-        echo '<span class="error">'._('The selected addon does not exist.').'</span><br />';
-        return false;
-    }
-    if (!$_SESSION['role']['manageaddons'] && $_SESSION['userid'] != $addon->addonCurrent['uploader'])
-    {
-        echo '<span class="error">'._('You do not have the necessary permissions to perform this action.').'</span><br />';
-        return false;
-    }
-    if (strlen($description) == 0)
-    {
-        echo '<span class="error">'._('The description field was blank.').'</span><br />';
-        return false;
-    }
-
-    $update_query = 'UPDATE `'.DB_PREFIX.$addon_type.'`
-        SET `description` = \''.$description.'\'
-        WHERE `id` = \''.$addon_id.'\'';
-    $reqSql = sql_query($update_query);
-    writeAssetXML();
-    writeNewsXML();
-    if (!$reqSql)
-        return false;
-    return true;
-}
-
-function set_designer($addon_type,$addon_id,$designer)
-{
-    // Validate parameters
-    if ($addon_type != 'karts' && $addon_type != 'tracks')
-    {
-        echo '<span class="error">'._('Invalid addon type.').'</span><br />';
-        return false;
-    }
-    $addon_id = addon_id_clean($addon_id);
-    $designer = mysql_real_escape_string($designer);
-
-    // Check if addon exists, and permissions
-    $addon = new coreAddon($addon_type);
-    $addon->selectById($addon_id);
-    if (!$addon->addonCurrent)
-    {
-        echo '<span class="error">'._('The selected addon does not exist.').'</span><br />';
-        return false;
-    }
-    if (!$_SESSION['role']['manageaddons'] && $_SESSION['userid'] != $addon->addonCurrent['uploader'])
-    {
-        echo '<span class="error">'._('You do not have the necessary permissions to perform this action.').'</span><br />';
-        return false;
-    }
-    if (strlen($designer) == 0)
-    {
-        echo '<span class="error">'._('The designer field was blank.').'</span><br />';
-        return false;
-    }
-
-    $update_query = 'UPDATE `'.DB_PREFIX.$addon_type.'`
-        SET `designer` = \''.$designer.'\'
-        WHERE `id` = \''.$addon_id.'\'';
-    $reqSql = sql_query($update_query);
-    writeAssetXML();
-    writeNewsXML();
-    if (!$reqSql)
-        return false;
-    return true;
 }
 
 function update_status($type,$addon_id,$fields)

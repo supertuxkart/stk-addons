@@ -63,15 +63,18 @@ loadAddons();
 switch ($_GET['save'])
 {
     default: break;
-    case 'desc':
+    case 'props':
         if (!isset($_POST['description']))
             break;
-        if (set_description($_GET['type'], $_GET['name'], $_POST['description']))
-            echo _('Saved description.').'<br />';
-        break;
-    case 'designer':
         if (!isset($_POST['designer']))
             break;
+        $edit_addon = new coreAddon($_GET['type']);
+        $edit_addon->selectById($_GET['name']);
+        if ($edit_addon->setInformation('description',$_POST['description'])
+                && $edit_addon->setInformation('designer',$_POST['designer']))
+            echo _('Saved properties.').'<br />';
+        break;
+    case 'designer':
         if (set_designer($_GET['type'], $_GET['name'], $_POST['designer']))
             echo _('Saved designer.').'<br />';
         break;
