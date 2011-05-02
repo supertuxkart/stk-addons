@@ -74,21 +74,6 @@ else
 
 $addon = new coreUser;
 $addon->selectById($id);
-if($action == "available")
-{
-	$addon->setAvailable();
-	$addon->selectById($id);
-}
-elseif($action == "range")
-{
-	$addon->setRange($value);
-	$addon->selectById($id);
-}
-elseif($action != "")
-{
-	$addon->setInformation($action, $value);
-	$addon->selectById($id);
-}
 if($action == "remove")
 {
 	$addon->remove();

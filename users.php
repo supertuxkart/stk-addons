@@ -71,6 +71,18 @@ switch ($action)
             break;
         }
         $addon->setPass();
+        break;
+    case 'config':
+        $addon = new coreUser;
+        $addon->selectByUser($_GET['user']);
+        if ($_SESSION['user'] != $_GET['user']
+                && !$_SESSION['role']['manage'.$addon->userCurrent['role'].'s'])
+        {
+            echo '<span class="error">'._('You do not have the necessary permissions to perform this action.').'</span><br />';
+            break;
+        }
+        $addon->setConfig();
+        break;
 }
 ?>
     </div>

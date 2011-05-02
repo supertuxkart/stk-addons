@@ -179,10 +179,10 @@ class coreUser
         echo '
         <hr />
         <h3>Configuration</h3>
-        <form enctype="multipart/form-data" action="?title='.$this->userCurrent['id'].'&amp;action=config" method="GET" >
+        <form enctype="multipart/form-data" action="?user='.$this->userCurrent['user'].'&amp;action=config" method="POST" >
         <table>';
-        echo '<tr><td>'._('Homepage:').'</td><td><input type="text" name="homepage" value="'.$this->userCurrent['homepage'].'" /></td></tr>';
-        echo '<tr><td>'._('Avatar:').'</td><td><input type="file" name="avatar" /></td></tr>';
+        echo '<tr><td>'._('Homepage:').'</td><td><input type="text" name="homepage" value="'.$this->userCurrent['homepage'].'" disabled /></td></tr>';
+        echo '<tr><td>'._('Avatar:').'</td><td><input type="file" name="avatar" disabled /></td></tr>';
         // Edit role if allowed
         if($_SESSION['role']['manage'.$this->userCurrent['role'].'s'] == true || $_SESSION['userid'] == $this->userCurrent['id'])
         {
@@ -208,7 +208,7 @@ class coreUser
             }
             echo '/></td></tr>';
         }
-        echo '<tr><td></td><td><input type="submit" value="'._('Save Configuration').'" disabled /></td></tr>';
+        echo '<tr><td></td><td><input type="submit" value="'._('Save Configuration').'" /></td></tr>';
         echo '</table></form>';
         if($this->userCurrent['id'] == $_SESSION['userid'])
         {
@@ -254,31 +254,53 @@ class coreUser
 
         return $succes;
     }
+    
+    function setConfig()
+    {
+        if ($_SESSION['role']['manage'.$this->userCurrent['role'].'s'])
+        {
+            // Set availability status
+            if (!isset($_POST['available'])) $_POST['available'] = NULL;
+            if ($_POST['available'] == 'on')
+            {
+                $available = 1;
+                $verify = NULL;
+            }
+            else
+            {
+                // FIXME: Do we want to reset a verification code at all?
+                $available = 0;
+                $verify = cryptUrl(12);
+            }
+            $availableQuery = 'UPDATE `'.DB_PREFIX.'users`
+                SET `active` = '.$available.',
+                    `verify` = \''.$verify.'\'
+                WHERE `id` = '.$this->userCurrent['id'];
+            $availableSql = sql_query($availableQuery);
+            if (!$availableSql)
+                return false;
+            
+            // Set permission level
+            if (isset($_POST['range']))
+            {
+                if ($_SESSION['role']['manage'.$_POST['range'].'s'])
+                {
+                    $rangeQuery = 'UPDATE `'.DB_PREFIX.'users`
+                        SET `role` = \''.mysql_real_escape_string($_POST['range']).'\'
+                        WHERE `id` = '.$this->userCurrent['id'];
+                    $rangeSql = sql_query($rangeQuery);
+                    if (!$rangeSql)
+                        return false;
+                }
+            }
+            
+        }
+    }
+    
     function permalink()
     {
         return 'users.php?user='.$this->userCurrent['user'];
     }
-    function setAvailable()
-    {
-        global $base;
-        if($_SESSION['role']['manageaddons'] == true)
-        {
-            if($this->userCurrent['available'] == 0)
-            {
-                mysql_query("UPDATE `".DB_PREFIX.$this->addonType."` SET `available` = '1' WHERE `id` =".$this->addonCurrent['id']." LIMIT 1 ;");
-            }
-            else mysql_query("UPDATE .`".DB_PREFIX.$this->addonType."` SET `available` = '0' WHERE `id` =".$this->addonCurrent['id']." LIMIT 1 ;");
-        }
-    }
-	function setRange($range)
-	{
-	
-		global $base;
-		if($_SESSION['role']['manage'.$this->userCurrent['range'].'s'] == true && $_SESSION['role']['manage'.$range.'s'] == true)
-		{
-			mysql_query("UPDATE `".$base."`.`users` SET `range` = '".$range."' WHERE `users`.`id` =".$this->addonCurrent['id']." LIMIT 1 ;");
-		}
-	}
 }
 
 

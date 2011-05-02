@@ -172,17 +172,5 @@ else
 </body>
 </html>
 <?php
-function cryptUrl($nbr)
-{
-    $str = "";
-    $chaine = "abcdefghijklmnpqrstuvwxy";
-    srand((double)microtime()*1000000);
-    for($i=0; $i<$nbr; $i++)
-    {
-        $str .= $chaine[rand()%strlen($chaine)];
-    }
-    return $str;
-}
-
 $str = cryptUrl(12);
 ?>
