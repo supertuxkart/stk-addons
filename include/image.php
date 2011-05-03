@@ -71,6 +71,13 @@ function resizeImage($file)
     }
     // Create new canvas
     $destination = imagecreatetruecolor($width_destination, $height_destination);
+    
+    // Preserve transparency
+    imagealphablending($destination, false);
+    imagesavealpha($destination, true);
+    $transparent_bg = imagecolorallocatealpha($destination, 255, 255, 255, 127);
+    imagefilledrectangle($destination, 0, 0, $width_destination, $height_destination, $transparent_bg);
+    
     // Resize image
     imagecopyresampled($destination, $source, 0, 0, 0, 0, $width_destination, $height_destination, $width_source, $height_source);
     // Display image
