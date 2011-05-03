@@ -83,6 +83,12 @@ switch ($_GET['save'])
         if (update_status($_GET['type'],$_GET['name'],$_POST['fields']))
             echo _('Saved status.').'<br />';
         break;
+    case 'notes':
+        if (!isset($_GET['type']) || !isset($_GET['name']) || !isset($_POST['fields']))
+            break;
+        if (update_addon_notes($_GET['type'],$_GET['name'],$_POST['fields']))
+            echo _('Saved notes.').'<br />';
+        break;
 }
 ?>
     </div>

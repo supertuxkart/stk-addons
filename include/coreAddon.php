@@ -33,7 +33,7 @@ class coreAddon
         if (!$rev)
         {
             $querySql = 'SELECT a.*, r.id AS fileid, r.creation_date AS revision_timestamp,
-                    r.revision, r.format, r.image, r.status
+                    r.revision, r.format, r.image, r.status, r.moderator_note
                 FROM '.DB_PREFIX.$this->addonType.' a
                 LEFT JOIN '.DB_PREFIX.$this->addonType.'_revs r
                 ON a.id = r.addon_id
@@ -43,7 +43,7 @@ class coreAddon
         else
         {
             $querySql = 'SELECT a.*, r.id AS fileid, r.creation_date AS revision_timestamp,
-                    r.revision, r.format, r.image, r.status
+                    r.revision, r.format, r.image, r.status, r.moderator_note
                 FROM '.DB_PREFIX.$this->addonType.' a
                 LEFT JOIN '.DB_PREFIX.$this->addonType.'_revs r
                 ON a.id = r.addon_id
@@ -70,7 +70,7 @@ class coreAddon
     {
         $querySql = 'SELECT a.*, r.id AS fileid,
                 r.creation_date AS revision_timestamp, r.revision,
-                r.format, r.image, r.status
+                r.format, r.image, r.status, r.moderator_note
             FROM '.DB_PREFIX.$this->addonType.' a
             LEFT JOIN '.DB_PREFIX.$this->addonType.'_revs r
             ON a.id = r.addon_id
@@ -484,7 +484,30 @@ class coreAddon
         echo '</table>';
         echo '<input type="hidden" name="fields" value="'.implode(',',$fields).'" />';
         echo '<input type="submit" value="'._('Save Changes').'" />';
-        echo '</form>';
+        echo '</form><br />';
+        
+        // Moderator notes
+        echo '<strong>'._('Notes:').'</strong><br />';
+        if ($_SESSION['role']['manageaddons'])
+            echo '<form method="POST" action="'.$this->addonCurrent['permUrl'].'&amp;save=notes">';
+        $addonRevs = new coreAddon($this->addonType);
+        $addonRevs->selectById($this->addonCurrent['id'],true);
+        $fields = array();
+        while ($addonRevs->addonCurrent)
+        {
+            echo 'Rev '.$addonRevs->addonCurrent['revision'].':<br />';
+            echo '<textarea name="notes-'.$addonRevs->addonCurrent['revision'].'" rows="4" cols="60">';
+            echo $addonRevs->addonCurrent['moderator_note'];
+            echo '</textarea><br />';
+            $fields[] = 'notes-'.$addonRevs->addonCurrent['revision'];
+            $addonRevs->next();
+        }
+        if ($_SESSION['role']['manageaddons'])
+        {
+            echo '<input type="hidden" name="fields" value="'.implode(',',$fields).'" />';
+            echo '<input type="submit" value="'._('Save Notes').'" />';
+            echo '</form>';
+        }
     }
 
     function viewInformation($config = true)
@@ -658,10 +681,18 @@ function update_status($type,$addon_id,$fields)
     foreach ($status AS $revision => $value)
     {
         // Check if F_TEX_NOT_POWER_OF_2 is set in database
-        $addon = new coreAddon($type);
-        $addon->selectById($addon_id,$revision);
-        if ($addon->addonCurrent['status'] & F_TEX_NOT_POWER_OF_2)
+        $getStatusQuery = 'SELECT `status`
+            FROM `'.DB_PREFIX.$type.'_revs`
+            WHERE `addon_id` = \''.$addon_id.'\'
+            AND `revision` = '.$revision;
+        $getStatusSql = sql_query($getStatusQuery);
+        if (!$getStatusSql)
+            return false;
+        $getStatusResult = mysql_fetch_assoc($getStatusSql);
+        if ($getStatusResult['status'] & F_TEX_NOT_POWER_OF_2)
             $value += F_TEX_NOT_POWER_OF_2;
+        
+        // Write new addon
         $query = 'UPDATE `'.DB_PREFIX.$type.'_revs`
             SET `status` = '.$value.'
             WHERE `addon_id` = \''.$addon_id.'\'
@@ -672,6 +703,48 @@ function update_status($type,$addon_id,$fields)
     }
     writeAssetXML();
     writeNewsXML();
+    if ($error != 1)
+        return true;
+    return false;
+}
+
+function update_addon_notes($type,$addon_id,$fields)
+{
+    if (!$_SESSION['role']['manageaddons'])
+        return false;
+    if ($type != 'karts' && $type != 'tracks')
+    {
+        echo '<span class="error">'._('Invalid addon type.').'</span><br />';
+        return false;
+    }
+    $addon_id = addon_id_clean($addon_id);
+    $fields = explode(',',$fields);
+    $notes = array();
+    foreach ($fields AS $field)
+    {
+        if (!isset($_POST[$field]))
+            $_POST[$field] = NULL;
+        $fieldinfo = explode('-',$field);
+        $revision = (int)$fieldinfo[1];
+        // Update notes
+        $notes[$revision] = mysql_real_escape_string($_POST[$field]);
+    }
+    $error = 0;
+    foreach ($notes AS $revision => $value)
+    {
+        // Make sure addon exists
+        $addon = new coreAddon($type);
+        $addon->selectById($addon_id);
+        if (!$addon)
+            return false;
+        $query = 'UPDATE `'.DB_PREFIX.$type.'_revs`
+            SET `moderator_note` = \''.$value.'\'
+            WHERE `addon_id` = \''.$addon_id.'\'
+            AND `revision` = '.$revision;
+        $reqSql = sql_query($query);
+        if (!$reqSql)
+            $error = 1;
+    }
     if ($error != 1)
         return true;
     return false;

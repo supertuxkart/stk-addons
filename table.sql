@@ -61,6 +61,7 @@ CREATE TABLE `karts_revs` (
   `format` tinyint(4) NOT NULL,
   `image` tinytext NOT NULL,
   `status` mediumint(9) unsigned NOT NULL default '0',
+  `moderator_note` varchar(255) NULL default NULL,
   UNIQUE KEY `id` (`id`),
   KEY `track_id` (`addon_id`),
   KEY `status` (`status`)
@@ -119,6 +120,7 @@ CREATE TABLE `tracks_revs` (
   `format` tinyint(4) NOT NULL,
   `image` tinytext NOT NULL,
   `status` mediumint(9) unsigned NOT NULL default '0',
+  `moderator_note` varchar(255) NULL default NULL,
   UNIQUE KEY `id` (`id`),
   KEY `track_id` (`addon_id`),
   KEY `status` (`status`)
