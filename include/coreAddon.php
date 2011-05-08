@@ -528,6 +528,7 @@ class coreAddon
     /* FIXME: this function needs a _lot_ of a tests. */
     function addAddon($fileid, $addonid, $attributes)
     {
+        global $moderator_message;
 	global $user;
         // Check if logged in
         if (!$user->logged_in) {
@@ -581,6 +582,12 @@ class coreAddon
         // Add revision entry
         $fields = array('id','addon_id','revision','format','image','status');
         $values = array($fileid,$addonid,$rev,$attributes['version'],$attributes['image'],$attributes['status']);
+        // Add moderator message if available
+        if (!empty($moderator_message))
+        {
+            $fields[] = 'moderator_note';
+            $values[] = $moderator_message;
+        }
         if (!sql_insert($this->addonType.'_revs',$fields,$values))
             return false;
         writeAssetXML();

@@ -380,7 +380,7 @@ function generate_addon_id($type,$attb)
         return false;
 
     // Check database
-    while(sql_exist($type.'s', "id", $addon_id))
+    while(sql_exist($type, "id", $addon_id))
     {
         if (preg_match('/^.+_([0-9]+)$/i', $addon_id, $matches))
         {

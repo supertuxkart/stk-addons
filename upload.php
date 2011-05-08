@@ -65,7 +65,7 @@ if($_GET['action'] == "submit")
                     && !isset($_POST['license_cc-by-sa'])
                     && !isset($_POST['license_pd'])
                     && !isset($_POST['license_bsd'])
-                    && !isset($_POST['licesne_other']))
+                    && !isset($_POST['license_other']))
             || !isset($_POST['l_agreement'])
             || !isset($_POST['l_clean'])
             || ($_POST['l_author'] == 1 && !isset($_POST['l_licensefile1']))
@@ -75,6 +75,14 @@ if($_GET['action'] == "submit")
     }
     else
     {
+        // Generate a note to moderators for license verification
+        $moderator_message = NULL;
+        if (isset($_POST['license_other']))
+            $moderator_message .= 'Verify "other license"'."\n";
+        if ($_POST['l_author'] == 1)
+            $moderator_message .= 'Verify sole author'."\n";
+        else
+            $moderator_message .= 'Verify open content'."\n";
         if (isset($_GET['name']))
         {
             parseUpload($_FILES['file_addon'],true);
