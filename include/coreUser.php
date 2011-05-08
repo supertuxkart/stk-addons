@@ -187,15 +187,18 @@ class coreUser
         if($_SESSION['role']['manage'.$this->userCurrent['role'].'s'] == true || $_SESSION['userid'] == $this->userCurrent['id'])
         {
             echo '<tr><td>'._('Role:').'</td><td>';
-            echo '<select name="range">';
+            $role_disabled = NULL;
+            if ($_SESSION['userid'] == $this->userCurrent['id'])
+                    $role_disabled = 'disabled';
+            echo '<select name="range" '.$role_disabled.'>';
             echo '<option value="basicUser">Basic User</option>';
-            $range = array("moderator","administrator");
-            for($i=0;$i<2;$i++)
+            $range = array("moderator","administrator","supAdministrator","root");
+            for($i=0;$i<count($range);$i++)
             {
-                if($_SESSION['role']['manage'.$range[$i].'s'] == true)
+                if($_SESSION['role']['manage'.$range[$i].'s'] == true || $this->userCurrent['role'] == $range[$i])
                 {
                     echo '<option value="'.$range[$i].'"';
-                    if($this->userCurrent['role'] == $range[$i]) echo 'selected="selected"';
+                    if($this->userCurrent['role'] == $range[$i]) echo ' selected="selected"';
                     echo '>'.$range[$i].'</option>';
                 }
             }
