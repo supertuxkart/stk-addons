@@ -221,6 +221,8 @@ function parseUpload($file,$revision = false)
         echo '<span class="error">'._('Failed to create add-on.').'</span><br />';
     }
     rmdir_recursive(UP_LOCATION.'temp/'.$fileid);
+    writeAssetXML();
+    writeNewsXML();
     echo _('Successfully uploaded add-on.').'<br />';
     echo '<span style="font-size: large"><a href="addons.php?type='.$addon_type.'&amp;name='.$addon_id.'">'._('Continue.').'</a></span><br />';
 }

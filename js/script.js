@@ -2,6 +2,14 @@ var oldElSub ="";
 var oldSub ="";
 var oldRoot ="";
 var oldDiv ="";
+
+function confirm_delete(url)
+{
+    if (confirm("Really delete this item?")) {
+        window.location = url;
+    }
+}
+
 function loadSub(newSub)
 {
     newSub = "sub" + newSub;

@@ -89,6 +89,12 @@ switch ($_GET['save'])
         if (update_addon_notes($_GET['type'],$_GET['name'],$_POST['fields']))
             echo _('Saved notes.').'<br />';
         break;
+    case 'delete':
+        $edit_addon = new coreAddon($_GET['type']);
+        $edit_addon->selectById($_GET['name']);
+        if ($edit_addon->remove())
+            echo _('Deleted addon.').'<br />';
+        break;
 }
 ?>
     </div>

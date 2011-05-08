@@ -200,7 +200,48 @@ class coreAddon
             return false;
         if($_SESSION['role']['manageaddons'] != true)
             return false;
-        sql_remove_where($this->addonType, "id", $this->addonCurrent['id']);
+        
+        // Get revisions
+        $getRevsQuery = 'SELECT * FROM `'.DB_PREFIX.$this->addonType.'_revs`
+            WHERE `addon_id` = \''.$this->addonCurrent['id'].'\'';
+        $getRevsHandle = sql_query($getRevsQuery);
+        if (!$getRevsHandle)
+        {
+            if ($_SESSION['role']['manageaddons'])
+                echo mysql_error().'<br />';
+            return false;
+        }
+        $num_revisions = mysql_num_rows($getRevsHandle);
+        for ($i = 1; $i <= $num_revisions; $i++)
+        {
+            $getRevsResult = mysql_fetch_assoc($getRevsHandle);
+            // Delete revision archive
+            if (file_exists(UP_LOCATION.$getRevsResult['id'].'.zip') && !unlink(UP_LOCATION.$getRevsResult['id'].'.zip'))
+            {
+                echo _('Failed to delete file:').' '.UP_LOCATION.$getRevsResult['id'].'.zip<br />';
+                return false;
+            }
+            // Delete image file
+            if (file_exists(UP_LOCATION.'images/'.$getRevsResult['image']) && !unlink(UP_LOCATION.'images/'.$getRevsResult['image']))
+            {
+                echo _('Failed to delete file:').' '.UP_LOCATION.'images/'.$getRevsResult['image'].'<br />';
+                return false;
+            }
+            // Delete entry
+            if (!sql_remove_where($this->addonType.'_revs', 'id', $getRevsResult['id']))
+            {
+                echo _('Failed to remove revision record.').'<br />';
+                return false;
+            }
+        }
+        // Remove addon entry
+        if (!sql_remove_where($this->addonType, 'id', $this->addonCurrent['id']))
+        {
+            echo _('Failed to remove addon.').'<br />';
+            return false;
+        }
+        writeAssetXML();
+        writeNewsXML();
         return true;
     }
 
@@ -316,8 +357,12 @@ class coreAddon
         if ($this->addonCurrent['uploader'] == $_SESSION['userid'])
         {
             echo '<form method="POST" action="upload.php?type='.$this->addonType.'&amp;name='.$this->addonCurrent['id'].'">';
-            echo '<input type="submit" value="'._('Upload Revision').'" /></form><br />';
+            echo '<input type="submit" value="'._('Upload Revision').'" /></form><br /><Br />';
         }
+        
+        // Delete addon
+        if ($this->addonCurrent['uploader'] == $_SESSION['userid'] || $_SESSION['role']['manageaddons'])
+            echo '<input type="button" value="'._('Delete Addon').'" onClick="confirm_delete(\''.$this->addonCurrent['permUrl'].'&amp;save=delete\')" /><br /><br />';
 
         // Set status flags
         echo '<strong>'._('Status Flags:').'</strong><br />';
@@ -512,6 +557,10 @@ class coreAddon
 
     function viewInformation($config = true)
     {
+        // Make sure addon exists
+        if (!$this->addonCurrent)
+            return false;
+        
         $this->writeInformation();
 
         global $user;
@@ -590,8 +639,6 @@ class coreAddon
         }
         if (!sql_insert($this->addonType.'_revs',$fields,$values))
             return false;
-        writeAssetXML();
-        writeNewsXML();
         return true;
     }
 
