@@ -138,7 +138,6 @@ CREATE TABLE `users` (
   `verify` text NOT NULL,
   `reg_date` date NOT NULL,
   `homepage` text,
-  `avatar` text,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 

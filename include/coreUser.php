@@ -87,10 +87,6 @@ class coreUser
         echo '<table><tr><td>'._('Username:').'</td><td>'.$this->userCurrent['user'].'</td></tr>';
         echo '<tr><td>'._('Registration Date:').'</td><td>'.$this->userCurrent['reg_date'].'</td></tr>';
         echo '<tr><td>'._('Real Name:').'</td><td>'.$this->userCurrent['name'].'</td></tr>';
-        if(file_exists(UP_LOCATION.'avatar/'.$this->userCurrent['avatar']) && $this->userCurrent['avatar'] != NULL)
-        {
-        echo '<tr><td>'._('Avatar:').'</td><td><img class="avatar" src="'.DOWN_LOCATION.'avatar/'.$this->userCurrent['avatar'].'" /></td></tr>';
-        }
         echo '<tr><td>'._('Role:').'</td><td>'._($this->userCurrent['role']).'</td></tr>';
         if (strlen($this->userCurrent['homepage'] > 0))
         {
@@ -182,7 +178,6 @@ class coreUser
         <form enctype="multipart/form-data" action="?user='.$this->userCurrent['user'].'&amp;action=config" method="POST" >
         <table>';
         echo '<tr><td>'._('Homepage:').'</td><td><input type="text" name="homepage" value="'.$this->userCurrent['homepage'].'" disabled /></td></tr>';
-        echo '<tr><td>'._('Avatar:').'</td><td><input type="file" name="avatar" disabled /></td></tr>';
         // Edit role if allowed
         if($_SESSION['role']['manage'.$this->userCurrent['role'].'s'] == true || $_SESSION['userid'] == $this->userCurrent['id'])
         {
