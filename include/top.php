@@ -27,54 +27,8 @@ Description: top of all page
 
 ***************************************************************************/
 
-$nom_page = $_SERVER['PHP_SELF']."?";
-foreach($_GET as $cle => $element)
-{
-    if($cle != "lang") $nom_page = $nom_page.$cle."=".$element."&amp;";
-}
-$timestamp_expire = time() + 365*24*3600;
-if(!isset($_COOKIE['lang']))
-{
-	setcookie('lang', 'en_EN', $timestamp_expire);
-}
-if (isset($_GET['lang'])) { // If the user has chosen a language
-	switch ($_GET['lang']) { // En fonction de la langue, on crée une variable $langage qui contient le code
-		case 'fr':
-			setcookie('lang', 'fr_FR', $timestamp_expire);
-			break;
-		case 'en':
-			setcookie('lang', 'en_EN', $timestamp_expire);
-			break;
-		case 'nl':
-			setcookie('lang', 'nl_NL', $timestamp_expire);
-			break;
-		case 'de':
-			setcookie('lang', 'de_DE', $timestamp_expire);
-			break;
-		case 'ga':
-			setcookie('lang', 'ga_IE', $timestamp_expire);
-			break;
-		default:
-			setcookie('lang', 'en_EN', $timestamp_expire);
-			break;
-	}
-	?>
-	<html>
-	<head>
-		<meta http-equiv="refresh" content="0;URL=<?php echo $nom_page; ?>">
-	</head>
-	</html>
-	<?php
-	exit();
-
-}
-if (isset($_COOKIE['lang'])) setlocale(LC_ALL, $_COOKIE['lang'].'.UTF-8');
-
-bindtextdomain('translations', 'locale');
-textdomain('translations');
-bind_textdomain_codeset('translations', 'UTF-8');
 if(!isset($title))
-    $title="SuperTuxKart Add-ons";
+    $title=_('SuperTuxKart Add-ons');
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">

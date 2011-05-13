@@ -47,18 +47,6 @@ if (!isset($_POST['id']))
     $_POST['id'] = NULL;
 $_POST['id'] = (int)$_POST['id'];
 
-if(!isset($_COOKIE['lang']))
-{
-    $timestamp_expire = time() + 365*24*3600;
-    setcookie('lang', 'en_EN', $timestamp_expire);
-}
-
-setlocale(LC_ALL, $_COOKIE['lang'].'.UTF-8');
-
-bindtextdomain('translations', 'locale');
-textdomain('translations');
-bind_textdomain_codeset('translations', 'UTF-8');
-
 $type = mysql_real_escape_string($_GET['type']);
 $action = mysql_real_escape_string($_GET['action']);
 if($action=="file")

@@ -147,10 +147,11 @@ echo '</div>';
             <div id="lang-menu">
                 <a class="menu_head" href="#"><?php echo _("Languages");?></a>
                 <ul class="menu_body">
-                    <li><a href="<?php echo $nom_page.'&amp;lang=nl'; ?>"><img src="image/flag/nl.png" /></a></li>
-                    <li><a href="<?php echo $nom_page.'&amp;lang=fr'; ?>"><img src="image/flag/fr.png" /></a></li>
-                    <li><a href="<?php echo $nom_page.'&amp;lang=en'; ?>"><img src="image/flag/en.png" /></a></li>
-                    <li><a href="<?php echo $nom_page.'&amp;lang=ga'; ?>"><img src="image/flag/ga.png" /></a></li>
+                    <li><a href="<?php echo $page_url.'&amp;lang=nl_NL'; ?>"><img src="image/flag/nl.png" /></a></li>
+                    <li><a href="<?php echo $page_url.'&amp;lang=fr_FR'; ?>"><img src="image/flag/fr.png" /></a></li>
+                    <li><a href="<?php echo $page_url.'&amp;lang=en_US'; ?>"><img src="image/flag/en.png" /></a></li>
+                    <li><a href="<?php echo $page_url.'&amp;lang=ga_IE'; ?>"><img src="image/flag/ga.png" /></a></li>
+                    <!-- <li><a href="<?php echo $page_url.'&amp;lang=de_DE'; ?>"><img src="image/flag/de.png" /></a></li> -->
                 </ul>
             </div>
         <a href="http://supertuxkart.sourceforge.net"> <?php echo _("STK Homepage");?></a>

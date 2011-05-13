@@ -30,17 +30,6 @@ $security ="";
 define('ROOT','./');
 include('include.php');
 
-if(!isset($_COOKIE['lang']))
-{
-    $timestamp_expire = time() + 365*24*3600;
-    setcookie('lang', 'en_EN', $timestamp_expire);
-}
-setlocale(LC_ALL, $_COOKIE['lang'].'.UTF-8');
-
-bindtextdomain('translations', 'locale');
-textdomain('translations');
-bind_textdomain_codeset('translations', 'UTF-8');
-
 if (!isset($_GET['value']))
     $_GET['value'] = NULL;
 if (!isset($_GET['id']))

@@ -19,6 +19,7 @@
  */
 
 require(ROOT.'config.php');
+require(ROOT.'include/locale.php');
 require(ROOT.'include/assetFlags.php');
 require(ROOT.'include/sql.php');
 require(ROOT.'include/user.php');
