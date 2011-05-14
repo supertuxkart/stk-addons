@@ -115,7 +115,7 @@ if($_GET['action'] == "submit")
         <label><?php echo _("File:"); ?><br /><input type="file" name="file_addon" /><br /></label>
         <?php echo _('Supported file types are:'); ?> .zip<br /><br />
         <strong><?php echo _('Agreement:'); ?></strong><br />
-        <table width="800">
+        <table width="800" id="upload_agreement">
             <tr>
                 <td width="1"><input type="radio" name="l_author" id="l_author1" value="1" onChange="uploadFormFieldToggle();" checked /></td>
                 <td colspan="3">
@@ -178,13 +178,13 @@ if($_GET['action'] == "submit")
             <tr>
                 <td colspan="2" width="60"></td>
                 <td colspan="2">
-                    <?php echo _('Files released under other licenses will be rejected unless it can be verified that the license is open.') ?>
+                    <?php echo _('Files released under other licenses will be rejected unless it can be verified that the license is open.') ?><br /><br />
                 </td>
             </tr>
             <tr>
                 <td><input type="checkbox" name="l_agreement" /></td>
                 <td colspan="3">
-                    <?php echo _('I recognize that if my file does not meet the above rules, it may be removed at any time without prior notice; I also assume the entire responsibility for any copyright violation that may result from not following the above rules.').' <strong>'._('Required').'</strong>'; ?>
+                    <?php echo _('I recognize that if my file does not meet the above rules, it may be removed at any time without prior notice; I also assume the entire responsibility for any copyright violation that may result from not following the above rules.').' <strong>'._('Required').'</strong><br /><br />'; ?>
                 </td>
             </tr>
             <tr>

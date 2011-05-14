@@ -134,6 +134,11 @@ body {
     vertical-align: middle;
 }
 
+#upload_agreement td
+{
+    vertical-align: top;
+}
+
 .viewGlobal
 {
 	width:1000px;
