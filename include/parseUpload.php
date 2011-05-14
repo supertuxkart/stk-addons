@@ -270,9 +270,13 @@ function find_license($dir)
                     return $name;
                 }
             }
-            else if(file_exists($dir."/License.txt"))
+            else if(file_exists($dir.'/License.txt'))
             {
-                return $dir."/License.txt";
+                return $dir.'/License.txt';
+            }
+            else if (file_exists($dir.'/license.txt'))
+            {
+                return $dir.'/license.txt';
             }
         }
     }

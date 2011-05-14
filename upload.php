@@ -126,7 +126,7 @@ if($_GET['action'] == "submit")
                 <td colspan="2" width="60"></td>
                 <td><input type="checkbox" name="l_licensefile1" id="l_licensefile1"></td>
                 <td>
-                    <span id="l_licensetext1"><?php echo _('I have included a License.txt file describing the license under which my work is released, and my name (or nickname) if I want credit'); ?></span>
+                    <span id="l_licensetext1"><?php echo _('I have included a License.txt file describing the license under which my work is released, and my name (or nickname) if I want credit.').' <strong>'._('Required').'</strong>'; ?></span>
                 </td>
             </tr>
             <tr>
@@ -139,11 +139,11 @@ if($_GET['action'] == "submit")
                 <td colspan="2" width="60"></td>
                 <td><input type="checkbox" name="l_licensefile2" id="l_licensefile2"></td>
                 <td>
-                    <span id="l_licensetext2"><?php echo _('I have included a License.txt file including the name of every author whose material is used in this package, along with the license under which their work is released'); ?></span>
+                    <span id="l_licensetext2"><?php echo _('I have included a License.txt file including the name of every author whose material is used in this package, along with the license under which their work is released.').' <strong>'._('Required').'</strong>'; ?></span>
                 </td>
             </tr>
             <tr>
-                <td colspan="4"><?php echo _('This package includes files released under:'); ?></td>
+                <td colspan="4"><?php echo _('This package includes files released under:').' <strong>'._('Must check at least one').'</strong>'; ?></td>
             </tr>
             <tr>
                 <td colspan="2" width="60"></td>
@@ -178,13 +178,13 @@ if($_GET['action'] == "submit")
             <tr>
                 <td colspan="2" width="60"></td>
                 <td colspan="2">
-                    <?php echo _('Files released under other licenses will be rejected unless it can be verified that the license is open.'); ?>
+                    <?php echo _('Files released under other licenses will be rejected unless it can be verified that the license is open.') ?>
                 </td>
             </tr>
             <tr>
                 <td><input type="checkbox" name="l_agreement" /></td>
                 <td colspan="3">
-                    <?php echo _('I recognize that if my file does not meet the above rules, it may be removed at any time without prior notice; I also assume the entire responsibility for any copyright violation that may result from not following the above rules.'); ?>
+                    <?php echo _('I recognize that if my file does not meet the above rules, it may be removed at any time without prior notice; I also assume the entire responsibility for any copyright violation that may result from not following the above rules.').' <strong>'._('Required').'</strong>'; ?>
                 </td>
             </tr>
             <tr>
@@ -194,7 +194,8 @@ if($_GET['action'] == "submit")
                     1. <?php echo _('Profanity'); ?><br />
                     2. <?php echo _('Explicit images'); ?><br />
                     3. <?php echo _('Hateful messages and/or images'); ?><br />
-                    4. <?php echo _('Any other content that may be unsuitable for children'); ?>
+                    4. <?php echo _('Any other content that may be unsuitable for children'); ?><br />
+                    <strong><?php echo _('Required'); ?></strong>
                 </td>
             </tr>
         </table>
