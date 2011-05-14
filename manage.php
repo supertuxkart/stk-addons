@@ -74,6 +74,8 @@ switch ($_GET['action'])
         else
         {
             set_config('xml_frequency',(int)$_POST['xml_frequency']);
+            set_config('allowed_addon_exts',mysql_real_escape_string($_POST['allowed_addon_exts']));
+            set_config('allowed_source_exts',mysql_real_escape_string($_POST['allowed_source_exts']));
         }
         echo _('Saved settings.').'<br />';
         break;

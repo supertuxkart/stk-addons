@@ -463,8 +463,8 @@ function type_check($path)
     if (!is_dir($path))
         return false;
     // Make a list of approved file types
-    // FIXME: Don't hardcode this
-    $approved_types = array('txt','b3d','xml','png','jpg','jpeg','music','ogg');
+    $approved_types = get_config('allowed_addon_exts');
+    $approved_types = explode(',',$approved_types);
     $removed_files = array();
 
     foreach (scandir($path) AS $file)
