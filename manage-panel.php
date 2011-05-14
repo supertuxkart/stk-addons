@@ -78,6 +78,7 @@ function settings_panel()
     echo '<tr><td>'._('XML Download Frequency').'</td><td><input type="text" name="xml_frequency" value="'.get_config('xml_frequency').'" size="6" maxlength="8" /></td></tr>';
     echo '<tr><td>'._('Permitted Addon Filetypes').'</td><td><input type="text" name="allowed_addon_exts" value="'.get_config('allowed_addon_exts').'" /></td></tr>';
     echo '<tr><td>'._('Permitted Source Archive Filetypes').'</td><td><input type="text" name="allowed_source_exts" value="'.get_config('allowed_source_exts').'" /></td></tr>';
+    echo '<tr><td>'._('Administrator Email').'</td><td><input type="text" name="admin_email" value="'.get_config('admin_email').'" /></td></tr>';
     echo '<tr><td></td><td><input type="submit" value="'._('Save Settings').'" /></td></tr>';
     echo '</table>';
 }

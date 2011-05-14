@@ -76,6 +76,7 @@ switch ($_GET['action'])
             set_config('xml_frequency',(int)$_POST['xml_frequency']);
             set_config('allowed_addon_exts',mysql_real_escape_string($_POST['allowed_addon_exts']));
             set_config('allowed_source_exts',mysql_real_escape_string($_POST['allowed_source_exts']));
+            set_config('admin_email',mysql_real_escape_string($_POST['admin_email']));
         }
         echo _('Saved settings.').'<br />';
         break;

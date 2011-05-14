@@ -33,18 +33,18 @@ $passage_ligne = "\n";
 	{
 		case "newAccount":
 			$message_html = "<html><head></head><body>Thank you for registering an account on the SuperTuxKart Add-Ons Manager. Please click <a href=\"http://".$_SERVER["SERVER_NAME"].$option[1]."?action=valid&amp;num=$option[0]\">here</a> to activate your account.<br />Username: ".$option[2]."</body></html>";
-			$sujet = "New Account at ".$_SERVER["SERVER_NAME"];
+			$subject = "New Account at ".$_SERVER["SERVER_NAME"];
 			break;
 		case "bug":
 			$message_html = "<html><head></head><body>Bug report :<br />User : ".$option[0]."<br />Description :".$option[1]." <br /><br /></body></html>";
-			$sujet = "stkaddons : bug report";
+			$subject = "stkaddons : bug report";
 			break;
 	}
 
 	$boundary = "-----=".md5(rand());
 
 	$header = "From: \"stkaddons@tuxfamily.org\"<stkaddons@tuxfamily.org>".$passage_ligne;
-	$header.= "Reply-to: \"xapantu@gmail.com\" <xapantu@gmail.com>".$passage_ligne;
+	$header.= "Reply-to: \"STK-Addons Administrator\" <".get_config('admin_email').">".$passage_ligne;
 	$header.= "MIME-Version: 1.0".$passage_ligne;
 	$header.= "Content-Type: multipart/alternative;".$passage_ligne." boundary=\"$boundary\"".$passage_ligne;
 	$message = $passage_ligne."--".$boundary.$passage_ligne;
@@ -53,7 +53,7 @@ $passage_ligne = "\n";
 	$message.= $passage_ligne.$message_html.$passage_ligne;
 	$message.= $passage_ligne."--".$boundary."--".$passage_ligne;
 	$message.= $passage_ligne."--".$boundary."--".$passage_ligne;
-	mail($mail,$sujet,$message,$header);
+	mail($mail,$subject,$message,$header);
 }
 ?>
 
