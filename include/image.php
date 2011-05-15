@@ -89,26 +89,34 @@ function img_label($text)
 {
     $write_dir = UP_LOCATION.'temp/';
     $read_dir = DOWN_LOCATION.'temp/';
+    $text_noaccent = preg_replace('/\W/s','_',$text);
 
-    if (!file_exists($write_dir.'im_'.$text.'.png'))
+    if (!file_exists($write_dir.'im_'.$text_noaccent.'.png'))
     {
-        $length = strlen($text);
+        $text_size = 11;
+        $text_angle = 90;
+        $font = ROOT.'include/DejaVuSans.ttf';
+        $bbox = imagettfbbox($text_size, $text_angle, $font, $text);
 
-        $font = 3;
-        $height = imagefontwidth($font) * $length;
-        $width = imagefontheight($font);
+        $min_x = min(array($bbox[0],$bbox[2],$bbox[4],$bbox[6]));
+        $max_x = max(array($bbox[0],$bbox[2],$bbox[4],$bbox[6]));
+        $min_y = min(array($bbox[1],$bbox[3],$bbox[5],$bbox[7]));
+        $max_y = max(array($bbox[1],$bbox[3],$bbox[5],$bbox[7]));
 
-        $image = imagecreate($width,$height);
+        $width = $max_x - $min_x + 2;
+        $height = $max_y - $min_y + 2;
 
-        $x = imagesx($image) - $width;
-        $y = imagesy($image) - $height;
-        $bgcolor = imagecolorallocate($image,200,200,200);
-        $textcolor = imagecolorallocate($image,0,0,0);
-        imagecolortransparent($image,$bgcolor);
-        imagestringup($image,$font,0,$height - 1,$text,$textcolor);
-        imagepng($image,$write_dir.'im_'.$text.'.png');
+        $image = imagecreatetruecolor($width, $height);
+
+        $bgcolor = imagecolorallocate($image,0,0,0);
+        imagecolortransparent($image, $bgcolor);
+        $textcolor = imagecolorallocate($image,2,2,2);
+
+        imagettftext($image, $text_size, $text_angle, $width, $height, $textcolor, $font, $text);
+
+        imagepng($image,$write_dir.'im_'.$text_noaccent.'.png');
         imagedestroy($image);
     }
-    return '<img src="'.$read_dir.'im_'.htmlentities($text).'.png'.'" alt="'.htmlentities($text).'" />';
+    return '<img src="'.$read_dir.'im_'.$text_noaccent.'.png'.'" alt="'.htmlentities($text).'" />';
 }
 ?>
