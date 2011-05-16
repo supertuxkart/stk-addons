@@ -102,8 +102,20 @@ if($_GET['action'] == "submit")
         if (($_GET['type'] == 'karts' || $_GET['type'] == 'tracks')
                 && strlen($_GET['name']) != 0)
         {
+            // Working with an already existing addon
             echo '<form id="formKart" enctype="multipart/form-data" action="upload.php?type='.$_GET['type'].'&amp;name='.$_GET['name'].'&amp;action=submit" method="POST">';
-            echo _('Please upload a new revision of your kart or track.').'<br />';
+            if ($_GET['action'] != 'file')
+            {
+                echo _('Please upload a new revision of your kart or track.').'<br />';
+            }
+            else
+            {
+                echo _('What type of file are you uploading?').'<br />';
+                echo '<select name="upload-type">
+                    <option value="source">'._('Source Archive').'</option>
+                    <option value="image">'._('Image File').' (.png, .jpg, .jpeg)</option>
+                    </select><br />';
+            }
         }
         else
         {
@@ -113,7 +125,7 @@ if($_GET['action'] == "submit")
         }
         ?>
         <label><?php echo _("File:"); ?><br /><input type="file" name="file_addon" /><br /></label>
-        <?php echo _('Supported file types are:'); ?> .zip<br /><br />
+        <?php echo _('Supported archive types are:'); ?> .zip<br /><br />
         <strong><?php echo _('Agreement:'); ?></strong><br />
         <table width="800" id="upload_agreement">
             <tr>

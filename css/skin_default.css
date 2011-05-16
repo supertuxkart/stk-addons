@@ -477,30 +477,6 @@ span.f_rc
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
 }
-span.f_fanmade
-{
-    display: inline-block;
-    background-color: #FFCCCC;
-    border: 1px solid #990000;
-    color: #990000;
-    margin: 1px;
-    padding: 3px;
-    white-space: nowrap;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-}
-span.f_hq
-{
-    display: inline-block;
-    background-color: #FFCCFF;
-    border: 1px solid #990099;
-    color: #990099;
-    margin: 1px;
-    padding: 3px;
-    white-space: nowrap;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-}
 span.f_dfsg
 {
     display: inline-block;
@@ -671,6 +647,26 @@ span.f_dfsg
     width: 100%;
 }
 
+/* Addon image tiles */
+div.image_thumb_container
+{
+    display: inline-block;
+    background: #CCCCDD;
+    border: 1px solid #666677;
+    border-radius: 3px;
+    padding: 3px;
+    margin: 1px;
+    min-width: 75px;
+    min-height: 75px;
+    text-align: center;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+}
+div.unapproved
+{
+    border: 1px solid #CC0000;
+    background: #DDCCCC
+}
 
 #addon_flags th
 {

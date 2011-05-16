@@ -95,6 +95,31 @@ switch ($_GET['save'])
         if ($edit_addon->remove())
             echo _('Deleted addon.').'<br />';
         break;
+    case 'approve':
+    case 'unapprove':
+        if (approve_file((int)$_GET['id'],$_GET['save']))
+            echo _('File updated.').'<br />';
+        break;
+    case 'setimage':
+        $edit_addon = new coreAddon($_GET['type']);
+        $edit_addon->selectById($_GET['name']);
+        if ($edit_addon->set_image((int)$_GET['id']))
+            echo _('Set image.').'<br />';
+        break;
+    case 'seticon':
+        if ($_GET['type'] != 'karts')
+            break;
+        $edit_addon = new coreAddon($_GET['type']);
+        $edit_addon->selectById($_GET['name']);
+        if ($edit_addon->set_image((int)$_GET['id'],'icon'))
+            echo _('Set icon.').'<br />';
+        break;
+    case 'deletefile':
+        $edit_addon = new coreAddon($_GET['type']);
+        $edit_addon->selectById($_GET['name']);
+        if ($edit_addon->delete_file((int)$_GET['id']))
+            echo _('Deleted file.').'<br />';
+        break;
 }
 ?>
     </div>
@@ -122,11 +147,35 @@ function loadAddons()
     echo '<ul>';
     while($addonLoader->next())
     {
+        if ($addonLoader->addonType == 'karts')
+        {
+            if ($addonLoader->addonCurrent['icon'] != 0)
+            {
+                $get_image_query = 'SELECT `file_path` FROM `'.DB_PREFIX.'files`
+                    WHERE `id` = '.(int)$addonLoader->addonCurrent['icon'].'
+                    AND `approved` = 1
+                    LIMIT 1';
+                $get_image_handle = sql_query($get_image_query);
+                if (mysql_num_rows($get_image_handle) == 1)
+                {
+                    $icon = mysql_fetch_assoc($get_image_handle);
+                    $icon_path = $icon['file_path'];
+                }
+                else
+                {
+                    $icon_path = 'image/kart-icon.png';
+                }
+            }
+            else
+            {
+                $icon_path = 'image/kart-icon.png';
+            }
+        }
         // Approved?
         if(($addonLoader->addonCurrent['status'] & F_APPROVED) == F_APPROVED)
         {
             echo '<li><a class="menu-item" href="javascript:loadFrame(\''.$addonLoader->addonCurrent['id'].'\',\'addons-panel.php?type='.$_GET['type'].'\')">';
-            if($_GET['type'] != "tracks") echo '<img class="icon"  src="image.php?type=small&amp;pic=images/'.$addonLoader->addonCurrent['image'].'" />';
+            if($_GET['type'] != "tracks") echo '<img class="icon"  src="image.php?type=small&amp;pic='.$icon_path.'" />';
             else echo '<img class="icon"  src="image/track-icon.png" />';
             echo $addonLoader->addonCurrent['name']."</a></li>";
         }
@@ -134,7 +183,7 @@ function loadAddons()
         {
             echo '<li><a class="menu-item unavailable" href="javascript:loadFrame(\''.$addonLoader->addonCurrent['id'].'\',\'addons-panel.php?type='.$_GET['type'].'\')">';
             if($_GET['type'] != "tracks")
-                echo '<img class="icon"  src="image.php?type=small&amp;pic=images/'.$addonLoader->addonCurrent['image'].'" />';
+                echo '<img class="icon"  src="image.php?type=small&amp;pic='.$icon_path.'" />';
             else echo '<img class="icon"  src="image/track-icon.png" />';
             echo $addonLoader->addonCurrent['name']."</a></li>";
         }

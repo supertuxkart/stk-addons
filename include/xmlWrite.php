@@ -102,7 +102,7 @@ function generateAssetXML()
     // Fetch kart list
     $querySql = 'SELECT `k`.*, `r`.`id` AS `fileid`,
             `r`.`creation_date` AS `date`,`r`.`revision`,`r`.`format`,
-            `r`.`image`,`r`.`status`, `u`.`user`
+            `r`.`image`,`r`.`icon`,`r`.`status`, `u`.`user`
 	FROM '.DB_PREFIX.'karts k
 	LEFT JOIN '.DB_PREFIX.'karts_revs r
 	ON (`k`.`id`=`r`.`addon_id`)
@@ -123,7 +123,38 @@ function generateAssetXML()
 	$writer->writeAttribute('uploader',$result['user']);
         $writer->writeAttribute('designer',$result['designer']);
         $writer->writeAttribute('description',$result['description']);
-	$writer->writeAttribute('image',DOWN_LOCATION.'images/'.$result['image']);
+        if ($result['icon'] != 0)
+        {
+            $get_image_query = 'SELECT `file_path` FROM `'.DB_PREFIX.'files`
+                WHERE `id` = '.(int)$result['icon'].'
+                AND `approved` = 1
+                LIMIT 1';
+            $get_image_handle = sql_query($get_image_query);
+            if (mysql_num_rows($get_image_handle) == 1)
+            {
+                $icon = mysql_fetch_assoc($get_image_handle);
+                if (file_exists(UP_LOCATION.$icon['file_path']))
+                {
+                    $writer->writeAttribute('icon',DOWN_LOCATION.$icon['file_path']);
+                }
+            }
+        }
+        if ($result['image'] != 0)
+        {
+            $get_image_query = 'SELECT `file_path` FROM `'.DB_PREFIX.'files`
+                WHERE `id` = '.(int)$result['image'].'
+                AND `approved` = 1
+                LIMIT 1';
+            $get_image_handle = sql_query($get_image_query);
+            if (mysql_num_rows($get_image_handle) == 1)
+            {
+                $image = mysql_fetch_assoc($get_image_handle);
+                if (file_exists(UP_LOCATION.$image['file_path']))
+                {
+                    $writer->writeAttribute('image',DOWN_LOCATION.$image['file_path']);
+                }
+            }
+        }
         $writer->writeAttribute('format',$result['format']);
         $writer->writeAttribute('revision',$result['revision']);
         $writer->writeAttribute('status',$result['status']);
@@ -156,7 +187,22 @@ function generateAssetXML()
 	$writer->writeAttribute('uploader',$result['user']);
         $writer->writeAttribute('designer',$result['designer']);
         $writer->writeAttribute('description',$result['description']);
-	$writer->writeAttribute('image',DOWN_LOCATION.'images/'.$result['image']);
+        if ($result['image'] != 0)
+        {
+            $get_image_query = 'SELECT `file_path` FROM `'.DB_PREFIX.'files`
+                WHERE `id` = '.(int)$result['image'].'
+                AND `approved` = 1
+                LIMIT 1';
+            $get_image_handle = sql_query($get_image_query);
+            if (mysql_num_rows($get_image_handle) == 1)
+            {
+                $image = mysql_fetch_assoc($get_image_handle);
+                if (file_exists(UP_LOCATION.$image['file_path']))
+                {
+                    $writer->writeAttribute('image',DOWN_LOCATION.$image['file_path']);
+                }
+            }
+        }
         $writer->writeAttribute('format',$result['format']);
         $writer->writeAttribute('revision',$result['revision']);
         $writer->writeAttribute('status',$result['status']);

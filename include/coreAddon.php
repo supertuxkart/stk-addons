@@ -30,10 +30,13 @@ class coreAddon
 
     function selectById($id, $rev = false)
     {
+        $icon = NULL;
+        if ($this->addonType == 'karts')
+            $icon = ' r.icon,';
         if (!$rev)
         {
             $querySql = 'SELECT a.*, r.id AS fileid, r.creation_date AS revision_timestamp,
-                    r.revision, r.format, r.image, r.status, r.moderator_note
+                    r.revision, r.format, r.image,'.$icon.' r.status, r.moderator_note
                 FROM '.DB_PREFIX.$this->addonType.' a
                 LEFT JOIN '.DB_PREFIX.$this->addonType.'_revs r
                 ON a.id = r.addon_id
@@ -43,7 +46,7 @@ class coreAddon
         else
         {
             $querySql = 'SELECT a.*, r.id AS fileid, r.creation_date AS revision_timestamp,
-                    r.revision, r.format, r.image, r.status, r.moderator_note
+                    r.revision, r.format, r.image,'.$icon.' r.status, r.moderator_note
                 FROM '.DB_PREFIX.$this->addonType.' a
                 LEFT JOIN '.DB_PREFIX.$this->addonType.'_revs r
                 ON a.id = r.addon_id
@@ -68,9 +71,12 @@ class coreAddon
 
     function selectByUser($id)
     {
+        $icon = NULL;
+        if ($this->addonType == 'karts')
+            $icon = ' r.icon,';
         $querySql = 'SELECT a.*, r.id AS fileid,
                 r.creation_date AS revision_timestamp, r.revision,
-                r.format, r.image, r.status, r.moderator_note
+                r.format, r.image,'.$icon.' r.status, r.moderator_note
             FROM '.DB_PREFIX.$this->addonType.' a
             LEFT JOIN '.DB_PREFIX.$this->addonType.'_revs r
             ON a.id = r.addon_id
@@ -85,7 +91,10 @@ class coreAddon
 
     function loadAll()
     {
-        $querySql = 'SELECT a.*, r.id AS fileid, r.revision, r.format, r.image, r.status
+        $icon = NULL;
+        if ($this->addonType == 'karts')
+            $icon = ' r.icon,';
+        $querySql = 'SELECT a.*, r.id AS fileid, r.revision, r.format, r.image,'.$icon.' r.status
             FROM '.DB_PREFIX.$this->addonType.' a
             LEFT JOIN '.DB_PREFIX.$this->addonType.'_revs r
             ON a.id = r.addon_id
@@ -142,24 +151,50 @@ class coreAddon
         writeNewsXML();
         return true;
     }
-
-    function setFile($filetype = "image")
+    
+    function set_image($image_id, $field = 'image')
     {
-        if($_SESSION['role']['manageaddons'] == true || $this->addonCurrent['user'] == $_SESSION['userid'])
+        if (!$_SESSION['role']['manageaddons'] && $this->addonCurrent['uploader'] != $_SESSION['userid'])
+            return false;
+
+        $set_image_query = 'UPDATE `'.DB_PREFIX.$this->addonType.'_revs`
+            SET `'.$field.'` = '.(int)$image_id.'
+            WHERE `addon_id` = \''.$this->addonCurrent['id'].'\'
+            AND `status` & '.F_LATEST;
+        $set_image_handle = sql_query($set_image_query);
+        if (!$set_image_handle)
+            return false;
+        return true;
+    }
+
+    function delete_file($file_id)
+    {
+        if (!$_SESSION['role']['manageaddons'] && $this->addonCurrent['uploader'] != $_SESSION['userid'])
+            return false;
+
+        // Get file path
+        $get_file_query = 'SELECT `file_path` FROM `'.DB_PREFIX.'files`
+            WHERE `id` = '.(int)$file_id.'
+            LIMIT 1';
+        $get_file_handle = sql_query($get_file_query);
+        if (!$get_file_handle)
+            return false;
+        if (mysql_num_rows($get_file_handle) == 1)
         {
-            if (isset($_FILES['fileSend']))
-            {
-                $file_path = UP_LOCATION.$_POST['fileType'].'/'.$this->addonCurrent[$filetype];
-        		if(file_exists($file_path))
-                {
-                    /* Remove the existing file before copy the new one. */
-                    /* FIXME: is it really needed? */
-                    unlink($file_path);
-                }
-                /* Move the file which has been sent to it permanent location. */
-                move_uploaded_file($_FILES['fileSend']['tmp_name'], $file_path);
-            }
+            $get_file = mysql_fetch_assoc($get_file_handle);
+            if (file_exists(UP_LOCATION.$get_file['file_path']))
+                unlink(UP_LOCATION.$get_file['file_path']);
         }
+
+        // Delete file record
+        $del_file_query = 'DELETE FROM `'.DB_PREFIX.'files`
+            WHERE `id` = '.(int)$file_id;
+        $del_file_handle = sql_query($del_file_query);
+        if(!$del_file_handle)
+            return false;
+        writeAssetXML();
+        writeNewsXML();
+        return true;
     }
 
     /** Set an information of the addon.
@@ -200,7 +235,37 @@ class coreAddon
             return false;
         if($_SESSION['role']['manageaddons'] != true)
             return false;
+
+        // Remove files associated with this addon
+        $get_files_query = 'SELECT * FROM `'.DB_PREFIX.'files`
+            WHERE `addon_id` = \''.$this->addonCurrent['id'].'\'
+            AND `addon_type` = \''.$this->addonType.'\'';
+        $get_files_handle = sql_query($get_files_query);
+        if (!$get_files_handle)
+        {
+            echo '<span class="error">'._('Failed to find files associated with this addon.').'</span><br />';
+            return false;
+        }
+        $num_files = mysql_num_rows($get_files_handle);
+        for ($i = 1; $i <= $num_files; $i++)
+        {
+            $get_file = mysql_fetch_assoc($get_files_handle);
+            if (file_exists(UP_LOCATION.$get_file['file_path']) && !unlink(UP_LOCATION.$get_file['file_path']))
+            {
+                echo '<span class="error">'._('Failed to delete file:').' '.$get_file['file_path'].'</span><br />';
+            }
+        }
         
+        // Remove file records associated with addon
+        $remove_file_query = 'DELETE FROM `'.DB_PREFIX.'files`
+            WHERE `addon_id` = \''.$this->addonCurrent['id'].'\'
+            AND `addon_type` = \''.$this->addonType.'\'';
+        $remove_file_handle = sql_query($remove_file_query);
+        if (!$remove_file_handle)
+        {
+            echo '<span class="error">'._('Failed to remove file records for this addon.').'</span><br />';
+        }
+
         // Get revisions
         $getRevsQuery = 'SELECT * FROM `'.DB_PREFIX.$this->addonType.'_revs`
             WHERE `addon_id` = \''.$this->addonCurrent['id'].'\'';
@@ -221,12 +286,6 @@ class coreAddon
                 echo _('Failed to delete file:').' '.UP_LOCATION.$getRevsResult['id'].'.zip<br />';
                 return false;
             }
-            // Delete image file
-            if (file_exists(UP_LOCATION.'images/'.$getRevsResult['image']) && !unlink(UP_LOCATION.'images/'.$getRevsResult['image']))
-            {
-                echo _('Failed to delete file:').' '.UP_LOCATION.'images/'.$getRevsResult['image'].'<br />';
-                return false;
-            }
             // Delete entry
             if (!sql_remove_where($this->addonType.'_revs', 'id', $getRevsResult['id']))
             {
@@ -234,12 +293,14 @@ class coreAddon
                 return false;
             }
         }
+
         // Remove addon entry
         if (!sql_remove_where($this->addonType, 'id', $this->addonCurrent['id']))
         {
-            echo _('Failed to remove addon.').'<br />';
+            echo '<span class="error">'._('Failed to remove addon.').'</span><br />';
             return false;
         }
+
         writeAssetXML();
         writeNewsXML();
         return true;
@@ -272,15 +333,23 @@ class coreAddon
                 echo '<span class="f_beta">'._('Beta').'</span>';
         if ($this->addonCurrent['status'] & F_RC)
                 echo '<span class="f_rc">'._('Release-Candidate').'</span>';
-        if ($this->addonCurrent['status'] & F_FANMADE)
-                echo '<span class="f_fanmade">'._('Fan-Made').'</span>';
-        if ($this->addonCurrent['status'] & F_HQ)
-                echo '<span class="f_hq">'._('High-Quality').'</span>';
         if ($this->addonCurrent['status'] & F_DFSG)
                 echo '<span class="f_dfsg">'._('DFSG Compliant').'</span>';
 
-        echo '<br /><img class="preview" src="image.php?type=big&amp;pic=images/'.$this->addonCurrent['image'].'" style="float: right;" />
-        '.$description.'
+        // Get image
+        $image_query = 'SELECT `file_path` FROM `'.DB_PREFIX.'files`
+            WHERE `id` = '.$this->addonCurrent['image'].'
+            AND `approved` = 1
+            LIMIT 1';
+        $image_handle = sql_query($image_query);
+        if ($image_handle && mysql_num_rows($image_handle) == 1)
+        {
+            $image_result = mysql_fetch_assoc($image_handle);
+            echo '<br /><img class="preview" src="image.php?type=big&amp;pic='.$image_result['file_path'].'" style="float: right;" />';
+        }
+        else
+            echo '<br />';
+        echo $description.'
         <table>
         <tr><td><strong>'._('Designer:').'</strong></td><td>'.$this->addonCurrent['designer'].'</td></tr>
         <tr><td><strong>'._('Upload date:').'</strong></td><td>'.$this->addonCurrent['revision_timestamp'].'</td></tr>
@@ -326,7 +395,133 @@ class coreAddon
             $addonRevs->next();
         }
         echo '</table>';
+        
+        global $user;
+        if ($user->logged_in && $this->addonCurrent['uploader'] == $_SESSION['userid'])
+        {
+            echo '<form method="POST" action="upload.php?type='.$this->addonType.'&amp;name='.$this->addonCurrent['id'].'&amp;action=file">';
+            echo '<input type="submit" value="'._('Upload Image or Source Archive').'" />';
+            echo '</form><br />';
+        }
+        
+        // Show list of images associated with this addon
+        echo '<h3>'._('Images').'</h3>';
+        $imageFilesQuery = 'SELECT * FROM `'.DB_PREFIX.'files`
+            WHERE `addon_type` = \''.$this->addonType.'\'
+            AND `addon_id` = \''.$this->addonCurrent['id'].'\'
+            AND `file_type` = \'image\'';
+        $imageFilesHandle = sql_query($imageFilesQuery);
+    
+        // Create an array of all of the images that the current user can see
+        $image_files = array();
+        for ($i = 1; $i <= mysql_num_rows($imageFilesHandle); $i++)
+        {
+            $imageFilesResult = mysql_fetch_assoc($imageFilesHandle);
+            if ($user->logged_in &&
+                    ($this->addonCurrent['uploader'] == $_SESSION['userid']
+                    || $_SESSION['role']['manageaddons']))
+            {
+                $image_files[] = $imageFilesResult;
+                continue;
+            }
+            if ($imageFilesResult['approved'] == 1)
+            {
+                $image_files[] = $imageFilesResult;
+            }
+        }
+        
+        if (count($image_files) == 0)
+        {
+            echo _('No images have been uploaded for this addon yet.').'<br />';
+        }
+        else
+        {
+            foreach ($image_files AS $source_file)
+            {
+                if ($source_file['approved'] == 1)
+                    $div_style = 'image_thumb_container';
+                else
+                    $div_style = 'image_thumb_container unapproved';
+                echo '<div class="'.$div_style.'">';
+                echo '<a href="'.DOWN_LOCATION.$source_file['file_path'].'">';
+                echo '<img src="image.php?type=medium&amp;pic='.$source_file['file_path'].'" />';
+                echo '</a><br />';
+                if ($user->logged_in)
+                {
+                    if ($_SESSION['role']['manageaddons'])
+                    {
+                        if ($source_file['approved'] == 1)
+                            echo '<a href="'.$this->addonCurrent['permUrl'].'&amp;save=unapprove&amp;id='.$source_file['id'].'">'._('Unapprove').'</a>';
+                        else
+                            echo '<a href="'.$this->addonCurrent['permUrl'].'&amp;save=approve&amp;id='.$source_file['id'].'">'._('Approve').'</a>';
+                        echo '<br />';
+                    }
+                    if ($_SESSION['role']['manageaddons'] || $this->addonCurrent['uploader'] == $_SESSION['userid'])
+                    {
+                        if ($this->addonType == 'karts')
+                        {
+                            if ($this->addonCurrent['icon'] != $source_file['id'])
+                            {
+                                echo '<a href="'.$this->addonCurrent['permUrl'].'&amp;save=seticon&amp;id='.$source_file['id'].'">'._('Set Icon').'</a><br />';
+                            }
+                        }
+                        if ($this->addonCurrent['image'] != $source_file['id'])
+                        {
+                            echo '<a href="'.$this->addonCurrent['permUrl'].'&amp;save=setimage&amp;id='.$source_file['id'].'">'._('Set Image').'</a><br />';
+                        }
+                        echo '<a href="'.$this->addonCurrent['permUrl'].'&amp;save=deletefile&amp;id='.$source_file['id'].'">'._('Delete File').'</a><br />';
+                    }
+                }
+                echo '</div>';
+            }
+        }
 
+        // Show list of source files
+        echo '<h3>'._('Source Files').'</h3>';
+        $sourceFilesQuery = 'SELECT * FROM `'.DB_PREFIX.'files`
+            WHERE `addon_type` = \''.$this->addonType.'\'
+            AND `addon_id` = \''.$this->addonCurrent['id'].'\'
+            AND `file_type` = \'source\'';
+        $sourceFilesHandle = sql_query($sourceFilesQuery);
+    
+        // Create an array of all of the source files that the current user can see
+        $source_files = array();
+        for ($i = 1; $i <= mysql_num_rows($sourceFilesHandle); $i++)
+        {
+            $sourceFilesResult = mysql_fetch_assoc($sourceFilesHandle);
+            if ($user->logged_in &&
+                    ($this->addonCurrent['uploader'] == $_SESSION['userid']
+                    || $_SESSION['role']['manageaddons']))
+            {
+                $source_files[] = $sourceFilesResult;
+                continue;
+            }
+            if ($sourceFilesResult['approved'] == 1)
+            {
+                $source_files[] = $sourceFilesResult;
+            }
+        }
+        
+        if (count($source_files) == 0)
+        {
+            echo _('No source files have been uploaded for this addon yet.').'<br />';
+        }
+        else
+        {
+            echo '<table>';
+            $n = 1;
+            foreach ($source_files AS $source_file)
+            {
+                echo '<tr>';
+                $approved = NULL;
+                if ($source_file['approved'] == 0) $approved = ' ('._('Not Approved').')';
+                echo '<td>'._('Source file').' '.$n.$approved.'</td>';
+                echo '<td><a href="'.DOWN_LOCATION.$source_file['file_path'].'">'._('Download').'</a></td>';
+                // FIXME: Add approval button
+                echo '</tr>';
+            }
+            echo '</table>';
+        }
     }
 
     /* FIXME: this function needs a lot of cleanup / a rewrite. */
@@ -375,9 +570,7 @@ class coreAddon
             <th>'.img_label(_('Release-Candidate')).'</th>
             <th>'.img_label(_('Latest')).'</th>';
         if ($_SESSION['role']['manageaddons'])
-            echo '<th>'.img_label(_('Fan-Made')).'</th>
-                <th>'.img_label(_('High-Quality')).'</th>
-                <th>'.img_label(_('DFSG Compliant')).'</th>
+            echo '<th>'.img_label(_('DFSG Compliant')).'</th>
                 <th>'.img_label(_('Featured')).'</th>';
         echo '<th>'.img_label(_('Invalid Textures')).'</th>';
         echo '</tr>';
@@ -458,32 +651,6 @@ class coreAddon
 
             if ($_SESSION['role']['manageaddons'])
             {
-                // F_FANMADE
-                echo '<td>';
-                if ($addonRevs->addonCurrent['status'] & F_FANMADE)
-                {
-                    echo '<input type="checkbox" name="fanmade-'.$addonRevs->addonCurrent['revision'].'" checked />';
-                }
-                else
-                {
-                    echo '<input type="checkbox" name="fanmade-'.$addonRevs->addonCurrent['revision'].'" />';
-                }
-                echo '</td>';
-                $fields[] = 'fanmade-'.$addonRevs->addonCurrent['revision'];
-
-                // F_HQ
-                echo '<td>';
-                if ($addonRevs->addonCurrent['status'] & F_HQ)
-                {
-                    echo '<input type="checkbox" name="hq-'.$addonRevs->addonCurrent['revision'].'" checked />';
-                }
-                else
-                {
-                    echo '<input type="checkbox" name="hq-'.$addonRevs->addonCurrent['revision'].'" />';
-                }
-                echo '</td>';
-                $fields[] = 'hq-'.$addonRevs->addonCurrent['revision'];
-
                 // F_DFSG
                 echo '<td>';
                 if ($addonRevs->addonCurrent['status'] & F_DFSG)
@@ -496,7 +663,7 @@ class coreAddon
                 }
                 echo '</td>';
                 $fields[] = 'dfsg-'.$addonRevs->addonCurrent['revision'];
-
+                
                 // F_FEATURED
                 echo '<td>';
                 if ($addonRevs->addonCurrent['status'] & F_FEATURED)
@@ -532,7 +699,7 @@ class coreAddon
         echo '</form><br />';
         
         // Moderator notes
-        echo '<strong>'._('Notes:').'</strong><br />';
+        echo '<strong>'._('Notes from Moderator to Submitter:').'</strong><br />';
         if ($_SESSION['role']['manageaddons'])
             echo '<form method="POST" action="'.$this->addonCurrent['permUrl'].'&amp;save=notes">';
         $addonRevs = new coreAddon($this->addonType);
@@ -716,12 +883,6 @@ function update_status($type,$addon_id,$fields)
                 case 'rc':
                     $status[$revision] += F_RC;
                     break;
-                case 'fanmade':
-                    $status[$revision] += F_FANMADE;
-                    break;
-                case 'hq':
-                    $status[$revision] += F_HQ;
-                    break;
                 case 'dfsg':
                     $status[$revision] += F_DFSG;
                     break;
@@ -835,5 +996,31 @@ function format_compat($format,$filetype)
             break;
     }
     return _('Unknown');
+}
+
+function approve_file($file_id,$approve = 'approve')
+{
+    if ($approve == 'approve')
+        $approve = 1;
+    else
+        $approve = 0;
+
+    if (!$_SESSION['role']['manageaddons'])
+    {
+        echo '<span class="error">'._('Insufficient permissions.').'</span><br />';
+        return false;
+    }
+
+    $approve_query = 'UPDATE `'.DB_PREFIX.'files`
+        SET `approved` = '.$approve.'
+        WHERE `id` = '.(int)$file_id;
+    $approve_handle = sql_query($approve_query);
+    if (!$approve_handle)
+    {
+        return false;
+    }
+    writeAssetXML();
+    writeNewsXML();
+    return true;
 }
 ?>

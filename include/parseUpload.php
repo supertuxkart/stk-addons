@@ -54,19 +54,74 @@ function parseUpload($file,$revision = false)
             return false;
     }
 
-    // Check file extension
-    if (!preg_match('/\.zip$/i',$file['name']))
+    if (!isset($_POST['upload-type'])) $_POST['upload-type'] = NULL;
+    
+    // FIXME: Source upload doesn't work yet
+    if ($_POST['upload-type'] == 'source')
     {
-        echo '<span class="error">'._('The file you uploaded was not the correct type.')."</span><br />";
+        echo '<span class="error">Source file upload is not implemented yet.</span><br />';
         return false;
     }
-    $fileext = 'zip';
+    
+    // Check file-extension for uploaded file
+    if ($_POST['upload-type'] == 'image')
+    {
+        if (!preg_match('/\.(png|jpg|jpeg)$/i',$file['name']))
+        {
+            echo '<span class="error">'._('Uploaded image files must be either PNG or Jpeg files.').'</span><br />';
+            return false;
+        }
+    }
+    else
+    {
+        // File extension must be .zip
+        if (!preg_match('/\.zip$/i',$file['name']))
+        {
+            echo '<span class="error">'._('The file you uploaded was not the correct type.')."</span><br />";
+            return false;
+        }
+    }
+    $fileext = pathinfo($file['name'], PATHINFO_EXTENSION);
 
     // Generate a unique file name for the uploaded file
     $fileid = uniqid(true);
+    
+    // Handle image uploads
+    if ($_POST['upload-type'] == 'image')
+    {
+        // Make sure file doesn't already exist
+        while (file_exists(UP_LOCATION.'images/'.$fileid.'.'.$fileext))
+            $fileid = uniqid();
+        if (!move_uploaded_file($file['tmp_name'],UP_LOCATION.'images/'.$fileid.'.'.$fileext)) {
+            echo '<span class="error">'._('Failed to move uploaded file.');
+            return false;
+        }
+        
+        // Add database record
+        $newImageQuery = 'INSERT INTO `'.DB_PREFIX.'files`
+            (`addon_id`,`addon_type`,`file_type`,`file_path`)
+            VALUES
+            (\''.addon_id_clean($_GET['name']).'\',
+            \''.mysql_real_escape_string($_GET['type']).'\',
+            \'image\',
+            \'images/'.$fileid.'.'.$fileext.'\')';
+        $newImageHandle = sql_query($newImageQuery);
+        if (!$newImageHandle)
+        {
+            echo '<span class="error">'._('Failed to associate image file with addon.').'</span><br />';
+            unlink(UP_LOCATION.'images/'.$fileid.'.'.$fileext);
+            return false;
+        }
+        
+        echo _('Successfully uploaded image.').'<br />';
+        echo '<span style="font-size: large"><a href="addons.php?type='.$_GET['type'].'&amp;name='.$_GET['name'].'">'._('Continue.').'</a></span><br />';
+        return true;
+    }
+
+    // Make sure file doesn't already exist
     while (file_exists(UP_LOCATION.$fileid.'.'.$fileext))
         $fileid = uniqid();
-
+    
     // Move the archive to a working directory
     mkdir(UP_LOCATION.'temp/'.$fileid);
     if (!move_uploaded_file($file['tmp_name'],UP_LOCATION.'temp/'.$fileid.'/'.$fileid.'.'.$fileext)) {
@@ -137,6 +192,13 @@ function parseUpload($file,$revision = false)
         return false;
     }
 
+    // Get addon id
+    $addon_id = NULL;
+    if (isset($_GET['name']))
+        $addon_id = addon_id_clean($_GET['name']);
+    if (!preg_match('/^[a-z0-9\-]+_?[0-9]*$/i',$addon_id) || $addon_id == NULL)
+        $addon_id = generate_addon_id($addon_type,$parsed_xml['attributes']);
+
     // Save addon icon or screenshot
     if ($addon_type == 'tracks')
     {
@@ -156,6 +218,27 @@ function parseUpload($file,$revision = false)
     // Save file
     copy($image_file,UP_LOCATION.'images/'.$fileid.'.'.$imageext[1]);
     $parsed_xml['attributes']['image'] = $fileid.'.'.$imageext[1];
+
+    // Record image file in database
+    $newImageQuery = 'INSERT INTO `'.DB_PREFIX.'files`
+        (`addon_id`,`addon_type`,`file_type`,`file_path`)
+        VALUES
+        (\''.$addon_id.'\',
+        \''.$addon_type.'\',
+        \'image\',
+        \'images/'.$fileid.'.'.$imageext[1].'\')';
+    $newImageHandle = sql_query($newImageQuery);
+    if (!$newImageHandle)
+    {
+        echo '<span class="error">'._('Failed to associate image file with addon.').'</span><br />';
+        unlink(UP_LOCATION.'images/'.$fileid.'.'.$imageext[1]);
+        $parsed_xml['attributes']['image'] = 0;
+    }
+    else
+    {
+        // Get ID of previously inserted image
+        $parsed_xml['attributes']['image'] = mysql_insert_id();
+    }
 
     // Initialize the status flag
     $parsed_xml['attributes']['status'] = 0;
@@ -182,13 +265,6 @@ function parseUpload($file,$revision = false)
         rmdir_recursive(UP_LOCATION.'temp/'.$fileid);
         return false;
     }
-
-    // Get addon id
-    $addon_id = NULL;
-    if (isset($_GET['name']))
-        $addon_id = addon_id_clean($_GET['name']);
-    if (!preg_match('/^[a-z0-9\-]+_?[0-9]*$/i',$addon_id) || $addon_id == NULL)
-        $addon_id = generate_addon_id($addon_type,$parsed_xml['attributes']);
 
     // Set first revision to be "latest"
     if ($revision == false)

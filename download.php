@@ -32,7 +32,7 @@ if (!preg_match('/^[a-z]+$/i',$dir))
     exit;
 }
 // Make sure file name is not unsafe
-if (!preg_match('/^[a-z0-9\-_\ ]+\.[a-z0-9]+$/i',$file))
+if (!preg_match('/^[\w\-\ ]+\.[a-z0-9]+$/i',$file))
 {
     // File is unsafe - throw a 404 error
     header("HTTP/1.0 404 Not Found");
@@ -40,9 +40,10 @@ if (!preg_match('/^[a-z0-9\-_\ ]+\.[a-z0-9]+$/i',$file))
 }
 
 if ($dir != 'assets')
-    $filepath = UP_LOCATION.$dir.'/'.$file;
+    $assetpath = $dir.'/'.$file;
 else
-    $filepath = UP_LOCATION.$file;
+    $assetpath = $file;
+$filepath = UP_LOCATION.$assetpath;
 
 if (!file_exists($filepath))
 {
@@ -94,6 +95,12 @@ switch ($ext) {
 }
 $mtime = filemtime($filepath);
 $mtimestring = gmdate('D, d M Y H:i:s',$mtime);
+
+// Update download count for addons
+$counterQuery = 'UPDATE `'.DB_PREFIX.'files`
+    SET `downloads` = `downloads` + 1
+    WHERE `file_path` = \''.$assetpath.'\'';
+$counterHandle = sql_query($counterQuery);
 
 header("Pragma: public");
 header("Content-Type: $ctype");

@@ -15,7 +15,21 @@ CREATE TABLE `config` (
 INSERT INTO `config`
 (`name`,`value`)
 VALUES
-('xml_frequency','172800');
+('xml_frequency','172800'),
+('allowed_addon_exts','txt,b3d,xml,png,jpg,jpeg,music,ogg'),
+('allowed_source_exts','txt,blend,png,jpg,jpeg,xcf,psd,wav,ogg,flac,xml'),
+('admin_email','webmaster@localhost');
+
+CREATE TABLE `files` (
+    `id` int(11) NOT NULL auto_increment,
+    `addon_id` varchar(30) NOT NULL,
+    `addon_type` ENUM('karts','tracks'),
+    `file_type` ENUM('source','image','addon'),
+    `file_path` text NOT NULL,
+    `approved` int(1) NOT NULL default 0,
+    `downloads` int UNSIGNED NOT NULL default 0,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `help` (
   `user` int(11) NOT NULL,
@@ -54,17 +68,18 @@ CREATE TABLE `karts` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `karts_revs` (
-  `id` char(23) NOT NULL,
-  `addon_id` varchar(30) NOT NULL,
-  `creation_date` timestamp NOT NULL default CURRENT_TIMESTAMP,
-  `revision` tinyint(4) NOT NULL default '1',
-  `format` tinyint(4) NOT NULL,
-  `image` tinytext NOT NULL,
-  `status` mediumint(9) unsigned NOT NULL default '0',
-  `moderator_note` varchar(255) NULL default NULL,
-  UNIQUE KEY `id` (`id`),
-  KEY `track_id` (`addon_id`),
-  KEY `status` (`status`)
+    `id` char(23) NOT NULL,
+    `addon_id` varchar(30) NOT NULL,
+    `creation_date` timestamp NOT NULL default CURRENT_TIMESTAMP,
+    `revision` tinyint(4) NOT NULL default '1',
+    `format` tinyint(4) NOT NULL,
+    `icon` int UNSIGNED NOT NULL default '0',
+    `image` int UNSIGNED NOT NULL default '0',
+    `status` mediumint(9) unsigned NOT NULL default '0',
+    `moderator_note` varchar(255) NULL default NULL,
+    UNIQUE KEY `id` (`id`),
+    KEY `track_id` (`addon_id`),
+    KEY `status` (`status`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `news` (
@@ -113,17 +128,17 @@ CREATE TABLE `tracks` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tracks_revs` (
-  `id` char(23) NOT NULL,
-  `addon_id` varchar(30) NOT NULL,
-  `creation_date` timestamp NOT NULL default CURRENT_TIMESTAMP,
-  `revision` tinyint(4) NOT NULL default '1',
-  `format` tinyint(4) NOT NULL,
-  `image` tinytext NOT NULL,
-  `status` mediumint(9) unsigned NOT NULL default '0',
-  `moderator_note` varchar(255) NULL default NULL,
-  UNIQUE KEY `id` (`id`),
-  KEY `track_id` (`addon_id`),
-  KEY `status` (`status`)
+    `id` char(23) NOT NULL,
+    `addon_id` varchar(30) NOT NULL,
+    `creation_date` timestamp NOT NULL default CURRENT_TIMESTAMP,
+    `revision` tinyint(4) NOT NULL default '1',
+    `format` tinyint(4) NOT NULL,
+    `image` int UNSIGNED NOT NULL default '0',
+    `status` mediumint(9) unsigned NOT NULL default '0',
+    `moderator_note` varchar(255) NULL default NULL,
+    UNIQUE KEY `id` (`id`),
+    KEY `track_id` (`addon_id`),
+    KEY `status` (`status`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `users` (
