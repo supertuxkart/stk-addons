@@ -798,6 +798,11 @@ class coreAddon
         // Add revision entry
         $fields = array('id','addon_id','revision','format','image','status');
         $values = array($fileid,$addonid,$rev,$attributes['version'],$attributes['image'],$attributes['status']);
+        if ($this->addonType == 'karts')
+        {
+            $fields[] = 'icon';
+            $values[] = $attributes['image'];
+        }
         // Add moderator message if available
         if (!empty($moderator_message))
         {
