@@ -175,7 +175,7 @@ if($_GET['action'] == "submit")
             <tr>
                 <td colspan="2" width="60"></td>
                 <td><input type="checkbox" name="license_pd" /></td>
-                <td><?php echo _('Public Domain'); ?></td>
+                <td><?php echo _('CC0 (Public Domain)'); ?></td>
             </tr>
             <tr>
                 <td colspan="2" width="60"></td>
