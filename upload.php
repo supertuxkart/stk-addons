@@ -78,11 +78,11 @@ if($_GET['action'] == "submit")
         // Generate a note to moderators for license verification
         $moderator_message = NULL;
         if (isset($_POST['license_other']))
-            $moderator_message .= 'Verify "other license"'."\n";
+            $moderator_message .= 'Auto-message: Moderator: Please verify that license is "free"'."\n";
         if ($_POST['l_author'] == 1)
-            $moderator_message .= 'Verify sole author'."\n";
+            $moderator_message .= 'Auto-message: Content is solely created by uploader.'."\n";
         else
-            $moderator_message .= 'Verify open content'."\n";
+            $moderator_message .= 'Auto-message: Content contains third-party open content.'."\n";
         if (isset($_GET['name']))
         {
             parseUpload($_FILES['file_addon'],true);
