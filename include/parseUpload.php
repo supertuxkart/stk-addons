@@ -27,31 +27,11 @@ function parseUpload($file,$revision = false)
     }
 
     // Check for file upload errors
-    switch ($file['error'])
+    $upload_error = file_upload_error($file);
+    if ($upload_error !== false)
     {
-        default:
-            echo '<span class="error">'._('Unknown file upload error.')."</span><br />";
-            return false;
-        case UPLOAD_ERR_OK:
-            break;
-        case UPLOAD_ERR_INI_SIZE:
-            echo '<span class="error">'._('Uploaded file is too large.')."</span><br />";
-            return false;
-        case UPLOAD_ERR_FORM_SIZE:
-            echo '<span class="error">'._('Uploaded file is too large.')."</span><br />";
-            return false;
-        case UPLOAD_ERR_PARTIAL:
-            echo '<span class="error">'._('Uploaded file is incomplete.')."</span><br />";
-            return false;
-        case UPLOAD_ERR_NO_FILE:
-            echo '<span class="error">'._('No file was uploaded.')."</span><br />";
-            return false;
-        case UPLOAD_ERR_NO_TMP_DIR:
-            echo '<span class="error">'._('There is no TEMP directory to store the uploaded file in.')."</span><br />";
-            return false;
-        case UPLOAD_ERR_CANT_WRITE:
-            echo '<span class="error">'._('Unable to write uploaded file to disk.')."</span><br />";
-            return false;
+        echo '<span class="error">'.$upload_error.'</span><br />'."\n";
+        return false;
     }
 
     if (!isset($_POST['upload-type'])) $_POST['upload-type'] = NULL;
@@ -74,8 +54,8 @@ function parseUpload($file,$revision = false)
     }
     else
     {
-        // File extension must be .zip
-        if (!preg_match('/\.zip$/i',$file['name']))
+        // File extension must be .zip, .tgz, .tar, .tar.gz
+        if (!preg_match('/\.(zip|tgz|tar|tar\.gz)$/i',$file['name']))
         {
             echo '<span class="error">'._('The file you uploaded was not the correct type.')."</span><br />";
             return false;
@@ -86,12 +66,19 @@ function parseUpload($file,$revision = false)
     // Generate a unique file name for the uploaded file
     $fileid = uniqid(true);
     
+    // Set upload directory
+    if ($_POST['upload-type'] == 'image')
+        $file_dir = 'images/';
+    else
+        $file_dir = NULL;
+    
+    // Make sure file at this path doesn't already exist
+    while (file_exists(UP_LOCATION.$file_dir.$fileid.'.'.$fileext))
+        $fileid = uniqid();
+    
     // Handle image uploads
     if ($_POST['upload-type'] == 'image')
     {
-        // Make sure file doesn't already exist
-        while (file_exists(UP_LOCATION.'images/'.$fileid.'.'.$fileext))
-            $fileid = uniqid();
         if (!move_uploaded_file($file['tmp_name'],UP_LOCATION.'images/'.$fileid.'.'.$fileext)) {
             echo '<span class="error">'._('Failed to move uploaded file.');
             return false;
@@ -117,10 +104,6 @@ function parseUpload($file,$revision = false)
         echo '<span style="font-size: large"><a href="addons.php?type='.$_GET['type'].'&amp;name='.$_GET['name'].'">'._('Continue.').'</a></span><br />';
         return true;
     }
-
-    // Make sure file doesn't already exist
-    while (file_exists(UP_LOCATION.$fileid.'.'.$fileext))
-        $fileid = uniqid();
     
     // Move the archive to a working directory
     mkdir(UP_LOCATION.'temp/'.$fileid);
@@ -142,6 +125,21 @@ function parseUpload($file,$revision = false)
             $archive->extractTo(UP_LOCATION.'temp/'.$fileid.'/');
             $archive->close();
             unlink(UP_LOCATION.'temp/'.$fileid.'/'.$fileid.'.zip');
+            break;
+        case 'tar':
+        case 'gz':
+        case 'tgz':
+            require_once('Archive/Tar.php');
+            $archive = new Archive_Tar(UP_LOCATION.'temp/'.$fileid.'/'.$fileid.'.'.$fileext);
+            if (!$archive)
+            {
+                echo '<span class="error">'._('Could not open archive file. It may be corrupted.').'</span><br />';
+                unlink(UP_LOCATION.'temp/'.$fileid.'/'.$fileid.'.'.$fileext);
+                rmdir(UP_LOCATION.'temp/'.$fileid);
+                return false;
+            }
+            $archive->extract(UP_LOCATION.'temp/'.$fileid.'/');
+            unlink(UP_LOCATION.'temp/'.$fileid.'/'.$fileid.'.'.$fileext);
             break;
         default:
             echo '<span class="error">'._('Unknown archive type.').'</span><br />';
@@ -301,6 +299,33 @@ function parseUpload($file,$revision = false)
     writeNewsXML();
     echo _('Successfully uploaded add-on.').'<br />';
     echo '<span style="font-size: large"><a href="addons.php?type='.$addon_type.'&amp;name='.$addon_id.'">'._('Continue.').'</a></span><br />';
+}
+
+function file_upload_error($upload)
+{
+    if (!is_array($upload))
+    {
+        return _('Upload is invalid.');
+    }
+    switch ($upload['error'])
+    {
+        default:
+            return _('Unknown file upload error.');
+        case UPLOAD_ERR_OK:
+            return false;
+        case UPLOAD_ERR_INI_SIZE:
+            return _('Uploaded file is too large.');
+        case UPLOAD_ERR_FORM_SIZE:
+            return _('Uploaded file is too large.');
+        case UPLOAD_ERR_PARTIAL:
+            return _('Uploaded file is incomplete.');
+        case UPLOAD_ERR_NO_FILE:
+            return _('No file was uploaded.');
+        case UPLOAD_ERR_NO_TMP_DIR:
+            return _('There is no TEMP directory to store the uploaded file in.');
+        case UPLOAD_ERR_CANT_WRITE:
+            return _('Unable to write uploaded file to disk.');
+    }
 }
 
 function find_xml($dir)

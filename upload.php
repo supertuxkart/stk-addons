@@ -125,7 +125,7 @@ if($_GET['action'] == "submit")
         }
         ?>
         <label><?php echo _("File:"); ?><br /><input type="file" name="file_addon" /><br /></label>
-        <?php echo _('Supported archive types are:'); ?> .zip<br /><br />
+        <?php echo _('Supported archive types are:'); ?> .zip, .tgz, .tar, .tar.gz<br /><br />
         <strong><?php echo _('Agreement:'); ?></strong><br />
         <table width="800" id="upload_agreement">
             <tr>
