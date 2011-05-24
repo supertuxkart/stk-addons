@@ -46,7 +46,7 @@ function parseUpload($file,$revision = false)
     // Check file-extension for uploaded file
     if ($_POST['upload-type'] == 'image')
     {
-        if (!preg_match('/\.(png|jpg|jpeg)$/i',$file['name']))
+        if (!preg_match('/\.(png|jpg|jpeg)$/i',$file['name'],$fileext))
         {
             echo '<span class="error">'._('Uploaded image files must be either PNG or Jpeg files.').'</span><br />';
             return false;
@@ -54,14 +54,14 @@ function parseUpload($file,$revision = false)
     }
     else
     {
-        // File extension must be .zip, .tgz, .tar, .tar.gz
-        if (!preg_match('/\.(zip|tgz|tar|tar\.gz)$/i',$file['name']))
+        // File extension must be .zip, .tgz, .tar, .tar.gz, tar.bz2, .tbz
+        if (!preg_match('/\.(zip|t[bg]z|tar|tar\.gz|tar\.bz2)$/i',$file['name'],$fileext))
         {
             echo '<span class="error">'._('The file you uploaded was not the correct type.')."</span><br />";
             return false;
         }
     }
-    $fileext = pathinfo($file['name'], PATHINFO_EXTENSION);
+    $fileext = $fileext[1];
 
     // Generate a unique file name for the uploaded file
     $fileid = uniqid(true);
@@ -113,40 +113,11 @@ function parseUpload($file,$revision = false)
     }
 
     // Extract archive
-    switch ($fileext) {
-        case 'zip':
-            $archive = new ZipArchive;
-            if (!$archive->open(UP_LOCATION.'temp/'.$fileid.'/'.$fileid.'.zip')) {
-                echo '<span class="error">'._('Could not open archive file. It may be corrupted.').'</span><br />';
-                unlink(UP_LOCATION.'temp/'.$fileid.'/'.$fileid.'.'.$fileext);
-                rmdir(UP_LOCATION.'temp/'.$fileid);
-                return false;
-            }
-            $archive->extractTo(UP_LOCATION.'temp/'.$fileid.'/');
-            $archive->close();
-            unlink(UP_LOCATION.'temp/'.$fileid.'/'.$fileid.'.zip');
-            break;
-        case 'tar':
-        case 'gz':
-        case 'tgz':
-            require_once('Archive/Tar.php');
-            $archive = new Archive_Tar(UP_LOCATION.'temp/'.$fileid.'/'.$fileid.'.'.$fileext);
-            if (!$archive)
-            {
-                echo '<span class="error">'._('Could not open archive file. It may be corrupted.').'</span><br />';
-                unlink(UP_LOCATION.'temp/'.$fileid.'/'.$fileid.'.'.$fileext);
-                rmdir(UP_LOCATION.'temp/'.$fileid);
-                return false;
-            }
-            $archive->extract(UP_LOCATION.'temp/'.$fileid.'/');
-            unlink(UP_LOCATION.'temp/'.$fileid.'/'.$fileid.'.'.$fileext);
-            break;
-        default:
-            echo '<span class="error">'._('Unknown archive type.').'</span><br />';
-            unlink(UP_LOCATION.'temp/'.$fileid.'/'.$fileid.'.'.$fileext);
-            rmdir(UP_LOCATION.'temp/'.$fileid);
-            return false;
-            break;
+    if (!extract_archive(UP_LOCATION.'temp/'.$fileid.'/'.$fileid.'.'.$fileext,
+            UP_LOCATION.'temp/'.$fileid.'/',
+            $fileext))
+    {
+        rmdir_recursive(UP_LOCATION.'temp/'.$fileid);
     }
 
     // Find XML file
@@ -155,16 +126,19 @@ function parseUpload($file,$revision = false)
     if (!$xml_file) {
         echo '<span class="error>'._('Invalid archive file.').'</span><br />';
         rmdir_recursive(UP_LOCATION.'temp/'.$fileid);
+        return false;
     }
 
     // Define addon type
     if (preg_match('/kart\.xml$/',$xml_file))
     {
         $addon_type = 'karts';
+        echo _('Upload was recognized as a kart.').'<br />';
     }
     else
     {
         $addon_type = 'tracks';
+        echo _('Upload was recognized as a track.').'<br />';
     }
 
     // Read XML
@@ -299,6 +273,78 @@ function parseUpload($file,$revision = false)
     writeNewsXML();
     echo _('Successfully uploaded add-on.').'<br />';
     echo '<span style="font-size: large"><a href="addons.php?type='.$addon_type.'&amp;name='.$addon_id.'">'._('Continue.').'</a></span><br />';
+}
+
+function extract_archive($file,$destination,$fileext = NULL)
+{
+    if (!file_exists($file))
+    {
+        echo '<span class="error">'._('The file to extract does not exist.').'</span><br />';
+    }
+
+    if ($fileext == NULL)
+        $fileext = pathinfo($file, PATHINFO_EXTENSION);
+
+    // Extract archive
+    switch ($fileext) {
+        // Handle archives using ZipArchive class
+        case 'zip':
+            $archive = new ZipArchive;
+            if (!$archive->open($file)) {
+                echo '<span class="error">'._('Could not open archive file. It may be corrupted.').'</span><br />';
+                unlink($file);
+                return false;
+            }
+            if (!$archive->extractTo($destination))
+            {
+                echo '<span class="error">'._('Failed to extract archive file.').' (zip)</span><br />';
+                unlink($file);
+                return false;
+            }
+            $archive->close();
+            unlink($file);
+            break;
+
+        // Handle archives using Archive_Tar class
+        case 'tar':
+        case 'tar.gz':
+        case 'tgz':
+        case 'gz':
+        case 'tbz':
+        case 'tar.bz2':
+        case 'bz2':
+            require_once('Archive/Tar.php');
+            $compression = NULL;
+            if ($fileext == 'tar.gz' || $fileext == 'tgz' || $fileext == 'gz')
+            {
+                $compression = 'gz';
+            }
+            elseif ($fileext == 'tbz' || $fileext == 'tar.bz2' || $fileext == 'bz2')
+            {
+                $compression = 'bz2';
+            }
+            $archive = new Archive_Tar($file, $compression);
+            if (!$archive)
+            {
+                echo '<span class="error">'._('Could not open archive file. It may be corrupted.').'</span><br />';
+                unlink($file);
+                return false;
+            }
+            if (!$archive->extract($destination))
+            {
+                echo '<span class="error">'._('Failed to extract archive file.').' ('.$compression.')</span><br />';
+                unlink($file);
+                return false;
+            }
+            unlink($file);
+            break;
+
+        default:
+            echo '<span class="error">'._('Unknown archive type.').'</span><br />';
+            unlink($file);
+            return false;
+    }
+    return true;
 }
 
 function file_upload_error($upload)
