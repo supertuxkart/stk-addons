@@ -91,7 +91,7 @@ function news_message_panel()
     echo '<td>'._('Display on Website:').'</td><td><input type="checkbox" name="web_display" id="web_display" checked /></td></tr>';
     echo '<td></td><td><input type="submit" value="'._('Create Message').'" /></td></tr></table>';
     echo '</form>';
-    echo 'Todo:<ol><li>Allow selecting from a list of conditions rather than typing. Too typo-prone.</li><li>Type semicolon-delimited expressions, e.g. <tt>stkversion > 0.7.0;addonNotInstalled = {addonID};</tt>.</li><li>Allow editing in future, in case of goofs or changes.</li></ol>';
+    echo 'Todo:<ol><li>Allow selecting from a list of conditions rather than typing. Too typo-prone.</li><li>Type semicolon-delimited expressions, e.g. <tt>stkversion > 0.7.0;addonid not installed;</tt>.</li><li>Allow editing in future, in case of goofs or changes.</li></ol>';
     echo '<br />';
 
     $reqSql = 'SELECT `n`.*, `u`.`user`
