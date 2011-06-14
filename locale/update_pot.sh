@@ -1,3 +1,4 @@
+#!/bin/bash
 cd ..
 mkdir pot
 cp *.php pot

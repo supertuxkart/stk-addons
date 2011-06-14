@@ -139,7 +139,7 @@ class coreUser
         $trackHandle = sql_query($trackSql);
         if (mysql_num_rows($trackHandle) == 0)
         {
-            echo _('This user has not uploaded any karts.').'<br />';
+            echo _('This user has not uploaded any tracks.').'<br />';
         }
         else
         {
