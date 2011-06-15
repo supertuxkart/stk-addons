@@ -157,12 +157,14 @@ function parseUpload($file,$revision = false)
     fclose($fhandle);
 
     // Check for valid license file
-    if (!find_license(UP_LOCATION.'temp/'.$fileid))
+    $license_file = find_license(UP_LOCATION.'temp/'.$fileid);
+    if ($license_file === false)
     {
         echo '<span class="error">'._('A valid License.txt file was not found. Please add a License.txt file to your archive and re-submit it.').'</span><br />';
         rmdir_recursive(UP_LOCATION.'temp/'.$fileid);
         return false;
     }
+    $parsed_xml['attributes']['license'] = $license_file;
 
     // Get addon id
     $addon_id = NULL;
@@ -419,11 +421,11 @@ function find_license($dir)
             }
             else if(file_exists($dir.'/License.txt'))
             {
-                return $dir.'/License.txt';
+                return file_get_contents($dir.'/License.txt');
             }
             else if (file_exists($dir.'/license.txt'))
             {
-                return $dir.'/license.txt';
+                return file_get_contents($dir.'/license.txt');
             }
         }
     }

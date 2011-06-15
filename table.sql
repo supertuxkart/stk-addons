@@ -64,6 +64,7 @@ CREATE TABLE `karts` (
   `uploader` int(11) NOT NULL,
   `creation_date` timestamp NOT NULL default CURRENT_TIMESTAMP,
   `designer` tinytext NOT NULL,
+  `license` varchar(4096) NULL DEFAULT NULL,
   UNIQUE KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -124,6 +125,7 @@ CREATE TABLE `tracks` (
   `creation_date` timestamp NOT NULL default CURRENT_TIMESTAMP,
   `designer` tinytext NOT NULL,
   `arena` tinyint(1) NOT NULL default '0',
+  `license` varchar(4096) NULL DEFAULT NULL,
   UNIQUE KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 

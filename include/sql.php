@@ -84,7 +84,7 @@ function sql_update($table, $property_select, $value_select, $property_change, $
 {
     $request = "UPDATE `".DB_NAME."`.`".DB_PREFIX.$table."`
                         SET `$property_change` =  '$new_value'
-                        WHERE `".$table."`.`$property_select` = $value_select;";
+                        WHERE `".DB_PREFIX.$table."`.`$property_select` = '$value_select';";
     //echo $request;
     return mysql_query($request) or die(mysql_error());
 }

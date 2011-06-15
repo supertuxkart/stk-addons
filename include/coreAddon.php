@@ -359,7 +359,9 @@ class coreAddon
         </table></div>
 
         <a href="'.DOWN_LOCATION.$this->addonCurrent['fileid'].'.zip"><img src="image/download.png" alt="Download" title="Download" /></a>
-
+        <br /><br /><br /><br />
+        <strong>'._('License:').'</strong><br />
+        <textarea name="license" rows="4" cols="60">'.strip_tags($this->addonCurrent['license']).'</textarea>
         <br /><br /><strong>'._('Permalink:').'</strong><br />
         '.$this->addonCurrent['permUrl'].'<br />';
         
@@ -762,8 +764,8 @@ class coreAddon
         if (!sql_exist($this->addonType, 'id', $addonid))
         {
             echo _('Creating a new add-on...').'<br />';
-            $fields = array('id','name','uploader','designer');
-            $values = array($addonid,$attributes['name'],$_SESSION['userid'],$attributes['designer']);
+            $fields = array('id','name','uploader','designer','license');
+            $values = array($addonid,$attributes['name'],$_SESSION['userid'],$attributes['designer'],$attributes['license']);
             if ($this->addonType == 'track')
             {
                 $fields[] = 'arena';
@@ -775,6 +777,15 @@ class coreAddon
         else
         {
             echo _('This add-on already exists. Adding revision...').'<br />';
+            // Update license file record
+            if (!sql_update($this->addonType,
+                    'id',
+                    mysql_real_escape_string($addonid),
+                    'license',
+                    mysql_real_escape_string($attributes['license'])))
+            {
+                echo '<span class="error">'._('Failed to update the license record for this add-on.').'</span><br />';
+            }
         }
 
         // Add the new revision
