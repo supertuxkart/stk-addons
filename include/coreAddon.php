@@ -37,20 +37,22 @@ class coreAddon
         {
             $querySql = 'SELECT a.*, r.id AS fileid, r.creation_date AS revision_timestamp,
                     r.revision, r.format, r.image,'.$icon.' r.status, r.moderator_note
-                FROM '.DB_PREFIX.$this->addonType.' a
-                LEFT JOIN '.DB_PREFIX.$this->addonType.'_revs r
-                ON a.id = r.addon_id
-                WHERE a.id = \''.$id.'\'
-                AND r.status & '.F_LATEST;
+                FROM `'.DB_PREFIX.'addons` `a`
+                LEFT JOIN `'.DB_PREFIX.$this->addonType.'_revs` `r`
+                ON `a`.`id` = `r`.`addon_id`
+                WHERE `a`.`id` = \''.$id.'\'
+                AND `a`.`type` = \''.$this->addonType.'\'
+                AND `r`.`status` & '.F_LATEST;
         }
         else
         {
             $querySql = 'SELECT a.*, r.id AS fileid, r.creation_date AS revision_timestamp,
                     r.revision, r.format, r.image,'.$icon.' r.status, r.moderator_note
-                FROM '.DB_PREFIX.$this->addonType.' a
+                FROM '.DB_PREFIX.'addons a
                 LEFT JOIN '.DB_PREFIX.$this->addonType.'_revs r
                 ON a.id = r.addon_id
-                WHERE a.id = \''.$id.'\'';
+                WHERE a.id = \''.$id.'\'
+                AND `a`.`type` = \''.$this->addonType.'\'';
         }
         $this->reqSql = sql_query($querySql);
         if (!$this->reqSql)
@@ -77,10 +79,11 @@ class coreAddon
         $querySql = 'SELECT a.*, r.id AS fileid,
                 r.creation_date AS revision_timestamp, r.revision,
                 r.format, r.image,'.$icon.' r.status, r.moderator_note
-            FROM '.DB_PREFIX.$this->addonType.' a
+            FROM '.DB_PREFIX.'addons a
             LEFT JOIN '.DB_PREFIX.$this->addonType.'_revs r
             ON a.id = r.addon_id
-            WHERE a.uploader = \''.$id.'\'';
+            WHERE a.uploader = \''.$id.'\'
+            AND `a`.`type` = \''.$this->addonType.'\'';
         $this->reqSql = sql_query($querySql);
         $this->addonCurrent = sql_next($this->reqSql);
         if ($this->addonCurrent)
@@ -95,11 +98,12 @@ class coreAddon
         if ($this->addonType == 'karts')
             $icon = ' r.icon,';
         $querySql = 'SELECT a.*, r.id AS fileid, r.revision, r.format, r.image,'.$icon.' r.status
-            FROM '.DB_PREFIX.$this->addonType.' a
+            FROM '.DB_PREFIX.'addons a
             LEFT JOIN '.DB_PREFIX.$this->addonType.'_revs r
             ON a.id = r.addon_id
             WHERE r.status & '.F_LATEST.'
-            ORDER BY a.`name` ASC, a.`id` ASC';
+            AND `a`.`type` = \''.$this->addonType.'\'
+            ORDER BY `a`.`name` ASC, `a`.`id` ASC';
         $this->reqSql = sql_query($querySql);
         return $this->reqSql;
     }
@@ -215,7 +219,7 @@ class coreAddon
         if (strlen($info) == 0)
             return false;
         
-        $updateQuery = 'UPDATE `'.DB_PREFIX.$this->addonType.'`
+        $updateQuery = 'UPDATE `'.DB_PREFIX.'addons`
             SET `'.$info.'` = \''.$value.'\'
             WHERE `id` = \''.$this->addonCurrent['id'].'\'';
         $updateSql = sql_query($updateQuery);
@@ -295,7 +299,7 @@ class coreAddon
         }
 
         // Remove addon entry
-        if (!sql_remove_where($this->addonType, 'id', $this->addonCurrent['id']))
+        if (!sql_remove_where('addons', 'id', $this->addonCurrent['id']))
         {
             echo '<span class="error">'._('Failed to remove addon.').'</span><br />';
             return false;
@@ -754,31 +758,31 @@ class coreAddon
         }
 
         // Make sure no addon with this id exists
-        if(sql_exist($this->addonType.'_revs', "id", $fileid))
+        if(sql_exist($this->addonType.'_revs', 'id', $fileid))
         {
             echo '<span class="error">'._('The add-on you are trying to create already exists.').'</span><br />';
             return false;
         }
 
         // Check if we're creating a new add-on
-        if (!sql_exist($this->addonType, 'id', $addonid))
+        if (!sql_exist('addons', 'id', $addonid))
         {
             echo _('Creating a new add-on...').'<br />';
-            $fields = array('id','name','uploader','designer','license');
-            $values = array($addonid,$attributes['name'],$_SESSION['userid'],$attributes['designer'],$attributes['license']);
-            if ($this->addonType == 'track')
+            $fields = array('id','type','name','uploader','designer','license');
+            $values = array($addonid,$this->addonType,$attributes['name'],$_SESSION['userid'],$attributes['designer'],$attributes['license']);
+            if ($this->addonType == 'tracks')
             {
-                $fields[] = 'arena';
+                $fields[] = 'props';
                 $values[] = $attributes['arena'];
             }
-            if (!sql_insert($this->addonType,$fields,$values))
+            if (!sql_insert('addons',$fields,$values))
                 return false;
         }
         else
         {
             echo _('This add-on already exists. Adding revision...').'<br />';
             // Update license file record
-            if (!sql_update($this->addonType,
+            if (!sql_update('addons',
                     'id',
                     mysql_real_escape_string($addonid),
                     'license',
@@ -1006,7 +1010,7 @@ function format_compat($format,$filetype)
             }
             if ($format >= 3 && $format <= 5)
             {
-                return '0.7 - 0.7.1b';
+                return '0.7 - 0.7.2';
             }
             return _('Unknown');
             break;

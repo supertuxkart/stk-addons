@@ -97,10 +97,11 @@ class coreUser
         // List of karts created by the current user
         echo '<h3>'._('User\'s Karts').'</h3>';
         $kartSql = 'SELECT `a`.*, `r`.`status`
-            FROM `'.DB_PREFIX.'karts` `a`
+            FROM `'.DB_PREFIX.'addons` `a`
             LEFT JOIN `'.DB_PREFIX.'karts_revs` `r`
             ON `a`.`id` = `r`.`addon_id`
-            WHERE `a`.`uploader` = \''.$this->userCurrent['id'].'\'';
+            WHERE `a`.`uploader` = \''.$this->userCurrent['id'].'\'
+            AND `a`.`type` = \'karts\'';
         $kartHandle = sql_query($kartSql);
         if (mysql_num_rows($kartHandle) == 0)
         {
@@ -132,10 +133,11 @@ class coreUser
 
         echo '<h3>'._('User\'s Tracks').'</h3>';
         $trackSql = 'SELECT `a`.*, `r`.`status`
-            FROM `'.DB_PREFIX.'tracks` `a`
+            FROM `'.DB_PREFIX.'addons` `a`
             LEFT JOIN `'.DB_PREFIX.'tracks_revs` `r`
             ON `a`.`id` = `r`.`addon_id`
-            WHERE `a`.`uploader` = \''.$this->userCurrent['id'].'\'';
+            WHERE `a`.`uploader` = \''.$this->userCurrent['id'].'\'
+            AND `a`.`type` = \'tracks\'';
         $trackHandle = sql_query($trackSql);
         if (mysql_num_rows($trackHandle) == 0)
         {

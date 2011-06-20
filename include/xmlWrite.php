@@ -103,11 +103,12 @@ function generateAssetXML()
     $querySql = 'SELECT `k`.*, `r`.`id` AS `fileid`,
             `r`.`creation_date` AS `date`,`r`.`revision`,`r`.`format`,
             `r`.`image`,`r`.`icon`,`r`.`status`, `u`.`user`
-	FROM '.DB_PREFIX.'karts k
+	FROM '.DB_PREFIX.'addons k
 	LEFT JOIN '.DB_PREFIX.'karts_revs r
 	ON (`k`.`id`=`r`.`addon_id`)
 	LEFT JOIN '.DB_PREFIX.'users u
-        ON (`k`.`uploader` = `u`.`id`)';
+        ON (`k`.`uploader` = `u`.`id`)
+        WHERE `k`.`type` = \'karts\'';
     $reqSql = sql_query($querySql);
     while($result = sql_next($reqSql))
     {
@@ -167,11 +168,12 @@ function generateAssetXML()
     $querySql = 'SELECT `k`.*, `r`.`id` AS `fileid`,
             `r`.`creation_date` AS `date`,`r`.`revision`,`r`.`format`,
             `r`.`image`,`r`.`status`, `u`.`user`
-	FROM '.DB_PREFIX.'tracks k
+	FROM '.DB_PREFIX.'addons k
 	LEFT JOIN '.DB_PREFIX.'tracks_revs r
 	ON (`k`.`id`=`r`.`addon_id`)
 	LEFT JOIN '.DB_PREFIX.'users u
-        ON (`k`.`uploader` = `u`.`id`)';
+        ON (`k`.`uploader` = `u`.`id`)
+        WHERE `k`.`type` = \'tracks\'';
     $reqSql = sql_query($querySql);
     while($result = sql_next($reqSql))
     {
@@ -184,7 +186,7 @@ function generateAssetXML()
         $writer->writeAttribute('id',$result['id']);
         $writer->writeAttribute('name',$result['name']);
         $writer->writeAttribute('file',DOWN_LOCATION.$result['fileid'].'.zip');
-        $writer->writeAttribute('arena',$result['arena']);
+        $writer->writeAttribute('arena',$result['props']);
 	$writer->writeAttribute('date',strtotime($result['date']));
 	$writer->writeAttribute('uploader',$result['user']);
         $writer->writeAttribute('designer',$result['designer']);

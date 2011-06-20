@@ -24,10 +24,10 @@ include_once('include/sql.php');
 include_once('include/xmlWrite.php');
 
 $xml = writeNewsXML();
-echo '<textarea rows="20" cols="60">'.$xml.'</textarea><br />';
+echo 'News xml written: '.$xml.'<br />';
 
 $xml = writeAssetXML();
-echo '<textarea rows="20" cols="60">'.$xml.'</textarea><br />';
+echo 'Asset xml written: '.$xml.'<br />';
 
 
 

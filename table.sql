@@ -1,5 +1,18 @@
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
+CREATE TABLE `addons` (
+    `id` varchar(30) NOT NULL,
+    `type` ENUM('karts','tracks'),
+    `name` tinytext NOT NULL,
+    `uploader` int(11) NOT NULL,
+    `creation_date` timestamp NOT NULL default CURRENT_TIMESTAMP,
+    `designer` tinytext NOT NULL,
+    `props` int UNSIGNED NOT NULL DEFAULT '0',
+    `description` varchar(140),
+    `license` varchar(4096) NULL DEFAULT NULL,
+    UNIQUE KEY `id` (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 CREATE TABLE `clients` (
     `id` int(11) NOT NULL auto_increment PRIMARY KEY,
     `agent_string` varchar(255) NOT NULL,
@@ -56,18 +69,6 @@ CREATE TABLE `history` (
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-
-CREATE TABLE `karts` (
-  `id` varchar(30) NOT NULL,
-  `name` tinytext NOT NULL,
-  `description` varchar(140),
-  `uploader` int(11) NOT NULL,
-  `creation_date` timestamp NOT NULL default CURRENT_TIMESTAMP,
-  `designer` tinytext NOT NULL,
-  `license` varchar(4096) NULL DEFAULT NULL,
-  UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
 CREATE TABLE `karts_revs` (
     `id` char(23) NOT NULL,
     `addon_id` varchar(30) NOT NULL,
@@ -116,18 +117,6 @@ INSERT INTO `properties` (`type`, `lock`, `typefield`, `default`, `name`) VALUES
 ('tracks', 0, 'text', '', 'Author'),
 ('tracks', 0, 'file', '', 'Image'),
 ('tracks', 0, 'enum', '0.7\r\n0.6', 'STK Version')
-
-CREATE TABLE `tracks` (
-  `id` varchar(30) NOT NULL,
-  `name` tinytext NOT NULL,
-  `description` varchar(140),
-  `uploader` int(11) NOT NULL,
-  `creation_date` timestamp NOT NULL default CURRENT_TIMESTAMP,
-  `designer` tinytext NOT NULL,
-  `arena` tinyint(1) NOT NULL default '0',
-  `license` varchar(4096) NULL DEFAULT NULL,
-  UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tracks_revs` (
     `id` char(23) NOT NULL,

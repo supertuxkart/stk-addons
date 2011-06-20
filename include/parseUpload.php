@@ -535,8 +535,9 @@ function generate_addon_id($type,$attb)
         return false;
 
     // Check database
-    while(sql_exist($type, "id", $addon_id))
+    while(sql_exist('addons', 'id', $addon_id))
     {
+        // If the addon id already exists, add an incrementing number to it
         if (preg_match('/^.+_([0-9]+)$/i', $addon_id, $matches))
         {
             $next_num = (int)$matches[1];
