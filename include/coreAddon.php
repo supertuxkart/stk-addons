@@ -362,12 +362,19 @@ class coreAddon
         {
             if (file_exists(UP_LOCATION.$file_path))
             {
-                echo '<a href="'.DOWN_LOCATION.$file_path.'">';
+                echo '<a href="'.DOWN_LOCATION.$file_path.'"><img src="image/download.png" alt="Download" title="Download" /></a>';
+            }
+            else
+            {
+                echo '<span class="error">'._('File not found.').'</span><br />';
             }
         }
-        
-        echo '<img src="image/download.png" alt="Download" title="Download" /></a>
-        <br /><br /><br /><br />
+        else
+        {
+            echo '<span class="error">'._('File not found.').'</span><br />';
+        }
+
+        echo '<br /><br /><br /><br />
         <strong>'._('License:').'</strong><br />
         <textarea name="license" rows="4" cols="60">'.strip_tags($this->addonCurrent['license']).'</textarea>
         <br /><br /><strong>'._('Permalink:').'</strong><br />
