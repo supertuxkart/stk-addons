@@ -145,7 +145,7 @@ class coreUser
         }
         else
         {
-            // Print kart list
+            // Print track list
             echo '<ul>';
             for ($i = 0; $i < mysql_num_rows($trackHandle); $i++)
             {
@@ -155,7 +155,7 @@ class coreUser
                     continue;
                 if ($trackResult['status'] & F_APPROVED)
                 {
-                    echo '<li><a href="addons.php?type=karts&amp;name='.$trackResult['id'].'">'
+                    echo '<li><a href="addons.php?type=tracks&amp;name='.$trackResult['id'].'">'
                         .$trackResult['name'].'</a></li>';
                 }
                 else
@@ -163,7 +163,7 @@ class coreUser
                     if ($_SESSION['role']['manageaddons'] == false
                             && $trackResult['uploader'] != $_SESSION['userid'])
                         continue;
-                    echo '<li class="unavailable"><a href="addons.php?type=karts&amp;name='.$trackResult['id'].'">'
+                    echo '<li class="unavailable"><a href="addons.php?type=tracks&amp;name='.$trackResult['id'].'">'
                         .$trackResult['name'].'</a></li>';
                 }
             }

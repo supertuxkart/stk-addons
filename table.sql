@@ -10,7 +10,8 @@ CREATE TABLE `addons` (
     `props` int UNSIGNED NOT NULL DEFAULT '0',
     `description` varchar(140),
     `license` varchar(4096) NULL DEFAULT NULL,
-    UNIQUE KEY `id` (`id`)
+    UNIQUE KEY `id` (`id`),
+    INDEX (`type`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `clients` (
