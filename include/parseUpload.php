@@ -84,7 +84,7 @@ function parseUpload($file,$revision = false)
             return false;
         }
         
-        // Add database record
+        // Add database record for image
         $newImageQuery = 'INSERT INTO `'.DB_PREFIX.'files`
             (`addon_id`,`addon_type`,`file_type`,`file_path`)
             VALUES
@@ -238,6 +238,27 @@ function parseUpload($file,$revision = false)
         echo '<span class="error">'._('Failed to re-pack archive file.').'</span>';
         rmdir_recursive(UP_LOCATION.'temp/'.$fileid);
         return false;
+    }
+    
+    // Record addon's file in database
+    $newAddonFileQuery = 'INSERT INTO `'.DB_PREFIX.'files`
+        (`addon_id`,`addon_type`,`file_type`,`file_path`)
+        VALUES
+        (\''.$addon_id.'\',
+        \''.$addon_type.'\',
+        \'addon\',
+        \''.$fileid.'.zip\')';
+    $newAddonFileHandle = sql_query($newAddonFileQuery);
+    if (!$newAddonFileHandle)
+    {
+        echo '<span class="error">'._('Failed to associate archive file with addon.').'</span><br />';
+        unlink(UP_LOCATION.$fileid.'.zip');
+        $parsed_xml['attributes']['fileid'] = 0;
+    }
+    else
+    {
+        // Get ID of previously inserted image
+        $parsed_xml['attributes']['fileid'] = mysql_insert_id();
     }
 
     // Set first revision to be "latest"

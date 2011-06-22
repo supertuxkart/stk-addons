@@ -20,8 +20,7 @@
 
 define('ROOT','./');
 include_once('config.php');
-include_once('include/sql.php');
-include_once('include/xmlWrite.php');
+include_once('include.php');
 
 $xml = writeNewsXML();
 echo 'News xml written: '.$xml.'<br />';

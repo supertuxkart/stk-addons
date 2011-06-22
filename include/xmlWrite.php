@@ -100,7 +100,7 @@ function generateAssetXML()
     $writer->writeAttribute('frequency', get_config('xml_frequency'));
 
     // Fetch kart list
-    $querySql = 'SELECT `k`.*, `r`.`id` AS `fileid`,
+    $querySql = 'SELECT `k`.*, `r`.`fileid`,
             `r`.`creation_date` AS `date`,`r`.`revision`,`r`.`format`,
             `r`.`image`,`r`.`icon`,`r`.`status`, `u`.`user`
 	FROM '.DB_PREFIX.'addons k
@@ -112,60 +112,51 @@ function generateAssetXML()
     $reqSql = sql_query($querySql);
     while($result = sql_next($reqSql))
     {
-        if (!file_exists(UP_LOCATION.$result['fileid'].'.zip'))
+        $file_path = get_file_path($result['fileid']);
+        if ($file_path === false)
         {
-            echo '<span class="warming">'._('The following file could not be found:').' '.$result['fileid'].'.zip</span><br />';
+            echo '<span class="warning">'._('An error occurred finding the path for the file of kart: ').$result['name'].'</span><br />';
+            continue;
+        }
+        if (!file_exists(UP_LOCATION.$file_path))
+        {
+            echo '<span class="warming">'._('The following file could not be found:').' '.$file_path.'</span><br />';
             continue;
         }
 	$writer->startElement('kart');
         $writer->writeAttribute('id',$result['id']);
         $writer->writeAttribute('name',$result['name']);
-        $writer->writeAttribute('file',DOWN_LOCATION.$result['fileid'].'.zip');
+        $file_path = get_file_path($result['fileid']);
+        $writer->writeAttribute('file',DOWN_LOCATION.$file_path);
 	$writer->writeAttribute('date',strtotime($result['date']));
 	$writer->writeAttribute('uploader',$result['user']);
         $writer->writeAttribute('designer',$result['designer']);
         $writer->writeAttribute('description',$result['description']);
-        if ($result['icon'] != 0)
+        $icon_path = get_file_path($result['icon']);
+        if ($icon_path !== false)
         {
-            $get_image_query = 'SELECT `file_path` FROM `'.DB_PREFIX.'files`
-                WHERE `id` = '.(int)$result['icon'].'
-                AND `approved` = 1
-                LIMIT 1';
-            $get_image_handle = sql_query($get_image_query);
-            if (mysql_num_rows($get_image_handle) == 1)
+            if (file_exists(UP_LOCATION.$icon_path))
             {
-                $icon = mysql_fetch_assoc($get_image_handle);
-                if (file_exists(UP_LOCATION.$icon['file_path']))
-                {
-                    $writer->writeAttribute('icon',DOWN_LOCATION.$icon['file_path']);
-                }
+                $writer->writeAttribute('icon',DOWN_LOCATION.$icon_path);
             }
         }
-        if ($result['image'] != 0)
+        $image_path = get_file_path($result['image']);
+        if ($image_path !== false)
         {
-            $get_image_query = 'SELECT `file_path` FROM `'.DB_PREFIX.'files`
-                WHERE `id` = '.(int)$result['image'].'
-                AND `approved` = 1
-                LIMIT 1';
-            $get_image_handle = sql_query($get_image_query);
-            if (mysql_num_rows($get_image_handle) == 1)
+            if (file_exists(UP_LOCATION.$image_path))
             {
-                $image = mysql_fetch_assoc($get_image_handle);
-                if (file_exists(UP_LOCATION.$image['file_path']))
-                {
-                    $writer->writeAttribute('image',DOWN_LOCATION.$image['file_path']);
-                }
+                $writer->writeAttribute('image',DOWN_LOCATION.$image_path);
             }
         }
         $writer->writeAttribute('format',$result['format']);
         $writer->writeAttribute('revision',$result['revision']);
         $writer->writeAttribute('status',$result['status']);
-        $writer->writeAttribute('size',filesize(UP_LOCATION.$result['fileid'].'.zip'));
+        $writer->writeAttribute('size',filesize(UP_LOCATION.$file_path));
 	$writer->endElement();
     }
 
     // Fetch track list
-    $querySql = 'SELECT `k`.*, `r`.`id` AS `fileid`,
+    $querySql = 'SELECT `k`.*, `r`.`fileid`,
             `r`.`creation_date` AS `date`,`r`.`revision`,`r`.`format`,
             `r`.`image`,`r`.`status`, `u`.`user`
 	FROM '.DB_PREFIX.'addons k
@@ -177,40 +168,39 @@ function generateAssetXML()
     $reqSql = sql_query($querySql);
     while($result = sql_next($reqSql))
     {
-        if (!file_exists(UP_LOCATION.$result['fileid'].'.zip'))
+        $file_path = get_file_path($result['fileid']);
+        if ($file_path === false)
         {
-            echo '<span class="warming">'._('The following file could not be found:').' '.$result['fileid'].'.zip</span><br />';
+            echo '<span class="warning">'._('An error occurred finding the path for the file of track: ').$result['name'].'</span><br />';
+            continue;
+        }
+        if (!file_exists(UP_LOCATION.$file_path))
+        {
+            echo '<span class="warming">'._('The following file could not be found:').' '.$file_path.'</span><br />';
             continue;
         }
 	$writer->startElement('track');
         $writer->writeAttribute('id',$result['id']);
         $writer->writeAttribute('name',$result['name']);
-        $writer->writeAttribute('file',DOWN_LOCATION.$result['fileid'].'.zip');
+        $file_path = get_file_path($result['fileid']);
+        $writer->writeAttribute('file',DOWN_LOCATION.$file_path);
         $writer->writeAttribute('arena',$result['props']);
 	$writer->writeAttribute('date',strtotime($result['date']));
 	$writer->writeAttribute('uploader',$result['user']);
         $writer->writeAttribute('designer',$result['designer']);
         $writer->writeAttribute('description',$result['description']);
-        if ($result['image'] != 0)
+        $image_path = get_file_path($result['image']);
+        if ($image_path !== false)
         {
-            $get_image_query = 'SELECT `file_path` FROM `'.DB_PREFIX.'files`
-                WHERE `id` = '.(int)$result['image'].'
-                AND `approved` = 1
-                LIMIT 1';
-            $get_image_handle = sql_query($get_image_query);
-            if (mysql_num_rows($get_image_handle) == 1)
+            if (file_exists(UP_LOCATION.$image_path))
             {
-                $image = mysql_fetch_assoc($get_image_handle);
-                if (file_exists(UP_LOCATION.$image['file_path']))
-                {
-                    $writer->writeAttribute('image',DOWN_LOCATION.$image['file_path']);
-                }
+                $writer->writeAttribute('image',DOWN_LOCATION.$image_path);
             }
         }
         $writer->writeAttribute('format',$result['format']);
         $writer->writeAttribute('revision',$result['revision']);
         $writer->writeAttribute('status',$result['status']);
-        $writer->writeAttribute('size',filesize(UP_LOCATION.$result['fileid'].'.zip'));
+        $writer->writeAttribute('size',filesize(UP_LOCATION.$file_path));
 	$writer->endElement();
     }
 

@@ -35,7 +35,7 @@ class coreAddon
             $icon = ' r.icon,';
         if (!$rev)
         {
-            $querySql = 'SELECT a.*, r.id AS fileid, r.creation_date AS revision_timestamp,
+            $querySql = 'SELECT a.*, r.fileid, r.creation_date AS revision_timestamp,
                     r.revision, r.format, r.image,'.$icon.' r.status, r.moderator_note
                 FROM `'.DB_PREFIX.'addons` `a`
                 LEFT JOIN `'.DB_PREFIX.$this->addonType.'_revs` `r`
@@ -46,7 +46,7 @@ class coreAddon
         }
         else
         {
-            $querySql = 'SELECT a.*, r.id AS fileid, r.creation_date AS revision_timestamp,
+            $querySql = 'SELECT a.*, r.fileid, r.creation_date AS revision_timestamp,
                     r.revision, r.format, r.image,'.$icon.' r.status, r.moderator_note
                 FROM '.DB_PREFIX.'addons a
                 LEFT JOIN '.DB_PREFIX.$this->addonType.'_revs r
@@ -76,7 +76,7 @@ class coreAddon
         $icon = NULL;
         if ($this->addonType == 'karts')
             $icon = ' r.icon,';
-        $querySql = 'SELECT a.*, r.id AS fileid,
+        $querySql = 'SELECT a.*, r.fileid,
                 r.creation_date AS revision_timestamp, r.revision,
                 r.format, r.image,'.$icon.' r.status, r.moderator_note
             FROM '.DB_PREFIX.'addons a
@@ -97,7 +97,7 @@ class coreAddon
         $icon = NULL;
         if ($this->addonType == 'karts')
             $icon = ' r.icon,';
-        $querySql = 'SELECT a.*, r.id AS fileid, r.revision, r.format, r.image,'.$icon.' r.status
+        $querySql = 'SELECT a.*, r.fileid, r.revision, r.format, r.image,'.$icon.' r.status
             FROM '.DB_PREFIX.'addons a
             LEFT JOIN '.DB_PREFIX.$this->addonType.'_revs r
             ON a.id = r.addon_id
@@ -284,12 +284,6 @@ class coreAddon
         for ($i = 1; $i <= $num_revisions; $i++)
         {
             $getRevsResult = mysql_fetch_assoc($getRevsHandle);
-            // Delete revision archive
-            if (file_exists(UP_LOCATION.$getRevsResult['id'].'.zip') && !unlink(UP_LOCATION.$getRevsResult['id'].'.zip'))
-            {
-                echo _('Failed to delete file:').' '.UP_LOCATION.$getRevsResult['id'].'.zip<br />';
-                return false;
-            }
             // Delete entry
             if (!sql_remove_where($this->addonType.'_revs', 'id', $getRevsResult['id']))
             {
@@ -360,9 +354,19 @@ class coreAddon
         <tr><td><strong>'._('Submitted by:').'</strong></td><td><a href="users.php?title='.$addonUser->userCurrent['id'].'">'.$addonUser->userCurrent['name'].'</a></td></tr>
         <tr><td><strong>'._('Revision:').'</strong></td><td>'.$this->addonCurrent['revision'].'</td></tr>
         <tr><td><strong>'._('Compatible with:').'</strong></td><td>'.format_compat($this->addonCurrent['format'],$this->addonType).'</td></tr>
-        </table></div>
-
-        <a href="'.DOWN_LOCATION.$this->addonCurrent['fileid'].'.zip"><img src="image/download.png" alt="Download" title="Download" /></a>
+        </table></div>';
+        
+        // Get download path
+        $file_path = get_file_path($result['fileid']);
+        if ($file_path !== false)
+        {
+            if (file_exists(UP_LOCATION.$file_path))
+            {
+                echo '<a href="'.DOWN_LOCATION.$file_path.'">';
+            }
+        }
+        
+        echo '<img src="image/download.png" alt="Download" title="Download" /></a>
         <br /><br /><br /><br />
         <strong>'._('License:').'</strong><br />
         <textarea name="license" rows="4" cols="60">'.strip_tags($this->addonCurrent['license']).'</textarea>
@@ -379,6 +383,7 @@ class coreAddon
             global $user;
             if (!$user->logged_in)
             {
+                // Users not logged in cannot see unapproved addons
                 if (!($addonRevs->addonCurrent['status'] & F_APPROVED))
                 {
                     $addonRevs->next();
@@ -387,6 +392,8 @@ class coreAddon
             }
             else
             {
+                // Logged in users who are not the uploader, or moderators
+                // cannot see unapproved addons
                 if (($addonRevs->addonCurrent['uploader'] != $_SESSION['userid']
                         && !$_SESSION['role']['manageaddons'])
                         && !($addonRevs->addonCurrent['status'] & F_APPROVED))
@@ -396,8 +403,25 @@ class coreAddon
                 }
             }
 
-            echo '<tr><td>'.$addonRevs->addonCurrent['revision_timestamp'].'</td>
-                <td><a href="'.DOWN_LOCATION.$addonRevs->addonCurrent['fileid'].'.zip">'._('Download revision').' '.$addonRevs->addonCurrent['revision'].'</a></td></tr>';
+            echo '<tr><td>'.$addonRevs->addonCurrent['revision_timestamp'].'</td><td>';
+            // Get download path
+            $file_path = get_file_path($addonRevs->addonCurrent['fileid']);
+            if ($file_path !== false)
+            {
+                if (file_exists(UP_LOCATION.$file_path))
+                {
+                    echo '<a href="'.DOWN_LOCATION.$file_path.'">'._('Download revision').' '.$addonRevs->addonCurrent['revision'].'</a>';
+                }
+                else
+                {
+                    echo _('Revision').' '.$addonRevs->addonCurrent['revision'].' - '._('File not found.');
+                }
+            }
+            else
+            {
+                echo _('Revision').' '.$addonRevs->addonCurrent['revision'].' - '._('File not found.');
+            }
+            echo '</td></tr>';
             $addonRevs->next();
         }
         echo '</table>';
@@ -811,8 +835,8 @@ class coreAddon
             $rev = $result['revision'] + 1;
         }
         // Add revision entry
-        $fields = array('id','addon_id','revision','format','image','status');
-        $values = array($fileid,$addonid,$rev,$attributes['version'],$attributes['image'],$attributes['status']);
+        $fields = array('id','addon_id','fileid','revision','format','image','status');
+        $values = array($fileid,$addonid,$attributes['fileid'],$rev,$attributes['version'],$attributes['image'],$attributes['status']);
         if ($this->addonType == 'karts')
         {
             $fields[] = 'icon';
@@ -943,6 +967,25 @@ function update_status($type,$addon_id,$fields)
     return false;
 }
 
+function get_file_path($file_id)
+{
+    // Validate input
+    if (!is_numeric($file_id))
+        return false;
+    if ($file_id == 0)
+        return false;
+
+    // Look up file path from database
+    $query = 'SELECT `file_path` FROM `'.DB_PREFIX.'files`
+        WHERE `id` = '.(int)$file_id.'
+        LIMIT 1';
+    $handle = sql_query($query);
+    if (mysql_num_rows($handle) == 0)
+        return false;
+    $file = mysql_fetch_assoc($handle);
+    return $file['file_path'];
+}
+
 function update_addon_notes($type,$addon_id,$fields)
 {
     if (!$_SESSION['role']['manageaddons'])
@@ -999,7 +1042,7 @@ function format_compat($format,$filetype)
             }
             if ($format == 2)
             {
-                return '0.7 - 0.7.1b';
+                return '0.7 - 0.7.2';
             }
             return _('Unknown');
             break;

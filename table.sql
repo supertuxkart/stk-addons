@@ -73,6 +73,7 @@ CREATE TABLE `history` (
 CREATE TABLE `karts_revs` (
     `id` char(23) NOT NULL,
     `addon_id` varchar(30) NOT NULL,
+    `fileid` INT UNSIGNED NOT NULL DEFAULT '0',
     `creation_date` timestamp NOT NULL default CURRENT_TIMESTAMP,
     `revision` tinyint(4) NOT NULL default '1',
     `format` tinyint(4) NOT NULL,
@@ -122,6 +123,7 @@ INSERT INTO `properties` (`type`, `lock`, `typefield`, `default`, `name`) VALUES
 CREATE TABLE `tracks_revs` (
     `id` char(23) NOT NULL,
     `addon_id` varchar(30) NOT NULL,
+    `fileid` INT UNSIGNED NOT NULL DEFAULT '0',
     `creation_date` timestamp NOT NULL default CURRENT_TIMESTAMP,
     `revision` tinyint(4) NOT NULL default '1',
     `format` tinyint(4) NOT NULL,
