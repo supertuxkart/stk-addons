@@ -126,7 +126,6 @@ function generateAssetXML()
 	$writer->startElement('kart');
         $writer->writeAttribute('id',$result['id']);
         $writer->writeAttribute('name',$result['name']);
-        $file_path = get_file_path($result['fileid']);
         $writer->writeAttribute('file',DOWN_LOCATION.$file_path);
 	$writer->writeAttribute('date',strtotime($result['date']));
 	$writer->writeAttribute('uploader',$result['user']);
@@ -182,7 +181,6 @@ function generateAssetXML()
 	$writer->startElement('track');
         $writer->writeAttribute('id',$result['id']);
         $writer->writeAttribute('name',$result['name']);
-        $file_path = get_file_path($result['fileid']);
         $writer->writeAttribute('file',DOWN_LOCATION.$file_path);
         $writer->writeAttribute('arena',$result['props']);
 	$writer->writeAttribute('date',strtotime($result['date']));
