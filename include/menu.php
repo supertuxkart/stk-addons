@@ -111,6 +111,12 @@ if($_SESSION['role']['manageaddons'] || $_SERVER['PHP_SELF'] != "index.php")
 echo '</div>';
 echo '</div>';
 } */
+
+function get_self()
+{
+    $list = get_included_files();
+    return $list[0];
+}
 ?>
 <div id="global">
 <div id="top-menu">
@@ -124,6 +130,22 @@ echo '</div>';
     echo '<a href="index.php">';
     echo _("Home");
     echo '</a>';
+
+    if (basename(get_self()) == 'addons.php')
+    {
+        if ($_GET['type'] == 'karts')
+        {
+            $link = 'addons.php?type=tracks';
+            $text = _('Tracks');
+        }
+        else
+        {
+            $link = 'addons.php?type=karts';
+            $text = _('Karts');
+        }
+        echo '<a href="'.$link.'">'.$text.'</a>';
+    }
+
     if($user->logged_in)
     {
         echo'<a href="login.php?action=logout">'._("Log out").'</a>';

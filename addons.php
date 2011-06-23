@@ -126,23 +126,6 @@ switch ($_GET['save'])
     <div id="right-content_body"></div>
     <div id="right-content_bottom"></div>
 </div>
-<div id="section_link">
-<?php
-    if ($_GET['type'] == 'karts')
-    {
-        $link = 'addons.php?type=tracks';
-        $image = 'image/tracks-small.png';
-        $text = _('Tracks');
-    }
-    else
-    {
-        $link = 'addons.php?type=karts';
-        $image = 'image/karts-small.png';
-        $text = _('Karts');
-    }
-    echo '<a href="'.$link.'"><img src="'.$image.'" width="36" height="35"> '.$text.'</a>';
-?>
-</div>
 </div>
 <script type="text/javascript">
 <?php echo $js; ?>
