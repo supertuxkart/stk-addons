@@ -357,7 +357,7 @@ class coreAddon
         </table></div>';
         
         // Get download path
-        $file_path = get_file_path($result['fileid']);
+        $file_path = get_file_path($this->addonCurrent['fileid']);
         if ($file_path !== false)
         {
             if (file_exists(UP_LOCATION.$file_path))

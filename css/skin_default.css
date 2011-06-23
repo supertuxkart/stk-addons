@@ -647,6 +647,20 @@ span.f_dfsg
     width: 100%;
 }
 
+#section_link
+{
+    background-image: url('../image/section_other.png');
+    clear: both;
+    float: left;
+    font-size: 2.5em;
+    height: 36px;
+    margin-left: 30px;
+    padding: 2px;
+    padding-left: 5px;
+    padding-right: 0px;
+    width: 245px;
+}
+
 /* Addon image tiles */
 div.image_thumb_container
 {
