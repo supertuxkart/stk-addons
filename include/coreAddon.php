@@ -309,6 +309,7 @@ class coreAddon
       */
     function writeInformation()
     {
+        global $user;
         $addonUser = new coreUser();
         $addonUser->selectById($this->addonCurrent['uploader']);
         if ($this->addonCurrent['designer'] == NULL)
@@ -319,8 +320,30 @@ class coreAddon
             $description = htmlentities ($this->addonCurrent['description']).'<br />';
 
         //div for jqery TODO:add jquery effects
-        echo '<div id="accordion"><div>
-        <h1>'.$this->addonCurrent['name'].'</h1>';
+        echo '<div id="accordion"><div>';
+
+        // Get image
+        $image_query = 'SELECT `file_path` FROM `'.DB_PREFIX.'files`
+            WHERE `id` = '.$this->addonCurrent['image'].'
+            AND `approved` = 1
+            LIMIT 1';
+        $image_handle = sql_query($image_query);
+        echo '<div id="addon-image">';
+        if ($image_handle && mysql_num_rows($image_handle) == 1)
+        {
+            $image_result = mysql_fetch_assoc($image_handle);
+            echo '<img class="preview" src="image.php?type=big&amp;pic='.$image_result['file_path'].'" />';
+        }
+        // Add upload button below image (or in place of image)
+        if ($user->logged_in && $this->addonCurrent['uploader'] == $_SESSION['userid'])
+        {
+            echo '<br /><form method="POST" action="upload.php?type='.$this->addonType.'&amp;name='.$this->addonCurrent['id'].'&amp;action=file">';
+            echo '<input type="submit" value="'._('Upload Image').'" />';
+            echo '</form>';
+        }
+        echo '</div>';
+
+        echo '<h1>'.$this->addonCurrent['name'].'</h1><br />';
 
         // Display badges for status flags
         if ($this->addonCurrent['status'] & F_FEATURED)
@@ -333,25 +356,11 @@ class coreAddon
                 echo '<span class="f_rc">'._('Release-Candidate').'</span>';
         if ($this->addonCurrent['status'] & F_DFSG)
                 echo '<span class="f_dfsg">'._('DFSG Compliant').'</span>';
-
-        // Get image
-        $image_query = 'SELECT `file_path` FROM `'.DB_PREFIX.'files`
-            WHERE `id` = '.$this->addonCurrent['image'].'
-            AND `approved` = 1
-            LIMIT 1';
-        $image_handle = sql_query($image_query);
-        if ($image_handle && mysql_num_rows($image_handle) == 1)
-        {
-            $image_result = mysql_fetch_assoc($image_handle);
-            echo '<br /><img class="preview" src="image.php?type=big&amp;pic='.$image_result['file_path'].'" style="float: right;" />';
-        }
-        else
-            echo '<br />';
         echo $description.'
         <table>
         <tr><td><strong>'._('Designer:').'</strong></td><td>'.$this->addonCurrent['designer'].'</td></tr>
         <tr><td><strong>'._('Upload date:').'</strong></td><td>'.$this->addonCurrent['revision_timestamp'].'</td></tr>
-        <tr><td><strong>'._('Submitted by:').'</strong></td><td><a href="users.php?title='.$addonUser->userCurrent['id'].'">'.$addonUser->userCurrent['name'].'</a></td></tr>
+        <tr><td><strong>'._('Submitted by:').'</strong></td><td><a href="users.php?user='.$addonUser->userCurrent['user'].'">'.$addonUser->userCurrent['name'].'</a></td></tr>
         <tr><td><strong>'._('Revision:').'</strong></td><td>'.$this->addonCurrent['revision'].'</td></tr>
         <tr><td><strong>'._('Compatible with:').'</strong></td><td>'.format_compat($this->addonCurrent['format'],$this->addonType).'</td></tr>
         </table></div>';
@@ -431,18 +440,18 @@ class coreAddon
             echo '</td></tr>';
             $addonRevs->next();
         }
-        echo '</table>';
-        
-        global $user;
-        if ($user->logged_in && $this->addonCurrent['uploader'] == $_SESSION['userid'])
-        {
-            echo '<form method="POST" action="upload.php?type='.$this->addonType.'&amp;name='.$this->addonCurrent['id'].'&amp;action=file">';
-            echo '<input type="submit" value="'._('Upload Image or Source Archive').'" />';
-            echo '</form><br />';
-        }
+        echo '</table><br /><br />';
         
         // Show list of images associated with this addon
         echo '<h3>'._('Images').'</h3>';
+        // Add upload button to the right of the Images label
+        if ($user->logged_in && $this->addonCurrent['uploader'] == $_SESSION['userid'])
+        {
+            echo '<div style="float: right;"><form method="POST" action="upload.php?type='.$this->addonType.'&amp;name='.$this->addonCurrent['id'].'&amp;action=file">';
+            echo '<input type="submit" value="'._('Upload Image').'" />';
+            echo '</form></div>';
+        }
+        echo '<br /><br />';
         $imageFilesQuery = 'SELECT * FROM `'.DB_PREFIX.'files`
             WHERE `addon_type` = \''.$this->addonType.'\'
             AND `addon_id` = \''.$this->addonCurrent['id'].'\'
@@ -512,9 +521,18 @@ class coreAddon
                 echo '</div>';
             }
         }
+        echo '<br /><br />';
 
         // Show list of source files
         echo '<h3>'._('Source Files').'</h3>';
+        // Add upload button to the right of the Source Files label
+        if ($user->logged_in && $this->addonCurrent['uploader'] == $_SESSION['userid'])
+        {
+            echo '<div style="float: right;"><form method="POST" action="upload.php?type='.$this->addonType.'&amp;name='.$this->addonCurrent['id'].'&amp;action=file">';
+            echo '<input type="submit" value="'._('Upload Source File').'" />';
+            echo '</form></div>';
+        }
+        echo '<br /><br />';
         $sourceFilesQuery = 'SELECT * FROM `'.DB_PREFIX.'files`
             WHERE `addon_type` = \''.$this->addonType.'\'
             AND `addon_id` = \''.$this->addonCurrent['id'].'\'

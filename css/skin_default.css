@@ -490,74 +490,6 @@ span.f_dfsg
     -webkit-border-radius: 3px;
 }
 
-/* In process of obseleting - do not use */
-#select-addons
-{
-    float:left;
-    margin-top:20px;
-    
-}
-
-#content-addon
-{
-    float:left;
-    margin-left:50px;
-    padding:0px;
-    margin-top:30px;
-    width: 620px;
-}
-#content-addon_top
-{
-    background-image:url("../image/content-addon_top.png");
-    height: 10px;
-    width: 100%;
-}
-#content-addon_bottom
-{
-    background-image:url("../image/content-addon_bottom.png");
-    height: 10px;
-    width: 100%;
-}
-#content-addon_status
-{
-    background-image:url("../image/content-addon.png");
-    overflow-x: hidden;
-    width: 580px;
-    padding: 0px 20px 0px 20px;
-}
-#content-addon_body
-{
-    background-image:url("../image/content-addon.png");
-    width:580px;
-    height:456px;
-    padding: 0px 20px 0px 20px;
-    overflow-y:scroll;
-    overflow-x: hidden;
-}
-#select-addons{
-    width:250px;
-    float:left;
-    margin-left:33px;
-}
-#select-addons_top, #select-addons_center, #select-addons_bottom{
-    width:100%;
-    display:block;
-    min-height:10px;
-}
-#select-addons_top
-{
-    background-image:url("../image/select-top.png");
-}
-#select-addons_center
-{
-    background-image:url("../image/background-news-center.png");
-}
-#select-addons_bottom
-{
-    background-image:url("../image/select-bottom.png");
-}
-/* End obseleted section */
-
 /* Layout for panels */
 #left-menu
 {
@@ -645,6 +577,20 @@ span.f_dfsg
     background-image:url("../image/content-addon_bottom.png");
     height: 10px;
     width: 100%;
+}
+#addon-image
+{
+    display: block;
+    float: right;
+    text-align: center;
+}
+#right-content h1
+{
+    display: inline;
+}
+#right-content h3
+{
+    display: inline;
 }
 
 /* Addon image tiles */
