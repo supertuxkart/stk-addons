@@ -34,14 +34,8 @@ function parseUpload($file,$revision = false)
         return false;
     }
 
+    // This won't be set when uploading addons/revisions
     if (!isset($_POST['upload-type'])) $_POST['upload-type'] = NULL;
-    
-    // FIXME: Source upload doesn't work yet
-    if ($_POST['upload-type'] == 'source')
-    {
-        echo '<span class="error">Source file upload is not implemented yet.</span><br />';
-        return false;
-    }
     
     // Check file-extension for uploaded file
     if ($_POST['upload-type'] == 'image')
@@ -124,112 +118,126 @@ function parseUpload($file,$revision = false)
     $xml_file = find_xml(UP_LOCATION.'temp/'.$fileid);
     $xml_dir = dirname($xml_file);
     if (!$xml_file) {
-        echo '<span class="error>'._('Invalid archive file.').'</span><br />';
+        echo '<span class="error>'._('Invalid archive file. The archive must contain the addon\'s xml file.').'</span><br />';
         rmdir_recursive(UP_LOCATION.'temp/'.$fileid);
         return false;
-    }
-
-    // Define addon type
-    if (preg_match('/kart\.xml$/',$xml_file))
-    {
-        $addon_type = 'karts';
-        echo _('Upload was recognized as a kart.').'<br />';
-    }
-    else
-    {
-        $addon_type = 'tracks';
-        echo _('Upload was recognized as a track.').'<br />';
-    }
-
-    // Read XML
-    $parsed_xml = read_xml($xml_file,$addon_type);
-    if (!$parsed_xml)
-    {
-        echo '<span class="error">'._('Failed to read the add-on\'s XML file. Please make sure you are using the latest version of the kart or track exporter.').'</span><br />';
-        rmdir_recursive(UP_LOCATION.'temp/'.$fileid);
-        return false;
-    }
-    // Write new XML file
-    $fhandle = fopen($xml_file,'w');
-    if (!fwrite($fhandle,$parsed_xml['xml'])) {
-        echo '<span class="error">'._('Failed to write new XML file:').'</span><br />';
-    }
-    fclose($fhandle);
-
-    // Check for valid license file
-    $license_file = find_license(UP_LOCATION.'temp/'.$fileid);
-    if ($license_file === false)
-    {
-        echo '<span class="error">'._('A valid License.txt file was not found. Please add a License.txt file to your archive and re-submit it.').'</span><br />';
-        rmdir_recursive(UP_LOCATION.'temp/'.$fileid);
-        return false;
-    }
-    $parsed_xml['attributes']['license'] = $license_file;
-
-    // Get addon id
-    $addon_id = NULL;
-    if (isset($_GET['name']))
-        $addon_id = addon_id_clean($_GET['name']);
-    if (!preg_match('/^[a-z0-9\-]+_?[0-9]*$/i',$addon_id) || $addon_id == NULL)
-        $addon_id = generate_addon_id($addon_type,$parsed_xml['attributes']);
-
-    // Save addon icon or screenshot
-    if ($addon_type == 'tracks')
-    {
-        $image_file = $xml_dir.'/'.$parsed_xml['attributes']['screenshot'];
-    }
-    else
-    {
-        $image_file = $xml_dir.'/'.$parsed_xml['attributes']['icon-file'];
-    }
-    // Check if file exists
-    if (!file_exists($image_file))
-    {
-        $image_file = '';
-    }
-    // Get image file extension
-    preg_match('/\.([a-z]+)$/i',$image_file,$imageext);
-    // Save file
-    copy($image_file,UP_LOCATION.'images/'.$fileid.'.'.$imageext[1]);
-    $parsed_xml['attributes']['image'] = $fileid.'.'.$imageext[1];
-
-    // Record image file in database
-    $newImageQuery = 'INSERT INTO `'.DB_PREFIX.'files`
-        (`addon_id`,`addon_type`,`file_type`,`file_path`)
-        VALUES
-        (\''.$addon_id.'\',
-        \''.$addon_type.'\',
-        \'image\',
-        \'images/'.$fileid.'.'.$imageext[1].'\')';
-    $newImageHandle = sql_query($newImageQuery);
-    if (!$newImageHandle)
-    {
-        echo '<span class="error">'._('Failed to associate image file with addon.').'</span><br />';
-        unlink(UP_LOCATION.'images/'.$fileid.'.'.$imageext[1]);
-        $parsed_xml['attributes']['image'] = 0;
-    }
-    else
-    {
-        // Get ID of previously inserted image
-        $parsed_xml['attributes']['image'] = mysql_insert_id();
-    }
-
-    // Initialize the status flag
-    $parsed_xml['attributes']['status'] = 0;
-
-    // Check to make sure all image dimensions are powers of 2
-    if (!image_check($xml_dir))
-    {
-        echo '<span class="warning">'._('Some images in this add-on do not have dimensions that are a power of two.')
-            .' '._('This may cause display errors on some video cards.').'</span><br />';
-        $parsed_xml['attributes']['status'] += F_TEX_NOT_POWER_OF_2;
     }
 
     // Check for invalid files
-    $invalid_files = type_check($xml_dir);
+    if ($_POST['upload-type'] == 'source')
+        $invalid_files = type_check($xml_dir, true);
+    else
+        $invalid_files = type_check($xml_dir);
     if (is_array($invalid_files) && count($invalid_files != 0))
     {
         echo '<span class="warning">'._('Some invalid files were found in the uploaded add-on. These files have been removed from the archive:').' '.implode(', ',$invalid_files).'</span><br />';
+    }
+
+    if ($_POST['upload-type'] != 'source')
+    {
+        // Define addon type
+        if (preg_match('/kart\.xml$/',$xml_file))
+        {
+            $addon_type = 'karts';
+            echo _('Upload was recognized as a kart.').'<br />';
+        }
+        else
+        {
+            $addon_type = 'tracks';
+            echo _('Upload was recognized as a track.').'<br />';
+        }
+
+        // Read XML
+        $parsed_xml = read_xml($xml_file,$addon_type);
+        if (!$parsed_xml)
+        {
+            echo '<span class="error">'._('Failed to read the add-on\'s XML file. Please make sure you are using the latest version of the kart or track exporter.').'</span><br />';
+            rmdir_recursive(UP_LOCATION.'temp/'.$fileid);
+            return false;
+        }
+        // Write new XML file
+        $fhandle = fopen($xml_file,'w');
+        if (!fwrite($fhandle,$parsed_xml['xml'])) {
+            echo '<span class="error">'._('Failed to write new XML file:').'</span><br />';
+        }
+        fclose($fhandle);
+
+        // Check for valid license file
+        $license_file = find_license(UP_LOCATION.'temp/'.$fileid);
+        if ($license_file === false)
+        {
+            echo '<span class="error">'._('A valid License.txt file was not found. Please add a License.txt file to your archive and re-submit it.').'</span><br />';
+            rmdir_recursive(UP_LOCATION.'temp/'.$fileid);
+            return false;
+        }
+        $parsed_xml['attributes']['license'] = $license_file;
+
+        // Get addon id
+        $addon_id = NULL;
+        if (isset($_GET['name']))
+            $addon_id = addon_id_clean($_GET['name']);
+        if (!preg_match('/^[a-z0-9\-]+_?[0-9]*$/i',$addon_id) || $addon_id == NULL)
+            $addon_id = generate_addon_id($addon_type,$parsed_xml['attributes']);
+
+        // Save addon icon or screenshot
+        if ($addon_type == 'tracks')
+        {
+            $image_file = $xml_dir.'/'.$parsed_xml['attributes']['screenshot'];
+        }
+        else
+        {
+            $image_file = $xml_dir.'/'.$parsed_xml['attributes']['icon-file'];
+        }
+        // Check if file exists
+        if (!file_exists($image_file))
+        {
+            $image_file = '';
+        }
+        // Get image file extension
+        preg_match('/\.([a-z]+)$/i',$image_file,$imageext);
+        // Save file
+        copy($image_file,UP_LOCATION.'images/'.$fileid.'.'.$imageext[1]);
+        $parsed_xml['attributes']['image'] = $fileid.'.'.$imageext[1];
+
+        // Record image file in database
+        $newImageQuery = 'INSERT INTO `'.DB_PREFIX.'files`
+            (`addon_id`,`addon_type`,`file_type`,`file_path`)
+            VALUES
+            (\''.$addon_id.'\',
+            \''.$addon_type.'\',
+            \'image\',
+            \'images/'.$fileid.'.'.$imageext[1].'\')';
+        $newImageHandle = sql_query($newImageQuery);
+        if (!$newImageHandle)
+        {
+            echo '<span class="error">'._('Failed to associate image file with addon.').'</span><br />';
+            unlink(UP_LOCATION.'images/'.$fileid.'.'.$imageext[1]);
+            $parsed_xml['attributes']['image'] = 0;
+        }
+        else
+        {
+            // Get ID of previously inserted image
+            $parsed_xml['attributes']['image'] = mysql_insert_id();
+        }
+
+        // Initialize the status flag
+        $parsed_xml['attributes']['status'] = 0;
+
+        // Check to make sure all image dimensions are powers of 2
+        if (!image_check($xml_dir))
+        {
+            echo '<span class="warning">'._('Some images in this add-on do not have dimensions that are a power of two.')
+                .' '._('This may cause display errors on some video cards.').'</span><br />';
+            $parsed_xml['attributes']['status'] += F_TEX_NOT_POWER_OF_2;
+        }
+        
+        $filetype = 'addon';
+    }
+    else
+    {
+        $addon_id = addon_id_clean($_GET['name']);
+        $addon_type = mysql_real_escape_string($_GET['type']);
+        $filetype = 'source';
     }
 
     // Repack zip file
@@ -246,19 +254,29 @@ function parseUpload($file,$revision = false)
         VALUES
         (\''.$addon_id.'\',
         \''.$addon_type.'\',
-        \'addon\',
+        \''.$filetype.'\',
         \''.$fileid.'.zip\')';
     $newAddonFileHandle = sql_query($newAddonFileQuery);
     if (!$newAddonFileHandle)
     {
         echo '<span class="error">'._('Failed to associate archive file with addon.').'</span><br />';
         unlink(UP_LOCATION.$fileid.'.zip');
-        $parsed_xml['attributes']['fileid'] = 0;
+        if ($_POST['upload-type'] != 'source')
+            $parsed_xml['attributes']['fileid'] = 0;
     }
     else
     {
-        // Get ID of previously inserted image
-        $parsed_xml['attributes']['fileid'] = mysql_insert_id();
+        // Get ID of previously inserted file
+        if ($_POST['upload-type'] != 'source')
+            $parsed_xml['attributes']['fileid'] = mysql_insert_id();
+    }
+    
+    if ($_POST['upload-type'] == 'source')
+    {
+        rmdir_recursive(UP_LOCATION.'temp/'.$fileid);
+        echo _('Successfully uploaded source archive.').'<br />';
+        echo '<span style="font-size: large"><a href="addons.php?type='.$addon_type.'&amp;name='.$addon_id.'">'._('Continue.').'</a></span><br />';
+        return true;
     }
 
     // Set first revision to be "latest"
@@ -627,14 +645,17 @@ function image_check($path)
     return true;
 }
 
-function type_check($path)
+function type_check($path, $source = false)
 {
     if (!file_exists($path))
         return false;
     if (!is_dir($path))
         return false;
     // Make a list of approved file types
-    $approved_types = get_config('allowed_addon_exts');
+    if ($source === false)
+        $approved_types = get_config('allowed_addon_exts');
+    else
+        $approved_types = get_config('allowed_source_exts');
     $approved_types = explode(',',$approved_types);
     $removed_files = array();
 

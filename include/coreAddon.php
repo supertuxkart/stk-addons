@@ -552,10 +552,21 @@ class coreAddon
                 echo '<tr>';
                 $approved = NULL;
                 if ($source_file['approved'] == 0) $approved = ' ('._('Not Approved').')';
-                echo '<td>'._('Source file').' '.$n.$approved.'</td>';
-                echo '<td><a href="'.DOWN_LOCATION.$source_file['file_path'].'">'._('Download').'</a></td>';
-                // FIXME: Add approval button
-                echo '</tr>';
+                echo '<td><strong>';
+                printf(_('Source File %s'),$n);
+                echo '</strong>'.$approved.'</td>';
+                echo '<td><a href="'.DOWN_LOCATION.$source_file['file_path'].'">'._('Download').'</a>';
+                if ($user->logged_in)
+                {
+                    if ($_SESSION['role']['manageaddons'])
+                    {
+                        if ($source_file['approved'] == 1)
+                            echo ' | <a href="'.$this->addonCurrent['permUrl'].'&amp;save=unapprove&amp;id='.$source_file['id'].'">'._('Unapprove').'</a>';
+                        else
+                            echo ' | <a href="'.$this->addonCurrent['permUrl'].'&amp;save=approve&amp;id='.$source_file['id'].'">'._('Approve').'</a>';
+                    }
+                }
+                echo '</td></tr>';
             }
             echo '</table>';
         }
