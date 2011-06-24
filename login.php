@@ -87,7 +87,7 @@ if ($_GET['action'] == 'submit')
     echo '<div id="content">';
     if ($user->logged_in === true)
     {
-        echo _('Welcome').' '.$_SESSION['real_name'].'. ';
+        printf(_('Welcome, %s!').'<br />',$_SESSION['real_name']);
         echo _('Click <a href="index.php">here</a> if you do not automatically redirect.').'<br />';
         include('include/footer.php');
         exit;

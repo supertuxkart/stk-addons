@@ -125,7 +125,8 @@ function get_self()
     <?php
     if($user->logged_in)
     {
-        echo _('Welcome').' '.$_SESSION['real_name'].'&nbsp;&nbsp;&nbsp;';
+        printf(_('Welcome, %s'),$_SESSION['real_name']);
+        echo '&nbsp;&nbsp;&nbsp;';
     }
     echo '<a href="index.php">';
     echo _("Home");

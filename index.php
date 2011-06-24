@@ -76,8 +76,8 @@ include("include/top.php");
                         // Note most downloaded track and kart
                         $pop_kart = stat_most_downloaded('karts');
                         $pop_track = stat_most_downloaded('tracks');
-                        echo '<li>'._('The most downloaded kart is').' '.addon_name($pop_kart).'</li>';
-                        echo '<li>'._('The most downloaded track is').' '.addon_name($pop_track).'</li>';
+                        printf('<li>'._('The most downloaded kart is %s.').'</li>'."\n",addon_name($pop_kart));
+                        printf('<li>'._('The most downloaded track is %s.').'</li>'."\n",addon_name($pop_track));
                         
                         $newsSql = 'SELECT * FROM `'.DB_PREFIX.'news`
                             WHERE `active` = 1
@@ -86,7 +86,7 @@ include("include/top.php");
                         $handle = sql_query($newsSql);
                         for ($result = sql_next($handle); $result; $result = sql_next($handle))
                         {
-                            echo '<li>'.htmlentities($result['content']).'</li>';
+                            printf("<li>%s</li>\n",htmlentities($result['content']));
                         }
                         ?>
                     </ul>
