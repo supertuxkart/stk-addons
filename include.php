@@ -28,6 +28,7 @@ require(ROOT.'include/coreAddon.php');
 require(ROOT.'include/coreUser.php');
 require(ROOT.'include/parseUpload.php');
 require(ROOT.'include/image.php');
+require(ROOT.'include/statistics.php');
 require(ROOT.'include/xmlWrite.php');
 
 

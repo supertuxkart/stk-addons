@@ -73,6 +73,12 @@ include("include/top.php");
                 <div id="news-panel">
                     <ul id="news-messages">
                         <?php
+                        // Note most downloaded track and kart
+                        $pop_kart = stat_most_downloaded('karts');
+                        $pop_track = stat_most_downloaded('tracks');
+                        echo '<li>'._('The most downloaded kart is').' '.addon_name($pop_kart).'</li>';
+                        echo '<li>'._('The most downloaded track is').' '.addon_name($pop_track).'</li>';
+                        
                         $newsSql = 'SELECT * FROM `'.DB_PREFIX.'news`
                             WHERE `active` = 1
                             AND `web_display` = 1

@@ -98,28 +98,6 @@ CREATE TABLE `news` (
     KEY `date` (`date`,`active`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
-CREATE TABLE `properties` (
-    `type` text NOT NULL,
-    `lock` int(11) NOT NULL,
-    `typefield` text NOT NULL,
-    `default` text NOT NULL,
-    `name` text NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
-INSERT INTO `properties` (`type`, `lock`, `typefield`, `default`, `name`) VALUES
-('karts', 1, 'text', '', 'name'),
-('karts', 1, 'text', '1', 'version'),
-('karts', 0, 'file', '', 'File'),
-('karts', 0, 'file', '', 'Icon'),
-('karts', 0, 'file', '', 'Image'),
-('karts', 0, 'enum', '0.7\r\n0.6', 'STK Version'),
-('tracks', 1, 'text', '', 'name'),
-('tracks', 0, 'text', '1', 'version'),
-('tracks', 0, 'file', '', 'File'),
-('tracks', 0, 'text', '', 'Author'),
-('tracks', 0, 'file', '', 'Image'),
-('tracks', 0, 'enum', '0.7\r\n0.6', 'STK Version')
-
 CREATE TABLE `tracks_revs` (
     `id` char(23) NOT NULL,
     `addon_id` varchar(30) NOT NULL,
@@ -150,5 +128,5 @@ CREATE TABLE `users` (
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
-INSERT INTO `users` (`user`, `pass`, `name`, `role`, `email`, `active`, `last_login`, `verify`, `reg_date`, `homepage`, `avatar`) VALUES
-('admin', 'd8fc1f6f58d1872be71a07ed0094b9bf715e5c9d90018c9ce82af0a0582ee868', 'Administrator', 'root', 'webmaster@localhost', 1, '2011-03-05 03:24:32', '', '2011-03-03', NULL, NULL);
+INSERT INTO `users` (`user`, `pass`, `name`, `role`, `email`, `active`, `last_login`, `verify`, `reg_date`, `homepage`) VALUES
+('admin', 'd8fc1f6f58d1872be71a07ed0094b9bf715e5c9d90018c9ce82af0a0582ee868', 'Administrator', 'root', 'webmaster@localhost', 1, '2011-03-05 03:24:32', '', '2011-03-03', NULL);
