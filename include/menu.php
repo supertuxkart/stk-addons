@@ -175,6 +175,7 @@ function get_self()
                     <li><a href="<?php echo $page_url.'&amp;lang=en_US'; ?>"><img src="image/flag/en.png" /></a></li>
                     <li><a href="<?php echo $page_url.'&amp;lang=ga_IE'; ?>"><img src="image/flag/ga.png" /></a></li>
                     <li><a href="<?php echo $page_url.'&amp;lang=de_DE'; ?>"><img src="image/flag/de.png" /></a></li>
+                    <li><a href="https://translations.launchpad.net/stk/stkaddons">Translate<br />STK-Addons</a></li>
                 </ul>
             </div>
         <a href="http://supertuxkart.sourceforge.net"> <?php echo _("STK Homepage");?></a>

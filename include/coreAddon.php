@@ -356,7 +356,7 @@ class coreAddon
                 echo '<span class="f_rc">'._('Release-Candidate').'</span>';
         if ($this->addonCurrent['status'] & F_DFSG)
                 echo '<span class="f_dfsg">'._('DFSG Compliant').'</span>';
-        echo $description.'
+        echo '<br />'.$description.'
         <table>
         <tr><td><strong>'._('Designer:').'</strong></td><td>'.$this->addonCurrent['designer'].'</td></tr>
         <tr><td><strong>'._('Upload date:').'</strong></td><td>'.$this->addonCurrent['revision_timestamp'].'</td></tr>

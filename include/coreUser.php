@@ -83,7 +83,7 @@ class coreUser
 
     function writeInformation()
     {
-        echo '<h1>'.$this->userCurrent['user'].'</h1>';
+        echo '<h1>'.$this->userCurrent['user'].'</h1><br />';
         echo '<table><tr><td>'._('Username:').'</td><td>'.$this->userCurrent['user'].'</td></tr>';
         echo '<tr><td>'._('Registration Date:').'</td><td>'.$this->userCurrent['reg_date'].'</td></tr>';
         echo '<tr><td>'._('Real Name:').'</td><td>'.$this->userCurrent['name'].'</td></tr>';
@@ -92,10 +92,10 @@ class coreUser
         {
             echo '<tr><td>'._('Homepage:').'</td><td><a href="'.$this->userCurrent['homepage'].'" >'.$this->userCurrent['homepage'].'</a></td></tr>';
         }
-        echo '</table>';
+        echo '</table><br />';
 
         // List of karts created by the current user
-        echo '<h3>'._('User\'s Karts').'</h3>';
+        echo '<h3>'._('User\'s Karts').'</h3><br />';
         $kartSql = 'SELECT `a`.*, `r`.`status`
             FROM `'.DB_PREFIX.'addons` `a`
             LEFT JOIN `'.DB_PREFIX.'karts_revs` `r`
@@ -128,10 +128,10 @@ class coreUser
                         .$kartResult['name'].'</a></li>';
                 }
             }
-            echo '</ul>';
+            echo '</ul><br />';
         }
 
-        echo '<h3>'._('User\'s Tracks').'</h3>';
+        echo '<h3>'._('User\'s Tracks').'</h3><br />';
         $trackSql = 'SELECT `a`.*, `r`.`status`
             FROM `'.DB_PREFIX.'addons` `a`
             LEFT JOIN `'.DB_PREFIX.'tracks_revs` `r`
@@ -167,7 +167,7 @@ class coreUser
                         .$trackResult['name'].'</a></li>';
                 }
             }
-            echo '</ul>';
+            echo '</ul><br />';
         }
     }
 
@@ -176,7 +176,7 @@ class coreUser
         global $dirDownload, $dirUpload;
         echo '
         <hr />
-        <h3>Configuration</h3>
+        <h3>Configuration</h3><br />
         <form enctype="multipart/form-data" action="?user='.$this->userCurrent['user'].'&amp;action=config" method="POST" >
         <table>';
         echo '<tr><td>'._('Homepage:').'</td><td><input type="text" name="homepage" value="'.$this->userCurrent['homepage'].'" disabled /></td></tr>';
@@ -209,10 +209,10 @@ class coreUser
             echo '/></td></tr>';
         }
         echo '<tr><td></td><td><input type="submit" value="'._('Save Configuration').'" /></td></tr>';
-        echo '</table></form>';
+        echo '</table></form><br />';
         if($this->userCurrent['id'] == $_SESSION['userid'])
         {
-            echo '<h3>'._('Change Password').'</h3>
+            echo '<h3>'._('Change Password').'</h3><br />
             <form action="users.php?user='.$this->userCurrent['user'].'&amp;action=password" method="POST">
             '._('Old Password:').'<br />
             <input type="password" name="oldPass" /><br />
