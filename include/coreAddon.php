@@ -892,7 +892,7 @@ class coreAddon
     /** To get the permanent link of the current addon */ 
     function permalink()
     {
-        return 'addons.php?type='.$this->addonType.'&amp;name='.$this->addonCurrent['name'];
+        return 'addons.php?type='.$this->addonType.'&amp;name='.$this->addonCurrent['id'];
     }
 }
 
@@ -1058,6 +1058,7 @@ function update_addon_notes($type,$addon_id,$fields)
         $notes[$revision] = mysql_real_escape_string($_POST[$field]);
     }
     $error = 0;
+    // Save record in database
     foreach ($notes AS $revision => $value)
     {
         // Make sure addon exists
@@ -1073,6 +1074,34 @@ function update_addon_notes($type,$addon_id,$fields)
         if (!$reqSql)
             $error = 1;
     }
+    
+    // Generate email
+    $email_body = NULL;
+    foreach ($notes AS $revision => $value)
+    {
+        $email_body .= '<strong>Revision '.$revision.'</strong><br /><br />';
+        $value = nl2br(strip_tags($value));
+        $email_body .= $value.'<br /><br />';
+    }
+    // Get uploader email address
+    $user = $addon->addonCurrent['uploader'];
+    $userQuery = 'SELECT `name`,`email` FROM `'.DB_PREFIX.'users`
+        WHERE `id` = '.(int)$user.' LIMIT 1';
+    $userHandle = sql_query($userQuery);
+    if (!$userHandle)
+        $error = 1;
+    else
+    {
+        require_once(ROOT.'include/mail.php');
+        $result = mysql_fetch_assoc($userHandle);
+        sendMail($result['email'],
+                'moderatorNotification',
+                array($addon->addonCurrent['name'],
+                SITE_ROOT.$addon->permalink(),
+                $email_body,
+                $result['name']));
+    }
+
     if ($error != 1)
         return true;
     return false;
