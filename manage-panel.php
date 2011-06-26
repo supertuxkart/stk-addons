@@ -79,6 +79,11 @@ function settings_panel()
     echo '<tr><td>'._('Permitted Addon Filetypes').'</td><td><input type="text" name="allowed_addon_exts" value="'.get_config('allowed_addon_exts').'" /></td></tr>';
     echo '<tr><td>'._('Permitted Source Archive Filetypes').'</td><td><input type="text" name="allowed_source_exts" value="'.get_config('allowed_source_exts').'" /></td></tr>';
     echo '<tr><td>'._('Administrator Email').'</td><td><input type="text" name="admin_email" value="'.get_config('admin_email').'" /></td></tr>';
+    if (get_config('list_invisible') == 1)
+        $invisible_opts = '<option value="1" selected>'._('True').'</option><option value="0">'._('False').'</option>';
+    else
+        $invisible_opts = '<option value="1">'._('True').'</option><option value="0" selected>'._('False').'</option>';
+    echo '<tr><td>'._('List Invisible Addons in XML').'</td><td><select name="list_invisible">'.$invisible_opts.'</option></td></tr>';
     echo '<tr><td></td><td><input type="submit" value="'._('Save Settings').'" /></td></tr>';
     echo '</table>';
 }

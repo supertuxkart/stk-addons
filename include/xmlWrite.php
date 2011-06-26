@@ -112,6 +112,11 @@ function generateAssetXML()
     $reqSql = sql_query($querySql);
     while($result = sql_next($reqSql))
     {
+        if (get_config('list_invisible') == 0)
+        {
+            if($result['status'] & F_INVISIBLE)
+                continue;
+        }
         $file_path = get_file_path($result['fileid']);
         if ($file_path === false)
         {
@@ -167,6 +172,11 @@ function generateAssetXML()
     $reqSql = sql_query($querySql);
     while($result = sql_next($reqSql))
     {
+        if (get_config('list_invisible') == 0)
+        {
+            if($result['status'] & F_INVISIBLE)
+                continue;
+        }
         $file_path = get_file_path($result['fileid']);
         if ($file_path === false)
         {

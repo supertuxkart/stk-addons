@@ -26,7 +26,7 @@ define('F_APPROVED',1);
 define('F_ALPHA',2);
 define('F_BETA',4);
 define('F_RC',8);
-define('F_RESERVED1',16); // Reserved for future use
+define('F_INVISIBLE',16);
 define('F_RESERVED2',32); // Reserved for future use
 define('F_DFSG',64);
 define('F_FEATURED',128);

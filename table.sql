@@ -32,7 +32,8 @@ VALUES
 ('xml_frequency','172800'),
 ('allowed_addon_exts','txt,b3d,xml,png,jpg,jpeg,music,ogg'),
 ('allowed_source_exts','txt,blend,png,jpg,jpeg,xcf,psd,wav,ogg,flac,xml'),
-('admin_email','webmaster@localhost');
+('admin_email','webmaster@localhost'),
+('list_invisible','1');
 
 CREATE TABLE `files` (
     `id` int(11) NOT NULL auto_increment,

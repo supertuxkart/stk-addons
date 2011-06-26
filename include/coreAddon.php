@@ -630,7 +630,10 @@ class coreAddon
         echo '<form method="POST" action="'.$this->addonCurrent['permUrl'].'&amp;save=status">';
         echo '<table id="addon_flags"><tr><th></th>';
         if ($_SESSION['role']['manageaddons'])
-            echo '<th>'.img_label(_('Approved')).'</th>';
+        {
+            echo '<th>'.img_label(_('Approved')).'</th>
+                <th>'.img_label(_('Invisible')).'</th>';
+        }
         echo '<th>'.img_label(_('Alpha')).'</th>
             <th>'.img_label(_('Beta')).'</th>
             <th>'.img_label(_('Release-Candidate')).'</th>
@@ -648,9 +651,9 @@ class coreAddon
         {
             echo '<tr><td style="text-align: center;">Rev '.$addonRevs->addonCurrent['revision'].'</td>';
 
-            // F_APPROVED
             if ($_SESSION['role']['manageaddons'] == true)
             {
+                // F_APPROVED
                 echo '<td>';
                 if ($addonRevs->addonCurrent['status'] & F_APPROVED)
                 {
@@ -662,6 +665,19 @@ class coreAddon
                 }
                 echo '</td>';
                 $fields[] = 'approved-'.$addonRevs->addonCurrent['revision'];
+                
+                // F_INVISIBLE
+                echo '<td>';
+                if ($addonRevs->addonCurrent['status'] & F_INVISIBLE)
+                {
+                    echo '<input type="checkbox" name="invisible-'.$addonRevs->addonCurrent['revision'].'" checked />';
+                }
+                else
+                {
+                    echo '<input type="checkbox" name="invisible-'.$addonRevs->addonCurrent['revision'].'" />';
+                }
+                echo '</td>';
+                $fields[] = 'invisible-'.$addonRevs->addonCurrent['revision'];
             }
 
             // F_ALPHA
@@ -806,8 +822,6 @@ class coreAddon
         }
     }
 
-    /* FIXME: please cleanup me! */
-    /* FIXME: this function needs a _lot_ of a tests. */
     function addAddon($fileid, $addonid, $attributes)
     {
         global $moderator_message;
@@ -967,6 +981,9 @@ function update_status($type,$addon_id,$fields)
                 default: break;
                 case 'approved':
                     $status[$revision] += F_APPROVED;
+                    break;
+                case 'invisible':
+                    $status[$revision] += F_INVISIBLE;
                     break;
                 case 'alpha':
                     $status[$revision] += F_ALPHA;
