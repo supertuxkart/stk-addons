@@ -852,7 +852,9 @@ class coreAddon
             {
                 $fields[] = 'props';
                 if ($attributes['arena'] == 'Y')
-                    $values[] = 1;
+                    $values[] = '1';
+                else
+                    $values[] = '0';
             }
             if (!sql_insert('addons',$fields,$values))
                 return false;

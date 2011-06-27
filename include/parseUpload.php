@@ -38,24 +38,7 @@ function parseUpload($file,$revision = false)
     if (!isset($_POST['upload-type'])) $_POST['upload-type'] = NULL;
     
     // Check file-extension for uploaded file
-    if ($_POST['upload-type'] == 'image')
-    {
-        if (!preg_match('/\.(png|jpg|jpeg)$/i',$file['name'],$fileext))
-        {
-            echo '<span class="error">'._('Uploaded image files must be either PNG or Jpeg files.').'</span><br />';
-            return false;
-        }
-    }
-    else
-    {
-        // File extension must be .zip, .tgz, .tar, .tar.gz, tar.bz2, .tbz
-        if (!preg_match('/\.(zip|t[bg]z|tar|tar\.gz|tar\.bz2)$/i',$file['name'],$fileext))
-        {
-            echo '<span class="error">'._('The file you uploaded was not the correct type.')."</span><br />";
-            return false;
-        }
-    }
-    $fileext = $fileext[1];
+    $fileext = check_extension($file['name'], $_POST['upload-type']);
 
     // Generate a unique file name for the uploaded file
     $fileid = uniqid(true);
@@ -316,6 +299,29 @@ function parseUpload($file,$revision = false)
     echo '<span style="font-size: large"><a href="addons.php?type='.$addon_type.'&amp;name='.$addon_id.'">'._('Continue.').'</a></span><br />';
 }
 
+function check_extension($filename,$type = NULL)
+{
+    // Check file-extension for uploaded file
+    if ($type == 'image')
+    {
+        if (!preg_match('/\.(png|jpg|jpeg)$/i',$filename,$fileext))
+        {
+            echo '<span class="error">'._('Uploaded image files must be either PNG or Jpeg files.').'</span><br />';
+            return false;
+        }
+    }
+    else
+    {
+        // File extension must be .zip, .tgz, .tar, .tar.gz, tar.bz2, .tbz
+        if (!preg_match('/\.(zip|t[bg]z|tar|tar\.gz|tar\.bz2)$/i',$filename,$fileext))
+        {
+            echo '<span class="error">'._('The file you uploaded was not the correct type.')."</span><br />";
+            return false;
+        }
+    }
+    return $fileext[1];
+}
+
 function extract_archive($file,$destination,$fileext = NULL)
 {
     if (!file_exists($file))
@@ -535,7 +541,7 @@ function read_xml($file,$type)
 
     // Make sure certain attributes exist
     if (!array_key_exists('arena',$attributes))
-        $attributes['arena'] = 0;
+        $attributes['arena'] = '0';
     if (!array_key_exists('designer',$attributes))
         $attributes['designer'] = '';
 

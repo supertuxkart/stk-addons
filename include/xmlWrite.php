@@ -188,11 +188,14 @@ function generateAssetXML()
             echo '<span class="warming">'._('The following file could not be found:').' '.$file_path.'</span><br />';
             continue;
         }
-	$writer->startElement('track');
+        // Check if arena...
+        if ($result['props'] == 1)
+            $writer->startElement('arena');
+        else
+            $writer->startElement('track');
         $writer->writeAttribute('id',$result['id']);
         $writer->writeAttribute('name',$result['name']);
         $writer->writeAttribute('file',DOWN_LOCATION.$file_path);
-        $writer->writeAttribute('arena',$result['props']);
 	$writer->writeAttribute('date',strtotime($result['date']));
 	$writer->writeAttribute('uploader',$result['user']);
         $writer->writeAttribute('designer',$result['designer']);
