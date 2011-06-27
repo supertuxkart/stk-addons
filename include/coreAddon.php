@@ -357,8 +357,12 @@ class coreAddon
         if ($this->addonCurrent['status'] & F_DFSG)
                 echo '<span class="f_dfsg">'._('DFSG Compliant').'</span>';
         echo '<br />'.$description.'
-        <table>
-        <tr><td><strong>'._('Designer:').'</strong></td><td>'.$this->addonCurrent['designer'].'</td></tr>
+        <table>';
+        if ($this->addonType == 'tracks' && $this->addonCurrent['props'] == 1)
+        {
+            echo '<tr><td><strong>'._('Type:').'</strong></td><td>'._('Arena').'</td></tr>';
+        }
+        echo '<tr><td><strong>'._('Designer:').'</strong></td><td>'.$this->addonCurrent['designer'].'</td></tr>
         <tr><td><strong>'._('Upload date:').'</strong></td><td>'.$this->addonCurrent['revision_timestamp'].'</td></tr>
         <tr><td><strong>'._('Submitted by:').'</strong></td><td><a href="users.php?user='.$addonUser->userCurrent['user'].'">'.$addonUser->userCurrent['name'].'</a></td></tr>
         <tr><td><strong>'._('Revision:').'</strong></td><td>'.$this->addonCurrent['revision'].'</td></tr>
@@ -847,7 +851,8 @@ class coreAddon
             if ($this->addonType == 'tracks')
             {
                 $fields[] = 'props';
-                $values[] = $attributes['arena'];
+                if ($attributes['arena'] == 'Y')
+                    $values[] = 1;
             }
             if (!sql_insert('addons',$fields,$values))
                 return false;
