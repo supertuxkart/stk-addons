@@ -33,6 +33,7 @@ VALUES
 ('allowed_addon_exts','txt,b3d,xml,png,jpg,jpeg,music,ogg'),
 ('allowed_source_exts','txt,blend,png,jpg,jpeg,xcf,psd,wav,ogg,flac,xml'),
 ('admin_email','webmaster@localhost'),
+('list_email','supertuxkart-addons@lists.sourceforge.net'),
 ('list_invisible','1');
 
 CREATE TABLE `files` (

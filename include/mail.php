@@ -59,5 +59,25 @@ function sendMail($mail, $subject, $option)
     $message.= $passage_ligne."--".$boundary."--".$passage_ligne;
     mail($mail,$subject,$message,$header);
 }
+
+function moderator_email($subject, $message)
+{
+    $mail_address = get_config('list_email');
+    if (strlen($mail_address) == 0)
+        return;
+
+    $boundary = "-----=".md5(rand());
+    $header = "From: \"stkaddons@tuxfamily.org\"<stkaddons@tuxfamily.org>\n"
+        ."Reply-to: \"STK-Addons Administrator\" <".get_config('admin_email').">\n"
+        ."MIME-Version: 1.0\n"
+        ."Content-Type: multipart/alternative;\n boundary=\"$boundary\"\n";
+    $message = "\n--".$boundary."\n"
+        ."Content-Type: text/html; charset=\"ISO-8859-1\"\n"
+        ."Content-Transfer-Encoding: 8bit\n"
+        ."\n".$message_html."\n"
+        ."\n--".$boundary."--\n"
+        ."\n--".$boundary."--\n";
+    mail($mail_address,$subject,$message,$header);
+}
 ?>
 

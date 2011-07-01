@@ -1116,7 +1116,6 @@ function update_addon_notes($type,$addon_id,$fields)
         $error = 1;
     else
     {
-        require_once(ROOT.'include/mail.php');
         $result = mysql_fetch_assoc($userHandle);
         sendMail($result['email'],
                 'moderatorNotification',
