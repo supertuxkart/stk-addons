@@ -50,39 +50,34 @@ $login_form =
     '._('Email Address:').' <br />
     <input type="text" name="mail" /><br /><br />
     '._('Terms:').'<br />
-    <textarea rows="10" cols="80">'._('
-=== STK Addons Terms and Conditions ===
-
-You must agree to these terms in order to upload content to the STK Addons site.
-
-The STK Addons service is designed to be a repository exclusively for Super Tux
-Kart addon content. As such, all uploaded content must be intended for this
+    <textarea rows="10" cols="80">
+=== '._('STK Addons Terms and Conditions')." ===\n\n".
+_('You must agree to these terms in order to upload content to the STK Addons site.')."\n\n".
+_('The STK Addons service is designed to be a repository exclusively for Super
+Tux Kart addon content. All uploaded content must be intended for this
 purpose. When you upload your content, it will be available publicly on the
-internet, and may be available in-game for download.
-
-Because Super Tux Kart aims to comply with the Debian Free Software Guidelines,
-and because the host for this web service requires it, you may not upload
-content which is locked down with a restrictive license. Licenses such as
-CC-NC-SA 3.0, or other DFSG-compliant licenses are required. As well, all
-content taken from third-party sources must be attributed properly, and must
+internet, and will be made available in-game for download.')."\n\n".
+_('Super Tux Kart aims to comply with the Debian Free Software Guidelines (DFSG).
+TuxFamily.org also requires that content they host comply with open licenses.
+You may not upload content which is locked down with a restrictive license.
+Licenses such as CC-BY-SA 3.0, or other DFSG-compliant licenses are required.
+All content taken from third-party sources must be attributed properly, and must
 also be available under an open license. Licenses and attribution should be
 included in a "license.txt" file in each uploaded archive. Uploads without
-proper licenses or attribution may be deleted without warning.
-
-As well, even with valid licenses and attribution, content may not contain any
-of the following:
-    1. Profanity
-    2. Explicit images
-    3. Hateful messages and/or images
-    4. Any other content that may be unsuitable for children
-If any of your uploads are found to contain any of the above, your upload may
-be deleted, as well as your account, and any other content you may have
-uploaded.
-
-By checking the box below, you are signifying that you understand the contents
-of these terms. If you have any questions or comments regarding these terms, one
-of the members of the development team would gladly assist you.
-').'</textarea><br />
+proper licenses or attribution may be deleted without warning.')."\n\n".
+_('Even with valid licenses and attribution, content may not contain any
+of the following:')."\n".
+'    1. '._('Profanity')."\n".
+'    2. '._('Explicit images')."\n".
+'    3. '._('Hateful messages and/or images')."\n".
+'    4. '._('Any other content that may be unsuitable for children')."\n".
+_('If any of your uploads are found to contain any of the above, your upload
+will be removed, your account may be removed, and any other content you uploaded
+may be removed.')."\n\n".
+_('By checking the box below, you are confirming that you understand these
+terms. If you have any questions or comments regarding these terms, one of the
+members of the development team would gladly assist you.').
+'</textarea><br />
     <input type="checkbox" name="terms" /> '._('I agree to the above terms').'<br />
     <input type="submit" value="Submit" />
     </form>';

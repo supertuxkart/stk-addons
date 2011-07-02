@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-06-24 14:19-0600\n"
+"POT-Creation-Date: 2011-07-02 00:22-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -100,200 +100,217 @@ msgstr ""
 msgid "Failed to remove addon."
 msgstr ""
 
-#: coreAddon.php:315 coreAddon.php:579 coreAddon.php:1058 coreAddon.php:1068
-#: coreAddon.php:1079 coreAddon.php:1082
+#: coreAddon.php:316 coreAddon.php:612 coreAddon.php:1139 coreAddon.php:1149
+#: coreAddon.php:1160 coreAddon.php:1163
 msgid "Unknown"
 msgstr ""
 
-#: coreAddon.php:327 coreAddon.php:611
+#: coreAddon.php:341 coreAddon.php:455
+msgid "Upload Image"
+msgstr ""
+
+#: coreAddon.php:350 coreAddon.php:647
 msgid "Featured"
 msgstr ""
 
-#: coreAddon.php:329 coreAddon.php:605
+#: coreAddon.php:352 coreAddon.php:641
 msgid "Alpha"
 msgstr ""
 
-#: coreAddon.php:331 coreAddon.php:606
+#: coreAddon.php:354 coreAddon.php:642
 msgid "Beta"
 msgstr ""
 
-#: coreAddon.php:333 coreAddon.php:607
+#: coreAddon.php:356 coreAddon.php:643
 msgid "Release-Candidate"
 msgstr ""
 
-#: coreAddon.php:335 coreAddon.php:610
+#: coreAddon.php:358 coreAddon.php:646
 msgid "DFSG Compliant"
 msgstr ""
 
-#: coreAddon.php:352 coreAddon.php:577
+#: coreAddon.php:363
+msgid "Type:"
+msgstr ""
+
+#: coreAddon.php:363
+msgid "Arena"
+msgstr ""
+
+#: coreAddon.php:365 coreAddon.php:610
 msgid "Designer:"
 msgstr ""
 
-#: coreAddon.php:353
+#: coreAddon.php:366
 msgid "Upload date:"
 msgstr ""
 
-#: coreAddon.php:354
+#: coreAddon.php:367
 msgid "Submitted by:"
 msgstr ""
 
-#: coreAddon.php:355
+#: coreAddon.php:368
 msgid "Revision:"
 msgstr ""
 
-#: coreAddon.php:356
+#: coreAddon.php:369
 msgid "Compatible with:"
 msgstr ""
 
-#: coreAddon.php:369 coreAddon.php:374 coreAddon.php:424 coreAddon.php:429
+#: coreAddon.php:382 coreAddon.php:387 coreAddon.php:437 coreAddon.php:442
 msgid "File not found."
 msgstr ""
 
-#: coreAddon.php:378
+#: coreAddon.php:391
 msgid "License:"
 msgstr ""
 
-#: coreAddon.php:380
+#: coreAddon.php:393
 msgid "Permalink:"
 msgstr ""
 
-#: coreAddon.php:385
+#: coreAddon.php:398
 msgid "Revisions:"
 msgstr ""
 
-#: coreAddon.php:420
+#: coreAddon.php:433
 msgid "Download revision"
 msgstr ""
 
-#: coreAddon.php:424 coreAddon.php:429
+#: coreAddon.php:437 coreAddon.php:442
 msgid "Revision"
 msgstr ""
 
-#: coreAddon.php:440
-msgid "Upload Image or Source Archive"
-msgstr ""
-
-#: coreAddon.php:445
+#: coreAddon.php:450
 msgid "Images"
 msgstr ""
 
-#: coreAddon.php:472
+#: coreAddon.php:485
 msgid "No images have been uploaded for this addon yet."
 msgstr ""
 
-#: coreAddon.php:491
+#: coreAddon.php:504 coreAddon.php:586
 msgid "Unapprove"
 msgstr ""
 
-#: coreAddon.php:493
+#: coreAddon.php:506 coreAddon.php:588
 msgid "Approve"
 msgstr ""
 
-#: coreAddon.php:502
+#: coreAddon.php:515
 msgid "Set Icon"
 msgstr ""
 
-#: coreAddon.php:507
+#: coreAddon.php:520
 msgid "Set Image"
 msgstr ""
 
-#: coreAddon.php:509
+#: coreAddon.php:522
 msgid "Delete File"
 msgstr ""
 
-#: coreAddon.php:517
+#: coreAddon.php:531
 msgid "Source Files"
 msgstr ""
 
-#: coreAddon.php:544
+#: coreAddon.php:536
+msgid "Upload Source File"
+msgstr ""
+
+#: coreAddon.php:566
 msgid "No source files have been uploaded for this addon yet."
 msgstr ""
 
-#: coreAddon.php:554
+#: coreAddon.php:576
 msgid "Not Approved"
 msgstr ""
 
-#: coreAddon.php:555
-msgid "Source file"
+#: coreAddon.php:578
+#, php-format
+msgid "Source File %s"
 msgstr ""
 
-#: coreAddon.php:556
+#: coreAddon.php:580
 msgid "Download"
 msgstr ""
 
-#: coreAddon.php:583
+#: coreAddon.php:616
 msgid "Description:"
 msgstr ""
 
-#: coreAddon.php:583
+#: coreAddon.php:616
 msgid "Max 140 characters"
 msgstr ""
 
-#: coreAddon.php:585
+#: coreAddon.php:618
 msgid "Save Properties"
 msgstr ""
 
-#: coreAddon.php:592
+#: coreAddon.php:625
 msgid "Upload Revision"
 msgstr ""
 
-#: coreAddon.php:597
+#: coreAddon.php:630
 msgid "Delete Addon"
 msgstr ""
 
-#: coreAddon.php:600
+#: coreAddon.php:633
 msgid "Status Flags:"
 msgstr ""
 
-#: coreAddon.php:604
+#: coreAddon.php:638
 msgid "Approved"
 msgstr ""
 
-#: coreAddon.php:608
+#: coreAddon.php:639
+msgid "Invisible"
+msgstr ""
+
+#: coreAddon.php:644
 msgid "Latest"
 msgstr ""
 
-#: coreAddon.php:612
+#: coreAddon.php:648
 msgid "Invalid Textures"
 msgstr ""
 
-#: coreAddon.php:735
+#: coreAddon.php:784
 msgid "Save Changes"
 msgstr ""
 
-#: coreAddon.php:739
+#: coreAddon.php:788
 msgid "Notes from Moderator to Submitter:"
 msgstr ""
 
-#: coreAddon.php:757
+#: coreAddon.php:806
 msgid "Save Notes"
 msgstr ""
 
-#: coreAddon.php:794
+#: coreAddon.php:841
 msgid "The add-on you are trying to create already exists."
 msgstr ""
 
-#: coreAddon.php:801
+#: coreAddon.php:848
 msgid "Creating a new add-on..."
 msgstr ""
 
-#: coreAddon.php:814
+#: coreAddon.php:864
 msgid "This add-on already exists. Adding revision..."
 msgstr ""
 
-#: coreAddon.php:822
+#: coreAddon.php:872
 msgid "Failed to update the license record for this add-on."
 msgstr ""
 
-#: coreAddon.php:832
+#: coreAddon.php:882
 msgid "Failed to check for previous add-on revisions."
 msgstr ""
 
-#: coreAddon.php:909 coreAddon.php:1016
+#: coreAddon.php:959 coreAddon.php:1069
 msgid "Invalid addon type."
 msgstr ""
 
-#: coreAddon.php:1094
+#: coreAddon.php:1175
 msgid "Insufficient permissions."
 msgstr ""
 
@@ -361,7 +378,7 @@ msgstr ""
 msgid "New Password (Confirm):"
 msgstr ""
 
-#: coreUser.php:234 createAccount.php:102
+#: coreUser.php:234 createAccount.php:97
 msgid "Your passwords do not match."
 msgstr ""
 
@@ -369,7 +386,7 @@ msgstr ""
 msgid "Your old password is not correct."
 msgstr ""
 
-#: coreUser.php:244 createAccount.php:112
+#: coreUser.php:244 createAccount.php:107
 msgid "Your password must be at least 6 characters long."
 msgstr ""
 
@@ -401,78 +418,106 @@ msgstr ""
 msgid "Terms:"
 msgstr ""
 
-#: createAccount.php:53
+#: createAccount.php:54
+msgid "STK Addons Terms and Conditions"
+msgstr ""
+
+#: createAccount.php:55
 msgid ""
-"\n"
-"=== STK Addons Terms and Conditions ===\n"
-"\n"
 "You must agree to these terms in order to upload content to the STK Addons "
-"site.\n"
-"\n"
-"The STK Addons service is designed to be a repository exclusively for Super "
-"Tux\n"
-"Kart addon content. As such, all uploaded content must be intended for this\n"
+"site."
+msgstr ""
+
+#: createAccount.php:56
+msgid ""
+"The STK Addons service is designed to be a repository exclusively for Super\n"
+"Tux Kart addon content. All uploaded content must be intended for this\n"
 "purpose. When you upload your content, it will be available publicly on the\n"
-"internet, and may be available in-game for download.\n"
-"\n"
-"Because Super Tux Kart aims to comply with the Debian Free Software "
-"Guidelines,\n"
-"and because the host for this web service requires it, you may not upload\n"
-"content which is locked down with a restrictive license. Licenses such as\n"
-"CC-NC-SA 3.0, or other DFSG-compliant licenses are required. As well, all\n"
-"content taken from third-party sources must be attributed properly, and "
+"internet, and will be made available in-game for download."
+msgstr ""
+
+#: createAccount.php:60
+msgid ""
+"Super Tux Kart aims to comply with the Debian Free Software Guidelines "
+"(DFSG).\n"
+"TuxFamily.org also requires that content they host comply with open "
+"licenses.\n"
+"You may not upload content which is locked down with a restrictive license.\n"
+"Licenses such as CC-BY-SA 3.0, or other DFSG-compliant licenses are "
+"required.\n"
+"All content taken from third-party sources must be attributed properly, and "
 "must\n"
 "also be available under an open license. Licenses and attribution should be\n"
 "included in a \"license.txt\" file in each uploaded archive. Uploads "
 "without\n"
-"proper licenses or attribution may be deleted without warning.\n"
-"\n"
-"As well, even with valid licenses and attribution, content may not contain "
-"any\n"
-"of the following:\n"
-"    1. Profanity\n"
-"    2. Explicit images\n"
-"    3. Hateful messages and/or images\n"
-"    4. Any other content that may be unsuitable for children\n"
-"If any of your uploads are found to contain any of the above, your upload "
-"may\n"
-"be deleted, as well as your account, and any other content you may have\n"
-"uploaded.\n"
-"\n"
-"By checking the box below, you are signifying that you understand the "
-"contents\n"
-"of these terms. If you have any questions or comments regarding these terms, "
-"one\n"
-"of the members of the development team would gladly assist you.\n"
+"proper licenses or attribution may be deleted without warning."
 msgstr ""
 
-#: createAccount.php:86
+#: createAccount.php:68
+msgid ""
+"Even with valid licenses and attribution, content may not contain any\n"
+"of the following:"
+msgstr ""
+
+#: createAccount.php:70 upload.php:206
+msgid "Profanity"
+msgstr ""
+
+#: createAccount.php:71 upload.php:207
+msgid "Explicit images"
+msgstr ""
+
+#: createAccount.php:72 upload.php:208
+msgid "Hateful messages and/or images"
+msgstr ""
+
+#: createAccount.php:73 upload.php:209
+msgid "Any other content that may be unsuitable for children"
+msgstr ""
+
+#: createAccount.php:74
+msgid ""
+"If any of your uploads are found to contain any of the above, your upload\n"
+"will be removed, your account may be removed, and any other content you "
+"uploaded\n"
+"may be removed."
+msgstr ""
+
+#: createAccount.php:77
+msgid ""
+"By checking the box below, you are confirming that you understand these\n"
+"terms. If you have any questions or comments regarding these terms, one of "
+"the\n"
+"members of the development team would gladly assist you."
+msgstr ""
+
+#: createAccount.php:81
 msgid "I agree to the above terms"
 msgstr ""
 
-#: createAccount.php:107
+#: createAccount.php:102
 msgid "Your username must be at least 4 characters long."
 msgstr ""
 
-#: createAccount.php:117
+#: createAccount.php:112
 msgid "You must agree to the terms to register."
 msgstr ""
 
-#: createAccount.php:142
+#: createAccount.php:136
 msgid ""
 "Account creation was successful. Please activate your account using the link "
 "emailed to you."
 msgstr ""
 
-#: createAccount.php:146
+#: createAccount.php:140
 msgid "An error occurred while creating your account."
 msgstr ""
 
-#: createAccount.php:151
+#: createAccount.php:145
 msgid "Your username has already been used."
 msgstr ""
 
-#: createAccount.php:163
+#: createAccount.php:157
 msgid "Your account has been activated."
 msgstr ""
 
@@ -581,60 +626,76 @@ msgid "Administrator Email"
 msgstr ""
 
 #: manage-panel.php:82
+msgid "Moderator List Email"
+msgstr ""
+
+#: manage-panel.php:84 manage-panel.php:86
+msgid "True"
+msgstr ""
+
+#: manage-panel.php:84 manage-panel.php:86
+msgid "False"
+msgstr ""
+
+#: manage-panel.php:87
+msgid "List Invisible Addons in XML"
+msgstr ""
+
+#: manage-panel.php:88
 msgid "Save Settings"
 msgstr ""
 
-#: manage-panel.php:89 manage-panel.php:111
+#: manage-panel.php:95 manage-panel.php:117
 msgid "Message:"
 msgstr ""
 
-#: manage-panel.php:90 manage-panel.php:113
+#: manage-panel.php:96 manage-panel.php:119
 msgid "Condition:"
 msgstr ""
 
-#: manage-panel.php:91
+#: manage-panel.php:97
 msgid "Display on Website:"
 msgstr ""
 
-#: manage-panel.php:92
+#: manage-panel.php:98
 msgid "Create Message"
 msgstr ""
 
-#: manage-panel.php:105
+#: manage-panel.php:111
 msgid "No news messages currently exist."
 msgstr ""
 
-#: manage-panel.php:110
+#: manage-panel.php:116
 msgid "Date:"
 msgstr ""
 
-#: manage-panel.php:112
+#: manage-panel.php:118
 msgid "Author:"
 msgstr ""
 
-#: manage-panel.php:114
+#: manage-panel.php:120
 msgid "Web:"
 msgstr ""
 
-#: manage-panel.php:115
+#: manage-panel.php:121
 msgid "Actions:"
 msgstr ""
 
-#: manage-panel.php:133
+#: manage-panel.php:139
 msgid "Clients by User-Agent"
 msgstr ""
 
-#: manage-panel.php:140
+#: manage-panel.php:146
 msgid ""
 "There are currently no SuperTuxKart clients recorded. Your download script "
 "may not be configured properly."
 msgstr ""
 
-#: manage-panel.php:145
+#: manage-panel.php:151
 msgid "User-Agent String:"
 msgstr ""
 
-#: manage-panel.php:145
+#: manage-panel.php:151
 msgid "Game Version:"
 msgstr ""
 
@@ -654,15 +715,15 @@ msgstr ""
 msgid "XML Download Frequency value is invalid."
 msgstr ""
 
-#: manage.php:81
+#: manage.php:83
 msgid "Saved settings."
 msgstr ""
 
-#: manage.php:99
+#: manage.php:101
 msgid "Created message."
 msgstr ""
 
-#: manage.php:103
+#: manage.php:105
 msgid "Failed to create message."
 msgstr ""
 
@@ -699,7 +760,7 @@ msgstr ""
 msgid "Languages"
 msgstr ""
 
-#: menu.php:180
+#: menu.php:181
 msgid "STK Homepage"
 msgstr ""
 
@@ -707,138 +768,142 @@ msgstr ""
 msgid "Failed to upload your file."
 msgstr ""
 
-#: parseUpload.php:51
-msgid "Uploaded image files must be either PNG or Jpeg files."
-msgstr ""
-
-#: parseUpload.php:60
-msgid "The file you uploaded was not the correct type."
-msgstr ""
-
-#: parseUpload.php:83 parseUpload.php:111
+#: parseUpload.php:60 parseUpload.php:88
 msgid "Failed to move uploaded file."
 msgstr ""
 
-#: parseUpload.php:98 parseUpload.php:207
+#: parseUpload.php:75 parseUpload.php:196
 msgid "Failed to associate image file with addon."
 msgstr ""
 
-#: parseUpload.php:103
+#: parseUpload.php:80
 msgid "Successfully uploaded image."
 msgstr ""
 
-#: parseUpload.php:104 parseUpload.php:298
+#: parseUpload.php:81 parseUpload.php:261 parseUpload.php:299
 msgid "Continue."
 msgstr ""
 
-#: parseUpload.php:127
-msgid "Invalid archive file."
+#: parseUpload.php:104
+msgid "Invalid archive file. The archive must contain the addon's xml file."
 msgstr ""
 
-#: parseUpload.php:136
-msgid "Upload was recognized as a kart."
-msgstr ""
-
-#: parseUpload.php:141
-msgid "Upload was recognized as a track."
-msgstr ""
-
-#: parseUpload.php:148
-msgid ""
-"Failed to read the add-on's XML file. Please make sure you are using the "
-"latest version of the kart or track exporter."
-msgstr ""
-
-#: parseUpload.php:155
-msgid "Failed to write new XML file:"
-msgstr ""
-
-#: parseUpload.php:163
-msgid ""
-"A valid License.txt file was not found. Please add a License.txt file to "
-"your archive and re-submit it."
-msgstr ""
-
-#: parseUpload.php:223
-msgid ""
-"Some images in this add-on do not have dimensions that are a power of two."
-msgstr ""
-
-#: parseUpload.php:224
-msgid "This may cause display errors on some video cards."
-msgstr ""
-
-#: parseUpload.php:232
+#: parseUpload.php:116
 msgid ""
 "Some invalid files were found in the uploaded add-on. These files have been "
 "removed from the archive:"
 msgstr ""
 
-#: parseUpload.php:238
+#: parseUpload.php:125
+msgid "Upload was recognized as a kart."
+msgstr ""
+
+#: parseUpload.php:130
+msgid "Upload was recognized as a track."
+msgstr ""
+
+#: parseUpload.php:137
+msgid ""
+"Failed to read the add-on's XML file. Please make sure you are using the "
+"latest version of the kart or track exporter."
+msgstr ""
+
+#: parseUpload.php:144
+msgid "Failed to write new XML file:"
+msgstr ""
+
+#: parseUpload.php:152
+msgid ""
+"A valid License.txt file was not found. Please add a License.txt file to "
+"your archive and re-submit it."
+msgstr ""
+
+#: parseUpload.php:212
+msgid ""
+"Some images in this add-on do not have dimensions that are a power of two."
+msgstr ""
+
+#: parseUpload.php:213
+msgid "This may cause display errors on some video cards."
+msgstr ""
+
+#: parseUpload.php:229
 msgid "Failed to re-pack archive file."
 msgstr ""
 
-#: parseUpload.php:254
+#: parseUpload.php:245
 msgid "Failed to associate archive file with addon."
 msgstr ""
 
-#: parseUpload.php:277
+#: parseUpload.php:260
+msgid "Successfully uploaded source archive."
+msgstr ""
+
+#: parseUpload.php:278
 msgid "You are trying to add a new revision of an addon that does not exist."
 msgstr ""
 
-#: parseUpload.php:284 users.php:70 users.php:81
+#: parseUpload.php:285 users.php:70 users.php:81
 msgid "You do not have the necessary permissions to perform this action."
 msgstr ""
 
-#: parseUpload.php:292
+#: parseUpload.php:293
 msgid "Failed to create add-on."
 msgstr ""
 
-#: parseUpload.php:297
+#: parseUpload.php:298
 msgid "Successfully uploaded add-on."
 msgstr ""
 
-#: parseUpload.php:305
+#: parseUpload.php:309
+msgid "Uploaded image files must be either PNG or Jpeg files."
+msgstr ""
+
+#: parseUpload.php:318
+msgid "The file you uploaded was not the correct type."
+msgstr ""
+
+#: parseUpload.php:329
 msgid "The file to extract does not exist."
 msgstr ""
 
-#: parseUpload.php:317 parseUpload.php:352
+#: parseUpload.php:341 parseUpload.php:376
 msgid "Could not open archive file. It may be corrupted."
 msgstr ""
 
-#: parseUpload.php:323 parseUpload.php:358
+#: parseUpload.php:347 parseUpload.php:382
 msgid "Failed to extract archive file."
 msgstr ""
 
-#: parseUpload.php:366
+#: parseUpload.php:390
 msgid "Unknown archive type."
 msgstr ""
 
-#: parseUpload.php:377
+#: parseUpload.php:401
 msgid "Upload is invalid."
 msgstr ""
 
-#: parseUpload.php:382
+#: parseUpload.php:406
 msgid "Unknown file upload error."
 msgstr ""
 
-#: parseUpload.php:386 parseUpload.php:388
+#: parseUpload.php:410 parseUpload.php:412
 msgid "Uploaded file is too large."
 msgstr ""
 
-#: parseUpload.php:390
+#: parseUpload.php:414
 msgid "Uploaded file is incomplete."
 msgstr ""
 
-#: parseUpload.php:392
+#: parseUpload.php:416
 msgid "No file was uploaded."
 msgstr ""
 
-#: parseUpload.php:394
+#: parseUpload.php:418
 msgid "There is no TEMP directory to store the uploaded file in."
 msgstr ""
 
-#: parseUpload.php:396
+#: parseUpload.php:420
 msgid "Unable to write uploaded file to disk."
 msgstr ""
 
@@ -973,22 +1038,6 @@ msgstr ""
 msgid "My package does not include:"
 msgstr ""
 
-#: upload.php:206
-msgid "Profanity"
-msgstr ""
-
-#: upload.php:207
-msgid "Explicit images"
-msgstr ""
-
-#: upload.php:208
-msgid "Hateful messages and/or images"
-msgstr ""
-
-#: upload.php:209
-msgid "Any other content that may be unsuitable for children"
-msgstr ""
-
 #: upload.php:217
 msgid "Upload file"
 msgstr ""
@@ -997,14 +1046,14 @@ msgstr ""
 msgid "Me"
 msgstr ""
 
-#: xmlWrite.php:118
+#: xmlWrite.php:123
 msgid "An error occurred finding the path for the file of kart: "
 msgstr ""
 
-#: xmlWrite.php:123 xmlWrite.php:178
+#: xmlWrite.php:128 xmlWrite.php:188
 msgid "The following file could not be found:"
 msgstr ""
 
-#: xmlWrite.php:173
+#: xmlWrite.php:183
 msgid "An error occurred finding the path for the file of track: "
 msgstr ""
