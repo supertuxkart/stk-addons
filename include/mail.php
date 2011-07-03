@@ -60,7 +60,7 @@ function sendMail($mail, $subject, $option)
     mail($mail,$subject,$message,$header);
 }
 
-function moderator_email($subject, $message)
+function moderator_email($subject, $message_html)
 {
     $mail_address = get_config('list_email');
     if (strlen($mail_address) == 0)
