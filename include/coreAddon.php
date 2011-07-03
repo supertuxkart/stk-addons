@@ -586,8 +586,10 @@ class coreAddon
                             echo ' | <a href="'.$this->addonCurrent['permUrl'].'&amp;save=unapprove&amp;id='.$source_file['id'].'">'._('Unapprove').'</a>';
                         else
                             echo ' | <a href="'.$this->addonCurrent['permUrl'].'&amp;save=approve&amp;id='.$source_file['id'].'">'._('Approve').'</a>';
+                        echo ' | <a href="'.$this->addonCurrent['permUrl'].'&amp;save=deletefile&amp;id='.$source_file['id'].'">'._('Delete File').'</a><br />';
                     }
                 }
+                $n++;
                 echo '</td></tr>';
             }
             echo '</table>';
@@ -613,7 +615,7 @@ class coreAddon
                 $this->addonCurrent['designer'] = NULL;
         echo '<input type="text" name="designer" id="designer_field" value="'.$this->addonCurrent['designer'].'" /><br />';
         echo '<br />';
-        echo '<strong>'._('Description:').'</strong> ('._('Max 140 characters').')<br />';
+        echo '<strong>'._('Description:').'</strong> ('.printf(_('Max %s characters'),'140').')<br />';
         echo '<textarea name="description" id="desc_field" rows="4" cols="60">'.$this->addonCurrent['description'].'</textarea><br />';
         echo '<input type="submit" value="'._('Save Properties').'" />';
         echo '</form><br />';
