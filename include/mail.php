@@ -64,10 +64,13 @@ function moderator_email($subject, $message)
 {
     $mail_address = get_config('list_email');
     if (strlen($mail_address) == 0)
+    {
+        echo '<span class="warning">'._('No moderator mailing-list email is set.').'</span><br />';
         return;
+    }
 
     $boundary = "-----=".md5(rand());
-    $header = "From: \"stkaddons@tuxfamily.org\"<stkaddons@tuxfamily.org>\n"
+    $header = "From: \"STK-Addons Administrator\" <".get_config('admin_email').">\n"
         ."Reply-to: \"STK-Addons Administrator\" <".get_config('admin_email').">\n"
         ."MIME-Version: 1.0\n"
         ."Content-Type: multipart/alternative;\n boundary=\"$boundary\"\n";
