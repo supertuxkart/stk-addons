@@ -911,7 +911,7 @@ class coreAddon
             return false;
         // Send mail to moderators
         moderator_email('New Addon Upload',
-                "{S_SESSION['user']} has uploaded a new file for the {$this->addonType} \'{$attributes['name']}\' ($addonid)");
+                "{$_SESSION['user']} has uploaded a new file for the {$this->addonType} \'{$attributes['name']}\' ($addonid)");
         return true;
     }
 
