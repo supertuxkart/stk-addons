@@ -849,7 +849,11 @@ class coreAddon
         {
             echo _('Creating a new add-on...').'<br />';
             $fields = array('id','type','name','uploader','designer','license');
-            $values = array($addonid,$this->addonType,$attributes['name'],$_SESSION['userid'],$attributes['designer'],$attributes['license']);
+            $values = array($addonid,$this->addonType,
+                mysql_real_escape_string($attributes['name']),
+                mysql_real_escape_string($_SESSION['userid']),
+                mysql_real_escape_string($attributes['designer']),
+                mysql_real_escape_string($attributes['license']));
             if ($this->addonType == 'tracks')
             {
                 $fields[] = 'props';
@@ -895,7 +899,9 @@ class coreAddon
         }
         // Add revision entry
         $fields = array('id','addon_id','fileid','revision','format','image','status');
-        $values = array($fileid,$addonid,$attributes['fileid'],$rev,$attributes['version'],$attributes['image'],$attributes['status']);
+        $values = array($fileid,$addonid,$attributes['fileid'],$rev,
+            mysql_real_escape_string($attributes['version']),
+            $attributes['image'],$attributes['status']);
         if ($this->addonType == 'karts')
         {
             $fields[] = 'icon';
