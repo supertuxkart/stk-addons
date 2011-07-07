@@ -437,7 +437,9 @@ class coreAddon
             {
                 if (file_exists(UP_LOCATION.$file_path))
                 {
-                    echo '<a href="'.DOWN_LOCATION.$file_path.'">'._('Download revision').' '.$addonRevs->addonCurrent['revision'].'</a>';
+                    echo '<a href="'.DOWN_LOCATION.$file_path.'">';
+                    printf(_('Download revision %u'),$addonRevs->addonCurrent['revision']);
+                    echo '</a>';
                 }
                 else
                 {
@@ -582,7 +584,7 @@ class coreAddon
                 $approved = NULL;
                 if ($source_file['approved'] == 0) $approved = ' ('._('Not Approved').')';
                 echo '<td><strong>';
-                printf(_('Source File %s'),$n);
+                printf(_('Source File %u'),$n);
                 echo '</strong>'.$approved.'</td>';
                 echo '<td><a href="'.DOWN_LOCATION.$source_file['file_path'].'">'._('Download').'</a>';
                 if ($user->logged_in)
@@ -622,7 +624,7 @@ class coreAddon
                 $this->addonCurrent['designer'] = NULL;
         echo '<input type="text" name="designer" id="designer_field" value="'.$this->addonCurrent['designer'].'" /><br />';
         echo '<br />';
-        echo '<strong>'._('Description:').'</strong> ('.printf(_('Max %s characters'),'140').')<br />';
+        printf('<strong>'._('Description:').'</strong> ('._('Max %u characters').')<br />','140');
         echo '<textarea name="description" id="desc_field" rows="4" cols="60">'.$this->addonCurrent['description'].'</textarea><br />';
         echo '<input type="submit" value="'._('Save Properties').'" />';
         echo '</form><br />';
@@ -662,7 +664,9 @@ class coreAddon
         $fields[] = 'latest';
         while ($addonRevs->addonCurrent)
         {
-            echo '<tr><td style="text-align: center;">Rev '.$addonRevs->addonCurrent['revision'].'</td>';
+            echo '<tr><td style="text-align: center;">';
+            printf(_('Rev %u:'),$addonRevs->addonCurrent['revision']);
+            echo '</td>';
 
             if ($_SESSION['role']['manageaddons'] == true)
             {
@@ -802,7 +806,7 @@ class coreAddon
         $fields = array();
         while ($addonRevs->addonCurrent)
         {
-            echo 'Rev '.$addonRevs->addonCurrent['revision'].':<br />';
+            printf(_('Rev %u:').'<br />',$addonRevs->addonCurrent['revision']);
             echo '<textarea name="notes-'.$addonRevs->addonCurrent['revision'].'" rows="4" cols="60">';
             echo $addonRevs->addonCurrent['moderator_note'];
             echo '</textarea><br />';

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-02 00:22-0600\n"
+"POT-Creation-Date: 2011-07-07 13:46-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -76,241 +76,259 @@ msgstr ""
 msgid "basicUser"
 msgstr ""
 
-#: coreAddon.php:64
+#: coreAddon.php:65
 msgid "The requested addon does not exist."
 msgstr ""
 
-#: coreAddon.php:250
+#: coreAddon.php:252
 msgid "Failed to find files associated with this addon."
 msgstr ""
 
-#: coreAddon.php:259
+#: coreAddon.php:261
 msgid "Failed to delete file:"
 msgstr ""
 
-#: coreAddon.php:270
+#: coreAddon.php:272
 msgid "Failed to remove file records for this addon."
 msgstr ""
 
-#: coreAddon.php:290
+#: coreAddon.php:292
 msgid "Failed to remove revision record."
 msgstr ""
 
-#: coreAddon.php:298
+#: coreAddon.php:300
 msgid "Failed to remove addon."
 msgstr ""
 
-#: coreAddon.php:316 coreAddon.php:612 coreAddon.php:1139 coreAddon.php:1149
-#: coreAddon.php:1160 coreAddon.php:1163
+#: coreAddon.php:318 coreAddon.php:623 coreAddon.php:1168 coreAddon.php:1178
+#: coreAddon.php:1189 coreAddon.php:1192
 msgid "Unknown"
 msgstr ""
 
-#: coreAddon.php:341 coreAddon.php:455
+#: coreAddon.php:343 coreAddon.php:464
 msgid "Upload Image"
 msgstr ""
 
-#: coreAddon.php:350 coreAddon.php:647
+#: coreAddon.php:352 coreAddon.php:658
 msgid "Featured"
 msgstr ""
 
-#: coreAddon.php:352 coreAddon.php:641
+#: coreAddon.php:354 coreAddon.php:652
 msgid "Alpha"
 msgstr ""
 
-#: coreAddon.php:354 coreAddon.php:642
+#: coreAddon.php:356 coreAddon.php:653
 msgid "Beta"
 msgstr ""
 
-#: coreAddon.php:356 coreAddon.php:643
+#: coreAddon.php:358 coreAddon.php:654
 msgid "Release-Candidate"
 msgstr ""
 
-#: coreAddon.php:358 coreAddon.php:646
+#: coreAddon.php:360 coreAddon.php:657
 msgid "DFSG Compliant"
 msgstr ""
 
-#: coreAddon.php:363
+#: coreAddon.php:365
 msgid "Type:"
 msgstr ""
 
-#: coreAddon.php:363
+#: coreAddon.php:365
 msgid "Arena"
 msgstr ""
 
-#: coreAddon.php:365 coreAddon.php:610
+#: coreAddon.php:367 coreAddon.php:621
 msgid "Designer:"
 msgstr ""
 
-#: coreAddon.php:366
+#: coreAddon.php:368
 msgid "Upload date:"
 msgstr ""
 
-#: coreAddon.php:367
+#: coreAddon.php:369
 msgid "Submitted by:"
 msgstr ""
 
-#: coreAddon.php:368
+#: coreAddon.php:370
 msgid "Revision:"
 msgstr ""
 
-#: coreAddon.php:369
+#: coreAddon.php:371
 msgid "Compatible with:"
 msgstr ""
 
-#: coreAddon.php:382 coreAddon.php:387 coreAddon.php:437 coreAddon.php:442
+#: coreAddon.php:376
+msgid ""
+"Warning: This addon may not display correctly on some systems. It uses "
+"textures that may not be compatible with all video cards."
+msgstr ""
+
+#: coreAddon.php:389 coreAddon.php:394 coreAddon.php:446 coreAddon.php:451
 msgid "File not found."
 msgstr ""
 
-#: coreAddon.php:391
+#: coreAddon.php:398
 msgid "License:"
 msgstr ""
 
-#: coreAddon.php:393
+#: coreAddon.php:400
 msgid "Permalink:"
 msgstr ""
 
-#: coreAddon.php:398
+#: coreAddon.php:405
 msgid "Revisions:"
 msgstr ""
 
-#: coreAddon.php:433
-msgid "Download revision"
+#: coreAddon.php:441
+#, php-format
+msgid "Download revision %u"
 msgstr ""
 
-#: coreAddon.php:437 coreAddon.php:442
+#: coreAddon.php:446 coreAddon.php:451
 msgid "Revision"
 msgstr ""
 
-#: coreAddon.php:450
+#: coreAddon.php:459
 msgid "Images"
 msgstr ""
 
-#: coreAddon.php:485
+#: coreAddon.php:494
 msgid "No images have been uploaded for this addon yet."
 msgstr ""
 
-#: coreAddon.php:504 coreAddon.php:586
+#: coreAddon.php:513 coreAddon.php:595
 msgid "Unapprove"
 msgstr ""
 
-#: coreAddon.php:506 coreAddon.php:588
+#: coreAddon.php:515 coreAddon.php:597
 msgid "Approve"
 msgstr ""
 
-#: coreAddon.php:515
+#: coreAddon.php:524
 msgid "Set Icon"
 msgstr ""
 
-#: coreAddon.php:520
+#: coreAddon.php:529
 msgid "Set Image"
 msgstr ""
 
-#: coreAddon.php:522
+#: coreAddon.php:531 coreAddon.php:598
 msgid "Delete File"
 msgstr ""
 
-#: coreAddon.php:531
+#: coreAddon.php:540
 msgid "Source Files"
 msgstr ""
 
-#: coreAddon.php:536
+#: coreAddon.php:545
 msgid "Upload Source File"
 msgstr ""
 
-#: coreAddon.php:566
+#: coreAddon.php:575
 msgid "No source files have been uploaded for this addon yet."
 msgstr ""
 
-#: coreAddon.php:576
+#: coreAddon.php:585
 msgid "Not Approved"
 msgstr ""
 
-#: coreAddon.php:578
+#: coreAddon.php:587
 #, php-format
-msgid "Source File %s"
+msgid "Source File %u"
 msgstr ""
 
-#: coreAddon.php:580
+#: coreAddon.php:589
 msgid "Download"
 msgstr ""
 
-#: coreAddon.php:616
+#: coreAddon.php:627
+#, php-format
 msgid "Description:"
 msgstr ""
 
-#: coreAddon.php:616
-msgid "Max 140 characters"
+#: coreAddon.php:627
+#, php-format
+msgid "Max %u characters"
 msgstr ""
 
-#: coreAddon.php:618
+#: coreAddon.php:629
 msgid "Save Properties"
 msgstr ""
 
-#: coreAddon.php:625
+#: coreAddon.php:636
 msgid "Upload Revision"
 msgstr ""
 
-#: coreAddon.php:630
+#: coreAddon.php:641
 msgid "Delete Addon"
 msgstr ""
 
-#: coreAddon.php:633
+#: coreAddon.php:644
 msgid "Status Flags:"
 msgstr ""
 
-#: coreAddon.php:638
+#: coreAddon.php:649
 msgid "Approved"
 msgstr ""
 
-#: coreAddon.php:639
+#: coreAddon.php:650
 msgid "Invisible"
 msgstr ""
 
-#: coreAddon.php:644
+#: coreAddon.php:655
 msgid "Latest"
 msgstr ""
 
-#: coreAddon.php:648
+#: coreAddon.php:659
 msgid "Invalid Textures"
 msgstr ""
 
-#: coreAddon.php:784
+#: coreAddon.php:668 coreAddon.php:809
+#, php-format
+msgid "Rev %u:"
+msgstr ""
+
+#: coreAddon.php:797
 msgid "Save Changes"
 msgstr ""
 
-#: coreAddon.php:788
+#: coreAddon.php:801
 msgid "Notes from Moderator to Submitter:"
 msgstr ""
 
-#: coreAddon.php:806
+#: coreAddon.php:819
 msgid "Save Notes"
 msgstr ""
 
-#: coreAddon.php:841
+#: coreAddon.php:854
 msgid "The add-on you are trying to create already exists."
 msgstr ""
 
-#: coreAddon.php:848
+#: coreAddon.php:861
 msgid "Creating a new add-on..."
 msgstr ""
 
-#: coreAddon.php:864
+#: coreAddon.php:881
 msgid "This add-on already exists. Adding revision..."
 msgstr ""
 
-#: coreAddon.php:872
+#: coreAddon.php:887
+msgid "Failed to update the name record for this add-on."
+msgstr ""
+
+#: coreAddon.php:896
 msgid "Failed to update the license record for this add-on."
 msgstr ""
 
-#: coreAddon.php:882
+#: coreAddon.php:906
 msgid "Failed to check for previous add-on revisions."
 msgstr ""
 
-#: coreAddon.php:959 coreAddon.php:1069
+#: coreAddon.php:988 coreAddon.php:1098
 msgid "Invalid addon type."
 msgstr ""
 
-#: coreAddon.php:1175
+#: coreAddon.php:1204
 msgid "Insufficient permissions."
 msgstr ""
 
@@ -583,6 +601,10 @@ msgstr ""
 
 #: login.php:112
 msgid "Create an account."
+msgstr ""
+
+#: mail.php:68
+msgid "No moderator mailing-list email is set."
 msgstr ""
 
 #: manage-panel.php:43
