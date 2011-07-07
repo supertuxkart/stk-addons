@@ -52,7 +52,8 @@ class coreAddon
                 LEFT JOIN '.DB_PREFIX.$this->addonType.'_revs r
                 ON a.id = r.addon_id
                 WHERE a.id = \''.$id.'\'
-                AND `a`.`type` = \''.$this->addonType.'\'';
+                AND `a`.`type` = \''.$this->addonType.'\'
+                ORDER BY `r`.`revision` ASC';
         }
         $this->reqSql = sql_query($querySql);
         if (!$this->reqSql)
@@ -83,7 +84,8 @@ class coreAddon
             LEFT JOIN '.DB_PREFIX.$this->addonType.'_revs r
             ON a.id = r.addon_id
             WHERE a.uploader = \''.$id.'\'
-            AND `a`.`type` = \''.$this->addonType.'\'';
+            AND `a`.`type` = \''.$this->addonType.'\'
+            AND `r`.`status` & '.F_LATEST;
         $this->reqSql = sql_query($querySql);
         $this->addonCurrent = sql_next($this->reqSql);
         if ($this->addonCurrent)
@@ -103,7 +105,7 @@ class coreAddon
             ON a.id = r.addon_id
             WHERE r.status & '.F_LATEST.'
             AND `a`.`type` = \''.$this->addonType.'\'
-            ORDER BY `a`.`name` ASC, `a`.`id` ASC';
+            ORDER BY `a`.`name` ASC, `a`.`id` ASC, `r`.`revision` ASC';
         $this->reqSql = sql_query($querySql);
         return $this->reqSql;
     }
@@ -368,6 +370,11 @@ class coreAddon
         <tr><td><strong>'._('Revision:').'</strong></td><td>'.$this->addonCurrent['revision'].'</td></tr>
         <tr><td><strong>'._('Compatible with:').'</strong></td><td>'.format_compat($this->addonCurrent['format'],$this->addonType).'</td></tr>
         </table></div>';
+        
+        if ($this->addonCurrent['status'] & F_TEX_NOT_POWER_OF_2)
+        {
+            echo _('Warning: This addon may not display correctly on some systems. It uses textures that may not be compatible with all video cards.')."<br />\n";
+        }
         
         // Get download path
         $file_path = get_file_path($this->addonCurrent['fileid']);
@@ -868,6 +875,13 @@ class coreAddon
         else
         {
             echo _('This add-on already exists. Adding revision...').'<br />';
+            // Update the addon name
+            if (!sql_update('addons',
+                    'id',mysql_real_escape_string($addonid),
+                    'name',mysql_real_escape_string($attirbutes['name'])))
+            {
+                echo '<span class="error">'._('Failed to update the name record for this add-on.').'</span><br />';
+            }
             // Update license file record
             if (!sql_update('addons',
                     'id',

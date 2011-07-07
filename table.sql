@@ -85,7 +85,8 @@ CREATE TABLE `karts_revs` (
     `moderator_note` varchar(4096) NULL default NULL,
     UNIQUE KEY `id` (`id`),
     KEY `track_id` (`addon_id`),
-    KEY `status` (`status`)
+    KEY `status` (`status`),
+    KEY `revision` (`revision`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `news` (
@@ -112,7 +113,8 @@ CREATE TABLE `tracks_revs` (
     `moderator_note` varchar(4096) NULL default NULL,
     UNIQUE KEY `id` (`id`),
     KEY `track_id` (`addon_id`),
-    KEY `status` (`status`)
+    KEY `status` (`status`),
+    KEY `revision` (`revision`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `users` (
@@ -133,3 +135,11 @@ CREATE TABLE `users` (
 /* Default admin password is 'password' - Change after install. */
 INSERT INTO `users` (`user`, `pass`, `name`, `role`, `email`, `active`, `last_login`, `verify`, `reg_date`, `homepage`) VALUES
 ('admin', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', 'Administrator', 'root', 'webmaster@localhost', 1, '2011-03-05 03:24:32', '', '2011-03-03', NULL);
+
+CREATE TABLE `votes` (
+    `id` int unsigned NOT NULL auto_increment,
+    `user_id` int unsigned NOT NULL,
+    `addon_id` varchar(30) NOT NULL,
+    `vote` int(1) unsigned NOT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
