@@ -65,6 +65,10 @@ switch ($_POST['id'])
         echo '<h1>'._('News Messages').'</h1>';
         news_message_panel();
         break;
+    case 'files':
+        echo '<h1>'._('Uploaded Files').'</h1>';
+        files_panel();
+        break;
     case 'clients':
         echo '<h1>'._('Client Versions').'</h1>';
         clients_panel();
@@ -132,6 +136,84 @@ function news_message_panel()
         }
         echo '</table>';
     }
+}
+
+function files_panel()
+{
+    $filesSql = 'SELECT * FROM `'.DB_PREFIX.'files`
+        ORDER BY `addon_id` ASC';
+    $filesHandle = sql_query($filesSql);
+    if (!$filesHandle)
+        return false;
+    
+    if (mysql_num_rows($filesHandle) == 0)
+    {
+        echo _('No files have been uploaded.');
+        return;
+    }
+    
+    $name_label = _('Name:');
+    $addon_label = _('Add-on:');
+    $type_label = _('Type:');
+    $references_label = _('References:');
+
+    echo <<< EOF
+<table class="info">
+<thead>
+<tr>
+<th>$name_label</th>
+<th>$addon_label</th>
+<th>$type_label</th>
+<th>$references_label</th>
+</tr>
+</thead>
+<tbody>
+EOF;
+    for ($i = 0; $i < mysql_num_rows($filesHandle); $i++)
+    {
+        $filesResult = mysql_fetch_assoc($filesHandle);
+
+        // Get references to files
+        switch ($filesResult['file_type'])
+        {
+            default:
+                $references = 'TODO';
+                break;
+            case 'addon':
+                $references = array();
+                // Look for tracks with this file
+                $refQuery = 'SELECT * FROM `'.DB_PREFIX.'tracks_revs`
+                    WHERE `fileid` = '.$filesResult['id'];
+                $refHandle = sql_query($refQuery);
+                for ($j = 0; mysql_num_rows($refHandle) > $j; $j++)
+                {
+                    $refResult = mysql_fetch_assoc($refHandle);
+                    $references[] = $refResult['addon_id'].' (track)';
+                }
+
+                // Look for karts with this file
+                $refQuery = 'SELECT * FROM `'.DB_PREFIX.'karts_revs`
+                    WHERE `fileid` = '.$filesResult['id'];
+                $refHandle = sql_query($refQuery);
+                for ($j = 0; mysql_num_rows($refHandle) > $j; $j++)
+                {
+                    $refResult = mysql_fetch_assoc($refHandle);
+                    $references[] = $refResult['addon_id'].' (kart)';
+                }
+                
+                if (count($references) == 0)
+                    $references[] = '<span class="error">None</span>';
+                
+                $references = implode(', ',$references);
+                
+                break;
+        }
+
+        echo "<tr><td>{$filesResult['file_path']}</td>
+            <td>{$filesResult['addon_id']} ({$filesResult['addon_type']})</td>
+            <td>{$filesResult['file_type']}</td><td>$references</td></tr>";
+    }
+    echo '</tbody></table>';
 }
 
 function clients_panel()

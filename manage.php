@@ -45,6 +45,11 @@ if (!isset($_GET['action'])) $_GET['action'] = NULL;
                </a>
            </li>
            <li>
+               <a class="menu-item" href="javascript:loadFrame('files','manage-panel.php');">
+                   <?php echo _('Uploaded Files'); ?>
+               </a>
+           </li>
+           <li>
                <a class="menu-item" href="javascript:loadFrame('clients','manage-panel.php');">
                    <?php echo _('Client Versions'); ?>
                </a>
