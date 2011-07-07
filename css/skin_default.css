@@ -586,11 +586,26 @@ span.f_dfsg
 }
 #right-content h1
 {
-    display: inline;
+    border-bottom: 1px solid #CCCCCC;
 }
 #right-content h3
 {
     display: inline;
+}
+
+#right-content table.info
+{
+    border: 0px;
+    border-spacing: 0px 2px;
+    margin: 5px 2px 5px 2px;
+}
+#right-content table.info tbody tr
+{
+    background: #DDDDDD;
+}
+#right-content table.info tbody tr:nth-child(even)
+{
+    background: #EEEEEE;
 }
 
 /* Addon image tiles */
@@ -655,59 +670,4 @@ div.help-hidden
 {
     border:1px solid grey;
     width:250px;
-}
-.avatar
-{
-    max-width:150px;
-    max-height:150px;
-}
-.newaddon
-{
-    color:brown;
-}
-.news_home
-{
-    border-bottom:brown 1px solid;
-    padding-bottom:4px;
-    font-size:12.5px;
-}
-#news_div
-{
-    margin-bottom:5px;
-}
-
-
-/*********** Menu advanced **************/
-#advanced
-{
-    position:absolute;
-    right:0px;
-    top:50px;
-    margin-right:0px;
-}
-#content_advanced
-{
-    width:0px;
-    background-color:black;
-    height:500px;
-    position:relative;
-    float:right;
-    color:white;
-    overflow:hidden;
-}
-#advanced a {
-    color:#b50404;
-    font-weight:bold;
-}
-#advanced a:hover {
-    color:white;
-}
-#advanced .news_home
-{
-    width:300px;
-}
-/********** Disbale border for links *******************/
-#advanced a:focus {
-    outline:0;
-    border:none;
 }

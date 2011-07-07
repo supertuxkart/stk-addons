@@ -324,6 +324,8 @@ class coreAddon
         //div for jqery TODO:add jquery effects
         echo '<div id="accordion"><div>';
 
+        echo '<h1>'.$this->addonCurrent['name'].'</h1>';
+
         // Get image
         $image_query = 'SELECT `file_path` FROM `'.DB_PREFIX.'files`
             WHERE `id` = '.$this->addonCurrent['image'].'
@@ -344,9 +346,7 @@ class coreAddon
             echo '</form>';
         }
         echo '</div>';
-
-        echo '<h1>'.$this->addonCurrent['name'].'</h1><br />';
-
+        
         // Display badges for status flags
         if ($this->addonCurrent['status'] & F_FEATURED)
                 echo '<span class="f_featured">'._('Featured').'</span>';
@@ -359,7 +359,7 @@ class coreAddon
         if ($this->addonCurrent['status'] & F_DFSG)
                 echo '<span class="f_dfsg">'._('DFSG Compliant').'</span>';
         echo '<br />'.$description.'
-        <table>';
+        <table class="info">';
         if ($this->addonType == 'tracks' && $this->addonCurrent['props'] == 1)
         {
             echo '<tr><td><strong>'._('Type:').'</strong></td><td>'._('Arena').'</td></tr>';
@@ -643,7 +643,7 @@ class coreAddon
         // Set status flags
         echo '<strong>'._('Status Flags:').'</strong><br />';
         echo '<form method="POST" action="'.$this->addonCurrent['permUrl'].'&amp;save=status">';
-        echo '<table id="addon_flags"><tr><th></th>';
+        echo '<table id="addon_flags" class="info"><thead><tr><th></th>';
         if ($_SESSION['role']['manageaddons'])
         {
             echo '<th>'.img_label(_('Approved')).'</th>
@@ -657,7 +657,7 @@ class coreAddon
             echo '<th>'.img_label(_('DFSG Compliant')).'</th>
                 <th>'.img_label(_('Featured')).'</th>';
         echo '<th>'.img_label(_('Invalid Textures')).'</th>';
-        echo '</tr>';
+        echo '</tr></thead>';
         $addonRevs = new coreAddon($this->addonType);
         $addonRevs->selectById($this->addonCurrent['id'],true);
         $fields = array();
