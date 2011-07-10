@@ -8,13 +8,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-07 13:46-0600\n"
+"POT-Creation-Date: 2011-07-09 22:06-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: User.php:147
+msgid "Me"
+msgstr ""
 
 #: addons-panel.php:44
 msgid "This page cannot be loaded because an invalid add-on type was provided."
@@ -80,255 +84,255 @@ msgstr ""
 msgid "The requested addon does not exist."
 msgstr ""
 
-#: coreAddon.php:252
+#: coreAddon.php:250
 msgid "Failed to find files associated with this addon."
 msgstr ""
 
-#: coreAddon.php:261
+#: coreAddon.php:259
 msgid "Failed to delete file:"
 msgstr ""
 
-#: coreAddon.php:272
+#: coreAddon.php:270
 msgid "Failed to remove file records for this addon."
 msgstr ""
 
-#: coreAddon.php:292
+#: coreAddon.php:290
 msgid "Failed to remove revision record."
 msgstr ""
 
-#: coreAddon.php:300
+#: coreAddon.php:298
 msgid "Failed to remove addon."
 msgstr ""
 
-#: coreAddon.php:318 coreAddon.php:623 coreAddon.php:1168 coreAddon.php:1178
-#: coreAddon.php:1189 coreAddon.php:1192
+#: coreAddon.php:316 coreAddon.php:634 coreAddon.php:1177 coreAddon.php:1187
+#: coreAddon.php:1198 coreAddon.php:1201
 msgid "Unknown"
 msgstr ""
 
-#: coreAddon.php:343 coreAddon.php:464
+#: coreAddon.php:343 coreAddon.php:475
 msgid "Upload Image"
 msgstr ""
 
-#: coreAddon.php:352 coreAddon.php:658
+#: coreAddon.php:350 coreAddon.php:664
 msgid "Featured"
 msgstr ""
 
-#: coreAddon.php:354 coreAddon.php:652
+#: coreAddon.php:352 coreAddon.php:658
 msgid "Alpha"
 msgstr ""
 
-#: coreAddon.php:356 coreAddon.php:653
+#: coreAddon.php:354 coreAddon.php:659
 msgid "Beta"
 msgstr ""
 
-#: coreAddon.php:358 coreAddon.php:654
+#: coreAddon.php:356 coreAddon.php:660
 msgid "Release-Candidate"
 msgstr ""
 
-#: coreAddon.php:360 coreAddon.php:657
+#: coreAddon.php:358 coreAddon.php:663
 msgid "DFSG Compliant"
 msgstr ""
 
-#: coreAddon.php:365
+#: coreAddon.php:363 manage-panel.php:157
 msgid "Type:"
 msgstr ""
 
-#: coreAddon.php:365
+#: coreAddon.php:363
 msgid "Arena"
 msgstr ""
 
-#: coreAddon.php:367 coreAddon.php:621
+#: coreAddon.php:365 coreAddon.php:632
 msgid "Designer:"
 msgstr ""
 
-#: coreAddon.php:368
+#: coreAddon.php:366
 msgid "Upload date:"
 msgstr ""
 
-#: coreAddon.php:369
+#: coreAddon.php:367
 msgid "Submitted by:"
 msgstr ""
 
-#: coreAddon.php:370
+#: coreAddon.php:368
 msgid "Revision:"
 msgstr ""
 
-#: coreAddon.php:371
+#: coreAddon.php:369
 msgid "Compatible with:"
 msgstr ""
 
-#: coreAddon.php:376
+#: coreAddon.php:374
 msgid ""
 "Warning: This addon may not display correctly on some systems. It uses "
 "textures that may not be compatible with all video cards."
 msgstr ""
 
-#: coreAddon.php:389 coreAddon.php:394 coreAddon.php:446 coreAddon.php:451
+#: coreAddon.php:387 coreAddon.php:392 coreAddon.php:457 coreAddon.php:462
 msgid "File not found."
 msgstr ""
 
-#: coreAddon.php:398
+#: coreAddon.php:396
 msgid "License:"
 msgstr ""
 
-#: coreAddon.php:400
-msgid "Permalink:"
+#: coreAddon.php:401
+msgid "Permalink"
 msgstr ""
 
-#: coreAddon.php:405
-msgid "Revisions:"
+#: coreAddon.php:407
+msgid "Revisions"
 msgstr ""
 
-#: coreAddon.php:441
+#: coreAddon.php:413
+msgid "Upload Revision"
+msgstr ""
+
+#: coreAddon.php:452
 #, php-format
 msgid "Download revision %u"
 msgstr ""
 
-#: coreAddon.php:446 coreAddon.php:451
+#: coreAddon.php:457 coreAddon.php:462
 msgid "Revision"
 msgstr ""
 
-#: coreAddon.php:459
+#: coreAddon.php:470
 msgid "Images"
 msgstr ""
 
-#: coreAddon.php:494
+#: coreAddon.php:505
 msgid "No images have been uploaded for this addon yet."
 msgstr ""
 
-#: coreAddon.php:513 coreAddon.php:595
+#: coreAddon.php:524 coreAddon.php:606
 msgid "Unapprove"
 msgstr ""
 
-#: coreAddon.php:515 coreAddon.php:597
+#: coreAddon.php:526 coreAddon.php:608
 msgid "Approve"
 msgstr ""
 
-#: coreAddon.php:524
+#: coreAddon.php:535
 msgid "Set Icon"
 msgstr ""
 
-#: coreAddon.php:529
+#: coreAddon.php:540
 msgid "Set Image"
 msgstr ""
 
-#: coreAddon.php:531 coreAddon.php:598
+#: coreAddon.php:542 coreAddon.php:609
 msgid "Delete File"
 msgstr ""
 
-#: coreAddon.php:540
+#: coreAddon.php:551
 msgid "Source Files"
 msgstr ""
 
-#: coreAddon.php:545
+#: coreAddon.php:556
 msgid "Upload Source File"
 msgstr ""
 
-#: coreAddon.php:575
+#: coreAddon.php:586
 msgid "No source files have been uploaded for this addon yet."
 msgstr ""
 
-#: coreAddon.php:585
+#: coreAddon.php:596
 msgid "Not Approved"
 msgstr ""
 
-#: coreAddon.php:587
+#: coreAddon.php:598
 #, php-format
 msgid "Source File %u"
 msgstr ""
 
-#: coreAddon.php:589
+#: coreAddon.php:600
 msgid "Download"
 msgstr ""
 
-#: coreAddon.php:627
+#: coreAddon.php:638
 #, php-format
 msgid "Description:"
 msgstr ""
 
-#: coreAddon.php:627
+#: coreAddon.php:638
 #, php-format
 msgid "Max %u characters"
 msgstr ""
 
-#: coreAddon.php:629
+#: coreAddon.php:642
 msgid "Save Properties"
 msgstr ""
 
-#: coreAddon.php:636
-msgid "Upload Revision"
-msgstr ""
-
-#: coreAddon.php:641
+#: coreAddon.php:647
 msgid "Delete Addon"
 msgstr ""
 
-#: coreAddon.php:644
+#: coreAddon.php:650
 msgid "Status Flags:"
 msgstr ""
 
-#: coreAddon.php:649
+#: coreAddon.php:655
 msgid "Approved"
 msgstr ""
 
-#: coreAddon.php:650
+#: coreAddon.php:656
 msgid "Invisible"
 msgstr ""
 
-#: coreAddon.php:655
+#: coreAddon.php:661
 msgid "Latest"
 msgstr ""
 
-#: coreAddon.php:659
+#: coreAddon.php:665
 msgid "Invalid Textures"
 msgstr ""
 
-#: coreAddon.php:668 coreAddon.php:809
+#: coreAddon.php:674 coreAddon.php:815
 #, php-format
 msgid "Rev %u:"
 msgstr ""
 
-#: coreAddon.php:797
+#: coreAddon.php:803
 msgid "Save Changes"
 msgstr ""
 
-#: coreAddon.php:801
+#: coreAddon.php:807
 msgid "Notes from Moderator to Submitter:"
 msgstr ""
 
-#: coreAddon.php:819
+#: coreAddon.php:828
 msgid "Save Notes"
 msgstr ""
 
-#: coreAddon.php:854
+#: coreAddon.php:863
 msgid "The add-on you are trying to create already exists."
 msgstr ""
 
-#: coreAddon.php:861
+#: coreAddon.php:870
 msgid "Creating a new add-on..."
 msgstr ""
 
-#: coreAddon.php:881
+#: coreAddon.php:890
 msgid "This add-on already exists. Adding revision..."
 msgstr ""
 
-#: coreAddon.php:887
+#: coreAddon.php:896
 msgid "Failed to update the name record for this add-on."
 msgstr ""
 
-#: coreAddon.php:896
+#: coreAddon.php:905
 msgid "Failed to update the license record for this add-on."
 msgstr ""
 
-#: coreAddon.php:906
+#: coreAddon.php:915
 msgid "Failed to check for previous add-on revisions."
 msgstr ""
 
-#: coreAddon.php:988 coreAddon.php:1098
+#: coreAddon.php:997 coreAddon.php:1107
 msgid "Invalid addon type."
 msgstr ""
 
-#: coreAddon.php:1204
+#: coreAddon.php:1213
 msgid "Insufficient permissions."
 msgstr ""
 
@@ -424,7 +428,7 @@ msgstr ""
 msgid "Password (confirm):"
 msgstr ""
 
-#: createAccount.php:48
+#: createAccount.php:48 manage-panel.php:155
 msgid "Name:"
 msgstr ""
 
@@ -547,11 +551,11 @@ msgstr ""
 msgid "You will be redirected to the home page."
 msgstr ""
 
-#: index.php:44 index.php:47 menu.php:145
+#: index.php:44 index.php:47 menu.php:60
 msgid "Karts"
 msgstr ""
 
-#: index.php:54 index.php:57 menu.php:140
+#: index.php:54 index.php:57 menu.php:55
 msgid "Tracks"
 msgstr ""
 
@@ -628,96 +632,112 @@ msgid "News Messages"
 msgstr ""
 
 #: manage-panel.php:69 manage.php:49
+msgid "Uploaded Files"
+msgstr ""
+
+#: manage-panel.php:73 manage.php:54
 msgid "Client Versions"
 msgstr ""
 
-#: manage-panel.php:78
+#: manage-panel.php:82
 msgid "XML Download Frequency"
 msgstr ""
 
-#: manage-panel.php:79
+#: manage-panel.php:83
 msgid "Permitted Addon Filetypes"
 msgstr ""
 
-#: manage-panel.php:80
+#: manage-panel.php:84
 msgid "Permitted Source Archive Filetypes"
 msgstr ""
 
-#: manage-panel.php:81
+#: manage-panel.php:85
 msgid "Administrator Email"
 msgstr ""
 
-#: manage-panel.php:82
+#: manage-panel.php:86
 msgid "Moderator List Email"
 msgstr ""
 
-#: manage-panel.php:84 manage-panel.php:86
+#: manage-panel.php:88 manage-panel.php:90
 msgid "True"
 msgstr ""
 
-#: manage-panel.php:84 manage-panel.php:86
+#: manage-panel.php:88 manage-panel.php:90
 msgid "False"
 msgstr ""
 
-#: manage-panel.php:87
+#: manage-panel.php:91
 msgid "List Invisible Addons in XML"
 msgstr ""
 
-#: manage-panel.php:88
+#: manage-panel.php:92
 msgid "Save Settings"
 msgstr ""
 
-#: manage-panel.php:95 manage-panel.php:117
+#: manage-panel.php:99 manage-panel.php:121
 msgid "Message:"
 msgstr ""
 
-#: manage-panel.php:96 manage-panel.php:119
+#: manage-panel.php:100 manage-panel.php:123
 msgid "Condition:"
 msgstr ""
 
-#: manage-panel.php:97
+#: manage-panel.php:101
 msgid "Display on Website:"
 msgstr ""
 
-#: manage-panel.php:98
+#: manage-panel.php:102
 msgid "Create Message"
 msgstr ""
 
-#: manage-panel.php:111
+#: manage-panel.php:115
 msgid "No news messages currently exist."
 msgstr ""
 
-#: manage-panel.php:116
+#: manage-panel.php:120
 msgid "Date:"
 msgstr ""
 
-#: manage-panel.php:118
+#: manage-panel.php:122
 msgid "Author:"
 msgstr ""
 
-#: manage-panel.php:120
+#: manage-panel.php:124
 msgid "Web:"
 msgstr ""
 
-#: manage-panel.php:121
+#: manage-panel.php:125
 msgid "Actions:"
 msgstr ""
 
-#: manage-panel.php:139
+#: manage-panel.php:151
+msgid "No files have been uploaded."
+msgstr ""
+
+#: manage-panel.php:156
+msgid "Add-on:"
+msgstr ""
+
+#: manage-panel.php:158
+msgid "References:"
+msgstr ""
+
+#: manage-panel.php:221
 msgid "Clients by User-Agent"
 msgstr ""
 
-#: manage-panel.php:146
+#: manage-panel.php:228
 msgid ""
 "There are currently no SuperTuxKart clients recorded. Your download script "
 "may not be configured properly."
 msgstr ""
 
-#: manage-panel.php:151
+#: manage-panel.php:233
 msgid "User-Agent String:"
 msgstr ""
 
-#: manage-panel.php:151
+#: manage-panel.php:233
 msgid "Game Version:"
 msgstr ""
 
@@ -725,64 +745,64 @@ msgstr ""
 msgid "SuperTuxKart Add-ons"
 msgstr ""
 
-#: manage.php:25 menu.php:156
+#: manage.php:25 menu.php:71
 msgid "Manage"
 msgstr ""
 
-#: manage.php:67
+#: manage.php:72
 msgid "One or more fields has been left blank. Settings were not saved."
 msgstr ""
 
-#: manage.php:72
+#: manage.php:77
 msgid "XML Download Frequency value is invalid."
 msgstr ""
 
-#: manage.php:83
+#: manage.php:88
 msgid "Saved settings."
 msgstr ""
 
-#: manage.php:101
+#: manage.php:106
 msgid "Created message."
 msgstr ""
 
-#: manage.php:105
+#: manage.php:110
 msgid "Failed to create message."
 msgstr ""
 
-#: menu.php:128
+#: menu.php:43
 #, php-format
 msgid "Welcome, %s"
 msgstr ""
 
-#: menu.php:132
+#: menu.php:47
 msgid "Home"
 msgstr ""
 
-#: menu.php:152
+#: menu.php:67
 msgid "Log out"
 msgstr ""
 
-#: menu.php:153 users.php:38
+#: menu.php:68 users.php:38
 msgid "Users"
 msgstr ""
 
-#: menu.php:154
+#: menu.php:69
 msgid "Upload"
 msgstr ""
 
-#: menu.php:161
+#: menu.php:76
 msgid "Login"
 msgstr ""
 
-#: menu.php:165
+#: menu.php:80
 msgid "About"
 msgstr ""
 
-#: menu.php:171
+#: menu.php:86
 msgid "Languages"
 msgstr ""
 
-#: menu.php:181
+#: menu.php:96
 msgid "STK Homepage"
 msgstr ""
 
@@ -1062,10 +1082,6 @@ msgstr ""
 
 #: upload.php:217
 msgid "Upload file"
-msgstr ""
-
-#: user.php:146
-msgid "Me"
 msgstr ""
 
 #: xmlWrite.php:123

@@ -1,4 +1,4 @@
-# Dutch translation for stk
+# Russian translation for stk
 # Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
 # This file is distributed under the same license as the stk package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
@@ -8,451 +8,448 @@ msgstr ""
 "Project-Id-Version: stk\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-07-07 13:46-0600\n"
-"PO-Revision-Date: 2011-07-08 14:53+0000\n"
-"Last-Translator: Asciimonster <asciimonster@yahoo.co.uk>\n"
-"Language-Team: Dutch <nl@li.org>\n"
+"PO-Revision-Date: 2011-07-09 15:04+0000\n"
+"Last-Translator: KroArtem <feeblehamster@mail.ru>\n"
+"Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-07-10 04:12+0000\n"
+"X-Launchpad-Export-Date: 2011-07-10 04:04+0000\n"
 "X-Generator: Launchpad (build 13376)\n"
 
 #: addons-panel.php:44
 msgid ""
 "This page cannot be loaded because an invalid add-on type was provided."
-msgstr "Deze pagina kon niet worden geladen. Het opgegeven type is ongeldig."
+msgstr ""
 
 #: addons-panel.php:48
 msgid "This page cannot be loaded because an invalid action was provided."
 msgstr ""
-"Deze pagina kon niet worden geladen. De opgegeven activiteit is ongeldig."
 
 #: addons.php:75
 msgid "Saved properties."
-msgstr "Eigenschappen opgeslagen"
+msgstr ""
 
 #: addons.php:84
 msgid "Saved status."
-msgstr "Status opgeslagen"
+msgstr ""
 
 #: addons.php:90
 msgid "Saved notes."
-msgstr "Notities opgeslagen"
+msgstr ""
 
 #: addons.php:96
 msgid "Deleted addon."
-msgstr "Add-on is verwijderd"
+msgstr "Аддон удален."
 
 #: addons.php:101
 msgid "File updated."
-msgstr "Bestand bijgewerkt"
+msgstr "Файл обновлен."
 
 #: addons.php:107
 msgid "Set image."
-msgstr "Afbeelding instellen"
+msgstr ""
 
 #: addons.php:115
 msgid "Set icon."
-msgstr "Icoon instellen"
+msgstr ""
 
 #: addons.php:121
 msgid "Deleted file."
-msgstr "Bestand verwijderd"
+msgstr ""
 
 #: allow.php:102
 msgid "root"
-msgstr "hoofdmap"
+msgstr ""
 
 #: allow.php:103
 msgid "supAdministrator"
-msgstr "super-beheerder"
+msgstr ""
 
 #: allow.php:104
 msgid "administrator"
-msgstr "beheerder"
+msgstr "администратор"
 
 #: allow.php:105
 msgid "moderator"
-msgstr "moderator"
+msgstr "модератор"
 
 #: allow.php:106
 msgid "basicUser"
-msgstr "standaard-gebruiker"
+msgstr "пользователь"
 
 #: coreAddon.php:65
 msgid "The requested addon does not exist."
-msgstr "De add-on bestaat niet."
+msgstr "Запрашиваемый аддон не существует."
 
 #: coreAddon.php:252
 msgid "Failed to find files associated with this addon."
-msgstr "Kan geen bestanden bij deze add-on vinden"
+msgstr "Не удалось найти файл, связанный с этим аддоном."
 
 #: coreAddon.php:261
 msgid "Failed to delete file:"
-msgstr "Kon bestand niet wissen:"
+msgstr "Не удалось удалить файл:"
 
 #: coreAddon.php:272
 msgid "Failed to remove file records for this addon."
-msgstr "Add-on bestanden verwijderen mislukt"
+msgstr ""
 
 #: coreAddon.php:292
 msgid "Failed to remove revision record."
-msgstr "Kon versie niet verwijderen"
+msgstr ""
 
 #: coreAddon.php:300
 msgid "Failed to remove addon."
-msgstr "Kon add-on niet verwijderen"
+msgstr ""
 
 #: coreAddon.php:318 coreAddon.php:623 coreAddon.php:1168 coreAddon.php:1178
 #: coreAddon.php:1189 coreAddon.php:1192
 msgid "Unknown"
-msgstr "Onbekend"
+msgstr "неизвестно"
 
 #: coreAddon.php:343 coreAddon.php:464
 msgid "Upload Image"
-msgstr "Upload afbeelding"
+msgstr "Загрузить изображение"
 
 #: coreAddon.php:352 coreAddon.php:658
 msgid "Featured"
-msgstr "Aanbevolen"
+msgstr ""
 
 #: coreAddon.php:354 coreAddon.php:652
 msgid "Alpha"
-msgstr "Alfa"
+msgstr "Альфа"
 
 #: coreAddon.php:356 coreAddon.php:653
 msgid "Beta"
-msgstr "Bèta"
+msgstr "Бета"
 
 #: coreAddon.php:358 coreAddon.php:654
 msgid "Release-Candidate"
-msgstr "Release-Candidate"
+msgstr "Релиз-кандидат"
 
 #: coreAddon.php:360 coreAddon.php:657
 msgid "DFSG Compliant"
-msgstr "Voldoet aan DSFG"
+msgstr ""
 
 #: coreAddon.php:365
 msgid "Type:"
-msgstr "Type:"
+msgstr ""
 
 #: coreAddon.php:365
 msgid "Arena"
-msgstr "Arena"
+msgstr ""
 
 #: coreAddon.php:367 coreAddon.php:621
 msgid "Designer:"
-msgstr "Ontwerper:"
+msgstr ""
 
 #: coreAddon.php:368
 msgid "Upload date:"
-msgstr "Datum van upload:"
+msgstr "Дата загрузки:"
 
 #: coreAddon.php:369
 msgid "Submitted by:"
-msgstr "Ingestuurd door:"
+msgstr "Отправитель:"
 
 #: coreAddon.php:370
 msgid "Revision:"
-msgstr "Versie:"
+msgstr "Ревизия"
 
 #: coreAddon.php:371
 msgid "Compatible with:"
-msgstr "Te gebruiken met:"
+msgstr "Совместим с :"
 
 #: coreAddon.php:376
 msgid ""
 "Warning: This addon may not display correctly on some systems. It uses "
 "textures that may not be compatible with all video cards."
 msgstr ""
-"Waarschuwing: Deze add-on wordt op sommige systemen mogelijk verkeerd "
-"getoond. Het gebruikt texturen die niet door alle videokaarten getoond "
-"kunnen worden."
+"Предупреждение: этот аддон может отображаться некорректно на некоторых "
+"системах. Он использует текстуры, которые могут быть не совместимы с "
+"некоторыми видеокартами."
 
 #: coreAddon.php:389 coreAddon.php:394 coreAddon.php:446 coreAddon.php:451
 msgid "File not found."
-msgstr "Bestand niet gevonden."
+msgstr "Файл не найден."
 
 #: coreAddon.php:398
 msgid "License:"
-msgstr "Licentie:"
+msgstr "Лицензия:"
 
 #: coreAddon.php:400
 msgid "Permalink:"
-msgstr "Volglink:"
+msgstr ""
 
 #: coreAddon.php:405
 msgid "Revisions:"
-msgstr "Versies:"
+msgstr "Ревизии:"
 
 #: coreAddon.php:441
 #, php-format
 msgid "Download revision %u"
-msgstr "Download versie %u"
+msgstr "Скачать ревизию %u"
 
 #: coreAddon.php:446 coreAddon.php:451
 msgid "Revision"
-msgstr "Revisie"
+msgstr "Ревизия"
 
 #: coreAddon.php:459
 msgid "Images"
-msgstr "Afbeeldingen"
+msgstr "Изображения"
 
 #: coreAddon.php:494
 msgid "No images have been uploaded for this addon yet."
-msgstr "Er zijn nog geen afbeeldingen geüpload voor deze add-on"
+msgstr "Для этого аддона не загружено ни одного изображения."
 
 #: coreAddon.php:513 coreAddon.php:595
 msgid "Unapprove"
-msgstr "Afkeuren"
+msgstr ""
 
 #: coreAddon.php:515 coreAddon.php:597
 msgid "Approve"
-msgstr "Goedkeuren"
+msgstr "Подтвердить"
 
 #: coreAddon.php:524
 msgid "Set Icon"
-msgstr "Pictogram instellen"
+msgstr ""
 
 #: coreAddon.php:529
 msgid "Set Image"
-msgstr "Afbeelding instellen"
+msgstr ""
 
 #: coreAddon.php:531 coreAddon.php:598
 msgid "Delete File"
-msgstr "Bestand verwijderen"
+msgstr "Удалить файл"
 
 #: coreAddon.php:540
 msgid "Source Files"
-msgstr "Broncodebestanden"
+msgstr "Исходные файлы"
 
 #: coreAddon.php:545
 msgid "Upload Source File"
-msgstr "Upload bronbestand"
+msgstr "Загрузить исходный файл"
 
 #: coreAddon.php:575
 msgid "No source files have been uploaded for this addon yet."
-msgstr "Er zijn nog geen bestanden voor deze add-on geüpload"
+msgstr ""
 
 #: coreAddon.php:585
 msgid "Not Approved"
-msgstr "Niet goedgekeurd"
+msgstr "Не подтверждено"
 
 #: coreAddon.php:587
 #, php-format
 msgid "Source File %u"
-msgstr "Bronbestand %u"
+msgstr "Исходный файл %u"
 
 #: coreAddon.php:589
 msgid "Download"
-msgstr "Downloaden"
+msgstr "Скачать"
 
 #: coreAddon.php:627
 #, php-format
 msgid "Description:"
-msgstr "Omschrijving:"
+msgstr "Описание:"
 
 #: coreAddon.php:627
 #, php-format
 msgid "Max %u characters"
-msgstr "Maximaal %u karakters"
+msgstr "Максимум %u символов"
 
 #: coreAddon.php:629
 msgid "Save Properties"
-msgstr "Eigenschappen opslaan"
+msgstr "Сохранить настройки"
 
 #: coreAddon.php:636
 msgid "Upload Revision"
-msgstr "Versie uploaden"
+msgstr "Загрузить ревизию"
 
 #: coreAddon.php:641
 msgid "Delete Addon"
-msgstr "Add-on verwijderen"
+msgstr "Удалить аддон"
 
 #: coreAddon.php:644
 msgid "Status Flags:"
-msgstr "Statusvlaggen:"
+msgstr ""
 
 #: coreAddon.php:649
 msgid "Approved"
-msgstr "Goedgekeurd"
+msgstr ""
 
 #: coreAddon.php:650
 msgid "Invisible"
-msgstr "Onzichtbaar"
+msgstr "Невидимое"
 
 #: coreAddon.php:655
 msgid "Latest"
-msgstr "Meest recent"
+msgstr ""
 
 #: coreAddon.php:659
 msgid "Invalid Textures"
-msgstr "Ongeldige texturen"
+msgstr ""
 
 #: coreAddon.php:668 coreAddon.php:809
 #, php-format
 msgid "Rev %u:"
-msgstr "Versie %u:"
+msgstr ""
 
 #: coreAddon.php:797
 msgid "Save Changes"
-msgstr "Wijzigingen opslaan"
+msgstr "Сохранить изменения"
 
 #: coreAddon.php:801
 msgid "Notes from Moderator to Submitter:"
-msgstr "Bericht van de moderator aan de uploader:"
+msgstr ""
 
 #: coreAddon.php:819
 msgid "Save Notes"
-msgstr "Noties oplslaan"
+msgstr ""
 
 #: coreAddon.php:854
 msgid "The add-on you are trying to create already exists."
-msgstr "De add-on bestaat al"
+msgstr "Аддон, который вы пытаетесь создать, уже существует."
 
 #: coreAddon.php:861
 msgid "Creating a new add-on..."
-msgstr "Nieuwe add-on aanmaken..."
+msgstr ""
 
 #: coreAddon.php:881
 msgid "This add-on already exists. Adding revision..."
-msgstr "Deze add-on bestaat al. Toevoegen als nieuwe versie..."
+msgstr ""
 
 #: coreAddon.php:887
 msgid "Failed to update the name record for this add-on."
-msgstr "Naam van deze add-on kon niet gewijzigd worden"
+msgstr ""
 
 #: coreAddon.php:896
 msgid "Failed to update the license record for this add-on."
-msgstr "Kon licentie-informatie van deze add-on niet bijwerken."
+msgstr ""
 
 #: coreAddon.php:906
 msgid "Failed to check for previous add-on revisions."
-msgstr "Kon niet controleren op oude add-on versies."
+msgstr ""
 
 #: coreAddon.php:988 coreAddon.php:1098
 msgid "Invalid addon type."
-msgstr "Ongeldig add-on type"
+msgstr ""
 
 #: coreAddon.php:1204
 msgid "Insufficient permissions."
-msgstr "Onvoldoende rechten"
+msgstr ""
 
 #: coreUser.php:87 createAccount.php:42 login.php:106
 msgid "Username:"
-msgstr "Gebruikersnaam:"
+msgstr "Имя пользователя"
 
 #: coreUser.php:88
 msgid "Registration Date:"
-msgstr "Registratiedatum:"
+msgstr "Дата регистрации:"
 
 #: coreUser.php:89
 msgid "Real Name:"
-msgstr "Echte naam:"
+msgstr "Настоящее имя:"
 
 #: coreUser.php:90 coreUser.php:186
 msgid "Role:"
-msgstr "Rol:"
+msgstr ""
 
 #: coreUser.php:93 coreUser.php:182
 msgid "Homepage:"
-msgstr "Internetadres:"
+msgstr "Домашняя страница:"
 
 #: coreUser.php:98
 msgid "User's Karts"
-msgstr "Karts van deze gebruiker"
+msgstr ""
 
 #: coreUser.php:108
 msgid "This user has not uploaded any karts."
-msgstr "Deze gebruiker heeft nog geen karts geupload."
+msgstr "Этот пользователь не загрузил ни одного карта."
 
 #: coreUser.php:134
 msgid "User's Tracks"
-msgstr "Parcoursen van deze gebruiker"
+msgstr "Трассы пользователя"
 
 #: coreUser.php:144
 msgid "This user has not uploaded any tracks."
-msgstr "Deze gebruiker heeft geen parcoursen geüpload."
+msgstr "Этот пользователь не загрузил ни одной трассы."
 
 #: coreUser.php:203
 msgid "User Activated:"
-msgstr "Gebruiker geactiveerd:"
+msgstr ""
 
 #: coreUser.php:211
 msgid "Save Configuration"
-msgstr "Configuratie opslaan"
+msgstr ""
 
 #: coreUser.php:215 coreUser.php:223
 msgid "Change Password"
-msgstr "Wijzig wachtwoord"
+msgstr "Изменить пароль"
 
 #: coreUser.php:217
 msgid "Old Password:"
-msgstr "Oud wachtwoord:"
+msgstr "Старый пароль:"
 
 #: coreUser.php:219
 msgid "New Password:"
-msgstr "Nieuw wachtwoord:"
+msgstr "Новый пароль:"
 
 #: coreUser.php:219 createAccount.php:44
 msgid "Must be at least 6 characters long."
-msgstr "Moet minimaal 6 tekens lang zijn"
+msgstr "Минимум 6 символов."
 
 #: coreUser.php:221
 msgid "New Password (Confirm):"
-msgstr "Nieuw wachtwoord (opnieuw):"
+msgstr "Новый пароль (подтвердите)"
 
 #: coreUser.php:234 createAccount.php:97
 msgid "Your passwords do not match."
-msgstr "De wachtwoorden komen niet overeen."
+msgstr "Ваши пароли не совпадают."
 
 #: coreUser.php:239
 msgid "Your old password is not correct."
-msgstr "Het oude wachtwoord is niet correct."
+msgstr "Ваш старый пароль неверен."
 
 #: coreUser.php:244 createAccount.php:107
 msgid "Your password must be at least 6 characters long."
-msgstr "Het wachtwoord moet minimaal 6 tekens lang zijn."
+msgstr "Ваш пароль должен быть минимум 6 символов в длину."
 
 #: coreUser.php:250
 msgid "Your password is changed."
-msgstr "Het wachtwoord is gewijzigd."
+msgstr "Ваш пароль изменен."
 
 #: createAccount.php:42
 msgid "Must be at least 4 characters long."
-msgstr "Moet ten minste 4 tekens lang zijn"
+msgstr ""
 
 #: createAccount.php:44 login.php:108
 msgid "Password:"
-msgstr "Wachtwoord:"
+msgstr "Пароль:"
 
 #: createAccount.php:46
 msgid "Password (confirm):"
-msgstr "Wachtwoord (opnieuw):"
+msgstr "Пароль (подтвердите):"
 
 #: createAccount.php:48
 msgid "Name:"
-msgstr "Naam:"
+msgstr ""
 
 #: createAccount.php:50
 msgid "Email Address:"
-msgstr "E-mailadres:"
+msgstr ""
 
 #: createAccount.php:52
 msgid "Terms:"
-msgstr "Voorwaarden:"
+msgstr ""
 
 #: createAccount.php:54
 msgid "STK Addons Terms and Conditions"
-msgstr "STK add-ons termen en voorwaarden"
+msgstr ""
 
 #: createAccount.php:55
 msgid ""
 "You must agree to these terms in order to upload content to the STK Addons "
 "site."
 msgstr ""
-"Als je niet akkoord gaat met deze voorwaarden kun je GEEN content naar de "
-"STK add-ons pagina uploaden."
 
 #: createAccount.php:56
 msgid ""
@@ -461,9 +458,6 @@ msgid ""
 "purpose. When you upload your content, it will be available publicly on the\n"
 "internet, and will be made available in-game for download."
 msgstr ""
-"De STK add-on service is speciaal gemaakt voor SuperTuxKart. All geüploade\n"
-"content moet STK content zijn. Door het uploaden wordt het publiekelijk \n"
-"downloadbaar in het spel zelf."
 
 #: createAccount.php:60
 msgid ""
@@ -481,45 +475,28 @@ msgid ""
 "without\n"
 "proper licenses or attribution may be deleted without warning."
 msgstr ""
-"SuperTuxKart probeert te voldoen aan de Debian vrije software richtlijnen "
-"(DFSG). \n"
-"Tuxfamily.org, host van stkaddons.net, verlangt dat alle content aan deze "
-"richt-\n"
-"lijnen voldoet. Bestanden met restictieve licentieovereenkomsten mogen "
-"daarom niet \n"
-"geüpload worden. Enkel DFSG-compliant licenties zoals de CC-BY-SA 3.0 "
-"voldoen. \n"
-"Alle content van derden moet correct worden beschreven in het "
-"\"license.txt\" bestand, \n"
-"inclusief vemelding van de licentie waaronder het is uitgegeven. Het "
-"\"license.txt\" \n"
-"bestand dient bij elke upload te worden meegegeven. Uploads zonder dit "
-"bestand \n"
-"worden zonder waarchuwing verwijderd."
 
 #: createAccount.php:68
 msgid ""
 "Even with valid licenses and attribution, content may not contain any\n"
 "of the following:"
 msgstr ""
-"Ongeacht (correctheid van) licenties en bronverwijzingen mag de content \n"
-"geen van onderstaande zaken bevatten:"
 
 #: createAccount.php:70 upload.php:206
 msgid "Profanity"
-msgstr "Scheldwoorden/Schuttingtaal"
+msgstr ""
 
 #: createAccount.php:71 upload.php:207
 msgid "Explicit images"
-msgstr "(Sexueel) suggestieve afbeeldingen"
+msgstr ""
 
 #: createAccount.php:72 upload.php:208
 msgid "Hateful messages and/or images"
-msgstr "Hatelijke meldingen en/of afbeeldingen"
+msgstr ""
 
 #: createAccount.php:73 upload.php:209
 msgid "Any other content that may be unsuitable for children"
-msgstr "Enig ander materiaal dat niet voor kinderen bestemd is."
+msgstr ""
 
 #: createAccount.php:74
 msgid ""
@@ -528,8 +505,6 @@ msgid ""
 "uploaded\n"
 "may be removed."
 msgstr ""
-"Als je upload een van bovenstaande zaken bevat wordt de upload verwijderd. \n"
-"Tevens kan je account, inclusief al je andere uploads verwijderd worden."
 
 #: createAccount.php:77
 msgid ""
@@ -538,526 +513,500 @@ msgid ""
 "the\n"
 "members of the development team would gladly assist you."
 msgstr ""
-"Door onderstaande box aan te vinken bevestig je dat je deze voorwaarden \n"
-"begrijpt. Onze ontwikkelaar helpen graag als je vragen of opmerkingen \n"
-"hebt aangaande deze voorwaarden."
 
 #: createAccount.php:81
 msgid "I agree to the above terms"
-msgstr "Ik stem in met bovenstaande voorwaarden"
+msgstr ""
 
 #: createAccount.php:102
 msgid "Your username must be at least 4 characters long."
-msgstr "Het wachtwoord moet minimaal 4 tekens lang zijn"
+msgstr ""
 
 #: createAccount.php:112
 msgid "You must agree to the terms to register."
-msgstr "Je moet instemmen met de voorwaarden om te kunnen registreren."
+msgstr ""
 
 #: createAccount.php:136
 msgid ""
 "Account creation was successful. Please activate your account using the link "
 "emailed to you."
 msgstr ""
-"Aanmaken van het account is gelukt. Er wordt een e-mail gestuurd. Activeer "
-"het account door op de link in de e-mail te klikken."
 
 #: createAccount.php:140
 msgid "An error occurred while creating your account."
-msgstr "Er is een fout opgetreden bij het aanmaken van je account."
+msgstr "Произошла ошибка при создании вашего аккаунта."
 
 #: createAccount.php:145
 msgid "Your username has already been used."
-msgstr "De gebruikersnaam is al in gebruik."
+msgstr "Такое имя пользователя уже существует."
 
 #: createAccount.php:157
 msgid "Your account has been activated."
-msgstr "Het account is geactiveerd."
+msgstr "Ваш аккаунт активирован."
 
 #: disabled.php:40
 msgid "This page is currently disabled."
-msgstr "Deze pagina is momenteel gedeactiveerd."
+msgstr ""
 
 #: disabled.php:41 security.php:48
 msgid "You will be redirected to the home page."
-msgstr "Je wordt nu naar de hoofdpagina gebracht."
+msgstr "Вы будете перенаправлены на главную страницу."
 
 #: index.php:44 index.php:47 menu.php:145
 msgid "Karts"
-msgstr "Karts"
+msgstr "Карты"
 
 #: index.php:54 index.php:57 menu.php:140
 msgid "Tracks"
-msgstr "Parcours"
+msgstr "Трассы"
 
 #: index.php:64 index.php:67
 msgid "Help"
-msgstr "Hulp"
+msgstr "Помощь"
 
 #: index.php:79
 #, php-format
 msgid "The most downloaded kart is %s."
-msgstr "De meest gedownloade kart is %s."
+msgstr ""
 
 #: index.php:80
 #, php-format
 msgid "The most downloaded track is %s."
-msgstr "Het meest gedownloade parcours is %s."
+msgstr ""
 
 #: login.php:47
 msgid "Failed to logout."
-msgstr "Uitloggen niet geslaagd."
+msgstr ""
 
 #: login.php:54
 msgid "You have been logged out."
-msgstr "Je bent uigelogd."
+msgstr ""
 
 #: login.php:55 login.php:68 login.php:91
 msgid ""
 "Click <a href=\"index.php\">here</a> if you do not automatically redirect."
 msgstr ""
-"Klik <a href=\"index.php\">hier</a> als je niet automatisch wordt doorgeleid."
 
 #: login.php:67
 msgid "You are already logged in."
-msgstr "Je bent reeds ingelogd."
+msgstr ""
 
 #: login.php:90
 #, php-format
 msgid "Welcome, %s!"
-msgstr "Welkom %s!"
+msgstr "Добро пожаловать, %s!"
 
 #: login.php:95
 msgid "Authentication failed."
-msgstr "De authenticatie is mislukt."
+msgstr "Ошибка авторизации."
 
 #: login.php:110
 msgid "Log In"
-msgstr "Inloggen"
+msgstr ""
 
 #: login.php:112
 msgid "Create an account."
-msgstr "Account aanmaken"
+msgstr "Создать аккаунт."
 
 #: mail.php:68
 msgid "No moderator mailing-list email is set."
-msgstr "Geen moderator e-maillijst ingesteld"
+msgstr ""
 
 #: manage-panel.php:43
 msgid "Deleted message."
-msgstr "Bericht is verwijderd"
+msgstr ""
 
 #: manage-panel.php:47
 msgid "Failed to delete message."
-msgstr "Bericht kon niet verwijderd worden"
+msgstr "Не удалось удалить сообщение."
 
 #: manage-panel.php:58
 msgid "Invalid page. You may have followed a broken link."
-msgstr "Ongeldige pagina. Waarschijnlijk heb je een foutieve link gebruikt."
+msgstr ""
 
 #: manage-panel.php:61 manage.php:39
 msgid "General Settings"
-msgstr "Algemene instellingen"
+msgstr ""
 
 #: manage-panel.php:65 manage.php:44
 msgid "News Messages"
-msgstr "Nieuwsberichten"
+msgstr ""
 
 #: manage-panel.php:69 manage.php:49
 msgid "Client Versions"
-msgstr "Clientversies"
+msgstr ""
 
 #: manage-panel.php:78
 msgid "XML Download Frequency"
-msgstr "XML dowload frequentie"
+msgstr ""
 
 #: manage-panel.php:79
 msgid "Permitted Addon Filetypes"
-msgstr "Geldige add-on bestandstypen"
+msgstr ""
 
 #: manage-panel.php:80
 msgid "Permitted Source Archive Filetypes"
-msgstr "Geldige bronarchief bestandstypen"
+msgstr ""
 
 #: manage-panel.php:81
 msgid "Administrator Email"
-msgstr "E-mail van administrator"
+msgstr ""
 
 #: manage-panel.php:82
 msgid "Moderator List Email"
-msgstr "Moderator E-mail"
+msgstr ""
 
 #: manage-panel.php:84 manage-panel.php:86
 msgid "True"
-msgstr "Waar"
+msgstr ""
 
 #: manage-panel.php:84 manage-panel.php:86
 msgid "False"
-msgstr "Onwaar"
+msgstr ""
 
 #: manage-panel.php:87
 msgid "List Invisible Addons in XML"
-msgstr "Toon onzichtbare add-ons als XML"
+msgstr ""
 
 #: manage-panel.php:88
 msgid "Save Settings"
-msgstr "Instellingen opslaan"
+msgstr ""
 
 #: manage-panel.php:95 manage-panel.php:117
 msgid "Message:"
-msgstr "Bericht:"
+msgstr ""
 
 #: manage-panel.php:96 manage-panel.php:119
 msgid "Condition:"
-msgstr "Voorwaarde:"
+msgstr ""
 
 #: manage-panel.php:97
 msgid "Display on Website:"
-msgstr "Toon op webpagina:"
+msgstr ""
 
 #: manage-panel.php:98
 msgid "Create Message"
-msgstr "Bericht aanmaken"
+msgstr ""
 
 #: manage-panel.php:111
 msgid "No news messages currently exist."
-msgstr "Er zijn momenteel geen nieuwsberichten."
+msgstr ""
 
 #: manage-panel.php:116
 msgid "Date:"
-msgstr "Datum:"
+msgstr ""
 
 #: manage-panel.php:118
 msgid "Author:"
-msgstr "Auteur:"
+msgstr ""
 
 #: manage-panel.php:120
 msgid "Web:"
-msgstr "Web:"
+msgstr ""
 
 #: manage-panel.php:121
 msgid "Actions:"
-msgstr "Handelingen:"
+msgstr ""
 
 #: manage-panel.php:139
 msgid "Clients by User-Agent"
-msgstr "Clients by User-Agent"
+msgstr ""
 
 #: manage-panel.php:146
 msgid ""
 "There are currently no SuperTuxKart clients recorded. Your download script "
 "may not be configured properly."
 msgstr ""
-"Er zijn momenteel geen SuperTuxKart clienten beschikbaar. Het download "
-"script werkt misschien niet."
 
 #: manage-panel.php:151
 msgid "User-Agent String:"
-msgstr "User-Agent String:"
+msgstr ""
 
 #: manage-panel.php:151
 msgid "Game Version:"
-msgstr "Versie van spel:"
+msgstr ""
 
 #: manage.php:25 top.php:31 users.php:38
 msgid "SuperTuxKart Add-ons"
-msgstr "SuperTuxKart add-ons"
+msgstr ""
 
 #: manage.php:25 menu.php:156
 msgid "Manage"
-msgstr "Beheren"
+msgstr ""
 
 #: manage.php:67
 msgid "One or more fields has been left blank. Settings were not saved."
-msgstr "Eén of meerdere velden zijn leeg. Instellingen zijn niet opgeslagen."
+msgstr ""
 
 #: manage.php:72
 msgid "XML Download Frequency value is invalid."
-msgstr "XML download fequentie is ongeldig."
+msgstr ""
 
 #: manage.php:83
 msgid "Saved settings."
-msgstr "Instellingen opgeslagen"
+msgstr ""
 
 #: manage.php:101
 msgid "Created message."
-msgstr "Bericht aangemaakt"
+msgstr ""
 
 #: manage.php:105
 msgid "Failed to create message."
-msgstr "Bericht aanmaken niet gelukt."
+msgstr ""
 
 #: menu.php:128
 #, php-format
 msgid "Welcome, %s"
-msgstr "Welkom %s"
+msgstr ""
 
 #: menu.php:132
 msgid "Home"
-msgstr "Home"
+msgstr ""
 
 #: menu.php:152
 msgid "Log out"
-msgstr "Uitloggen"
+msgstr ""
 
 #: menu.php:153 users.php:38
 msgid "Users"
-msgstr "Gebruikers"
+msgstr ""
 
 #: menu.php:154
 msgid "Upload"
-msgstr "Uploaden"
+msgstr ""
 
 #: menu.php:161
 msgid "Login"
-msgstr "Inloggen"
+msgstr ""
 
 #: menu.php:165
 msgid "About"
-msgstr "Over..."
+msgstr ""
 
 #: menu.php:171
 msgid "Languages"
-msgstr "Talen"
+msgstr ""
 
 #: menu.php:181
 msgid "STK Homepage"
-msgstr "STK homepagina"
+msgstr ""
 
 #: parseUpload.php:25
 msgid "Failed to upload your file."
-msgstr "Uploaden niet gelukt"
+msgstr ""
 
 #: parseUpload.php:60 parseUpload.php:88
 msgid "Failed to move uploaded file."
-msgstr "Fout bij verplaatsen geüpload bestand."
+msgstr ""
 
 #: parseUpload.php:75 parseUpload.php:196
 msgid "Failed to associate image file with addon."
-msgstr "Afbeelding toevoegen aan add-on mislukt"
+msgstr ""
 
 #: parseUpload.php:80
 msgid "Successfully uploaded image."
-msgstr "Uploaden afbeelding geslaagd"
+msgstr ""
 
 #: parseUpload.php:81 parseUpload.php:261 parseUpload.php:299
 msgid "Continue."
-msgstr "Doorgaan"
+msgstr ""
 
 #: parseUpload.php:104
 msgid "Invalid archive file. The archive must contain the addon's xml file."
 msgstr ""
-"Ongeldig archiefbestand. Het archiefbestand moet het XML bestand van de add-"
-"on bevatten."
 
 #: parseUpload.php:116
 msgid ""
 "Some invalid files were found in the uploaded add-on. These files have been "
 "removed from the archive:"
 msgstr ""
-"Er zijn ongeldige bestanden gevonden in de geüploadde add-on. De volgende "
-"bestanden zijn uit het archief verwijderd:"
 
 #: parseUpload.php:125
 msgid "Upload was recognized as a kart."
-msgstr "Upload is herkend als kart."
+msgstr ""
 
 #: parseUpload.php:130
 msgid "Upload was recognized as a track."
-msgstr "Upload is herkend als parcours."
+msgstr ""
 
 #: parseUpload.php:137
 msgid ""
 "Failed to read the add-on's XML file. Please make sure you are using the "
 "latest version of the kart or track exporter."
 msgstr ""
-"Kon add-on XML bestand niet lezen. Controleer of de laatste versie van de "
-"kart- of track exporter gebruikt is."
 
 #: parseUpload.php:144
 msgid "Failed to write new XML file:"
-msgstr "XML bestand kon niet geschreven worden."
+msgstr ""
 
 #: parseUpload.php:152
 msgid ""
 "A valid License.txt file was not found. Please add a License.txt file to "
 "your archive and re-submit it."
 msgstr ""
-"Geen geldig License.txt bestand gevonden. Voeg een License.txt bestand toe "
-"aan je archief en upload opniew."
 
 #: parseUpload.php:212
 msgid ""
 "Some images in this add-on do not have dimensions that are a power of two."
-msgstr "De afmetingen van sommige afbeeldingen zijn geen veelvouden van 2."
+msgstr ""
 
 #: parseUpload.php:213
 msgid "This may cause display errors on some video cards."
-msgstr "Dit kan problemen geven met oudere videokaarten."
+msgstr ""
 
 #: parseUpload.php:229
 msgid "Failed to re-pack archive file."
-msgstr "Kon archief niet opnieuw inpakken."
+msgstr ""
 
 #: parseUpload.php:245
 msgid "Failed to associate archive file with addon."
-msgstr "Archief kon niet gekoppeld worden met add-on"
+msgstr ""
 
 #: parseUpload.php:260
 msgid "Successfully uploaded source archive."
-msgstr "Uploaden archief succesvol"
+msgstr ""
 
 #: parseUpload.php:278
 msgid "You are trying to add a new revision of an addon that does not exist."
 msgstr ""
-"Je hebt geprobeerd een versie van een niet bestaande add-on aan te maken."
 
 #: parseUpload.php:285 users.php:70 users.php:81
 msgid "You do not have the necessary permissions to perform this action."
-msgstr "Je hebt onvoldoende rechten voor deze handeling."
+msgstr ""
 
 #: parseUpload.php:293
 msgid "Failed to create add-on."
-msgstr "Kon add-on niet aanmaken."
+msgstr ""
 
 #: parseUpload.php:298
 msgid "Successfully uploaded add-on."
-msgstr "Uploaden van add-on geslaagd"
+msgstr ""
 
 #: parseUpload.php:309
 msgid "Uploaded image files must be either PNG or Jpeg files."
-msgstr "Afbeeldingen moeten PNG of JPEG bestanden zijn."
+msgstr ""
 
 #: parseUpload.php:318
 msgid "The file you uploaded was not the correct type."
-msgstr "Het te uploaden bestand heeft een ongeldig type."
+msgstr ""
 
 #: parseUpload.php:329
 msgid "The file to extract does not exist."
-msgstr "Uit te pakken bestand niet herkend"
+msgstr ""
 
 #: parseUpload.php:341 parseUpload.php:376
 msgid "Could not open archive file. It may be corrupted."
-msgstr "Kon archiefbestand niet openen. Waarschijnlijk is het corrupt."
+msgstr ""
 
 #: parseUpload.php:347 parseUpload.php:382
 msgid "Failed to extract archive file."
-msgstr "Uitpakken archiefbestand niet gelukt"
+msgstr ""
 
 #: parseUpload.php:390
 msgid "Unknown archive type."
-msgstr "Onbekand archieftype"
+msgstr ""
 
 #: parseUpload.php:401
 msgid "Upload is invalid."
-msgstr "Upload is ongeldig"
+msgstr ""
 
 #: parseUpload.php:406
 msgid "Unknown file upload error."
-msgstr "Onbekende fout bij het uploaden van het bestand."
+msgstr ""
 
 #: parseUpload.php:410 parseUpload.php:412
 msgid "Uploaded file is too large."
-msgstr "Bestand is te groot om te uploaden."
+msgstr ""
 
 #: parseUpload.php:414
 msgid "Uploaded file is incomplete."
-msgstr "Geüploade bestand is incompleet."
+msgstr ""
 
 #: parseUpload.php:416
 msgid "No file was uploaded."
-msgstr "Er is geen bestand geüpload."
+msgstr ""
 
 #: parseUpload.php:418
 msgid "There is no TEMP directory to store the uploaded file in."
-msgstr "Er is geen TEMP map om het te uploaden bestand in te bewaren."
+msgstr ""
 
 #: parseUpload.php:420
 msgid "Unable to write uploaded file to disk."
-msgstr "Kon geüploade bestand niet naar disk wegschrijven."
+msgstr ""
 
 #: security.php:47
 msgid "You do not have the rights to access this page."
-msgstr "Je hebt onvoldoende rechten om deze pagina te bekijken."
+msgstr ""
 
 #: security.php:69
 msgid "You must be logged in to access this page."
-msgstr "Je moet ingelogd zijn om deze pagina te openen."
+msgstr ""
 
 #: security.php:70
 msgid "You will be redirected to the login page."
-msgstr "Je wordt doorgeleid naar de loginpagina."
+msgstr ""
 
 #: upload.php:74
 msgid ""
 "Your response to the agreement was unacceptable. You may not upload this "
 "content to the STK Addons website."
 msgstr ""
-"Het antwoord op de voorwaarden is niet geaccepteerd. Uploaden van content is "
-"uitgeschakeld."
 
 #: upload.php:109
 msgid "Please upload a new revision of your kart or track."
-msgstr "Gelieve een nieuwe versie van je kart of parcours te uploaden."
+msgstr ""
 
 #: upload.php:113
 msgid "What type of file are you uploading?"
-msgstr "Wat is het bestandstype dat je gaat uploaden?"
+msgstr ""
 
 #: upload.php:115
 msgid "Source Archive"
-msgstr "Bronarchief"
+msgstr ""
 
 #: upload.php:116
 msgid "Image File"
-msgstr "Afbeeldingbestand"
+msgstr ""
 
 #: upload.php:123
 msgid "Please upload a kart or track."
-msgstr "Gelieve een kart of parcours te uploaden."
+msgstr ""
 
 #: upload.php:124
 msgid "Do not use this form if you are updating an existing add-on.<br />"
 msgstr ""
-"Dit forumlier niet te gebruiken om een bestaande add-on bij te werken.<br />"
 
 #: upload.php:127
 msgid "File:"
-msgstr "Bestand:"
+msgstr ""
 
 #: upload.php:128
 msgid "Supported archive types are:"
-msgstr "Ondersteunde archieftypen:"
+msgstr ""
 
 #: upload.php:129
 msgid "Agreement:"
-msgstr "Voorwaarde:"
+msgstr ""
 
 #: upload.php:134
 msgid ""
 "I am the sole author of every file (model, texture, sound effect, etc.) in "
 "this package"
 msgstr ""
-"Ik, en ik alleen, ben de auteur van elk bestand (model, textuur, "
-"geluiseffect, etc.) in dit pakket."
 
 #: upload.php:141
 msgid ""
 "I have included a License.txt file describing the license under which my "
 "work is released, and my name (or nickname) if I want credit."
 msgstr ""
-"Ik heb een License.txt bestand toegevoegd met licentieinformatie en mijn "
-"naam (of bijnaam) voor de eer en glorie."
 
 #: upload.php:141 upload.php:154 upload.php:199 upload.php:210
 msgid "Required"
-msgstr "Verplicht"
+msgstr ""
 
 #: upload.php:147
 msgid "I have included open content made by people other than me"
 msgstr ""
-"Ik heb content van anderen/derden toegevoegd; Deze content zijn ook "
-"vrijgegeven onder een open-source licentie"
 
 #: upload.php:154
 msgid ""
@@ -1065,49 +1014,44 @@ msgid ""
 "material is used in this package, along with the license under which their "
 "work is released."
 msgstr ""
-"Ik heb een License.txt bestand toegevoegd met licentieinformatie en de naam "
-"van elke auteur wiens materiaal in dit pakket is gebruikt."
 
 #: upload.php:158
 msgid "This package includes files released under:"
 msgstr ""
-"Dit pakket bevat bestanden welke zijn uitgegeven onder de volgende licenties:"
 
 #: upload.php:158
 msgid "Must check at least one"
-msgstr "Minimaal 1 moet aangevinkt worden"
+msgstr ""
 
 #: upload.php:163
 msgid "GNU GPL"
-msgstr "GNU GPL"
+msgstr ""
 
 #: upload.php:168
 msgid "Creative Commons BY 3.0"
-msgstr "Creative Commons BY 3.0"
+msgstr ""
 
 #: upload.php:173
 msgid "Creative Commons BY SA 3.0"
-msgstr "Creative Commons BY SA 3.0"
+msgstr ""
 
 #: upload.php:178
 msgid "CC0 (Public Domain)"
-msgstr "CC0 (Publiek Domein)"
+msgstr ""
 
 #: upload.php:183
 msgid "BSD License"
-msgstr "BSD-licentie"
+msgstr ""
 
 #: upload.php:188
 msgid "Other open license"
-msgstr "Open licentie (overig)"
+msgstr ""
 
 #: upload.php:193
 msgid ""
 "Files released under other licenses will be rejected unless it can be "
 "verified that the license is open."
 msgstr ""
-"Bestanden uitgegeven onder andere licenties worden afgewezen tenzij bewezen "
-"kan worden dat het om een open licentie gaat."
 
 #: upload.php:199
 msgid ""
@@ -1116,170 +1060,27 @@ msgid ""
 "for any copyright violation that may result from not following the above "
 "rules."
 msgstr ""
-"Ik bevestig dat dit bestand voldoet aan de hierboven beschreven regels. "
-"Mocht dit toch niet het geval zijn, mag mijn bestand zonder waarschuwing "
-"verwijderd worden en neem ik verantwoordelijkheid voor enige copyright "
-"schendingen die voorkomen uit het schenden van bovenstaande regels."
 
 #: upload.php:205
 msgid "My package does not include:"
-msgstr "Mijn pakket bevat niet:"
+msgstr ""
 
 #: upload.php:217
 msgid "Upload file"
-msgstr "Upload bestand"
+msgstr ""
 
 #: user.php:146
 msgid "Me"
-msgstr "Mijzelf"
+msgstr ""
 
 #: xmlWrite.php:123
 msgid "An error occurred finding the path for the file of kart: "
-msgstr "Pad naar kartbestand niet gevonden: "
+msgstr ""
 
 #: xmlWrite.php:128 xmlWrite.php:188
 msgid "The following file could not be found:"
-msgstr "Het volgende bestand is niet gevonden:"
+msgstr ""
 
 #: xmlWrite.php:183
 msgid "An error occurred finding the path for the file of track: "
-msgstr "Pad naar parcoursbestand niet gevonden: "
-
-#~ msgid "Fan-Made"
-#~ msgstr "Door Fan"
-
-#~ msgid "High-Quality"
-#~ msgstr "Hoge Kwaliteit"
-
-#~ msgid "Download revision"
-#~ msgstr "Versie downloaden"
-
-#~ msgid "Max 140 characters"
-#~ msgstr "Maximaal 140 tekens"
-
-#~ msgid "Notes:"
-#~ msgstr "Notities:"
-
-#~ msgid ""
-#~ "\n"
-#~ "=== STK Addons Terms and Conditions ===\n"
-#~ "\n"
-#~ "You must agree to these terms in order to upload content to the STK Addons "
-#~ "site.\n"
-#~ "\n"
-#~ "The STK Addons service is designed to be a repository exclusively for Super "
-#~ "Tux\n"
-#~ "Kart addon content. As such, all uploaded content must be intended for this\n"
-#~ "purpose. When you upload your content, it will be available publicly on the\n"
-#~ "internet, and may be available in-game for download.\n"
-#~ "\n"
-#~ "Because Super Tux Kart aims to comply with the Debian Free Software "
-#~ "Guidelines,\n"
-#~ "and because the host for this web service requires it, you may not upload\n"
-#~ "content which is locked down with a restrictive license. Licenses such as\n"
-#~ "CC-NC-SA 3.0, or other DFSG-compliant licenses are required. As well, all\n"
-#~ "content taken from third-party sources must be attributed properly, and "
-#~ "must\n"
-#~ "also be available under an open license. Licenses and attribution should be\n"
-#~ "included in a \"license.txt\" file in each uploaded archive. Uploads "
-#~ "without\n"
-#~ "proper licenses or attribution may be deleted without warning.\n"
-#~ "\n"
-#~ "As well, even with valid licenses and attribution, content may not contain "
-#~ "any\n"
-#~ "of the following:\n"
-#~ "    1. Profanity\n"
-#~ "    2. Explicit images\n"
-#~ "    3. Hateful messages and/or images\n"
-#~ "    4. Any other content that may be unsuitable for children\n"
-#~ "If any of your uploads are found to contain any of the above, your upload "
-#~ "may\n"
-#~ "be deleted, as well as your account, and any other content you may have\n"
-#~ "uploaded.\n"
-#~ "\n"
-#~ "By checking the box below, you are signifying that you understand the "
-#~ "contents\n"
-#~ "of these terms. If you have any questions or comments regarding these terms, "
-#~ "one\n"
-#~ "of the members of the development team would gladly assist you.\n"
-#~ msgstr ""
-#~ "\n"
-#~ "=== Voorwaarden van de STK Add-on service ===\n"
-#~ "\n"
-#~ "Pas nadat je akkoord bent gegaan mag je content naar de STK Add-ons \n"
-#~ "website uploaden.\n"
-#~ "\n"
-#~ "De STK add-on service is enkel bestemd voor content van en voor het\n"
-#~ " SuperTuxKart spel. Alle geüploade content moet dus hieraan voldoen.\n"
-#~ " Nadat je content is geüpload wordt publiekelijk toegankelijk en kan in \n"
-#~ "het spel worden geïnstalleerd.\n"
-#~ "\n"
-#~ "SuperTuxKart probeert in overeenstemming te blijven met de Debian Free \n"
-#~ "Software Richtlijnen. Dit is tevens een vereiste van deze webservice. Daarom "
-#~ "\n"
-#~ "Mag je geen content met restrictieve licentievoorwaarden uploaden. Licenties "
-#~ "\n"
-#~ "zoals de CC-NC-SA 3.0 of andere DFSG-toegestane licenties zijn verplicht. "
-#~ "Tevens \n"
-#~ "moet alle content van 3e partijen correct beschreven zijn en vrijgeven zijn "
-#~ "d.m.v.\n"
-#~ "een open source licentie. Bronverwijzingen en licenties moeten met elke "
-#~ "upload \n"
-#~ "in een bestand genaamd \"license.txt\" beschikbaar zijn. Uploads zonder dit "
-#~ "bestand \n"
-#~ "of content met onbekende of ongeldige bronvermelding worden zonder \n"
-#~ "waarschuwing verwijdert. \n"
-#~ "\n"
-#~ "Tevens zal content verwijdert worden, welke de volgende zaken bevatten:\n"
-#~ "    1. Scheldwoorden/schuttingtaal\n"
-#~ "    2. (Sexueel) Suggestieve afbeeldingen \n"
-#~ "    3. Hatelijke meldingen of afbeeldingen\n"
-#~ "    4. Elk ander materaal wat voor kinderen ongeschikt is\n"
-#~ "Als één van je uploads een van bovenstaande bevat kan de upload zonder \n"
-#~ "toestemming verwijdert worden. De beheerder kan tevens besluiten alle "
-#~ "uploads \n"
-#~ "en het account van de gebruiker in kwestie te verwijderen.\n"
-#~ "\n"
-#~ "Door het aanvinken van het vierknt hieronder geef je aan deze tekst te "
-#~ "hebben gelezen\n"
-#~ "en hiermee akkoord te gaan. Mocht je vragen hebben over deze voorwaarden, "
-#~ "dan helpen \n"
-#~ "de mensen van ons ontwikkelteam je graag verder.\n"
-
-#~ msgid "Welcome"
-#~ msgstr "Welkom"
-
-#~ msgid "Invalid archive file."
-#~ msgstr "Ongeldig archiefbestand"
-
-#~ msgid ""
-#~ "I have included a License.txt file describing the license under which my "
-#~ "work is released, and my name (or nickname) if I want credit"
-#~ msgstr ""
-#~ "Ik heb een Licence.txt bestand bijgevoegd met daarin de licentievoorwaarden "
-#~ "en mijn naam (of bijnaam) waaronder deze add-on uitgegeven wordt."
-
-#~ msgid "Supported file types are:"
-#~ msgstr "De volgende bestandstypen worden ondersteund:"
-
-#~ msgid ""
-#~ "I have included a License.txt file including the name of every author whose "
-#~ "material is used in this package, along with the license under which their "
-#~ "work is released"
-#~ msgstr ""
-#~ "Ik heb een License.txt bestand bijgevoegd met daarin de naam van elke auteur "
-#~ "wiens materiaal gebruikt is in dit pakket, en tevens de licentievoorwaarden "
-#~ "waaronder deze add-on uitgegeven is."
-
-#~ msgid "Public Domain"
-#~ msgstr "Publiek domein"
-
-#~ msgid "Source file"
-#~ msgstr "Bronbestand"
-
-#~ msgid "Upload Image or Source Archive"
-#~ msgstr "Afbeelding of bronarchief uploaden"
-
-#, php-format
-#~ msgid "Source File %s"
-#~ msgstr "Bronbestand %s"
+msgstr ""
