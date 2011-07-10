@@ -179,7 +179,7 @@ function loadAddons()
             else echo '<img class="icon"  src="image/track-icon.png" />';
             echo $addonLoader->addonCurrent['name']."</a></li>";
         }
-        elseif($user->logged_in && ($_SESSION['role']['manageaddons'] == true || $_SESSION['userid'] == $addonLoader->addonCurrent['uploader']))
+        elseif(User::$logged_in && ($_SESSION['role']['manageaddons'] == true || $_SESSION['userid'] == $addonLoader->addonCurrent['uploader']))
         {
             echo '<li><a class="menu-item unavailable" href="javascript:loadFrame(\''.$addonLoader->addonCurrent['id'].'\',\'addons-panel.php?type='.$_GET['type'].'\')">';
             if($_GET['type'] != "tracks")

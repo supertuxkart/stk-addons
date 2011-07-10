@@ -123,13 +123,11 @@ class coreAddon
 
     /**
      * Change the approval value on the add-on revision
-     * @global user $user
      * @return boolean Success
      */
     function approve()
     {
-        global $user;
-        if (!$user->logged_in)
+        if (!User::$logged_in)
             return false;
         if($_SESSION['role']['manageaddons'] != true)
             return false;
@@ -210,7 +208,7 @@ class coreAddon
     function setInformation($info, $value)
     {
         global $user;
-        if (!$user->logged_in)
+        if (!User::$logged_in)
             return false;
 
         if ($_SESSION['role']['manageaddons'] != true && $this->addonCurrent['uploader'] != $_SESSION['userid'])
@@ -237,7 +235,7 @@ class coreAddon
     function remove()
     {
         global $user;
-        if (!$user->logged_in)
+        if (!User::$logged_in)
             return false;
         if($_SESSION['role']['manageaddons'] != true)
             return false;
@@ -339,7 +337,7 @@ class coreAddon
             echo '<img class="preview" src="image.php?type=big&amp;pic='.$image_result['file_path'].'" />';
         }
         // Add upload button below image (or in place of image)
-        if ($user->logged_in && $this->addonCurrent['uploader'] == $_SESSION['userid'])
+        if (User::$logged_in && $this->addonCurrent['uploader'] == $_SESSION['userid'])
         {
             echo '<br /><form method="POST" action="upload.php?type='.$this->addonType.'&amp;name='.$this->addonCurrent['id'].'&amp;action=file">';
             echo '<input type="submit" value="'._('Upload Image').'" />';
@@ -397,18 +395,31 @@ class coreAddon
         echo '<br /><br /><br /><br />
         <strong>'._('License:').'</strong><br />
         <textarea name="license" rows="4" cols="60">'.strip_tags($this->addonCurrent['license']).'</textarea>
-        <br /><br /><strong>'._('Permalink:').'</strong><br />
-        '.$this->addonCurrent['permUrl'].'<br />';
-        
+        <br /><br />';
+
+        // Print a permanent reference link (permalink) to this addon
+        echo '<h3>'._('Permalink').'</h3><br />
+        <a href="'.$this->addonCurrent['permUrl'].'">'.$this->addonCurrent['permUrl'].'</a><br /><br />';
+
+        // List revisions
         $addonRevs = new coreAddon($this->addonType);
         $addonRevs->selectById($this->addonCurrent['id'],true);
-        echo '<strong>'._('Revisions:').'</strong><br />';
-        echo '<table>';
+        echo '<h3>'._('Revisions').'</h3>';
+
+        // Add upload button to the right of the Revisions label
+        if (User::$logged_in && $this->addonCurrent['uploader'] == $_SESSION['userid'])
+        {
+            echo '<div style="float: right;"><form method="POST" action="upload.php?type='.$this->addonType.'&amp;name='.$this->addonCurrent['id'].'">';
+            echo '<input type="submit" value="'._('Upload Revision').'" />';
+            echo '</form></div>';
+        }
+
+        echo '<br /><table>';
         while ($addonRevs->addonCurrent)
         {
             // Don't list unapproved addons
             global $user;
-            if (!$user->logged_in)
+            if (!User::$logged_in)
             {
                 // Users not logged in cannot see unapproved addons
                 if (!($addonRevs->addonCurrent['status'] & F_APPROVED))
@@ -458,7 +469,7 @@ class coreAddon
         // Show list of images associated with this addon
         echo '<h3>'._('Images').'</h3>';
         // Add upload button to the right of the Images label
-        if ($user->logged_in && $this->addonCurrent['uploader'] == $_SESSION['userid'])
+        if (User::$logged_in && $this->addonCurrent['uploader'] == $_SESSION['userid'])
         {
             echo '<div style="float: right;"><form method="POST" action="upload.php?type='.$this->addonType.'&amp;name='.$this->addonCurrent['id'].'&amp;action=file">';
             echo '<input type="submit" value="'._('Upload Image').'" />';
@@ -476,7 +487,7 @@ class coreAddon
         for ($i = 1; $i <= mysql_num_rows($imageFilesHandle); $i++)
         {
             $imageFilesResult = mysql_fetch_assoc($imageFilesHandle);
-            if ($user->logged_in &&
+            if (User::$logged_in &&
                     ($this->addonCurrent['uploader'] == $_SESSION['userid']
                     || $_SESSION['role']['manageaddons']))
             {
@@ -505,7 +516,7 @@ class coreAddon
                 echo '<a href="'.DOWN_LOCATION.$source_file['file_path'].'">';
                 echo '<img src="image.php?type=medium&amp;pic='.$source_file['file_path'].'" />';
                 echo '</a><br />';
-                if ($user->logged_in)
+                if (User::$logged_in)
                 {
                     if ($_SESSION['role']['manageaddons'])
                     {
@@ -539,7 +550,7 @@ class coreAddon
         // Show list of source files
         echo '<h3>'._('Source Files').'</h3>';
         // Add upload button to the right of the Source Files label
-        if ($user->logged_in && $this->addonCurrent['uploader'] == $_SESSION['userid'])
+        if (User::$logged_in && $this->addonCurrent['uploader'] == $_SESSION['userid'])
         {
             echo '<div style="float: right;"><form method="POST" action="upload.php?type='.$this->addonType.'&amp;name='.$this->addonCurrent['id'].'&amp;action=file">';
             echo '<input type="submit" value="'._('Upload Source File').'" />';
@@ -557,7 +568,7 @@ class coreAddon
         for ($i = 1; $i <= mysql_num_rows($sourceFilesHandle); $i++)
         {
             $sourceFilesResult = mysql_fetch_assoc($sourceFilesHandle);
-            if ($user->logged_in &&
+            if (User::$logged_in &&
                     ($this->addonCurrent['uploader'] == $_SESSION['userid']
                     || $_SESSION['role']['manageaddons']))
             {
@@ -587,7 +598,7 @@ class coreAddon
                 printf(_('Source File %u'),$n);
                 echo '</strong>'.$approved.'</td>';
                 echo '<td><a href="'.DOWN_LOCATION.$source_file['file_path'].'">'._('Download').'</a>';
-                if ($user->logged_in)
+                if (User::$logged_in)
                 {
                     if ($_SESSION['role']['manageaddons'])
                     {
@@ -610,7 +621,7 @@ class coreAddon
     {
         // Check permission
         global $user;
-        if ($user->logged_in == false)
+        if (User::$logged_in == false)
             return false;
         if ($_SESSION['role']['manageaddons'] == false && $this->addonCurrent['uploader'] != $_SESSION['userid'])
             return false;
@@ -630,13 +641,6 @@ class coreAddon
             onKeyDown="textLimit(document.getElementById(\'desc_field\'),140);">'.$this->addonCurrent['description'].'</textarea><br />';
         echo '<input type="submit" value="'._('Save Properties').'" />';
         echo '</form><br />';
-
-        // Add revision
-        if ($this->addonCurrent['uploader'] == $_SESSION['userid'])
-        {
-            echo '<form method="POST" action="upload.php?type='.$this->addonType.'&amp;name='.$this->addonCurrent['id'].'">';
-            echo '<input type="submit" value="'._('Upload Revision').'" /></form><br /><Br />';
-        }
         
         // Delete addon
         if ($this->addonCurrent['uploader'] == $_SESSION['userid'] || $_SESSION['role']['manageaddons'])
@@ -835,7 +839,7 @@ class coreAddon
         $this->writeInformation();
 
         global $user;
-        if ($user->logged_in == false)
+        if (User::$logged_in == false)
             return false;
         //write configuration for the submiter and administrator
         if(($_SESSION['role']['manageaddons'] == true || $this->addonCurrent['uploader'] == $_SESSION['userid']) && $config)
@@ -849,7 +853,7 @@ class coreAddon
         global $moderator_message;
 	global $user;
         // Check if logged in
-        if (!$user->logged_in) {
+        if (!User::$logged_in) {
             return false;
         }
 

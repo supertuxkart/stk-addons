@@ -38,7 +38,7 @@ function get_self()
     <div id="top-menu-content">
         <div class="left">
     <?php
-    if($user->logged_in)
+    if(User::$logged_in)
     {
         printf(_('Welcome, %s'),$_SESSION['real_name']);
         echo '&nbsp;&nbsp;&nbsp;';
@@ -62,7 +62,7 @@ function get_self()
         echo '<a href="'.$link.'">'.$text.'</a>';
     }
 
-    if($user->logged_in)
+    if(User::$logged_in)
     {
         echo'<a href="login.php?action=logout">'._("Log out").'</a>';
         echo'<a href="users.php">'._("Users").'</a>';
@@ -85,11 +85,12 @@ function get_self()
             <div id="lang-menu">
                 <a class="menu_head" href="#"><?php echo _("Languages");?></a>
                 <ul class="menu_body">
-                    <li><a href="<?php echo $page_url.'&amp;lang=nl_NL'; ?>"><img src="image/flag/nl.png" /></a></li>
-                    <li><a href="<?php echo $page_url.'&amp;lang=fr_FR'; ?>"><img src="image/flag/fr.png" /></a></li>
                     <li><a href="<?php echo $page_url.'&amp;lang=en_US'; ?>"><img src="image/flag/en.png" /></a></li>
-                    <li><a href="<?php echo $page_url.'&amp;lang=ga_IE'; ?>"><img src="image/flag/ga.png" /></a></li>
                     <li><a href="<?php echo $page_url.'&amp;lang=de_DE'; ?>"><img src="image/flag/de.png" /></a></li>
+                    <li><a href="<?php echo $page_url.'&amp;lang=fr_FR'; ?>"><img src="image/flag/fr.png" /></a></li>
+                    <li><a href="<?php echo $page_url.'&amp;lang=ga_IE'; ?>"><img src="image/flag/ga.png" /></a></li>
+                    <li><a href="<?php echo $page_url.'&amp;lang=nl_NL'; ?>"><img src="image/flag/nl.png" /></a></li>
+                    <li><a href="<?php echo $page_url.'&amp;lang=ru_RU'; ?>"><img src="image/flag/ru.png" /></a></li>
                     <li><a href="https://translations.launchpad.net/stk/stkaddons">Translate<br />STK-Addons</a></li>
                 </ul>
             </div>

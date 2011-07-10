@@ -32,7 +32,7 @@ $auth = false;
 if($security != "")
 {
     $auth = false;
-    if($user->logged_in)
+    if(User::$logged_in)
     {
         if($_SESSION['role'][$security] == false)
         {

@@ -18,12 +18,12 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-class user
+class User
 {
-    public $logged_in = false;
-    public $user_id = 0;
+    public static $logged_in = false;
+    public static $user_id = 0;
 
-    function __construct() {
+    static function init() {
         // Validate user's session on every page
         if (session_id() == "") {
             session_start();
@@ -39,7 +39,7 @@ class user
         {
             // One or more of the session variables was not set - this may
             // be an issue, so force logout
-            $this->logout();
+            User::logout();
             return;
         }
         // Validate session if complete set of variables is available
@@ -54,14 +54,14 @@ class user
         $num_rows = mysql_num_rows($reqSql);
         if($num_rows != 1)
         {
-            $this->logout();
+            User::logout();
             return false;
         }
-        $this->user_id = $_SESSION['userid'];
-        $this->logged_in = true;
+        User::$user_id = $_SESSION['userid'];
+        User::$logged_in = true;
     }
 
-    function login($username,$password)
+    static function login($username,$password)
     {
         // Validate parameters
         // Username must be 4 or more characters
@@ -84,14 +84,14 @@ class user
         $reqSql = sql_query($querySql);
         if (!$reqSql)
         {
-            $this->logout();
+            User::logout();
             return false;
         }
         $num_rows = mysql_num_rows($reqSql);
 
         // Check if the user exists
         if($num_rows != 1) {
-            $this->logout();
+            User::logout();
             return false;
         }
         $result = mysql_fetch_assoc($reqSql);
@@ -109,15 +109,15 @@ class user
                 WHERE id = '.$_SESSION['userid'];
         $reqSql = mysql_query($set_logintime_query);
         if (!$reqSql) {
-            $this->logout();
+            User::logout();
             return false;
         }
-        $this->user_id = $result['id'];
-        $this->logged_in = true;
+        User::$user_id = $result['id'];
+        User::$logged_in = true;
         return true;
     }
 
-    function logout()
+    static function logout()
     {
         unset($_SESSION['userid']);
         unset($_SESSION['user']);
@@ -127,10 +127,11 @@ class user
         unset($_SESSION['last_login']);
         session_destroy();
         session_start();
-        $this->user_id = 0;
-        $this->logged_in = false;
+        User::$user_id = 0;
+        User::$logged_in = false;
     }
 }
+User::init();
 
 function loadUsers()
 {
@@ -168,6 +169,4 @@ EOF;
     echo "</ul>";
 
 }
-
-$user = new user;
 ?>

@@ -67,7 +67,7 @@ class coreUser
     function viewInformation()
     {
         global $user;
-        if (!$user->logged_in)
+        if (!User::$logged_in)
             return false;
 
         $this->writeInformation();

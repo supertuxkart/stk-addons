@@ -38,9 +38,9 @@ $_GET['action'] = (isset($_GET['action'])) ? $_GET['action'] : NULL;
 
 if ($_GET['action'] == 'logout')
 {
-    $user->logout();
+    User::logout();
     include(ROOT.'include/menu.php');
-    if ($user->logged_in === true)
+    if (User::$logged_in === true)
     {
         include(ROOT.'include/top.php');
         echo '</head><body><div id="content">';
@@ -58,7 +58,7 @@ if ($_GET['action'] == 'logout')
     exit;
 }
 
-if ($user->logged_in === true)
+if (User::$logged_in === true)
 {
     include(ROOT.'include/top.php');
     echo '<meta http-equiv="refresh" content="3;URL=index.php"></head><body>';
@@ -73,7 +73,7 @@ if ($user->logged_in === true)
 if ($_GET['action'] == 'submit')
 {
     // Variable validation is done by the function below
-    if ($user->login($_POST['user'],$_POST['pass']))
+    if (User::login($_POST['user'],$_POST['pass']))
     {
         include(ROOT.'include/top.php');
         echo '<meta http-equiv="refresh" content="3;URL=index.php">';
@@ -85,7 +85,7 @@ if ($_GET['action'] == 'submit')
     echo '</head><body>';
     include(ROOT.'include/menu.php');
     echo '<div id="content">';
-    if ($user->logged_in === true)
+    if (User::$logged_in === true)
     {
         printf(_('Welcome, %s!').'<br />',$_SESSION['real_name']);
         echo _('Click <a href="index.php">here</a> if you do not automatically redirect.').'<br />';
