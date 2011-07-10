@@ -659,9 +659,9 @@ function type_check($path, $source = false)
         return false;
     // Make a list of approved file types
     if ($source === false)
-        $approved_types = get_config('allowed_addon_exts');
+        $approved_types = ConfigManager::get_config('allowed_addon_exts');
     else
-        $approved_types = get_config('allowed_source_exts');
+        $approved_types = ConfigManager::get_config('allowed_source_exts');
     $approved_types = explode(',',$approved_types);
     $removed_files = array();
 

@@ -78,12 +78,12 @@ switch ($_GET['action'])
         }
         else
         {
-            set_config('xml_frequency',(int)$_POST['xml_frequency']);
-            set_config('allowed_addon_exts',mysql_real_escape_string($_POST['allowed_addon_exts']));
-            set_config('allowed_source_exts',mysql_real_escape_string($_POST['allowed_source_exts']));
-            set_config('admin_email',mysql_real_escape_string($_POST['admin_email']));
-            set_config('list_email',mysql_real_escape_string($_POST['list_email']));
-            set_config('list_invisible',(int)$_POST['list_invisible']);
+            ConfigManager::set_config('xml_frequency',(int)$_POST['xml_frequency']);
+            ConfigManager::set_config('allowed_addon_exts',mysql_real_escape_string($_POST['allowed_addon_exts']));
+            ConfigManager::set_config('allowed_source_exts',mysql_real_escape_string($_POST['allowed_source_exts']));
+            ConfigManager::set_config('admin_email',mysql_real_escape_string($_POST['admin_email']));
+            ConfigManager::set_config('list_email',mysql_real_escape_string($_POST['list_email']));
+            ConfigManager::set_config('list_invisible',(int)$_POST['list_invisible']);
         }
         echo _('Saved settings.').'<br />';
         break;

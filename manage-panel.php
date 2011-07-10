@@ -79,12 +79,12 @@ function settings_panel()
 {
     echo '<form method="POST" action="manage.php?view=general&amp;action=save_config">';
     echo '<table>';
-    echo '<tr><td>'._('XML Download Frequency').'</td><td><input type="text" name="xml_frequency" value="'.get_config('xml_frequency').'" size="6" maxlength="8" /></td></tr>';
-    echo '<tr><td>'._('Permitted Addon Filetypes').'</td><td><input type="text" name="allowed_addon_exts" value="'.get_config('allowed_addon_exts').'" /></td></tr>';
-    echo '<tr><td>'._('Permitted Source Archive Filetypes').'</td><td><input type="text" name="allowed_source_exts" value="'.get_config('allowed_source_exts').'" /></td></tr>';
-    echo '<tr><td>'._('Administrator Email').'</td><td><input type="text" name="admin_email" value="'.get_config('admin_email').'" /></td></tr>';
-    echo '<tr><td>'._('Moderator List Email').'</td><td><input type="text" name="list_email" value="'.get_config('list_email').'" /></td></tr>';
-    if (get_config('list_invisible') == 1)
+    echo '<tr><td>'._('XML Download Frequency').'</td><td><input type="text" name="xml_frequency" value="'.ConfigManager::get_config('xml_frequency').'" size="6" maxlength="8" /></td></tr>';
+    echo '<tr><td>'._('Permitted Addon Filetypes').'</td><td><input type="text" name="allowed_addon_exts" value="'.ConfigManager::get_config('allowed_addon_exts').'" /></td></tr>';
+    echo '<tr><td>'._('Permitted Source Archive Filetypes').'</td><td><input type="text" name="allowed_source_exts" value="'.ConfigManager::get_config('allowed_source_exts').'" /></td></tr>';
+    echo '<tr><td>'._('Administrator Email').'</td><td><input type="text" name="admin_email" value="'.ConfigManager::get_config('admin_email').'" /></td></tr>';
+    echo '<tr><td>'._('Moderator List Email').'</td><td><input type="text" name="list_email" value="'.ConfigManager::get_config('list_email').'" /></td></tr>';
+    if (ConfigManager::get_config('list_invisible') == 1)
         $invisible_opts = '<option value="1" selected>'._('True').'</option><option value="0">'._('False').'</option>';
     else
         $invisible_opts = '<option value="1">'._('True').'</option><option value="0" selected>'._('False').'</option>';

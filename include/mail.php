@@ -48,7 +48,7 @@ function sendMail($mail, $subject, $option)
     $boundary = "-----=".md5(rand());
 
     $header = "From: \"stkaddons@tuxfamily.org\"<stkaddons@tuxfamily.org>".$passage_ligne;
-    $header.= "Reply-to: \"STK-Addons Administrator\" <".get_config('admin_email').">".$passage_ligne;
+    $header.= "Reply-to: \"STK-Addons Administrator\" <".ConfigManager::get_config('admin_email').">".$passage_ligne;
     $header.= "MIME-Version: 1.0".$passage_ligne;
     $header.= "Content-Type: multipart/alternative;".$passage_ligne." boundary=\"$boundary\"".$passage_ligne;
     $message = $passage_ligne."--".$boundary.$passage_ligne;
@@ -62,7 +62,7 @@ function sendMail($mail, $subject, $option)
 
 function moderator_email($subject, $message_html)
 {
-    $mail_address = get_config('list_email');
+    $mail_address = ConfigManager::get_config('list_email');
     if (strlen($mail_address) == 0)
     {
         echo '<span class="warning">'._('No moderator mailing-list email is set.').'</span><br />';
@@ -70,8 +70,8 @@ function moderator_email($subject, $message_html)
     }
 
     $boundary = "-----=".md5(rand());
-    $header = "From: \"STK-Addons Administrator\" <".get_config('admin_email').">\n"
-        ."Reply-to: \"STK-Addons Administrator\" <".get_config('admin_email').">\n"
+    $header = "From: \"STK-Addons Administrator\" <".ConfigManager::get_config('admin_email').">\n"
+        ."Reply-to: \"STK-Addons Administrator\" <".ConfigManager::get_config('admin_email').">\n"
         ."MIME-Version: 1.0\n"
         ."Content-Type: multipart/alternative;\n boundary=\"$boundary\"\n";
     $message = "\n--".$boundary."\n"

@@ -36,7 +36,7 @@ function generateNewsXML()
     // File creation time
     $writer->writeAttribute('mtime',time());
     // Time between updates
-    $writer->writeAttribute('frequency', get_config('xml_frequency'));
+    $writer->writeAttribute('frequency', ConfigManager::get_config('xml_frequency'));
 
     // Reference assets.xml
     $writer->startElement('include');
@@ -97,7 +97,7 @@ function generateAssetXML()
     // File creation time
     $writer->writeAttribute('mtime',time());
     // Time between updates
-    $writer->writeAttribute('frequency', get_config('xml_frequency'));
+    $writer->writeAttribute('frequency', ConfigManager::get_config('xml_frequency'));
 
     // Fetch kart list
     $querySql = 'SELECT `k`.*, `r`.`fileid`,
@@ -112,7 +112,7 @@ function generateAssetXML()
     $reqSql = sql_query($querySql);
     while($result = sql_next($reqSql))
     {
-        if (get_config('list_invisible') == 0)
+        if (ConfigManager::get_config('list_invisible') == 0)
         {
             if($result['status'] & F_INVISIBLE)
                 continue;
@@ -172,7 +172,7 @@ function generateAssetXML()
     $reqSql = sql_query($querySql);
     while($result = sql_next($reqSql))
     {
-        if (get_config('list_invisible') == 0)
+        if (ConfigManager::get_config('list_invisible') == 0)
         {
             if($result['status'] & F_INVISIBLE)
                 continue;
