@@ -625,7 +625,9 @@ class coreAddon
         echo '<input type="text" name="designer" id="designer_field" value="'.$this->addonCurrent['designer'].'" /><br />';
         echo '<br />';
         printf('<strong>'._('Description:').'</strong> ('._('Max %u characters').')<br />','140');
-        echo '<textarea name="description" id="desc_field" rows="4" cols="60">'.$this->addonCurrent['description'].'</textarea><br />';
+        echo '<textarea name="description" id="desc_field" rows="4" cols="60"
+            onKeyUp="textLimit(document.getElementById(\'desc_field\'),140);"
+            onKeyDown="textLimit(document.getElementById(\'desc_field\'),140);">'.$this->addonCurrent['description'].'</textarea><br />';
         echo '<input type="submit" value="'._('Save Properties').'" />';
         echo '</form><br />';
 
@@ -807,7 +809,10 @@ class coreAddon
         while ($addonRevs->addonCurrent)
         {
             printf(_('Rev %u:').'<br />',$addonRevs->addonCurrent['revision']);
-            echo '<textarea name="notes-'.$addonRevs->addonCurrent['revision'].'" rows="4" cols="60">';
+            echo '<textarea name="notes-'.$addonRevs->addonCurrent['revision'].'"
+                id="notes-'.$addonRevs->addonCurrent['revision'].'" rows="4" cols="60"
+                onKeyUp="textLimit(document.getElementById(\'notes-'.$addonRevs->addonCurrent['revision'].'\'),4000);"
+                onKeyDown="textLimit(document.getElementById(\'notes-'.$addonRevs->addonCurrent['revision'].'\'),4000);">';
             echo $addonRevs->addonCurrent['moderator_note'];
             echo '</textarea><br />';
             $fields[] = 'notes-'.$addonRevs->addonCurrent['revision'];

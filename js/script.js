@@ -96,3 +96,9 @@ function load_jquery()
         document.body.style.cursor='default';
     });
 }
+
+function textLimit(field, num) {
+    if (field.value.length > num) {
+        field.value = field.value.substring(0, num);
+    }
+}
