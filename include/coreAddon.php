@@ -882,7 +882,7 @@ class coreAddon
             // Update the addon name
             if (!sql_update('addons',
                     'id',mysql_real_escape_string($addonid),
-                    'name',mysql_real_escape_string($attirbutes['name'])))
+                    'name',mysql_real_escape_string($attributes['name'])))
             {
                 echo '<span class="error">'._('Failed to update the name record for this add-on.').'</span><br />';
             }
