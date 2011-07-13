@@ -36,6 +36,7 @@ function uploadFormFieldToggle()
     var check2 = document.getElementById('l_licensefile2');
     var checklabel1 = document.getElementById('l_licensetext1');
     var checklabel2 = document.getElementById('l_licensetext2');
+    var filetypeselect = document.getElementById('upload-type');
     if (radio1.checked)
     {
         check1.disabled = false;
@@ -50,6 +51,30 @@ function uploadFormFieldToggle()
         checklabel1.style.color = '#999999';
         checklabel2.style.color = '#000000';
     }
+    if (filetypeselect != undefined)
+    {
+        if (filetypeselect.value == 'image') {
+            check1.disabled = true;
+            check2.disabled = true;
+            checklabel1.style.color = '#999999';
+            checklabel2.style.color = '#999999';
+        } else {
+            if (radio1.checked)
+            {
+                check1.disabled = false;
+                check2.disabled = true;
+                checklabel1.style.color = '#000000';
+                checklabel2.style.color = '#999999';
+            }
+            else
+            {
+                check1.disabled = true;
+                check2.disabled = false;
+                checklabel1.style.color = '#999999';
+                checklabel2.style.color = '#000000';
+            }
+        }
+    }
 }
 </script>
 </head><body>
@@ -59,17 +84,36 @@ include(ROOT.'include/menu.php');
 if($_GET['action'] == "submit")
 {
     echo '<div id="content">';
-    if (!isset($_POST['l_author'])
-            || (!isset($_POST['l_licensefile1']) && !isset($_POST['l_licensefile2']))
-            || (!isset($_POST['license_gpl']) && !isset($_POST['license_cc-by'])
-                    && !isset($_POST['license_cc-by-sa'])
-                    && !isset($_POST['license_pd'])
-                    && !isset($_POST['license_bsd'])
-                    && !isset($_POST['license_other']))
-            || !isset($_POST['l_agreement'])
-            || !isset($_POST['l_clean'])
-            || ($_POST['l_author'] == 1 && !isset($_POST['l_licensefile1']))
-            || ($_POST['l_author'] == 2 && !isset($_POST['l_licensefile2'])))
+    // Check to make sure all form license boxes are good
+    $agreement_form = 1;
+    while ($agreement_form == 1)
+    {
+        if (!isset($_POST['license_gpl'])
+                && !isset($_POST['license_cc-by'])
+                && !isset($_POST['license_cc-by-sa'])
+                && !isset($_POST['license_pd'])
+                && !isset($_POST['license_bsd'])
+                && !isset($_POST['license_other']))
+            $agreement_form = 0;
+        if (!isset($_POST['l_agreement']) || !isset($_POST['l_clean']))
+            $agreement_form = 0;
+        if (!isset($_POST['l_author']))
+            $agreement_form = 0;
+        if (isset($_POST['upload-type']) && $_POST['upload-type'] == 'image')
+        {
+            if ($_POST['l_author'] != 1 && $_POST['l_author'] != 2)
+                $agreement_form = 0;
+        }
+        else
+        {
+            if ($_POST['l_author'] == 1 && !isset($_POST['l_licensefile1']))
+                $agreement_form = 0;
+            if ($_POST['l_author'] == 2 && !isset($_POST['l_licensefile2']))
+                $agreement_form = 0;
+        }
+        break;
+    }
+    if ($agreement_form == 0)
     {
         echo '<span class="error">'._('Your response to the agreement was unacceptable. You may not upload this content to the STK Addons website.').'</span><br />';
     }
@@ -111,7 +155,7 @@ if($_GET['action'] == "submit")
             else
             {
                 echo _('What type of file are you uploading?').'<br />';
-                echo '<select name="upload-type">
+                echo '<select name="upload-type" id="upload-type" onChange="uploadFormFieldToggle();">
                     <option value="source">'._('Source Archive').'</option>
                     <option value="image">'._('Image File').' (.png, .jpg, .jpeg)</option>
                     </select><br />';

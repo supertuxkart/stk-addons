@@ -98,19 +98,25 @@ function parseUpload($file,$revision = false)
     }
 
     // Find XML file
-    $xml_file = find_xml(UP_LOCATION.'temp/'.$fileid);
-    $xml_dir = dirname($xml_file);
-    if (!$xml_file) {
-        echo '<span class="error>'._('Invalid archive file. The archive must contain the addon\'s xml file.').'</span><br />';
-        rmdir_recursive(UP_LOCATION.'temp/'.$fileid);
-        return false;
+    if ($_POST['upload-type'] != 'source')
+    {
+        $xml_file = find_xml(UP_LOCATION.'temp/'.$fileid);
+        $xml_dir = dirname($xml_file);
+        if (!$xml_file) {
+            echo '<span class="error>'._('Invalid archive file. The archive must contain the addon\'s xml file.').'</span><br />';
+            rmdir_recursive(UP_LOCATION.'temp/'.$fileid);
+            return false;
+        }
     }
 
     // Check for invalid files
-    if ($_POST['upload-type'] == 'source')
-        $invalid_files = type_check($xml_dir, true);
-    else
+    if ($_POST['upload-type'] != 'source')
         $invalid_files = type_check($xml_dir);
+    else
+    {
+        $xml_dir = UP_LOCATION.'temp/'.$fileid;
+        $invalid_files = type_check($xml_dir, true);
+    }
     if (is_array($invalid_files) && count($invalid_files != 0))
     {
         echo '<span class="warning">'._('Some invalid files were found in the uploaded add-on. These files have been removed from the archive:').' '.implode(', ',$invalid_files).'</span><br />';
