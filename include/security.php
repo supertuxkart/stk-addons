@@ -44,8 +44,8 @@ if($security != "")
                     <?php include("menu.php"); ?>
                     <div id="content">
                         <span class="error">
-                            <?php echo _('You do not have the rights to access this page.'); ?><br />
-                            <?php echo _('You will be redirected to the home page.'); ?>
+                            <?php echo htmlspecialchars(_('You do not have the rights to access this page.')); ?><br />
+                            <?php echo htmlspecialchars(_('You will be redirected to the home page.')); ?>
                         </span>
                     <?php include("include/footer.php"); ?>
             <?php
@@ -66,8 +66,8 @@ if($security != "")
                 <?php include("menu.php"); ?>
                 <div id="content">
                     <span class="error">
-                        <?php echo _('You must be logged in to access this page.'); ?><br />
-                        <?php echo _('You will be redirected to the login page.'); ?>
+                        <?php echo htmlspecialchars(_('You must be logged in to access this page.')); ?><br />
+                        <?php echo htmlspecialchars(_('You will be redirected to the login page.')); ?>
                     </span>
                 <?php include("include/footer.php"); ?>
         <?php

@@ -37,7 +37,7 @@ include(ROOT.'include/top.php');
         <?php include('include/menu.php'); ?>
         <div id="content">
             <span class="error">
-                <?php echo _('This page is currently disabled.'); ?><br />
-                <?php echo _('You will be redirected to the home page.'); ?>
+                <?php echo htmlspecialchars(_('This page is currently disabled.')); ?><br />
+                <?php echo htmlspecialchars(_('You will be redirected to the home page.')); ?>
             </span>
         <?php include("include/footer.php"); exit; ?>

@@ -40,11 +40,11 @@ switch ($_GET['action'])
         $handle = sql_query($reqSql);
         if ($handle)
         {
-            echo _('Deleted message.').'<br />';
+            echo htmlspecialchars(_('Deleted message.')).'<br />';
         }
         else
         {
-            echo '<span class="error">'._('Failed to delete message.').'</span><br />';
+            echo '<span class="error">'.htmlspecialchars(_('Failed to delete message.')).'</span><br />';
             break;
         }
         // Regenerate xml
@@ -55,22 +55,22 @@ switch ($_GET['action'])
 switch ($_POST['id'])
 {
     default:
-        echo '<span class="error">'._('Invalid page. You may have followed a broken link.').'</span><br />';
+        echo '<span class="error">'.htmlspecialchars(_('Invalid page. You may have followed a broken link.')).'</span><br />';
         exit;
     case 'general':
-        echo '<h1>'._('General Settings').'</h1>';
+        echo '<h1>'.htmlspecialchars(_('General Settings')).'</h1>';
         settings_panel();
         break;
     case 'news':
-        echo '<h1>'._('News Messages').'</h1>';
+        echo '<h1>'.htmlspecialchars(_('News Messages')).'</h1>';
         news_message_panel();
         break;
     case 'files':
-        echo '<h1>'._('Uploaded Files').'</h1>';
+        echo '<h1>'.htmlspecialchars(_('Uploaded Files')).'</h1>';
         files_panel();
         break;
     case 'clients':
-        echo '<h1>'._('Client Versions').'</h1>';
+        echo '<h1>'.htmlspecialchars(_('Client Versions')).'</h1>';
         clients_panel();
         break;
 }
@@ -79,27 +79,27 @@ function settings_panel()
 {
     echo '<form method="POST" action="manage.php?view=general&amp;action=save_config">';
     echo '<table>';
-    echo '<tr><td>'._('XML Download Frequency').'</td><td><input type="text" name="xml_frequency" value="'.ConfigManager::get_config('xml_frequency').'" size="6" maxlength="8" /></td></tr>';
-    echo '<tr><td>'._('Permitted Addon Filetypes').'</td><td><input type="text" name="allowed_addon_exts" value="'.ConfigManager::get_config('allowed_addon_exts').'" /></td></tr>';
-    echo '<tr><td>'._('Permitted Source Archive Filetypes').'</td><td><input type="text" name="allowed_source_exts" value="'.ConfigManager::get_config('allowed_source_exts').'" /></td></tr>';
-    echo '<tr><td>'._('Administrator Email').'</td><td><input type="text" name="admin_email" value="'.ConfigManager::get_config('admin_email').'" /></td></tr>';
-    echo '<tr><td>'._('Moderator List Email').'</td><td><input type="text" name="list_email" value="'.ConfigManager::get_config('list_email').'" /></td></tr>';
+    echo '<tr><td>'.htmlspecialchars(_('XML Download Frequency')).'</td><td><input type="text" name="xml_frequency" value="'.ConfigManager::get_config('xml_frequency').'" size="6" maxlength="8" /></td></tr>';
+    echo '<tr><td>'.htmlspecialchars(_('Permitted Addon Filetypes')).'</td><td><input type="text" name="allowed_addon_exts" value="'.ConfigManager::get_config('allowed_addon_exts').'" /></td></tr>';
+    echo '<tr><td>'.htmlspecialchars(_('Permitted Source Archive Filetypes')).'</td><td><input type="text" name="allowed_source_exts" value="'.ConfigManager::get_config('allowed_source_exts').'" /></td></tr>';
+    echo '<tr><td>'.htmlspecialchars(_('Administrator Email')).'</td><td><input type="text" name="admin_email" value="'.ConfigManager::get_config('admin_email').'" /></td></tr>';
+    echo '<tr><td>'.htmlspecialchars(_('Moderator List Email')).'</td><td><input type="text" name="list_email" value="'.ConfigManager::get_config('list_email').'" /></td></tr>';
     if (ConfigManager::get_config('list_invisible') == 1)
-        $invisible_opts = '<option value="1" selected>'._('True').'</option><option value="0">'._('False').'</option>';
+        $invisible_opts = '<option value="1" selected>'.htmlspecialchars(_('True')).'</option><option value="0">'.htmlspecialchars(_('False')).'</option>';
     else
-        $invisible_opts = '<option value="1">'._('True').'</option><option value="0" selected>'._('False').'</option>';
-    echo '<tr><td>'._('List Invisible Addons in XML').'</td><td><select name="list_invisible">'.$invisible_opts.'</option></td></tr>';
-    echo '<tr><td></td><td><input type="submit" value="'._('Save Settings').'" /></td></tr>';
+        $invisible_opts = '<option value="1">'.htmlspecialchars(_('True')).'</option><option value="0" selected>'.htmlspecialchars(_('False')).'</option>';
+    echo '<tr><td>'.htmlspecialchars(_('List Invisible Addons in XML')).'</td><td><select name="list_invisible">'.$invisible_opts.'</option></td></tr>';
+    echo '<tr><td></td><td><input type="submit" value="'.htmlspecialchars(_('Save Settings')).'" /></td></tr>';
     echo '</table>';
 }
 
 function news_message_panel()
 {
     echo '<form method="POST" action="manage.php?view=news&amp;action=new_news"><table><tr>';
-    echo '<td>'._('Message:').'</td><td><input type="text" name="message" id="news_message" size="60" maxlength="140" /></td></tr><tr>';
-    echo '<td>'._('Condition:').'</td><td><input type="text" name="condition" id="news_condition" size="60" maxlength="255" /></td></tr><tr>';
-    echo '<td>'._('Display on Website:').'</td><td><input type="checkbox" name="web_display" id="web_display" checked /></td></tr>';
-    echo '<td></td><td><input type="submit" value="'._('Create Message').'" /></td></tr></table>';
+    echo '<td>'.htmlspecialchars(_('Message:')).'</td><td><input type="text" name="message" id="news_message" size="60" maxlength="140" /></td></tr><tr>';
+    echo '<td>'.htmlspecialchars(_('Condition:')).'</td><td><input type="text" name="condition" id="news_condition" size="60" maxlength="255" /></td></tr><tr>';
+    echo '<td>'.htmlspecialchars(_('Display on Website:')).'</td><td><input type="checkbox" name="web_display" id="web_display" checked /></td></tr>';
+    echo '<td></td><td><input type="submit" value="'.htmlspecialchars(_('Create Message')).'" /></td></tr></table>';
     echo '</form>';
     echo 'Todo:<ol><li>Allow selecting from a list of conditions rather than typing. Too typo-prone.</li><li>Type semicolon-delimited expressions, e.g. <tt>stkversion > 0.7.0;addonid not installed;</tt>.</li><li>Allow editing in future, in case of goofs or changes.</li></ol>';
     echo '<br />';
@@ -112,17 +112,17 @@ function news_message_panel()
     $handle = sql_query($reqSql);
     if (!$handle)
     {
-        echo _('No news messages currently exist.').'<br />';
+        echo htmlspecialchars(_('No news messages currently exist.')).'<br />';
     }
     else
     {
         echo '<table width="100%"><tr>
-            <th width="100">'._('Date:').'</th>
-            <th>'._('Message:').'</th>
-            <th>'._('Author:').'</th>
-            <th>'._('Condition:').'</th>
-            <th>'._('Web:').'</th>
-            <th>'._('Actions:').'</th></tr>';
+            <th width="100">'.htmlspecialchars(_('Date:')).'</th>
+            <th>'.htmlspecialchars(_('Message:')).'</th>
+            <th>'.htmlspecialchars(_('Author:')).'</th>
+            <th>'.htmlspecialchars(_('Condition:')).'</th>
+            <th>'.htmlspecialchars(_('Web:')).'</th>
+            <th>'.htmlspecialchars(_('Actions:')).'</th></tr>';
         for ($result = sql_next($handle); $result; $result = sql_next($handle))
         {
             echo '<tr>';
@@ -148,14 +148,14 @@ function files_panel()
     
     if (mysql_num_rows($filesHandle) == 0)
     {
-        echo _('No files have been uploaded.');
+        echo htmlspecialchars(_('No files have been uploaded.'));
         return;
     }
     
-    $name_label = _('Name:');
-    $addon_label = _('Add-on:');
-    $type_label = _('Type:');
-    $references_label = _('References:');
+    $name_label = htmlspecialchars(_('Name:'));
+    $addon_label = htmlspecialchars(_('Add-on:'));
+    $type_label = htmlspecialchars(_('Type:'));
+    $references_label = htmlspecialchars(_('References:'));
 
     echo <<< EOF
 <table class="info">
@@ -218,19 +218,19 @@ EOF;
 
 function clients_panel()
 {
-    echo '<br /><h3>'._('Clients by User-Agent').'</h3>';
+    echo '<br /><h3>'.htmlspecialchars(_('Clients by User-Agent')).'</h3>';
     // Read recorded user-agents from database
     $clientsSql = 'SELECT * FROM `'.DB_PREFIX.'clients`
         ORDER BY `agent_string` ASC';
     $clientsHandle = sql_query($clientsSql);
     if (mysql_num_rows($clientsHandle) == 0)
     {
-        echo _('There are currently no SuperTuxKart clients recorded. Your download script may not be configured properly.').'<br />';
+        echo htmlspecialchars(_('There are currently no SuperTuxKart clients recorded. Your download script may not be configured properly.')).'<br />';
     }
     else
     {
         echo '<table width="100%">';
-        echo '<tr><th>'._('User-Agent String:').'</th><th>'._('Game Version:').'</th></tr>';
+        echo '<tr><th>'.htmlspecialchars(_('User-Agent String:')).'</th><th>'.htmlspecialchars(_('Game Version:')).'</th></tr>';
         for ($clientsResult = sql_next($clientsHandle); $clientsResult; $clientsResult = sql_next($clientsHandle))
         {
             echo '<tr><td>'.$clientsResult['agent_string'].'</td><td>'.$clientsResult['stk_version'].'</td></tr>';

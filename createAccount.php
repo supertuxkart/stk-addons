@@ -39,46 +39,46 @@ $_GET['action'] = (isset($_GET['action'])) ? $_GET['action'] : NULL;
 // Login form
 $login_form =
     '<form id="form" action="createAccount.php?action=submit" method="POST">
-    '._('Username:').' ('._('Must be at least 4 characters long.').')<br />
+    '.htmlspecialchars(_('Username:')).' ('.htmlspecialchars(_('Must be at least 4 characters long.')).')<br />
     <input type="text" name="user" /><br />
-    '._('Password:').' ('._('Must be at least 6 characters long.').')<br />
+    '.htmlspecialchars(_('Password:')).' ('.htmlspecialchars(_('Must be at least 6 characters long.')).')<br />
     <input type="password" id="pass1" name="pass1" /><br />
-    '._('Password (confirm):').' <br />
+    '.htmlspecialchars(_('Password (confirm):')).' <br />
     <input type="password" id="pass2" name="pass2" /><br />
-    '._('Name:').' <br />
+    '.htmlspecialchars(_('Name:')).' <br />
     <input type="text" id="name" name="name" /><br />
-    '._('Email Address:').' <br />
+    '.htmlspecialchars(_('Email Address:')).' <br />
     <input type="text" name="mail" /><br /><br />
-    '._('Terms:').'<br />
+    '.htmlspecialchars(_('Terms:')).'<br />
     <textarea rows="10" cols="80">
-=== '._('STK Addons Terms and Conditions')." ===\n\n".
-_('You must agree to these terms in order to upload content to the STK Addons site.')."\n\n".
+=== '.htmlspecialchars(_('STK Addons Terms and Conditions'))." ===\n\n".
+htmlspecialchars(_('You must agree to these terms in order to upload content to the STK Addons site.'))."\n\n".
 _('The STK Addons service is designed to be a repository exclusively for Super
 Tux Kart addon content. All uploaded content must be intended for this
 purpose. When you upload your content, it will be available publicly on the
 internet, and will be made available in-game for download.')."\n\n".
-_('Super Tux Kart aims to comply with the Debian Free Software Guidelines (DFSG).
+htmlspecialchars(_('Super Tux Kart aims to comply with the Debian Free Software Guidelines (DFSG).
 TuxFamily.org also requires that content they host comply with open licenses.
 You may not upload content which is locked down with a restrictive license.
 Licenses such as CC-BY-SA 3.0, or other DFSG-compliant licenses are required.
 All content taken from third-party sources must be attributed properly, and must
 also be available under an open license. Licenses and attribution should be
 included in a "license.txt" file in each uploaded archive. Uploads without
-proper licenses or attribution may be deleted without warning.')."\n\n".
-_('Even with valid licenses and attribution, content may not contain any
-of the following:')."\n".
-'    1. '._('Profanity')."\n".
-'    2. '._('Explicit images')."\n".
-'    3. '._('Hateful messages and/or images')."\n".
-'    4. '._('Any other content that may be unsuitable for children')."\n".
-_('If any of your uploads are found to contain any of the above, your upload
+proper licenses or attribution may be deleted without warning.'))."\n\n".
+htmlspecialchars(_('Even with valid licenses and attribution, content may not contain any
+of the following:'))."\n".
+'    1. '.htmlspecialchars(_('Profanity'))."\n".
+'    2. '.htmlspecialchars(_('Explicit images'))."\n".
+'    3. '.htmlspecialchars(_('Hateful messages and/or images'))."\n".
+'    4. '.htmlspecialchars(_('Any other content that may be unsuitable for children'))."\n".
+htmlspecialchars(_('If any of your uploads are found to contain any of the above, your upload
 will be removed, your account may be removed, and any other content you uploaded
-may be removed.')."\n\n".
-_('By checking the box below, you are confirming that you understand these
+may be removed.'))."\n\n".
+htmlspecialchars(_('By checking the box below, you are confirming that you understand these
 terms. If you have any questions or comments regarding these terms, one of the
-members of the development team would gladly assist you.').
+members of the development team would gladly assist you.')).
 '</textarea><br />
-    <input type="checkbox" name="terms" /> '._('I agree to the above terms').'<br />
+    <input type="checkbox" name="terms" /> '.htmlspecialchars(_('I agree to the above terms')).'<br />
     <input type="submit" value="Submit" />
     </form>';
 
@@ -94,22 +94,22 @@ if (!isset($_POST['terms'])) $_POST['terms'] = NULL;
 
 if ($_GET['action'] == 'submit' && $_POST['pass1'] != $_POST['pass2'])
 {
-    echo '<span class="error">'._('Your passwords do not match.').'</span><br /><br />';
+    echo '<span class="error">'.htmlspecialchars(_('Your passwords do not match.')).'</span><br /><br />';
     echo $login_form;
 }
 elseif ($_GET['action'] == 'submit' && strlen($_POST['user']) < 4)
 {
-    echo '<span class="error">'._('Your username must be at least 4 characters long.').'</span><br /><br />';
+    echo '<span class="error">'.htmlspecialchars(_('Your username must be at least 4 characters long.')).'</span><br /><br />';
     echo $login_form;
 }
 elseif ($_GET['action'] == 'submit' && strlen($_POST['pass1']) < 6)
 {
-    echo '<span class="error">'._('Your password must be at least 6 characters long.').'</span><br /><br />';
+    echo '<span class="error">'.htmlspecialchars(_('Your password must be at least 6 characters long.')).'</span><br /><br />';
     echo $login_form;
 }
 elseif ($_GET['action'] == 'submit' && $_POST['terms'] != 'on')
 {
-    echo '<span class="error">'._('You must agree to the terms to register.').'</span><br />';
+    echo '<span class="error">'.htmlspecialchars(_('You must agree to the terms to register.')).'</span><br />';
     echo $login_form;
 }
 elseif($_GET['action'] == "submit" && $_POST['pass1'] == $_POST['pass2'])
@@ -133,16 +133,16 @@ elseif($_GET['action'] == "submit" && $_POST['pass1'] == $_POST['pass2'])
         if ($createSql)
         {
             sendMail(mysql_real_escape_string($_POST['mail']), "newAccount", array($crypt, $_SERVER["PHP_SELF"], $user));
-            echo _("Account creation was successful. Please activate your account using the link emailed to you.");
+            echo htmlspecialchars(_("Account creation was successful. Please activate your account using the link emailed to you."));
         }
         else
         {
-            echo '<span class="error">'._('An error occurred while creating your account.').'</span><br />';
+            echo '<span class="error">'.htmlspecialchars(_('An error occurred while creating your account.')).'</span><br />';
         }
     }
     else
     {
-        echo '<span class="error">'._('Your username has already been used.')."</span><br /><br />";
+        echo '<span class="error">'.htmlspecialchars(_('Your username has already been used.'))."</span><br /><br />";
         echo $login_form;
     }
 }
@@ -154,7 +154,7 @@ elseif($_GET['action'] == "valid")
     $handle = sql_query($reqSql);
     if (!$handle)
         die (mysql_error());
-    echo _('Your account has been activated.').'<br />';
+    echo htmlspecialchars(_('Your account has been activated.')).'<br />';
 }
 else
 {

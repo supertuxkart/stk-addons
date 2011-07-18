@@ -40,11 +40,11 @@ function get_self()
     <?php
     if(User::$logged_in)
     {
-        printf(_('Welcome, %s'),$_SESSION['real_name']);
+        printf(htmlspecialchars(_('Welcome, %s')),$_SESSION['real_name']);
         echo '&nbsp;&nbsp;&nbsp;';
     }
     echo '<a href="index.php">';
-    echo _("Home");
+    echo htmlspecialchars(_("Home"));
     echo '</a>';
 
     if (basename(get_self()) == 'addons.php')
@@ -52,38 +52,38 @@ function get_self()
         if ($_GET['type'] == 'karts')
         {
             $link = 'addons.php?type=tracks';
-            $text = _('Tracks');
+            $text = htmlspecialchars(_('Tracks'));
         }
         else
         {
             $link = 'addons.php?type=karts';
-            $text = _('Karts');
+            $text = htmlspecialchars(_('Karts'));
         }
         echo '<a href="'.$link.'">'.$text.'</a>';
     }
 
     if(User::$logged_in)
     {
-        echo'<a href="login.php?action=logout">'._("Log out").'</a>';
-        echo'<a href="users.php">'._("Users").'</a>';
-        echo'<a href="upload.php">'._("Upload").'</a>';
+        echo'<a href="login.php?action=logout">'.htmlspecialchars(_("Log out")).'</a>';
+        echo'<a href="users.php">'.htmlspecialchars(_("Users")).'</a>';
+        echo'<a href="upload.php">'.htmlspecialchars(_("Upload")).'</a>';
         if ($_SESSION['role']['managesettings'])
-            echo '<a href="manage.php">'._('Manage').'</a>';
+            echo '<a href="manage.php">'.htmlspecialchars(_('Manage')).'</a>';
     }
     else
     {
         echo'<a href="login.php">';
-        echo _('Login');
+        echo htmlspecialchars(_('Login'));
         echo '</a>';
     }
     echo'<a href="about.php">';
-    echo _('About');
+    echo htmlspecialchars(_('About'));
     echo '</a>';
      ?>
         </div>
         <div class="right">
             <div id="lang-menu">
-                <a class="menu_head" href="#"><?php echo _("Languages");?></a>
+                <a class="menu_head" href="#"><?php echo htmlspecialchars(_("Languages"));?></a>
                 <ul class="menu_body">
                     <li><a href="<?php echo $page_url.'&amp;lang=en_US'; ?>"><img src="image/flag/en.png" /></a></li>
                     <li><a href="<?php echo $page_url.'&amp;lang=de_DE'; ?>"><img src="image/flag/de.png" /></a></li>
@@ -94,7 +94,7 @@ function get_self()
                     <li><a href="https://translations.launchpad.net/stk/stkaddons">Translate<br />STK-Addons</a></li>
                 </ul>
             </div>
-        <a href="http://supertuxkart.sourceforge.net"> <?php echo _("STK Homepage");?></a>
+        <a href="http://supertuxkart.sourceforge.net"> <?php echo htmlspecialchars(_("STK Homepage"));?></a>
         </div>
     </div>
 </div>

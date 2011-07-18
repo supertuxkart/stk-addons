@@ -22,7 +22,7 @@ define('ROOT','./');
 $security = 'managesettings';
 require('include.php');
 
-$title = _('SuperTuxKart Add-ons').' | '._('Manage');
+$title = htmlspecialchars(_('SuperTuxKart Add-ons')).' | '.htmlspecialchars(_('Manage'));
 
 require('include/top.php');
 echo '</head><body>';
@@ -36,22 +36,22 @@ if (!isset($_GET['action'])) $_GET['action'] = NULL;
         <ul>
            <li>
                <a class="menu-item" href="javascript:loadFrame('general','manage-panel.php');">
-                   <?php echo _('General Settings'); ?>
+                   <?php echo htmlspecialchars(_('General Settings')); ?>
                </a>
            </li>
            <li>
                <a class="menu-item" href="javascript:loadFrame('news','manage-panel.php');">
-                   <?php echo _('News Messages'); ?>
+                   <?php echo htmlspecialchars(_('News Messages')); ?>
                </a>
            </li>
            <li>
                <a class="menu-item" href="javascript:loadFrame('files','manage-panel.php');">
-                   <?php echo _('Uploaded Files'); ?>
+                   <?php echo htmlspecialchars(_('Uploaded Files')); ?>
                </a>
            </li>
            <li>
                <a class="menu-item" href="javascript:loadFrame('clients','manage-panel.php');">
-                   <?php echo _('Client Versions'); ?>
+                   <?php echo htmlspecialchars(_('Client Versions')); ?>
                </a>
            </li>
         </ul>
@@ -69,12 +69,12 @@ switch ($_GET['action'])
     case 'save_config':
         if (!isset($_POST['xml_frequency']))
         {
-            echo '<span class="error">'._('One or more fields has been left blank. Settings were not saved.').'</span><br />';
+            echo '<span class="error">'.htmlspecialchars(_('One or more fields has been left blank. Settings were not saved.')).'</span><br />';
             break;
         }
         if (!is_numeric($_POST['xml_frequency']))
         {
-            echo '<span class="error">'._('XML Download Frequency value is invalid.').'</span><br />';
+            echo '<span class="error">'.htmlspecialchars(_('XML Download Frequency value is invalid.')).'</span><br />';
         }
         else
         {
@@ -85,7 +85,7 @@ switch ($_GET['action'])
             ConfigManager::set_config('list_email',mysql_real_escape_string($_POST['list_email']));
             ConfigManager::set_config('list_invisible',(int)$_POST['list_invisible']);
         }
-        echo _('Saved settings.').'<br />';
+        echo htmlspecialchars(_('Saved settings.')).'<br />';
         break;
     case 'new_news':
         if (!isset($_POST['message']) || !isset($_POST['condition']))
@@ -103,11 +103,11 @@ switch ($_GET['action'])
         $handle = sql_query($reqSql);
         if ($handle)
         {
-            echo _('Created message.').'<br />';
+            echo htmlspecialchars(_('Created message.')).'<br />';
         }
         else
         {
-            echo '<span class="error">'._('Failed to create message.').'</span><br />';
+            echo '<span class="error">'.htmlspecialchars(_('Failed to create message.')).'</span><br />';
             break;
         }
         // Regenerate xml

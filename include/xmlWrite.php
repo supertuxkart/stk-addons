@@ -120,12 +120,12 @@ function generateAssetXML()
         $file_path = get_file_path($result['fileid']);
         if ($file_path === false)
         {
-            echo '<span class="warning">'._('An error occurred finding the path for the file of kart: ').$result['name'].'</span><br />';
+            echo '<span class="warning">'.htmlspecialchars(_('An error occurred finding the path for the file of kart: ')).$result['name'].'</span><br />';
             continue;
         }
         if (!file_exists(UP_LOCATION.$file_path))
         {
-            echo '<span class="warming">'._('The following file could not be found:').' '.$file_path.'</span><br />';
+            echo '<span class="warming">'.htmlspecialchars(_('The following file could not be found:')).' '.$file_path.'</span><br />';
             continue;
         }
 	$writer->startElement('kart');
@@ -180,12 +180,12 @@ function generateAssetXML()
         $file_path = get_file_path($result['fileid']);
         if ($file_path === false)
         {
-            echo '<span class="warning">'._('An error occurred finding the path for the file of track: ').$result['name'].'</span><br />';
+            echo '<span class="warning">'.htmlspecialchars(_('An error occurred finding the path for the file of track: ')).$result['name'].'</span><br />';
             continue;
         }
         if (!file_exists(UP_LOCATION.$file_path))
         {
-            echo '<span class="warming">'._('The following file could not be found:').' '.$file_path.'</span><br />';
+            echo '<span class="warming">'.htmlspecialchars(_('The following file could not be found:')).' '.$file_path.'</span><br />';
             continue;
         }
         // Check if arena...

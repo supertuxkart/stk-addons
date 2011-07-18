@@ -65,7 +65,7 @@ function moderator_email($subject, $message_html)
     $mail_address = ConfigManager::get_config('list_email');
     if (strlen($mail_address) == 0)
     {
-        echo '<span class="warning">'._('No moderator mailing-list email is set.').'</span><br />';
+        echo '<span class="warning">'.htmlspecialchars(_('No moderator mailing-list email is set.')).'</span><br />';
         return;
     }
 

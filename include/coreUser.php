@@ -84,18 +84,18 @@ class coreUser
     function writeInformation()
     {
         echo '<h1>'.$this->userCurrent['user'].'</h1><br />';
-        echo '<table><tr><td>'._('Username:').'</td><td>'.$this->userCurrent['user'].'</td></tr>';
-        echo '<tr><td>'._('Registration Date:').'</td><td>'.$this->userCurrent['reg_date'].'</td></tr>';
-        echo '<tr><td>'._('Real Name:').'</td><td>'.$this->userCurrent['name'].'</td></tr>';
-        echo '<tr><td>'._('Role:').'</td><td>'._($this->userCurrent['role']).'</td></tr>';
+        echo '<table><tr><td>'.htmlspecialchars(_('Username:')).'</td><td>'.$this->userCurrent['user'].'</td></tr>';
+        echo '<tr><td>'.htmlspecialchars(_('Registration Date:')).'</td><td>'.$this->userCurrent['reg_date'].'</td></tr>';
+        echo '<tr><td>'.htmlspecialchars(_('Real Name:')).'</td><td>'.$this->userCurrent['name'].'</td></tr>';
+        echo '<tr><td>'.htmlspecialchars(_('Role:')).'</td><td>'.htmlspecialchars(_($this->userCurrent['role'])).'</td></tr>';
         if (strlen($this->userCurrent['homepage'] > 0))
         {
-            echo '<tr><td>'._('Homepage:').'</td><td><a href="'.$this->userCurrent['homepage'].'" >'.$this->userCurrent['homepage'].'</a></td></tr>';
+            echo '<tr><td>'.htmlspecialchars(_('Homepage:')).'</td><td><a href="'.$this->userCurrent['homepage'].'" >'.$this->userCurrent['homepage'].'</a></td></tr>';
         }
         echo '</table><br />';
 
         // List of karts created by the current user
-        echo '<h3>'._('User\'s Karts').'</h3><br />';
+        echo '<h3>'.htmlspecialchars(_('User\'s Karts')).'</h3><br />';
         $kartSql = 'SELECT `a`.*, `r`.`status`
             FROM `'.DB_PREFIX.'addons` `a`
             LEFT JOIN `'.DB_PREFIX.'karts_revs` `r`
@@ -105,7 +105,7 @@ class coreUser
         $kartHandle = sql_query($kartSql);
         if (mysql_num_rows($kartHandle) == 0)
         {
-            echo _('This user has not uploaded any karts.').'<br />';
+            echo htmlspecialchars(_('This user has not uploaded any karts.')).'<br />';
         }
         else
         {
@@ -131,7 +131,7 @@ class coreUser
             echo '</ul><br />';
         }
 
-        echo '<h3>'._('User\'s Tracks').'</h3><br />';
+        echo '<h3>'.htmlspecialchars(_('User\'s Tracks')).'</h3><br />';
         $trackSql = 'SELECT `a`.*, `r`.`status`
             FROM `'.DB_PREFIX.'addons` `a`
             LEFT JOIN `'.DB_PREFIX.'tracks_revs` `r`
@@ -141,7 +141,7 @@ class coreUser
         $trackHandle = sql_query($trackSql);
         if (mysql_num_rows($trackHandle) == 0)
         {
-            echo _('This user has not uploaded any tracks.').'<br />';
+            echo htmlspecialchars(_('This user has not uploaded any tracks.')).'<br />';
         }
         else
         {
@@ -179,11 +179,11 @@ class coreUser
         <h3>Configuration</h3><br />
         <form enctype="multipart/form-data" action="?user='.$this->userCurrent['user'].'&amp;action=config" method="POST" >
         <table>';
-        echo '<tr><td>'._('Homepage:').'</td><td><input type="text" name="homepage" value="'.$this->userCurrent['homepage'].'" disabled /></td></tr>';
+        echo '<tr><td>'.htmlspecialchars(_('Homepage:')).'</td><td><input type="text" name="homepage" value="'.$this->userCurrent['homepage'].'" disabled /></td></tr>';
         // Edit role if allowed
         if($_SESSION['role']['manage'.$this->userCurrent['role'].'s'] == true || $_SESSION['userid'] == $this->userCurrent['id'])
         {
-            echo '<tr><td>'._('Role:').'</td><td>';
+            echo '<tr><td>'.htmlspecialchars(_('Role:')).'</td><td>';
             $role_disabled = NULL;
             if ($_SESSION['userid'] == $this->userCurrent['id'])
                     $role_disabled = 'disabled';
@@ -200,7 +200,7 @@ class coreUser
                 }
             }
             echo '</select>';
-            echo '</td></tr><tr><td>'._('User Activated:').'</td><td>';
+            echo '</td></tr><tr><td>'.htmlspecialchars(_('User Activated:')).'</td><td>';
             echo '<input type="checkbox" name="available" ';
             if($this->userCurrent['active'] == 1)
             {
@@ -208,19 +208,19 @@ class coreUser
             }
             echo '/></td></tr>';
         }
-        echo '<tr><td></td><td><input type="submit" value="'._('Save Configuration').'" /></td></tr>';
+        echo '<tr><td></td><td><input type="submit" value="'.htmlspecialchars(_('Save Configuration')).'" /></td></tr>';
         echo '</table></form><br />';
         if($this->userCurrent['id'] == $_SESSION['userid'])
         {
-            echo '<h3>'._('Change Password').'</h3><br />
+            echo '<h3>'.htmlspecialchars(_('Change Password')).'</h3><br />
             <form action="users.php?user='.$this->userCurrent['user'].'&amp;action=password" method="POST">
-            '._('Old Password:').'<br />
+            '.htmlspecialchars(_('Old Password:')).'<br />
             <input type="password" name="oldPass" /><br />
-            '._('New Password:').' ('._('Must be at least 6 characters long.').')<br />
+            '.htmlspecialchars(_('New Password:')).' ('.htmlspecialchars(_('Must be at least 6 characters long.')).')<br />
             <input type="password" name="newPass" /><br />
-            '._('New Password (Confirm):').'<br />
+            '.htmlspecialchars(_('New Password (Confirm):')).'<br />
             <input type="password" name="newPass2" /><br />
-            <input type="submit" value="'._('Change Password').'" />
+            <input type="submit" value="'.htmlspecialchars(_('Change Password')).'" />
             </form>';
             }
 	}
@@ -231,23 +231,23 @@ class coreUser
         $succes =false;
         if($newPass != $_POST['newPass2'])
         {
-            echo '<span class="error">'._('Your passwords do not match.').'</span><br />';
+            echo '<span class="error">'.htmlspecialchars(_('Your passwords do not match.')).'</span><br />';
             return false;
         }
         if(hash('sha256',$_POST['oldPass']) != $this->userCurrent['pass'])
         {
-            echo '<span class="error">'._('Your old password is not correct.').'</span><br />';
+            echo '<span class="error">'.htmlspecialchars(_('Your old password is not correct.')).'</span><br />';
             return false;
         }
         if (strlen($_POST['newPass']) < 6)
         {
-            echo '<span class="error">'._('Your password must be at least 6 characters long.').'</span><br />';
+            echo '<span class="error">'.htmlspecialchars(_('Your password must be at least 6 characters long.')).'</span><br />';
             return false;
         }
         if($_SESSION['userid'] == $this->userCurrent['id'])
         {
                 mysql_query("UPDATE `".DB_PREFIX."users` SET `pass` = '".hash('sha256',$_POST['newPass'])."' WHERE `id` =".$this->userCurrent['id']." LIMIT 1 ;");
-                echo _('Your password is changed.').'<br />';
+                echo htmlspecialchars(_('Your password is changed.')).'<br />';
                 $_SESSION['pass'] = hash('sha256',$_POST['newPass']);
                 $succes=true;
         }

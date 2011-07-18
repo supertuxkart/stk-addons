@@ -115,7 +115,7 @@ if($_GET['action'] == "submit")
     }
     if ($agreement_form == 0)
     {
-        echo '<span class="error">'._('Your response to the agreement was unacceptable. You may not upload this content to the STK Addons website.').'</span><br />';
+        echo '<span class="error">'.htmlspecialchars(_('Your response to the agreement was unacceptable. You may not upload this content to the STK Addons website.')).'</span><br />';
     }
     else
     {
@@ -150,115 +150,115 @@ if($_GET['action'] == "submit")
             echo '<form id="formKart" enctype="multipart/form-data" action="upload.php?type='.$_GET['type'].'&amp;name='.$_GET['name'].'&amp;action=submit" method="POST">';
             if ($_GET['action'] != 'file')
             {
-                echo _('Please upload a new revision of your kart or track.').'<br />';
+                echo htmlspecialchars(_('Please upload a new revision of your kart or track.')).'<br />';
             }
             else
             {
-                echo _('What type of file are you uploading?').'<br />';
+                echo htmlspecialchars(_('What type of file are you uploading?')).'<br />';
                 echo '<select name="upload-type" id="upload-type" onChange="uploadFormFieldToggle();">
-                    <option value="source">'._('Source Archive').'</option>
-                    <option value="image">'._('Image File').' (.png, .jpg, .jpeg)</option>
+                    <option value="source">'.htmlspecialchars(_('Source Archive')).'</option>
+                    <option value="image">'.htmlspecialchars(_('Image File')).' (.png, .jpg, .jpeg)</option>
                     </select><br />';
             }
         }
         else
         {
             echo '<form id="formKart" enctype="multipart/form-data" action="upload.php?action=submit" method="POST">';
-            echo _('Please upload a kart or track.').'<br />';
-            echo _('Do not use this form if you are updating an existing add-on.'.'<br />');
+            echo htmlspecialchars(_('Please upload a kart or track.')).'<br />';
+            echo htmlspecialchars(_('Do not use this form if you are updating an existing add-on.'.'<br />'));
         }
         ?>
-        <label><?php echo _("File:"); ?><br /><input type="file" name="file_addon" /><br /></label>
-        <?php echo _('Supported archive types are:'); ?> .zip, .tar, .tgz, .tar.gz, .tbz, .tar.bz2<br /><br />
-        <strong><?php echo _('Agreement:'); ?></strong><br />
+        <label><?php echo htmlspecialchars(_("File:")); ?><br /><input type="file" name="file_addon" /><br /></label>
+        <?php echo htmlspecialchars(_('Supported archive types are:')); ?> .zip, .tar, .tgz, .tar.gz, .tbz, .tar.bz2<br /><br />
+        <strong><?php echo htmlspecialchars(_('Agreement:')); ?></strong><br />
         <table width="800" id="upload_agreement">
             <tr>
                 <td width="1"><input type="radio" name="l_author" id="l_author1" value="1" onChange="uploadFormFieldToggle();" checked /></td>
                 <td colspan="3">
-                    <?php echo _('I am the sole author of every file (model, texture, sound effect, etc.) in this package'); ?>
+                    <?php echo htmlspecialchars(_('I am the sole author of every file (model, texture, sound effect, etc.) in this package')); ?>
                 </td>
             </tr>
             <tr>
                 <td colspan="2" width="60"></td>
                 <td><input type="checkbox" name="l_licensefile1" id="l_licensefile1"></td>
                 <td>
-                    <span id="l_licensetext1"><?php echo _('I have included a License.txt file describing the license under which my work is released, and my name (or nickname) if I want credit.').' <strong>'._('Required').'</strong>'; ?></span>
+                    <span id="l_licensetext1"><?php echo htmlspecialchars(_('I have included a License.txt file describing the license under which my work is released, and my name (or nickname) if I want credit.')).' <strong>'.htmlspecialchars(_('Required')).'</strong>'; ?></span>
                 </td>
             </tr>
             <tr>
                 <td width="1"><input type="radio" name="l_author" id="l_author2" value="2" onChange="uploadFormFieldToggle();" /></td>
                 <td colspan="3">
-                    <?php echo _('I have included open content made by people other than me'); ?>
+                    <?php echo htmlspecialchars(_('I have included open content made by people other than me')); ?>
                 </td>
             </tr>
             <tr>
                 <td colspan="2" width="60"></td>
                 <td><input type="checkbox" name="l_licensefile2" id="l_licensefile2"></td>
                 <td>
-                    <span id="l_licensetext2"><?php echo _('I have included a License.txt file including the name of every author whose material is used in this package, along with the license under which their work is released.').' <strong>'._('Required').'</strong>'; ?></span>
+                    <span id="l_licensetext2"><?php echo htmlspecialchars(_('I have included a License.txt file including the name of every author whose material is used in this package, along with the license under which their work is released.')).' <strong>'.htmlspecialchars(_('Required')).'</strong>'; ?></span>
                 </td>
             </tr>
             <tr>
-                <td colspan="4"><?php echo _('This package includes files released under:').' <strong>'._('Must check at least one').'</strong>'; ?></td>
+                <td colspan="4"><?php echo htmlspecialchars(_('This package includes files released under:')).' <strong>'.htmlspecialchars(_('Must check at least one')).'</strong>'; ?></td>
             </tr>
             <tr>
                 <td colspan="2" width="60"></td>
                 <td><input type="checkbox" name="license_gpl" /></td>
-                <td><?php echo _('GNU GPL'); ?></td>
+                <td><?php echo htmlspecialchars(_('GNU GPL')); ?></td>
             </tr>
             <tr>
                 <td colspan="2" width="60"></td>
                 <td><input type="checkbox" name="license_cc-by" /></td>
-                <td><?php echo _('Creative Commons BY 3.0'); ?></td>
+                <td><?php echo htmlspecialchars(_('Creative Commons BY 3.0')); ?></td>
             </tr>
             <tr>
                 <td colspan="2" width="60"></td>
                 <td><input type="checkbox" name="license_cc-by-sa" /></td>
-                <td><?php echo _('Creative Commons BY SA 3.0'); ?></td>
+                <td><?php echo htmlspecialchars(_('Creative Commons BY SA 3.0')); ?></td>
             </tr>
             <tr>
                 <td colspan="2" width="60"></td>
                 <td><input type="checkbox" name="license_pd" /></td>
-                <td><?php echo _('CC0 (Public Domain)'); ?></td>
+                <td><?php echo htmlspecialchars(_('CC0 (Public Domain)')); ?></td>
             </tr>
             <tr>
                 <td colspan="2" width="60"></td>
                 <td><input type="checkbox" name="license_bsd" /></td>
-                <td><?php echo _('BSD License'); ?></td>
+                <td><?php echo htmlspecialchars(_('BSD License')); ?></td>
             </tr>
             <tr>
                 <td colspan="2" width="60"></td>
                 <td><input type="checkbox" name="license_other" /></td>
-                <td><?php echo _('Other open license'); ?></td>
+                <td><?php echo htmlspecialchars(_('Other open license')); ?></td>
             </tr>
             <tr>
                 <td colspan="2" width="60"></td>
                 <td colspan="2">
-                    <?php echo _('Files released under other licenses will be rejected unless it can be verified that the license is open.') ?><br /><br />
+                    <?php echo htmlspecialchars(_('Files released under other licenses will be rejected unless it can be verified that the license is open.')) ?><br /><br />
                 </td>
             </tr>
             <tr>
                 <td><input type="checkbox" name="l_agreement" /></td>
                 <td colspan="3">
-                    <?php echo _('I recognize that if my file does not meet the above rules, it may be removed at any time without prior notice; I also assume the entire responsibility for any copyright violation that may result from not following the above rules.').' <strong>'._('Required').'</strong><br /><br />'; ?>
+                    <?php echo htmlspecialchars(_('I recognize that if my file does not meet the above rules, it may be removed at any time without prior notice; I also assume the entire responsibility for any copyright violation that may result from not following the above rules.')).' <strong>'.htmlspecialchars(_('Required')).'</strong><br /><br />'; ?>
                 </td>
             </tr>
             <tr>
                 <td><input type="checkbox" name="l_clean" /></td>
                 <td colspan="3">
-                    <?php echo _('My package does not include:'); ?><br />
-                    1. <?php echo _('Profanity'); ?><br />
-                    2. <?php echo _('Explicit images'); ?><br />
-                    3. <?php echo _('Hateful messages and/or images'); ?><br />
-                    4. <?php echo _('Any other content that may be unsuitable for children'); ?><br />
-                    <strong><?php echo _('Required'); ?></strong>
+                    <?php echo htmlspecialchars(_('My package does not include:')); ?><br />
+                    1. <?php echo htmlspecialchars(_('Profanity')); ?><br />
+                    2. <?php echo htmlspecialchars(_('Explicit images')); ?><br />
+                    3. <?php echo htmlspecialchars(_('Hateful messages and/or images')); ?><br />
+                    4. <?php echo htmlspecialchars(_('Any other content that may be unsuitable for children')); ?><br />
+                    <strong><?php echo htmlspecialchars(_('Required')); ?></strong>
                 </td>
             </tr>
         </table>
         <script type="text/javascript">
             uploadFormFieldToggle();
         </script>
-        <input type="submit" value="<?php echo _('Upload file'); ?>" />
+        <input type="submit" value="<?php echo htmlspecialchars(_('Upload file')); ?>" />
     </form>
 </div>
 <?php

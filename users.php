@@ -35,7 +35,7 @@ include('include.php');
 $_GET['user'] = (isset($_GET['user'])) ? mysql_real_escape_string($_GET['user']) : NULL;
 $action = (isset($_GET['action'])) ? $_GET['action'] : NULL;
 
-$title = _('SuperTuxKart Add-ons').' | '._('Users');
+$title = htmlspecialchars(_('SuperTuxKart Add-ons')).' | '.htmlspecialchars(_('Users'));
 
 include('include/top.php');
 echo '</head><body>';
@@ -67,7 +67,7 @@ switch ($action)
         if ($_SESSION['user'] != $_GET['user']
                 && !$_SESSION['role']['manage'.$addon->userCurrent['role'].'s'])
         {
-            echo '<span class="error">'._('You do not have the necessary permissions to perform this action.').'</span><br />';
+            echo '<span class="error">'.htmlspecialchars(_('You do not have the necessary permissions to perform this action.')).'</span><br />';
             break;
         }
         $addon->setPass();
@@ -78,7 +78,7 @@ switch ($action)
         if ($_SESSION['user'] != $_GET['user']
                 && !$_SESSION['role']['manage'.$addon->userCurrent['role'].'s'])
         {
-            echo '<span class="error">'._('You do not have the necessary permissions to perform this action.').'</span><br />';
+            echo '<span class="error">'.htmlspecialchars(_('You do not have the necessary permissions to perform this action.')).'</span><br />';
             break;
         }
         $addon->setConfig();

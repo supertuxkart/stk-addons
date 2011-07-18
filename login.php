@@ -44,15 +44,15 @@ if ($_GET['action'] == 'logout')
     {
         include(ROOT.'include/top.php');
         echo '</head><body><div id="content">';
-        echo '<span class="error">'._('Failed to logout.').'</span><br />';
+        echo '<span class="error">'.htmlspecialchars(_('Failed to logout.')).'</span><br />';
     }
     else
     {
         include(ROOT.'include/top.php');
         echo '<meta http-equiv="refresh" content="3;URL=index.php"></head><body>';
         echo '<div id="content">';
-        echo _('You have been logged out.').'<br />';
-        echo _('Click <a href="index.php">here</a> if you do not automatically redirect.').'<br />';
+        echo htmlspecialchars(_('You have been logged out.')).'<br />';
+        printf(htmlspecialchars(_('Click %shere%s if you do not automatically redirect.')),'<a href="index.php">','</a>').'<br />';
     }
     include(ROOT.'include/footer.php');
     exit;
@@ -64,8 +64,8 @@ if (User::$logged_in === true)
     echo '<meta http-equiv="refresh" content="3;URL=index.php"></head><body>';
     include(ROOT.'include/menu.php');
     echo '<div id="content">';
-    echo _('You are already logged in.').' ';
-    echo _('Click <a href="index.php">here</a> if you do not automatically redirect.').'<br />';
+    echo htmlspecialchars(_('You are already logged in.')).' ';
+    printf(htmlspecialchars(_('Click %shere%s if you do not automatically redirect.')),'<a href="index.php">','</a>').'<br />';
     include('include/footer.php');
     exit;
 }
@@ -87,12 +87,12 @@ if ($_GET['action'] == 'submit')
     echo '<div id="content">';
     if (User::$logged_in === true)
     {
-        printf(_('Welcome, %s!').'<br />',$_SESSION['real_name']);
-        echo _('Click <a href="index.php">here</a> if you do not automatically redirect.').'<br />';
+        printf(htmlspecialchars(_('Welcome, %s!')).'<br />',$_SESSION['real_name']);
+        printf(htmlspecialchars(_('Click %shere%s if you do not automatically redirect.')),'<a href="index.php">','</a>').'<br />';
         include('include/footer.php');
         exit;
     }
-    echo '<span class="error">'._('Authentication failed.').'</span><br />';
+    echo '<span class="error">'.htmlspecialchars(_('Authentication failed.')).'</span><br />';
 }
 else
 {
@@ -103,12 +103,12 @@ else
 }
 ?>
 <form action="login.php?action=submit" method="POST">
-    <?php echo _('Username:'); ?><br />
+    <?php echo htmlspecialchars(_('Username:')); ?><br />
     <input type="text" name="user" /><br />
-    <?php echo _('Password:'); ?><br />
+    <?php echo htmlspecialchars(_('Password:')); ?><br />
     <input type="password" name="pass" /><br />
-    <input type="submit" value="<?php echo _('Log In'); ?>" />
+    <input type="submit" value="<?php echo htmlspecialchars(_('Log In')); ?>" />
 </form>
-<a href="createAccount.php"><?php echo _('Create an account.'); ?></a>
+<a href="createAccount.php"><?php echo htmlspecialchars(_('Create an account.')); ?></a>
 </div>
 <?php include("include/footer.php"); ?>

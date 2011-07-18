@@ -41,30 +41,30 @@ include("include/top.php");
 		<div id="select-addon-panel">
 		    <div class="icon-container">
                         <a href="addons.php?type=karts">
-                            <img src="image/karts.png" alt="<?php echo _('Karts'); ?>" /><br />
+                            <img src="image/karts.png" alt="<?php echo htmlspecialchars(_('Karts')); ?>" /><br />
                             <h2 class="menu">
                                 <div class="left"></div>
-                                <div class="center"><?php echo _("Karts"); ?></div>
+                                <div class="center"><?php echo htmlspecialchars(_("Karts")); ?></div>
                                 <div class="right"></div>
                             </h2>
                         </a>
 		    </div>
                     <div class="icon-container">
                         <a href="addons.php?type=tracks">
-                            <img src="image/tracks.png" alt="<?php echo _('Tracks'); ?>" /><br />
+                            <img src="image/tracks.png" alt="<?php echo htmlspecialchars(_('Tracks')); ?>" /><br />
                             <h2 class="menu" >
                                 <div class="left"></div>
-                                <div class="center"><?php echo _("Tracks"); ?></div>
+                                <div class="center"><?php echo htmlspecialchars(_("Tracks")); ?></div>
                                 <div class="right"></div>
                             </h2>
                         </a>
 		    </div>
                     <div class="icon-container">
                         <a href="http://supertuxkart.sourceforge.net/Category:Stkaddons">
-                            <img src="image/help.png" alt="<?php echo _('Help'); ?>" /><br />
+                            <img src="image/help.png" alt="<?php echo htmlspecialchars(_('Help')); ?>" /><br />
                             <h2 class="menu">
                                 <div class="left"></div>
-                                <div class="center"><?php echo _("Help"); ?></div>
+                                <div class="center"><?php echo htmlspecialchars(_("Help")); ?></div>
                                 <div class="right"></div>
                             </h2>
                         </a>
@@ -76,8 +76,8 @@ include("include/top.php");
                         // Note most downloaded track and kart
                         $pop_kart = stat_most_downloaded('karts');
                         $pop_track = stat_most_downloaded('tracks');
-                        printf('<li>'._('The most downloaded kart is %s.').'</li>'."\n",addon_name($pop_kart));
-                        printf('<li>'._('The most downloaded track is %s.').'</li>'."\n",addon_name($pop_track));
+                        printf('<li>'.htmlspecialchars(_('The most downloaded kart is %s.')).'</li>'."\n",addon_name($pop_kart));
+                        printf('<li>'.htmlspecialchars(_('The most downloaded track is %s.')).'</li>'."\n",addon_name($pop_track));
                         
                         $newsSql = 'SELECT * FROM `'.DB_PREFIX.'news`
                             WHERE `active` = 1

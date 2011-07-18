@@ -41,11 +41,11 @@ if (!isset($_POST['id']))
 
 $type = (isset($_GET['type']))? $_GET['type'] : NULL;
 if ($type != 'tracks' && $type != 'karts' && $type != 'users')
-    die(_('This page cannot be loaded because an invalid add-on type was provided.'));
+    die(htmlspecialchars(_('This page cannot be loaded because an invalid add-on type was provided.')));
 if (!isset($_GET['action'])) $_GET['action'] = NULL;
 $action = $_GET['action'];
 if ($action != NULL && $action != 'file' && $action != 'remove' && $action != 'approve')
-    die(_('This page cannot be loaded because an invalid action was provided.'));
+    die(htmlspecialchars(_('This page cannot be loaded because an invalid action was provided.')));
 
 if(isset($_GET['id']))
 {

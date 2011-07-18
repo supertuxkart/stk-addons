@@ -22,7 +22,7 @@ function parseUpload($file,$revision = false)
 {
     if (!is_array($file))
     {
-        echo '<span class="error">'._('Failed to upload your file.').'</span><br />';
+        echo '<span class="error">'.htmlspecialchars(_('Failed to upload your file.')).'</span><br />';
         return false;
     }
 
@@ -57,7 +57,7 @@ function parseUpload($file,$revision = false)
     if ($_POST['upload-type'] == 'image')
     {
         if (!move_uploaded_file($file['tmp_name'],UP_LOCATION.'images/'.$fileid.'.'.$fileext)) {
-            echo '<span class="error">'._('Failed to move uploaded file.');
+            echo '<span class="error">'.htmlspecialchars(_('Failed to move uploaded file.'));
             return false;
         }
         
@@ -72,20 +72,20 @@ function parseUpload($file,$revision = false)
         $newImageHandle = sql_query($newImageQuery);
         if (!$newImageHandle)
         {
-            echo '<span class="error">'._('Failed to associate image file with addon.').'</span><br />';
+            echo '<span class="error">'.htmlspecialchars(_('Failed to associate image file with addon.')).'</span><br />';
             unlink(UP_LOCATION.'images/'.$fileid.'.'.$fileext);
             return false;
         }
         
-        echo _('Successfully uploaded image.').'<br />';
-        echo '<span style="font-size: large"><a href="addons.php?type='.$_GET['type'].'&amp;name='.$_GET['name'].'">'._('Continue.').'</a></span><br />';
+        echo htmlspecialchars(_('Successfully uploaded image.')).'<br />';
+        echo '<span style="font-size: large"><a href="addons.php?type='.$_GET['type'].'&amp;name='.$_GET['name'].'">'.htmlspecialchars(_('Continue.')).'</a></span><br />';
         return true;
     }
     
     // Move the archive to a working directory
     mkdir(UP_LOCATION.'temp/'.$fileid);
     if (!move_uploaded_file($file['tmp_name'],UP_LOCATION.'temp/'.$fileid.'/'.$fileid.'.'.$fileext)) {
-        echo '<span class="error">'._('Failed to move uploaded file.');
+        echo '<span class="error">'.htmlspecialchars(_('Failed to move uploaded file.'));
         return false;
     }
 
@@ -103,7 +103,7 @@ function parseUpload($file,$revision = false)
         $xml_file = find_xml(UP_LOCATION.'temp/'.$fileid);
         $xml_dir = dirname($xml_file);
         if (!$xml_file) {
-            echo '<span class="error>'._('Invalid archive file. The archive must contain the addon\'s xml file.').'</span><br />';
+            echo '<span class="error>'.htmlspecialchars(_('Invalid archive file. The archive must contain the addon\'s xml file.')).'</span><br />';
             rmdir_recursive(UP_LOCATION.'temp/'.$fileid);
             return false;
         }
@@ -119,7 +119,7 @@ function parseUpload($file,$revision = false)
     }
     if (is_array($invalid_files) && count($invalid_files != 0))
     {
-        echo '<span class="warning">'._('Some invalid files were found in the uploaded add-on. These files have been removed from the archive:').' '.implode(', ',$invalid_files).'</span><br />';
+        echo '<span class="warning">'.htmlspecialchars(_('Some invalid files were found in the uploaded add-on. These files have been removed from the archive:')).' '.implode(', ',$invalid_files).'</span><br />';
     }
 
     if ($_POST['upload-type'] != 'source')
@@ -128,26 +128,26 @@ function parseUpload($file,$revision = false)
         if (preg_match('/kart\.xml$/',$xml_file))
         {
             $addon_type = 'karts';
-            echo _('Upload was recognized as a kart.').'<br />';
+            echo htmlspecialchars(_('Upload was recognized as a kart.')).'<br />';
         }
         else
         {
             $addon_type = 'tracks';
-            echo _('Upload was recognized as a track.').'<br />';
+            echo htmlspecialchars(_('Upload was recognized as a track.')).'<br />';
         }
 
         // Read XML
         $parsed_xml = read_xml($xml_file,$addon_type);
         if (!$parsed_xml)
         {
-            echo '<span class="error">'._('Failed to read the add-on\'s XML file. Please make sure you are using the latest version of the kart or track exporter.').'</span><br />';
+            echo '<span class="error">'.htmlspecialchars(_('Failed to read the add-on\'s XML file. Please make sure you are using the latest version of the kart or track exporter.')).'</span><br />';
             rmdir_recursive(UP_LOCATION.'temp/'.$fileid);
             return false;
         }
         // Write new XML file
         $fhandle = fopen($xml_file,'w');
         if (!fwrite($fhandle,$parsed_xml['xml'])) {
-            echo '<span class="error">'._('Failed to write new XML file:').'</span><br />';
+            echo '<span class="error">'.htmlspecialchars(_('Failed to write new XML file:')).'</span><br />';
         }
         fclose($fhandle);
 
@@ -155,7 +155,7 @@ function parseUpload($file,$revision = false)
         $license_file = find_license(UP_LOCATION.'temp/'.$fileid);
         if ($license_file === false)
         {
-            echo '<span class="error">'._('A valid License.txt file was not found. Please add a License.txt file to your archive and re-submit it.').'</span><br />';
+            echo '<span class="error">'.htmlspecialchars(_('A valid License.txt file was not found. Please add a License.txt file to your archive and re-submit it.')).'</span><br />';
             rmdir_recursive(UP_LOCATION.'temp/'.$fileid);
             return false;
         }
@@ -199,7 +199,7 @@ function parseUpload($file,$revision = false)
         $newImageHandle = sql_query($newImageQuery);
         if (!$newImageHandle)
         {
-            echo '<span class="error">'._('Failed to associate image file with addon.').'</span><br />';
+            echo '<span class="error">'.htmlspecialchars(_('Failed to associate image file with addon.')).'</span><br />';
             unlink(UP_LOCATION.'images/'.$fileid.'.'.$imageext[1]);
             $parsed_xml['attributes']['image'] = 0;
         }
@@ -215,8 +215,8 @@ function parseUpload($file,$revision = false)
         // Check to make sure all image dimensions are powers of 2
         if (!image_check($xml_dir))
         {
-            echo '<span class="warning">'._('Some images in this add-on do not have dimensions that are a power of two.')
-                .' '._('This may cause display errors on some video cards.').'</span><br />';
+            echo '<span class="warning">'.htmlspecialchars(_('Some images in this add-on do not have dimensions that are a power of two.'))
+                .' '.htmlspecialchars(_('This may cause display errors on some video cards.')).'</span><br />';
             $parsed_xml['attributes']['status'] += F_TEX_NOT_POWER_OF_2;
         }
         
@@ -232,7 +232,7 @@ function parseUpload($file,$revision = false)
     // Repack zip file
     if (!repack_zip($xml_dir,UP_LOCATION.$fileid.'.zip'))
     {
-        echo '<span class="error">'._('Failed to re-pack archive file.').'</span>';
+        echo '<span class="error">'.htmlspecialchars(_('Failed to re-pack archive file.')).'</span>';
         rmdir_recursive(UP_LOCATION.'temp/'.$fileid);
         return false;
     }
@@ -248,7 +248,7 @@ function parseUpload($file,$revision = false)
     $newAddonFileHandle = sql_query($newAddonFileQuery);
     if (!$newAddonFileHandle)
     {
-        echo '<span class="error">'._('Failed to associate archive file with addon.').'</span><br />';
+        echo '<span class="error">'.htmlspecialchars(_('Failed to associate archive file with addon.')).'</span><br />';
         unlink(UP_LOCATION.$fileid.'.zip');
         if ($_POST['upload-type'] != 'source')
             $parsed_xml['attributes']['fileid'] = 0;
@@ -263,8 +263,8 @@ function parseUpload($file,$revision = false)
     if ($_POST['upload-type'] == 'source')
     {
         rmdir_recursive(UP_LOCATION.'temp/'.$fileid);
-        echo _('Successfully uploaded source archive.').'<br />';
-        echo '<span style="font-size: large"><a href="addons.php?type='.$addon_type.'&amp;name='.$addon_id.'">'._('Continue.').'</a></span><br />';
+        echo htmlspecialchars(_('Successfully uploaded source archive.')).'<br />';
+        echo '<span style="font-size: large"><a href="addons.php?type='.$addon_type.'&amp;name='.$addon_id.'">'.htmlspecialchars(_('Continue.')).'</a></span><br />';
         return true;
     }
 
@@ -281,14 +281,14 @@ function parseUpload($file,$revision = false)
         $addon->selectById($addon_id);
         if (!$addon->addonCurrent)
         {
-            echo '<span class="error">'._('You are trying to add a new revision of an addon that does not exist.').'</span><br />';
+            echo '<span class="error">'.htmlspecialchars(_('You are trying to add a new revision of an addon that does not exist.')).'</span><br />';
             rmdir_recursive(UP_LOCATION.'temp/'.$fileid);
             return false;
         }
         if ($_SESSION['userid'] != $addon->addonCurrent['uploader']
                 && !$_SESSION['role']['manageaddons'])
         {
-            echo '<span class="error">'._('You do not have the necessary permissions to perform this action.').'</span><br />';
+            echo '<span class="error">'.htmlspecialchars(_('You do not have the necessary permissions to perform this action.')).'</span><br />';
             rmdir_recursive(UP_LOCATION.'temp/'.$fileid);
             return false;
         }
@@ -296,13 +296,13 @@ function parseUpload($file,$revision = false)
 
     if (!$addon->addAddon($fileid,$addon_id,$parsed_xml['attributes']))
     {
-        echo '<span class="error">'._('Failed to create add-on.').'</span><br />';
+        echo '<span class="error">'.htmlspecialchars(_('Failed to create add-on.')).'</span><br />';
     }
     rmdir_recursive(UP_LOCATION.'temp/'.$fileid);
     writeAssetXML();
     writeNewsXML();
-    echo _('Successfully uploaded add-on.').'<br />';
-    echo '<span style="font-size: large"><a href="addons.php?type='.$addon_type.'&amp;name='.$addon_id.'">'._('Continue.').'</a></span><br />';
+    echo htmlspecialchars(_('Successfully uploaded add-on.')).'<br />';
+    echo '<span style="font-size: large"><a href="addons.php?type='.$addon_type.'&amp;name='.$addon_id.'">'.htmlspecialchars(_('Continue.')).'</a></span><br />';
 }
 
 function check_extension($filename,$type = NULL)
@@ -312,7 +312,7 @@ function check_extension($filename,$type = NULL)
     {
         if (!preg_match('/\.(png|jpg|jpeg)$/i',$filename,$fileext))
         {
-            echo '<span class="error">'._('Uploaded image files must be either PNG or Jpeg files.').'</span><br />';
+            echo '<span class="error">'.htmlspecialchars(_('Uploaded image files must be either PNG or Jpeg files.')).'</span><br />';
             return false;
         }
     }
@@ -321,7 +321,7 @@ function check_extension($filename,$type = NULL)
         // File extension must be .zip, .tgz, .tar, .tar.gz, tar.bz2, .tbz
         if (!preg_match('/\.(zip|t[bg]z|tar|tar\.gz|tar\.bz2)$/i',$filename,$fileext))
         {
-            echo '<span class="error">'._('The file you uploaded was not the correct type.')."</span><br />";
+            echo '<span class="error">'.htmlspecialchars(_('The file you uploaded was not the correct type.'))."</span><br />";
             return false;
         }
     }
@@ -332,7 +332,7 @@ function extract_archive($file,$destination,$fileext = NULL)
 {
     if (!file_exists($file))
     {
-        echo '<span class="error">'._('The file to extract does not exist.').'</span><br />';
+        echo '<span class="error">'.htmlspecialchars(_('The file to extract does not exist.')).'</span><br />';
     }
 
     if ($fileext == NULL)
@@ -344,13 +344,13 @@ function extract_archive($file,$destination,$fileext = NULL)
         case 'zip':
             $archive = new ZipArchive;
             if (!$archive->open($file)) {
-                echo '<span class="error">'._('Could not open archive file. It may be corrupted.').'</span><br />';
+                echo '<span class="error">'.htmlspecialchars(_('Could not open archive file. It may be corrupted.')).'</span><br />';
                 unlink($file);
                 return false;
             }
             if (!$archive->extractTo($destination))
             {
-                echo '<span class="error">'._('Failed to extract archive file.').' (zip)</span><br />';
+                echo '<span class="error">'.htmlspecialchars(_('Failed to extract archive file.')).' (zip)</span><br />';
                 unlink($file);
                 return false;
             }
@@ -379,13 +379,13 @@ function extract_archive($file,$destination,$fileext = NULL)
             $archive = new Archive_Tar($file, $compression);
             if (!$archive)
             {
-                echo '<span class="error">'._('Could not open archive file. It may be corrupted.').'</span><br />';
+                echo '<span class="error">'.htmlspecialchars(_('Could not open archive file. It may be corrupted.')).'</span><br />';
                 unlink($file);
                 return false;
             }
             if (!$archive->extract($destination))
             {
-                echo '<span class="error">'._('Failed to extract archive file.').' ('.$compression.')</span><br />';
+                echo '<span class="error">'.htmlspecialchars(_('Failed to extract archive file.')).' ('.$compression.')</span><br />';
                 unlink($file);
                 return false;
             }
@@ -393,7 +393,7 @@ function extract_archive($file,$destination,$fileext = NULL)
             break;
 
         default:
-            echo '<span class="error">'._('Unknown archive type.').'</span><br />';
+            echo '<span class="error">'.htmlspecialchars(_('Unknown archive type.')).'</span><br />';
             unlink($file);
             return false;
     }
@@ -404,26 +404,26 @@ function file_upload_error($upload)
 {
     if (!is_array($upload))
     {
-        return _('Upload is invalid.');
+        return htmlspecialchars(_('Upload is invalid.'));
     }
     switch ($upload['error'])
     {
         default:
-            return _('Unknown file upload error.');
+            return htmlspecialchars(_('Unknown file upload error.'));
         case UPLOAD_ERR_OK:
             return false;
         case UPLOAD_ERR_INI_SIZE:
-            return _('Uploaded file is too large.');
+            return htmlspecialchars(_('Uploaded file is too large.'));
         case UPLOAD_ERR_FORM_SIZE:
-            return _('Uploaded file is too large.');
+            return htmlspecialchars(_('Uploaded file is too large.'));
         case UPLOAD_ERR_PARTIAL:
-            return _('Uploaded file is incomplete.');
+            return htmlspecialchars(_('Uploaded file is incomplete.'));
         case UPLOAD_ERR_NO_FILE:
-            return _('No file was uploaded.');
+            return htmlspecialchars(_('No file was uploaded.'));
         case UPLOAD_ERR_NO_TMP_DIR:
-            return _('There is no TEMP directory to store the uploaded file in.');
+            return htmlspecialchars(_('There is no TEMP directory to store the uploaded file in.'));
         case UPLOAD_ERR_CANT_WRITE:
-            return _('Unable to write uploaded file to disk.');
+            return htmlspecialchars(_('Unable to write uploaded file to disk.'));
     }
 }
 
@@ -589,7 +589,7 @@ function generate_addon_id($type,$attb)
     while(sql_exist('addons', 'id', $addon_id))
     {
         // If the addon id already exists, add an incrementing number to it
-        if (preg_match('/^.+_([0-9]+)$/i', $addon_id, $matches))
+        if (preg_match('/^.+htmlspecialchars(_([0-9]+))$/i', $addon_id, $matches))
         {
             $next_num = (int)$matches[1];
             $next_num++;

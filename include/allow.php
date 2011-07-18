@@ -99,9 +99,9 @@ switch($result['role'])
         break;
 }
 //support for translations :
-_("root");
-_("supAdministrator");
-_("administrator");
-_("moderator");
-_("basicUser");
+htmlspecialchars(_("root"));
+htmlspecialchars(_("supAdministrator"));
+htmlspecialchars(_("administrator"));
+htmlspecialchars(_("moderator"));
+htmlspecialchars(_("basicUser"));
 ?>

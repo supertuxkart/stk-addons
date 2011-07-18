@@ -62,7 +62,7 @@ class coreAddon
         }
         if (mysql_num_rows($this->reqSql) == 0)
         {
-            echo _('The requested addon does not exist.').'<br />';
+            echo htmlspecialchars(_('The requested addon does not exist.')).'<br />';
         }
 
         $this->addonCurrent = sql_next($this->reqSql);
@@ -247,7 +247,7 @@ class coreAddon
         $get_files_handle = sql_query($get_files_query);
         if (!$get_files_handle)
         {
-            echo '<span class="error">'._('Failed to find files associated with this addon.').'</span><br />';
+            echo '<span class="error">'.htmlspecialchars(_('Failed to find files associated with this addon.')).'</span><br />';
             return false;
         }
         $num_files = mysql_num_rows($get_files_handle);
@@ -256,7 +256,7 @@ class coreAddon
             $get_file = mysql_fetch_assoc($get_files_handle);
             if (file_exists(UP_LOCATION.$get_file['file_path']) && !unlink(UP_LOCATION.$get_file['file_path']))
             {
-                echo '<span class="error">'._('Failed to delete file:').' '.$get_file['file_path'].'</span><br />';
+                echo '<span class="error">'.htmlspecialchars(_('Failed to delete file:')).' '.$get_file['file_path'].'</span><br />';
             }
         }
         
@@ -267,7 +267,7 @@ class coreAddon
         $remove_file_handle = sql_query($remove_file_query);
         if (!$remove_file_handle)
         {
-            echo '<span class="error">'._('Failed to remove file records for this addon.').'</span><br />';
+            echo '<span class="error">'.htmlspecialchars(_('Failed to remove file records for this addon.')).'</span><br />';
         }
 
         // Get revisions
@@ -287,7 +287,7 @@ class coreAddon
             // Delete entry
             if (!sql_remove_where($this->addonType.'_revs', 'id', $getRevsResult['id']))
             {
-                echo _('Failed to remove revision record.').'<br />';
+                echo htmlspecialchars(_('Failed to remove revision record.')).'<br />';
                 return false;
             }
         }
@@ -295,7 +295,7 @@ class coreAddon
         // Remove addon entry
         if (!sql_remove_where('addons', 'id', $this->addonCurrent['id']))
         {
-            echo '<span class="error">'._('Failed to remove addon.').'</span><br />';
+            echo '<span class="error">'.htmlspecialchars(_('Failed to remove addon.')).'</span><br />';
             return false;
         }
 
@@ -313,7 +313,7 @@ class coreAddon
         $addonUser = new coreUser();
         $addonUser->selectById($this->addonCurrent['uploader']);
         if ($this->addonCurrent['designer'] == NULL)
-            $this->addonCurrent['designer'] = '<em>'._('Unknown').'</em>';
+            $this->addonCurrent['designer'] = '<em>'.htmlspecialchars(_('Unknown')).'</em>';
         if ($this->addonCurrent['description'] == NULL)
             $description = NULL;
         else
@@ -340,38 +340,38 @@ class coreAddon
         if (User::$logged_in && $this->addonCurrent['uploader'] == $_SESSION['userid'])
         {
             echo '<br /><form method="POST" action="upload.php?type='.$this->addonType.'&amp;name='.$this->addonCurrent['id'].'&amp;action=file">';
-            echo '<input type="submit" value="'._('Upload Image').'" />';
+            echo '<input type="submit" value="'.htmlspecialchars(_('Upload Image')).'" />';
             echo '</form>';
         }
         echo '</div>';
         
         // Display badges for status flags
         if ($this->addonCurrent['status'] & F_FEATURED)
-                echo '<span class="f_featured">'._('Featured').'</span>';
+                echo '<span class="f_featured">'.htmlspecialchars(_('Featured')).'</span>';
         if ($this->addonCurrent['status'] & F_ALPHA)
-                echo '<span class="f_alpha">'._('Alpha').'</span>';
+                echo '<span class="f_alpha">'.htmlspecialchars(_('Alpha')).'</span>';
         if ($this->addonCurrent['status'] & F_BETA)
-                echo '<span class="f_beta">'._('Beta').'</span>';
+                echo '<span class="f_beta">'.htmlspecialchars(_('Beta')).'</span>';
         if ($this->addonCurrent['status'] & F_RC)
-                echo '<span class="f_rc">'._('Release-Candidate').'</span>';
+                echo '<span class="f_rc">'.htmlspecialchars(_('Release-Candidate')).'</span>';
         if ($this->addonCurrent['status'] & F_DFSG)
-                echo '<span class="f_dfsg">'._('DFSG Compliant').'</span>';
+                echo '<span class="f_dfsg">'.htmlspecialchars(_('DFSG Compliant')).'</span>';
         echo '<br />'.$description.'
         <table class="info">';
         if ($this->addonType == 'tracks' && $this->addonCurrent['props'] == 1)
         {
-            echo '<tr><td><strong>'._('Type:').'</strong></td><td>'._('Arena').'</td></tr>';
+            echo '<tr><td><strong>'.htmlspecialchars(_('Type:')).'</strong></td><td>'.htmlspecialchars(_('Arena')).'</td></tr>';
         }
-        echo '<tr><td><strong>'._('Designer:').'</strong></td><td>'.$this->addonCurrent['designer'].'</td></tr>
-        <tr><td><strong>'._('Upload date:').'</strong></td><td>'.$this->addonCurrent['revision_timestamp'].'</td></tr>
-        <tr><td><strong>'._('Submitted by:').'</strong></td><td><a href="users.php?user='.$addonUser->userCurrent['user'].'">'.$addonUser->userCurrent['name'].'</a></td></tr>
-        <tr><td><strong>'._('Revision:').'</strong></td><td>'.$this->addonCurrent['revision'].'</td></tr>
-        <tr><td><strong>'._('Compatible with:').'</strong></td><td>'.format_compat($this->addonCurrent['format'],$this->addonType).'</td></tr>
+        echo '<tr><td><strong>'.htmlspecialchars(_('Designer:')).'</strong></td><td>'.$this->addonCurrent['designer'].'</td></tr>
+        <tr><td><strong>'.htmlspecialchars(_('Upload date:')).'</strong></td><td>'.$this->addonCurrent['revision_timestamp'].'</td></tr>
+        <tr><td><strong>'.htmlspecialchars(_('Submitted by:')).'</strong></td><td><a href="users.php?user='.$addonUser->userCurrent['user'].'">'.$addonUser->userCurrent['name'].'</a></td></tr>
+        <tr><td><strong>'.htmlspecialchars(_('Revision:')).'</strong></td><td>'.$this->addonCurrent['revision'].'</td></tr>
+        <tr><td><strong>'.htmlspecialchars(_('Compatible with:')).'</strong></td><td>'.format_compat($this->addonCurrent['format'],$this->addonType).'</td></tr>
         </table></div>';
         
         if ($this->addonCurrent['status'] & F_TEX_NOT_POWER_OF_2)
         {
-            echo _('Warning: This addon may not display correctly on some systems. It uses textures that may not be compatible with all video cards.')."<br />\n";
+            echo htmlspecialchars(_('Warning: This addon may not display correctly on some systems. It uses textures that may not be compatible with all video cards.'))."<br />\n";
         }
         
         // Get download path
@@ -384,33 +384,33 @@ class coreAddon
             }
             else
             {
-                echo '<span class="error">'._('File not found.').'</span><br />';
+                echo '<span class="error">'.htmlspecialchars(_('File not found.')).'</span><br />';
             }
         }
         else
         {
-            echo '<span class="error">'._('File not found.').'</span><br />';
+            echo '<span class="error">'.htmlspecialchars(_('File not found.')).'</span><br />';
         }
 
         echo '<br /><br /><br /><br />
-        <strong>'._('License:').'</strong><br />
+        <strong>'.htmlspecialchars(_('License:')).'</strong><br />
         <textarea name="license" rows="4" cols="60">'.strip_tags($this->addonCurrent['license']).'</textarea>
         <br /><br />';
 
         // Print a permanent reference link (permalink) to this addon
-        echo '<h3>'._('Permalink').'</h3><br />
+        echo '<h3>'.htmlspecialchars(_('Permalink')).'</h3><br />
         <a href="'.$this->addonCurrent['permUrl'].'">'.$this->addonCurrent['permUrl'].'</a><br /><br />';
 
         // List revisions
         $addonRevs = new coreAddon($this->addonType);
         $addonRevs->selectById($this->addonCurrent['id'],true);
-        echo '<h3>'._('Revisions').'</h3>';
+        echo '<h3>'.htmlspecialchars(_('Revisions')).'</h3>';
 
         // Add upload button to the right of the Revisions label
         if (User::$logged_in && $this->addonCurrent['uploader'] == $_SESSION['userid'])
         {
             echo '<div style="float: right;"><form method="POST" action="upload.php?type='.$this->addonType.'&amp;name='.$this->addonCurrent['id'].'">';
-            echo '<input type="submit" value="'._('Upload Revision').'" />';
+            echo '<input type="submit" value="'.htmlspecialchars(_('Upload Revision')).'" />';
             echo '</form></div>';
         }
 
@@ -449,17 +449,17 @@ class coreAddon
                 if (file_exists(UP_LOCATION.$file_path))
                 {
                     echo '<a href="'.DOWN_LOCATION.$file_path.'">';
-                    printf(_('Download revision %u'),$addonRevs->addonCurrent['revision']);
+                    printf(htmlspecialchars(_('Download revision %u')),$addonRevs->addonCurrent['revision']);
                     echo '</a>';
                 }
                 else
                 {
-                    echo _('Revision').' '.$addonRevs->addonCurrent['revision'].' - '._('File not found.');
+                    echo htmlspecialchars(_('Revision')).' '.$addonRevs->addonCurrent['revision'].' - '.htmlspecialchars(_('File not found.'));
                 }
             }
             else
             {
-                echo _('Revision').' '.$addonRevs->addonCurrent['revision'].' - '._('File not found.');
+                echo htmlspecialchars(_('Revision')).' '.$addonRevs->addonCurrent['revision'].' - '.htmlspecialchars(_('File not found.'));
             }
             echo '</td></tr>';
             $addonRevs->next();
@@ -467,12 +467,12 @@ class coreAddon
         echo '</table><br /><br />';
         
         // Show list of images associated with this addon
-        echo '<h3>'._('Images').'</h3>';
+        echo '<h3>'.htmlspecialchars(_('Images')).'</h3>';
         // Add upload button to the right of the Images label
         if (User::$logged_in && $this->addonCurrent['uploader'] == $_SESSION['userid'])
         {
             echo '<div style="float: right;"><form method="POST" action="upload.php?type='.$this->addonType.'&amp;name='.$this->addonCurrent['id'].'&amp;action=file">';
-            echo '<input type="submit" value="'._('Upload Image').'" />';
+            echo '<input type="submit" value="'.htmlspecialchars(_('Upload Image')).'" />';
             echo '</form></div>';
         }
         echo '<br /><br />';
@@ -502,7 +502,7 @@ class coreAddon
         
         if (count($image_files) == 0)
         {
-            echo _('No images have been uploaded for this addon yet.').'<br />';
+            echo htmlspecialchars(_('No images have been uploaded for this addon yet.')).'<br />';
         }
         else
         {
@@ -521,9 +521,9 @@ class coreAddon
                     if ($_SESSION['role']['manageaddons'])
                     {
                         if ($source_file['approved'] == 1)
-                            echo '<a href="'.$this->addonCurrent['permUrl'].'&amp;save=unapprove&amp;id='.$source_file['id'].'">'._('Unapprove').'</a>';
+                            echo '<a href="'.$this->addonCurrent['permUrl'].'&amp;save=unapprove&amp;id='.$source_file['id'].'">'.htmlspecialchars(_('Unapprove')).'</a>';
                         else
-                            echo '<a href="'.$this->addonCurrent['permUrl'].'&amp;save=approve&amp;id='.$source_file['id'].'">'._('Approve').'</a>';
+                            echo '<a href="'.$this->addonCurrent['permUrl'].'&amp;save=approve&amp;id='.$source_file['id'].'">'.htmlspecialchars(_('Approve')).'</a>';
                         echo '<br />';
                     }
                     if ($_SESSION['role']['manageaddons'] || $this->addonCurrent['uploader'] == $_SESSION['userid'])
@@ -532,14 +532,14 @@ class coreAddon
                         {
                             if ($this->addonCurrent['icon'] != $source_file['id'])
                             {
-                                echo '<a href="'.$this->addonCurrent['permUrl'].'&amp;save=seticon&amp;id='.$source_file['id'].'">'._('Set Icon').'</a><br />';
+                                echo '<a href="'.$this->addonCurrent['permUrl'].'&amp;save=seticon&amp;id='.$source_file['id'].'">'.htmlspecialchars(_('Set Icon')).'</a><br />';
                             }
                         }
                         if ($this->addonCurrent['image'] != $source_file['id'])
                         {
-                            echo '<a href="'.$this->addonCurrent['permUrl'].'&amp;save=setimage&amp;id='.$source_file['id'].'">'._('Set Image').'</a><br />';
+                            echo '<a href="'.$this->addonCurrent['permUrl'].'&amp;save=setimage&amp;id='.$source_file['id'].'">'.htmlspecialchars(_('Set Image')).'</a><br />';
                         }
-                        echo '<a href="'.$this->addonCurrent['permUrl'].'&amp;save=deletefile&amp;id='.$source_file['id'].'">'._('Delete File').'</a><br />';
+                        echo '<a href="'.$this->addonCurrent['permUrl'].'&amp;save=deletefile&amp;id='.$source_file['id'].'">'.htmlspecialchars(_('Delete File')).'</a><br />';
                     }
                 }
                 echo '</div>';
@@ -548,12 +548,12 @@ class coreAddon
         echo '<br /><br />';
 
         // Show list of source files
-        echo '<h3>'._('Source Files').'</h3>';
+        echo '<h3>'.htmlspecialchars(_('Source Files')).'</h3>';
         // Add upload button to the right of the Source Files label
         if (User::$logged_in && $this->addonCurrent['uploader'] == $_SESSION['userid'])
         {
             echo '<div style="float: right;"><form method="POST" action="upload.php?type='.$this->addonType.'&amp;name='.$this->addonCurrent['id'].'&amp;action=file">';
-            echo '<input type="submit" value="'._('Upload Source File').'" />';
+            echo '<input type="submit" value="'.htmlspecialchars(_('Upload Source File')).'" />';
             echo '</form></div>';
         }
         echo '<br /><br />';
@@ -583,7 +583,7 @@ class coreAddon
         
         if (count($source_files) == 0)
         {
-            echo _('No source files have been uploaded for this addon yet.').'<br />';
+            echo htmlspecialchars(_('No source files have been uploaded for this addon yet.')).'<br />';
         }
         else
         {
@@ -593,20 +593,20 @@ class coreAddon
             {
                 echo '<tr>';
                 $approved = NULL;
-                if ($source_file['approved'] == 0) $approved = ' ('._('Not Approved').')';
+                if ($source_file['approved'] == 0) $approved = ' ('.htmlspecialchars(_('Not Approved')).')';
                 echo '<td><strong>';
-                printf(_('Source File %u'),$n);
+                printf(htmlspecialchars(_('Source File %u')),$n);
                 echo '</strong>'.$approved.'</td>';
-                echo '<td><a href="'.DOWN_LOCATION.$source_file['file_path'].'">'._('Download').'</a>';
+                echo '<td><a href="'.DOWN_LOCATION.$source_file['file_path'].'">'.htmlspecialchars(_('Download')).'</a>';
                 if (User::$logged_in)
                 {
                     if ($_SESSION['role']['manageaddons'])
                     {
                         if ($source_file['approved'] == 1)
-                            echo ' | <a href="'.$this->addonCurrent['permUrl'].'&amp;save=unapprove&amp;id='.$source_file['id'].'">'._('Unapprove').'</a>';
+                            echo ' | <a href="'.$this->addonCurrent['permUrl'].'&amp;save=unapprove&amp;id='.$source_file['id'].'">'.htmlspecialchars(_('Unapprove')).'</a>';
                         else
-                            echo ' | <a href="'.$this->addonCurrent['permUrl'].'&amp;save=approve&amp;id='.$source_file['id'].'">'._('Approve').'</a>';
-                        echo ' | <a href="'.$this->addonCurrent['permUrl'].'&amp;save=deletefile&amp;id='.$source_file['id'].'">'._('Delete File').'</a><br />';
+                            echo ' | <a href="'.$this->addonCurrent['permUrl'].'&amp;save=approve&amp;id='.$source_file['id'].'">'.htmlspecialchars(_('Approve')).'</a>';
+                        echo ' | <a href="'.$this->addonCurrent['permUrl'].'&amp;save=deletefile&amp;id='.$source_file['id'].'">'.htmlspecialchars(_('Delete File')).'</a><br />';
                     }
                 }
                 $n++;
@@ -629,40 +629,40 @@ class coreAddon
         echo '<hr /><h3>Configuration</h3>';
         // Edit designer
         echo '<form name="changeProps" action="'.$this->addonCurrent['permUrl'].'&amp;save=props" method="POST">';
-        echo '<strong>'._('Designer:').'</strong><br />';
+        echo '<strong>'.htmlspecialchars(_('Designer:')).'</strong><br />';
         // FIXME: Find a cleaner way to check this
-        if ($this->addonCurrent['designer'] == '<em>'._('Unknown').'</em>')
+        if ($this->addonCurrent['designer'] == '<em>'.htmlspecialchars(_('Unknown')).'</em>')
                 $this->addonCurrent['designer'] = NULL;
         echo '<input type="text" name="designer" id="designer_field" value="'.$this->addonCurrent['designer'].'" /><br />';
         echo '<br />';
-        printf('<strong>'._('Description:').'</strong> ('._('Max %u characters').')<br />','140');
+        printf('<strong>'.htmlspecialchars(_('Description:')).'</strong> ('.htmlspecialchars(_('Max %u characters')).')<br />','140');
         echo '<textarea name="description" id="desc_field" rows="4" cols="60"
             onKeyUp="textLimit(document.getElementById(\'desc_field\'),140);"
             onKeyDown="textLimit(document.getElementById(\'desc_field\'),140);">'.$this->addonCurrent['description'].'</textarea><br />';
-        echo '<input type="submit" value="'._('Save Properties').'" />';
+        echo '<input type="submit" value="'.htmlspecialchars(_('Save Properties')).'" />';
         echo '</form><br />';
         
         // Delete addon
         if ($this->addonCurrent['uploader'] == $_SESSION['userid'] || $_SESSION['role']['manageaddons'])
-            echo '<input type="button" value="'._('Delete Addon').'" onClick="confirm_delete(\''.$this->addonCurrent['permUrl'].'&amp;save=delete\')" /><br /><br />';
+            echo '<input type="button" value="'.htmlspecialchars(_('Delete Addon')).'" onClick="confirm_delete(\''.$this->addonCurrent['permUrl'].'&amp;save=delete\')" /><br /><br />';
 
         // Set status flags
-        echo '<strong>'._('Status Flags:').'</strong><br />';
+        echo '<strong>'.htmlspecialchars(_('Status Flags:')).'</strong><br />';
         echo '<form method="POST" action="'.$this->addonCurrent['permUrl'].'&amp;save=status">';
         echo '<table id="addon_flags" class="info"><thead><tr><th></th>';
         if ($_SESSION['role']['manageaddons'])
         {
-            echo '<th>'.img_label(_('Approved')).'</th>
-                <th>'.img_label(_('Invisible')).'</th>';
+            echo '<th>'.img_label(htmlspecialchars(_('Approved'))).'</th>
+                <th>'.img_label(htmlspecialchars(_('Invisible'))).'</th>';
         }
-        echo '<th>'.img_label(_('Alpha')).'</th>
-            <th>'.img_label(_('Beta')).'</th>
-            <th>'.img_label(_('Release-Candidate')).'</th>
-            <th>'.img_label(_('Latest')).'</th>';
+        echo '<th>'.img_label(htmlspecialchars(_('Alpha'))).'</th>
+            <th>'.img_label(htmlspecialchars(_('Beta'))).'</th>
+            <th>'.img_label(htmlspecialchars(_('Release-Candidate'))).'</th>
+            <th>'.img_label(htmlspecialchars(_('Latest'))).'</th>';
         if ($_SESSION['role']['manageaddons'])
-            echo '<th>'.img_label(_('DFSG Compliant')).'</th>
-                <th>'.img_label(_('Featured')).'</th>';
-        echo '<th>'.img_label(_('Invalid Textures')).'</th>';
+            echo '<th>'.img_label(htmlspecialchars(_('DFSG Compliant'))).'</th>
+                <th>'.img_label(htmlspecialchars(_('Featured'))).'</th>';
+        echo '<th>'.img_label(htmlspecialchars(_('Invalid Textures'))).'</th>';
         echo '</tr></thead>';
         $addonRevs = new coreAddon($this->addonType);
         $addonRevs->selectById($this->addonCurrent['id'],true);
@@ -671,7 +671,7 @@ class coreAddon
         while ($addonRevs->addonCurrent)
         {
             echo '<tr><td style="text-align: center;">';
-            printf(_('Rev %u:'),$addonRevs->addonCurrent['revision']);
+            printf(htmlspecialchars(_('Rev %u:')),$addonRevs->addonCurrent['revision']);
             echo '</td>';
 
             if ($_SESSION['role']['manageaddons'] == true)
@@ -800,11 +800,11 @@ class coreAddon
         }
         echo '</table>';
         echo '<input type="hidden" name="fields" value="'.implode(',',$fields).'" />';
-        echo '<input type="submit" value="'._('Save Changes').'" />';
+        echo '<input type="submit" value="'.htmlspecialchars(_('Save Changes')).'" />';
         echo '</form><br />';
         
         // Moderator notes
-        echo '<strong>'._('Notes from Moderator to Submitter:').'</strong><br />';
+        echo '<strong>'.htmlspecialchars(_('Notes from Moderator to Submitter:')).'</strong><br />';
         if ($_SESSION['role']['manageaddons'])
             echo '<form method="POST" action="'.$this->addonCurrent['permUrl'].'&amp;save=notes">';
         $addonRevs = new coreAddon($this->addonType);
@@ -812,7 +812,7 @@ class coreAddon
         $fields = array();
         while ($addonRevs->addonCurrent)
         {
-            printf(_('Rev %u:').'<br />',$addonRevs->addonCurrent['revision']);
+            printf(htmlspecialchars(_('Rev %u:')).'<br />',$addonRevs->addonCurrent['revision']);
             echo '<textarea name="notes-'.$addonRevs->addonCurrent['revision'].'"
                 id="notes-'.$addonRevs->addonCurrent['revision'].'" rows="4" cols="60"
                 onKeyUp="textLimit(document.getElementById(\'notes-'.$addonRevs->addonCurrent['revision'].'\'),4000);"
@@ -825,7 +825,7 @@ class coreAddon
         if ($_SESSION['role']['manageaddons'])
         {
             echo '<input type="hidden" name="fields" value="'.implode(',',$fields).'" />';
-            echo '<input type="submit" value="'._('Save Notes').'" />';
+            echo '<input type="submit" value="'.htmlspecialchars(_('Save Notes')).'" />';
             echo '</form>';
         }
     }
@@ -860,14 +860,14 @@ class coreAddon
         // Make sure no addon with this id exists
         if(sql_exist($this->addonType.'_revs', 'id', $fileid))
         {
-            echo '<span class="error">'._('The add-on you are trying to create already exists.').'</span><br />';
+            echo '<span class="error">'.htmlspecialchars(_('The add-on you are trying to create already exists.')).'</span><br />';
             return false;
         }
 
         // Check if we're creating a new add-on
         if (!sql_exist('addons', 'id', $addonid))
         {
-            echo _('Creating a new add-on...').'<br />';
+            echo htmlspecialchars(_('Creating a new add-on...')).'<br />';
             $fields = array('id','type','name','uploader','designer','license');
             $values = array($addonid,$this->addonType,
                 mysql_real_escape_string($attributes['name']),
@@ -887,13 +887,13 @@ class coreAddon
         }
         else
         {
-            echo _('This add-on already exists. Adding revision...').'<br />';
+            echo htmlspecialchars(_('This add-on already exists. Adding revision...')).'<br />';
             // Update the addon name
             if (!sql_update('addons',
                     'id',mysql_real_escape_string($addonid),
                     'name',mysql_real_escape_string($attributes['name'])))
             {
-                echo '<span class="error">'._('Failed to update the name record for this add-on.').'</span><br />';
+                echo '<span class="error">'.htmlspecialchars(_('Failed to update the name record for this add-on.')).'</span><br />';
             }
             // Update license file record
             if (!sql_update('addons',
@@ -902,7 +902,7 @@ class coreAddon
                     'license',
                     mysql_real_escape_string($attributes['license'])))
             {
-                echo '<span class="error">'._('Failed to update the license record for this add-on.').'</span><br />';
+                echo '<span class="error">'.htmlspecialchars(_('Failed to update the license record for this add-on.')).'</span><br />';
             }
         }
 
@@ -912,7 +912,7 @@ class coreAddon
         $reqSql = sql_query($prevRevQuerySql);
         if (!$reqSql)
         {
-            echo '<span class="error">'._('Failed to check for previous add-on revisions.').'</span><br />';
+            echo '<span class="error">'.htmlspecialchars(_('Failed to check for previous add-on revisions.')).'</span><br />';
             return false;
         }
         if (mysql_num_rows($reqSql) == 0)
@@ -994,7 +994,7 @@ function update_status($type,$addon_id,$fields)
 {
     if ($type != 'karts' && $type != 'tracks')
     {
-        echo '<span class="error">'._('Invalid addon type.').'</span><br />';
+        echo '<span class="error">'.htmlspecialchars(_('Invalid addon type.')).'</span><br />';
         return false;
     }
     $addon_id = addon_id_clean($addon_id);
@@ -1104,7 +1104,7 @@ function update_addon_notes($type,$addon_id,$fields)
         return false;
     if ($type != 'karts' && $type != 'tracks')
     {
-        echo '<span class="error">'._('Invalid addon type.').'</span><br />';
+        echo '<span class="error">'.htmlspecialchars(_('Invalid addon type.')).'</span><br />';
         return false;
     }
     $addon_id = addon_id_clean($addon_id);
@@ -1174,7 +1174,7 @@ function format_compat($format,$filetype)
     switch ($filetype)
     {
         default:
-            return _('Unknown');
+            return htmlspecialchars(_('Unknown'));
         case 'karts':
             if ($format == 1)
             {
@@ -1184,7 +1184,7 @@ function format_compat($format,$filetype)
             {
                 return '0.7 - 0.7.2';
             }
-            return _('Unknown');
+            return htmlspecialchars(_('Unknown'));
             break;
         case 'tracks':
             if ($format == 1 || $format == 2)
@@ -1195,10 +1195,10 @@ function format_compat($format,$filetype)
             {
                 return '0.7 - 0.7.2';
             }
-            return _('Unknown');
+            return htmlspecialchars(_('Unknown'));
             break;
     }
-    return _('Unknown');
+    return htmlspecialchars(_('Unknown'));
 }
 
 function approve_file($file_id,$approve = 'approve')
@@ -1210,7 +1210,7 @@ function approve_file($file_id,$approve = 'approve')
 
     if (!$_SESSION['role']['manageaddons'])
     {
-        echo '<span class="error">'._('Insufficient permissions.').'</span><br />';
+        echo '<span class="error">'.htmlspecialchars(_('Insufficient permissions.')).'</span><br />';
         return false;
     }
 

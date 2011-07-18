@@ -72,7 +72,7 @@ switch ($_GET['save'])
         $edit_addon->selectById($_GET['name']);
         if ($edit_addon->setInformation('description',$_POST['description'])
                 && $edit_addon->setInformation('designer',$_POST['designer']))
-            echo _('Saved properties.').'<br />';
+            echo htmlspecialchars(_('Saved properties.')).'<br />';
         break;
     case 'rev':
         parseUpload($_FILES['file_addon'],true);
@@ -81,30 +81,30 @@ switch ($_GET['save'])
         if (!isset($_GET['type']) || !isset($_GET['name']) || !isset($_POST['fields']))
             break;
         if (update_status($_GET['type'],$_GET['name'],$_POST['fields']))
-            echo _('Saved status.').'<br />';
+            echo htmlspecialchars(_('Saved status.')).'<br />';
         break;
     case 'notes':
         if (!isset($_GET['type']) || !isset($_GET['name']) || !isset($_POST['fields']))
             break;
         if (update_addon_notes($_GET['type'],$_GET['name'],$_POST['fields']))
-            echo _('Saved notes.').'<br />';
+            echo htmlspecialchars(_('Saved notes.')).'<br />';
         break;
     case 'delete':
         $edit_addon = new coreAddon($_GET['type']);
         $edit_addon->selectById($_GET['name']);
         if ($edit_addon->remove())
-            echo _('Deleted addon.').'<br />';
+            echo htmlspecialchars(_('Deleted addon.')).'<br />';
         break;
     case 'approve':
     case 'unapprove':
         if (approve_file((int)$_GET['id'],$_GET['save']))
-            echo _('File updated.').'<br />';
+            echo htmlspecialchars(_('File updated.')).'<br />';
         break;
     case 'setimage':
         $edit_addon = new coreAddon($_GET['type']);
         $edit_addon->selectById($_GET['name']);
         if ($edit_addon->set_image((int)$_GET['id']))
-            echo _('Set image.').'<br />';
+            echo htmlspecialchars(_('Set image.')).'<br />';
         break;
     case 'seticon':
         if ($_GET['type'] != 'karts')
@@ -112,13 +112,13 @@ switch ($_GET['save'])
         $edit_addon = new coreAddon($_GET['type']);
         $edit_addon->selectById($_GET['name']);
         if ($edit_addon->set_image((int)$_GET['id'],'icon'))
-            echo _('Set icon.').'<br />';
+            echo htmlspecialchars(_('Set icon.')).'<br />';
         break;
     case 'deletefile':
         $edit_addon = new coreAddon($_GET['type']);
         $edit_addon->selectById($_GET['name']);
         if ($edit_addon->delete_file((int)$_GET['id']))
-            echo _('Deleted file.').'<br />';
+            echo htmlspecialchars(_('Deleted file.')).'<br />';
         break;
 }
 ?>
