@@ -1,461 +1,466 @@
-# French translation for stk
+# Galician translation for stk
 # Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
 # This file is distributed under the same license as the stk package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
 #
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>, 2011.
 msgid ""
 msgstr ""
 "Project-Id-Version: stk\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-07-09 22:06-0600\n"
-"PO-Revision-Date: 2011-07-18 01:56+0000\n"
-"Last-Translator: Auria <auria.mg@gmail.com>\n"
-"Language-Team: French <fr@li.org>\n"
+"PO-Revision-Date: 2011-07-21 06:58+0000\n"
+"Last-Translator: Adrián Chaves Fernández <adriyetichaves@gmail.com>\n"
+"Language-Team: Galician <gl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2011-07-22 20:44+0000\n"
 "X-Generator: Launchpad (build 13483)\n"
+"Language: gl\n"
 
 #: User.php:147
 msgid "Me"
-msgstr "Moi"
+msgstr "Eu"
 
 #: addons-panel.php:44
 msgid ""
 "This page cannot be loaded because an invalid add-on type was provided."
 msgstr ""
+"Non se pode cargar esta páxina porque o tipo de complemento indicado non é "
+"correcto."
 
 #: addons-panel.php:48
 msgid "This page cannot be loaded because an invalid action was provided."
 msgstr ""
+"Non se pode cargar esta páxina porque a acción indicada non é correcta."
 
 #: addons.php:75
 msgid "Saved properties."
-msgstr "Les propriétés ont été sauvegardées."
+msgstr "Gardáronse as propiedades."
 
 #: addons.php:84
 msgid "Saved status."
-msgstr "Le statut a été sauvegardé."
+msgstr "Gardouse o estado."
 
 #: addons.php:90
 msgid "Saved notes."
-msgstr "Les notes ont été sauvegardées."
+msgstr "Gardáronse as notas."
 
 #: addons.php:96
 msgid "Deleted addon."
-msgstr ""
+msgstr "Eliminouse o complemento."
 
 #: addons.php:101
 msgid "File updated."
-msgstr "Fichier mis à jour."
+msgstr "Actualizouse o ficheiro."
 
 #: addons.php:107
 msgid "Set image."
-msgstr "Image sélectionnée."
+msgstr "Estableceuse a imaxe."
 
 #: addons.php:115
 msgid "Set icon."
-msgstr ""
+msgstr "Estableceuse a icona."
 
 #: addons.php:121
 msgid "Deleted file."
-msgstr "Fichier supprimmé."
+msgstr "Eliminouse o ficheiro."
 
 #: allow.php:102
 msgid "root"
-msgstr ""
+msgstr "Administrador principal (root)"
 
 #: allow.php:103
 msgid "supAdministrator"
-msgstr ""
+msgstr "Administrador superior"
 
 #: allow.php:104
 msgid "administrator"
-msgstr "administrateur"
+msgstr "Administrador"
 
 #: allow.php:105
 msgid "moderator"
-msgstr "modérateur"
+msgstr "Moderador"
 
 #: allow.php:106
 msgid "basicUser"
-msgstr ""
+msgstr "Usuario"
 
 #: coreAddon.php:65
 msgid "The requested addon does not exist."
-msgstr ""
+msgstr "O complemento solicitado non existe."
 
 #: coreAddon.php:250
 msgid "Failed to find files associated with this addon."
-msgstr ""
+msgstr "Non se atoparon os ficheiros asociados con este complemento."
 
 #: coreAddon.php:259
 msgid "Failed to delete file:"
-msgstr "Impossible de supprimmer le fichier:"
+msgstr "Non se puido eliminar o seguinte ficheiro:"
 
 #: coreAddon.php:270
 msgid "Failed to remove file records for this addon."
-msgstr ""
+msgstr "Non se puideron eliminar os rexistros de ficheiro deste complemento."
 
 #: coreAddon.php:290
 msgid "Failed to remove revision record."
-msgstr ""
+msgstr "Non se puido eliminar o rexistro da revisión."
 
 #: coreAddon.php:298
 msgid "Failed to remove addon."
-msgstr ""
+msgstr "Non se puido eliminar o complemento."
 
 #: coreAddon.php:316 coreAddon.php:634 coreAddon.php:1177 coreAddon.php:1187
 #: coreAddon.php:1198 coreAddon.php:1201
 msgid "Unknown"
-msgstr "Inconnu(e)"
+msgstr "Descoñecido"
 
 #: coreAddon.php:343 coreAddon.php:475
 msgid "Upload Image"
-msgstr "Ajouter Image"
+msgstr "Subir unha imaxe"
 
 #: coreAddon.php:350 coreAddon.php:664
 msgid "Featured"
-msgstr "Recommendé"
+msgstr "Destacado"
 
 #: coreAddon.php:352 coreAddon.php:658
 msgid "Alpha"
-msgstr "Alpha"
+msgstr "Alfa"
 
 #: coreAddon.php:354 coreAddon.php:659
 msgid "Beta"
-msgstr "Bêta"
+msgstr "Beta"
 
 #: coreAddon.php:356 coreAddon.php:660
 msgid "Release-Candidate"
-msgstr ""
+msgstr "Candidata a versión final"
 
+# DFSG = Debian Free Software Guidelines («directrices de software libre de Debian»).
 #: coreAddon.php:358 coreAddon.php:663
 msgid "DFSG Compliant"
-msgstr "Conforme aux DFSG"
+msgstr "Concorde coas DFSG"
 
 #: coreAddon.php:363 manage-panel.php:157
 msgid "Type:"
-msgstr "Type :"
+msgstr "Tipo:"
 
 #: coreAddon.php:363
 msgid "Arena"
-msgstr "Arène"
+msgstr "Arena"
 
 #: coreAddon.php:365 coreAddon.php:632
 msgid "Designer:"
-msgstr "Auteur:"
+msgstr "Deseñador:"
 
 #: coreAddon.php:366
 msgid "Upload date:"
-msgstr "Date de l'envoi:"
+msgstr "Data de carga:"
 
 #: coreAddon.php:367
 msgid "Submitted by:"
-msgstr "Envoyé par:"
+msgstr "Enviado por:"
 
 #: coreAddon.php:368
 msgid "Revision:"
-msgstr "Révision:"
+msgstr "Revisión:"
 
 #: coreAddon.php:369
 msgid "Compatible with:"
-msgstr "Compatible avec:"
+msgstr "Compatíbel con:"
 
 #: coreAddon.php:374
 msgid ""
 "Warning: This addon may not display correctly on some systems. It uses "
 "textures that may not be compatible with all video cards."
 msgstr ""
-"Avertissement: ce pack d'ajouts pourrait ne pas s'afficher correctement sur "
-"certains systèmes, parce qu'il contient des textures qui ne sont pas "
-"compatibles avec toutes les cartes graphiques."
+"Advertencia: este complemento podería non verse correctamente nalgúns "
+"sistemas. Emprega texturas que poderían non ser compatíbeis con todas as "
+"tarxetas gráficas."
 
 #: coreAddon.php:387 coreAddon.php:392 coreAddon.php:457 coreAddon.php:462
 msgid "File not found."
-msgstr "Fichier non trouvé."
+msgstr "Non se atopou o ficheiro."
 
 #: coreAddon.php:396
 msgid "License:"
-msgstr "License :"
+msgstr "Licenza:"
 
 #: coreAddon.php:401
 msgid "Permalink"
-msgstr "Lien permanent"
+msgstr "Ligazón permanente"
 
 #: coreAddon.php:407
 msgid "Revisions"
-msgstr "Révisions"
+msgstr "Revisións"
 
 #: coreAddon.php:413
 msgid "Upload Revision"
-msgstr "Envoyer la révision"
+msgstr "Subir unha revisión"
 
 #: coreAddon.php:452
 #, php-format
 msgid "Download revision %u"
-msgstr "Télécharger la révision %u"
+msgstr "Descargar a revisión %u"
 
 #: coreAddon.php:457 coreAddon.php:462
 msgid "Revision"
-msgstr "Révision"
+msgstr "Revisión"
 
 #: coreAddon.php:470
 msgid "Images"
-msgstr "Images"
+msgstr "Imaxes"
 
 #: coreAddon.php:505
 msgid "No images have been uploaded for this addon yet."
-msgstr "Aucune image n'a été soumise pour ce pack d'addon."
+msgstr "Aínda non se subiu ningunha imaxe deste complemento."
 
 #: coreAddon.php:524 coreAddon.php:606
 msgid "Unapprove"
-msgstr "Désapprouver"
+msgstr "Desaprobar"
 
 #: coreAddon.php:526 coreAddon.php:608
 msgid "Approve"
-msgstr "Approuver"
+msgstr "Aprobar"
 
 #: coreAddon.php:535
 msgid "Set Icon"
-msgstr "Utiliser comme icône"
+msgstr "Escoller a icona"
 
 #: coreAddon.php:540
 msgid "Set Image"
-msgstr "Utiliser comme image"
+msgstr "Escoller a imaxe"
 
 #: coreAddon.php:542 coreAddon.php:609
 msgid "Delete File"
-msgstr "Supprimer le fichier"
+msgstr "Eliminar o ficheiro"
 
 #: coreAddon.php:551
 msgid "Source Files"
-msgstr "Fichiers sources"
+msgstr "Ficheiros fonte"
 
 #: coreAddon.php:556
 msgid "Upload Source File"
-msgstr "Envoyer les sources"
+msgstr "Subir un ficheiro fonte"
 
 #: coreAddon.php:586
 msgid "No source files have been uploaded for this addon yet."
-msgstr "Aucun fichier source n'a été fourni pour ce pack d'ajouts."
+msgstr "Aínda non se subiu ningún ficheiro fonte deste complemento."
 
 #: coreAddon.php:596
 msgid "Not Approved"
-msgstr "Non approuvé"
+msgstr "Non aprobado"
 
 #: coreAddon.php:598
 #, php-format
 msgid "Source File %u"
-msgstr "Fichier Sources %u"
+msgstr "Ficheiro fonte %u"
 
 #: coreAddon.php:600
 msgid "Download"
-msgstr "Télécharger"
+msgstr "Descargar"
 
 #: coreAddon.php:638
 #, php-format
 msgid "Description:"
-msgstr "Description :"
+msgstr "Descrición:"
 
 #: coreAddon.php:638
 #, php-format
 msgid "Max %u characters"
-msgstr "Max %u caractères"
+msgstr "Non máis de %u karts"
 
 #: coreAddon.php:642
 msgid "Save Properties"
-msgstr "Sauvegarder les propriétés"
+msgstr "Gardar as propiedades"
 
 #: coreAddon.php:647
 msgid "Delete Addon"
-msgstr "Supprimer le pack d'ajouts"
+msgstr "Eliminar o complemento"
 
 #: coreAddon.php:650
 msgid "Status Flags:"
-msgstr ""
+msgstr "Marcas de estado:"
 
 #: coreAddon.php:655
 msgid "Approved"
-msgstr "Approuvé"
+msgstr "Aprobado"
 
 #: coreAddon.php:656
 msgid "Invisible"
-msgstr "Invisible"
+msgstr "Invisíbel"
 
 #: coreAddon.php:661
 msgid "Latest"
-msgstr "Le plus récent"
+msgstr "Último"
 
 #: coreAddon.php:665
 msgid "Invalid Textures"
-msgstr "Textures Invalides"
+msgstr "Texturas incorrectas"
 
 #: coreAddon.php:674 coreAddon.php:815
 #, php-format
 msgid "Rev %u:"
-msgstr "Rév %u:"
+msgstr "Revisión %u:"
 
 #: coreAddon.php:803
 msgid "Save Changes"
-msgstr "Enregistrer les modifications"
+msgstr "Gardar os cambios"
 
 #: coreAddon.php:807
 msgid "Notes from Moderator to Submitter:"
-msgstr ""
+msgstr "Notas do moderador a quen o enviou:"
 
 #: coreAddon.php:828
 msgid "Save Notes"
-msgstr "Sauvegarder les notes"
+msgstr "Gardar as notas"
 
 #: coreAddon.php:863
 msgid "The add-on you are trying to create already exists."
-msgstr "L'ajout que vous tentez de créer existe déjà."
+msgstr "O complemento que intenta crear xa existe."
 
 #: coreAddon.php:870
 msgid "Creating a new add-on..."
-msgstr "Création d'un nouvel ajout..."
+msgstr "Creando un novo complemento…"
 
 #: coreAddon.php:890
 msgid "This add-on already exists. Adding revision..."
-msgstr "Cet ajout existe déjà. Ajout d'une révision..."
+msgstr "O complemento xa existe. Engadindo unha revisión…"
 
 #: coreAddon.php:896
 msgid "Failed to update the name record for this add-on."
-msgstr ""
+msgstr "Non se puido actualizar o rexistro do nome do complemento."
 
 #: coreAddon.php:905
 msgid "Failed to update the license record for this add-on."
-msgstr ""
+msgstr "Non se puido actualizar o rexistro da licenza do complemento."
 
 #: coreAddon.php:915
 msgid "Failed to check for previous add-on revisions."
-msgstr ""
+msgstr "Non se puido comprobar se había revisións anteriores do complemento."
 
 #: coreAddon.php:997 coreAddon.php:1107
 msgid "Invalid addon type."
-msgstr "Type de pack d'ajout invalide"
+msgstr "O tipo de complemento é incorrecto."
 
 #: coreAddon.php:1213
 msgid "Insufficient permissions."
-msgstr "Permissions insuffisantes"
+msgstr "Non dispón de permisos abondo."
 
 #: coreUser.php:87 createAccount.php:42 login.php:106
 msgid "Username:"
-msgstr "Nom d'utilisateur :"
+msgstr "Usuario:4"
 
 #: coreUser.php:88
 msgid "Registration Date:"
-msgstr "Date d'enregistrement:"
+msgstr "Data de rexistro:"
 
 #: coreUser.php:89
 msgid "Real Name:"
-msgstr "Nom réel :"
+msgstr "Nome real:"
 
 #: coreUser.php:90 coreUser.php:186
 msgid "Role:"
-msgstr "Rôle :"
+msgstr "Rol:"
 
 #: coreUser.php:93 coreUser.php:182
 msgid "Homepage:"
-msgstr "Page d'accueil :"
+msgstr "Páxina web:"
 
 #: coreUser.php:98
 msgid "User's Karts"
-msgstr "Karts de l'utilisateur"
+msgstr "Karts"
 
 #: coreUser.php:108
 msgid "This user has not uploaded any karts."
-msgstr ""
+msgstr "O usuario non subiu kart ningún."
 
 #: coreUser.php:134
 msgid "User's Tracks"
-msgstr "Pistes de l'utilisateur"
+msgstr "Circuítos"
 
 #: coreUser.php:144
 msgid "This user has not uploaded any tracks."
-msgstr ""
+msgstr "O usuario non subiu circuíto ningún."
 
 #: coreUser.php:203
 msgid "User Activated:"
-msgstr ""
+msgstr "Usuario activado:"
 
 #: coreUser.php:211
 msgid "Save Configuration"
-msgstr "Enregistrer la configuration"
+msgstr "Gardar a configuración"
 
 #: coreUser.php:215 coreUser.php:223
 msgid "Change Password"
-msgstr "Changer le mot de passe"
+msgstr "Cambiar o contrasinal"
 
 #: coreUser.php:217
 msgid "Old Password:"
-msgstr "Ancien mot de passe:"
+msgstr "Contrasinal actual:"
 
 #: coreUser.php:219
 msgid "New Password:"
-msgstr "Nouveau mot de passe:"
+msgstr "Contrasinal novo:"
 
 #: coreUser.php:219 createAccount.php:44
 msgid "Must be at least 6 characters long."
-msgstr "Doit avoir une longueur minimum de 6 caractères."
+msgstr "debe ter polo menos 6 caracteres"
 
 #: coreUser.php:221
 msgid "New Password (Confirm):"
-msgstr "Nouveau mot de passe (confirmation):"
+msgstr "Contrasinal novo (repetir):"
 
 #: coreUser.php:234 createAccount.php:97
 msgid "Your passwords do not match."
-msgstr "Vos mots de passes ne sont pas identiques."
+msgstr "Os contrasinais novos non coinciden."
 
 #: coreUser.php:239
 msgid "Your old password is not correct."
-msgstr "Votre ancien mot de passe est incorrect."
+msgstr "O contrasinal actual é incorrecto."
 
 #: coreUser.php:244 createAccount.php:107
 msgid "Your password must be at least 6 characters long."
-msgstr "Le mot de passe doit avoir une longueur minimum de 6 caractères."
+msgstr "O contrasinal debe ter polo menos 6 caracteres."
 
 #: coreUser.php:250
 msgid "Your password is changed."
-msgstr "Votre mot de passe a été modifié."
+msgstr "Cambiouse o contrasinal."
 
 #: createAccount.php:42
 msgid "Must be at least 4 characters long."
-msgstr "Doit avoir une longueur minimum de 4 caractères."
+msgstr "debe ter polo menos 4 caracteres"
 
 #: createAccount.php:44 login.php:108
 msgid "Password:"
-msgstr "Mot de passe :"
+msgstr "Contrasinal:"
 
 #: createAccount.php:46
 msgid "Password (confirm):"
-msgstr "Mot de passe (confirmation):"
+msgstr "Contrasinal (repetir):"
 
 #: createAccount.php:48 manage-panel.php:155
 msgid "Name:"
-msgstr "Nom :"
+msgstr "Nome:"
 
 #: createAccount.php:50
 msgid "Email Address:"
-msgstr "Adresse courriel:"
+msgstr "Enderezo de correo electrónico:"
 
 #: createAccount.php:52
 msgid "Terms:"
-msgstr ""
+msgstr "Termos:"
 
 #: createAccount.php:54
 msgid "STK Addons Terms and Conditions"
-msgstr "Terms et conditions Ajouts STK:"
+msgstr "Termos e condicións de STK Addons"
 
 #: createAccount.php:55
 msgid ""
 "You must agree to these terms in order to upload content to the STK Addons "
 "site."
 msgstr ""
-"Vous devez être d'accord avec ces termes pour poster du contenu sur le site "
-"des Ajouts SuperTuxKart."
+"Debe aceptar as condicións para subir contido á sitio web «STK Addons»."
 
 #: createAccount.php:56
 msgid ""
@@ -464,12 +469,11 @@ msgid ""
 "purpose. When you upload your content, it will be available publicly on the\n"
 "internet, and will be made available in-game for download."
 msgstr ""
-"Le service des ajouts SuperTuxKart est conçu pour être un dépot "
-"exclusivement\n"
-"pour du contenu s'ajoutant à STK : tout contenu posté doit être prévu à cet\n"
-"effet. Le contenu posté sur ce site sera disponible publiquement sur "
-"l'Internet,\n"
-"et pourra être téléchargé depuis le jeu."
+"O servizo «STK Addons» está deseñado para aloxar complementos de\n"
+"SuperTuxKart exclusivamente. Todo o contido subido debe estar orientado\n"
+"a este propósito. Ao subir contido, saiba que este estará dispoñíbel\n"
+"publicamente a través da Internet, e poderá descargarse dende o propio\n"
+"xogo."
 
 #: createAccount.php:60
 msgid ""
@@ -487,43 +491,46 @@ msgid ""
 "without\n"
 "proper licenses or attribution may be deleted without warning."
 msgstr ""
-"SuperTuxKart se conforme à la politique Debian Free Software Guidelines "
-"(DFSG).\n"
-"Tuxfamiliy.org requiert aussi que le contenu sur leurs serveurs utilise des "
-"licenses\n"
-"ouvertes. Vous ne pouvez donc pas poster de contenu encombré de licenses\n"
-"restrictives. Des licenses comme CC-BY-SA 3.0, or autres license compatibles "
-"DFSG,\n"
-"sont requises. Tout contenu provenant de tierces parties doit correctement "
-"attribuer\n"
-"son auteur, et doit être sous license libre. L'information de license et "
-"d'attribution doit\n"
-"être contenue dans un fichier \"license.txt\" dans chaque archive postée. "
-"Les envois\n"
-"sans licenses ou attribution appropriés pourraient être supprimés sans pré-"
-"avis."
+"SuperTuxKart aspira a cumprir as directrices de software libre de Debian "
+"(“DFSG”\n"
+"polas súas siglas en inglés). TuxFamily.org esixe tamén que o contido "
+"aloxado\n"
+"faga uso de licenzas libres. Non está permitido subir contido protexido por "
+"licenzas\n"
+"privativas. Deben empregarse licenzas como a CC-BY-SA 3.0 ou outras "
+"compatíbeis\n"
+"coas directrices de software libre de Debian. Todo contido de terceiros debe "
+"estar\n"
+"propiamente atribuído, e tamén baixo unha licenza libre. A licenza e as "
+"atribucións\n"
+"deben ir incluídas en inglés nun ficheiro co nome «license.txt» dentro de "
+"cada\n"
+"arquivo que se suba. Todo o que se suba sen empregar as licenzas ou "
+"atribucións\n"
+"axeitadas poderá ser eliminado sen previo aviso."
 
 #: createAccount.php:68
 msgid ""
 "Even with valid licenses and attribution, content may not contain any\n"
 "of the following:"
-msgstr ""
+msgstr "O contido subido non pode conter nada da seguinte lista:"
 
 #: createAccount.php:70 upload.php:206
 msgid "Profanity"
-msgstr "Vulgarité"
+msgstr "blasfemias,"
 
 #: createAccount.php:71 upload.php:207
 msgid "Explicit images"
-msgstr "Des images explicites"
+msgstr "imaxes explícitas,"
 
 #: createAccount.php:72 upload.php:208
 msgid "Hateful messages and/or images"
-msgstr "Des messages ou images haineuses"
+msgstr "mensaxes ou imaxes de odio, ou"
 
 #: createAccount.php:73 upload.php:209
 msgid "Any other content that may be unsuitable for children"
-msgstr "Tout autre contenu pouvant ne pas être approprié pour des enfants"
+msgstr ""
+"calquera outro contido que poida considerarse non axeitado para nenos."
 
 #: createAccount.php:74
 msgid ""
@@ -532,8 +539,9 @@ msgid ""
 "uploaded\n"
 "may be removed."
 msgstr ""
-"Si un de vos envois contient un des éléments énumérés ci-haut, il sera\n"
-"supprimé et votre accompte pourrait être suspendu."
+"De descubrirse que algunha das súas contribucións contén algo do anterior,\n"
+"ditas contribucións serán eliminadas, e pode que con elas a súa conta e\n"
+"calquera outro contido que subise."
 
 #: createAccount.php:77
 msgid ""
@@ -542,50 +550,49 @@ msgid ""
 "the\n"
 "members of the development team would gladly assist you."
 msgstr ""
-"En cochant la case ci-dessous, vous confirmez comprendre ces termes.\n"
-"Si vous avez des questions ou commentaires sur ces termes, un des\n"
-"membres de l'équipe de développement pourra vous assister avec plaisir."
+"Marcando a seguinte caixa, afirma que comprende estas condicións. Se ten\n"
+"algunha dúbida ou comentario sobre as mesmas, contacte co equipo e\n"
+"seguro que algún dos membros está dispoñíbel para axudalo."
 
 #: createAccount.php:81
 msgid "I agree to the above terms"
-msgstr "Je suis d'accord avec les termes"
+msgstr "Acepto as condicións"
 
 #: createAccount.php:102
 msgid "Your username must be at least 4 characters long."
-msgstr ""
-"Votre nom d'utilisateur doit avoir une longueur minimale de 4 caracètères."
+msgstr "O seu nome de usuario debe ter polo menos 4 caracteres."
 
 #: createAccount.php:112
 msgid "You must agree to the terms to register."
-msgstr "Vous devez être d'accord avec les termes pour vous enregistrer"
+msgstr "Debe concordar coas condicións para rexistrarse."
 
 #: createAccount.php:136
 msgid ""
 "Account creation was successful. Please activate your account using the link "
 "emailed to you."
 msgstr ""
-"La création du compte s'est effectuée avec succès. Veuillez activer votre "
-"compte en cliquant sur le lien dans le courriel qui vous a été envoyé."
+"A creación da conta realizouse correctamente. Agora active a súa conta coa "
+"ligazón que se lle enviou por correo electrónico."
 
 #: createAccount.php:140
 msgid "An error occurred while creating your account."
-msgstr "Une erreur est survenue en créant votre compte"
+msgstr "Houbo un erro ao intentar crear a súa conta."
 
 #: createAccount.php:145
 msgid "Your username has already been used."
-msgstr "Ce nom d'utilisateur a déjà été utilisé"
+msgstr "O seu nome de usuario xa está collido."
 
 #: createAccount.php:157
 msgid "Your account has been activated."
-msgstr "Votre compte a été activé"
+msgstr "Activouse a súa conta."
 
 #: disabled.php:40
 msgid "This page is currently disabled."
-msgstr ""
+msgstr "Esta páxina está desactivada nestes momentos."
 
 #: disabled.php:41 security.php:48
 msgid "You will be redirected to the home page."
-msgstr "Vous serez redirigés à la page d'accueil"
+msgstr "Será dirixido á páxina principal."
 
 #: index.php:44 index.php:47 menu.php:60
 msgid "Karts"
@@ -593,151 +600,152 @@ msgstr "Karts"
 
 #: index.php:54 index.php:57 menu.php:55
 msgid "Tracks"
-msgstr "Circuits"
+msgstr "Circuítos"
 
 #: index.php:64 index.php:67
 msgid "Help"
-msgstr "Aide"
+msgstr "Axuda"
 
 #: index.php:79
 #, php-format
 msgid "The most downloaded kart is %s."
-msgstr ""
+msgstr "O kart máis descargado é «%s»."
 
 #: index.php:80
 #, php-format
 msgid "The most downloaded track is %s."
-msgstr ""
+msgstr "O circuíto máis descargado é «%s»."
 
 #: login.php:47
 msgid "Failed to logout."
-msgstr ""
+msgstr "Non se puido pechar a sesión."
 
 #: login.php:54
 msgid "You have been logged out."
-msgstr "Vous avez été déconnecté."
+msgstr "Pechouse a sesión."
 
 #: login.php:55 login.php:68 login.php:91
 msgid ""
 "Click <a href=\"index.php\">here</a> if you do not automatically redirect."
-msgstr ""
+msgstr "Prema <a href=\"index.php\">aquí</a> en caso contrario."
 
 #: login.php:67
 msgid "You are already logged in."
-msgstr "Vous êtes déjà connecté."
+msgstr "Xa está identificado."
 
 #: login.php:90
 #, php-format
 msgid "Welcome, %s!"
-msgstr "Bienvenue, %s!"
+msgstr "Benvido, %s!"
 
 #: login.php:95
 msgid "Authentication failed."
-msgstr "L'authentification a échoué."
+msgstr "Non se puido realizar a identificación."
 
 #: login.php:110
 msgid "Log In"
-msgstr "S'identifier"
+msgstr "Identificarse"
 
 #: login.php:112
 msgid "Create an account."
-msgstr "Créer un compte."
+msgstr "Crear unha conta."
 
 #: mail.php:68
 msgid "No moderator mailing-list email is set."
 msgstr ""
+"Non hai ningunha lista de correo electrónico de moderadores configurada."
 
 #: manage-panel.php:43
 msgid "Deleted message."
-msgstr "Message supprimé."
+msgstr "Eliminouse a mensaxe."
 
 #: manage-panel.php:47
 msgid "Failed to delete message."
-msgstr ""
+msgstr "Non se puido eliminar a mensaxe."
 
 #: manage-panel.php:58
 msgid "Invalid page. You may have followed a broken link."
-msgstr ""
+msgstr "A páxina é incorrecta. Pode que seguise unha ligazón rota."
 
 #: manage-panel.php:61 manage.php:39
 msgid "General Settings"
-msgstr "Paramètres généraux"
+msgstr "Configuración xeral"
 
 #: manage-panel.php:65 manage.php:44
 msgid "News Messages"
-msgstr ""
+msgstr "Mensaxes novas"
 
 #: manage-panel.php:69 manage.php:49
 msgid "Uploaded Files"
-msgstr ""
+msgstr "Ficheiros subidos"
 
 #: manage-panel.php:73 manage.php:54
 msgid "Client Versions"
-msgstr ""
+msgstr "Versións do cliente"
 
 #: manage-panel.php:82
 msgid "XML Download Frequency"
-msgstr ""
+msgstr "Frecuencia de descarga en XML"
 
 #: manage-panel.php:83
 msgid "Permitted Addon Filetypes"
-msgstr ""
+msgstr "Tipos de complemento permitidos"
 
 #: manage-panel.php:84
 msgid "Permitted Source Archive Filetypes"
-msgstr ""
+msgstr "Tipos de arquivo de fontes permitidos"
 
 #: manage-panel.php:85
 msgid "Administrator Email"
-msgstr ""
+msgstr "Correo electrónico do administrador"
 
 #: manage-panel.php:86
 msgid "Moderator List Email"
-msgstr ""
+msgstr "Correo electrónico da lista de moderadores"
 
 #: manage-panel.php:88 manage-panel.php:90
 msgid "True"
-msgstr ""
+msgstr "Verdadeiro"
 
 #: manage-panel.php:88 manage-panel.php:90
 msgid "False"
-msgstr ""
+msgstr "Falso"
 
 #: manage-panel.php:91
 msgid "List Invisible Addons in XML"
-msgstr ""
+msgstr "Listar os complementos invisíbeis no XML"
 
 #: manage-panel.php:92
 msgid "Save Settings"
-msgstr "Enregistrer les paramètres"
+msgstr "Gardar a configuración"
 
 #: manage-panel.php:99 manage-panel.php:121
 msgid "Message:"
-msgstr "Message :"
+msgstr "Mensaxe:"
 
 #: manage-panel.php:100 manage-panel.php:123
 msgid "Condition:"
-msgstr "Condition :"
+msgstr "Estado:"
 
 #: manage-panel.php:101
 msgid "Display on Website:"
-msgstr ""
+msgstr "Amosar no sitio web:"
 
 #: manage-panel.php:102
 msgid "Create Message"
-msgstr ""
+msgstr "Crear unha mensaxe"
 
 #: manage-panel.php:115
 msgid "No news messages currently exist."
-msgstr ""
+msgstr "Non hai mensaxes novas."
 
 #: manage-panel.php:120
 msgid "Date:"
-msgstr "Date :"
+msgstr "Data:"
 
 #: manage-panel.php:122
 msgid "Author:"
-msgstr "Auteur :"
+msgstr "Autor:"
 
 #: manage-panel.php:124
 msgid "Web:"
@@ -745,338 +753,338 @@ msgstr "Web:"
 
 #: manage-panel.php:125
 msgid "Actions:"
-msgstr "Actions:"
+msgstr "Accións:"
 
 #: manage-panel.php:151
 msgid "No files have been uploaded."
-msgstr "Aucun fichier n'a été soumis."
+msgstr "Non se subiu ficheiro ningún."
 
 #: manage-panel.php:156
 msgid "Add-on:"
-msgstr "Pack d'ajout:"
+msgstr "Complemento:"
 
 #: manage-panel.php:158
 msgid "References:"
-msgstr ""
+msgstr "Referencias:"
 
 #: manage-panel.php:221
 msgid "Clients by User-Agent"
-msgstr ""
+msgstr "Clientes por usuario:"
 
 #: manage-panel.php:228
 msgid ""
 "There are currently no SuperTuxKart clients recorded. Your download script "
 "may not be configured properly."
 msgstr ""
+"De momento non se ten rexistro e ningún cliente de SuperTuxKart. Pode que o "
+"seu guión (script) de descarga non estea correctamente configurado."
 
 #: manage-panel.php:233
 msgid "User-Agent String:"
-msgstr ""
+msgstr "Cadea co usuario:"
 
 #: manage-panel.php:233
 msgid "Game Version:"
-msgstr ""
+msgstr "Versión do xogo:"
 
 #: manage.php:25 top.php:31 users.php:38
 msgid "SuperTuxKart Add-ons"
-msgstr "Packs d'ajouts SuperTuxKart"
+msgstr "Complementos do SuperTuxKart"
 
 #: manage.php:25 menu.php:71
 msgid "Manage"
-msgstr ""
+msgstr "Xestionar"
 
 #: manage.php:72
 msgid "One or more fields has been left blank. Settings were not saved."
-msgstr ""
+msgstr "Hai algún campo baleiro, e por tanto non se gardou a configuración."
 
 #: manage.php:77
 msgid "XML Download Frequency value is invalid."
-msgstr ""
+msgstr "O valor da frecuencia de descarga en XML é incorrecto."
 
 #: manage.php:88
 msgid "Saved settings."
-msgstr ""
+msgstr "Gardouse a configuración."
 
 #: manage.php:106
 msgid "Created message."
-msgstr ""
+msgstr "Creouse a mensaxe."
 
 #: manage.php:110
 msgid "Failed to create message."
-msgstr ""
+msgstr "Non se puido crear a mensaxe."
 
 #: menu.php:43
 #, php-format
 msgid "Welcome, %s"
-msgstr "Bienvenue, %s"
+msgstr "Benvido, %s"
 
 #: menu.php:47
 msgid "Home"
-msgstr "Page d'accueil"
+msgstr "Inicio"
 
 #: menu.php:67
 msgid "Log out"
-msgstr "Se déconnecter"
+msgstr "Saír"
 
 #: menu.php:68 users.php:38
 msgid "Users"
-msgstr "Utilisateurs"
+msgstr "Usuarios"
 
 #: menu.php:69
 msgid "Upload"
-msgstr "Envoyer"
+msgstr "Subir"
 
 #: menu.php:76
 msgid "Login"
-msgstr "Connexion"
+msgstr "Identificarse"
 
 #: menu.php:80
 msgid "About"
-msgstr "À propos"
+msgstr "Información"
 
 #: menu.php:86
 msgid "Languages"
-msgstr "Langues"
+msgstr "Linguas"
 
 #: menu.php:96
 msgid "STK Homepage"
-msgstr "Page d'accueil SuperTuxKart"
+msgstr "Páxina do SuperTuxKart"
 
 #: parseUpload.php:25
 msgid "Failed to upload your file."
-msgstr "L'envoi de votre fichier a échoué."
+msgstr "Non se puido subir o ficheiro."
 
 #: parseUpload.php:60 parseUpload.php:88
 msgid "Failed to move uploaded file."
-msgstr "La mise en place de votre fichier a échoué."
+msgstr "Non se puido mover o ficheiro subido."
 
 #: parseUpload.php:75 parseUpload.php:196
 msgid "Failed to associate image file with addon."
-msgstr "L'image n'a pu être associée au pack d'ajouts."
+msgstr "Non se puido asociar o ficheiro de imaxe cun complemento."
 
 #: parseUpload.php:80
 msgid "Successfully uploaded image."
-msgstr "L'image a été déposée avec succès."
+msgstr "A imaxe subiuse correctamente."
 
 #: parseUpload.php:81 parseUpload.php:261 parseUpload.php:299
 msgid "Continue."
-msgstr ""
+msgstr "Continuar."
 
 #: parseUpload.php:104
 msgid "Invalid archive file. The archive must contain the addon's xml file."
-msgstr ""
-"Fichier invalide. Vous devez soumettre une archive contenant le fichier XML "
-"de l'addon."
+msgstr "O arquivo é incorrecto. Debe conter o ficheiro XML do complemento."
 
 #: parseUpload.php:116
 msgid ""
 "Some invalid files were found in the uploaded add-on. These files have been "
 "removed from the archive:"
 msgstr ""
-"Certains fichiers invalides ont été trouvés dans le fichier déposé. Ces "
-"fichiers ont été supprimés :"
+"Atopáronse algúns ficheiros incorrectos no complemento. Ditos ficheiros "
+"elimináronse:"
 
 #: parseUpload.php:125
 msgid "Upload was recognized as a kart."
-msgstr "Le pack a été reconnu comme étant un kart."
+msgstr "O que subiu parece ser un kart."
 
 #: parseUpload.php:130
 msgid "Upload was recognized as a track."
-msgstr "Le pack a été reconnu comme étant un circuit."
+msgstr "O que subiu parece ser un circuíto."
 
 #: parseUpload.php:137
 msgid ""
 "Failed to read the add-on's XML file. Please make sure you are using the "
 "latest version of the kart or track exporter."
 msgstr ""
-"Impossible de lire le fichier XML du pack d'ajout. Assurez-vous d'utiliser "
-"la dernière version des exporteurs."
+"Non se puido ler o ficheiro XML do complemento. Asegúrese de que está a "
+"empregar a última versión do exportador de karts ou circuítos."
 
 #: parseUpload.php:144
 msgid "Failed to write new XML file:"
-msgstr ""
+msgstr "Non se puido escribir o novo ficheiro XML:"
 
 #: parseUpload.php:152
 msgid ""
 "A valid License.txt file was not found. Please add a License.txt file to "
 "your archive and re-submit it."
 msgstr ""
-"Un fichier License.txt valide n'a pas été trouvé. Veuillez ajouter un "
-"fichier License.txt à votre archive et la soumettre à nouveau."
+"Non se atopou un ficheiro «License.txt» correcto. Engádao ao arquivo e volva "
+"subilo."
 
 #: parseUpload.php:212
 msgid ""
 "Some images in this add-on do not have dimensions that are a power of two."
 msgstr ""
-"Certaines images dans ce pack ont des dimensions qui ne sont pas des "
-"puissances de 2."
+"As dimensións dalgunhas das imaxes do complemento non son potencias de 2."
 
 #: parseUpload.php:213
 msgid "This may cause display errors on some video cards."
 msgstr ""
-"Cela pourrait causer des problèmes d'affichage sur certaines cartes "
-"graphiques."
+"Isto pode dar lugar a problemas de visualización nalgunhas tarxetas gráficas."
 
 #: parseUpload.php:229
 msgid "Failed to re-pack archive file."
-msgstr ""
+msgstr "Non se puido volver empaquetar o arquivo."
 
 #: parseUpload.php:245
 msgid "Failed to associate archive file with addon."
-msgstr ""
+msgstr "Non se puido asociar o arquivo a un complemento."
 
 #: parseUpload.php:260
 msgid "Successfully uploaded source archive."
-msgstr "Le fichier source a été déposé avec succès."
+msgstr "O arquivo coas fontes subiuse correctamente."
 
 #: parseUpload.php:278
 msgid "You are trying to add a new revision of an addon that does not exist."
 msgstr ""
+"Está a intentar engadir unha nova revisión dun complemento que non existe."
 
 #: parseUpload.php:285 users.php:70 users.php:81
 msgid "You do not have the necessary permissions to perform this action."
-msgstr ""
+msgstr "Non ten os permisos necesarios para realizar esa operación."
 
 #: parseUpload.php:293
 msgid "Failed to create add-on."
-msgstr ""
+msgstr "Non se puido crear o complemento."
 
 #: parseUpload.php:298
 msgid "Successfully uploaded add-on."
-msgstr "Pack d'ajouts déposé avec succès."
+msgstr "O complemento subiuse correctamente."
 
 #: parseUpload.php:309
 msgid "Uploaded image files must be either PNG or Jpeg files."
-msgstr "Les images doivent être au format PNG ou JPEG."
+msgstr "Os ficheiros de imaxe a subir deben ser de tipo PNG ou JPEG."
 
 #: parseUpload.php:318
 msgid "The file you uploaded was not the correct type."
-msgstr "Le fichier que vous avez déposé n'est pas du bon type."
+msgstr "O ficheiro que subir non era do tipo correcto."
 
 #: parseUpload.php:329
 msgid "The file to extract does not exist."
-msgstr ""
+msgstr "O ficheiro a extraer non existe."
 
 #: parseUpload.php:341 parseUpload.php:376
 msgid "Could not open archive file. It may be corrupted."
-msgstr "Impossible d'ouvrir l'archive. Le fichier est peut-être corrompu."
+msgstr "Non se puido abrir o arquivo. Pode que se estragase."
 
 #: parseUpload.php:347 parseUpload.php:382
 msgid "Failed to extract archive file."
-msgstr "Impossible d'extraire l'archive."
+msgstr "Non se puido extraer o contido do arquivo."
 
 #: parseUpload.php:390
 msgid "Unknown archive type."
-msgstr "Type d'archive inconnu."
+msgstr "Non se recoñeceu o tipo de arquivo."
 
 #: parseUpload.php:401
 msgid "Upload is invalid."
-msgstr ""
+msgstr "O contido subido é incorrecto."
 
 #: parseUpload.php:406
 msgid "Unknown file upload error."
-msgstr ""
+msgstr "Houbo un erro descoñecido ao intentar subir o ficheiro."
 
 #: parseUpload.php:410 parseUpload.php:412
 msgid "Uploaded file is too large."
-msgstr "Le fichier déposé est trop gros."
+msgstr "O ficheiro a subir é grande de máis."
 
 #: parseUpload.php:414
 msgid "Uploaded file is incomplete."
-msgstr "The fichier déposé est incomplet."
+msgstr "O ficheiro a subir está incompleto."
 
 #: parseUpload.php:416
 msgid "No file was uploaded."
-msgstr "Aucun fichier n'a été déposé."
+msgstr "Non se subiu ningún ficheiro."
 
 #: parseUpload.php:418
 msgid "There is no TEMP directory to store the uploaded file in."
-msgstr ""
+msgstr "Non hai ficheiro temporal ao que subir o ficheiro."
 
 #: parseUpload.php:420
 msgid "Unable to write uploaded file to disk."
-msgstr ""
+msgstr "Non se puido gravar o ficheiro subido no disco duro."
 
 #: security.php:47
 msgid "You do not have the rights to access this page."
-msgstr ""
+msgstr "Non ten os permisos necesarios para acceder a esta páxina."
 
 #: security.php:69
 msgid "You must be logged in to access this page."
-msgstr ""
+msgstr "Ten que identificarse para acceder a esta páxina."
 
 #: security.php:70
 msgid "You will be redirected to the login page."
-msgstr ""
+msgstr "Será dirixido á páxina de identificación."
 
 #: upload.php:74
 msgid ""
 "Your response to the agreement was unacceptable. You may not upload this "
 "content to the STK Addons website."
 msgstr ""
+"Non se pode aceptar a súa resposta ao acordo. Non pode subir este contido ao "
+"sitio web STK Addons."
 
 #: upload.php:109
 msgid "Please upload a new revision of your kart or track."
-msgstr ""
+msgstr "Suba unha nova revisión do seu kart ou circuíto."
 
 #: upload.php:113
 msgid "What type of file are you uploading?"
-msgstr "Quel est le type de fichier à déposer?"
+msgstr "Que tipo de ficheiro está a subir?"
 
 #: upload.php:115
 msgid "Source Archive"
-msgstr ""
+msgstr "Arquivo de fontes"
 
 #: upload.php:116
 msgid "Image File"
-msgstr "Fichier Image"
+msgstr "Ficheiro de imaxe"
 
 #: upload.php:123
 msgid "Please upload a kart or track."
-msgstr "Veuillez déposer un kart ou une piste"
+msgstr "Suba un kart ou circuíto."
 
 #: upload.php:124
 msgid "Do not use this form if you are updating an existing add-on.<br />"
 msgstr ""
-"N'utilisez pas ce formulaire pour mettre à jour une add-on qui existe "
-"déjà.<br/>"
+"Non empregue este formulario para actualizar un complemento existente.<br />"
 
 #: upload.php:127
 msgid "File:"
-msgstr "Fichier:"
+msgstr "Ficheiro:"
 
 #: upload.php:128
 msgid "Supported archive types are:"
-msgstr "Les types d'archives supportés sont:"
+msgstr "Estes son os tipos de arquivo permitidos:"
 
 #: upload.php:129
 msgid "Agreement:"
-msgstr ""
+msgstr "Acordo:"
 
 #: upload.php:134
 msgid ""
 "I am the sole author of every file (model, texture, sound effect, etc.) in "
 "this package"
 msgstr ""
-"Je suis le seul auteur de chaque fichier (modèle, texture, effet sonore, "
-"etc.) de ce paquet"
+"Son o único autor de todos e cada un dos ficheiros (modelos, texturas, "
+"efectos de son, etc.) deste paquete."
 
 #: upload.php:141
 msgid ""
 "I have included a License.txt file describing the license under which my "
 "work is released, and my name (or nickname) if I want credit."
 msgstr ""
-"J'ai inclus un fichier License.txt qui décrit la license sous laquelle je "
-"publie mon travail, ainsi que mon nom (ou surnom) si je désire être crédité "
-"pour mon travail."
+"Incluín un ficheiro «License.txt» coa licenza baixo cuxos termos liberei a "
+"miña obra, e o meu nome (ou alcume) en caso de querer que se faga referencia "
+"ao mesmo."
 
 #: upload.php:141 upload.php:154 upload.php:199 upload.php:210
 msgid "Required"
-msgstr "Requis"
+msgstr "Necesario."
 
 #: upload.php:147
 msgid "I have included open content made by people other than me"
-msgstr "J'ai inclus du contenu libre créé par d'autres gens que moi"
+msgstr "Incluín contido libre obra doutras persoas."
 
 #: upload.php:154
 msgid ""
@@ -1084,49 +1092,49 @@ msgid ""
 "material is used in this package, along with the license under which their "
 "work is released."
 msgstr ""
-"J'ai inclus un fichier License.txt qui comprend le nom de chaque auteur dont "
-"j'ai utilisé le matériel pour ce paquet, ainsi que la license sous laquelle "
-"ils ont publié leur travail."
+"Incluín un ficheiro «License.txt» co nome de cada un dos autores cuxas obras "
+"forman parte do paquete, así como coa licenza baixo a que están protexidas "
+"as súas obras."
 
 #: upload.php:158
 msgid "This package includes files released under:"
-msgstr "Ce paquet comprend des fichiers publiés sous la/les license(s):"
+msgstr "O paquete inclúe ficheiros publicados coas as seguintes licenzas:"
 
 #: upload.php:158
 msgid "Must check at least one"
-msgstr "Vous devez cocher au moins un élément"
+msgstr "(debe escoller polo menos unha)"
 
 #: upload.php:163
 msgid "GNU GPL"
-msgstr "GNU GPL"
+msgstr "GNU GPL."
 
 #: upload.php:168
 msgid "Creative Commons BY 3.0"
-msgstr "Creative Commons BY 3.0"
+msgstr "Creative Commons BY 3.0."
 
 #: upload.php:173
 msgid "Creative Commons BY SA 3.0"
-msgstr "Creative Commons BY SA 3.0"
+msgstr "Creative Commons BY SA 3.0."
 
 #: upload.php:178
 msgid "CC0 (Public Domain)"
-msgstr "CC0 (Public Domain)"
+msgstr "CC0 (dominio público)."
 
 #: upload.php:183
 msgid "BSD License"
-msgstr "Licence BSD"
+msgstr "Licenza BSD."
 
 #: upload.php:188
 msgid "Other open license"
-msgstr "Une autre license libre"
+msgstr "Outro tipo de licenza libre."
 
 #: upload.php:193
 msgid ""
 "Files released under other licenses will be rejected unless it can be "
 "verified that the license is open."
 msgstr ""
-"Les fichiers sous d'autres licences seront rejetés sauf s'il est possible de "
-"vérifier que cette licence est libre."
+"Os ficheiros publicados con outras licenzas rexeitaranse a menos que se "
+"poida verificar que dita licenza é libre."
 
 #: upload.php:199
 msgid ""
@@ -1135,27 +1143,27 @@ msgid ""
 "for any copyright violation that may result from not following the above "
 "rules."
 msgstr ""
-"Je reconnais que si mon fichier ne respecte pas les règles mentionnées ci-"
-"haut, il pourrait être retiré en tout temps sans pré-avis; de plus, j'assume "
-"l'entière responsabilité pour tout violation de copyright qui résulterait "
-"d'un manquement aux règles précédentes."
+"Entendo que se o ficheiro non cumpre estas regras podería eliminarse en "
+"calquera momento sen previo aviso. Asumo ademais toda a responsabilidade "
+"ante calquera violación das leis de dereito de autor que se poida derivar do "
+"incumprimento das mesmas."
 
 #: upload.php:205
 msgid "My package does not include:"
-msgstr "Mon paquet n'inclut pas:"
+msgstr "O paquete non contén:"
 
 #: upload.php:217
 msgid "Upload file"
-msgstr "Envoyer le fichier"
+msgstr "Subir o ficheiro"
 
 #: xmlWrite.php:123
 msgid "An error occurred finding the path for the file of kart: "
-msgstr ""
+msgstr "Houbo un erro ao intentar atopar a ruta ao ficheiro de kart: "
 
 #: xmlWrite.php:128 xmlWrite.php:188
 msgid "The following file could not be found:"
-msgstr ""
+msgstr "Non se puido atopar o seguinte ficheiro:"
 
 #: xmlWrite.php:183
 msgid "An error occurred finding the path for the file of track: "
-msgstr ""
+msgstr "Houbo un erro ao intentar atopar a ruta ao ficheiro de circuíto: "

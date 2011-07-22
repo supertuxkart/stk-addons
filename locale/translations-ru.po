@@ -7,36 +7,44 @@ msgid ""
 msgstr ""
 "Project-Id-Version: stk\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-07-07 13:46-0600\n"
-"PO-Revision-Date: 2011-07-09 15:04+0000\n"
+"POT-Creation-Date: 2011-07-09 22:06-0600\n"
+"PO-Revision-Date: 2011-07-21 14:26+0000\n"
 "Last-Translator: KroArtem <feeblehamster@mail.ru>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-07-10 04:04+0000\n"
-"X-Generator: Launchpad (build 13376)\n"
+"X-Launchpad-Export-Date: 2011-07-22 21:00+0000\n"
+"X-Generator: Launchpad (build 13483)\n"
+
+#: User.php:147
+msgid "Me"
+msgstr "Я"
 
 #: addons-panel.php:44
 msgid ""
 "This page cannot be loaded because an invalid add-on type was provided."
 msgstr ""
+"Страница не может быть загружена, так как был предоставлен неправильный тип "
+"аддона."
 
 #: addons-panel.php:48
 msgid "This page cannot be loaded because an invalid action was provided."
 msgstr ""
+"Страница не может быть загружена. так как было совершено неправильное "
+"действие."
 
 #: addons.php:75
 msgid "Saved properties."
-msgstr ""
+msgstr "Настройки сохранены."
 
 #: addons.php:84
 msgid "Saved status."
-msgstr ""
+msgstr "Статус сохранен."
 
 #: addons.php:90
 msgid "Saved notes."
-msgstr ""
+msgstr "Заметки сохранены."
 
 #: addons.php:96
 msgid "Deleted addon."
@@ -48,23 +56,23 @@ msgstr "Файл обновлен."
 
 #: addons.php:107
 msgid "Set image."
-msgstr ""
+msgstr "Назначить изображение."
 
 #: addons.php:115
 msgid "Set icon."
-msgstr ""
+msgstr "Назначить иконку."
 
 #: addons.php:121
 msgid "Deleted file."
-msgstr ""
+msgstr "Файл удален."
 
 #: allow.php:102
 msgid "root"
-msgstr ""
+msgstr "суперпользователь"
 
 #: allow.php:103
 msgid "supAdministrator"
-msgstr ""
+msgstr "суперадминистратор"
 
 #: allow.php:104
 msgid "administrator"
@@ -82,84 +90,84 @@ msgstr "пользователь"
 msgid "The requested addon does not exist."
 msgstr "Запрашиваемый аддон не существует."
 
-#: coreAddon.php:252
+#: coreAddon.php:250
 msgid "Failed to find files associated with this addon."
 msgstr "Не удалось найти файл, связанный с этим аддоном."
 
-#: coreAddon.php:261
+#: coreAddon.php:259
 msgid "Failed to delete file:"
 msgstr "Не удалось удалить файл:"
 
-#: coreAddon.php:272
+#: coreAddon.php:270
 msgid "Failed to remove file records for this addon."
 msgstr ""
 
-#: coreAddon.php:292
+#: coreAddon.php:290
 msgid "Failed to remove revision record."
 msgstr ""
 
-#: coreAddon.php:300
+#: coreAddon.php:298
 msgid "Failed to remove addon."
-msgstr ""
+msgstr "Не удалось удалть аддон."
 
-#: coreAddon.php:318 coreAddon.php:623 coreAddon.php:1168 coreAddon.php:1178
-#: coreAddon.php:1189 coreAddon.php:1192
+#: coreAddon.php:316 coreAddon.php:634 coreAddon.php:1177 coreAddon.php:1187
+#: coreAddon.php:1198 coreAddon.php:1201
 msgid "Unknown"
 msgstr "неизвестно"
 
-#: coreAddon.php:343 coreAddon.php:464
+#: coreAddon.php:343 coreAddon.php:475
 msgid "Upload Image"
 msgstr "Загрузить изображение"
 
-#: coreAddon.php:352 coreAddon.php:658
+#: coreAddon.php:350 coreAddon.php:664
 msgid "Featured"
-msgstr ""
+msgstr "Рекомендуемые"
 
-#: coreAddon.php:354 coreAddon.php:652
+#: coreAddon.php:352 coreAddon.php:658
 msgid "Alpha"
 msgstr "Альфа"
 
-#: coreAddon.php:356 coreAddon.php:653
+#: coreAddon.php:354 coreAddon.php:659
 msgid "Beta"
 msgstr "Бета"
 
-#: coreAddon.php:358 coreAddon.php:654
+#: coreAddon.php:356 coreAddon.php:660
 msgid "Release-Candidate"
 msgstr "Релиз-кандидат"
 
-#: coreAddon.php:360 coreAddon.php:657
+#: coreAddon.php:358 coreAddon.php:663
 msgid "DFSG Compliant"
 msgstr ""
 
-#: coreAddon.php:365
+#: coreAddon.php:363 manage-panel.php:157
 msgid "Type:"
-msgstr ""
+msgstr "Тип:"
 
-#: coreAddon.php:365
+#: coreAddon.php:363
 msgid "Arena"
-msgstr ""
+msgstr "Арена"
 
-#: coreAddon.php:367 coreAddon.php:621
+#: coreAddon.php:365 coreAddon.php:632
 msgid "Designer:"
-msgstr ""
+msgstr "Дизайнер:"
 
-#: coreAddon.php:368
+#: coreAddon.php:366
 msgid "Upload date:"
 msgstr "Дата загрузки:"
 
-#: coreAddon.php:369
+#: coreAddon.php:367
 msgid "Submitted by:"
 msgstr "Отправитель:"
 
-#: coreAddon.php:370
+#: coreAddon.php:368
 msgid "Revision:"
 msgstr "Ревизия"
 
-#: coreAddon.php:371
+#: coreAddon.php:369
 msgid "Compatible with:"
 msgstr "Совместим с :"
 
-#: coreAddon.php:376
+#: coreAddon.php:374
 msgid ""
 "Warning: This addon may not display correctly on some systems. It uses "
 "textures that may not be compatible with all video cards."
@@ -168,174 +176,174 @@ msgstr ""
 "системах. Он использует текстуры, которые могут быть не совместимы с "
 "некоторыми видеокартами."
 
-#: coreAddon.php:389 coreAddon.php:394 coreAddon.php:446 coreAddon.php:451
+#: coreAddon.php:387 coreAddon.php:392 coreAddon.php:457 coreAddon.php:462
 msgid "File not found."
 msgstr "Файл не найден."
 
-#: coreAddon.php:398
+#: coreAddon.php:396
 msgid "License:"
 msgstr "Лицензия:"
 
-#: coreAddon.php:400
-msgid "Permalink:"
-msgstr ""
+#: coreAddon.php:401
+msgid "Permalink"
+msgstr "Постоянная ссылка"
 
-#: coreAddon.php:405
-msgid "Revisions:"
-msgstr "Ревизии:"
+#: coreAddon.php:407
+msgid "Revisions"
+msgstr "Ревизии"
 
-#: coreAddon.php:441
+#: coreAddon.php:413
+msgid "Upload Revision"
+msgstr "Загрузить ревизию"
+
+#: coreAddon.php:452
 #, php-format
 msgid "Download revision %u"
 msgstr "Скачать ревизию %u"
 
-#: coreAddon.php:446 coreAddon.php:451
+#: coreAddon.php:457 coreAddon.php:462
 msgid "Revision"
 msgstr "Ревизия"
 
-#: coreAddon.php:459
+#: coreAddon.php:470
 msgid "Images"
 msgstr "Изображения"
 
-#: coreAddon.php:494
+#: coreAddon.php:505
 msgid "No images have been uploaded for this addon yet."
 msgstr "Для этого аддона не загружено ни одного изображения."
 
-#: coreAddon.php:513 coreAddon.php:595
+#: coreAddon.php:524 coreAddon.php:606
 msgid "Unapprove"
-msgstr ""
+msgstr "Неподтвержденное"
 
-#: coreAddon.php:515 coreAddon.php:597
+#: coreAddon.php:526 coreAddon.php:608
 msgid "Approve"
 msgstr "Подтвердить"
 
-#: coreAddon.php:524
+#: coreAddon.php:535
 msgid "Set Icon"
-msgstr ""
+msgstr "Назначить иконку"
 
-#: coreAddon.php:529
+#: coreAddon.php:540
 msgid "Set Image"
-msgstr ""
+msgstr "Назначить изображение"
 
-#: coreAddon.php:531 coreAddon.php:598
+#: coreAddon.php:542 coreAddon.php:609
 msgid "Delete File"
 msgstr "Удалить файл"
 
-#: coreAddon.php:540
+#: coreAddon.php:551
 msgid "Source Files"
 msgstr "Исходные файлы"
 
-#: coreAddon.php:545
+#: coreAddon.php:556
 msgid "Upload Source File"
 msgstr "Загрузить исходный файл"
 
-#: coreAddon.php:575
+#: coreAddon.php:586
 msgid "No source files have been uploaded for this addon yet."
-msgstr ""
+msgstr "Для этого аддона не было загружено ни одного исходного файла."
 
-#: coreAddon.php:585
+#: coreAddon.php:596
 msgid "Not Approved"
 msgstr "Не подтверждено"
 
-#: coreAddon.php:587
+#: coreAddon.php:598
 #, php-format
 msgid "Source File %u"
 msgstr "Исходный файл %u"
 
-#: coreAddon.php:589
+#: coreAddon.php:600
 msgid "Download"
 msgstr "Скачать"
 
-#: coreAddon.php:627
+#: coreAddon.php:638
 #, php-format
 msgid "Description:"
 msgstr "Описание:"
 
-#: coreAddon.php:627
+#: coreAddon.php:638
 #, php-format
 msgid "Max %u characters"
 msgstr "Максимум %u символов"
 
-#: coreAddon.php:629
+#: coreAddon.php:642
 msgid "Save Properties"
 msgstr "Сохранить настройки"
 
-#: coreAddon.php:636
-msgid "Upload Revision"
-msgstr "Загрузить ревизию"
-
-#: coreAddon.php:641
+#: coreAddon.php:647
 msgid "Delete Addon"
 msgstr "Удалить аддон"
 
-#: coreAddon.php:644
+#: coreAddon.php:650
 msgid "Status Flags:"
 msgstr ""
 
-#: coreAddon.php:649
+#: coreAddon.php:655
 msgid "Approved"
-msgstr ""
+msgstr "Подтверждено"
 
-#: coreAddon.php:650
+#: coreAddon.php:656
 msgid "Invisible"
 msgstr "Невидимое"
 
-#: coreAddon.php:655
+#: coreAddon.php:661
 msgid "Latest"
 msgstr ""
 
-#: coreAddon.php:659
+#: coreAddon.php:665
 msgid "Invalid Textures"
-msgstr ""
+msgstr "'Плохие' текстуры"
 
-#: coreAddon.php:668 coreAddon.php:809
+#: coreAddon.php:674 coreAddon.php:815
 #, php-format
 msgid "Rev %u:"
-msgstr ""
+msgstr "Рев. %u^"
 
-#: coreAddon.php:797
+#: coreAddon.php:803
 msgid "Save Changes"
 msgstr "Сохранить изменения"
 
-#: coreAddon.php:801
+#: coreAddon.php:807
 msgid "Notes from Moderator to Submitter:"
-msgstr ""
+msgstr "Заметки модератора отправителю:"
 
-#: coreAddon.php:819
+#: coreAddon.php:828
 msgid "Save Notes"
-msgstr ""
+msgstr "Сохранить заметки"
 
-#: coreAddon.php:854
+#: coreAddon.php:863
 msgid "The add-on you are trying to create already exists."
 msgstr "Аддон, который вы пытаетесь создать, уже существует."
 
-#: coreAddon.php:861
+#: coreAddon.php:870
 msgid "Creating a new add-on..."
-msgstr ""
+msgstr "Создаем новый аддон..."
 
-#: coreAddon.php:881
+#: coreAddon.php:890
 msgid "This add-on already exists. Adding revision..."
-msgstr ""
+msgstr "Такой аддон уже существует. Добавляем ревизию..."
 
-#: coreAddon.php:887
+#: coreAddon.php:896
 msgid "Failed to update the name record for this add-on."
 msgstr ""
 
-#: coreAddon.php:896
+#: coreAddon.php:905
 msgid "Failed to update the license record for this add-on."
 msgstr ""
 
-#: coreAddon.php:906
+#: coreAddon.php:915
 msgid "Failed to check for previous add-on revisions."
-msgstr ""
+msgstr "Не удалось проверить предыдущие ревизии аддона."
 
-#: coreAddon.php:988 coreAddon.php:1098
+#: coreAddon.php:997 coreAddon.php:1107
 msgid "Invalid addon type."
-msgstr ""
+msgstr "Неверный тип аддона."
 
-#: coreAddon.php:1204
+#: coreAddon.php:1213
 msgid "Insufficient permissions."
-msgstr ""
+msgstr "Недостаточно прав."
 
 #: coreUser.php:87 createAccount.php:42 login.php:106
 msgid "Username:"
@@ -351,7 +359,7 @@ msgstr "Настоящее имя:"
 
 #: coreUser.php:90 coreUser.php:186
 msgid "Role:"
-msgstr ""
+msgstr "Статус:"
 
 #: coreUser.php:93 coreUser.php:182
 msgid "Homepage:"
@@ -359,7 +367,7 @@ msgstr "Домашняя страница:"
 
 #: coreUser.php:98
 msgid "User's Karts"
-msgstr ""
+msgstr "Пользовательские карты"
 
 #: coreUser.php:108
 msgid "This user has not uploaded any karts."
@@ -375,11 +383,11 @@ msgstr "Этот пользователь не загрузил ни одной 
 
 #: coreUser.php:203
 msgid "User Activated:"
-msgstr ""
+msgstr "Пользователь активирован:"
 
 #: coreUser.php:211
 msgid "Save Configuration"
-msgstr ""
+msgstr "Сохранить конфигурацию"
 
 #: coreUser.php:215 coreUser.php:223
 msgid "Change Password"
@@ -419,7 +427,7 @@ msgstr "Ваш пароль изменен."
 
 #: createAccount.php:42
 msgid "Must be at least 4 characters long."
-msgstr ""
+msgstr "Не менее 4 символов."
 
 #: createAccount.php:44 login.php:108
 msgid "Password:"
@@ -429,27 +437,29 @@ msgstr "Пароль:"
 msgid "Password (confirm):"
 msgstr "Пароль (подтвердите):"
 
-#: createAccount.php:48
+#: createAccount.php:48 manage-panel.php:155
 msgid "Name:"
-msgstr ""
+msgstr "Имя:"
 
 #: createAccount.php:50
 msgid "Email Address:"
-msgstr ""
+msgstr "Адрес Email:"
 
 #: createAccount.php:52
 msgid "Terms:"
-msgstr ""
+msgstr "Условия:"
 
 #: createAccount.php:54
 msgid "STK Addons Terms and Conditions"
-msgstr ""
+msgstr "Положения и условия сайта STK Addons"
 
 #: createAccount.php:55
 msgid ""
 "You must agree to these terms in order to upload content to the STK Addons "
 "site."
 msgstr ""
+"Вы должны согласиться с этими условиями, чтобы иметь возможность загружать "
+"данные на сайт STK Addons."
 
 #: createAccount.php:56
 msgid ""
@@ -458,6 +468,10 @@ msgid ""
 "purpose. When you upload your content, it will be available publicly on the\n"
 "internet, and will be made available in-game for download."
 msgstr ""
+"Сервис STK Addons создан в качестве репозитория исключительно для "
+"дополнительного контента к игре Supertuxkart. Весь загружаемый контент "
+"предназначен только для этого. Когда вы загружаете аддон, он становится "
+"доступным в интернете, а также доступен для загрузки в игре."
 
 #: createAccount.php:60
 msgid ""
@@ -481,10 +495,12 @@ msgid ""
 "Even with valid licenses and attribution, content may not contain any\n"
 "of the following:"
 msgstr ""
+"Даже удовлетворяя требованиям лицензии и имея ссылки на источники аддона, он "
+"не может содержать следующее:"
 
 #: createAccount.php:70 upload.php:206
 msgid "Profanity"
-msgstr ""
+msgstr "Сквернословие"
 
 #: createAccount.php:71 upload.php:207
 msgid "Explicit images"
@@ -492,11 +508,11 @@ msgstr ""
 
 #: createAccount.php:72 upload.php:208
 msgid "Hateful messages and/or images"
-msgstr ""
+msgstr "Сообщения или изображения, содержащие ненависть и злобу."
 
 #: createAccount.php:73 upload.php:209
 msgid "Any other content that may be unsuitable for children"
-msgstr ""
+msgstr "Любой другой контент, нежелательный для детей."
 
 #: createAccount.php:74
 msgid ""
@@ -505,6 +521,9 @@ msgid ""
 "uploaded\n"
 "may be removed."
 msgstr ""
+"Если какой-нибудь из ваших аддонов содержит что-нибудь из перечисленного "
+"выше, ваш аддон может быть удален, или ваш аккаунт может быть удален, и "
+"любой другой контент, который вы загрузили, также может быть удален."
 
 #: createAccount.php:77
 msgid ""
@@ -513,24 +532,29 @@ msgid ""
 "the\n"
 "members of the development team would gladly assist you."
 msgstr ""
+"Ставя галочку, вы тем самым подтверждаете, что понимаете эти условия. Если у "
+"вас есть какие-то вопросы или комментарии по поводу условий, любой из "
+"разработчиков с радостью поможет вам."
 
 #: createAccount.php:81
 msgid "I agree to the above terms"
-msgstr ""
+msgstr "Я согласен с условиями"
 
 #: createAccount.php:102
 msgid "Your username must be at least 4 characters long."
-msgstr ""
+msgstr "Ваше имя пользователя должно быть не менее 4 символов."
 
 #: createAccount.php:112
 msgid "You must agree to the terms to register."
-msgstr ""
+msgstr "Вы должны согласиться с условиями, чтобы зарегистрироваться."
 
 #: createAccount.php:136
 msgid ""
 "Account creation was successful. Please activate your account using the link "
 "emailed to you."
 msgstr ""
+"Создание аккаунта прошло успешно. Пожалуйста, активируйте аккаунт, используя "
+"ссылку, которая придет на ваш email."
 
 #: createAccount.php:140
 msgid "An error occurred while creating your account."
@@ -546,17 +570,17 @@ msgstr "Ваш аккаунт активирован."
 
 #: disabled.php:40
 msgid "This page is currently disabled."
-msgstr ""
+msgstr "Эта страница на данный момент недоступна."
 
 #: disabled.php:41 security.php:48
 msgid "You will be redirected to the home page."
 msgstr "Вы будете перенаправлены на главную страницу."
 
-#: index.php:44 index.php:47 menu.php:145
+#: index.php:44 index.php:47 menu.php:60
 msgid "Karts"
 msgstr "Карты"
 
-#: index.php:54 index.php:57 menu.php:140
+#: index.php:54 index.php:57 menu.php:55
 msgid "Tracks"
 msgstr "Трассы"
 
@@ -567,29 +591,31 @@ msgstr "Помощь"
 #: index.php:79
 #, php-format
 msgid "The most downloaded kart is %s."
-msgstr ""
+msgstr "Наиболее скачиваемый карт: %s."
 
 #: index.php:80
 #, php-format
 msgid "The most downloaded track is %s."
-msgstr ""
+msgstr "Наиболее скачиваемая трасса: %s."
 
 #: login.php:47
 msgid "Failed to logout."
-msgstr ""
+msgstr "Не удалось выйти из системы."
 
 #: login.php:54
 msgid "You have been logged out."
-msgstr ""
+msgstr "Вы вышли из системы."
 
 #: login.php:55 login.php:68 login.php:91
 msgid ""
 "Click <a href=\"index.php\">here</a> if you do not automatically redirect."
 msgstr ""
+"Нажмите <a href=\"index.php\"сюда</a>, если вы не были автоматически "
+"перенаправлены."
 
 #: login.php:67
 msgid "You are already logged in."
-msgstr ""
+msgstr "ВЫ уже вошли в систему."
 
 #: login.php:90
 #, php-format
@@ -602,7 +628,7 @@ msgstr "Ошибка авторизации."
 
 #: login.php:110
 msgid "Log In"
-msgstr ""
+msgstr "Вход"
 
 #: login.php:112
 msgid "Create an account."
@@ -614,7 +640,7 @@ msgstr ""
 
 #: manage-panel.php:43
 msgid "Deleted message."
-msgstr ""
+msgstr "Сообщение удалено."
 
 #: manage-panel.php:47
 msgid "Failed to delete message."
@@ -622,228 +648,250 @@ msgstr "Не удалось удалить сообщение."
 
 #: manage-panel.php:58
 msgid "Invalid page. You may have followed a broken link."
-msgstr ""
+msgstr "Неверная страница. Возможно, вы использовали неправильную ссылку."
 
 #: manage-panel.php:61 manage.php:39
 msgid "General Settings"
-msgstr ""
+msgstr "Основные настройки"
 
 #: manage-panel.php:65 manage.php:44
 msgid "News Messages"
 msgstr ""
 
 #: manage-panel.php:69 manage.php:49
+msgid "Uploaded Files"
+msgstr "Загруженные файлы"
+
+#: manage-panel.php:73 manage.php:54
 msgid "Client Versions"
-msgstr ""
-
-#: manage-panel.php:78
-msgid "XML Download Frequency"
-msgstr ""
-
-#: manage-panel.php:79
-msgid "Permitted Addon Filetypes"
-msgstr ""
-
-#: manage-panel.php:80
-msgid "Permitted Source Archive Filetypes"
-msgstr ""
-
-#: manage-panel.php:81
-msgid "Administrator Email"
-msgstr ""
+msgstr "Версии клиента"
 
 #: manage-panel.php:82
+msgid "XML Download Frequency"
+msgstr "Частота скачиваний XML"
+
+#: manage-panel.php:83
+msgid "Permitted Addon Filetypes"
+msgstr "Разрешенные типы файлов аддона"
+
+#: manage-panel.php:84
+msgid "Permitted Source Archive Filetypes"
+msgstr "Разрешенные типы архива исходных файлов"
+
+#: manage-panel.php:85
+msgid "Administrator Email"
+msgstr "Email администратора"
+
+#: manage-panel.php:86
 msgid "Moderator List Email"
 msgstr ""
 
-#: manage-panel.php:84 manage-panel.php:86
+#: manage-panel.php:88 manage-panel.php:90
 msgid "True"
 msgstr ""
 
-#: manage-panel.php:84 manage-panel.php:86
+#: manage-panel.php:88 manage-panel.php:90
 msgid "False"
 msgstr ""
 
-#: manage-panel.php:87
+#: manage-panel.php:91
 msgid "List Invisible Addons in XML"
 msgstr ""
 
-#: manage-panel.php:88
+#: manage-panel.php:92
 msgid "Save Settings"
-msgstr ""
+msgstr "Сохранить настройки"
 
-#: manage-panel.php:95 manage-panel.php:117
+#: manage-panel.php:99 manage-panel.php:121
 msgid "Message:"
-msgstr ""
+msgstr "Сообщение:"
 
-#: manage-panel.php:96 manage-panel.php:119
+#: manage-panel.php:100 manage-panel.php:123
 msgid "Condition:"
 msgstr ""
 
-#: manage-panel.php:97
+#: manage-panel.php:101
 msgid "Display on Website:"
-msgstr ""
+msgstr "Отображение на сайте:"
 
-#: manage-panel.php:98
+#: manage-panel.php:102
 msgid "Create Message"
-msgstr ""
+msgstr "Создать сообщение"
 
-#: manage-panel.php:111
+#: manage-panel.php:115
 msgid "No news messages currently exist."
-msgstr ""
-
-#: manage-panel.php:116
-msgid "Date:"
-msgstr ""
-
-#: manage-panel.php:118
-msgid "Author:"
-msgstr ""
+msgstr "Не существует ни одного новостного сообщения."
 
 #: manage-panel.php:120
+msgid "Date:"
+msgstr "Дата:"
+
+#: manage-panel.php:122
+msgid "Author:"
+msgstr "Автор:"
+
+#: manage-panel.php:124
 msgid "Web:"
 msgstr ""
 
-#: manage-panel.php:121
+#: manage-panel.php:125
 msgid "Actions:"
+msgstr "Действия:"
+
+#: manage-panel.php:151
+msgid "No files have been uploaded."
+msgstr "Ни одного файла не было загружено."
+
+#: manage-panel.php:156
+msgid "Add-on:"
+msgstr "Аддон:"
+
+#: manage-panel.php:158
+msgid "References:"
 msgstr ""
 
-#: manage-panel.php:139
+#: manage-panel.php:221
 msgid "Clients by User-Agent"
 msgstr ""
 
-#: manage-panel.php:146
+#: manage-panel.php:228
 msgid ""
 "There are currently no SuperTuxKart clients recorded. Your download script "
 "may not be configured properly."
 msgstr ""
 
-#: manage-panel.php:151
+#: manage-panel.php:233
 msgid "User-Agent String:"
-msgstr ""
+msgstr "Строка User-Agent:"
 
-#: manage-panel.php:151
+#: manage-panel.php:233
 msgid "Game Version:"
-msgstr ""
+msgstr "Версия игры:"
 
 #: manage.php:25 top.php:31 users.php:38
 msgid "SuperTuxKart Add-ons"
-msgstr ""
+msgstr "Аддоны SuperTuxKart"
 
-#: manage.php:25 menu.php:156
+#: manage.php:25 menu.php:71
 msgid "Manage"
 msgstr ""
 
-#: manage.php:67
-msgid "One or more fields has been left blank. Settings were not saved."
-msgstr ""
-
 #: manage.php:72
+msgid "One or more fields has been left blank. Settings were not saved."
+msgstr "Одно или более полей были не заполнены. Настройки не сохранены."
+
+#: manage.php:77
 msgid "XML Download Frequency value is invalid."
-msgstr ""
+msgstr "Значение частоты скачивания XML неверно."
 
-#: manage.php:83
+#: manage.php:88
 msgid "Saved settings."
-msgstr ""
+msgstr "Настройки сохранены."
 
-#: manage.php:101
+#: manage.php:106
 msgid "Created message."
-msgstr ""
+msgstr "Сообщение создано."
 
-#: manage.php:105
+#: manage.php:110
 msgid "Failed to create message."
-msgstr ""
+msgstr "Не удалось создать сообщение."
 
-#: menu.php:128
+#: menu.php:43
 #, php-format
 msgid "Welcome, %s"
-msgstr ""
+msgstr "Добро пожаловать, %s"
 
-#: menu.php:132
+#: menu.php:47
 msgid "Home"
-msgstr ""
+msgstr "Главная"
 
-#: menu.php:152
+#: menu.php:67
 msgid "Log out"
-msgstr ""
+msgstr "Выход"
 
-#: menu.php:153 users.php:38
+#: menu.php:68 users.php:38
 msgid "Users"
-msgstr ""
+msgstr "Пользователи"
 
-#: menu.php:154
+#: menu.php:69
 msgid "Upload"
-msgstr ""
+msgstr "Загрузить"
 
-#: menu.php:161
+#: menu.php:76
 msgid "Login"
-msgstr ""
+msgstr "Вход"
 
-#: menu.php:165
+#: menu.php:80
 msgid "About"
-msgstr ""
+msgstr "О сайте"
 
-#: menu.php:171
+#: menu.php:86
 msgid "Languages"
-msgstr ""
+msgstr "Языки"
 
-#: menu.php:181
+#: menu.php:96
 msgid "STK Homepage"
-msgstr ""
+msgstr "Домашняя страницы STK"
 
 #: parseUpload.php:25
 msgid "Failed to upload your file."
-msgstr ""
+msgstr "Не удалось загрузить ваш файл."
 
 #: parseUpload.php:60 parseUpload.php:88
 msgid "Failed to move uploaded file."
-msgstr ""
+msgstr "Не удалось переместить загруженный файл."
 
 #: parseUpload.php:75 parseUpload.php:196
 msgid "Failed to associate image file with addon."
-msgstr ""
+msgstr "Не удалось ассоциировать изображение с аддоном."
 
 #: parseUpload.php:80
 msgid "Successfully uploaded image."
-msgstr ""
+msgstr "Изображение успешно загружено."
 
 #: parseUpload.php:81 parseUpload.php:261 parseUpload.php:299
 msgid "Continue."
-msgstr ""
+msgstr "Продолжить."
 
 #: parseUpload.php:104
 msgid "Invalid archive file. The archive must contain the addon's xml file."
-msgstr ""
+msgstr "Неправильный файл с архивом. Архив должен содержать XML-файл аддона."
 
 #: parseUpload.php:116
 msgid ""
 "Some invalid files were found in the uploaded add-on. These files have been "
 "removed from the archive:"
 msgstr ""
+"Некоторые неправильные файлы были найдены в загруженном аддоне. Эти файлы "
+"были удалены из архива:"
 
 #: parseUpload.php:125
 msgid "Upload was recognized as a kart."
-msgstr ""
+msgstr "Загруженный файл распознан как карт."
 
 #: parseUpload.php:130
 msgid "Upload was recognized as a track."
-msgstr ""
+msgstr "Загруженный файл распознан как трасса."
 
 #: parseUpload.php:137
 msgid ""
 "Failed to read the add-on's XML file. Please make sure you are using the "
 "latest version of the kart or track exporter."
 msgstr ""
+"Не удалось прочитать XML-файл аддона. Пожалуйста, убедитесь, что вы "
+"используете последнюю версию экспортера картов или трасс."
 
 #: parseUpload.php:144
 msgid "Failed to write new XML file:"
-msgstr ""
+msgstr "Не удалось записать новый XML-файл."
 
 #: parseUpload.php:152
 msgid ""
 "A valid License.txt file was not found. Please add a License.txt file to "
 "your archive and re-submit it."
 msgstr ""
+"Подходящий файл License.txt не найден. Пожалуйста, добавьте файл License.txt "
+"к вашему архиву и отправьте его снова."
 
 #: parseUpload.php:212
 msgid ""
@@ -853,160 +901,169 @@ msgstr ""
 #: parseUpload.php:213
 msgid "This may cause display errors on some video cards."
 msgstr ""
+"Это может повлечь некоторые проблемы с отображением на некоторых видеокартах."
 
 #: parseUpload.php:229
 msgid "Failed to re-pack archive file."
-msgstr ""
+msgstr "Не удалось перепаковать файл с архивом."
 
 #: parseUpload.php:245
 msgid "Failed to associate archive file with addon."
-msgstr ""
+msgstr "Не удалось ассоциировать архив с аддоном."
 
 #: parseUpload.php:260
 msgid "Successfully uploaded source archive."
-msgstr ""
+msgstr "Архив с исходниками успешно загружен."
 
 #: parseUpload.php:278
 msgid "You are trying to add a new revision of an addon that does not exist."
-msgstr ""
+msgstr "Вы пытаетесь добавить новую ревизию аддона, который не существует."
 
 #: parseUpload.php:285 users.php:70 users.php:81
 msgid "You do not have the necessary permissions to perform this action."
-msgstr ""
+msgstr "Вы не имеете достаточно прав для совершения этого действия."
 
 #: parseUpload.php:293
 msgid "Failed to create add-on."
-msgstr ""
+msgstr "Не удалось создать аддон."
 
 #: parseUpload.php:298
 msgid "Successfully uploaded add-on."
-msgstr ""
+msgstr "Аддон успешно загружен."
 
 #: parseUpload.php:309
 msgid "Uploaded image files must be either PNG or Jpeg files."
-msgstr ""
+msgstr "Загружаемое изображение должно быть в формате PNG или Jpeg."
 
 #: parseUpload.php:318
 msgid "The file you uploaded was not the correct type."
-msgstr ""
+msgstr "Файл, который вы загрузили, имеет неверное расширение."
 
 #: parseUpload.php:329
 msgid "The file to extract does not exist."
-msgstr ""
+msgstr "Распаковываемый файл не существует."
 
 #: parseUpload.php:341 parseUpload.php:376
 msgid "Could not open archive file. It may be corrupted."
-msgstr ""
+msgstr "Не удалось открыть файл с архивом. Файл может быть поврежден."
 
 #: parseUpload.php:347 parseUpload.php:382
 msgid "Failed to extract archive file."
-msgstr ""
+msgstr "Не удалось распаковать файл с архивом."
 
 #: parseUpload.php:390
 msgid "Unknown archive type."
-msgstr ""
+msgstr "Неизвестный тип архива."
 
 #: parseUpload.php:401
 msgid "Upload is invalid."
-msgstr ""
+msgstr "Загрузка неверна."
 
 #: parseUpload.php:406
 msgid "Unknown file upload error."
-msgstr ""
+msgstr "Неизвестная ошибка загрузки файла."
 
 #: parseUpload.php:410 parseUpload.php:412
 msgid "Uploaded file is too large."
-msgstr ""
+msgstr "Загружаемый файл слишком большой."
 
 #: parseUpload.php:414
 msgid "Uploaded file is incomplete."
-msgstr ""
+msgstr "Загружаемый файл поврежден."
 
 #: parseUpload.php:416
 msgid "No file was uploaded."
-msgstr ""
+msgstr "Файл не был загружен."
 
 #: parseUpload.php:418
 msgid "There is no TEMP directory to store the uploaded file in."
-msgstr ""
+msgstr "Нет директории TEMP, где бы хранился загруженный файл."
 
 #: parseUpload.php:420
 msgid "Unable to write uploaded file to disk."
-msgstr ""
+msgstr "Невозможно записать загруженный файл на диск."
 
 #: security.php:47
 msgid "You do not have the rights to access this page."
-msgstr ""
+msgstr "У вас нет прав для просмотра этой страницы."
 
 #: security.php:69
 msgid "You must be logged in to access this page."
-msgstr ""
+msgstr "Вы должны войти в систему для доступа к этой странице."
 
 #: security.php:70
 msgid "You will be redirected to the login page."
-msgstr ""
+msgstr "Вы будете перенаправлены на страницу входа."
 
 #: upload.php:74
 msgid ""
 "Your response to the agreement was unacceptable. You may not upload this "
 "content to the STK Addons website."
 msgstr ""
+"Ваш ответ на соглашение неприемлем. Вы не можете загрузить эти файлы на сайт "
+"STK Addons."
 
 #: upload.php:109
 msgid "Please upload a new revision of your kart or track."
-msgstr ""
+msgstr "Пожалуйста, загрузите новую ревизию вашего карта или трассы."
 
 #: upload.php:113
 msgid "What type of file are you uploading?"
-msgstr ""
+msgstr "Какой тип файла вы загружаете?"
 
 #: upload.php:115
 msgid "Source Archive"
-msgstr ""
+msgstr "Архив с исходниками"
 
 #: upload.php:116
 msgid "Image File"
-msgstr ""
+msgstr "Файл изображения"
 
 #: upload.php:123
 msgid "Please upload a kart or track."
-msgstr ""
+msgstr "Пожалуйста, загрузите карт или трассу."
 
 #: upload.php:124
 msgid "Do not use this form if you are updating an existing add-on.<br />"
 msgstr ""
+"Не используйте эту форму, если вы обновляете уже существующий аддон.<br />"
 
 #: upload.php:127
 msgid "File:"
-msgstr ""
+msgstr "Файл:"
 
 #: upload.php:128
 msgid "Supported archive types are:"
-msgstr ""
+msgstr "Поддерживаемые типы архивов:"
 
 #: upload.php:129
 msgid "Agreement:"
-msgstr ""
+msgstr "Соглашение:"
 
 #: upload.php:134
 msgid ""
 "I am the sole author of every file (model, texture, sound effect, etc.) in "
 "this package"
 msgstr ""
+"Я являюсь единственным автором каждого файла (модели, текстуры, звукового "
+"эффекта и т.д.) в пакете"
 
 #: upload.php:141
 msgid ""
 "I have included a License.txt file describing the license under which my "
 "work is released, and my name (or nickname) if I want credit."
 msgstr ""
+"Я включил файл License.txt, описывающий лицензию, под которой публикуется "
+"моя работа, и мое имя (или псевдоним), если я хочу, чтобы меня вписали в "
+"список создателей."
 
 #: upload.php:141 upload.php:154 upload.php:199 upload.php:210
 msgid "Required"
-msgstr ""
+msgstr "Обязательно"
 
 #: upload.php:147
 msgid "I have included open content made by people other than me"
-msgstr ""
+msgstr "Я включил в состав открытый контент, созданный другими людьми"
 
 #: upload.php:154
 msgid ""
@@ -1014,44 +1071,49 @@ msgid ""
 "material is used in this package, along with the license under which their "
 "work is released."
 msgstr ""
+"Я включил файл License.txt, содержащий имя каждого автора, чей материал был "
+"использован в этом пакете, и название лицензии, под которой распространяется "
+"их работа."
 
 #: upload.php:158
 msgid "This package includes files released under:"
-msgstr ""
+msgstr "Этот пакет содержит файлы, распространяемые под лицензией:"
 
 #: upload.php:158
 msgid "Must check at least one"
-msgstr ""
+msgstr "Необходимо выбрать как минимум одну лицензию"
 
 #: upload.php:163
 msgid "GNU GPL"
-msgstr ""
+msgstr "GNU GPL"
 
 #: upload.php:168
 msgid "Creative Commons BY 3.0"
-msgstr ""
+msgstr "Creative Commons BY 3.0"
 
 #: upload.php:173
 msgid "Creative Commons BY SA 3.0"
-msgstr ""
+msgstr "Creative Commons BY SA 3.0"
 
 #: upload.php:178
 msgid "CC0 (Public Domain)"
-msgstr ""
+msgstr "CC0 (общественное достояние)"
 
 #: upload.php:183
 msgid "BSD License"
-msgstr ""
+msgstr "Лицензия BSD"
 
 #: upload.php:188
 msgid "Other open license"
-msgstr ""
+msgstr "Другая свободная лицензия"
 
 #: upload.php:193
 msgid ""
 "Files released under other licenses will be rejected unless it can be "
 "verified that the license is open."
 msgstr ""
+"Файлы, использующие другие лицензии, будут отклонены, если нет возможности "
+"проверить, свободная ли лицензия или нет."
 
 #: upload.php:199
 msgid ""
@@ -1060,27 +1122,30 @@ msgid ""
 "for any copyright violation that may result from not following the above "
 "rules."
 msgstr ""
+"Я понимаю, что если мой файл не удовлетворяет написанным выше правилам, то "
+"он может быть в любое время удален без предупреждения; Я также возлагаю на "
+"себя всю ответственность по нарушению авторских прав в случае неподчинения "
+"перечисленным выше правилам."
 
 #: upload.php:205
 msgid "My package does not include:"
-msgstr ""
+msgstr "Мой пакет не содержит:"
 
 #: upload.php:217
 msgid "Upload file"
-msgstr ""
-
-#: user.php:146
-msgid "Me"
-msgstr ""
+msgstr "Загрузить файл"
 
 #: xmlWrite.php:123
 msgid "An error occurred finding the path for the file of kart: "
-msgstr ""
+msgstr "Произошла ошибка при поиске пути к файлу карта: "
 
 #: xmlWrite.php:128 xmlWrite.php:188
 msgid "The following file could not be found:"
-msgstr ""
+msgstr "Данный файл не может быть найден:"
 
 #: xmlWrite.php:183
 msgid "An error occurred finding the path for the file of track: "
-msgstr ""
+msgstr "Произошла ошибка при поиске пути к файлу трассы: "
+
+#~ msgid "Revisions:"
+#~ msgstr "Ревизии:"
