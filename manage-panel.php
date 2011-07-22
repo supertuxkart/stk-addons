@@ -218,7 +218,7 @@ EOF;
 
 function clients_panel()
 {
-    echo '<br /><h3>'.htmlspecialchars(_('Clients by User-Agent')).'</h3>';
+    echo '<h3>'.htmlspecialchars(_('Clients by User-Agent')).'</h3>';
     // Read recorded user-agents from database
     $clientsSql = 'SELECT * FROM `'.DB_PREFIX.'clients`
         ORDER BY `agent_string` ASC';

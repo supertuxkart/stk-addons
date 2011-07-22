@@ -101,13 +101,13 @@ body {
 }
 #select-addon-panel > div.icon-container h2.menu
 {
-    width:65px;
+    width:74px;
     margin:auto;
     text-decoration:none;
 }
 #select-addon-panel > div.icon-container h2.menu .center
 {
-    width:51px;
+    width: 60px;
 }
 
 #news-panel
@@ -590,7 +590,8 @@ span.f_dfsg
 }
 #right-content h3
 {
-    display: inline;
+    display: block;
+    border-bottom: 1px dashed #CCCCCC;
 }
 
 #right-content table.info
@@ -609,16 +610,21 @@ span.f_dfsg
 }
 
 /* Addon image tiles */
+div.image_thumbs
+{
+    overflow: auto;
+}
 div.image_thumb_container
 {
-    display: inline-block;
+    display: block;
     background: #CCCCDD;
     border: 1px solid #666677;
     border-radius: 3px;
+    float: left;
     padding: 3px;
     margin: 1px;
-    min-width: 75px;
-    min-height: 75px;
+    min-width: 78px;
+    min-height: 78px;
     text-align: center;
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;

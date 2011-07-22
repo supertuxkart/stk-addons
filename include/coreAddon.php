@@ -392,13 +392,13 @@ class coreAddon
             echo '<span class="error">'.htmlspecialchars(_('File not found.')).'</span><br />';
         }
 
-        echo '<br /><br /><br /><br />
-        <strong>'.htmlspecialchars(_('License:')).'</strong><br />
+        echo '<br />
+        <h3>'.htmlspecialchars(_('License')).'</h3>
         <textarea name="license" rows="4" cols="60">'.strip_tags($this->addonCurrent['license']).'</textarea>
         <br /><br />';
 
         // Print a permanent reference link (permalink) to this addon
-        echo '<h3>'.htmlspecialchars(_('Permalink')).'</h3><br />
+        echo '<h3>'.htmlspecialchars(_('Permalink')).'</h3>
         <a href="'.$this->addonCurrent['permUrl'].'">'.$this->addonCurrent['permUrl'].'</a><br /><br />';
 
         // List revisions
@@ -414,7 +414,7 @@ class coreAddon
             echo '</form></div>';
         }
 
-        echo '<br /><table>';
+        echo '<table>';
         while ($addonRevs->addonCurrent)
         {
             // Don't list unapproved addons
@@ -464,7 +464,7 @@ class coreAddon
             echo '</td></tr>';
             $addonRevs->next();
         }
-        echo '</table><br /><br />';
+        echo '</table><br />';
         
         // Show list of images associated with this addon
         echo '<h3>'.htmlspecialchars(_('Images')).'</h3>';
@@ -475,7 +475,6 @@ class coreAddon
             echo '<input type="submit" value="'.htmlspecialchars(_('Upload Image')).'" />';
             echo '</form></div>';
         }
-        echo '<br /><br />';
         $imageFilesQuery = 'SELECT * FROM `'.DB_PREFIX.'files`
             WHERE `addon_type` = \''.$this->addonType.'\'
             AND `addon_id` = \''.$this->addonCurrent['id'].'\'
@@ -506,6 +505,7 @@ class coreAddon
         }
         else
         {
+            echo '<div class="image_thumbs">';
             foreach ($image_files AS $source_file)
             {
                 if ($source_file['approved'] == 1)
@@ -544,8 +544,9 @@ class coreAddon
                 }
                 echo '</div>';
             }
+            echo '</div>';
         }
-        echo '<br /><br />';
+        echo '<br />';
 
         // Show list of source files
         echo '<h3>'.htmlspecialchars(_('Source Files')).'</h3>';
@@ -556,7 +557,6 @@ class coreAddon
             echo '<input type="submit" value="'.htmlspecialchars(_('Upload Source File')).'" />';
             echo '</form></div>';
         }
-        echo '<br /><br />';
         $sourceFilesQuery = 'SELECT * FROM `'.DB_PREFIX.'files`
             WHERE `addon_type` = \''.$this->addonType.'\'
             AND `addon_id` = \''.$this->addonCurrent['id'].'\'
@@ -612,7 +612,7 @@ class coreAddon
                 $n++;
                 echo '</td></tr>';
             }
-            echo '</table>';
+            echo '</table><br />';
         }
     }
 

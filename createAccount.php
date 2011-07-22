@@ -107,6 +107,11 @@ elseif ($_GET['action'] == 'submit' && strlen($_POST['pass1']) < 6)
     echo '<span class="error">'.htmlspecialchars(_('Your password must be at least 6 characters long.')).'</span><br /><br />';
     echo $login_form;
 }
+elseif ($_GET['action'] == 'submit' && (strlen($_GET['name']) == 0 || strlen($_GET['mail']) == 0))
+{
+    echo '<span class="error">'.htmlspecialchars(_('You must fill in all of the fields.')).'</span><br />';
+    echo $login_form;
+}
 elseif ($_GET['action'] == 'submit' && $_POST['terms'] != 'on')
 {
     echo '<span class="error">'.htmlspecialchars(_('You must agree to the terms to register.')).'</span><br />';

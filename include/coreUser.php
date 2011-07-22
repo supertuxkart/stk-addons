@@ -83,7 +83,7 @@ class coreUser
 
     function writeInformation()
     {
-        echo '<h1>'.$this->userCurrent['user'].'</h1><br />';
+        echo '<h1>'.$this->userCurrent['user'].'</h1>';
         echo '<table><tr><td>'.htmlspecialchars(_('Username:')).'</td><td>'.$this->userCurrent['user'].'</td></tr>';
         echo '<tr><td>'.htmlspecialchars(_('Registration Date:')).'</td><td>'.$this->userCurrent['reg_date'].'</td></tr>';
         echo '<tr><td>'.htmlspecialchars(_('Real Name:')).'</td><td>'.$this->userCurrent['name'].'</td></tr>';
@@ -92,10 +92,10 @@ class coreUser
         {
             echo '<tr><td>'.htmlspecialchars(_('Homepage:')).'</td><td><a href="'.$this->userCurrent['homepage'].'" >'.$this->userCurrent['homepage'].'</a></td></tr>';
         }
-        echo '</table><br />';
+        echo '</table>';
 
         // List of karts created by the current user
-        echo '<h3>'.htmlspecialchars(_('User\'s Karts')).'</h3><br />';
+        echo '<h3>'.htmlspecialchars(_('User\'s Karts')).'</h3>';
         $kartSql = 'SELECT `a`.*, `r`.`status`
             FROM `'.DB_PREFIX.'addons` `a`
             LEFT JOIN `'.DB_PREFIX.'karts_revs` `r`
@@ -131,7 +131,7 @@ class coreUser
             echo '</ul><br />';
         }
 
-        echo '<h3>'.htmlspecialchars(_('User\'s Tracks')).'</h3><br />';
+        echo '<h3>'.htmlspecialchars(_('User\'s Tracks')).'</h3>';
         $trackSql = 'SELECT `a`.*, `r`.`status`
             FROM `'.DB_PREFIX.'addons` `a`
             LEFT JOIN `'.DB_PREFIX.'tracks_revs` `r`
@@ -176,7 +176,7 @@ class coreUser
         global $dirDownload, $dirUpload;
         echo '
         <hr />
-        <h3>Configuration</h3><br />
+        <h3>Configuration</h3>
         <form enctype="multipart/form-data" action="?user='.$this->userCurrent['user'].'&amp;action=config" method="POST" >
         <table>';
         echo '<tr><td>'.htmlspecialchars(_('Homepage:')).'</td><td><input type="text" name="homepage" value="'.$this->userCurrent['homepage'].'" disabled /></td></tr>';
