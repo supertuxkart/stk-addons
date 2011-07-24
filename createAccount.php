@@ -50,7 +50,7 @@ $login_form =
     '.htmlspecialchars(_('Email Address:')).' <br />
     <input type="text" name="mail" /><br /><br />
     '.htmlspecialchars(_('Terms:')).'<br />
-    <textarea rows="10" cols="80">
+    <textarea rows="10" cols="80" readonly>
 === '.htmlspecialchars(_('STK Addons Terms and Conditions'))." ===\n\n".
 htmlspecialchars(_('You must agree to these terms in order to upload content to the STK Addons site.'))."\n\n".
 _('The STK Addons service is designed to be a repository exclusively for Super
