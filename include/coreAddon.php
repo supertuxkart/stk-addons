@@ -322,7 +322,7 @@ class coreAddon
         //div for jqery TODO:add jquery effects
         echo '<div id="accordion"><div>';
 
-        echo '<h1>'.$this->addonCurrent['name'].'</h1>';
+        echo '<h1>'.htmlspecialchars($this->addonCurrent['name']).'</h1>';
 
         // Get image
         $image_query = 'SELECT `file_path` FROM `'.DB_PREFIX.'files`
@@ -362,9 +362,9 @@ class coreAddon
         {
             echo '<tr><td><strong>'.htmlspecialchars(_('Type:')).'</strong></td><td>'.htmlspecialchars(_('Arena')).'</td></tr>';
         }
-        echo '<tr><td><strong>'.htmlspecialchars(_('Designer:')).'</strong></td><td>'.$this->addonCurrent['designer'].'</td></tr>
+        echo '<tr><td><strong>'.htmlspecialchars(_('Designer:')).'</strong></td><td>'.htmlspecialchars($this->addonCurrent['designer']).'</td></tr>
         <tr><td><strong>'.htmlspecialchars(_('Upload date:')).'</strong></td><td>'.$this->addonCurrent['revision_timestamp'].'</td></tr>
-        <tr><td><strong>'.htmlspecialchars(_('Submitted by:')).'</strong></td><td><a href="users.php?user='.$addonUser->userCurrent['user'].'">'.$addonUser->userCurrent['name'].'</a></td></tr>
+        <tr><td><strong>'.htmlspecialchars(_('Submitted by:')).'</strong></td><td><a href="users.php?user='.$addonUser->userCurrent['user'].'">'.htmlspecialchars($addonUser->userCurrent['name']).'</a></td></tr>
         <tr><td><strong>'.htmlspecialchars(_('Revision:')).'</strong></td><td>'.$this->addonCurrent['revision'].'</td></tr>
         <tr><td><strong>'.htmlspecialchars(_('Compatible with:')).'</strong></td><td>'.format_compat($this->addonCurrent['format'],$this->addonType).'</td></tr>
         </table></div>';
