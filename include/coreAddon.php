@@ -606,8 +606,9 @@ class coreAddon
                             echo ' | <a href="'.$this->addonCurrent['permUrl'].'&amp;save=unapprove&amp;id='.$source_file['id'].'">'.htmlspecialchars(_('Unapprove')).'</a>';
                         else
                             echo ' | <a href="'.$this->addonCurrent['permUrl'].'&amp;save=approve&amp;id='.$source_file['id'].'">'.htmlspecialchars(_('Approve')).'</a>';
-                        echo ' | <a href="'.$this->addonCurrent['permUrl'].'&amp;save=deletefile&amp;id='.$source_file['id'].'">'.htmlspecialchars(_('Delete File')).'</a><br />';
                     }
+                    if ($this->addonCurrent['uploader'] == $_SESSION['userid'] || $_SESSION['role']['manageaddons'])
+                        echo ' | <a href="'.$this->addonCurrent['permUrl'].'&amp;save=deletefile&amp;id='.$source_file['id'].'">'.htmlspecialchars(_('Delete File')).'</a><br />';
                 }
                 $n++;
                 echo '</td></tr>';
