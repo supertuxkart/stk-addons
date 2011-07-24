@@ -681,7 +681,7 @@ function type_check($path, $source = false)
         // Dig into deeper directories
         if (is_dir($file))
         {
-            $dir_result = type_check($file);
+            $dir_result = type_check($file, $source);
             if (is_array($dir_result))
             {
                 foreach ($dir_result AS $result)

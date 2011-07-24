@@ -313,7 +313,7 @@ class coreAddon
         $addonUser = new coreUser();
         $addonUser->selectById($this->addonCurrent['uploader']);
         if ($this->addonCurrent['designer'] == NULL)
-            $this->addonCurrent['designer'] = '<em>'.htmlspecialchars(_('Unknown')).'</em>';
+            $this->addonCurrent['designer'] = htmlspecialchars(_('Unknown'));
         if ($this->addonCurrent['description'] == NULL)
             $description = NULL;
         else
