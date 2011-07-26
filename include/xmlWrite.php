@@ -81,6 +81,8 @@ function writeNewsXML()
 
 function generateAssetXML()
 {
+    // Define addon types
+    $addon_types = array('kart','track','arena');
     $writer = new XMLWriter();
     // Output to memory
     $writer->openMemory();
@@ -99,120 +101,61 @@ function generateAssetXML()
     // Time between updates
     $writer->writeAttribute('frequency', ConfigManager::get_config('xml_frequency'));
 
-    // Fetch kart list
-    $querySql = 'SELECT `k`.*, `r`.`fileid`,
-            `r`.`creation_date` AS `date`,`r`.`revision`,`r`.`format`,
-            `r`.`image`,`r`.`icon`,`r`.`status`, `u`.`user`
-	FROM '.DB_PREFIX.'addons k
-	LEFT JOIN '.DB_PREFIX.'karts_revs r
-	ON (`k`.`id`=`r`.`addon_id`)
-	LEFT JOIN '.DB_PREFIX.'users u
-        ON (`k`.`uploader` = `u`.`id`)
-        WHERE `k`.`type` = \'karts\'';
-    $reqSql = sql_query($querySql);
-    while($result = sql_next($reqSql))
+    foreach ($addon_types AS $type)
     {
-        if (ConfigManager::get_config('list_invisible') == 0)
-        {
-            if($result['status'] & F_INVISIBLE)
-                continue;
-        }
-        $file_path = get_file_path($result['fileid']);
-        if ($file_path === false)
-        {
-            echo '<span class="warning">'.htmlspecialchars(_('An error occurred finding the path for the file of kart: ')).$result['name'].'</span><br />';
-            continue;
-        }
-        if (!file_exists(UP_LOCATION.$file_path))
-        {
-            echo '<span class="warming">'.htmlspecialchars(_('The following file could not be found:')).' '.$file_path.'</span><br />';
-            continue;
-        }
-	$writer->startElement('kart');
-        $writer->writeAttribute('id',$result['id']);
-        $writer->writeAttribute('name',$result['name']);
-        $writer->writeAttribute('file',DOWN_LOCATION.$file_path);
-	$writer->writeAttribute('date',strtotime($result['date']));
-	$writer->writeAttribute('uploader',$result['user']);
-        $writer->writeAttribute('designer',$result['designer']);
-        $writer->writeAttribute('description',$result['description']);
-        $icon_path = get_file_path($result['icon']);
-        if ($icon_path !== false)
-        {
-            if (file_exists(UP_LOCATION.$icon_path))
-            {
-                $writer->writeAttribute('icon',DOWN_LOCATION.$icon_path);
-            }
-        }
-        $image_path = get_file_path($result['image']);
-        if ($image_path !== false)
-        {
-            if (file_exists(UP_LOCATION.$image_path))
-            {
-                $writer->writeAttribute('image',DOWN_LOCATION.$image_path);
-            }
-        }
-        $writer->writeAttribute('format',$result['format']);
-        $writer->writeAttribute('revision',$result['revision']);
-        $writer->writeAttribute('status',$result['status']);
-        $writer->writeAttribute('size',filesize(UP_LOCATION.$file_path));
-	$writer->endElement();
-    }
+        // Fetch addon list
+        $querySql = 'SELECT `k`.*, `r`.`fileid`,
+                `r`.`creation_date` AS `date`,`r`.`revision`,`r`.`format`,
+                `r`.`image`,`r`.`status`, `u`.`user`
+            FROM '.DB_PREFIX.'addons k
+            LEFT JOIN '.DB_PREFIX.$type.'s_revs r
+            ON (`k`.`id`=`r`.`addon_id`)
+            LEFT JOIN '.DB_PREFIX.'users u
+            ON (`k`.`uploader` = `u`.`id`)
+            WHERE `k`.`type` = \''.$type.'s\'';
+        $reqSql = sql_query($querySql);
 
-    // Fetch track list
-    $querySql = 'SELECT `k`.*, `r`.`fileid`,
-            `r`.`creation_date` AS `date`,`r`.`revision`,`r`.`format`,
-            `r`.`image`,`r`.`status`, `u`.`user`
-	FROM '.DB_PREFIX.'addons k
-	LEFT JOIN '.DB_PREFIX.'tracks_revs r
-	ON (`k`.`id`=`r`.`addon_id`)
-	LEFT JOIN '.DB_PREFIX.'users u
-        ON (`k`.`uploader` = `u`.`id`)
-        WHERE `k`.`type` = \'tracks\'';
-    $reqSql = sql_query($querySql);
-    while($result = sql_next($reqSql))
-    {
-        if (ConfigManager::get_config('list_invisible') == 0)
+        // Loop through each addon record
+        while($result = sql_next($reqSql))
         {
-            if($result['status'] & F_INVISIBLE)
-                continue;
-        }
-        $file_path = get_file_path($result['fileid']);
-        if ($file_path === false)
-        {
-            echo '<span class="warning">'.htmlspecialchars(_('An error occurred finding the path for the file of track: ')).$result['name'].'</span><br />';
-            continue;
-        }
-        if (!file_exists(UP_LOCATION.$file_path))
-        {
-            echo '<span class="warming">'.htmlspecialchars(_('The following file could not be found:')).' '.$file_path.'</span><br />';
-            continue;
-        }
-        // Check if arena...
-        if ($result['props'] == 1)
-            $writer->startElement('arena');
-        else
-            $writer->startElement('track');
-        $writer->writeAttribute('id',$result['id']);
-        $writer->writeAttribute('name',$result['name']);
-        $writer->writeAttribute('file',DOWN_LOCATION.$file_path);
-	$writer->writeAttribute('date',strtotime($result['date']));
-	$writer->writeAttribute('uploader',$result['user']);
-        $writer->writeAttribute('designer',$result['designer']);
-        $writer->writeAttribute('description',$result['description']);
-        $image_path = get_file_path($result['image']);
-        if ($image_path !== false)
-        {
-            if (file_exists(UP_LOCATION.$image_path))
+            if (ConfigManager::get_config('list_invisible') == 0)
             {
-                $writer->writeAttribute('image',DOWN_LOCATION.$image_path);
+                if($result['status'] & F_INVISIBLE)
+                    continue;
             }
+            $file_path = get_file_path($result['fileid']);
+            if ($file_path === false)
+            {
+                echo '<span class="warning">'.htmlspecialchars(_('An error occurred finding the path for the file of kart: ')).$result['name'].'</span><br />';
+                continue;
+            }
+            if (!file_exists(UP_LOCATION.$file_path))
+            {
+                echo '<span class="warming">'.htmlspecialchars(_('The following file could not be found:')).' '.$file_path.'</span><br />';
+                continue;
+            }
+            $writer->startElement($type);
+            $writer->writeAttribute('id',$result['id']);
+            $writer->writeAttribute('name',$result['name']);
+            $writer->writeAttribute('file',DOWN_LOCATION.$file_path);
+            $writer->writeAttribute('date',strtotime($result['date']));
+            $writer->writeAttribute('uploader',$result['user']);
+            $writer->writeAttribute('designer',$result['designer']);
+            $writer->writeAttribute('description',$result['description']);
+            $image_path = get_file_path($result['image']);
+            if ($image_path !== false)
+            {
+                if (file_exists(UP_LOCATION.$image_path))
+                {
+                    $writer->writeAttribute('image',DOWN_LOCATION.$image_path);
+                }
+            }
+            $writer->writeAttribute('format',$result['format']);
+            $writer->writeAttribute('revision',$result['revision']);
+            $writer->writeAttribute('status',$result['status']);
+            $writer->writeAttribute('size',filesize(UP_LOCATION.$file_path));
+            $writer->endElement();
         }
-        $writer->writeAttribute('format',$result['format']);
-        $writer->writeAttribute('revision',$result['revision']);
-        $writer->writeAttribute('status',$result['status']);
-        $writer->writeAttribute('size',filesize(UP_LOCATION.$file_path));
-	$writer->endElement();
     }
 
     // End document tag
