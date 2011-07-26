@@ -51,15 +51,19 @@ function get_self()
     {
         if ($_GET['type'] == 'karts')
         {
-            $link = 'addons.php?type=tracks';
-            $text = htmlspecialchars(_('Tracks'));
+            echo '<a href="addons.php?type=tracks">'.htmlspecialchars(_('Tracks')).'</a>';
+            echo '<a href="addons.php?type=arenas">'.htmlspecialchars(_('Arenas')).'</a>';
+        }
+        elseif ($_GET['type'] == 'tracks')
+        {
+            echo '<a href="addons.php?type=karts">'.htmlspecialchars(_('Karts')).'</a>';
+            echo '<a href="addons.php?type=arenas">'.htmlspecialchars(_('Arenas')).'</a>';
         }
         else
         {
-            $link = 'addons.php?type=karts';
-            $text = htmlspecialchars(_('Karts'));
+            echo '<a href="addons.php?type=karts">'.htmlspecialchars(_('Karts')).'</a>';
+            echo '<a href="addons.php?type=tracks">'.htmlspecialchars(_('Tracks')).'</a>';
         }
-        echo '<a href="'.$link.'">'.$text.'</a>';
     }
 
     if(User::$logged_in)

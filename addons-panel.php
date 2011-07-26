@@ -40,8 +40,9 @@ if (!isset($_POST['id']))
     $_POST['id'] = NULL;
 
 $type = (isset($_GET['type']))? $_GET['type'] : NULL;
-if ($type != 'tracks' && $type != 'karts' && $type != 'users')
+if ($type != 'tracks' && $type != 'karts' && $type != 'arenas')
     die(htmlspecialchars(_('This page cannot be loaded because an invalid add-on type was provided.')));
+
 if (!isset($_GET['action'])) $_GET['action'] = NULL;
 $action = $_GET['action'];
 if ($action != NULL && $action != 'file' && $action != 'remove' && $action != 'approve')

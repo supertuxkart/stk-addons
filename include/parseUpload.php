@@ -150,6 +150,12 @@ function parseUpload($file,$revision = false)
             echo '<span class="error">'.htmlspecialchars(_('Failed to write new XML file:')).'</span><br />';
         }
         fclose($fhandle);
+        
+        // Handle arenas
+        if ($parsed_xml['attributes']['arena'] == 'Y') {
+            echo htmlspecialchars(_('This track is an arena.')).'<br />';
+            $addon_type = 'arenas';
+        }
 
         // Check for valid license file
         $license_file = find_license(UP_LOCATION.'temp/'.$fileid);
@@ -169,13 +175,13 @@ function parseUpload($file,$revision = false)
             $addon_id = generate_addon_id($addon_type,$parsed_xml['attributes']);
 
         // Save addon icon or screenshot
-        if ($addon_type == 'tracks')
+        if ($addon_type == 'karts')
         {
-            $image_file = $xml_dir.'/'.$parsed_xml['attributes']['screenshot'];
+            $image_file = $xml_dir.'/'.$parsed_xml['attributes']['icon-file'];
         }
         else
         {
-            $image_file = $xml_dir.'/'.$parsed_xml['attributes']['icon-file'];
+            $image_file = $xml_dir.'/'.$parsed_xml['attributes']['screenshot'];
         }
         // Check if file exists
         if (!file_exists($image_file))
@@ -227,6 +233,14 @@ function parseUpload($file,$revision = false)
         $addon_id = addon_id_clean($_GET['name']);
         $addon_type = mysql_real_escape_string($_GET['type']);
         $filetype = 'source';
+    }
+
+    // Validate addon type field
+    if ($addon_type != 'karts' && $addon_type != 'tracks' && $addon_type != 'arenas')
+    {
+        echo '<span class="error">'.htmlspecialchars(_('Invalid addon type.')).'</span><br />';
+        rmdir_recursive(UP_LOCATION.'temp/'.$fileid);
+        return false;
     }
 
     // Repack zip file

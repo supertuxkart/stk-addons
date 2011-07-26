@@ -2,7 +2,7 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
 CREATE TABLE `addons` (
     `id` varchar(30) NOT NULL,
-    `type` ENUM('karts','tracks'),
+    `type` ENUM('karts','tracks','arenas'),
     `name` tinytext NOT NULL,
     `uploader` int(11) NOT NULL,
     `creation_date` timestamp NOT NULL default CURRENT_TIMESTAMP,
@@ -12,6 +12,22 @@ CREATE TABLE `addons` (
     `license` varchar(4096) NULL DEFAULT NULL,
     UNIQUE KEY `id` (`id`),
     INDEX (`type`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE `arenas_revs` (
+    `id` char(23) NOT NULL,
+    `addon_id` varchar(30) NOT NULL,
+    `fileid` int(10) unsigned NOT NULL DEFAULT '0',
+    `creation_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `revision` tinyint(4) NOT NULL DEFAULT '1',
+    `format` tinyint(4) NOT NULL,
+    `image` int(10) unsigned NOT NULL DEFAULT '0',
+    `status` mediumint(9) unsigned NOT NULL DEFAULT '0',
+    `moderator_note` varchar(4096) DEFAULT NULL,
+    UNIQUE KEY `id` (`id`),
+    KEY `track_id` (`addon_id`),
+    KEY `status` (`status`),
+    KEY `revision` (`revision`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `clients` (
@@ -39,7 +55,7 @@ VALUES
 CREATE TABLE `files` (
     `id` int(11) NOT NULL auto_increment,
     `addon_id` varchar(30) NOT NULL,
-    `addon_type` ENUM('karts','tracks'),
+    `addon_type` ENUM('karts','tracks','arenas'),
     `file_type` ENUM('source','image','addon'),
     `file_path` text NOT NULL,
     `approved` int(1) NOT NULL default 0,

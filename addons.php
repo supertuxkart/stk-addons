@@ -137,9 +137,11 @@ function loadAddons()
     global $addon, $dirDownload, $dirUpload, $js, $user;
     if($_GET['type'] != "karts" &&
         $_GET['type'] != "tracks"  &&
+        $_GET['type'] != "arenas" &&
         $_GET['type'] != "file"  &&
         $_GET['type'] != "blender")
     {
+        echo '<span class="error">'.htmlspecialchars(_('Invalid Type')).'</span><br />';
         return;
     }
     $addonLoader = new coreAddon($_GET['type']);
@@ -182,7 +184,7 @@ function loadAddons()
         elseif(User::$logged_in && ($_SESSION['role']['manageaddons'] == true || $_SESSION['userid'] == $addonLoader->addonCurrent['uploader']))
         {
             echo '<li><a class="menu-item unavailable" href="javascript:loadFrame(\''.$addonLoader->addonCurrent['id'].'\',\'addons-panel.php?type='.$_GET['type'].'\')">';
-            if($_GET['type'] != "tracks")
+            if($_GET['type'] == "karts")
                 echo '<img class="icon"  src="image.php?type=small&amp;pic='.$icon_path.'" />';
             else echo '<img class="icon"  src="image/track-icon.png" />';
             echo $addonLoader->addonCurrent['name']."</a></li>";

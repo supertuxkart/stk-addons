@@ -60,6 +60,16 @@ include("include/top.php");
                         </a>
 		    </div>
                     <div class="icon-container">
+                        <a href="addons.php?type=arenas">
+                            <img src="image/arenas.png" alt="<?php echo htmlspecialchars(_('Arenas')); ?>" /><br />
+                            <h2 class="menu" >
+                                <div class="left"></div>
+                                <div class="center"><?php echo htmlspecialchars(_("Arenas")); ?></div>
+                                <div class="right"></div>
+                            </h2>
+                        </a>
+		    </div>
+                    <div class="icon-container">
                         <a href="http://supertuxkart.sourceforge.net/Category:Stkaddons">
                             <img src="image/help.png" alt="<?php echo htmlspecialchars(_('Help')); ?>" /><br />
                             <h2 class="menu">

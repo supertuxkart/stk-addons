@@ -358,7 +358,7 @@ class coreAddon
                 echo '<span class="f_dfsg">'.htmlspecialchars(_('DFSG Compliant')).'</span>';
         echo '<br />'.$description.'
         <table class="info">';
-        if ($this->addonType == 'tracks' && $this->addonCurrent['props'] == 1)
+        if ($this->addonType == 'arenas')
         {
             echo '<tr><td><strong>'.htmlspecialchars(_('Type:')).'</strong></td><td>'.htmlspecialchars(_('Arena')).'</td></tr>';
         }
