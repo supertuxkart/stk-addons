@@ -993,7 +993,7 @@ function addon_name($addon_id)
 
 function update_status($type,$addon_id,$fields)
 {
-    if ($type != 'karts' && $type != 'tracks')
+    if ($type != 'karts' && $type != 'tracks' && $type != 'arenas')
     {
         echo '<span class="error">'.htmlspecialchars(_('Invalid addon type.')).'</span><br />';
         return false;
@@ -1103,7 +1103,7 @@ function update_addon_notes($type,$addon_id,$fields)
 {
     if (!$_SESSION['role']['manageaddons'])
         return false;
-    if ($type != 'karts' && $type != 'tracks')
+    if ($type != 'karts' && $type != 'tracks' && $type != 'arenas')
     {
         echo '<span class="error">'.htmlspecialchars(_('Invalid addon type.')).'</span><br />';
         return false;
@@ -1188,6 +1188,7 @@ function format_compat($format,$filetype)
             return htmlspecialchars(_('Unknown'));
             break;
         case 'tracks':
+        case 'arenas':
             if ($format == 1 || $format == 2)
             {
                 return 'Pre-0.7';

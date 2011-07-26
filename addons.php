@@ -141,7 +141,7 @@ function loadAddons()
         $_GET['type'] != "file"  &&
         $_GET['type'] != "blender")
     {
-        echo '<span class="error">'.htmlspecialchars(_('Invalid Type')).'</span><br />';
+        echo '<span class="error">'.htmlspecialchars(_('Invalid addon type.')).'</span><br />';
         return;
     }
     $addonLoader = new coreAddon($_GET['type']);

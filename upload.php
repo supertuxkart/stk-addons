@@ -143,7 +143,7 @@ if($_GET['action'] == "submit")
 ?>
     <div id="content">
         <?php
-        if (($_GET['type'] == 'karts' || $_GET['type'] == 'tracks')
+        if (($_GET['type'] == 'karts' || $_GET['type'] == 'tracks' || $_GET['type'] == 'arenas')
                 && strlen($_GET['name']) != 0)
         {
             // Working with an already existing addon
