@@ -177,7 +177,7 @@ function loadAddons()
         if(($addonLoader->addonCurrent['status'] & F_APPROVED) == F_APPROVED)
         {
             echo '<li><a class="menu-item" href="javascript:loadFrame(\''.$addonLoader->addonCurrent['id'].'\',\'addons-panel.php?type='.$_GET['type'].'\')">';
-            if($_GET['type'] != "tracks") echo '<img class="icon"  src="image.php?type=small&amp;pic='.$icon_path.'" />';
+            if($_GET['type'] == "karts") echo '<img class="icon"  src="image.php?type=small&amp;pic='.$icon_path.'" />';
             else echo '<img class="icon"  src="image/track-icon.png" />';
             echo $addonLoader->addonCurrent['name']."</a></li>";
         }
