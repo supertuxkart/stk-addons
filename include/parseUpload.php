@@ -315,8 +315,10 @@ function parseUpload($file,$revision = false)
     rmdir_recursive(UP_LOCATION.'temp/'.$fileid);
     writeAssetXML();
     writeNewsXML();
-    echo htmlspecialchars(_('Successfully uploaded add-on.')).'<br />';
-    echo '<span style="font-size: large"><a href="addons.php?type='.$addon_type.'&amp;name='.$addon_id.'">'.htmlspecialchars(_('Continue.')).'</a></span><br />';
+    echo htmlspecialchars(_('Your add-on was uploaded successfully. It will be reviewed by our moderators before becoming publicly available.')).'<br /><br />';
+    echo '<a href="upload.php?type='.$addon_type.'&amp;name='.$addon_id.'&amp;action=file">'.htmlspecialchars(_('Click here to upload the sources to your add-on now.')).'</a><br />';
+    echo htmlspecialchars(_('(Uploading the sources to your add-on enables others to improve your work and also ensure your add-on will not be lost in the future if new SuperTuxKart versions are not compatible with the current format.)')).'<br /><br />';
+    echo '<a href="addons.php?type='.$addon_type.'&amp;name='.$addon_id.'">'.htmlspecialchars(_('Click here to view your add-on.')).'</a><br />';
 }
 
 function check_extension($filename,$type = NULL)
@@ -603,7 +605,7 @@ function generate_addon_id($type,$attb)
     while(sql_exist('addons', 'id', $addon_id))
     {
         // If the addon id already exists, add an incrementing number to it
-        if (preg_match('/^.+htmlspecialchars(_([0-9]+))$/i', $addon_id, $matches))
+        if (preg_match('/^.+_([0-9]+)$/i', $addon_id, $matches))
         {
             $next_num = (int)$matches[1];
             $next_num++;
