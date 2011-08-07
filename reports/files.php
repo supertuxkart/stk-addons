@@ -44,5 +44,12 @@ $image_query = 'SELECT `addon_id`,`addon_type`,`file_path`,`date_added`,`approve
     ORDER BY `addon_id` ASC, `date_added` ASC';
 $report->addQuery($image_section,$image_query);
 
+$source_section = $report->addSection("Source");
+$source_query = 'SELECT `addon_id`,`addon_type`,`file_path`,`date_added`,`approved`,`downloads`
+    FROM `'.DB_PREFIX.'files`
+    WHERE `file_type` = \'source\'
+    ORDER BY `addon_id` ASC, `date_added` ASC';
+$report->addQuery($source_section,$source_query);
+
 print($report);
 ?>
