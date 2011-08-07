@@ -82,6 +82,7 @@ class Report
             $query_result .= "\t\t<tr>\n";
             foreach ($result AS $current_result)
             {
+                $current_result = htmlspecialchars($current_result);
                 $query_result .= "\t\t\t<td>{$current_result}</td>\n";
             }
             $query_result .= "\t\t</tr>\n";
