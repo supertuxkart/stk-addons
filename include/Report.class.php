@@ -67,34 +67,36 @@ class Report
         $query_result .= "\t<h3>Result</h3>\n";
         $query_result .= "\t<p>($count rows returned)</p>\n";
         
-        $query_result .= "\t<table>\n\t\t<thead>\n\t\t\t<tr>\n";
+        $query_result .= "\t<table cellspacing=\"0\" class=\"sortable\"><thead>\n\t\t<tr>\n";
         // List column names
         for ($i = 0; $i < mysql_num_fields($handle); $i++) {
             $field_info = mysql_fetch_field($handle, $i);
-            $query_result .= "\t\t\t\t<th>{$field_info->name}</th>\n";
+            $query_result .= "\t\t\t<th>{$field_info->name}</th>\n";
         }
-        $query_result .= "\t\t\t</tr>\n\t\t</thead>\n\t\t<tbody>\n";
+        $query_result .= "\t\t</tr></thead><tbody>\n";
         
         // List results
         for ($i = 1; $i <= $count; $i++)
         {
             $result = mysql_fetch_assoc($handle);
-            $query_result .= "\t\t\t<tr>\n";
+            $query_result .= "\t\t<tr>\n";
             foreach ($result AS $current_result)
             {
-                $query_result .= "\t\t\t\t<td>{$current_result}</td>\n";
+                $query_result .= "\t\t\t<td>{$current_result}</td>\n";
             }
-            $query_result .= "\t\t\t<tr>\n";
+            $query_result .= "\t\t</tr>\n";
         }
         
-        $query_result .= "\t\t</tbody>\n\t</table>";
+        $query_result .= "\t</tbody></table>";
         
         $this->report_structure[$section]['content'] .= $query_result;
     }
     
     public function __toString()
     {
-        $return = "<html>\n<head>\n\t<title>{$this->report_title}</title>\n</head>\n";
+        $return = "<html>\n<head>\n\t<title>{$this->report_title}</title>\n";
+        $return .= "\t<script src=\"".ROOT."js/sorttable.js\" type=\"text/javascript\"></script>\n";
+        $return .= "\t<link href=\"".ROOT."css/report.css\" rel=\"StyleSheet\" type=\"text/css\" />\n</head>\n";
         $return .= "<body>\n\t<h1>{$this->report_title}</h1>\n";
         $return .= "\t<blockquote>{$this->report_description}</blockquote>\n";
         
