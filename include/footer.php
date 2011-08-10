@@ -29,4 +29,5 @@ Description: footer
 
 ?>
 </div>
+<p style="font-size: small; color: #000000; text-align: center;">Site hosted by <a href="http://www.tuxfamily.org/">tuxfamily.org</a></p>
 </body></html>

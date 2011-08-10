@@ -82,7 +82,7 @@ function resizeImage($file)
     imagecopyresampled($destination, $source, 0, 0, 0, 0, $width_destination, $height_destination, $width_source, $height_source);
     // Display image
     header("Content-Type: image/png");
-    imagepng($destination);
+    imagepng($destination,NULL,9);
 }
 
 function img_label($text)
