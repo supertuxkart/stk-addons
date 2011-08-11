@@ -272,6 +272,28 @@ overflow-x:hidden;
     display:block;
     width:476px !important;
 }
+.rating { 
+	position: relative;
+	width: 91px;
+	height: 17px;
+}
+.rating .emptystars {
+	position: absolute;
+	background: transparent url(../image/stars.png) top left no-repeat;
+	top: 0px;
+	left: 0px;
+	width: 91px;
+	height: 17px;
+	z-index: 101;
+}
+.rating .fullstars {
+	position: absolute;
+	background: transparent url(../image/stars_full.png) top left no-repeat;
+	top: 0px;
+	left: 0px;
+	height: 17px;
+	z-index: 102;
+}
 
 a
 {

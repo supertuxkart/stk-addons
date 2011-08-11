@@ -303,12 +303,25 @@ class coreAddon
         writeNewsXML();
         return true;
     }
-
+	
+	//get the average rating for a specified addon
+	function getAverageRating()
+	{
+		$getAvgRatingQuery = "SELECT avg(vote) FROM `votes` WHERE `addon_id` = '".$this->addonCurrent['id']."'";
+		$getAvgRatingHandle = sql_query($getAvgRatingQuery);
+		if (mysql_num_rows($getAvgRatingHandle) != 0) { //make sure that there are votes
+			$getRatingsResult = mysql_fetch_assoc($getAvgRatingHandle);
+			$this->avgRating = (intval($getRatingsResult['avg(vote)'])/5)*100; //Turn the average (1-5) into a usable 20-100%
+		}
+		return true;
+	}
+	
     /** Print the information of the addon, it name, it description, it
       * version...
       */
     function writeInformation()
     {
+		
         global $user;
         $addonUser = new coreUser();
         $addonUser->selectById($this->addonCurrent['uploader']);
@@ -322,7 +335,7 @@ class coreAddon
         //div for jqery TODO:add jquery effects
         echo '<div id="accordion"><div>';
 
-        echo '<h1>'.htmlspecialchars($this->addonCurrent['name']).'</h1>';
+        echo '<table border="0px" width="100%"><tr><td width="100%"><h1>'.htmlspecialchars($this->addonCurrent['name']).'</h1></td><td align="right"><div class="rating"><div class="emptystars"></div><div class="fullstars" style="width: '.$this->avgRating.'%;"></div></div></td></tr></table>';
 
         // Get image
         $image_query = 'SELECT `file_path` FROM `'.DB_PREFIX.'files`
@@ -836,7 +849,7 @@ class coreAddon
         // Make sure addon exists
         if (!$this->addonCurrent)
             return false;
-        
+        $this->getAverageRating();
         $this->writeInformation();
 
         global $user;
