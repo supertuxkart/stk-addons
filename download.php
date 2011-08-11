@@ -106,9 +106,18 @@ header("Pragma: public");
 header("Content-Type: $ctype");
 header("Content-Length: $filesize");
 header("Last-Modified: $mtimestring GMT");
-// Prevent caching
-header("Cache-Control: no-cache, must-revalidate");
-header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
+// Prevent caching of most files
+if ($ctype != "image/png" && $ctype != "image/jpg")
+{
+    header("Cache-Control: no-cache, must-revalidate");
+    header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
+}
+else
+{
+    // Redirect to actual resource server to save bandwidth on the web host
+    header('Location: http://downloads.tuxfamily.org/stkaddons/assets/'.$assetpath);
+    exit;
+}
 
 // Send file
 readfile($filepath);
