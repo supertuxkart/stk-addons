@@ -72,16 +72,19 @@ if (User::$logged_in === true)
 
 if ($_GET['action'] == 'submit')
 {
-    // Variable validation is done by the function below
-    if (User::login($_POST['user'],$_POST['pass']))
+    $error = false;
+    try
     {
-        include(ROOT.'include/top.php');
+        // Variable validation is done by the function below
+        User::login($_POST['user'],$_POST['pass']);
+    }
+    catch (LoginException $e)
+    {
+        $error = $e->getMessage();
+    }
+    include(ROOT.'include/top.php');
+    if ($error === false)
         echo '<meta http-equiv="refresh" content="3;URL=index.php">';
-    }
-    else
-    {
-        include(ROOT.'include/top.php');
-    }
     echo '</head><body>';
     include(ROOT.'include/menu.php');
     echo '<div id="content">';
@@ -92,7 +95,11 @@ if ($_GET['action'] == 'submit')
         include('include/footer.php');
         exit;
     }
-    echo '<span class="error">'.htmlspecialchars(_('Authentication failed.')).'</span><br />';
+    else
+    {
+        echo '<span class="error">'.$error.'</span><br />';
+    }
+    
 }
 else
 {

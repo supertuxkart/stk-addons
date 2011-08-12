@@ -34,5 +34,6 @@ require(ROOT.'include/mail.php');
 require(ROOT.'include/statistics.php');
 require(ROOT.'include/xmlWrite.php');
 
+class LoginException extends Exception {}
 
 ?>
