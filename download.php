@@ -97,9 +97,7 @@ $mtime = filemtime($filepath);
 $mtimestring = gmdate('D, d M Y H:i:s',$mtime);
 
 // Update download count for addons
-$counterQuery = 'UPDATE `'.DB_PREFIX.'files`
-    SET `downloads` = `downloads` + 1
-    WHERE `file_path` = \''.$assetpath.'\'';
+$counterQuery = 'CALL `'.DB_PREFIX.'increment_download` (\''.$assetpath.'\')';
 $counterHandle = sql_query($counterQuery);
 
 header("Pragma: public");

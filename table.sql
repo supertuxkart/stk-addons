@@ -60,7 +60,8 @@ CREATE TABLE `files` (
     `file_path` text NOT NULL,
     `approved` int(1) NOT NULL default 0,
     `downloads` int UNSIGNED NOT NULL default 0,
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    FULLTEXT (`file_path`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `help` (
@@ -159,3 +160,9 @@ CREATE TABLE `votes` (
     `vote` int(1) unsigned NOT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- Stored Procedures
+CREATE PROCEDURE increment_download (IN filepath TEXT)
+    UPDATE `v2_files`
+    SET `downloads` = `downloads` + 1
+    WHERE `file_path` = filepath
