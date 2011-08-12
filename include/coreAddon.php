@@ -327,11 +327,12 @@ class coreAddon
             }
             
             // get users previous rating if it exists
-            
-            $getExistingRatingQuery = "SELECT vote FROM `".DB_PREFIX."votes` WHERE `addon_id` = '".$this->addonCurrent['id']."' and `user_id` = '".$_SESSION['userid']."'";
-            $getExistingRatingHandle = sql_query($getExistingRatingQuery);
-            $existingRatingsResult = mysql_fetch_assoc($getExistingRatingHandle);
-            $this->hasExistingRating = $existingRatingsResult['vote'];
+            if (User::$logged_in) {
+                $getExistingRatingQuery = "SELECT vote FROM `".DB_PREFIX."votes` WHERE `addon_id` = '".$this->addonCurrent['id']."' and `user_id` = '".$_SESSION['userid']."'";
+                $getExistingRatingHandle = sql_query($getExistingRatingQuery);
+                $existingRatingsResult = mysql_fetch_assoc($getExistingRatingHandle);
+                $this->hasExistingRating = $existingRatingsResult['vote'];
+            }
             return true;
     }
 	
@@ -403,7 +404,7 @@ class coreAddon
             echo '<tr><td><strong>'.htmlspecialchars(_('Your Rating: ')).'</strong></td><td>';
             if ($this->hasExistingRating) {
                 if ($this->hasExistingRating != 1) {
-                    echo htmlspecialchars($this->hasExistingRating). "stars";
+                    echo htmlspecialchars($this->hasExistingRating)." stars";
                 } else {
                     echo "1 star";
                 }
