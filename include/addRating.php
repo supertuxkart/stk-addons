@@ -16,7 +16,7 @@
             $existingRatingsResult = mysql_fetch_assoc($getExistingRatingHandle);
             $hasExistingRating = $existingRatingsResult['vote'];
             if (!$hasExistingRating) {
-                $insertRatingQuery = "INSERT INTO `".DB_NAME.DB_PREFIX."`.`votes` (`id`, `user_id`, `addon_id`, `vote`) VALUES (NULL, '".$_SESSION['userid']."', '".$addonId."', ".$rating.");";
+                $insertRatingQuery = "INSERT INTO `".DB_PREFIX."votes` (`user_id`, `addon_id`, `vote`) VALUES ('".$_SESSION['userid']."', '".$addonId."', ".$rating.");";
                 $insertRatingHandle = sql_query($insertRatingQuery);
             }
         }

@@ -412,7 +412,7 @@ class coreAddon
                 echo '<span id="user-rating">';
                 echo '<a href="javascript:addRating(1,\''.$this->addonCurrent['id'].'\',\'user-rating\',\'avg-rating\');"><div class="rating"><div class="emptystars"></div><div class="fullstars" style="width: 33%"></div></div></a><br />'; // 1 star
                 echo '<a href="javascript:addRating(2,\''.$this->addonCurrent['id'].'\',\'user-rating\',\'avg-rating\');"><div class="rating"><div class="emptystars"></div><div class="fullstars" style="width: 66%"></div></div></a><br />'; // 2 stars
-                echo '<a href="javascript:addRating(3,\''.$this->addonCurrent['id'].'\',\'user-rating\',\'avg-rating\');"><div class="rating"><div class="emptystars"></div><div class="fullstars" style="width: 100%"></div></div></a><br />'; // 3 stars
+                echo '<a href="javascript:addRating(3,\''.$this->addonCurrent['id'].'\',\'user-rating\',\'avg-rating\');"><div class="rating"><div class="emptystars"></div><div class="fullstars" style="width: 100%"></div></div></a>'; // 3 stars
                 echo '</span>';
             }
         }
