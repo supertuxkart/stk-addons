@@ -107,6 +107,11 @@ elseif ($_GET['action'] == 'submit' && strlen($_POST['pass1']) < 6)
     echo '<span class="error">'.htmlspecialchars(_('Your password must be at least 6 characters long.')).'</span><br /><br />';
     echo $login_form;
 }
+elseif ($_GET['action'] == 'submit' && !preg_match('/^[a-z0-9]+$/i',$_POST['user']))
+{
+    echo '<span class="error">'.htmlspecialchars(_('Your username can only contain alphanumeric characters.')).'</span><br /><br />';
+    echo $login_form;
+}
 elseif ($_GET['action'] == 'submit' && (strlen($_POST['name']) == 0 || strlen($_POST['mail']) == 0))
 {
     echo '<span class="error">'.htmlspecialchars(_('You must fill in all of the fields.')).'</span><br />';
