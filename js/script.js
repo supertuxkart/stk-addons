@@ -103,8 +103,8 @@ function textLimit(field, num) {
     }
 }
 function addRating(rating,addonId,sel_storage,disp_storage) {
-    loadHTML('./include/addRating.php?rating='+rating+'&amp;addonId='+addonId,sel_storage);
-    loadHTML('./include/addRating.php?addonId='+addonId,disp_storage);
+    loadHTML('./include/addRating.php?rating='+encodeURI(rating)+'&addonId='+encodeURI(addonId),sel_storage);
+    loadHTML('./include/addRating.php?addonId='+encodeURI(addonId),disp_storage);
 }
 
 // AJAX functions
@@ -136,17 +136,17 @@ function createXHR()
  */
 function loadHTML(url, storage)
 {
+    var storage_elem = document.getElementById(storage);
     var xhr = createXHR();
     xhr.onreadystatechange=function()
     {
         if(xhr.readyState == 4)
         {
-            if (storage.innerHTML == "undefined")
+            if (storage_elem.innerHTML == "undefined")
             {
-                //storage = xhr.responseText;
+                storage_elem = xhr.responseText;
             } else {
-                storage.innerHTML = '1';
-                //storage.innerHTML = xhr.responseText;
+                storage_elem.innerHTML = xhr.responseText;
             }
         }
     };
