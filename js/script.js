@@ -34,7 +34,7 @@ function loadFrame(id, page, value)
 
 function addonRequest(page, id, value)
 {
-    $.post(page, { id: id, value: value},
+    $.post(page, {id: id, value: value},
     function(data){
         $("#content-addon_body").html(data);
         $("#content-addon_body").scrollTop(0);
@@ -79,8 +79,8 @@ $(document).ready(function () {
     $('#advance_button').click(function () {
     //if($("#advanced").css("margin-right")!= "279px") $("#advanced").animate({ marginRight: "279px" }, 150 );
     //else  $("#advanced").animate({ marginRight: "1px" }, 150 );
-    if($("#content_advanced").css("width")!= "300px") $("#content_advanced").animate({ width: "300px" }, 150 );
-    else  $("#content_advanced").animate({ width: "0px" }, 150 );
+    if($("#content_advanced").css("width")!= "300px") $("#content_advanced").animate({width: "300px"}, 150 );
+    else  $("#content_advanced").animate({width: "0px"}, 150 );
     });
 });
 
@@ -102,23 +102,54 @@ function textLimit(field, num) {
         field.value = field.value.substring(0, num);
     }
 }
-function addRating(rating,addonId) {
-    var xmlhttp;
-    if (window.XMLHttpRequest)
-      {// code for IE7+, Firefox, Chrome, Opera, Safari
-      xmlhttp=new XMLHttpRequest();
-      }
-    else
-      {// code for IE6, IE5
-      xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-      }
-    xmlhttp.onreadystatechange=function()
-      {
-      if (xmlhttp.readyState==4 && xmlhttp.status==200)
+function addRating(rating,addonId,sel_storage,disp_storage) {
+    loadHTML('./include/addRating.php?rating='+rating+'&amp;addonId='+addonId,sel_storage);
+    loadHTML('./include/addRating.php?addonId='+addonId,disp_storage);
+}
+
+// AJAX functions
+function createXHR()
+{
+    var xmlhttp = false;
+    try
+    {// code for IE7+, Firefox, Chrome, Opera, Safari
+        xmlhttp=new XMLHttpRequest();
+    }
+    catch(e)
+    {// code for IE6, IE5
+        try
         {
-         window.location.reload();
-        }
-      }
-    xmlhttp.open("GET","include/addRating.php?rating="+rating+"&addonId="+addonId,true);
-    xmlhttp.send();
+            xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        catch(e)
+        {
+            xmlhttp = false;
+        }
+    }
+    return xmlhttp;
+}
+/**
+ * Loads an HTML page
+ * Put the content of the body tag into the current page.
+ * @param url URL of the HTML page to load
+ * @param storage ID of the tag that gets to hold the output
+ */
+function loadHTML(url, storage)
+{
+    var xhr = createXHR();
+    xhr.onreadystatechange=function()
+    {
+        if(xhr.readyState == 4)
+        {
+            if (storage.innerHTML == "undefined")
+            {
+                //storage = xhr.responseText;
+            } else {
+                storage.innerHTML = '1';
+                //storage.innerHTML = xhr.responseText;
+            }
+        }
+    };
+    xhr.open("GET", url , true);
+    xhr.send(null);
 }

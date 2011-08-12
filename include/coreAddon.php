@@ -354,7 +354,7 @@ class coreAddon
         //div for jqery TODO:add jquery effects
         echo '<div id="accordion"><div>';
 
-        echo '<table border="0px" width="100%"><tr><td width="100%"><h1>'.htmlspecialchars($this->addonCurrent['name']).'</h1></td><td align="right"><div class="rating"><div class="emptystars"></div><div class="fullstars" style="width: '.$this->avgRating.'%;"></div></div><p>'.$this->numRatingsString.'</p></td></tr></table>';
+        echo '<table border="0px" width="100%"><tr><td width="100%"><h1>'.htmlspecialchars($this->addonCurrent['name']).'</h1></td><td align="right"><div id="avg-rating"><div class="rating"><div class="emptystars"></div><div class="fullstars" style="width: '.$this->avgRating.'%;"></div></div><p>'.$this->numRatingsString.'</p></div></td></tr></table>';
 
         // Get image
         $image_query = 'SELECT `file_path` FROM `'.DB_PREFIX.'files`
@@ -408,9 +408,11 @@ class coreAddon
                     echo "1 star";
                 }
             } else {
-                echo '<a href="javascript:addRating(1,\''.$this->addonCurrent['id'].'\');"><div class="rating"><div class="emptystars"></div><div class="fullstars" style="width: 33%"></div></div></a><br />'; // 1 star
-                echo '<a href="javascript:addRating(2,\''.$this->addonCurrent['id'].'\');"><div class="rating"><div class="emptystars"></div><div class="fullstars" style="width: 66%"></div></div></a><br />'; // 2 stars
-                echo '<a href="javascript:addRating(3,\''.$this->addonCurrent['id'].'\');"><div class="rating"><div class="emptystars"></div><div class="fullstars" style="width: 100%"></div></div></a><br />'; // 3 stars
+                echo '<span id="user-rating">';
+                echo '<a href="javascript:addRating(1,\''.$this->addonCurrent['id'].'\',\'user-rating\',\'avg-rating\');"><div class="rating"><div class="emptystars"></div><div class="fullstars" style="width: 33%"></div></div></a><br />'; // 1 star
+                echo '<a href="javascript:addRating(2,\''.$this->addonCurrent['id'].'\',\'user-rating\',\'avg-rating\');"><div class="rating"><div class="emptystars"></div><div class="fullstars" style="width: 66%"></div></div></a><br />'; // 2 stars
+                echo '<a href="javascript:addRating(3,\''.$this->addonCurrent['id'].'\',\'user-rating\',\'avg-rating\');"><div class="rating"><div class="emptystars"></div><div class="fullstars" style="width: 100%"></div></div></a><br />'; // 3 stars
+                echo '</span>';
             }
         }
         echo '</td></tr></table></div>';
