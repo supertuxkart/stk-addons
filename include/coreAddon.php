@@ -392,7 +392,7 @@ class coreAddon
         <tr><td><strong>'.htmlspecialchars(_('Submitted by:')).'</strong></td><td><a href="users.php?user='.$addonUser->userCurrent['user'].'">'.htmlspecialchars($addonUser->userCurrent['name']).'</a></td></tr>
         <tr><td><strong>'.htmlspecialchars(_('Revision:')).'</strong></td><td>'.$this->addonCurrent['revision'].'</td></tr>
         <tr><td><strong>'.htmlspecialchars(_('Compatible with:')).'</strong></td><td>'.format_compat($this->addonCurrent['format'],$this->addonType).'</td></tr>';
-        if ($_SESSION['userid']) {
+        if (User::$logged_in) {
             echo '<tr><td><strong>'.htmlspecialchars(_('Your Rating: ')).'</strong></td><td>';
             if ($this->rating->getUserVote() !== false) {
                 if ($this->rating->getUserVote() != 1) {
