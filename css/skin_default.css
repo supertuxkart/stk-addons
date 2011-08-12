@@ -274,7 +274,7 @@ overflow-x:hidden;
 }
 .rating { 
 	position: relative;
-	width: 91px;
+	width: 55px;
 	height: 17px;
 }
 .rating .emptystars {
@@ -282,7 +282,7 @@ overflow-x:hidden;
 	background: transparent url(../image/stars.png) top left no-repeat;
 	top: 0px;
 	left: 0px;
-	width: 91px;
+	width: 55px;
 	height: 17px;
 	z-index: 101;
 }

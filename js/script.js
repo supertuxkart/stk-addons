@@ -102,3 +102,23 @@ function textLimit(field, num) {
         field.value = field.value.substring(0, num);
     }
 }
+function addRating(rating,addonId) {
+    var xmlhttp;
+    if (window.XMLHttpRequest)
+      {// code for IE7+, Firefox, Chrome, Opera, Safari
+      xmlhttp=new XMLHttpRequest();
+      }
+    else
+      {// code for IE6, IE5
+      xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+      }
+    xmlhttp.onreadystatechange=function()
+      {
+      if (xmlhttp.readyState==4 && xmlhttp.status==200)
+        {
+         window.location.reload();
+        }
+      }
+    xmlhttp.open("GET","include/addRating.php?rating="+rating+"&addonId="+addonId,true);
+    xmlhttp.send();
+}
