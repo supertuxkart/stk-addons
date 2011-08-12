@@ -22,6 +22,11 @@ class coreAddon
     var $addonType;
     var $reqSql;
     var $addonCurrent;
+    /**
+     * Ratings object, false if not initialized
+     * @var Ratings
+     */
+    private $rating = false;
 
     function coreAddon($type)
     {
@@ -304,36 +309,19 @@ class coreAddon
         return true;
     }
 	
-    //get the average rating for a specified addon
+    /**
+     * Initialize the addon rating info
+     */
     function getRatingInfo()
     {
-            // get average rating
-            $getAvgRatingQuery = "SELECT avg(vote) FROM `".DB_PREFIX."votes` WHERE `addon_id` = '".$this->addonCurrent['id']."'";
-            $getAvgRatingHandle = sql_query($getAvgRatingQuery);
-            $getRatingsResult = mysql_fetch_assoc($getAvgRatingHandle);
-            $this->avgRating = (intval($getRatingsResult['avg(vote)'])/3)*100; //Turn the average (1-3) into a usable 33-100%
+        $this->rating = new Ratings($this->addonCurrent['id']);
             
-            // get number of ratings
-            $getNumRatingQuery = "SELECT count(vote) FROM `".DB_PREFIX."votes` WHERE `addon_id` = '".$this->addonCurrent['id']."'";
-            $getNumRatingHandle = sql_query($getNumRatingQuery);
-            $numRatingsResult = mysql_fetch_assoc($getNumRatingHandle);
-            $numRatings = intval($numRatingsResult['count(vote)']);
-            
-            //create the string with the number of ratings (for use in the function below)
-            if ($numRatings != 1) {
-                $this->numRatingsString = $numRatings.' Votes';
-            } else {
-                $this->numRatingsString = $numRatings.' Vote';
-            }
-            
-            // get users previous rating if it exists
-            if (User::$logged_in) {
-                $getExistingRatingQuery = "SELECT vote FROM `".DB_PREFIX."votes` WHERE `addon_id` = '".$this->addonCurrent['id']."' and `user_id` = '".$_SESSION['userid']."'";
-                $getExistingRatingHandle = sql_query($getExistingRatingQuery);
-                $existingRatingsResult = mysql_fetch_assoc($getExistingRatingHandle);
-                $this->hasExistingRating = $existingRatingsResult['vote'];
-            }
-            return true;
+        //create the string with the number of ratings (for use in the function below)
+        if ($this->rating->getNumRatings() != 1) {
+            $this->numRatingsString = $this->rating->getNumRatings().' Votes';
+        } else {
+            $this->numRatingsString = $this->rating->getNumRatings().' Vote';
+        }
     }
 	
     /** Print the information of the addon, it name, it description, it
@@ -355,7 +343,11 @@ class coreAddon
         //div for jqery TODO:add jquery effects
         echo '<div id="accordion"><div>';
 
-        echo '<table border="0px" width="100%"><tr><td width="100%"><h1>'.htmlspecialchars($this->addonCurrent['name']).'</h1></td><td align="right"><div id="avg-rating"><div class="rating"><div class="emptystars"></div><div class="fullstars" style="width: '.$this->avgRating.'%;"></div></div><p>'.$this->numRatingsString.'</p></div></td></tr></table>';
+        echo '<table border="0px" width="100%"><tr><td width="100%">';
+        echo '<h1>'.htmlspecialchars($this->addonCurrent['name']).'</h1>';
+        echo '</td><td align="right">';
+        echo '<div id="avg-rating"><div class="rating"><div class="emptystars"></div><div class="fullstars" style="width: '.$this->rating->getAvgRatingPercent().'%;"></div></div><p>'.$this->numRatingsString.'</p></div>';
+        echo '</td></tr></table>';
 
         // Get image
         $image_query = 'SELECT `file_path` FROM `'.DB_PREFIX.'files`
@@ -402,9 +394,9 @@ class coreAddon
         <tr><td><strong>'.htmlspecialchars(_('Compatible with:')).'</strong></td><td>'.format_compat($this->addonCurrent['format'],$this->addonType).'</td></tr>';
         if ($_SESSION['userid']) {
             echo '<tr><td><strong>'.htmlspecialchars(_('Your Rating: ')).'</strong></td><td>';
-            if ($this->hasExistingRating) {
-                if ($this->hasExistingRating != 1) {
-                    echo htmlspecialchars($this->hasExistingRating)." stars";
+            if ($this->rating->getUserVote() !== false) {
+                if ($this->rating->getUserVote() != 1) {
+                    echo htmlspecialchars($this->rating->getUserVote())." stars";
                 } else {
                     echo "1 star";
                 }

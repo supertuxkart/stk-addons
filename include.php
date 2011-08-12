@@ -24,6 +24,7 @@ require(ROOT.'include/locale.php');
 require(ROOT.'include/assetFlags.php');
 require(ROOT.'include/sql.php');
 require(ROOT.'include/User.class.php');
+require(ROOT.'include/Ratings.class.php');
 require(ROOT.'include/security.php');
 require(ROOT.'include/coreAddon.php');
 require(ROOT.'include/coreUser.php');
