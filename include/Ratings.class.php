@@ -57,7 +57,7 @@ class Ratings {
             WHERE `addon_id` = '".$this->addon_id."'";
         $handle = sql_query($query);
         $result = mysql_fetch_assoc($handle);
-        $this->avg_rating = intval($result['avg(vote)']);
+        $this->avg_rating = $result['avg(vote)'];
     }
     
     /**
@@ -74,7 +74,7 @@ class Ratings {
      */
     public function getAvgRatingPercent() {
         $num_possible_ratings = $this->max_rating - $this->min_rating + 1;
-        return intval(($this->avg_rating / $num_possible_ratings) * 100);
+        return (int) ($this->avg_rating / $num_possible_ratings * 100);
     }
     
     /**
