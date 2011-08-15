@@ -37,6 +37,16 @@ $addon_query = 'SELECT `addon_id`,`addon_type`,`file_path`,`date_added`,`downloa
     ORDER BY `addon_id` ASC, `date_added` ASC';
 $report->addQuery($addon_section,$addon_query);
 
+$dl_section = $report->addSection("Add-Ons Cumulative Downloads");
+$dl_query = 'SELECT `a`.`id`,`a`.`type`,`a`.`name`,
+    sum(`f`.`downloads`) AS `dl_count`
+    FROM `'.DB_PREFIX.'addons` `a`, `'.DB_PREFIX.'files` `f`
+    WHERE `a`.`id` = `f`.`addon_id`
+    AND `f`.`file_type` = \'addon\'
+    GROUP BY `a`.`id`
+    ORDER BY `a`.`id` ASC';
+$report->addQuery($dl_section,$dl_query);
+
 $image_section = $report->addSection("Images");
 $image_query = 'SELECT `addon_id`,`addon_type`,`file_path`,`date_added`,`approved`,`downloads`
     FROM `'.DB_PREFIX.'files`
