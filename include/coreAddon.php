@@ -554,7 +554,7 @@ class coreAddon
                 else
                     $div_style = 'image_thumb_container unapproved';
                 echo '<div class="'.$div_style.'">';
-                echo '<a href="'.DOWN_LOCATION.$source_file['file_path'].'">';
+                echo '<a href="'.DOWN_LOCATION.$source_file['file_path'].'" target="_blank" style="target-new: tab;">';
                 echo '<img src="image.php?type=medium&amp;pic='.$source_file['file_path'].'" />';
                 echo '</a><br />';
                 if (User::$logged_in)
