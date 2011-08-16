@@ -54,16 +54,16 @@ if (!file_exists($filepath))
 
 // Check user-agent
 $uagent = $_SERVER['HTTP_USER_AGENT'];
-if (preg_match('#^SuperTuxKart/[a-z0-9\.\-_]+$#',$uagent)) {
+if (preg_match('#^(SuperTuxKart/[a-z0-9\.\-_]+)( \\(.*\\))?$#',$uagent,$matches)) {
     // Check if this user-agent is already known
     $checkSql = 'SELECT * FROM `'.DB_PREFIX.'clients`
-        WHERE `agent_string` = \''.mysql_real_escape_string($uagent).'\'';
+        WHERE `agent_string` = \''.mysql_real_escape_string($matches[1]).'\'';
     $checkHandle = sql_query($checkSql);
     if (mysql_num_rows($checkHandle) != 1)
     {
         // New user-agent. Add it to the database.
         $newSql = 'INSERT INTO `'.DB_PREFIX.'clients`
-            (`agent_string`) VALUES (\''.mysql_real_escape_string($uagent).'\')';
+            (`agent_string`) VALUES (\''.mysql_real_escape_string($matches[1]).'\')';
         $newHandle = sql_query($newSql);
     }
     else
