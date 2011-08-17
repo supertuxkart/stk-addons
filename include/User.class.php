@@ -45,12 +45,16 @@ class User
         // Validate session if complete set of variables is available
         $querySql = 'SELECT `id`,`user`,`pass`,`name`,`role`
             FROM `'.DB_PREFIX.'users`
-            WHERE `user` = \''.$_SESSION['user'].'\'
-            AND `pass` = \''.$_SESSION['pass'].'\'
-            AND `last_login` = \''.$_SESSION['last_login'].'\'
-            AND `name` = \''.$_SESSION['real_name'].'\'
+            WHERE `user` = \''.mysql_real_escape_string($_SESSION['user']).'\'
+            AND `pass` = \''.mysql_real_escape_string($_SESSION['pass']).'\'
+            AND `last_login` = \''.mysql_real_escape_string($_SESSION['last_login']).'\'
+            AND `name` = \''.mysql_real_escape_string($_SESSION['real_name']).'\'
             AND `active` = 1';
         $reqSql = sql_query($querySql);
+        if (!$reqSql) {
+            User::logout();
+            return false;
+        }
         $num_rows = mysql_num_rows($reqSql);
         if($num_rows != 1)
         {
