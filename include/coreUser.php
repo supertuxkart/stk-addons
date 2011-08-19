@@ -227,32 +227,17 @@ class coreUser
  
     function setPass()
     {
-        $newPass = mysql_real_escape_string($_POST['newPass']);
-        $succes =false;
-        if($newPass != $_POST['newPass2'])
+        $new_password = Validate::password($_POST['newPass'], $_POST['newPass2']);
+        
+        if(hash('sha256',$_POST['oldPass']) !== $this->userCurrent['pass'])
+            throw new UserException(htmlspecialchars(_('Your old password is not correct.')));
+
+        if(User::$user_id === $this->userCurrent['id'])
         {
-            echo '<span class="error">'.htmlspecialchars(_('Your passwords do not match.')).'</span><br />';
-            return false;
-        }
-        if(hash('sha256',$_POST['oldPass']) != $this->userCurrent['pass'])
-        {
-            echo '<span class="error">'.htmlspecialchars(_('Your old password is not correct.')).'</span><br />';
-            return false;
-        }
-        if (strlen($_POST['newPass']) < 6)
-        {
-            echo '<span class="error">'.htmlspecialchars(_('Your password must be at least 6 characters long.')).'</span><br />';
-            return false;
-        }
-        if($_SESSION['userid'] == $this->userCurrent['id'])
-        {
-                mysql_query("UPDATE `".DB_PREFIX."users` SET `pass` = '".hash('sha256',$_POST['newPass'])."' WHERE `id` =".$this->userCurrent['id']." LIMIT 1 ;");
-                echo htmlspecialchars(_('Your password is changed.')).'<br />';
-                $_SESSION['pass'] = hash('sha256',$_POST['newPass']);
-                $succes=true;
+            User::change_password($new_password);
         }
 
-        return $succes;
+        return true;
     }
     
     function setConfig()
@@ -302,152 +287,4 @@ class coreUser
         return 'users.php?user='.$this->userCurrent['user'];
     }
 }
-
-
-
-
-/*
-class coreUser
-{
-	var $reqSql;
-	var $addonCurrent;
-	function selectById($id)
-	{
-		$this->reqSql = mysql_query("SELECT * FROM users WHERE `users`.`id` =".$id." LIMIT 1 ;");
-		$this->addonCurrent = mysql_fetch_array($this->reqSql);
-	}
-	function loadAll()
-	{
-		$this->reqSql = mysql_query("SELECT * FROM users") or die(mysql_error());
-	}
-	function next()
-	{
-		$succes = true;
-		$this->addonCurrent = mysql_fetch_array($this->reqSql) or $succes = false;
-		return $succes;
-	}
-	function setAvailable()
-	{
-	
-		global $base;
-		if($_SESSION['role']['manage'.$this->addonCurrent['range'].'s'] == true)
-		{
-			if($this->addonCurrent['available'] == 0) mysql_query("UPDATE `".$base."`.`users` SET `available` = '1' WHERE `users`.`id` =".$this->addonCurrent['id']." LIMIT 1 ;") or die(mysql_error());
-			if($this->addonCurrent['available'] == 1) mysql_query("UPDATE `".$base."`.`users` SET `available` = '0' WHERE `users`.`id` =".$this->addonCurrent['id']." LIMIT 1 ;")  or die(mysql_error());
-		}
-	}
-	function setRange($range)
-	{
-	
-		global $base;
-		if($_SESSION['role']['manage'.$this->addonCurrent['range'].'s'] == true && $_SESSION['role']['manage'.$range.'s'] == true)
-		{
-			mysql_query("UPDATE `".$base."`.`users` SET `range` = '".$range."' WHERE `users`.`id` =".$this->addonCurrent['id']." LIMIT 1 ;");
-		}
-	}
-	
-	function setPass()
-	{
-	
-		global $base;
-		$newPass = mysql_real_escape_string($_POST['newPass']);
-		$succes =false;
-		if($newPass == $_POST['newPass2'])
-		{
-			if(md5($_POST['oldPass']) == $this->addonCurrent['pass'])
-			{
-				
-				if($_SESSION['id'] == $this->addonCurrent['id'])
-				{
-					mysql_query("UPDATE `".$base."`.`users` SET `pass` = '".md5($_POST['newPass'])."' WHERE `users`.`id` =".$this->addonCurrent['id']." LIMIT 1 ;");
-					echo '<div id="content">
-					Your password is changed.
-					</div>';
-					$succes=true;
-				}
-			}
-			else
-			{
-				echo "Wrong old password";
-			}
-		}
-		else
-		{
-			echo "Your passwords aren't same";
-		}
-		
-		return $succes;
-	}
-	
-	function setHomepage($page)
-	{
-	
-		global $base;
-		if($_SESSION['id'] == $this->addonCurrent['id'])
-		{
-			mysql_query("UPDATE `".$base."`.`users` SET `homepage` = '".$page."' WHERE `users`.`id` =".$this->addonCurrent['id']." LIMIT 1 ;");
-		}
-	}
-	
-	function viewInformations()
-	{
-		global $base;
-		echo '<table><tr><td>Login : </td><td>'.$this->addonCurrent['login'].'</td></tr>';
-		echo '<tr><td>Date Registered:</td><td>'.$this->addonCurrent['date'].'</td></tr>';
-		echo '<tr><td>Homepage :</td><td>'.$this->addonCurrent['homepage'].'</td></tr>';
-		if($_SESSION['role']['manage'.$this->addonCurrent['range'].'s'] == true || $_SESSION['id'] == $this->addonCurrent['id'])
-		{
-			echo 'Mail : '.$this->addonCurrent['mail'].'';
-		}
-		echo '</table>';
-		if($_SESSION['role']['manage'.$this->addonCurrent['range'].'s'] == true)
-		{
-			echo '<form action="#" method="GET">';
-			echo '<select onchange="addonRequest(\'users-panel.php?action=range&value=\'+this.value, '.$this->addonCurrent['id'].')" name="range" id="range'.$this->addonCurrent['id'].'">';
-			echo '<option value="basicUser">Basic User</option>';
-			$range = array("moderator","administrator");
-			for($i=0;$i<2;$i++)
-			{
-				if($_SESSION['role']['manage'.$range[$i].'s'] == true)
-				{
-					echo '<option value="'.$range[$i].'"';
-					if($this->addonCurrent['range'] == $range[$i]) echo 'selected="selected"';
-					echo '>'.$range[$i].'</option>';
-				}
-			}
-			echo '</select>';
-			echo '<input  onchange="addonRequest(\'users-panel.php?action=available\', '.$this->addonCurrent['id'].')" type="checkbox" name="available" id="available" ';
-			if($this->addonCurrent['available'] ==1)
-			{
-				echo 'checked="checked" ';
-			}
-			echo '/> <label for="available">Available</label><br /></form>';
-		}
-		echo '<h3>My karts</h3>';
-		include("include/coreAddon.php");
-		$mykart = new coreAddon("karts");
-		$mykart->selectByUser($this->addonCurrent['id']);
-		echo '<ul>';
-		while($mykart->next())
-		{
-			echo'<li><a href="index.php?addons=karts&amp;title='.$mykart->addonCurrent['name'].'">';
-			echo $mykart->addonCurrent['name'];
-			echo'</a></li>';
-		}
-		echo '</ul>';
-		
-		echo '<h3>My tracks</h3>';
-		$mytrack = new coreAddon("tracks");
-		$mytrack->selectByUser($this->addonCurrent['id']);
-		echo '<ul>';
-		while($mytrack->next())
-		{
-			echo'<li><a href="addons.php?addons=tracks&amp;title='.$mytrack->addonCurrent['name'].'">';
-			echo $mytrack->addonCurrent['name'];
-			echo'</a></li>';
-		}
-		echo '</ul>';
-	}
-}
-*/
 ?>

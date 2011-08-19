@@ -70,7 +70,13 @@ switch ($action)
             echo '<span class="error">'.htmlspecialchars(_('You do not have the necessary permissions to perform this action.')).'</span><br />';
             break;
         }
-        $addon->setPass();
+        try {
+            $addon->setPass();
+            echo htmlspecialchars(_('Your password has been changed successfully.'));
+        }
+        catch (UserException $e) {
+            echo '<span class="error">'.$e->getMessage().'</span><br />';
+        }
         break;
     case 'config':
         $addon = new coreUser;

@@ -126,6 +126,26 @@ class User
         User::$user_id = 0;
         User::$logged_in = false;
     }
+    
+    /**
+     * Change the password of the currently logged in user
+     * @param string $new_password Already escaped password
+     */
+    static function change_password($new_password) {
+        $user_id = User::$user_id;
+        
+        if (!User::$logged_in)
+            throw new UserException(htmlspecialchars(_('You must be logged in to change a password.')));
+
+        $query = 'UPDATE `'.DB_PREFIX."users`
+            SET `pass` = '$new_password'
+            WHERE `id` = $user_id";
+        $handle = sql_query($query);
+        if (!$handle)
+            throw new UserException(htmlspecialchars(_('Failed to change your password.')));
+        
+        $_SESSION['pass'] = $new_password;
+    }
 }
 User::init();
 
