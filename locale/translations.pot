@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-08-01 15:52-0600\n"
+"POT-Creation-Date: 2011-08-18 20:48-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,8 +16,53 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: User.class.php:147
+#: User.class.php:84
+msgid "Failed to log in."
+msgstr ""
+
+#: User.class.php:91
+msgid "Your username or password is incorrect."
+msgstr ""
+
+#: User.class.php:138
+msgid "You must be logged in to change a password."
+msgstr ""
+
+#: User.class.php:145
+msgid "Failed to change your password."
+msgstr ""
+
+#: User.class.php:163
 msgid "Me"
+msgstr ""
+
+#: Validate.class.php:33
+msgid "You must enter an email address."
+msgstr ""
+
+#: Validate.class.php:36
+#, php-format
+msgid "\"%s\" is not a valid email address."
+msgstr ""
+
+#: Validate.class.php:48
+msgid "Your username must be at least 4 characters long."
+msgstr ""
+
+#: Validate.class.php:51
+msgid "Your username can only contain alphanumeric characters."
+msgstr ""
+
+#: Validate.class.php:58
+msgid "Your password must be at least 6 characters long."
+msgstr ""
+
+#: Validate.class.php:62
+msgid "Your passwords do not match."
+msgstr ""
+
+#: Validate.class.php:70
+msgid "You must enter a name."
 msgstr ""
 
 #: addons-panel.php:44
@@ -60,7 +105,7 @@ msgstr ""
 msgid "Deleted file."
 msgstr ""
 
-#: addons.php:144 coreAddon.php:998 coreAddon.php:1108 parseUpload.php:241
+#: addons.php:144 coreAddon.php:1039 coreAddon.php:1149 parseUpload.php:241
 msgid "Invalid addon type."
 msgstr ""
 
@@ -84,258 +129,262 @@ msgstr ""
 msgid "basicUser"
 msgstr ""
 
-#: coreAddon.php:65
+#: coreAddon.php:70
 msgid "The requested addon does not exist."
 msgstr ""
 
-#: coreAddon.php:250
+#: coreAddon.php:255
 msgid "Failed to find files associated with this addon."
 msgstr ""
 
-#: coreAddon.php:259
+#: coreAddon.php:264
 msgid "Failed to delete file:"
 msgstr ""
 
-#: coreAddon.php:270
+#: coreAddon.php:275
 msgid "Failed to remove file records for this addon."
 msgstr ""
 
-#: coreAddon.php:290
+#: coreAddon.php:295
 msgid "Failed to remove revision record."
 msgstr ""
 
-#: coreAddon.php:298
+#: coreAddon.php:303
 msgid "Failed to remove addon."
 msgstr ""
 
-#: coreAddon.php:316 coreAddon.php:635 coreAddon.php:1178 coreAddon.php:1188
-#: coreAddon.php:1200 coreAddon.php:1203
+#: coreAddon.php:337 coreAddon.php:676 coreAddon.php:1219 coreAddon.php:1229
+#: coreAddon.php:1241 coreAddon.php:1244
 msgid "Unknown"
 msgstr ""
 
-#: coreAddon.php:343 coreAddon.php:475
+#: coreAddon.php:368 coreAddon.php:516
 msgid "Upload Image"
 msgstr ""
 
-#: coreAddon.php:350 coreAddon.php:665
+#: coreAddon.php:375 coreAddon.php:706
 msgid "Featured"
 msgstr ""
 
-#: coreAddon.php:352 coreAddon.php:659
+#: coreAddon.php:377 coreAddon.php:700
 msgid "Alpha"
 msgstr ""
 
-#: coreAddon.php:354 coreAddon.php:660
+#: coreAddon.php:379 coreAddon.php:701
 msgid "Beta"
 msgstr ""
 
-#: coreAddon.php:356 coreAddon.php:661
+#: coreAddon.php:381 coreAddon.php:702
 msgid "Release-Candidate"
 msgstr ""
 
-#: coreAddon.php:358 coreAddon.php:664
+#: coreAddon.php:383 coreAddon.php:705
 msgid "DFSG Compliant"
 msgstr ""
 
-#: coreAddon.php:363 manage-panel.php:157
+#: coreAddon.php:388 manage-panel.php:157
 msgid "Type:"
 msgstr ""
 
-#: coreAddon.php:363
+#: coreAddon.php:388
 msgid "Arena"
 msgstr ""
 
-#: coreAddon.php:365 coreAddon.php:633
+#: coreAddon.php:390 coreAddon.php:674
 msgid "Designer:"
 msgstr ""
 
-#: coreAddon.php:366
+#: coreAddon.php:391
 msgid "Upload date:"
 msgstr ""
 
-#: coreAddon.php:367
+#: coreAddon.php:392
 msgid "Submitted by:"
 msgstr ""
 
-#: coreAddon.php:368
+#: coreAddon.php:393
 msgid "Revision:"
 msgstr ""
 
-#: coreAddon.php:369
+#: coreAddon.php:394
 msgid "Compatible with:"
 msgstr ""
 
-#: coreAddon.php:374
+#: coreAddon.php:396
+msgid "Your Rating: "
+msgstr ""
+
+#: coreAddon.php:415
 msgid ""
 "Warning: This addon may not display correctly on some systems. It uses "
 "textures that may not be compatible with all video cards."
 msgstr ""
 
-#: coreAddon.php:387 coreAddon.php:392 coreAddon.php:457 coreAddon.php:462
+#: coreAddon.php:428 coreAddon.php:433 coreAddon.php:498 coreAddon.php:503
 msgid "File not found."
 msgstr ""
 
-#: coreAddon.php:396
+#: coreAddon.php:437
 msgid "License"
 msgstr ""
 
-#: coreAddon.php:401
+#: coreAddon.php:442
 msgid "Permalink"
 msgstr ""
 
-#: coreAddon.php:407
+#: coreAddon.php:448
 msgid "Revisions"
 msgstr ""
 
-#: coreAddon.php:413
+#: coreAddon.php:454
 msgid "Upload Revision"
 msgstr ""
 
-#: coreAddon.php:452
+#: coreAddon.php:493
 #, php-format
 msgid "Download revision %u"
 msgstr ""
 
-#: coreAddon.php:457 coreAddon.php:462
+#: coreAddon.php:498 coreAddon.php:503
 msgid "Revision"
 msgstr ""
 
-#: coreAddon.php:470
+#: coreAddon.php:511
 msgid "Images"
 msgstr ""
 
-#: coreAddon.php:504
+#: coreAddon.php:545
 msgid "No images have been uploaded for this addon yet."
 msgstr ""
 
-#: coreAddon.php:524 coreAddon.php:606
+#: coreAddon.php:565 coreAddon.php:647
 msgid "Unapprove"
 msgstr ""
 
-#: coreAddon.php:526 coreAddon.php:608
+#: coreAddon.php:567 coreAddon.php:649
 msgid "Approve"
 msgstr ""
 
-#: coreAddon.php:535
+#: coreAddon.php:576
 msgid "Set Icon"
 msgstr ""
 
-#: coreAddon.php:540
+#: coreAddon.php:581
 msgid "Set Image"
 msgstr ""
 
-#: coreAddon.php:542 coreAddon.php:611
+#: coreAddon.php:583 coreAddon.php:652
 msgid "Delete File"
 msgstr ""
 
-#: coreAddon.php:552
+#: coreAddon.php:593
 msgid "Source Files"
 msgstr ""
 
-#: coreAddon.php:557
+#: coreAddon.php:598
 msgid "Upload Source File"
 msgstr ""
 
-#: coreAddon.php:586
+#: coreAddon.php:627
 msgid "No source files have been uploaded for this addon yet."
 msgstr ""
 
-#: coreAddon.php:596
+#: coreAddon.php:637
 msgid "Not Approved"
 msgstr ""
 
-#: coreAddon.php:598
+#: coreAddon.php:639
 #, php-format
 msgid "Source File %u"
 msgstr ""
 
-#: coreAddon.php:600
+#: coreAddon.php:641
 msgid "Download"
 msgstr ""
 
-#: coreAddon.php:639
+#: coreAddon.php:680
 msgid "Description:"
 msgstr ""
 
-#: coreAddon.php:639
+#: coreAddon.php:680
 #, php-format
 msgid "Max %u characters"
 msgstr ""
 
-#: coreAddon.php:643
+#: coreAddon.php:684
 msgid "Save Properties"
 msgstr ""
 
-#: coreAddon.php:648
+#: coreAddon.php:689
 msgid "Delete Addon"
 msgstr ""
 
-#: coreAddon.php:651
+#: coreAddon.php:692
 msgid "Status Flags:"
 msgstr ""
 
-#: coreAddon.php:656
+#: coreAddon.php:697
 msgid "Approved"
 msgstr ""
 
-#: coreAddon.php:657
+#: coreAddon.php:698
 msgid "Invisible"
 msgstr ""
 
-#: coreAddon.php:662
+#: coreAddon.php:703
 msgid "Latest"
 msgstr ""
 
-#: coreAddon.php:666
+#: coreAddon.php:707
 msgid "Invalid Textures"
 msgstr ""
 
-#: coreAddon.php:675 coreAddon.php:816
+#: coreAddon.php:716 coreAddon.php:857
 #, php-format
 msgid "Rev %u:"
 msgstr ""
 
-#: coreAddon.php:804
+#: coreAddon.php:845
 msgid "Save Changes"
 msgstr ""
 
-#: coreAddon.php:808
+#: coreAddon.php:849
 msgid "Notes from Moderator to Submitter:"
 msgstr ""
 
-#: coreAddon.php:829
+#: coreAddon.php:870
 msgid "Save Notes"
 msgstr ""
 
-#: coreAddon.php:864
+#: coreAddon.php:905
 msgid "The add-on you are trying to create already exists."
 msgstr ""
 
-#: coreAddon.php:871
+#: coreAddon.php:912
 msgid "Creating a new add-on..."
 msgstr ""
 
-#: coreAddon.php:891
+#: coreAddon.php:932
 msgid "This add-on already exists. Adding revision..."
 msgstr ""
 
-#: coreAddon.php:897
+#: coreAddon.php:938
 msgid "Failed to update the name record for this add-on."
 msgstr ""
 
-#: coreAddon.php:906
+#: coreAddon.php:947
 msgid "Failed to update the license record for this add-on."
 msgstr ""
 
-#: coreAddon.php:916
+#: coreAddon.php:957
 msgid "Failed to check for previous add-on revisions."
 msgstr ""
 
-#: coreAddon.php:1215
+#: coreAddon.php:1256
 msgid "Insufficient permissions."
 msgstr ""
 
-#: coreUser.php:87 createAccount.php:42 login.php:106
+#: coreUser.php:87 createAccount.php:42 login.php:113
 msgid "Username:"
 msgstr ""
 
@@ -391,35 +440,20 @@ msgstr ""
 msgid "New Password:"
 msgstr ""
 
-#: coreUser.php:219 createAccount.php:44
-msgid "Must be at least 6 characters long."
+#: coreUser.php:219 createAccount.php:42 createAccount.php:44
+#, php-format
+msgid "Must be at least %d characters long."
 msgstr ""
 
 #: coreUser.php:221
 msgid "New Password (Confirm):"
 msgstr ""
 
-#: coreUser.php:234 createAccount.php:97
-msgid "Your passwords do not match."
-msgstr ""
-
-#: coreUser.php:239
+#: coreUser.php:233
 msgid "Your old password is not correct."
 msgstr ""
 
-#: coreUser.php:244 createAccount.php:107
-msgid "Your password must be at least 6 characters long."
-msgstr ""
-
-#: coreUser.php:250
-msgid "Your password is changed."
-msgstr ""
-
-#: createAccount.php:42
-msgid "Must be at least 4 characters long."
-msgstr ""
-
-#: createAccount.php:44 login.php:108
+#: createAccount.php:44 login.php:115
 msgid "Password:"
 msgstr ""
 
@@ -516,37 +550,33 @@ msgstr ""
 msgid "I agree to the above terms"
 msgstr ""
 
-#: createAccount.php:102
-msgid "Your username must be at least 4 characters long."
-msgstr ""
-
-#: createAccount.php:112
-msgid "You must fill in all of the fields."
-msgstr ""
-
-#: createAccount.php:117
+#: createAccount.php:105
 msgid "You must agree to the terms to register."
 msgstr ""
 
-#: createAccount.php:122
-msgid "You must enter a valid email address."
+#: createAccount.php:112
+msgid "An error occurred trying to validate your username."
 msgstr ""
 
-#: createAccount.php:146
+#: createAccount.php:113 createAccount.php:134
+msgid "Please contact a website administrator."
+msgstr ""
+
+#: createAccount.php:115
+msgid "Your username has already been used."
+msgstr ""
+
+#: createAccount.php:133
+msgid "An error occurred while creating your account."
+msgstr ""
+
+#: createAccount.php:138
 msgid ""
 "Account creation was successful. Please activate your account using the link "
 "emailed to you."
 msgstr ""
 
-#: createAccount.php:150
-msgid "An error occurred while creating your account."
-msgstr ""
-
-#: createAccount.php:155
-msgid "Your username has already been used."
-msgstr ""
-
-#: createAccount.php:167
+#: createAccount.php:154
 msgid "Your account has been activated."
 msgstr ""
 
@@ -592,7 +622,7 @@ msgstr ""
 msgid "You have been logged out."
 msgstr ""
 
-#: login.php:55 login.php:68 login.php:91
+#: login.php:55 login.php:68 login.php:94
 #, php-format
 msgid "Click %shere%s if you do not automatically redirect."
 msgstr ""
@@ -601,20 +631,16 @@ msgstr ""
 msgid "You are already logged in."
 msgstr ""
 
-#: login.php:90
+#: login.php:93
 #, php-format
 msgid "Welcome, %s!"
 msgstr ""
 
-#: login.php:95
-msgid "Authentication failed."
-msgstr ""
-
-#: login.php:110
+#: login.php:117
 msgid "Log In"
 msgstr ""
 
-#: login.php:112
+#: login.php:119
 msgid "Create an account."
 msgstr ""
 
@@ -900,7 +926,7 @@ msgstr ""
 msgid "You are trying to add a new revision of an addon that does not exist."
 msgstr ""
 
-#: parseUpload.php:305 users.php:70 users.php:81
+#: parseUpload.php:305 users.php:70 users.php:87
 msgid "You do not have the necessary permissions to perform this action."
 msgstr ""
 
@@ -1020,7 +1046,7 @@ msgid "Please upload a kart or track."
 msgstr ""
 
 #: upload.php:168
-msgid "Do not use this form if you are updating an existing add-on.<br />"
+msgid "Do not use this form if you are updating an existing add-on."
 msgstr ""
 
 #: upload.php:171
@@ -1114,6 +1140,10 @@ msgstr ""
 
 #: upload.php:261
 msgid "Upload file"
+msgstr ""
+
+#: users.php:75
+msgid "Your password has been changed successfully."
 msgstr ""
 
 #: xmlWrite.php:129
