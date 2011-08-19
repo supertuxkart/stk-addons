@@ -100,10 +100,9 @@ class User
         include(ROOT.'include/allow.php');
 
         // Set latest login time
-        $set_logintime_query = 'UPDATE '.DB_PREFIX.'users
-                SET last_login=\''.$_SESSION['last_login'].'\'
-                WHERE id = '.$_SESSION['userid'];
-        $reqSql = mysql_query($set_logintime_query);
+        $set_logintime_query = 'CALL `'.DB_PREFIX.'set_logintime`
+            ('.$_SESSION['userid'].', \''.$_SESSION['last_login'].'\')';
+        $reqSql = sql_query($set_logintime_query);
         if (!$reqSql) {
             User::logout();
             throw new UserException('Failed to record last login time.');

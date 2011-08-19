@@ -163,6 +163,11 @@ CREATE TABLE `votes` (
 
 -- Stored Procedures
 CREATE PROCEDURE increment_download (IN filepath TEXT)
-    UPDATE `v2_files`
+    UPDATE `files`
     SET `downloads` = `downloads` + 1
-    WHERE `file_path` = filepath
+    WHERE `file_path` = filepath;
+
+CREATE PROCEDURE set_logintime (IN userid INT(11), IN logintime TIMESTAMP)
+    UPDATE `users`
+    SET `last_login` = logintime
+    WHERE `id` = userid;
