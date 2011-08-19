@@ -70,13 +70,13 @@ class User
         // Validate parameters
         // Username must be 4 or more characters
         if (strlen($username) < 4)
-            throw new LoginException(htmlspecialchars(_('Your username must be at least 4 characters long.')));
+            throw new UserException(htmlspecialchars(_('Your username must be at least 4 characters long.')));
         // Password must be 8 or more characters
         if (strlen($password) < 6)
-            throw new LoginException(htmlspecialchars(_('Your password must be at least 6 characters long.')));
+            throw new UserException(htmlspecialchars(_('Your password must be at least 6 characters long.')));
         // Username can only contain alphanumeric characters
         if (!preg_match('/^[a-z0-9]+$/i',$username))
-            throw new LoginException(htmlspecialchars(_('Your username can only contain alphanumeric characters.')));
+            throw new UserException(htmlspecialchars(_('Your username can only contain alphanumeric characters.')));
         $password = hash('sha256',$password);
 
         // Get user record
@@ -89,14 +89,14 @@ class User
         if (!$reqSql)
         {
             User::logout();
-            throw new LoginException(htmlspecialchars(_('Failed to log in.')));
+            throw new UserException(htmlspecialchars(_('Failed to log in.')));
         }
         $num_rows = mysql_num_rows($reqSql);
 
         // Check if the user exists
         if($num_rows != 1) {
             User::logout();
-            throw new LoginException(htmlspecialchars(_('Your username or password is incorrect.')));
+            throw new UserException(htmlspecialchars(_('Your username or password is incorrect.')));
         }
         $result = mysql_fetch_assoc($reqSql);
 
@@ -114,7 +114,7 @@ class User
         $reqSql = mysql_query($set_logintime_query);
         if (!$reqSql) {
             User::logout();
-            throw new LoginException('Failed to record last login time.');
+            throw new UserException('Failed to record last login time.');
         }
         User::$user_id = $result['id'];
         User::$logged_in = true;

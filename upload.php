@@ -165,7 +165,7 @@ if($_GET['action'] == "submit")
         {
             echo '<form id="formKart" enctype="multipart/form-data" action="upload.php?action=submit" method="POST">';
             echo htmlspecialchars(_('Please upload a kart or track.')).'<br />';
-            echo htmlspecialchars(_('Do not use this form if you are updating an existing add-on.'.'<br />'));
+            echo htmlspecialchars(_('Do not use this form if you are updating an existing add-on.')).'<br />';
         }
         ?>
         <label><?php echo htmlspecialchars(_("File:")); ?><br /><input type="file" name="file_addon" /><br /></label>

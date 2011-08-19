@@ -18,22 +18,5 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require(ROOT.'config.php');
-require(ROOT.'include/exceptions.php');
-require(ROOT.'include/ConfigManager.php');
-require(ROOT.'include/Validate.class.php');
-require(ROOT.'include/locale.php');
-require(ROOT.'include/assetFlags.php');
-require(ROOT.'include/sql.php');
-require(ROOT.'include/User.class.php');
-require(ROOT.'include/Ratings.class.php');
-require(ROOT.'include/security.php');
-require(ROOT.'include/coreAddon.php');
-require(ROOT.'include/coreUser.php');
-require(ROOT.'include/parseUpload.php');
-require(ROOT.'include/image.php');
-require(ROOT.'include/mail.php');
-require(ROOT.'include/statistics.php');
-require(ROOT.'include/xmlWrite.php');
-
+class UserException extends Exception {}
 ?>

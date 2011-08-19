@@ -92,72 +92,54 @@ echo '
 
 if (!isset($_POST['terms'])) $_POST['terms'] = NULL;
 
-if ($_GET['action'] == 'submit' && $_POST['pass1'] != $_POST['pass2'])
+if ($_GET['action'] == 'submit')
 {
-    echo '<span class="error">'.htmlspecialchars(_('Your passwords do not match.')).'</span><br /><br />';
-    echo $login_form;
-}
-elseif ($_GET['action'] == 'submit' && strlen($_POST['user']) < 4)
-{
-    echo '<span class="error">'.htmlspecialchars(_('Your username must be at least 4 characters long.')).'</span><br /><br />';
-    echo $login_form;
-}
-elseif ($_GET['action'] == 'submit' && strlen($_POST['pass1']) < 6)
-{
-    echo '<span class="error">'.htmlspecialchars(_('Your password must be at least 6 characters long.')).'</span><br /><br />';
-    echo $login_form;
-}
-elseif ($_GET['action'] == 'submit' && !preg_match('/^[a-z0-9]+$/i',$_POST['user']))
-{
-    echo '<span class="error">'.htmlspecialchars(_('Your username can only contain alphanumeric characters.')).'</span><br /><br />';
-    echo $login_form;
-}
-elseif ($_GET['action'] == 'submit' && (strlen($_POST['name']) == 0 || strlen($_POST['mail']) == 0))
-{
-    echo '<span class="error">'.htmlspecialchars(_('You must fill in all of the fields.')).'</span><br />';
-    echo $login_form;
-}
-elseif ($_GET['action'] == 'submit' && $_POST['terms'] != 'on')
-{
-    echo '<span class="error">'.htmlspecialchars(_('You must agree to the terms to register.')).'</span><br />';
-    echo $login_form;
-}
-elseif ($_GET['action'] == 'submit' && validate_email($_POST['mail']) === false)
-{
-    echo '<span class="error">'.htmlspecialchars(_('You must enter a valid email address.')).'</span><br />';
-    echo $login_form;
-}
-elseif($_GET['action'] == "submit" && $_POST['pass1'] == $_POST['pass2'])
-{
-    $user = mysql_real_escape_string($_POST['user']);
-    $existSql= mysql_query("SELECT * FROM `".DB_PREFIX."users` WHERE `user` = '$user'");
-    $exist = mysql_num_rows($existSql);
-    if($exist === 0 && $user != null)
+    // Register new account
+    try
     {
-        $crypt = cryptUrl(12);
-        $createSql = mysql_query('
-            INSERT INTO `'.DB_PREFIX."users`
-                (`user`, `pass`, `name`, `role`, `email`,
-                `active`, `verify`, `reg_date`)
+        // Check all form input
+        $username = Validate::username($_POST['user']);
+        $password = Validate::password($_POST['pass1'], $_POST['pass2']);
+        $email = Validate::email($_POST['mail']);
+        $name = Validate::realname($_POST['name']);
+        $terms = Validate::checkbox($_POST['terms'],htmlspecialchars(_('You must agree to the terms to register.')));
+        
+        // Make sure requested username is not taken
+        $check_name_query = "SELECT * FROM `".DB_PREFIX."users` WHERE `user` = '$username'";
+        $check_name_handle = sql_query($check_name_query);
+        if (!$check_name_handle)
+            throw new UserException(htmlspecialchars(
+                    _('An error occurred trying to validate your username.')
+                    .' '._('Please contact a website administrator.')));
+        if (mysql_num_rows($check_name_handle) !== 0)
+            throw new UserException(htmlspecialchars(_('Your username has already been used.')));
+
+        // No exception occurred - continue with registration
+
+        // Generate verification code
+        $verification_code = cryptUrl(12);
+        $creation_date = date('Y-m-d');
+        $create_query = 'INSERT INTO `'.DB_PREFIX."users`
+                (`user`, `pass`, `name`,
+                `role`, `email`, `active`,
+                `verify`, `reg_date`)
             VALUES
-                ('".mysql_real_escape_string($_POST['user'])."',
-                '".hash('sha256',$_POST['pass1'])."',
-                '".mysql_real_escape_string($_POST['name'])."',
-                'basicUser','".mysql_real_escape_string($_POST['mail'])."',
-                '0','$crypt','".date('Y-m-d')."')");
-        if ($createSql)
-        {
-            sendMail(mysql_real_escape_string($_POST['mail']), "newAccount", array($crypt, $_SERVER["PHP_SELF"], $user));
-            echo htmlspecialchars(_("Account creation was successful. Please activate your account using the link emailed to you."));
-        }
-        else
-        {
-            echo '<span class="error">'.htmlspecialchars(_('An error occurred while creating your account.')).'</span><br />';
-        }
+                ('$username', '$password', '$name',
+                'basicUser', '$email', '0',
+                '$verification_code', '$creation_date')";
+        $create_handle = sql_query($create_query);
+        if (!$create_handle)
+            throw new UserException(htmlspecialchars(
+                    _('An error occurred while creating your account.')
+                    .' '._('Please contact a website administrator.')));
+        
+        // Send verification email
+        sendMail($email, "newAccount", array($verification_code, $_SERVER["PHP_SELF"], $username));
+        echo htmlspecialchars(_("Account creation was successful. Please activate your account using the link emailed to you."));
     }
-    else
+    catch (UserException $e)
     {
-        echo '<span class="error">'.htmlspecialchars(_('Your username has already been used.'))."</span><br /><br />";
+        echo '<span class="error">'.$e->getMessage().'</span><br /><br />';
         echo $login_form;
     }
 }
@@ -183,15 +165,4 @@ else
 <?php
 $str = cryptUrl(12);
 
-/**
- * Check if the input is a valid email address
- * @param string $email Email address
- * @return string Email address (or false if invalid)
- */
-function validate_email($email) {
-    if (!preg_match('/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i',$email)) {
-        return false;
-    }
-    return $email;
-}
 ?>
