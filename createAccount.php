@@ -39,9 +39,9 @@ $_GET['action'] = (isset($_GET['action'])) ? $_GET['action'] : NULL;
 // Login form
 $login_form =
     '<form id="form" action="createAccount.php?action=submit" method="POST">
-    '.htmlspecialchars(_('Username:')).' ('.htmlspecialchars(_('Must be at least 4 characters long.')).')<br />
+    '.htmlspecialchars(_('Username:')).' ('.htmlspecialchars(sprintf(_('Must be at least %d characters long.'),'4')).')<br />
     <input type="text" name="user" /><br />
-    '.htmlspecialchars(_('Password:')).' ('.htmlspecialchars(_('Must be at least 6 characters long.')).')<br />
+    '.htmlspecialchars(_('Password:')).' ('.htmlspecialchars(sprintf(_('Must be at least %d characters long.'),'6')).')<br />
     <input type="password" id="pass1" name="pass1" /><br />
     '.htmlspecialchars(_('Password (confirm):')).' <br />
     <input type="password" id="pass2" name="pass2" /><br />
