@@ -68,23 +68,15 @@ class User
     static function login($username,$password)
     {
         // Validate parameters
-        // Username must be 4 or more characters
-        if (strlen($username) < 4)
-            throw new UserException(htmlspecialchars(_('Your username must be at least 4 characters long.')));
-        // Password must be 8 or more characters
-        if (strlen($password) < 6)
-            throw new UserException(htmlspecialchars(_('Your password must be at least 6 characters long.')));
-        // Username can only contain alphanumeric characters
-        if (!preg_match('/^[a-z0-9]+$/i',$username))
-            throw new UserException(htmlspecialchars(_('Your username can only contain alphanumeric characters.')));
-        $password = hash('sha256',$password);
+        $username = Validate::username($username);
+        $password = Validate::password($password);
 
         // Get user record
         $querySql = 'SELECT `id`, `user`, `pass`, `name`, `role`
-                FROM `'.DB_PREFIX.'users`
-                WHERE `user` = \''.$username.'\'
-                AND `pass` = \''.$password.'\'
-                AND `active` = 1';
+                FROM `'.DB_PREFIX."users`
+                WHERE `user` = '$username'
+                AND `pass` = '$password'
+                AND `active` = 1";
         $reqSql = sql_query($querySql);
         if (!$reqSql)
         {

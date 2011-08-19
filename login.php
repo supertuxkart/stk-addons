@@ -78,7 +78,7 @@ if ($_GET['action'] == 'submit')
         // Variable validation is done by the function below
         User::login($_POST['user'],$_POST['pass']);
     }
-    catch (LoginException $e)
+    catch (UserException $e)
     {
         $error = $e->getMessage();
     }
