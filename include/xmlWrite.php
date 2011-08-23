@@ -43,6 +43,9 @@ function generateNewsXML()
     $writer->writeAttribute('file',ASSET_XML);
     $writer->writeAttribute('mtime',filemtime(ASSET_XML_LOCAL));
     $writer->endElement();
+    
+    // Refresh dynamic news entries
+    News::refreshDynamicEntries();
 
     // Fetch news list
     $querySql = 'SELECT `n`.*, `u`.`user`

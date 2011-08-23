@@ -19,7 +19,7 @@
  */
 
 define('ROOT','./');
-include_once('config.php');
+$security = '';
 include_once('include.php');
 
 $xml = writeNewsXML();

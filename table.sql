@@ -114,7 +114,9 @@ CREATE TABLE `news` (
     `condition` varchar(255) default NULL,
     `web_display` tinyint(1) NOT NULL default '1',
     `active` tinyint(1) NOT NULL default '1',
+    `dynamic` int(1) unsigned NOT NULL default '0',
     PRIMARY KEY  (`id`),
+    INDEX (`dynamic`),
     KEY `date` (`date`,`active`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
