@@ -83,6 +83,12 @@ include("include/top.php");
                 <div id="news-panel">
                     <ul id="news-messages">
                         <?php
+                        // Note the newest track and kart
+                        $new_kart = stat_newest('karts');
+                        $new_track = stat_newest('tracks');
+                        printf('<li>'.htmlspecialchars(_('The newest kart is %s.')).'</li>'."\n",addon_name($new_kart));
+                        printf('<li>'.htmlspecialchars(_('The newest track is %s.')).'</li>'."\n",addon_name($new_track));
+                        
                         // Note most downloaded track and kart
                         $pop_kart = stat_most_downloaded('karts');
                         $pop_track = stat_most_downloaded('tracks');

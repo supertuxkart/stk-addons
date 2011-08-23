@@ -48,4 +48,26 @@ function stat_most_downloaded($addontype, $filetype = 'addon')
     $sorted_keys = array_keys($dl_counts);
     return $sorted_keys[0];
 }
+
+function stat_newest($addontype) {
+    if ($addontype != 'karts'
+            && $addontype != 'tracks'
+            && $addontype != 'arenas')
+        return false;
+
+    $query = 'SELECT `a`.`id`
+        FROM `'.DB_PREFIX.'addons` `a`
+        LEFT JOIN `'.DB_PREFIX.$addontype.'_revs` `r`
+        ON `a`.`id` = `r`.`addon_id`
+        WHERE `r`.`status` & '.F_APPROVED.'
+        ORDER BY `a`.`creation_date` DESC 
+        LIMIT 1';
+    $handle = sql_query($query);
+    if (!$handle)
+        return false;
+    if (mysql_num_rows($handle) !== 1)
+        return false;
+    $result = mysql_fetch_assoc($handle);
+    return $result['id'];
+}
 ?>
