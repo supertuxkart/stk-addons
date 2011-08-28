@@ -43,22 +43,17 @@ $_GET['rev'] = (isset($_GET['rev'])) ? (int)$_GET['rev'] : NULL;
 <body>
 <?php 
 include("include/menu.php");
-?>
-<div id="left-menu">
-    <div id="left-menu_top"></div>
-    <div id="left-menu_body">
-<?php
+
+$panels = new PanelInterface();
+
+if (!Addon::isAllowedType($_GET['type'])) {
+    echo '<span class="error">'.htmlspecialchars(_('Invalid addon type.')).'</span><br />';
+    exit;
+}
+
 $js = "";
 
-loadAddons();
-?>
-    </div>
-    <div id="left-menu_bottom"></div>
-</div>
-<div id="right-content">
-    <div id="right-content_top"></div>
-    <div id="right-content_status">
-<?php
+ob_start();
 // Execute actions
 switch ($_GET['save'])
 {
@@ -121,12 +116,61 @@ switch ($_GET['save'])
             echo htmlspecialchars(_('Deleted file.')).'<br />';
         break;
 }
+$status = ob_get_clean();
+$panels->setStatusContent($status);
+
+$addons = array();
+$addonLoader = new coreAddon($_GET['type']);
+$addonLoader->loadAll();
+while($addonLoader->next())
+{
+    if ($addonLoader->addonType == 'karts')
+    {
+        if ($addonLoader->addonCurrent['icon'] != 0)
+        {
+            $get_image_query = 'SELECT `file_path` FROM `'.DB_PREFIX.'files`
+                WHERE `id` = '.(int)$addonLoader->addonCurrent['icon'].'
+                AND `approved` = 1
+                LIMIT 1';
+            $get_image_handle = sql_query($get_image_query);
+            if (mysql_num_rows($get_image_handle) == 1)
+            {
+                $icon = mysql_fetch_assoc($get_image_handle);
+                $icon_path = $icon['file_path'];
+            }
+            else
+            {
+                $icon_path = 'image/kart-icon.png';
+            }
+        }
+        else
+        {
+            $icon_path = 'image/kart-icon.png';
+        }
+    }
+    if ($_GET['type'] == 'karts')
+        $icon = 'image.php?type=small&amp;pic='.$icon_path;
+    else
+        $icon = 'image/track-icon.png';
+
+    // Approved?
+    if(($addonLoader->addonCurrent['status'] & F_APPROVED) == F_APPROVED)
+        $class = 'menu-item';
+    elseif(User::$logged_in && ($_SESSION['role']['manageaddons'] == true || $_SESSION['userid'] == $addonLoader->addonCurrent['uploader']))
+        $class = 'menu-item unavailable';
+    else
+        continue;
+    $addons[] = array(
+        'class' => $class,
+        'url'   => "javascript:loadFrame('{$addonLoader->addonCurrent['id']}','addons-panel.php?type={$_GET['type']}');",
+        'label' => '<img class="icon"  src="'.$icon.'" />'.htmlspecialchars($addonLoader->addonCurrent['name'])
+    );
+    if($addonLoader->addonCurrent['id'] == $_GET['name']) $js.= 'loadFrame(\''.$addonLoader->addonCurrent['id'].'\',\'addons-panel.php?type='.$_GET['type'].'\')';
+}
+$panels->setMenuItems($addons);
+
+echo $panels;
 ?>
-    </div>
-    <div id="right-content_body"></div>
-    <div id="right-content_bottom"></div>
-</div>
-</div>
 <script type="text/javascript">
 <?php echo $js; ?>
 </script>
