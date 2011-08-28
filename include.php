@@ -23,6 +23,8 @@ require(ROOT.'include/exceptions.php');
 require(ROOT.'include/ConfigManager.php');
 require(ROOT.'include/Validate.class.php');
 require(ROOT.'include/News.class.php');
+require(ROOT.'include/PanelInterface.class.php');
+require(ROOT.'include/Addon.class.php');
 require(ROOT.'include/locale.php');
 require(ROOT.'include/assetFlags.php');
 require(ROOT.'include/sql.php');

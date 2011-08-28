@@ -36,8 +36,8 @@ if(!isset($title))
     <head>
         <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
         <title><?php echo $title;?></title>
-        <link href="css/skin_<?php echo $style;?>.css" rel="stylesheet" media="all" type="text/css" />
-        <script type="text/javascript" src="js/jquery.js"></script>
-        <script type="text/javascript" src="js/jquery.newsticker.js"></script>
-        <script type="text/javascript" src="js/script.js"></script>
-        <link href="css/style_jquery.css" rel="stylesheet" type="text/css" />
+        <link href="<?php echo SITE_ROOT; ?>css/skin_<?php echo $style;?>.css" rel="stylesheet" media="all" type="text/css" />
+        <script type="text/javascript" src="<?php echo SITE_ROOT; ?>js/jquery.js"></script>
+        <script type="text/javascript" src="<?php echo SITE_ROOT; ?>js/jquery.newsticker.js"></script>
+        <script type="text/javascript" src="<?php echo SITE_ROOT; ?>js/script.js"></script>
+        <link href="<?php echo SITE_ROOT; ?>css/style_jquery.css" rel="stylesheet" type="text/css" />

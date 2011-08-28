@@ -40,23 +40,11 @@ $title = htmlspecialchars(_('SuperTuxKart Add-ons')).' | '.htmlspecialchars(_('U
 include('include/top.php');
 echo '</head><body>';
 include(ROOT.'include/menu.php');
-?>
 
-<div id="left-menu">
-    <div id="left-menu_top"></div>
-    <div id="left-menu_body">
-<?php
-$js = "";
-loadUsers();
-?>
-    </div>
-    <div id="left-menu_bottom"></div>
-</div>
+$panels = new PanelInterface();
+$js = NULL;
 
-<div id="right-content">
-    <div id="right-content_top"></div>
-    <div id="right-content_status">
-<?php
+ob_start();
 switch ($action)
 {
     default:
@@ -90,12 +78,37 @@ switch ($action)
         $addon->setConfig();
         break;
 }
-?>
-    </div>
-    <div id="right-content_body"></div>
-    <div id="right-content_bottom"></div>
-</div>
-<?php
+$status = ob_get_clean();
+$panels->setStatusContent($status);
+
+$users = array();
+$userLoader = new coreUser();
+$userLoader->loadAll();
+$users[] = array(
+    'url' => "javascript:loadFrame({$_SESSION['userid']},'users-panel.php');",
+    'label' => '<img class="icon"  src="image/user.png" />'.htmlspecialchars(_('Me'))
+);
+while($userLoader->next())
+{
+    // Make sure that the user is active, or the viewer has permission to
+    // manage this type of user
+    if ($_SESSION['role']['manage'.$userLoader->userCurrent['role'].'s']
+            || $userLoader->userCurrent['active'] == 1)
+    {
+        $class = 'menu-item';
+        if ($userLoader->userCurrent['active'] == 0) $class .= ' unavailable';
+        $users[] = array(
+            'url'   => "javascript:loadFrame('{$userLoader->userCurrent['id']}','users-panel.php');",
+            'label' => '<img class="icon"  src="image/user.png" />'.htmlspecialchars($userLoader->userCurrent['user']),
+            'class' => $class
+        );
+        if($userLoader->userCurrent['user'] == $_GET['user']) $js = 'loadFrame('.$userLoader->userCurrent['id'].',\'users-panel.php\')';
+    }
+}
+$panels->setMenuItems($users);
+
+echo $panels;
+
 echo '<script type="text/javascript">';
 echo $js;
 echo '</script>';

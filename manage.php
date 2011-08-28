@@ -28,40 +28,30 @@ require('include/top.php');
 echo '</head><body>';
 require('include/menu.php');
 if (!isset($_GET['action'])) $_GET['action'] = NULL;
-?>
 
-<div id="left-menu">
-    <div id="left-menu_top"></div>
-    <div id="left-menu_body">
-        <ul>
-           <li>
-               <a class="menu-item" href="javascript:loadFrame('general','manage-panel.php');">
-                   <?php echo htmlspecialchars(_('General Settings')); ?>
-               </a>
-           </li>
-           <li>
-               <a class="menu-item" href="javascript:loadFrame('news','manage-panel.php');">
-                   <?php echo htmlspecialchars(_('News Messages')); ?>
-               </a>
-           </li>
-           <li>
-               <a class="menu-item" href="javascript:loadFrame('files','manage-panel.php');">
-                   <?php echo htmlspecialchars(_('Uploaded Files')); ?>
-               </a>
-           </li>
-           <li>
-               <a class="menu-item" href="javascript:loadFrame('clients','manage-panel.php');">
-                   <?php echo htmlspecialchars(_('Client Versions')); ?>
-               </a>
-           </li>
-        </ul>
-    </div>
-    <div id="left-menu_bottom"></div>
-</div>
-<div id="right-content">
-    <div id="right-content_top"></div>
-    <div id="right-content_status">
-<?php
+$panels = new PanelInterface();
+
+$panels->setMenuItems(
+        array(
+            array(
+                'url'   => 'javascript:loadFrame(\'general\',\'manage-panel.php\');',
+                'label' => htmlspecialchars(_('General Settings'))
+            ),
+            array(
+                'url'   => 'javascript:loadFrame(\'news\',\'manage-panel.php\');',
+                'label' => htmlspecialchars(_('News Messages'))
+            ),
+            array(
+                'url'   => 'javascript:loadFrame(\'files\',\'manage-panel.php\');',
+                'label' => htmlspecialchars(_('Uploaded Files'))
+            ),
+            array(
+                'url'   => 'javascript:loadFrame(\'clients\',\'manage-panel.php\');',
+                'label' => htmlspecialchars(_('Client Versions'))
+            )
+        ));
+
+ob_start();
 switch ($_GET['action'])
 {
     default:
@@ -114,12 +104,11 @@ switch ($_GET['action'])
         writeNewsXML();
         break;
 }
-?>
-    </div>
-    <div id="right-content_body"></div>
-    <div id="right-content_bottom"></div>
-</div>
-<?php
+$status_content = ob_get_clean();
+$panels->setStatusContent($status_content);
+
+echo $panels;
+
 if (!isset($_GET['view']))
     $_GET['view'] = 'general';
 ?>
