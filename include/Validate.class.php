@@ -66,10 +66,10 @@ class Validate {
     }
     
     public static function realname($name) {
-        if (strlen($name) == 0) {
+        if (strlen(trim($name)) < 2) {
             throw new UserException(htmlspecialchars(_('You must enter a name.')));
         }
-        return mysql_real_escape_string(htmlspecialchars($name));
+        return mysql_real_escape_string(htmlspecialchars(trim($name)));
     }
     
     public static function checkbox($box, $message) {

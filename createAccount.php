@@ -105,7 +105,7 @@ if ($_GET['action'] == 'submit')
         $terms = Validate::checkbox($_POST['terms'],htmlspecialchars(_('You must agree to the terms to register.')));
         
         // Make sure requested username is not taken
-        $check_name_query = "SELECT * FROM `".DB_PREFIX."users` WHERE `user` = '$username'";
+        $check_name_query = "SELECT `user` FROM `".DB_PREFIX."users` WHERE `user` = '$username'";
         $check_name_handle = sql_query($check_name_query);
         if (!$check_name_handle)
             throw new UserException(htmlspecialchars(
@@ -119,14 +119,8 @@ if ($_GET['action'] == 'submit')
         // Generate verification code
         $verification_code = cryptUrl(12);
         $creation_date = date('Y-m-d');
-        $create_query = 'INSERT INTO `'.DB_PREFIX."users`
-                (`user`, `pass`, `name`,
-                `role`, `email`, `active`,
-                `verify`, `reg_date`)
-            VALUES
-                ('$username', '$password', '$name',
-                'basicUser', '$email', '0',
-                '$verification_code', '$creation_date')";
+        $create_query = 'CALL `'.DB_PREFIX."register_user`
+            ('$username','$password','$name','$email','$verification_code','$creation_date')";
         $create_handle = sql_query($create_query);
         if (!$create_handle)
             throw new UserException(htmlspecialchars(

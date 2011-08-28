@@ -169,6 +169,12 @@ CREATE PROCEDURE increment_download (IN filepath TEXT)
     SET `downloads` = `downloads` + 1
     WHERE `file_path` = filepath;
 
+CREATE PROCEDURE register_user (IN in_user TEXT, IN in_pass CHAR(64), IN in_name TEXT, IN in_email TEXT, IN in_vercode TEXT, IN in_regdate DATE)
+    INSERT INTO `users`
+    (`user`,`pass`,`name`,`role`,`email`,`active`,`verify`,`reg_date`)
+    VALUES
+    (in_user, in_pass, in_name, 'basicUser', in_email, 0, in_vercode, in_regdate);
+
 CREATE PROCEDURE set_logintime (IN userid INT(11), IN logintime TIMESTAMP)
     UPDATE `users`
     SET `last_login` = logintime
