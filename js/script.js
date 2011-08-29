@@ -82,6 +82,15 @@ $(document).ready(function () {
     if($("#content_advanced").css("width")!= "300px") $("#content_advanced").animate({width: "300px"}, 150 );
     else  $("#content_advanced").animate({width: "0px"}, 150 );
     });
+
+    $('a.addon-list').click(function() {
+      history.pushState({ path: this.path }, '', this.href);
+      var url = this.href;
+      var addonType = getUrlVars(url)['type'];
+      var addonId = getUrlVars(url)['name'];
+      loadFrame(addonId,'addons-panel.php?type=' + addonType);
+      return false;
+    });
 });
 
 function load_jquery()
@@ -152,4 +161,21 @@ function loadHTML(url, storage)
     };
     xhr.open("GET", url , true);
     xhr.send(null);
+}
+
+// Read a page's GET URL variables and return them as an associative array.
+function getUrlVars(url)
+{
+    if (url === undefined)
+        url = window.location.href;
+    
+    var vars = [], hash;
+    var hashes = url.slice(url.indexOf('?') + 1).split('&');
+    for(var i = 0; i < hashes.length; i++)
+    {
+        hash = hashes[i].split('=');
+        vars.push(hash[0]);
+        vars[hash[0]] = hash[1];
+    }
+    return vars;
 }

@@ -340,8 +340,7 @@ class coreAddon
         else
             $description = htmlentities ($this->addonCurrent['description']).'<br />';
 
-        //div for jqery TODO:add jquery effects
-        echo '<div id="accordion"><div>';
+        echo '<div>';
 
         echo '<table border="0px" width="100%"><tr><td width="100%">';
         echo '<h1>'.htmlspecialchars($this->addonCurrent['name']).'</h1>';

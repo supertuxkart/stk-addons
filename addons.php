@@ -155,14 +155,14 @@ while($addonLoader->next())
 
     // Approved?
     if(($addonLoader->addonCurrent['status'] & F_APPROVED) == F_APPROVED)
-        $class = 'menu-item';
+        $class = 'addon-list menu-item';
     elseif(User::$logged_in && ($_SESSION['role']['manageaddons'] == true || $_SESSION['userid'] == $addonLoader->addonCurrent['uploader']))
-        $class = 'menu-item unavailable';
+        $class = 'addon-list menu-item unavailable';
     else
         continue;
     $addons[] = array(
         'class' => $class,
-        'url'   => "javascript:loadFrame('{$addonLoader->addonCurrent['id']}','addons-panel.php?type={$_GET['type']}');",
+        'url'   => "addons.php?type={$_GET['type']}&amp;name={$addonLoader->addonCurrent['id']}",
         'label' => '<img class="icon"  src="'.$icon.'" />'.htmlspecialchars($addonLoader->addonCurrent['name'])
     );
 }
