@@ -165,76 +165,17 @@ while($addonLoader->next())
         'url'   => "javascript:loadFrame('{$addonLoader->addonCurrent['id']}','addons-panel.php?type={$_GET['type']}');",
         'label' => '<img class="icon"  src="'.$icon.'" />'.htmlspecialchars($addonLoader->addonCurrent['name'])
     );
-    if($addonLoader->addonCurrent['id'] == $_GET['name']) $js.= 'loadFrame(\''.$addonLoader->addonCurrent['id'].'\',\'addons-panel.php?type='.$_GET['type'].'\')';
 }
 $panels->setMenuItems($addons);
 
-echo $panels;
-?>
-<script type="text/javascript">
-<?php echo $js; ?>
-</script>
-<?php
-include("include/footer.php");
-function loadAddons()
-{
-    global $addon, $dirDownload, $dirUpload, $js, $user;
-    if($_GET['type'] != "karts" &&
-        $_GET['type'] != "tracks"  &&
-        $_GET['type'] != "arenas" &&
-        $_GET['type'] != "file"  &&
-        $_GET['type'] != "blender")
-    {
-        echo '<span class="error">'.htmlspecialchars(_('Invalid addon type.')).'</span><br />';
-        return;
-    }
-    $addonLoader = new coreAddon($_GET['type']);
-    $addonLoader->loadAll();
-    echo '<ul>';
-    while($addonLoader->next())
-    {
-        if ($addonLoader->addonType == 'karts')
-        {
-            if ($addonLoader->addonCurrent['icon'] != 0)
-            {
-                $get_image_query = 'SELECT `file_path` FROM `'.DB_PREFIX.'files`
-                    WHERE `id` = '.(int)$addonLoader->addonCurrent['icon'].'
-                    AND `approved` = 1
-                    LIMIT 1';
-                $get_image_handle = sql_query($get_image_query);
-                if (mysql_num_rows($get_image_handle) == 1)
-                {
-                    $icon = mysql_fetch_assoc($get_image_handle);
-                    $icon_path = $icon['file_path'];
-                }
-                else
-                {
-                    $icon_path = 'image/kart-icon.png';
-                }
-            }
-            else
-            {
-                $icon_path = 'image/kart-icon.png';
-            }
-        }
-        // Approved?
-        if(($addonLoader->addonCurrent['status'] & F_APPROVED) == F_APPROVED)
-        {
-            echo '<li><a class="menu-item" href="javascript:loadFrame(\''.$addonLoader->addonCurrent['id'].'\',\'addons-panel.php?type='.$_GET['type'].'\')">';
-            if($_GET['type'] == "karts") echo '<img class="icon"  src="image.php?type=small&amp;pic='.$icon_path.'" />';
-            else echo '<img class="icon"  src="image/track-icon.png" />';
-            echo $addonLoader->addonCurrent['name']."</a></li>";
-        }
-        elseif(User::$logged_in && ($_SESSION['role']['manageaddons'] == true || $_SESSION['userid'] == $addonLoader->addonCurrent['uploader']))
-        {
-            echo '<li><a class="menu-item unavailable" href="javascript:loadFrame(\''.$addonLoader->addonCurrent['id'].'\',\'addons-panel.php?type='.$_GET['type'].'\')">';
-            if($_GET['type'] == "karts")
-                echo '<img class="icon"  src="image.php?type=small&amp;pic='.$icon_path.'" />';
-            else echo '<img class="icon"  src="image/track-icon.png" />';
-            echo $addonLoader->addonCurrent['name']."</a></li>";
-        }
-        if($addonLoader->addonCurrent['id'] == $_GET['name']) $js.= 'loadFrame(\''.$addonLoader->addonCurrent['id'].'\',\'addons-panel.php?type='.$_GET['type'].'\')';
-    }
-    echo "</ul>";
+if (isset($_GET['name'])) {
+    $_GET['id'] = $_GET['name'];
+    ob_start();
+    include(ROOT.'addons-panel.php');
+    $content = ob_get_clean();
+    $panels->setContent($content);
 }
+
+echo $panels;
+include("include/footer.php");
 ?>

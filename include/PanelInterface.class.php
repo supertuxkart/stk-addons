@@ -40,6 +40,10 @@ class PanelInterface {
         $this->statusContent = $content;
     }
     
+    public function setContent($content) {
+        $this->rightContent = $content;
+    }
+    
     public function __toString() {
         $content = "<div id=\"panels\">\n";
         $content .= "\t<div id=\"left-menu\">\n";
