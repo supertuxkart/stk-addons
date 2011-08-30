@@ -570,26 +570,6 @@ function read_xml($file,$type)
     return array('xml'=>$new_xml,'attributes'=>$attributes);
 }
 
-function rmdir_recursive($dir)
-{
-    if (is_dir($dir))
-    {
-        $dir = rtrim($dir, '/');
-        $oDir = dir($dir);
-        while (($sFile = $oDir->read()) !== false)
-        {
-            if ($sFile != '.' && $sFile != '..')
-            {
-                (!is_link("$dir/$sFile") && is_dir("$dir/$sFile")) ? rmdir_recursive("$dir/$sFile") : unlink("$dir/$sFile");
-            }
-        }
-        $oDir->close();
-        rmdir($dir);
-        return true;
-    }
-    return false;
-}
-
 function generate_addon_id($type,$attb)
 {
     if (!is_array($attb))

@@ -34,20 +34,29 @@ $panels = new PanelInterface();
 $panels->setMenuItems(
         array(
             array(
-                'url'   => 'javascript:loadFrame(\'general\',\'manage-panel.php\');',
-                'label' => htmlspecialchars(_('General Settings'))
+                'url'   => 'manage.php?view=general',
+                'label' => htmlspecialchars(_('General Settings')),
+                'class' => 'manage-list menu-item'
             ),
             array(
-                'url'   => 'javascript:loadFrame(\'news\',\'manage-panel.php\');',
-                'label' => htmlspecialchars(_('News Messages'))
+                'url'   => 'manage.php?view=news',
+                'label' => htmlspecialchars(_('News Messages')),
+                'class' => 'manage-list menu-item'
             ),
             array(
-                'url'   => 'javascript:loadFrame(\'files\',\'manage-panel.php\');',
-                'label' => htmlspecialchars(_('Uploaded Files'))
+                'url'   => 'manage.php?view=files',
+                'label' => htmlspecialchars(_('Uploaded Files')),
+                'class' => 'manage-list menu-item'
             ),
             array(
-                'url'   => 'javascript:loadFrame(\'clients\',\'manage-panel.php\');',
-                'label' => htmlspecialchars(_('Client Versions'))
+                'url'   => 'manage.php?view=clients',
+                'label' => htmlspecialchars(_('Client Versions')),
+                'class' => 'manage-list menu-item'
+            ),
+            array(
+                'url'   => 'manage.php?view=cache',
+                'label' => htmlspecialchars(_('Cache Files')),
+                'class' => 'manage-list menu-item'
             )
         ));
 
@@ -107,15 +116,16 @@ switch ($_GET['action'])
 $status_content = ob_get_clean();
 $panels->setStatusContent($status_content);
 
-echo $panels;
-
 if (!isset($_GET['view']))
     $_GET['view'] = 'general';
-?>
-<script type="text/javascript">
-    loadFrame('<?php echo htmlentities($_GET['view']); ?>','manage-panel.php');
-</script>
-<?php
+$_POST['id'] = $_GET['view'];
+
+ob_start();
+include(ROOT.'manage-panel.php');
+$content = ob_get_clean();
+$panels->setContent($content);
+
+echo $panels;
 
 require('include/footer.php');
 ?>

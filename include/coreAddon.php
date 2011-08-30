@@ -1017,20 +1017,6 @@ function addon_id_clean($string)
     return $string;
 }
 
-function addon_name($addon_id)
-{
-    $addon_id = addon_id_clean($addon_id);
-    $query = 'SELECT `name` FROM `'.DB_PREFIX.'addons`
-        WHERE `id` = \''.$addon_id.'\' LIMIT 1';
-    $handle = sql_query($query);
-    if (!$handle)
-        return false;
-    if (mysql_num_rows($handle) == 0)
-        return false;
-    $result = mysql_fetch_assoc($handle);
-    return $result['name'];
-}
-
 function update_status($type,$addon_id,$fields)
 {
     if ($type != 'karts' && $type != 'tracks' && $type != 'arenas')

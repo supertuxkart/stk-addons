@@ -86,14 +86,14 @@ include("include/top.php");
                         // Note the newest track and kart
                         $new_kart = stat_newest('karts');
                         $new_track = stat_newest('tracks');
-                        printf('<li>'.htmlspecialchars(_('The newest kart is %s.')).'</li>'."\n",addon_name($new_kart));
-                        printf('<li>'.htmlspecialchars(_('The newest track is %s.')).'</li>'."\n",addon_name($new_track));
+                        printf('<li>'.htmlspecialchars(_('The newest kart is %s.')).'</li>'."\n",Addon::getName($new_kart));
+                        printf('<li>'.htmlspecialchars(_('The newest track is %s.')).'</li>'."\n",Addon::getName($new_track));
                         
                         // Note most downloaded track and kart
                         $pop_kart = stat_most_downloaded('karts');
                         $pop_track = stat_most_downloaded('tracks');
-                        printf('<li>'.htmlspecialchars(_('The most downloaded kart is %s.')).'</li>'."\n",addon_name($pop_kart));
-                        printf('<li>'.htmlspecialchars(_('The most downloaded track is %s.')).'</li>'."\n",addon_name($pop_track));
+                        printf('<li>'.htmlspecialchars(_('The most downloaded kart is %s.')).'</li>'."\n",Addon::getName($pop_kart));
+                        printf('<li>'.htmlspecialchars(_('The most downloaded track is %s.')).'</li>'."\n",Addon::getName($pop_track));
                         
                         $newsSql = 'SELECT * FROM `'.DB_PREFIX.'news`
                             WHERE `active` = 1

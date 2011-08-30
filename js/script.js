@@ -91,6 +91,22 @@ $(document).ready(function () {
       loadFrame(addonId,'addons-panel.php?type=' + addonType);
       return false;
     });
+    
+    $('a.manage-list').click(function() {
+      history.pushState({ path: this.path }, '', this.href);
+      var url = this.href;
+      var view = getUrlVars(url)['view'];
+      loadFrame(view,'manage-panel.php');
+      return false;
+    });
+
+    $('a.user-list').click(function() {
+      history.pushState({ path: this.path }, '', this.href);
+      var url = this.href;
+      var user = getUrlVars(url)['user'];
+      loadFrame(user,'users-panel.php');
+      return false;
+    });
 });
 
 function load_jquery()

@@ -28,9 +28,11 @@ Licence: GPLv3
 Description: page who is called in ajax and who give user informations
 
 ***************************************************************************/
-$security ="";
-define('ROOT','./');
-include('include.php');
+if (!isset($security))
+    $security ="";
+if (!defined('ROOT'))
+    define('ROOT','./');
+include_once('include.php');
 
 if (!isset($_GET['type']))
     $_GET['type'] = NULL;
@@ -45,6 +47,10 @@ if (!isset($_POST['value']))
     $_POST['value'] = NULL;
 if (!isset($_POST['id']))
     $_POST['id'] = NULL;
+if (!is_numeric($_POST['id']) && !isset($_GET['user'])) {
+    $_GET['user'] = $_POST['id'];
+    $_POST['id'] = 0;
+}
 $_POST['id'] = (int)$_POST['id'];
 
 $type = mysql_real_escape_string($_GET['type']);
@@ -61,7 +67,10 @@ else
 }
 
 $addon = new coreUser;
-$addon->selectById($id);
+if ($_POST['id'] !== 0)
+    $addon->selectById($id);
+else
+    $addon->selectByUser(mysql_real_escape_string($_GET['user']));
 if($action == "remove")
 {
 	$addon->remove();

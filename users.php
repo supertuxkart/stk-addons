@@ -85,8 +85,9 @@ $users = array();
 $userLoader = new coreUser();
 $userLoader->loadAll();
 $users[] = array(
-    'url' => "javascript:loadFrame({$_SESSION['userid']},'users-panel.php');",
-    'label' => '<img class="icon"  src="image/user.png" />'.htmlspecialchars(_('Me'))
+    'url'   => "users.php?user={$_SESSION['user']}",
+    'label' => '<img class="icon"  src="image/user.png" />'.htmlspecialchars(_('Me')),
+    'class' => 'user-list menu-item'
 );
 while($userLoader->next())
 {
@@ -95,10 +96,10 @@ while($userLoader->next())
     if ($_SESSION['role']['manage'.$userLoader->userCurrent['role'].'s']
             || $userLoader->userCurrent['active'] == 1)
     {
-        $class = 'menu-item';
+        $class = 'user-list menu-item';
         if ($userLoader->userCurrent['active'] == 0) $class .= ' unavailable';
         $users[] = array(
-            'url'   => "javascript:loadFrame('{$userLoader->userCurrent['id']}','users-panel.php');",
+            'url'   => "users.php?user={$userLoader->userCurrent['user']}",
             'label' => '<img class="icon"  src="image/user.png" />'.htmlspecialchars($userLoader->userCurrent['user']),
             'class' => $class
         );
@@ -107,11 +108,13 @@ while($userLoader->next())
 }
 $panels->setMenuItems($users);
 
+ob_start();
+include(ROOT.'users-panel.php');
+$content = ob_get_clean();
+$panels->setContent($content);
+
 echo $panels;
 
-echo '<script type="text/javascript">';
-echo $js;
-echo '</script>';
 include("include/footer.php"); ?>
 </body>
 </html>
