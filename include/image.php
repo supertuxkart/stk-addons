@@ -20,9 +20,29 @@
 
 function resizeImage($file)
 {
+    // Determine image size
+    $type = (isset($_GET['type'])) ? $_GET['type'] : NULL;
+    switch ($type) {
+        default:
+            $size = 100;
+            break;
+        case 'small':
+            $size = 25;
+            break;
+        case 'medium':
+            $size = 75;
+            break;
+        case 'big':
+            $size = 300;
+            break;
+    }
+    $cache_name = $size.'--'.basename($file);
+
+    // Check if image exists, and if it does, check its format
     if (!file_exists(UP_LOCATION.$file))
     {
         $source = imagecreatefrompng(ROOT.'image/notfound.png');
+        $format = 'png';
     }
     else
     {
@@ -31,34 +51,32 @@ function resizeImage($file)
         {
             default:
                 $source = imagecreatefrompng(ROOT.'image/notfound.png');
+                $format = 'png';
                 break;
             case IMAGETYPE_PNG:
                 $source = imagecreatefrompng(UP_LOCATION.$file);
+                $format = 'png';
                 break;
             case IMAGETYPE_JPEG:
                 $source = imagecreatefromjpeg(UP_LOCATION.$file);
+                $format = 'jpg';
                 break;
         }
     }
+    
+    // Use cached file if possible
+    if (file_exists(CACHE_DIR.'/'.$cache_name)) {
+        if ($format === 'png')
+            header('Content-Type: image/png');
+        else
+            header('Content-Type: image/jpeg');
+        echo file_get_contents(CACHE_DIR.'/'.$cache_name);
+        return;
+    }
+
     // Get length and width of original image
     $width_source = imagesx($source);
     $height_source = imagesy($source);
-    if($_GET['type'] == "big")
-    {
-        $size = 300;
-    }
-    elseif($_GET['type'] == "medium")
-    {
-        $size = 75;
-    }
-    elseif($_GET['type'] == "small")
-    {
-        $size = 25;
-    }
-    else
-    {
-        $size = 100;
-    }
     if($width_source > $height_source)
     {
             $width_destination = $size;
@@ -80,9 +98,16 @@ function resizeImage($file)
     
     // Resize image
     imagecopyresampled($destination, $source, 0, 0, 0, 0, $width_destination, $height_destination, $width_source, $height_source);
-    // Display image
-    header("Content-Type: image/png");
-    imagepng($destination,NULL,9);
+    // Display image and cache the result
+    if ($format === 'png') {
+        header('Content-Type: image/png');
+        imagepng($destination,CACHE_DIR.'/'.$cache_name,9);
+        imagepng($destination,NULL,9);
+    } else {
+        header("Content-Type: image/jpeg");
+        imagejpeg($destination,CACHE_DIR.'/'.$cache_name,90);
+        imagejpeg($destination,NULL,90);
+    }
 }
 
 function img_label($text)
