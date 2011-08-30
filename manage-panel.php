@@ -18,9 +18,11 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('ROOT','./');
-$security = 'managesettings';
-require('include.php');
+if (!defined('ROOT'))
+    define('ROOT','./');
+if (!isset($security))
+    $security = 'managesettings';
+require_once('include.php');
 
 if (!isset($_GET['action'])) $_GET['action'] = NULL;
 
@@ -50,6 +52,10 @@ switch ($_GET['action'])
         // Regenerate xml
         writeNewsXML();
         break;
+    case 'cache_clear':
+        Cache::clear();
+        echo 'Emptied cache.<br />';
+        break;
 }
 
 switch ($_POST['id'])
@@ -72,6 +78,10 @@ switch ($_POST['id'])
     case 'clients':
         echo '<h1>'.htmlspecialchars(_('Client Versions')).'</h1>';
         clients_panel();
+        break;
+    case 'cache':
+        echo '<h1>'.htmlspecialchars(_('Cache Files')).'</h1>';
+        cache_panel();
         break;
 }
 
@@ -201,6 +211,16 @@ EOF;
                     $references[] = $refResult['addon_id'].' (kart)';
                 }
                 
+                // Look for arenas with this file
+                $refQuery = 'SELECT * FROM `'.DB_PREFIX.'arenas_revs`
+                    WHERE `fileid` = '.$filesResult['id'];
+                $refHandle = sql_query($refQuery);
+                for ($j = 0; mysql_num_rows($refHandle) > $j; $j++)
+                {
+                    $refResult = mysql_fetch_assoc($refHandle);
+                    $references[] = $refResult['addon_id'].' (arena)';
+                }
+                
                 if (count($references) == 0)
                     $references[] = '<span class="error">None</span>';
                 
@@ -246,6 +266,11 @@ TODO:<br />
     <li>Make download script provide a certain file based on the user-agent</li>
 </ol>
 EOL;
+}
+
+function cache_panel() {
+    echo '<a href="manage.php?view=cache&amp;action=cache_clear">'.htmlspecialchars(_('Empty cache')).'</a><br />';
+    echo 'TODO: List cache files.<br />';
 }
 
 ?>

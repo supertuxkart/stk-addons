@@ -20,6 +20,7 @@
 
 require(ROOT.'config.php');
 require(ROOT.'include/exceptions.php');
+require(ROOT.'include/Cache.class.php');
 require(ROOT.'include/ConfigManager.php');
 require(ROOT.'include/Validate.class.php');
 require(ROOT.'include/News.class.php');
