@@ -136,6 +136,24 @@ class Addon {
         return $type;
     }
     
+    public static function getName($id)
+    {
+        if ($id == false)
+            return false;
+        $id = addon_id_clean($id);
+        $query = 'SELECT `name`
+            FROM `'.DB_PREFIX.'addons`
+            WHERE `id` = \''.$id.'\'
+            LIMIT 1';
+        $handle = sql_query($query);
+        if (!$handle)
+            return false;
+        if (mysql_num_rows($handle) == 0)
+            return false;
+        $result = mysql_fetch_assoc($handle);
+        return $result['name'];
+    }
+    
     public static function isAllowedType($type) {
         if (in_array($type, Addon::$allowedTypes)) {
             return true;
