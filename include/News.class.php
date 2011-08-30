@@ -42,7 +42,7 @@ class News {
         }
         
         // Dynamic newest kart display
-        $new_kart = addon_name(stat_newest('karts'));
+        $new_kart = Addon::getName(stat_newest('karts'));
         $existing_id = false;
         foreach ($entries AS $entry) {
             if (preg_match('/^Newest add-on kart: (.*)$/i',$entry['content'], $matches)) {
@@ -60,7 +60,7 @@ class News {
             }
         }
         // Add new entry
-        if ($existing_id === false) {
+        if ($existing_id === false && $new_kart !== false) {
             $insQuery = 'INSERT INTO `'.DB_PREFIX.'news`
                 (`content`,`web_display`,`dynamic`)
                 VALUES
@@ -71,7 +71,7 @@ class News {
         }
         
         // Dynamic newest track display
-        $new_track = addon_name(stat_newest('tracks'));
+        $new_track = Addon::getName(stat_newest('tracks'));
         $existing_id = false;
         foreach ($entries AS $entry) {
             if (preg_match('/^Newest add-on track: (.*)$/i',$entry['content'], $matches)) {
@@ -89,7 +89,7 @@ class News {
             }
         }
         // Add new entry
-        if ($existing_id === false) {
+        if ($existing_id === false && $new_track !== false) {
             $insQuery = 'INSERT INTO `'.DB_PREFIX.'news`
                 (`content`,`web_display`,`dynamic`)
                 VALUES
@@ -100,7 +100,7 @@ class News {
         }
         
         // Dynamic newest arena display
-        $new_arena = addon_name(stat_newest('arenas'));
+        $new_arena = Addon::getName(stat_newest('arenas'));
         $existing_id = false;
         foreach ($entries AS $entry) {
             if (preg_match('/^Newest add-on arena: (.*)$/i',$entry['content'], $matches)) {
@@ -118,7 +118,7 @@ class News {
             }
         }
         // Add new entry
-        if ($existing_id === false) {
+        if ($existing_id === false && $new_arena !== false) {
             $insQuery = 'INSERT INTO `'.DB_PREFIX.'news`
                 (`content`,`web_display`,`dynamic`)
                 VALUES
