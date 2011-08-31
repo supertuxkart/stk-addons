@@ -140,7 +140,7 @@ class Addon {
     {
         if ($id == false)
             return false;
-        $id = addon_id_clean($id);
+        $id = Addon::cleanId($id);
         $query = 'SELECT `name`
             FROM `'.DB_PREFIX.'addons`
             WHERE `id` = \''.$id.'\'
@@ -159,6 +159,26 @@ class Addon {
             return true;
         }
         return false;
+    }
+    
+    public static function cleanId($id) {
+        if (!is_string($id))
+            return false;
+        $length = strlen($id);
+        if ($length == 0)
+            return false;
+        $id = strtolower($id);
+        // Validate all characters in addon id
+        // Rather than using str_replace, and removing bad characters,
+        // it makes more sense to only allow certain characters
+        for ($i = 0; $i<$length; $i++)
+        {
+            $substr = substr($id,$i,1);
+            if (!preg_match('/^[a-z0-9\-_]$/i',$substr))
+                $substr = '-';
+            $id = substr_replace($id,$substr,$i,1);
+        }
+        return $id;
     }
 }
 ?>

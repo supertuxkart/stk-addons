@@ -34,7 +34,7 @@ include("include/view.php");
 include("include/top.php");
 
 // Validate addon-id parameter
-$_GET['name'] = (isset($_GET['name'])) ? addon_id_clean($_GET['name']) : NULL;
+$_GET['name'] = (isset($_GET['name'])) ? Addon::cleanId($_GET['name']) : NULL;
 $_GET['save'] = (isset($_GET['save'])) ? $_GET['save'] : NULL;
 $_GET['rev'] = (isset($_GET['rev'])) ? (int)$_GET['rev'] : NULL;
 

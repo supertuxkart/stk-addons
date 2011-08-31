@@ -996,27 +996,6 @@ class coreAddon
     }
 }
 
-function addon_id_clean($string)
-{
-    if (!is_string($string))
-        return false;
-    $length = strlen($string);
-    if ($length == 0)
-        return false;
-    $string = strtolower($string);
-    // Validate all characters in addon id
-    // Rather than using str_replace, and removing bad characters,
-    // it makes more sense to only allow certain characters
-    for ($i = 0; $i<$length; $i++)
-    {
-        $substr = substr($string,$i,1);
-        if (!preg_match('/^[a-z0-9\-_]$/i',$substr))
-            $substr = '-';
-        $string = substr_replace($string,$substr,$i,1);
-    }
-    return $string;
-}
-
 function update_status($type,$addon_id,$fields)
 {
     if ($type != 'karts' && $type != 'tracks' && $type != 'arenas')
@@ -1024,7 +1003,7 @@ function update_status($type,$addon_id,$fields)
         echo '<span class="error">'.htmlspecialchars(_('Invalid addon type.')).'</span><br />';
         return false;
     }
-    $addon_id = addon_id_clean($addon_id);
+    $addon_id = Addon::cleanId($addon_id);
     $fields = explode(',',$fields);
     $status = array();
     foreach ($fields AS $field)
@@ -1134,7 +1113,7 @@ function update_addon_notes($type,$addon_id,$fields)
         echo '<span class="error">'.htmlspecialchars(_('Invalid addon type.')).'</span><br />';
         return false;
     }
-    $addon_id = addon_id_clean($addon_id);
+    $addon_id = Addon::cleanId($addon_id);
     $fields = explode(',',$fields);
     $notes = array();
     foreach ($fields AS $field)

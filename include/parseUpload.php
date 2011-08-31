@@ -65,7 +65,7 @@ function parseUpload($file,$revision = false)
         $newImageQuery = 'INSERT INTO `'.DB_PREFIX.'files`
             (`addon_id`,`addon_type`,`file_type`,`file_path`)
             VALUES
-            (\''.addon_id_clean($_GET['name']).'\',
+            (\''.Addon::cleanId($_GET['name']).'\',
             \''.mysql_real_escape_string($_GET['type']).'\',
             \'image\',
             \'images/'.$fileid.'.'.$fileext.'\')';
@@ -170,7 +170,7 @@ function parseUpload($file,$revision = false)
         // Get addon id
         $addon_id = NULL;
         if (isset($_GET['name']))
-            $addon_id = addon_id_clean($_GET['name']);
+            $addon_id = Addon::cleanId($_GET['name']);
         if (!preg_match('/^[a-z0-9\-]+_?[0-9]*$/i',$addon_id) || $addon_id == NULL)
             $addon_id = generate_addon_id($addon_type,$parsed_xml['attributes']);
 
@@ -230,7 +230,7 @@ function parseUpload($file,$revision = false)
     }
     else
     {
-        $addon_id = addon_id_clean($_GET['name']);
+        $addon_id = Addon::cleanId($_GET['name']);
         $addon_type = mysql_real_escape_string($_GET['type']);
         $filetype = 'source';
     }
@@ -577,7 +577,7 @@ function generate_addon_id($type,$attb)
     if (!array_key_exists('name',$attb))
         return false;
 
-    $addon_id = addon_id_clean($attb['name']);
+    $addon_id = Addon::cleanId($attb['name']);
     if (!$addon_id)
         return false;
 
