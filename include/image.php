@@ -66,11 +66,8 @@ function resizeImage($file)
     
     // Use cached file if possible
     if (file_exists(CACHE_DIR.'/'.$cache_name)) {
-        if ($format === 'png')
-            header('Content-Type: image/png');
-        else
-            header('Content-Type: image/jpeg');
-        echo file_get_contents(CACHE_DIR.'/'.$cache_name);
+        header('Cached-Image: true');
+        header('Location: '.CACHE_DL.'/'.$cache_name);
         return;
     }
 
@@ -99,6 +96,7 @@ function resizeImage($file)
     // Resize image
     imagecopyresampled($destination, $source, 0, 0, 0, 0, $width_destination, $height_destination, $width_source, $height_source);
     // Display image and cache the result
+        header('Cached-Image: false');
     if ($format === 'png') {
         header('Content-Type: image/png');
         imagepng($destination,CACHE_DIR.'/'.$cache_name,9);

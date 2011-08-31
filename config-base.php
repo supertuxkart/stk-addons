@@ -35,6 +35,7 @@ define("UP_LOCATION", $dirUpload);
 define("DOWN_LOCATION", $dirDownload);
 define("SITE_ROOT", "http://stkaddons.tuxfamily.org/");
 define("CACHE_DIR", ROOT.'assets/temp');
+define("CACHE_DL", $dirBase.'assets/temp');
 define("NEWS_XML", $newsXmlPath);
 define("ASSET_XML", $assetXmlPath);
 define("NEWS_XML_LOCAL", $newsXmlPathLocal);
