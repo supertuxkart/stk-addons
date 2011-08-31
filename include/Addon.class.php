@@ -21,6 +21,43 @@
 class Addon {
     public static $allowedTypes = array('karts','tracks','arenas');
     private $type;
+    private $id;
+    private $uploaderId;
+    private $creationDate;
+    private $designer;
+    private $description;
+    private $license;
+    private $permalink;
+    
+    /**
+     * Instance constructor
+     * @param string $id 
+     */
+    public function Addon($id) {
+        $id = Addon::cleanId($id);
+        $this->id = $id;
+
+        $query = 'SELECT *
+                FROM `'.DB_PREFIX."addons`
+                WHERE `id` = '$id'";
+
+        $handle = sql_query($query);
+        if (!$handle)
+            throw new AddonException('Failed to load the requested add-on from the database.');
+        
+        if (mysql_num_rows($handle) == 0)
+            throw new AddonException(htmlspecialchars(_('The requested add-on does not exist.')));
+
+        $result = mysql_fetch_assoc($handle);
+        $this->type = $result['type'];
+        $this->name = $result['name'];
+        $this->uploaderId = $result['uploader'];
+        $this->creationDate = $result['creation_date'];
+        $this->designer = $result['designer'];
+        $this->description = $result['description'];
+        $this->license = $result['license'];
+        $this->permalink = SITE_ROOT.'addons.php?type='.$this->type.'&amp;name='.$this->id;
+    }
     
     public function create($type, $id, $fileid, $attributes)
     {
@@ -130,6 +167,33 @@ class Addon {
         // Make sure an add-on file with this id does not exist
         if(sql_exist($this->type.'_revs', 'id', $fileid))
             throw new AddonException(htmlspecialchars(_('The file you are trying to create already exists.')));
+    }
+
+    public static function generateId($type,$name)
+    {
+        if (!is_string($name))
+            return false;
+
+        $addon_id = Addon::cleanId($name);
+        if (!$addon_id)
+            return false;
+
+        // Check database
+        while(sql_exist('addons', 'id', $addon_id))
+        {
+            // If the addon id already exists, add an incrementing number to it
+            if (preg_match('/^.+_([0-9]+)$/i', $addon_id, $matches))
+            {
+                $next_num = (int)$matches[1];
+                $next_num++;
+                $addon_id = str_replace($matches[1],$next_num,$addon_id);
+            }
+            else
+            {
+                $addon_id .= '_1';
+            }
+        }
+        return $addon_id;
     }
     
     public function getType() {

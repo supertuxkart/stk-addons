@@ -172,7 +172,7 @@ function parseUpload($file,$revision = false)
         if (isset($_GET['name']))
             $addon_id = Addon::cleanId($_GET['name']);
         if (!preg_match('/^[a-z0-9\-]+_?[0-9]*$/i',$addon_id) || $addon_id == NULL)
-            $addon_id = generate_addon_id($addon_type,$parsed_xml['attributes']);
+            $addon_id = Addon::generateId($addon_type,$parsed_xml['attributes']['name']);
 
         // Save addon icon or screenshot
         if ($addon_type == 'karts')
@@ -568,35 +568,6 @@ function read_xml($file,$type)
         $attributes['designer'] = '';
 
     return array('xml'=>$new_xml,'attributes'=>$attributes);
-}
-
-function generate_addon_id($type,$attb)
-{
-    if (!is_array($attb))
-        return false;
-    if (!array_key_exists('name',$attb))
-        return false;
-
-    $addon_id = Addon::cleanId($attb['name']);
-    if (!$addon_id)
-        return false;
-
-    // Check database
-    while(sql_exist('addons', 'id', $addon_id))
-    {
-        // If the addon id already exists, add an incrementing number to it
-        if (preg_match('/^.+_([0-9]+)$/i', $addon_id, $matches))
-        {
-            $next_num = (int)$matches[1];
-            $next_num++;
-            $addon_id = str_replace($matches[1],$next_num,$addon_id);
-        }
-        else
-        {
-            $addon_id .= '_1';
-        }
-    }
-    return $addon_id;
 }
 
 function image_check($path)
