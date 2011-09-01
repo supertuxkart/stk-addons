@@ -125,41 +125,6 @@ class coreAddon
                 '?type='.$this->addonType.'&amp;name='.$this->addonCurrent['id'];
         return true;
     }
-
-    /**
-     * Change the approval value on the add-on revision
-     * @return boolean Success
-     */
-    function approve()
-    {
-        if (!User::$logged_in)
-            return false;
-        if($_SESSION['role']['manageaddons'] != true)
-            return false;
-
-        /* if the addons is already available, we want to deactivate it :
-            $is_available = abs(1 - 1) = 0
-           else, it isn't and we want to activate it:
-            $is_available = abs(0 - 1) = 1
-         */
-        $current_status = bindec($this->addonCurrrent['status']);
-        if ($current_status & F_APPROVED)
-        {
-            $current_status = $current_status - F_APPROVED;
-        }
-        else
-        {
-            $current_status = $current_status + F_APPROVED;
-        }
-        if (!sql_update($this->addonType.'_revs', "id",
-                   $this->addonCurrent['id'],
-                   "status",
-                   decbin($current_status)))
-            return false;
-        writeAssetXML();
-        writeNewsXML();
-        return true;
-    }
     
     function set_image($image_id, $field = 'image')
     {

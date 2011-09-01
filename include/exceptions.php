@@ -18,5 +18,6 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+class AddonException extends Exception {}
 class UserException extends Exception {}
 ?>

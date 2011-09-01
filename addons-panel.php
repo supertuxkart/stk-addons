@@ -73,10 +73,6 @@ switch ($action)
         }
         $addon->viewInformation();
         break;
-    case 'approve':
-	$addon->approve();
-	$addon->selectById($id);
-        break;
     case 'remove':
         $addon->remove();
         break;
