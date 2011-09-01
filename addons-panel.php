@@ -73,9 +73,6 @@ switch ($action)
         }
         $addon->viewInformation();
         break;
-    case 'remove':
-        $addon->remove();
-        break;
     case 'file':
 	?>
 	<html>

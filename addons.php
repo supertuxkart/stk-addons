@@ -85,10 +85,16 @@ switch ($_GET['save'])
             echo htmlspecialchars(_('Saved notes.')).'<br />';
         break;
     case 'delete':
-        $edit_addon = new coreAddon($_GET['type']);
-        $edit_addon->selectById($_GET['name']);
-        if ($edit_addon->remove())
+        try {
+            $delAddon = new Addon($_GET['name']);
+            $delAddon->delete();
+            unset($delAddon);
             echo htmlspecialchars(_('Deleted addon.')).'<br />';
+        }
+        catch (AddonException $e)
+        {
+            echo '<span class="error">'.$e->getMessage().'</span><br />';
+        }
         break;
     case 'approve':
     case 'unapprove':

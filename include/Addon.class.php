@@ -28,6 +28,8 @@ class Addon {
     private $description;
     private $license;
     private $permalink;
+    private $revisions = array();
+    private $latestRevision;
     
     /**
      * Instance constructor
@@ -37,15 +39,16 @@ class Addon {
         $id = Addon::cleanId($id);
         $this->id = $id;
 
-        $query = 'SELECT *
-                FROM `'.DB_PREFIX."addons`
-                WHERE `id` = '$id'";
+        $query = 'SELECT `type`,`name`,`uploader`,`creation_date`,
+                `designer`,`description`,`license`
+            FROM `'.DB_PREFIX."addons`
+            WHERE `id` = '$id'";
 
         $handle = sql_query($query);
         if (!$handle)
-            throw new AddonException('Failed to load the requested add-on from the database.');
+            throw new AddonException('Failed to read the requested add-on\'s information.');
         
-        if (mysql_num_rows($handle) == 0)
+        if (mysql_num_rows($handle) === 0)
             throw new AddonException(htmlspecialchars(_('The requested add-on does not exist.')));
 
         $result = mysql_fetch_assoc($handle);
@@ -57,8 +60,34 @@ class Addon {
         $this->description = $result['description'];
         $this->license = $result['license'];
         $this->permalink = SITE_ROOT.'addons.php?type='.$this->type.'&amp;name='.$this->id;
+        
+        // Get revisions
+        $revsQuery = 'SELECT *
+            FROM `'.DB_PREFIX.$this->type."_revs`
+            WHERE `addon_id` = '$this->id'
+            ORDER BY `revision` ASC";
+        $revsHandle = sql_query($revsQuery);
+        if (!$revsHandle)
+            throw new AddonException('Failed to read the requested add-on\'s revision information.');
+
+        if (mysql_num_rows($revsHandle) === 0)
+            throw new AddonException('No revisions of this add-on exist. This should never happen.');
+
+        for ($i = 1; $i <= mysql_num_rows($revsHandle); $i++) {
+            $rev = mysql_fetch_assoc($revsHandle);
+            $currentRev = array(
+                'file'          => $rev['fileid'],
+                'format'        => $rev['format'],
+                'image'         => $rev['image'],
+                'moderator_note'=> $rev['moderator_note'],
+                'status'        => $rev['status']
+            );
+            if ($currentRev['status'] & F_LATEST)
+                $this->latestRevision = $rev['revision'];
+            $this->revisions[$rev['revision']] = $currentRev;
+        }
     }
-    
+
     public function create($type, $id, $fileid, $attributes)
     {
         global $moderator_message;
@@ -167,6 +196,59 @@ class Addon {
         // Make sure an add-on file with this id does not exist
         if(sql_exist($this->type.'_revs', 'id', $fileid))
             throw new AddonException(htmlspecialchars(_('The file you are trying to create already exists.')));
+    }
+
+    /**
+     * Delete an add-on record and all associated files and ratings
+     */
+    public function delete() {
+        if (!User::$logged_in)
+            throw new AddonException(htmlentities(_('You must be logged in to perform this action.')));
+
+        if($_SESSION['role']['manageaddons'] != true)
+            throw new AddonException(htmlentities(_('You do not have the necessary permissions to perform this action.')));
+
+        // Remove files associated with this addon
+        $get_files_query = 'SELECT *
+            FROM `'.DB_PREFIX."files`
+            WHERE `addon_id` = '$this->id'";
+        $get_files_handle = sql_query($get_files_query);
+        if (!$get_files_handle)
+            throw new AddonException(htmlspecialchars(_('Failed to find files associated with this addon.')));
+
+        $num_files = mysql_num_rows($get_files_handle);
+        for ($i = 1; $i <= $num_files; $i++)
+        {
+            $get_file = mysql_fetch_assoc($get_files_handle);
+            if (file_exists(UP_LOCATION.$get_file['file_path']) && !unlink(UP_LOCATION.$get_file['file_path']))
+                echo '<span class="error">'.htmlspecialchars(_('Failed to delete file:')).' '.$get_file['file_path'].'</span><br />';
+        }
+        
+        // Remove file records associated with addon
+        $remove_file_query = 'DELETE FROM `'.DB_PREFIX.'files`
+            WHERE `addon_id` = \''.$this->id.'\'';
+        $remove_file_handle = sql_query($remove_file_query);
+        if (!$remove_file_handle)
+            echo '<span class="error">'.htmlspecialchars(_('Failed to remove file records for this addon.')).'</span><br />';
+
+        // Remove ratings associated with add-on
+        $ratings = new Ratings($this->id);
+        if (!$ratings->delete())
+            echo '<span class="error">'.htmlspecialchars(_('Failed to remove ratings for this add-on.')).'</span><br />';
+        
+        // Delete revisions
+        $revsQuery = 'DELETE FROM `'.DB_PREFIX.$this->type.'_revs`
+            WHERE `addon_id` = \''.$this->id.'\'';
+        $revsHandle = sql_query($revsQuery);
+        if (!$revsHandle)
+            throw new AddonException(htmlspecialchars(_('Failed to remove add-on revisions.')));
+
+        // Remove addon entry
+        if (!sql_remove_where('addons', 'id', $this->id))
+            throw new AddonException(htmlspecialchars(_('Failed to remove addon.')));
+
+        writeAssetXML();
+        writeNewsXML();
     }
 
     public static function generateId($type,$name)

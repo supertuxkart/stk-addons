@@ -47,6 +47,19 @@ class Ratings {
         $this->fetchNumRatings();
         $this->fetchUserVote();
     }
+
+    /**
+     * Delete all ratings for an add-on
+     * @return boolean Success
+     */
+    public function delete() {
+        $query = 'DELETE FROM `'.DB_PREFIX.'votes`
+            WHERE `addon_id` = \''.$this->addon_id.'\'';
+        $handle = sql_query($query);
+        if (!$handle)
+            return false;
+        return true;
+    }
     
     /**
      * Calculate the average rating (rounded to the nearest integer)
