@@ -30,6 +30,7 @@ define('ROOT','./');
 $security = "";
 // Include basic files
 include(ROOT.'include.php');
+$title = htmlspecialchars(_('STK Add-ons').' | '._('Login'));
 
 // define possibly undefined variables
 $_POST['user'] = (isset($_POST['user'])) ? $_POST['user'] : NULL;

@@ -28,7 +28,23 @@ Description: index page
 ***************************************************************************/
 $security ="";
 define('ROOT','./');
-$title = "Supertuxkart Addon Manager";
+$_GET['type'] = (isset($_GET['type'])) ? $_GET['type'] : NULL;
+switch ($_GET['type']) {
+    default:
+        $type_label = htmlspecialchars(_('Unknown Type'));
+        header("HTTP/1.0 404 Not Found");
+        break;
+    case 'tracks':
+        $type_label = htmlspecialchars(_('Tracks'));
+        break;
+    case 'karts':
+        $type_label = htmlspecialchars(_('Karts'));
+        break;
+    case 'arenas':
+        $type_label = htmlspecialchars(_('Arenas'));
+        break;
+}
+$title = htmlspecialchars(_('STK Add-ons').' | ').$type_label;
 include("include.php");
 include("include/view.php");
 include("include/top.php");

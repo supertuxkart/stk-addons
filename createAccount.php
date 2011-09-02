@@ -31,6 +31,7 @@ Description: index page
 define('ROOT','./');
 $security ="";
 include('include.php');
+$title = htmlspecialchars(_('STK Add-ons').' | '._('Register'));
 include('include/top.php');
 
 // define possibly undefined variables

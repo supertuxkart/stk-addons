@@ -29,6 +29,7 @@ Description: credits page
 
 define('ROOT','./');
 $security ="";
+$title = htmlspecialchars(_('STK Add-ons').' | '._('About'));
 include('include.php');
 include('include/top.php');
 ?>
@@ -40,8 +41,7 @@ include('include/top.php');
 		<div id="content">
 		<?php
 		$credits = file_get_contents("CREDITS");
-                $credits = str_replace("\n",'<br />',$credits);
-                echo '<tt>'.$credits.'</tt>';
+                echo '<pre>'.$credits.'</pre>';
 		?>
 		</div>
 		<?php

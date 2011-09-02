@@ -22,7 +22,7 @@ define('ROOT','./');
 $security = 'managesettings';
 require('include.php');
 
-$title = htmlspecialchars(_('SuperTuxKart Add-ons')).' | '.htmlspecialchars(_('Manage'));
+$title = htmlspecialchars(_('STK Add-ons').' | '._('Manage'));
 
 require('include/top.php');
 echo '</head><body>';
