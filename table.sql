@@ -50,7 +50,8 @@ VALUES
 ('allowed_source_exts','txt,blend,png,jpg,jpeg,xcf,psd,wav,ogg,flac,xml'),
 ('admin_email','webmaster@localhost'),
 ('list_email','supertuxkart-addons@lists.sourceforge.net'),
-('list_invisible','1');
+('list_invisible','1'),
+('blog_feed','http://supertuxkart.blogspot.com/feeds/posts/default?alt=rss');
 
 CREATE TABLE `files` (
     `id` int(11) NOT NULL auto_increment,

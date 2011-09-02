@@ -99,6 +99,7 @@ function settings_panel()
     else
         $invisible_opts = '<option value="1">'.htmlspecialchars(_('True')).'</option><option value="0" selected>'.htmlspecialchars(_('False')).'</option>';
     echo '<tr><td>'.htmlspecialchars(_('List Invisible Addons in XML')).'</td><td><select name="list_invisible">'.$invisible_opts.'</option></td></tr>';
+    echo '<tr><td>'.htmlspecialchars(_('Blog RSS Feed')).'</td><td><input name="blog_feed" value="'.ConfigManager::get_config('blog_feed').'" /></td></tr>';
     echo '<tr><td></td><td><input type="submit" value="'.htmlspecialchars(_('Save Settings')).'" /></td></tr>';
     echo '</table>';
 }

@@ -127,6 +127,75 @@ class News {
             if (!$insHandle)
                 echo 'Failed to insert newest kart news entry.<br />';
         }
+
+        // Add message for the latest blog-post
+        $latest_blogpost = News::getLatestBlogPost();
+        $existing_id = false;
+        foreach ($entries AS $entry) {
+            if (preg_match('/^Latest post on stkblog.net: (.*)$/i',$entry['content'], $matches)) {
+                if ($matches[1] != $latest_blogpost) {
+                    // Delete old record
+                    $delQuery = 'DELETE FROM `'.DB_PREFIX.'news`
+                        WHERE `id` = '.$entry['id'];
+                    $delHandle = sql_query($delQuery);
+                    if (!$delHandle)
+                        echo 'Warning: failed to delete old news record.<br />';
+                } else {
+                    $existing_id = true;
+                    break;
+                }
+            }
+        }
+        // Add new entry
+        if ($existing_id === false && $latest_blogpost !== false) {
+            $insQuery = 'INSERT INTO `'.DB_PREFIX.'news`
+                (`content`,`web_display`,`dynamic`)
+                VALUES
+                (\'Latest post on stkblog.net: '.mysql_real_escape_string($latest_blogpost).'\',1,1)';
+            $insHandle = sql_query($insQuery);
+            if (!$insHandle)
+                echo 'Failed to insert newest kart news entry.<br />';
+        }
+    }
+    
+    private static function getLatestBlogPost() {
+        $feed_url = ConfigManager::get_config('blog_feed');
+        if (strlen($feed_url) == 0)
+            return false;
+        
+        $xmlContents = file($feed_url,FILE_IGNORE_NEW_LINES);
+        if (!$xmlContents)
+            return false;
+        
+        $reader = xml_parser_create();
+        if (!xml_parse_into_struct($reader,implode('',$xmlContents),$vals,$index))
+        {
+            echo 'XML Error: '.xml_error_string(xml_get_error_code($reader)).'<br />';
+            return false;
+        }
+        
+        $startSearch = -1;
+        for ($i = 0; $i < count($vals); $i++) {
+            if ($vals[$i]['tag'] == 'ITEM')
+            {
+                $startSearch = $i;
+                break;
+            }
+        }
+        if ($startSearch == -1)
+            return false;
+
+        $articleTitle = NULL;
+        for ($i = $startSearch; $i < count($vals); $i++) {
+            if ($vals[$i]['tag'] == 'TITLE') {
+                $articleTitle = $vals[$i]['value'];
+                break;
+            }
+        }
+        if ($articleTitle === NULL)
+            return false;
+
+        return strip_tags($articleTitle);
     }
 }
 

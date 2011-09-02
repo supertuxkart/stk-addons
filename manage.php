@@ -83,6 +83,7 @@ switch ($_GET['action'])
             ConfigManager::set_config('admin_email',mysql_real_escape_string($_POST['admin_email']));
             ConfigManager::set_config('list_email',mysql_real_escape_string($_POST['list_email']));
             ConfigManager::set_config('list_invisible',(int)$_POST['list_invisible']);
+            ConfigManager::set_config('blog_feed', mysql_real_escape_string($_POST['blog_feed']));
         }
         echo htmlspecialchars(_('Saved settings.')).'<br />';
         break;
