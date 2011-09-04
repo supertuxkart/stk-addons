@@ -28,6 +28,7 @@ Description: index page
 ***************************************************************************/
 $security ="";
 define('ROOT','./');
+include("include.php");
 $_GET['type'] = (isset($_GET['type'])) ? $_GET['type'] : NULL;
 switch ($_GET['type']) {
     default:
@@ -45,14 +46,18 @@ switch ($_GET['type']) {
         break;
 }
 $title = htmlspecialchars(_('STK Add-ons').' | ').$type_label;
-include("include.php");
-include("include/view.php");
-include("include/top.php");
 
 // Validate addon-id parameter
 $_GET['name'] = (isset($_GET['name'])) ? Addon::cleanId($_GET['name']) : NULL;
 $_GET['save'] = (isset($_GET['save'])) ? $_GET['save'] : NULL;
 $_GET['rev'] = (isset($_GET['rev'])) ? (int)$_GET['rev'] : NULL;
+
+$addonName = Addon::getName($_GET['name']);
+if ($addonName !== false)
+    $title .= ' | '.$addonName;
+
+include("include/view.php");
+include("include/top.php");
 
 ?>
 </head>
