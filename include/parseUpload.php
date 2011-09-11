@@ -62,13 +62,10 @@ function parseUpload($file,$revision = false)
         }
         
         // Add database record for image
-        $newImageQuery = 'INSERT INTO `'.DB_PREFIX.'files`
-            (`addon_id`,`addon_type`,`file_type`,`file_path`)
-            VALUES
-            (\''.Addon::cleanId($_GET['name']).'\',
-            \''.mysql_real_escape_string($_GET['type']).'\',
-            \'image\',
-            \'images/'.$fileid.'.'.$fileext.'\')';
+        $addon_id = Addon::cleanId($_GET['name']);
+        $addon_type = mysql_real_escape_string($_GET['type']);
+        $newImageQuery = 'CALL `'.DB_PREFIX.'create_file_record` '.
+            "('$addon_id','$addon_type','image','images/$fileid.$fileext',@a)";
         $newImageHandle = sql_query($newImageQuery);
         if (!$newImageHandle)
         {
@@ -186,33 +183,34 @@ function parseUpload($file,$revision = false)
         // Check if file exists
         if (!file_exists($image_file))
         {
-            $image_file = '';
+            $image_file = false;
         }
-        // Get image file extension
-        preg_match('/\.([a-z]+)$/i',$image_file,$imageext);
-        // Save file
-        copy($image_file,UP_LOCATION.'images/'.$fileid.'.'.$imageext[1]);
-        $parsed_xml['attributes']['image'] = $fileid.'.'.$imageext[1];
+        if ($image_file !== false) {
+            // Get image file extension
+            preg_match('/\.([a-z]+)$/i',$image_file,$imageext);
+            // Save file
+            copy($image_file,UP_LOCATION.'images/'.$fileid.'.'.$imageext[1]);
+            $parsed_xml['attributes']['image'] = $fileid.'.'.$imageext[1];
 
-        // Record image file in database
-        $newImageQuery = 'INSERT INTO `'.DB_PREFIX.'files`
-            (`addon_id`,`addon_type`,`file_type`,`file_path`)
-            VALUES
-            (\''.$addon_id.'\',
-            \''.$addon_type.'\',
-            \'image\',
-            \'images/'.$fileid.'.'.$imageext[1].'\')';
-        $newImageHandle = sql_query($newImageQuery);
-        if (!$newImageHandle)
-        {
-            echo '<span class="error">'.htmlspecialchars(_('Failed to associate image file with addon.')).'</span><br />';
-            unlink(UP_LOCATION.'images/'.$fileid.'.'.$imageext[1]);
-            $parsed_xml['attributes']['image'] = 0;
-        }
-        else
-        {
-            // Get ID of previously inserted image
-            $parsed_xml['attributes']['image'] = mysql_insert_id();
+            // Record image file in database
+            $newImageQuery = 'CALL `'.DB_PREFIX.'create_file_record` '.
+                "('$addon_id','$addon_type','image','images/$fileid.{$imageext[1]}',@a)";
+            $newImageHandle = sql_query($newImageQuery);
+            if (!$newImageHandle)
+            {
+                echo '<span class="error">'.htmlspecialchars(_('Failed to associate image file with addon.')).mysql_error().'</span><br />';
+                unlink(UP_LOCATION.'images/'.$fileid.'.'.$imageext[1]);
+                $parsed_xml['attributes']['image'] = 0;
+            }
+            else
+            {        
+                $getInsertIdQuery = 'SELECT @a';
+                $getInsertIdHandle = sql_query($getInsertIdQuery);
+                if (!$getInsertIdHandle) $parsed_xml['attributes']['fileid'] = 0;
+                $iid_result = mysql_fetch_array($getInsertIdHandle);
+                // Get ID of previously inserted image
+                $parsed_xml['attributes']['image'] = $iid_result[0];
+            }
         }
 
         // Initialize the status flag
@@ -252,13 +250,8 @@ function parseUpload($file,$revision = false)
     }
     
     // Record addon's file in database
-    $newAddonFileQuery = 'INSERT INTO `'.DB_PREFIX.'files`
-        (`addon_id`,`addon_type`,`file_type`,`file_path`)
-        VALUES
-        (\''.$addon_id.'\',
-        \''.$addon_type.'\',
-        \''.$filetype.'\',
-        \''.$fileid.'.zip\')';
+    $newAddonFileQuery = 'CALL `'.DB_PREFIX.'create_file_record` '.
+        "('$addon_id','$addon_type','$filetype','$fileid.zip',@a)";
     $newAddonFileHandle = sql_query($newAddonFileQuery);
     if (!$newAddonFileHandle)
     {
@@ -269,9 +262,13 @@ function parseUpload($file,$revision = false)
     }
     else
     {
+        $getInsertIdQuery = 'SELECT @a';
+        $getInsertIdHandle = sql_query($getInsertIdQuery);
+        if (!$getInsertIdHandle) $parsed_xml['attributes']['fileid'] = 0;
+        $iid_result = mysql_fetch_array($getInsertIdHandle);
         // Get ID of previously inserted file
         if ($_POST['upload-type'] != 'source')
-            $parsed_xml['attributes']['fileid'] = mysql_insert_id();
+            $parsed_xml['attributes']['fileid'] = $iid_result[0];
     }
     
     if ($_POST['upload-type'] == 'source')

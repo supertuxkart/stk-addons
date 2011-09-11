@@ -165,6 +165,17 @@ CREATE TABLE `votes` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- Stored Procedures
+DELIMITER //
+CREATE PROCEDURE create_file_record (IN id TEXT, IN atype TEXT, IN ftype TEXT, IN fname TEXT, OUT insertid INT)
+BEGIN
+    INSERT INTO `files`
+    (`addon_id`,`addon_type`,`file_type`,`file_path`)
+    VALUES
+    (id,atype,ftype,fname);
+    SELECT LAST_INSERT_ID() INTO insertid;
+END//
+DELIMITER ;
+
 CREATE PROCEDURE increment_download (IN filepath TEXT)
     UPDATE `files`
     SET `downloads` = `downloads` + 1

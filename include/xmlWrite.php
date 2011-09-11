@@ -129,7 +129,7 @@ function generateAssetXML()
             $file_path = get_file_path($result['fileid']);
             if ($file_path === false)
             {
-                echo '<span class="warning">'.htmlspecialchars(_('An error occurred finding the path for the file of kart: ')).$result['name'].'</span><br />';
+                echo '<span class="warning">An error occurred locating add-on: '.$result['name'].'</span><br />';
                 continue;
             }
             if (!file_exists(UP_LOCATION.$file_path))
