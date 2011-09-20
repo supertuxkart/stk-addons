@@ -19,5 +19,6 @@
  */
 
 class AddonException extends Exception {}
+class UploadException extends Exception {}
 class UserException extends Exception {}
 ?>

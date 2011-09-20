@@ -91,7 +91,13 @@ switch ($_GET['save'])
             echo htmlspecialchars(_('Saved properties.')).'<br />';
         break;
     case 'rev':
-        parseUpload($_FILES['file_addon'],true);
+        try {
+            parseUpload($_FILES['file_addon'],true);
+        }
+        catch (UploadException $e)
+        {
+            echo '<span class="error">'.$e->getMessage().'</span><br />';
+        }
         break;
     case 'status':
         if (!isset($_GET['type']) || !isset($_GET['name']) || !isset($_POST['fields']))

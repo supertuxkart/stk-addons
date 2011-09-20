@@ -127,13 +127,14 @@ if($_GET['action'] == "submit")
             $moderator_message .= 'Auto-message: Content is solely created by uploader.'."\n";
         else
             $moderator_message .= 'Auto-message: Content contains third-party open content.'."\n";
-        if (isset($_GET['name']))
-        {
-            parseUpload($_FILES['file_addon'],true);
+        try {
+            if (isset($_GET['name']))
+                parseUpload($_FILES['file_addon'],true);
+            else
+                parseUpload($_FILES['file_addon']);
         }
-        else
-        {
-            parseUpload($_FILES['file_addon']);
+        catch (UploadException $e) {
+            echo '<span class="error">'.$e->getMessage().'</span><br />';
         }
     }
     echo '</div>';

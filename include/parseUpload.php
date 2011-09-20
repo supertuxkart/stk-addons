@@ -21,18 +21,12 @@
 function parseUpload($file,$revision = false)
 {
     if (!is_array($file))
-    {
-        echo '<span class="error">'.htmlspecialchars(_('Failed to upload your file.')).'</span><br />';
-        return false;
-    }
+        throw new UploadException(htmlspecialchars(_('Failed to upload your file.')));
 
     // Check for file upload errors
     $upload_error = file_upload_error($file);
     if ($upload_error !== false)
-    {
-        echo '<span class="error">'.$upload_error.'</span><br />'."\n";
-        return false;
-    }
+        throw new UploadException($upload_error);
 
     // This won't be set when uploading addons/revisions
     if (!isset($_POST['upload-type'])) $_POST['upload-type'] = NULL;
@@ -56,10 +50,8 @@ function parseUpload($file,$revision = false)
     // Handle image uploads
     if ($_POST['upload-type'] == 'image')
     {
-        if (!move_uploaded_file($file['tmp_name'],UP_LOCATION.'images/'.$fileid.'.'.$fileext)) {
-            echo '<span class="error">'.htmlspecialchars(_('Failed to move uploaded file.'));
-            return false;
-        }
+        if (!move_uploaded_file($file['tmp_name'],UP_LOCATION.'images/'.$fileid.'.'.$fileext))
+            throw new UploadException(htmlspecialchars(_('Failed to move uploaded file.')));
         
         // Add database record for image
         $addon_id = Addon::cleanId($_GET['name']);
@@ -69,9 +61,8 @@ function parseUpload($file,$revision = false)
         $newImageHandle = sql_query($newImageQuery);
         if (!$newImageHandle)
         {
-            echo '<span class="error">'.htmlspecialchars(_('Failed to associate image file with addon.')).'</span><br />';
             unlink(UP_LOCATION.'images/'.$fileid.'.'.$fileext);
-            return false;
+            throw new UploadException(htmlspecialchars(_('Failed to associate image file with addon.')));
         }
         
         echo htmlspecialchars(_('Successfully uploaded image.')).'<br />';
@@ -81,10 +72,8 @@ function parseUpload($file,$revision = false)
     
     // Move the archive to a working directory
     mkdir(UP_LOCATION.'temp/'.$fileid);
-    if (!move_uploaded_file($file['tmp_name'],UP_LOCATION.'temp/'.$fileid.'/'.$fileid.'.'.$fileext)) {
-        echo '<span class="error">'.htmlspecialchars(_('Failed to move uploaded file.'));
-        return false;
-    }
+    if (!move_uploaded_file($file['tmp_name'],UP_LOCATION.'temp/'.$fileid.'/'.$fileid.'.'.$fileext))
+        throw new UploadException(htmlspecialchars(_('Failed to move uploaded file.')));
 
     // Extract archive
     if (!extract_archive(UP_LOCATION.'temp/'.$fileid.'/'.$fileid.'.'.$fileext,
@@ -100,9 +89,8 @@ function parseUpload($file,$revision = false)
         $xml_file = find_xml(UP_LOCATION.'temp/'.$fileid);
         $xml_dir = dirname($xml_file);
         if (!$xml_file) {
-            echo '<span class="error>'.htmlspecialchars(_('Invalid archive file. The archive must contain the addon\'s xml file.')).'</span><br />';
             rmdir_recursive(UP_LOCATION.'temp/'.$fileid);
-            return false;
+            throw new UploadException(htmlspecialchars(_('Invalid archive file. The archive must contain the addon\'s xml file.')));
         }
     }
 
@@ -137,9 +125,8 @@ function parseUpload($file,$revision = false)
         $parsed_xml = read_xml($xml_file,$addon_type);
         if (!$parsed_xml)
         {
-            echo '<span class="error">'.htmlspecialchars(_('Failed to read the add-on\'s XML file. Please make sure you are using the latest version of the kart or track exporter.')).'</span><br />';
             rmdir_recursive(UP_LOCATION.'temp/'.$fileid);
-            return false;
+            throw new UploadException(htmlspecialchars(_('Failed to read the add-on\'s XML file. Please make sure you are using the latest version of the kart or track exporter.')));
         }
         // Write new XML file
         $fhandle = fopen($xml_file,'w');
@@ -158,9 +145,8 @@ function parseUpload($file,$revision = false)
         $license_file = find_license(UP_LOCATION.'temp/'.$fileid);
         if ($license_file === false)
         {
-            echo '<span class="error">'.htmlspecialchars(_('A valid License.txt file was not found. Please add a License.txt file to your archive and re-submit it.')).'</span><br />';
             rmdir_recursive(UP_LOCATION.'temp/'.$fileid);
-            return false;
+            throw new UploadException(htmlspecialchars(_('A valid License.txt file was not found. Please add a License.txt file to your archive and re-submit it.')));
         }
         $parsed_xml['attributes']['license'] = $license_file;
 
@@ -234,19 +220,17 @@ function parseUpload($file,$revision = false)
     }
 
     // Validate addon type field
-    if ($addon_type != 'karts' && $addon_type != 'tracks' && $addon_type != 'arenas')
+    if (!Addon::isAllowedType($addon_type))
     {
-        echo '<span class="error">'.htmlspecialchars(_('Invalid addon type.')).'</span><br />';
         rmdir_recursive(UP_LOCATION.'temp/'.$fileid);
-        return false;
+        throw new UploadException(htmlspecialchars(_('Invalid add-on type.')));
     }
 
     // Repack zip file
     if (!repack_zip($xml_dir,UP_LOCATION.$fileid.'.zip'))
     {
-        echo '<span class="error">'.htmlspecialchars(_('Failed to re-pack archive file.')).'</span>';
         rmdir_recursive(UP_LOCATION.'temp/'.$fileid);
-        return false;
+        throw new UploadException(htmlspecialchars(_('Failed to re-pack archive file.')));
     }
     
     // Record addon's file in database
@@ -292,16 +276,14 @@ function parseUpload($file,$revision = false)
         $addon->selectById($addon_id);
         if (!$addon->addonCurrent)
         {
-            echo '<span class="error">'.htmlspecialchars(_('You are trying to add a new revision of an addon that does not exist.')).'</span><br />';
             rmdir_recursive(UP_LOCATION.'temp/'.$fileid);
-            return false;
+            throw new UploadException(htmlspecialchars(_('You are trying to add a new revision of an add-on that does not exist.')));
         }
         if ($_SESSION['userid'] != $addon->addonCurrent['uploader']
                 && !$_SESSION['role']['manageaddons'])
         {
-            echo '<span class="error">'.htmlspecialchars(_('You do not have the necessary permissions to perform this action.')).'</span><br />';
             rmdir_recursive(UP_LOCATION.'temp/'.$fileid);
-            return false;
+            throw new UploadException(htmlspecialchars(_('You do not have the necessary permissions to perform this action.')));
         }
     }
 
@@ -324,19 +306,13 @@ function check_extension($filename,$type = NULL)
     if ($type == 'image')
     {
         if (!preg_match('/\.(png|jpg|jpeg)$/i',$filename,$fileext))
-        {
-            echo '<span class="error">'.htmlspecialchars(_('Uploaded image files must be either PNG or Jpeg files.')).'</span><br />';
-            return false;
-        }
+            throw new UploadException(htmlspecialchars(_('Uploaded image files must be either PNG or Jpeg files.')));
     }
     else
     {
         // File extension must be .zip, .tgz, .tar, .tar.gz, tar.bz2, .tbz
         if (!preg_match('/\.(zip|t[bg]z|tar|tar\.gz|tar\.bz2)$/i',$filename,$fileext))
-        {
-            echo '<span class="error">'.htmlspecialchars(_('The file you uploaded was not the correct type.'))."</span><br />";
-            return false;
-        }
+            throw new UploadException(htmlspecialchars(_('The file you uploaded was not the correct type.')));
     }
     return $fileext[1];
 }
