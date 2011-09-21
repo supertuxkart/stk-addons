@@ -263,15 +263,15 @@ class coreAddon
         
         // Display badges for status flags
         if ($this->addonCurrent['status'] & F_FEATURED)
-                echo '<span class="f_featured">'.htmlspecialchars(_('Featured')).'</span>';
+            echo '<span class="f_featured">'.htmlspecialchars(_('Featured')).'</span>';
         if ($this->addonCurrent['status'] & F_ALPHA)
-                echo '<span class="f_alpha">'.htmlspecialchars(_('Alpha')).'</span>';
+            echo '<span class="f_alpha">'.htmlspecialchars(_('Alpha')).'</span>';
         if ($this->addonCurrent['status'] & F_BETA)
-                echo '<span class="f_beta">'.htmlspecialchars(_('Beta')).'</span>';
+            echo '<span class="f_beta">'.htmlspecialchars(_('Beta')).'</span>';
         if ($this->addonCurrent['status'] & F_RC)
-                echo '<span class="f_rc">'.htmlspecialchars(_('Release-Candidate')).'</span>';
+            echo '<span class="f_rc">'.htmlspecialchars(_('Release-Candidate')).'</span>';
         if ($this->addonCurrent['status'] & F_DFSG)
-                echo '<span class="f_dfsg">'.htmlspecialchars(_('DFSG Compliant')).'</span>';
+            echo '<span class="f_dfsg">'.htmlspecialchars(_('DFSG Compliant')).'</span>';
         echo '<br />'.$description.'
         <table class="info">';
         if ($this->addonType == 'arenas')
@@ -323,15 +323,21 @@ class coreAddon
         {
             echo '<span class="error">'.htmlspecialchars(_('File not found.')).'</span><br />';
         }
+        
+        try {
+            $mAddon = new Addon($this->addonCurrent['id']);
+            echo '<br />
+            <h3>'.htmlspecialchars(_('License')).'</h3>
+            <textarea name="license" rows="4" cols="60">'.strip_tags($mAddon->getLicense()).'</textarea>
+            <br /><br />';
 
-        echo '<br />
-        <h3>'.htmlspecialchars(_('License')).'</h3>
-        <textarea name="license" rows="4" cols="60">'.strip_tags($this->addonCurrent['license']).'</textarea>
-        <br /><br />';
-
-        // Print a permanent reference link (permalink) to this addon
-        echo '<h3>'.htmlspecialchars(_('Permalink')).'</h3>
-        <a href="'.$this->addonCurrent['permUrl'].'">'.$this->addonCurrent['permUrl'].'</a><br /><br />';
+            // Print a permanent reference link (permalink) to this addon
+            echo '<h3>'.htmlspecialchars(_('Permalink')).'</h3>
+            <a href="'.$mAddon->getLink().'">'.$mAddon->getLink().'</a><br /><br />';
+        }
+        catch (AddonException $e) {
+            echo '<span class="error">'.$e->getMessage().'</span><br />';
+        }
 
         // List revisions
         $addonRevs = new coreAddon($this->addonType);
@@ -798,7 +804,7 @@ class coreAddon
         }
 
         // Check if we're creating a new add-on
-        if (!sql_exist('addons', 'id', $addonid))
+        if (!Addon::exists($addonid))
         {
             echo htmlspecialchars(_('Creating a new add-on...')).'<br />';
             $fields = array('id','type','name','uploader','designer','license');
@@ -888,95 +894,6 @@ class coreAddon
     }
 }
 
-function update_status($type,$addon_id,$fields)
-{
-    if ($type != 'karts' && $type != 'tracks' && $type != 'arenas')
-    {
-        echo '<span class="error">'.htmlspecialchars(_('Invalid addon type.')).'</span><br />';
-        return false;
-    }
-    $addon_id = Addon::cleanId($addon_id);
-    $fields = explode(',',$fields);
-    $status = array();
-    foreach ($fields AS $field)
-    {
-        if (!isset($_POST[$field]))
-            $_POST[$field] = NULL;
-        if ($field == 'latest')
-            $fieldinfo = array('',(int)$_POST['latest']);
-        else
-            $fieldinfo = explode('-',$field);
-        // Initialize the status of the current revision if it has
-        // not been created yet.
-        if (!isset($status[$fieldinfo[1]]))
-            $status[$fieldinfo[1]] = 0;
-        if ($field == 'latest')
-        {
-            $status[(int)$_POST['latest']] += F_LATEST;
-            continue;
-        }
-        // Update status values for all flags
-        if ($_POST[$field] == 'on')
-        {
-            $revision = (int)$fieldinfo[1];
-            switch ($fieldinfo[0])
-            {
-                default: break;
-                case 'approved':
-                    $status[$revision] += F_APPROVED;
-                    break;
-                case 'invisible':
-                    $status[$revision] += F_INVISIBLE;
-                    break;
-                case 'alpha':
-                    $status[$revision] += F_ALPHA;
-                    break;
-                case 'beta':
-                    $status[$revision] += F_BETA;
-                    break;
-                case 'rc':
-                    $status[$revision] += F_RC;
-                    break;
-                case 'dfsg':
-                    $status[$revision] += F_DFSG;
-                    break;
-                case 'featured':
-                    $status[$revision] += F_FEATURED;
-                    break;
-            }
-        }
-    }
-    $error = 0;
-    foreach ($status AS $revision => $value)
-    {
-        // Check if F_TEX_NOT_POWER_OF_2 is set in database
-        $getStatusQuery = 'SELECT `status`
-            FROM `'.DB_PREFIX.$type.'_revs`
-            WHERE `addon_id` = \''.$addon_id.'\'
-            AND `revision` = '.$revision;
-        $getStatusSql = sql_query($getStatusQuery);
-        if (!$getStatusSql)
-            return false;
-        $getStatusResult = mysql_fetch_assoc($getStatusSql);
-        if ($getStatusResult['status'] & F_TEX_NOT_POWER_OF_2)
-            $value += F_TEX_NOT_POWER_OF_2;
-        
-        // Write new addon
-        $query = 'UPDATE `'.DB_PREFIX.$type.'_revs`
-            SET `status` = '.$value.'
-            WHERE `addon_id` = \''.$addon_id.'\'
-            AND `revision` = '.$revision;
-        $reqSql = sql_query($query);
-        if (!$reqSql)
-            $error = 1;
-    }
-    writeAssetXML();
-    writeNewsXML();
-    if ($error != 1)
-        return true;
-    return false;
-}
-
 function get_file_path($file_id)
 {
     // Validate input
@@ -1053,12 +970,18 @@ function update_addon_notes($type,$addon_id,$fields)
     else
     {
         $result = mysql_fetch_assoc($userHandle);
-        sendMail($result['email'],
-                'moderatorNotification',
-                array($addon->addonCurrent['name'],
-                SITE_ROOT.$addon->permalink(),
-                $email_body,
-                $result['name']));
+        try {
+            $mAddon = new Addon($addon->addonCurrent['id']);
+            sendMail($result['email'],
+                    'moderatorNotification',
+                    array($addon->addonCurrent['name'],
+                    $mAddon->getLink(),
+                    $email_body,
+                    $result['name']));
+            }
+        catch (AddonException $e) {
+            echo '<span class="error">'.$e->getMessage().'</span><br />';
+        }
     }
 
     if ($error != 1)

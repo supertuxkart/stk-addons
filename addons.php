@@ -100,10 +100,16 @@ switch ($_GET['save'])
         }
         break;
     case 'status':
-        if (!isset($_GET['type']) || !isset($_GET['name']) || !isset($_POST['fields']))
+        if (!isset($_GET['name']) || !isset($_POST['fields']))
             break;
-        if (update_status($_GET['type'],$_GET['name'],$_POST['fields']))
+        try {
+            $addon = new Addon($_GET['name']);
+            $addon->setStatus($_POST['fields']);
             echo htmlspecialchars(_('Saved status.')).'<br />';
+        }
+        catch (AddonException $e) {
+            echo '<span class="error">'.$e->getMessage().'</span><br />';
+        }
         break;
     case 'notes':
         if (!isset($_GET['type']) || !isset($_GET['name']) || !isset($_POST['fields']))

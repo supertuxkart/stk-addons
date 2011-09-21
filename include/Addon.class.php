@@ -197,7 +197,19 @@ class Addon {
         if(sql_exist($this->type.'_revs', 'id', $fileid))
             throw new AddonException(htmlspecialchars(_('The file you are trying to create already exists.')));
     }
-
+    
+    /**
+     * Check if an add-on of the specified ID exists
+     * @param string $addon_id Addon ID
+     * @return boolean
+     */
+    public static function exists($addon_id) {
+        if (!sql_exist('addons', 'id', Addon::cleanId($addon_id))) {
+            return false;
+        }
+        return true;
+    }
+    
     /**
      * Delete an add-on record and all associated files and ratings
      */
@@ -282,6 +294,14 @@ class Addon {
         return $type;
     }
     
+    public function getLicense() {
+        return $this->license;
+    }
+    
+    public function getLink() {
+        return $this->permalink;
+    }
+    
     public static function getName($id)
     {
         if ($id == false)
@@ -325,6 +345,87 @@ class Addon {
             $id = substr_replace($id,$substr,$i,1);
         }
         return $id;
+    }
+    
+    public function setStatus($fields) {
+        $fields = explode(',',$fields);
+        $status = array();
+        // Iterate through each field
+        foreach ($fields AS $field)
+        {
+            if (!isset($_POST[$field]))
+                $_POST[$field] = NULL;
+            if ($field == 'latest')
+                $fieldinfo = array('',(int)$_POST['latest']);
+            else
+                $fieldinfo = explode('-',$field);
+            // Initialize the status of the current revision if it has
+            // not been created yet.
+            if (!isset($status[$fieldinfo[1]]))
+                $status[$fieldinfo[1]] = 0;
+            if ($field == 'latest')
+            {
+                $status[(int)$_POST['latest']] += F_LATEST;
+                continue;
+            }
+            // Update status values for all flags
+            if ($_POST[$field] == 'on')
+            {
+                $revision = (int)$fieldinfo[1];
+                switch ($fieldinfo[0])
+                {
+                    default: break;
+                    case 'approved':
+                        $status[$revision] += F_APPROVED;
+                        break;
+                    case 'invisible':
+                        $status[$revision] += F_INVISIBLE;
+                        break;
+                    case 'alpha':
+                        $status[$revision] += F_ALPHA;
+                        break;
+                    case 'beta':
+                        $status[$revision] += F_BETA;
+                        break;
+                    case 'rc':
+                        $status[$revision] += F_RC;
+                        break;
+                    case 'dfsg':
+                        $status[$revision] += F_DFSG;
+                        break;
+                    case 'featured':
+                        $status[$revision] += F_FEATURED;
+                        break;
+                }
+            }
+        }
+        $error = 0;
+        foreach ($status AS $revision => $value)
+        {
+            // Check if F_TEX_NOT_POWER_OF_2 is set in database
+            $getStatusQuery = 'SELECT `status`
+                FROM `'.DB_PREFIX.$this->type.'_revs`
+                WHERE `addon_id` = \''.$this->id.'\'
+                AND `revision` = '.$revision;
+            $getStatusSql = sql_query($getStatusQuery);
+            if (!$getStatusSql)
+                throw new AddonException('Failed to read status from the database.');
+            
+            $getStatusResult = mysql_fetch_assoc($getStatusSql);
+            if ($getStatusResult['status'] & F_TEX_NOT_POWER_OF_2)
+                $value += F_TEX_NOT_POWER_OF_2;
+
+            // Write new addon
+            $query = 'UPDATE `'.DB_PREFIX.$this->type.'_revs`
+                SET `status` = '.$value.'
+                WHERE `addon_id` = \''.$this->id.'\'
+                AND `revision` = '.$revision;
+            $reqSql = sql_query($query);
+            if (!$reqSql)
+                throw new AddonException('Failed to write add-on status.');
+        }
+        writeAssetXML();
+        writeNewsXML();
     }
 }
 ?>
