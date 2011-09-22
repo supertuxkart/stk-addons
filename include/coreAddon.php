@@ -177,7 +177,6 @@ class coreAddon
     */
     function setInformation($info, $value)
     {
-        global $user;
         if (!User::$logged_in)
             return false;
 
@@ -221,111 +220,104 @@ class coreAddon
       */
     function writeInformation()
     {
-		
-        global $user;
-        $addonUser = new coreUser();
-        $addonUser->selectById($this->addonCurrent['uploader']);
-        if ($this->addonCurrent['designer'] == NULL)
-            $this->addonCurrent['designer'] = htmlspecialchars(_('Unknown'));
-        if ($this->addonCurrent['description'] == NULL)
-            $description = NULL;
-        else
-            $description = htmlentities ($this->addonCurrent['description']).'<br />';
+        try {
+            $mAddon = new Addon($this->addonCurrent['id']);
+            $latestRev = $mAddon->getLatestRevision();
+            $addonUser = new coreUser();
+            $addonUser->selectById($mAddon->getUploader());
 
-        echo '<div>';
+            echo '<div>';
 
-        echo '<table border="0px" width="100%"><tr><td width="100%">';
-        echo '<h1>'.htmlspecialchars($this->addonCurrent['name']).'</h1>';
-        echo '</td><td align="right">';
-        echo '<div id="avg-rating"><div class="rating"><div class="emptystars"></div><div class="fullstars" style="width: '.$this->rating->getAvgRatingPercent().'%;"></div></div><p>'.$this->numRatingsString.'</p></div>';
-        echo '</td></tr></table>';
+            echo '<table border="0px" width="100%"><tr><td width="100%">';
+            echo '<h1>'.htmlspecialchars(Addon::getName($mAddon->getId())).'</h1>';
+            echo '</td><td align="right">';
+            echo '<div id="avg-rating"><div class="rating"><div class="emptystars"></div><div class="fullstars" style="width: '.$this->rating->getAvgRatingPercent().'%;"></div></div><p>'.$this->numRatingsString.'</p></div>';
+            echo '</td></tr></table>';
 
-        // Get image
-        $image_query = 'SELECT `file_path` FROM `'.DB_PREFIX.'files`
-            WHERE `id` = '.$this->addonCurrent['image'].'
-            AND `approved` = 1
-            LIMIT 1';
-        $image_handle = sql_query($image_query);
-        echo '<div id="addon-image">';
-        if ($image_handle && mysql_num_rows($image_handle) == 1)
-        {
-            $image_result = mysql_fetch_assoc($image_handle);
-            echo '<img class="preview" src="image.php?type=big&amp;pic='.$image_result['file_path'].'" />';
-        }
-        // Add upload button below image (or in place of image)
-        if (User::$logged_in && $this->addonCurrent['uploader'] == $_SESSION['userid'])
-        {
-            echo '<br /><form method="POST" action="upload.php?type='.$this->addonType.'&amp;name='.$this->addonCurrent['id'].'&amp;action=file">';
-            echo '<input type="submit" value="'.htmlspecialchars(_('Upload Image')).'" />';
-            echo '</form>';
-        }
-        echo '</div>';
-        
-        // Display badges for status flags
-        if ($this->addonCurrent['status'] & F_FEATURED)
-            echo '<span class="f_featured">'.htmlspecialchars(_('Featured')).'</span>';
-        if ($this->addonCurrent['status'] & F_ALPHA)
-            echo '<span class="f_alpha">'.htmlspecialchars(_('Alpha')).'</span>';
-        if ($this->addonCurrent['status'] & F_BETA)
-            echo '<span class="f_beta">'.htmlspecialchars(_('Beta')).'</span>';
-        if ($this->addonCurrent['status'] & F_RC)
-            echo '<span class="f_rc">'.htmlspecialchars(_('Release-Candidate')).'</span>';
-        if ($this->addonCurrent['status'] & F_DFSG)
-            echo '<span class="f_dfsg">'.htmlspecialchars(_('DFSG Compliant')).'</span>';
-        echo '<br />'.$description.'
-        <table class="info">';
-        if ($this->addonType == 'arenas')
-        {
-            echo '<tr><td><strong>'.htmlspecialchars(_('Type:')).'</strong></td><td>'.htmlspecialchars(_('Arena')).'</td></tr>';
-        }
-        echo '<tr><td><strong>'.htmlspecialchars(_('Designer:')).'</strong></td><td>'.htmlspecialchars($this->addonCurrent['designer']).'</td></tr>
-        <tr><td><strong>'.htmlspecialchars(_('Upload date:')).'</strong></td><td>'.$this->addonCurrent['revision_timestamp'].'</td></tr>
-        <tr><td><strong>'.htmlspecialchars(_('Submitted by:')).'</strong></td><td><a href="users.php?user='.$addonUser->userCurrent['user'].'">'.htmlspecialchars($addonUser->userCurrent['name']).'</a></td></tr>
-        <tr><td><strong>'.htmlspecialchars(_('Revision:')).'</strong></td><td>'.$this->addonCurrent['revision'].'</td></tr>
-        <tr><td><strong>'.htmlspecialchars(_('Compatible with:')).'</strong></td><td>'.format_compat($this->addonCurrent['format'],$this->addonType).'</td></tr>';
-        if (User::$logged_in) {
-            echo '<tr><td><strong>'.htmlspecialchars(_('Your Rating: ')).'</strong></td><td>';
-            if ($this->rating->getUserVote() !== false) {
-                if ($this->rating->getUserVote() != 1) {
-                    echo htmlspecialchars($this->rating->getUserVote())." stars";
-                } else {
-                    echo "1 star";
-                }
-            } else {
-                echo '<span id="user-rating">';
-                echo '<a href="javascript:addRating(1,\''.$this->addonCurrent['id'].'\',\'user-rating\',\'avg-rating\');"><div class="rating"><div class="emptystars"></div><div class="fullstars" style="width: 33%"></div></div></a><br />'; // 1 star
-                echo '<a href="javascript:addRating(2,\''.$this->addonCurrent['id'].'\',\'user-rating\',\'avg-rating\');"><div class="rating"><div class="emptystars"></div><div class="fullstars" style="width: 66%"></div></div></a><br />'; // 2 stars
-                echo '<a href="javascript:addRating(3,\''.$this->addonCurrent['id'].'\',\'user-rating\',\'avg-rating\');"><div class="rating"><div class="emptystars"></div><div class="fullstars" style="width: 100%"></div></div></a>'; // 3 stars
-                echo '</span>';
-            }
-        }
-        echo '</td></tr></table></div>';
-        
-        if ($this->addonCurrent['status'] & F_TEX_NOT_POWER_OF_2)
-        {
-            echo htmlspecialchars(_('Warning: This addon may not display correctly on some systems. It uses textures that may not be compatible with all video cards.'))."<br />\n";
-        }
-        
-        // Get download path
-        $file_path = get_file_path($this->addonCurrent['fileid']);
-        if ($file_path !== false)
-        {
-            if (file_exists(UP_LOCATION.$file_path))
+            // Get image
+            $image_query = 'SELECT `file_path` FROM `'.DB_PREFIX.'files`
+                WHERE `id` = '.$this->addonCurrent['image'].'
+                AND `approved` = 1
+                LIMIT 1';
+            $image_handle = sql_query($image_query);
+            echo '<div id="addon-image">';
+            if ($image_handle && mysql_num_rows($image_handle) == 1)
             {
-                echo '<a href="'.DOWN_LOCATION.$file_path.'"><img src="image/download.png" alt="Download" title="Download" /></a>';
+                $image_result = mysql_fetch_assoc($image_handle);
+                echo '<img class="preview" src="image.php?type=big&amp;pic='.$image_result['file_path'].'" />';
+            }
+            // Add upload button below image (or in place of image)
+            if (User::$logged_in && $mAddon->getUploader() == $_SESSION['userid'])
+            {
+                echo '<br /><form method="POST" action="upload.php?type='.$this->addonType.'&amp;name='.$mAddon->getId().'&amp;action=file">';
+                echo '<input type="submit" value="'.htmlspecialchars(_('Upload Image')).'" />';
+                echo '</form>';
+            }
+            echo '</div>';
+
+            // Display badges for status flags
+            if ($latestRev['status'] & F_FEATURED)
+                echo '<span class="f_featured">'.htmlspecialchars(_('Featured')).'</span>';
+            if ($latestRev['status'] & F_ALPHA)
+                echo '<span class="f_alpha">'.htmlspecialchars(_('Alpha')).'</span>';
+            if ($latestRev['status'] & F_BETA)
+                echo '<span class="f_beta">'.htmlspecialchars(_('Beta')).'</span>';
+            if ($latestRev['status'] & F_RC)
+                echo '<span class="f_rc">'.htmlspecialchars(_('Release-Candidate')).'</span>';
+            if ($latestRev['status'] & F_DFSG)
+                echo '<span class="f_dfsg">'.htmlspecialchars(_('DFSG Compliant')).'</span>';
+            echo '<br />'.$mAddon->getDescription().'
+            <table class="info">';
+            if ($this->addonType == 'arenas')
+            {
+                echo '<tr><td><strong>'.htmlspecialchars(_('Type:')).'</strong></td><td>'.htmlspecialchars(_('Arena')).'</td></tr>';
+            }
+            echo '<tr><td><strong>'.htmlspecialchars(_('Designer:')).'</strong></td><td>'.htmlspecialchars($mAddon->getDesigner()).'</td></tr>
+            <tr><td><strong>'.htmlspecialchars(_('Upload date:')).'</strong></td><td>'.$latestRev['timestamp'].'</td></tr>
+            <tr><td><strong>'.htmlspecialchars(_('Submitted by:')).'</strong></td><td><a href="users.php?user='.$addonUser->userCurrent['user'].'">'.htmlspecialchars($addonUser->userCurrent['name']).'</a></td></tr>
+            <tr><td><strong>'.htmlspecialchars(_('Revision:')).'</strong></td><td>'.$this->addonCurrent['revision'].'</td></tr>
+            <tr><td><strong>'.htmlspecialchars(_('Compatible with:')).'</strong></td><td>'.format_compat($this->addonCurrent['format'],$this->addonType).'</td></tr>';
+            if (User::$logged_in) {
+                echo '<tr><td><strong>'.htmlspecialchars(_('Your Rating: ')).'</strong></td><td>';
+                if ($this->rating->getUserVote() !== false) {
+                    if ($this->rating->getUserVote() != 1) {
+                        echo htmlspecialchars($this->rating->getUserVote())." stars";
+                    } else {
+                        echo "1 star";
+                    }
+                } else {
+                    echo '<span id="user-rating">';
+                    echo '<a href="javascript:addRating(1,\''.$mAddon->getId().'\',\'user-rating\',\'avg-rating\');"><div class="rating"><div class="emptystars"></div><div class="fullstars" style="width: 33%"></div></div></a><br />'; // 1 star
+                    echo '<a href="javascript:addRating(2,\''.$mAddon->getId().'\',\'user-rating\',\'avg-rating\');"><div class="rating"><div class="emptystars"></div><div class="fullstars" style="width: 66%"></div></div></a><br />'; // 2 stars
+                    echo '<a href="javascript:addRating(3,\''.$mAddon->getId().'\',\'user-rating\',\'avg-rating\');"><div class="rating"><div class="emptystars"></div><div class="fullstars" style="width: 100%"></div></div></a>'; // 3 stars
+                    echo '</span>';
+                }
+            }
+            echo '</td></tr></table></div>';
+
+            if ($latestRev['status'] & F_TEX_NOT_POWER_OF_2)
+            {
+                echo htmlspecialchars(_('Warning: This addon may not display correctly on some systems. It uses textures that may not be compatible with all video cards.'))."<br />\n";
+            }
+
+            // Get download path
+            $file_path = $mAddon->getFile((int)$this->addonCurrent['revision']);
+            if ($file_path !== false)
+            {
+                if (file_exists(UP_LOCATION.$file_path))
+                {
+                    echo '<a href="'.DOWN_LOCATION.$file_path.'"><img src="image/download.png" alt="Download" title="Download" /></a>';
+                }
+                else
+                {
+                    echo '<span class="error">'.htmlspecialchars(_('File not found.')).'</span><br />';
+                }
             }
             else
             {
                 echo '<span class="error">'.htmlspecialchars(_('File not found.')).'</span><br />';
             }
-        }
-        else
-        {
-            echo '<span class="error">'.htmlspecialchars(_('File not found.')).'</span><br />';
-        }
-        
-        try {
-            $mAddon = new Addon($this->addonCurrent['id']);
+
             echo '<br />
             <h3>'.htmlspecialchars(_('License')).'</h3>
             <textarea name="license" rows="4" cols="60">'.strip_tags($mAddon->getLicense()).'</textarea>
@@ -334,75 +326,64 @@ class coreAddon
             // Print a permanent reference link (permalink) to this addon
             echo '<h3>'.htmlspecialchars(_('Permalink')).'</h3>
             <a href="'.$mAddon->getLink().'">'.$mAddon->getLink().'</a><br /><br />';
+
+            // List revisions
+            echo '<h3>'.htmlspecialchars(_('Revisions')).'</h3>';
+
+            // Add upload button to the right of the Revisions label
+            if (User::$logged_in && $this->addonCurrent['uploader'] == $_SESSION['userid'])
+            {
+                echo '<div style="float: right;"><form method="POST" action="upload.php?type='.$this->addonType.'&amp;name='.$this->addonCurrent['id'].'">';
+                echo '<input type="submit" value="'.htmlspecialchars(_('Upload Revision')).'" />';
+                echo '</form></div>';
+            }
+
+            echo '<table>';
+            $revisions = $mAddon->getAllRevisions();
+            foreach ($revisions AS $rev_n => $revision) {
+                if (!User::$logged_in) {
+                    // Users not logged in cannot see unapproved addons
+                    if (!($revision['status'] & F_APPROVED))
+                        continue;
+                } else {
+                    // User is logged in
+                    // If the user is not the uploader, or moderators, then they
+                    // cannot see unapproved addons
+                    if (($mAddon->getUploader() != $_SESSION['userid']
+                            && !$_SESSION['role']['manageaddons'])
+                            && !($revision['status'] & F_APPROVED))
+                        continue;
+                }
+                
+                // Display revisions
+                echo '<tr><td>'.$revision['timestamp'].'</td><td>';
+                // Get download path
+                $file_path = $mAddon->getFile($rev_n);
+                if ($file_path !== false)
+                {
+                    if (file_exists(UP_LOCATION.$file_path))
+                    {
+                        echo '<a href="'.DOWN_LOCATION.$file_path.'">';
+                        printf(htmlspecialchars(_('Download revision %u')),$rev_n);
+                        echo '</a>';
+                    }
+                    else
+                    {
+                        echo htmlspecialchars(_('Revision')).' '.$rev_n.' - '.htmlspecialchars(_('File not found.'));
+                    }
+                }
+                else
+                {
+                    echo htmlspecialchars(_('Revision')).' '.$rev_n.' - '.htmlspecialchars(_('File not found.'));
+                }
+                echo '</td></tr>';
+            }
+            echo '</table><br />';
+        
         }
         catch (AddonException $e) {
             echo '<span class="error">'.$e->getMessage().'</span><br />';
         }
-
-        // List revisions
-        $addonRevs = new coreAddon($this->addonType);
-        $addonRevs->selectById($this->addonCurrent['id'],true);
-        echo '<h3>'.htmlspecialchars(_('Revisions')).'</h3>';
-
-        // Add upload button to the right of the Revisions label
-        if (User::$logged_in && $this->addonCurrent['uploader'] == $_SESSION['userid'])
-        {
-            echo '<div style="float: right;"><form method="POST" action="upload.php?type='.$this->addonType.'&amp;name='.$this->addonCurrent['id'].'">';
-            echo '<input type="submit" value="'.htmlspecialchars(_('Upload Revision')).'" />';
-            echo '</form></div>';
-        }
-
-        echo '<table>';
-        while ($addonRevs->addonCurrent)
-        {
-            // Don't list unapproved addons
-            global $user;
-            if (!User::$logged_in)
-            {
-                // Users not logged in cannot see unapproved addons
-                if (!($addonRevs->addonCurrent['status'] & F_APPROVED))
-                {
-                    $addonRevs->next();
-                    continue;
-                }
-            }
-            else
-            {
-                // Logged in users who are not the uploader, or moderators
-                // cannot see unapproved addons
-                if (($addonRevs->addonCurrent['uploader'] != $_SESSION['userid']
-                        && !$_SESSION['role']['manageaddons'])
-                        && !($addonRevs->addonCurrent['status'] & F_APPROVED))
-                {
-                    $addonRevs->next();
-                    continue;
-                }
-            }
-
-            echo '<tr><td>'.$addonRevs->addonCurrent['revision_timestamp'].'</td><td>';
-            // Get download path
-            $file_path = get_file_path($addonRevs->addonCurrent['fileid']);
-            if ($file_path !== false)
-            {
-                if (file_exists(UP_LOCATION.$file_path))
-                {
-                    echo '<a href="'.DOWN_LOCATION.$file_path.'">';
-                    printf(htmlspecialchars(_('Download revision %u')),$addonRevs->addonCurrent['revision']);
-                    echo '</a>';
-                }
-                else
-                {
-                    echo htmlspecialchars(_('Revision')).' '.$addonRevs->addonCurrent['revision'].' - '.htmlspecialchars(_('File not found.'));
-                }
-            }
-            else
-            {
-                echo htmlspecialchars(_('Revision')).' '.$addonRevs->addonCurrent['revision'].' - '.htmlspecialchars(_('File not found.'));
-            }
-            echo '</td></tr>';
-            $addonRevs->next();
-        }
-        echo '</table><br />';
         
         // Show list of images associated with this addon
         echo '<h3>'.htmlspecialchars(_('Images')).'</h3>';
@@ -559,7 +540,6 @@ class coreAddon
     function writeConfig()
     {
         // Check permission
-        global $user;
         if (User::$logged_in == false)
             return false;
         if ($_SESSION['role']['manageaddons'] == false && $this->addonCurrent['uploader'] != $_SESSION['userid'])
@@ -777,7 +757,6 @@ class coreAddon
         $this->getRatingInfo();
         $this->writeInformation();
 
-        global $user;
         if (User::$logged_in == false)
             return false;
         //write configuration for the submiter and administrator
@@ -790,7 +769,6 @@ class coreAddon
     function addAddon($fileid, $addonid, $attributes)
     {
         global $moderator_message;
-	global $user;
         // Check if logged in
         if (!User::$logged_in) {
             return false;
@@ -911,82 +889,6 @@ function get_file_path($file_id)
         return false;
     $file = mysql_fetch_assoc($handle);
     return $file['file_path'];
-}
-
-function update_addon_notes($type,$addon_id,$fields)
-{
-    if (!$_SESSION['role']['manageaddons'])
-        return false;
-    if ($type != 'karts' && $type != 'tracks' && $type != 'arenas')
-    {
-        echo '<span class="error">'.htmlspecialchars(_('Invalid addon type.')).'</span><br />';
-        return false;
-    }
-    $addon_id = Addon::cleanId($addon_id);
-    $fields = explode(',',$fields);
-    $notes = array();
-    foreach ($fields AS $field)
-    {
-        if (!isset($_POST[$field]))
-            $_POST[$field] = NULL;
-        $fieldinfo = explode('-',$field);
-        $revision = (int)$fieldinfo[1];
-        // Update notes
-        $notes[$revision] = mysql_real_escape_string($_POST[$field]);
-    }
-    $error = 0;
-    // Save record in database
-    foreach ($notes AS $revision => $value)
-    {
-        // Make sure addon exists
-        $addon = new coreAddon($type);
-        $addon->selectById($addon_id);
-        if (!$addon)
-            return false;
-        $query = 'UPDATE `'.DB_PREFIX.$type.'_revs`
-            SET `moderator_note` = \''.$value.'\'
-            WHERE `addon_id` = \''.$addon_id.'\'
-            AND `revision` = '.$revision;
-        $reqSql = sql_query($query);
-        if (!$reqSql)
-            $error = 1;
-    }
-    
-    // Generate email
-    $email_body = NULL;
-    foreach ($notes AS $revision => $value)
-    {
-        $email_body .= '<strong>Revision '.$revision.'</strong><br /><br />';
-        $value = nl2br(strip_tags($value));
-        $email_body .= $value.'<br /><br />';
-    }
-    // Get uploader email address
-    $user = $addon->addonCurrent['uploader'];
-    $userQuery = 'SELECT `name`,`email` FROM `'.DB_PREFIX.'users`
-        WHERE `id` = '.(int)$user.' LIMIT 1';
-    $userHandle = sql_query($userQuery);
-    if (!$userHandle)
-        $error = 1;
-    else
-    {
-        $result = mysql_fetch_assoc($userHandle);
-        try {
-            $mAddon = new Addon($addon->addonCurrent['id']);
-            sendMail($result['email'],
-                    'moderatorNotification',
-                    array($addon->addonCurrent['name'],
-                    $mAddon->getLink(),
-                    $email_body,
-                    $result['name']));
-            }
-        catch (AddonException $e) {
-            echo '<span class="error">'.$e->getMessage().'</span><br />';
-        }
-    }
-
-    if ($error != 1)
-        return true;
-    return false;
 }
 
 function format_compat($format,$filetype)

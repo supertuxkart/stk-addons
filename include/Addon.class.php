@@ -22,6 +22,7 @@ class Addon {
     public static $allowedTypes = array('karts','tracks','arenas');
     private $type;
     private $id;
+    private $name;
     private $uploaderId;
     private $creationDate;
     private $designer;
@@ -80,7 +81,8 @@ class Addon {
                 'format'        => $rev['format'],
                 'image'         => $rev['image'],
                 'moderator_note'=> $rev['moderator_note'],
-                'status'        => $rev['status']
+                'status'        => $rev['status'],
+                'timestamp'     => $rev['creation_date']
             );
             if ($currentRev['status'] & F_LATEST)
                 $this->latestRevision = $rev['revision'];
@@ -290,6 +292,24 @@ class Addon {
         return $addon_id;
     }
     
+    public function getAllRevisions() {
+        return $this->revisions;
+    }
+    
+    public function getDescription() {
+        return htmlentities($this->description);
+    }
+    
+    public function getDesigner() {
+        if ($this->designer == NULL)
+            return htmlspecialchars(_('Unknown'));
+        return $this->designer;
+    }
+    
+    public function getLatestRevision() {
+        return $this->revisions[$this->latestRevision];
+    }
+    
     public function getType() {
         return $type;
     }
@@ -301,7 +321,53 @@ class Addon {
     public function getLink() {
         return $this->permalink;
     }
+
+    /**
+     * Get the path to the requested add-on file
+     * @param integer $revision Revision number
+     * @return string File path relative to the asset directory
+     */
+    public function getFile($revision) {
+        if (!is_int($revision))
+            throw new AddonException('An invalid revision was provided.');
+
+        // Look up file ID
+        $look_up_query = 'SELECT `fileid`
+            FROM `'.$this->type.'_revs`
+            WHERE `addon_id` = \''.$this->id.'\'
+            AND `revision` = '.$revision;
+        $look_up_handle = sql_query($look_up_query);
+        if (!$look_up_handle)
+            throw new AddonException('Failed to look up file ID');
+        if (mysql_num_rows($look_up_handle) === 0)
+            throw new AddonException('There is no add-on found with the specified revision number.');
+        $look_up = mysql_fetch_assoc($look_up_handle);
+        
+        $file_id = $look_up['fileid'];
+
+        // Look up file path from database
+        $query = 'SELECT `file_path` FROM `'.DB_PREFIX.'files`
+            WHERE `id` = '.(int)$file_id.'
+            LIMIT 1';
+        $handle = sql_query($query);
+        if (!$handle)
+            throw new AddonException('Failed to search for the file in the database.');
+        if (mysql_num_rows($handle) == 0)
+            throw new AddonException('The requested file does not have an associated file record.');
+        $file = mysql_fetch_assoc($handle);
+        return $file['file_path'];
+    }
     
+    public function getId() {
+        return $this->id;
+    }
+    
+    public function getImage($icon = false) {
+        if ($icon === false)
+            return $this->image;
+        return $this->icon;
+    }
+
     public static function getName($id)
     {
         if ($id == false)
@@ -345,6 +411,63 @@ class Addon {
             $id = substr_replace($id,$substr,$i,1);
         }
         return $id;
+    }
+    
+    public function setNotes($fields) {
+        if (!$_SESSION['role']['manageaddons'])
+            throw new AddonException(htmlspecialchars(_('You do not have the neccessary permissions to perform this action.')));
+
+        $fields = explode(',',$fields);
+        $notes = array();
+        foreach ($fields AS $field)
+        {
+            if (!isset($_POST[$field]))
+                $_POST[$field] = NULL;
+            $fieldinfo = explode('-',$field);
+            $revision = (int)$fieldinfo[1];
+            // Update notes
+            $notes[$revision] = mysql_real_escape_string($_POST[$field]);
+        }
+        $error = 0;
+        // Save record in database
+        foreach ($notes AS $revision => $value)
+        {
+            $query = 'UPDATE `'.DB_PREFIX.$this->type.'_revs`
+                SET `moderator_note` = \''.$value.'\'
+                WHERE `addon_id` = \''.$this->id.'\'
+                AND `revision` = '.$revision;
+            $reqSql = sql_query($query);
+            if (!$reqSql)
+                throw new AddonException('Failed to set moderator note.');
+        }
+
+        // Generate email
+        $email_body = NULL;
+        foreach ($notes AS $revision => $value)
+        {
+            $email_body .= '<strong>Revision '.$revision.'</strong><br /><br />';
+            $value = nl2br(strip_tags($value));
+            $email_body .= $value.'<br /><br />';
+        }
+        // Get uploader email address
+        $user = $this->uploaderId;
+        $userQuery = 'SELECT `name`,`email` FROM `'.DB_PREFIX.'users`
+            WHERE `id` = '.(int)$user.' LIMIT 1';
+        $userHandle = sql_query($userQuery);
+        if (!$userHandle)
+            throw new AddonException('Failed to find user record.');
+
+        $result = mysql_fetch_assoc($userHandle);
+        sendMail($result['email'],
+                'moderatorNotification',
+                array($this->name,
+                $this->permalink,
+                $email_body,
+                $result['name']));
+    }
+    
+    public function getUploader() {
+        return $this->uploaderId;
     }
     
     public function setStatus($fields) {

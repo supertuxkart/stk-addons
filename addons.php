@@ -112,10 +112,16 @@ switch ($_GET['save'])
         }
         break;
     case 'notes':
-        if (!isset($_GET['type']) || !isset($_GET['name']) || !isset($_POST['fields']))
+        if (!isset($_GET['name']) || !isset($_POST['fields']))
             break;
-        if (update_addon_notes($_GET['type'],$_GET['name'],$_POST['fields']))
+        try {
+            $mAddon = new Addon($_GET['name']);
+            $mAddon->setNotes($_POST['fields']);
             echo htmlspecialchars(_('Saved notes.')).'<br />';
+        }
+        catch (AddonException $e) {
+            echo '<span class="error">'.$e->getMessage().'</span><br />';
+        }
         break;
     case 'delete':
         try {
