@@ -333,7 +333,7 @@ class Addon {
 
         // Look up file ID
         $look_up_query = 'SELECT `fileid`
-            FROM `'.$this->type.'_revs`
+            FROM `'.DB_PREFIX.$this->type.'_revs`
             WHERE `addon_id` = \''.$this->id.'\'
             AND `revision` = '.$revision;
         $look_up_handle = sql_query($look_up_query);
