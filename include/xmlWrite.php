@@ -126,7 +126,7 @@ function generateAssetXML()
                 if($result['status'] & F_INVISIBLE)
                     continue;
             }
-            $file_path = get_file_path($result['fileid']);
+            $file_path = File::getPath($result['fileid']);
             if ($file_path === false)
             {
                 echo '<span class="warning">An error occurred locating add-on: '.$result['name'].'</span><br />';
@@ -145,7 +145,7 @@ function generateAssetXML()
             $writer->writeAttribute('uploader',$result['user']);
             $writer->writeAttribute('designer',$result['designer']);
             $writer->writeAttribute('description',$result['description']);
-            $image_path = get_file_path($result['image']);
+            $image_path = File::getPath($result['image']);
             if ($image_path !== false)
             {
                 if (file_exists(UP_LOCATION.$image_path))

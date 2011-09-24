@@ -137,8 +137,14 @@ switch ($_GET['save'])
         break;
     case 'approve':
     case 'unapprove':
-        if (approve_file((int)$_GET['id'],$_GET['save']))
+        try {
+            $approve = ($_GET['save'] == 'approve') ? true : false;
+            File::approve((int)$_GET['id'], $approve);
             echo htmlspecialchars(_('File updated.')).'<br />';
+        }
+        catch (FileException $e) {
+            echo '<span class="error">'.$e->getMessage().'</span><br />';
+        }
         break;
     case 'setimage':
         $edit_addon = new coreAddon($_GET['type']);
@@ -155,10 +161,14 @@ switch ($_GET['save'])
             echo htmlspecialchars(_('Set icon.')).'<br />';
         break;
     case 'deletefile':
-        $edit_addon = new coreAddon($_GET['type']);
-        $edit_addon->selectById($_GET['name']);
-        if ($edit_addon->delete_file((int)$_GET['id']))
+        try {
+            $mAddon = new Addon($_GET['name']);
+            $mAddon->deleteFile((int)$_GET['id']);
             echo htmlspecialchars(_('Deleted file.')).'<br />';
+        }
+        catch (AddonException $e) {
+            echo '<span class="error">'.$e->getMessage().'</span><br />';
+        }
         break;
 }
 $status = ob_get_clean();

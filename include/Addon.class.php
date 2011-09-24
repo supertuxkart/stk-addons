@@ -264,6 +264,14 @@ class Addon {
         writeAssetXML();
         writeNewsXML();
     }
+    
+    public function deleteFile($file_id) {
+        if (!$_SESSION['role']['manageaddons'] && $this->uploaderID != User::$user_id)
+            throw new AddonException(htmlentities(_('You do not have the necessary permissions to perform this action.')));
+        
+        if (!File::delete($file_id))
+            throw new AddonException(htmlentities(_('Failed to delete file.')));
+    }
 
     public static function generateId($type,$name)
     {

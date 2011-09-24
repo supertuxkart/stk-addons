@@ -872,25 +872,6 @@ class coreAddon
     }
 }
 
-function get_file_path($file_id)
-{
-    // Validate input
-    if (!is_numeric($file_id))
-        return false;
-    if ($file_id == 0)
-        return false;
-
-    // Look up file path from database
-    $query = 'SELECT `file_path` FROM `'.DB_PREFIX.'files`
-        WHERE `id` = '.(int)$file_id.'
-        LIMIT 1';
-    $handle = sql_query($query);
-    if (mysql_num_rows($handle) == 0)
-        return false;
-    $file = mysql_fetch_assoc($handle);
-    return $file['file_path'];
-}
-
 function format_compat($format,$filetype)
 {
     // FIXME: This should not be hardcoded
@@ -923,31 +904,5 @@ function format_compat($format,$filetype)
             break;
     }
     return htmlspecialchars(_('Unknown'));
-}
-
-function approve_file($file_id,$approve = 'approve')
-{
-    if ($approve == 'approve')
-        $approve = 1;
-    else
-        $approve = 0;
-
-    if (!$_SESSION['role']['manageaddons'])
-    {
-        echo '<span class="error">'.htmlspecialchars(_('Insufficient permissions.')).'</span><br />';
-        return false;
-    }
-
-    $approve_query = 'UPDATE `'.DB_PREFIX.'files`
-        SET `approved` = '.$approve.'
-        WHERE `id` = '.(int)$file_id;
-    $approve_handle = sql_query($approve_query);
-    if (!$approve_handle)
-    {
-        return false;
-    }
-    writeAssetXML();
-    writeNewsXML();
-    return true;
 }
 ?>
