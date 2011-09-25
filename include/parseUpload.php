@@ -80,7 +80,7 @@ function parseUpload($file,$revision = false)
             UP_LOCATION.'temp/'.$fileid.'/',
             $fileext))
     {
-        rmdir_recursive(UP_LOCATION.'temp/'.$fileid);
+        File::deleteRecursive(UP_LOCATION.'temp/'.$fileid);
     }
 
     // Find XML file
@@ -89,7 +89,7 @@ function parseUpload($file,$revision = false)
         $xml_file = find_xml(UP_LOCATION.'temp/'.$fileid);
         $xml_dir = dirname($xml_file);
         if (!$xml_file) {
-            rmdir_recursive(UP_LOCATION.'temp/'.$fileid);
+            File::deleteRecursive(UP_LOCATION.'temp/'.$fileid);
             throw new UploadException(htmlspecialchars(_('Invalid archive file. The archive must contain the addon\'s xml file.')));
         }
     }
@@ -125,7 +125,7 @@ function parseUpload($file,$revision = false)
         $parsed_xml = read_xml($xml_file,$addon_type);
         if (!$parsed_xml)
         {
-            rmdir_recursive(UP_LOCATION.'temp/'.$fileid);
+            File::deleteRecursive(UP_LOCATION.'temp/'.$fileid);
             throw new UploadException(htmlspecialchars(_('Failed to read the add-on\'s XML file. Please make sure you are using the latest version of the kart or track exporter.')));
         }
         // Write new XML file
@@ -145,7 +145,7 @@ function parseUpload($file,$revision = false)
         $license_file = find_license(UP_LOCATION.'temp/'.$fileid);
         if ($license_file === false)
         {
-            rmdir_recursive(UP_LOCATION.'temp/'.$fileid);
+            File::deleteRecursive(UP_LOCATION.'temp/'.$fileid);
             throw new UploadException(htmlspecialchars(_('A valid License.txt file was not found. Please add a License.txt file to your archive and re-submit it.')));
         }
         $parsed_xml['attributes']['license'] = $license_file;
@@ -222,14 +222,14 @@ function parseUpload($file,$revision = false)
     // Validate addon type field
     if (!Addon::isAllowedType($addon_type))
     {
-        rmdir_recursive(UP_LOCATION.'temp/'.$fileid);
+        File::deleteRecursive(UP_LOCATION.'temp/'.$fileid);
         throw new UploadException(htmlspecialchars(_('Invalid add-on type.')));
     }
 
     // Repack zip file
     if (!repack_zip($xml_dir,UP_LOCATION.$fileid.'.zip'))
     {
-        rmdir_recursive(UP_LOCATION.'temp/'.$fileid);
+        File::deleteRecursive(UP_LOCATION.'temp/'.$fileid);
         throw new UploadException(htmlspecialchars(_('Failed to re-pack archive file.')));
     }
     
@@ -257,7 +257,7 @@ function parseUpload($file,$revision = false)
     
     if ($_POST['upload-type'] == 'source')
     {
-        rmdir_recursive(UP_LOCATION.'temp/'.$fileid);
+        File::deleteRecursive(UP_LOCATION.'temp/'.$fileid);
         echo htmlspecialchars(_('Successfully uploaded source archive.')).'<br />';
         echo '<span style="font-size: large"><a href="addons.php?type='.$addon_type.'&amp;name='.$addon_id.'">'.htmlspecialchars(_('Continue.')).'</a></span><br />';
         return true;
@@ -276,13 +276,13 @@ function parseUpload($file,$revision = false)
         $addon->selectById($addon_id);
         if (!$addon->addonCurrent)
         {
-            rmdir_recursive(UP_LOCATION.'temp/'.$fileid);
+            File::deleteRecursive(UP_LOCATION.'temp/'.$fileid);
             throw new UploadException(htmlspecialchars(_('You are trying to add a new revision of an add-on that does not exist.')));
         }
         if ($_SESSION['userid'] != $addon->addonCurrent['uploader']
                 && !$_SESSION['role']['manageaddons'])
         {
-            rmdir_recursive(UP_LOCATION.'temp/'.$fileid);
+            File::deleteRecursive(UP_LOCATION.'temp/'.$fileid);
             throw new UploadException(htmlspecialchars(_('You do not have the necessary permissions to perform this action.')));
         }
     }
@@ -291,7 +291,7 @@ function parseUpload($file,$revision = false)
     {
         echo '<span class="error">'.htmlspecialchars(_('Failed to create add-on.')).'</span><br />';
     }
-    rmdir_recursive(UP_LOCATION.'temp/'.$fileid);
+    File::deleteRecursive(UP_LOCATION.'temp/'.$fileid);
     writeAssetXML();
     writeNewsXML();
     echo htmlspecialchars(_('Your add-on was uploaded successfully. It will be reviewed by our moderators before becoming publicly available.')).'<br /><br />';

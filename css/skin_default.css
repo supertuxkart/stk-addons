@@ -26,6 +26,10 @@ body {
     color:black;
 }
 
+label {
+    font-weight: bold;
+}
+
 #top-menu
 {
     display: block;

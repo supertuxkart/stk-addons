@@ -33,33 +33,19 @@ class coreAddon
         $this->addonType = $type;
     }
 
-    function selectById($id, $rev = false)
+    function selectById($id)
     {
         $icon = NULL;
         if ($this->addonType == 'karts')
             $icon = ' r.icon,';
-        if (!$rev)
-        {
-            $querySql = 'SELECT a.*, r.fileid, r.creation_date AS revision_timestamp,
-                    r.revision, r.format, r.image,'.$icon.' r.status, r.moderator_note
-                FROM `'.DB_PREFIX.'addons` `a`
-                LEFT JOIN `'.DB_PREFIX.$this->addonType.'_revs` `r`
-                ON `a`.`id` = `r`.`addon_id`
-                WHERE `a`.`id` = \''.$id.'\'
-                AND `a`.`type` = \''.$this->addonType.'\'
-                AND `r`.`status` & '.F_LATEST;
-        }
-        else
-        {
-            $querySql = 'SELECT a.*, r.fileid, r.creation_date AS revision_timestamp,
-                    r.revision, r.format, r.image,'.$icon.' r.status, r.moderator_note
-                FROM '.DB_PREFIX.'addons a
-                LEFT JOIN '.DB_PREFIX.$this->addonType.'_revs r
-                ON a.id = r.addon_id
-                WHERE a.id = \''.$id.'\'
-                AND `a`.`type` = \''.$this->addonType.'\'
-                ORDER BY `r`.`revision` ASC';
-        }
+        $querySql = 'SELECT a.*, r.fileid, r.creation_date AS revision_timestamp,
+                r.revision, r.format, r.image,'.$icon.' r.status, r.moderator_note
+            FROM `'.DB_PREFIX.'addons` `a`
+            LEFT JOIN `'.DB_PREFIX.$this->addonType.'_revs` `r`
+            ON `a`.`id` = `r`.`addon_id`
+            WHERE `a`.`id` = \''.$id.'\'
+            AND `a`.`type` = \''.$this->addonType.'\'
+            AND `r`.`status` & '.F_LATEST;
         $this->reqSql = sql_query($querySql);
         if (!$this->reqSql)
         {
@@ -539,213 +525,178 @@ class coreAddon
     /* FIXME: this function needs a lot of cleanup / a rewrite. */
     function writeConfig()
     {
-        // Check permission
-        if (User::$logged_in == false)
-            return false;
-        if ($_SESSION['role']['manageaddons'] == false && $this->addonCurrent['uploader'] != $_SESSION['userid'])
-            return false;
+        try {
+            $cAddon = new Addon($this->addonCurrent['id']);
+            // Check permission
+            if (User::$logged_in == false)
+                throw new AddonException('You must be logged in to see this.');
+            if ($_SESSION['role']['manageaddons'] == false && $cAddon->getUploader() != $_SESSION['userid'])
+                throw new AddonException(htmlspecialchars(_('You do not have the necessary privileges to perform this action.')));
+            
+            echo '<hr /><h3>'.htmlspecialchars(_('Configuration')).'</h3>';
+            echo '<form name="changeProps" action="'.$cAddon->getLink().'&amp;save=props" method="POST">';
+            
+            // Edit designer
+            $designer = ($cAddon->getDesigner() == htmlspecialchars(_('Unknown'))) ? NULL : $cAddon->getDesigner();
+            echo '<label for="designer_field">'.htmlspecialchars(_('Designer:')).'</label><br />';
+            echo '<input type="text" name="designer" id="designer_field" value="'.$designer.'" /><br />';
+            echo '<br />';
+            
+            // Edit description
+            echo '<label for="desc_field">'.htmlspecialchars(_('Description:')).'</label> ('.sprintf(htmlspecialchars(_('Max %u characters')),'140').')<br />';
+            echo '<textarea name="description" id="desc_field" rows="4" cols="60"
+                onKeyUp="textLimit(document.getElementById(\'desc_field\'),140);"
+                onKeyDown="textLimit(document.getElementById(\'desc_field\'),140);">'.$this->addonCurrent['description'].'</textarea><br />';
 
-        echo '<hr /><h3>Configuration</h3>';
-        // Edit designer
-        echo '<form name="changeProps" action="'.$this->addonCurrent['permUrl'].'&amp;save=props" method="POST">';
-        echo '<strong>'.htmlspecialchars(_('Designer:')).'</strong><br />';
-        // FIXME: Find a cleaner way to check this
-        if ($this->addonCurrent['designer'] == '<em>'.htmlspecialchars(_('Unknown')).'</em>')
-                $this->addonCurrent['designer'] = NULL;
-        echo '<input type="text" name="designer" id="designer_field" value="'.$this->addonCurrent['designer'].'" /><br />';
-        echo '<br />';
-        printf('<strong>'.htmlspecialchars(_('Description:')).'</strong> ('.htmlspecialchars(_('Max %u characters')).')<br />','140');
-        echo '<textarea name="description" id="desc_field" rows="4" cols="60"
-            onKeyUp="textLimit(document.getElementById(\'desc_field\'),140);"
-            onKeyDown="textLimit(document.getElementById(\'desc_field\'),140);">'.$this->addonCurrent['description'].'</textarea><br />';
-        echo '<input type="submit" value="'.htmlspecialchars(_('Save Properties')).'" />';
-        echo '</form><br />';
-        
-        // Delete addon
-        if ($this->addonCurrent['uploader'] == $_SESSION['userid'] || $_SESSION['role']['manageaddons'])
-            echo '<input type="button" value="'.htmlspecialchars(_('Delete Addon')).'" onClick="confirm_delete(\''.$this->addonCurrent['permUrl'].'&amp;save=delete\')" /><br /><br />';
+            // Submit
+            echo '<input type="submit" value="'.htmlspecialchars(_('Save Properties')).'" />';
+            echo '</form><br />';
+            
+            // Delete addon
+            if ($cAddon->getUploader() == $_SESSION['userid']
+                    || $_SESSION['role']['manageaddons'])
+                echo '<input type="button" value="'.htmlspecialchars(_('Delete Addon')).'"
+                    onClick="confirm_delete(\''.$cAddon->getLink().'&amp;save=delete\')" /><br /><br />';
 
-        // Set status flags
-        echo '<strong>'.htmlspecialchars(_('Status Flags:')).'</strong><br />';
-        echo '<form method="POST" action="'.$this->addonCurrent['permUrl'].'&amp;save=status">';
-        echo '<table id="addon_flags" class="info"><thead><tr><th></th>';
-        if ($_SESSION['role']['manageaddons'])
-        {
-            echo '<th>'.img_label(htmlspecialchars(_('Approved'))).'</th>
-                <th>'.img_label(htmlspecialchars(_('Invisible'))).'</th>';
-        }
-        echo '<th>'.img_label(htmlspecialchars(_('Alpha'))).'</th>
-            <th>'.img_label(htmlspecialchars(_('Beta'))).'</th>
-            <th>'.img_label(htmlspecialchars(_('Release-Candidate'))).'</th>
-            <th>'.img_label(htmlspecialchars(_('Latest'))).'</th>';
-        if ($_SESSION['role']['manageaddons'])
-            echo '<th>'.img_label(htmlspecialchars(_('DFSG Compliant'))).'</th>
-                <th>'.img_label(htmlspecialchars(_('Featured'))).'</th>';
-        echo '<th>'.img_label(htmlspecialchars(_('Invalid Textures'))).'</th>';
-        echo '</tr></thead>';
-        $addonRevs = new coreAddon($this->addonType);
-        $addonRevs->selectById($this->addonCurrent['id'],true);
-        $fields = array();
-        $fields[] = 'latest';
-        while ($addonRevs->addonCurrent)
-        {
-            echo '<tr><td style="text-align: center;">';
-            printf(htmlspecialchars(_('Rev %u:')),$addonRevs->addonCurrent['revision']);
-            echo '</td>';
-
-            if ($_SESSION['role']['manageaddons'] == true)
-            {
-                // F_APPROVED
-                echo '<td>';
-                if ($addonRevs->addonCurrent['status'] & F_APPROVED)
-                {
-                    echo '<input type="checkbox" name="approved-'.$addonRevs->addonCurrent['revision'].'" checked />';
-                }
-                else
-                {
-                    echo '<input type="checkbox" name="approved-'.$addonRevs->addonCurrent['revision'].'" />';
-                }
+            // Set status flags
+            echo '<strong>'.htmlspecialchars(_('Status Flags:')).'</strong><br />';
+            echo '<form method="POST" action="'.$cAddon->getLink().'&amp;save=status">';
+            echo '<table id="addon_flags" class="info"><thead><tr><th></th>';
+            if ($_SESSION['role']['manageaddons'])
+                echo '<th>'.img_label(htmlspecialchars(_('Approved'))).'</th>
+                    <th>'.img_label(htmlspecialchars(_('Invisible'))).'</th>';
+            echo '<th>'.img_label(htmlspecialchars(_('Alpha'))).'</th>
+                <th>'.img_label(htmlspecialchars(_('Beta'))).'</th>
+                <th>'.img_label(htmlspecialchars(_('Release-Candidate'))).'</th>
+                <th>'.img_label(htmlspecialchars(_('Latest'))).'</th>';
+            if ($_SESSION['role']['manageaddons'])
+                echo '<th>'.img_label(htmlspecialchars(_('DFSG Compliant'))).'</th>
+                    <th>'.img_label(htmlspecialchars(_('Featured'))).'</th>';
+            echo '<th>'.img_label(htmlspecialchars(_('Invalid Textures'))).'</th>';
+            echo '</tr></thead>';
+            $fields = array();
+            $fields[] = 'latest';
+            foreach ($cAddon->getAllRevisions() AS $rev_n => $revision) {
+                // Row Header
+                echo '<tr><td style="text-align: center;">';
+                printf(htmlspecialchars(_('Rev %u:')),$rev_n);
                 echo '</td>';
-                $fields[] = 'approved-'.$addonRevs->addonCurrent['revision'];
+
+                if ($_SESSION['role']['manageaddons'] == true)  {
+                    // F_APPROVED
+                    echo '<td>';
+                    if ($revision['status'] & F_APPROVED)
+                        echo '<input type="checkbox" name="approved-'.$rev_n.'" checked />';
+                    else
+                        echo '<input type="checkbox" name="approved-'.$rev_n.'" />';
+                    echo '</td>';
+                    $fields[] = 'approved-'.$rev_n;
+
+                    // F_INVISIBLE
+                    echo '<td>';
+                    if ($revision['status'] & F_INVISIBLE)
+                        echo '<input type="checkbox" name="invisible-'.$rev_n.'" checked />';
+                    else
+                        echo '<input type="checkbox" name="invisible-'.$rev_n.'" />';
+                    echo '</td>';
+                    $fields[] = 'invisible-'.$rev_n;
+                }
                 
-                // F_INVISIBLE
+                // F_ALPHA
                 echo '<td>';
-                if ($addonRevs->addonCurrent['status'] & F_INVISIBLE)
-                {
-                    echo '<input type="checkbox" name="invisible-'.$addonRevs->addonCurrent['revision'].'" checked />';
-                }
+                if ($revision['status'] & F_ALPHA)
+                    echo '<input type="checkbox" name="alpha-'.$rev_n.'" checked />';
                 else
-                {
-                    echo '<input type="checkbox" name="invisible-'.$addonRevs->addonCurrent['revision'].'" />';
-                }
+                    echo '<input type="checkbox" name="alpha-'.$rev_n.'" />';
                 echo '</td>';
-                $fields[] = 'invisible-'.$addonRevs->addonCurrent['revision'];
-            }
+                $fields[] = 'alpha-'.$rev_n;
 
-            // F_ALPHA
-            echo '<td>';
-            if ($addonRevs->addonCurrent['status'] & F_ALPHA)
-            {
-                echo '<input type="checkbox" name="alpha-'.$addonRevs->addonCurrent['revision'].'" checked />';
-            }
-            else
-            {
-                echo '<input type="checkbox" name="alpha-'.$addonRevs->addonCurrent['revision'].'" />';
-            }
-            echo '</td>';
-            $fields[] = 'alpha-'.$addonRevs->addonCurrent['revision'];
+                // F_BETA
+                echo '<td>';
+                if ($revision['status'] & F_BETA)
+                    echo '<input type="checkbox" name="beta-'.$rev_n.'" checked />';
+                else
+                    echo '<input type="checkbox" name="beta-'.$rev_n.'" />';
+                echo '</td>';
+                $fields[] = 'beta-'.$rev_n;
 
-            // F_BETA
-            echo '<td>';
-            if ($addonRevs->addonCurrent['status'] & F_BETA)
-            {
-                echo '<input type="checkbox" name="beta-'.$addonRevs->addonCurrent['revision'].'" checked />';
-            }
-            else
-            {
-                echo '<input type="checkbox" name="beta-'.$addonRevs->addonCurrent['revision'].'" />';
-            }
-            echo '</td>';
-            $fields[] = 'beta-'.$addonRevs->addonCurrent['revision'];
+                // F_RC
+                echo '<td>';
+                if ($revision['status'] & F_RC)
+                    echo '<input type="checkbox" name="rc-'.$rev_n.'" checked />';
+                else
+                    echo '<input type="checkbox" name="rc-'.$rev_n.'" />';
+                echo '</td>';
+                $fields[] = 'rc-'.$rev_n;
 
-            // F_RC
-            echo '<td>';
-            if ($addonRevs->addonCurrent['status'] & F_RC)
-            {
-                echo '<input type="checkbox" name="rc-'.$addonRevs->addonCurrent['revision'].'" checked />';
-            }
-            else
-            {
-                echo '<input type="checkbox" name="rc-'.$addonRevs->addonCurrent['revision'].'" />';
-            }
-            echo '</td>';
-            $fields[] = 'rc-'.$addonRevs->addonCurrent['revision'];
+                // F_LATEST
+                echo '<td>';
+                if ($revision['status'] & F_LATEST)
+                    echo '<input type="radio" name="latest" value="'.$rev_n.'" checked />';
+                else
+                    echo '<input type="radio" name="latest" value="'.$rev_n.'" />';
+                echo '</td>';
+                
+                if ($_SESSION['role']['manageaddons'])
+                {
+                    // F_DFSG
+                    echo '<td>';
+                    if ($revision['status'] & F_DFSG)
+                        echo '<input type="checkbox" name="dfsg-'.$rev_n.'" checked />';
+                    else
+                        echo '<input type="checkbox" name="dfsg-'.$rev_n.'" />';
+                    echo '</td>';
+                    $fields[] = 'dfsg-'.$rev_n;
 
-            // F_LATEST
-            echo '<td>';
-            if ($addonRevs->addonCurrent['status'] & F_LATEST)
-            {
-                echo '<input type="radio" name="latest" value="'.$addonRevs->addonCurrent['revision'].'" checked />';
-            }
-            else
-            {
-                echo '<input type="radio" name="latest" value="'.$addonRevs->addonCurrent['revision'].'" />';
-            }
-            echo '</td>';
+                    // F_FEATURED
+                    echo '<td>';
+                    if ($revision['status'] & F_FEATURED)
+                        echo '<input type="checkbox" name="featured-'.$rev_n.'" checked />';
+                    else
+                        echo '<input type="checkbox" name="featured-'.$rev_n.'" />';
+                    echo '</td>';
+                    $fields[] = 'featured-'.$rev_n;
+                }
+                
+                // F_TEX_NOT_POWER_OF_2
+                echo '<td>';
+                if ($revision['status'] & F_TEX_NOT_POWER_OF_2)
+                    echo '<input type="checkbox" name="texpower-'.$rev_n.'" checked disabled />';
+                else
+                    echo '<input type="checkbox" name="texpower-'.$rev_n.'" disabled />';
+                echo '</td>';
 
+                echo '</tr>';
+            }
+            echo '</table>';
+            echo '<input type="hidden" name="fields" value="'.implode(',',$fields).'" />';
+            echo '<input type="submit" value="'.htmlspecialchars(_('Save Changes')).'" />';
+            echo '</form><br />';
+
+            // Moderator notes
+            echo '<strong>'.htmlspecialchars(_('Notes from Moderator to Submitter:')).'</strong><br />';
+            if ($_SESSION['role']['manageaddons'])
+                echo '<form method="POST" action="'.$cAddon->getLink().'&amp;save=notes">';
+            $fields = array();
+            foreach ($cAddon->getAllRevisions() AS $rev_n => $revision) {
+                printf(htmlspecialchars(_('Rev %u:')).'<br />',$rev_n);
+                echo '<textarea name="notes-'.$rev_n.'"
+                    id="notes-'.$rev_n.'" rows="4" cols="60"
+                    onKeyUp="textLimit(document.getElementById(\'notes-'.$rev_n.'\'),4000);"
+                    onKeyDown="textLimit(document.getElementById(\'notes-'.$rev_n.'\'),4000);">';
+                echo $revision['moderator_note'];
+                echo '</textarea><br />';
+                $fields[] = 'notes-'.$rev_n;
+            }
             if ($_SESSION['role']['manageaddons'])
             {
-                // F_DFSG
-                echo '<td>';
-                if ($addonRevs->addonCurrent['status'] & F_DFSG)
-                {
-                    echo '<input type="checkbox" name="dfsg-'.$addonRevs->addonCurrent['revision'].'" checked />';
-                }
-                else
-                {
-                    echo '<input type="checkbox" name="dfsg-'.$addonRevs->addonCurrent['revision'].'" />';
-                }
-                echo '</td>';
-                $fields[] = 'dfsg-'.$addonRevs->addonCurrent['revision'];
-                
-                // F_FEATURED
-                echo '<td>';
-                if ($addonRevs->addonCurrent['status'] & F_FEATURED)
-                {
-                    echo '<input type="checkbox" name="featured-'.$addonRevs->addonCurrent['revision'].'" checked />';
-                }
-                else
-                {
-                    echo '<input type="checkbox" name="featured-'.$addonRevs->addonCurrent['revision'].'" />';
-                }
-                echo '</td>';
-                $fields[] = 'featured-'.$addonRevs->addonCurrent['revision'];
+                echo '<input type="hidden" name="fields" value="'.implode(',',$fields).'" />';
+                echo '<input type="submit" value="'.htmlspecialchars(_('Save Notes')).'" />';
+                echo '</form>';
             }
-
-            // F_TEX_NOT_POWER_OF_2
-            echo '<td>';
-            if ($addonRevs->addonCurrent['status'] & F_TEX_NOT_POWER_OF_2)
-            {
-                echo '<input type="checkbox" name="texpower-'.$addonRevs->addonCurrent['revision'].'" checked disabled />';
-            }
-            else
-            {
-                echo '<input type="checkbox" name="texpower-'.$addonRevs->addonCurrent['revision'].'" disabled />';
-            }
-            echo '</td>';
-            
-            echo '</tr>';
-            $addonRevs->next();
         }
-        echo '</table>';
-        echo '<input type="hidden" name="fields" value="'.implode(',',$fields).'" />';
-        echo '<input type="submit" value="'.htmlspecialchars(_('Save Changes')).'" />';
-        echo '</form><br />';
-        
-        // Moderator notes
-        echo '<strong>'.htmlspecialchars(_('Notes from Moderator to Submitter:')).'</strong><br />';
-        if ($_SESSION['role']['manageaddons'])
-            echo '<form method="POST" action="'.$this->addonCurrent['permUrl'].'&amp;save=notes">';
-        $addonRevs = new coreAddon($this->addonType);
-        $addonRevs->selectById($this->addonCurrent['id'],true);
-        $fields = array();
-        while ($addonRevs->addonCurrent)
-        {
-            printf(htmlspecialchars(_('Rev %u:')).'<br />',$addonRevs->addonCurrent['revision']);
-            echo '<textarea name="notes-'.$addonRevs->addonCurrent['revision'].'"
-                id="notes-'.$addonRevs->addonCurrent['revision'].'" rows="4" cols="60"
-                onKeyUp="textLimit(document.getElementById(\'notes-'.$addonRevs->addonCurrent['revision'].'\'),4000);"
-                onKeyDown="textLimit(document.getElementById(\'notes-'.$addonRevs->addonCurrent['revision'].'\'),4000);">';
-            echo $addonRevs->addonCurrent['moderator_note'];
-            echo '</textarea><br />';
-            $fields[] = 'notes-'.$addonRevs->addonCurrent['revision'];
-            $addonRevs->next();
-        }
-        if ($_SESSION['role']['manageaddons'])
-        {
-            echo '<input type="hidden" name="fields" value="'.implode(',',$fields).'" />';
-            echo '<input type="submit" value="'.htmlspecialchars(_('Save Notes')).'" />';
-            echo '</form>';
+        catch (AddonException $e) {
+            echo '<span class="error">'.$e->getMessage().'</span><br />';
         }
     }
 

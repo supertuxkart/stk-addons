@@ -219,7 +219,7 @@ class Addon {
         if (!User::$logged_in)
             throw new AddonException(htmlentities(_('You must be logged in to perform this action.')));
 
-        if($_SESSION['role']['manageaddons'] != true)
+        if($_SESSION['role']['manageaddons'] != true && User::$user_id != $this->uploaderId)
             throw new AddonException(htmlentities(_('You do not have the necessary permissions to perform this action.')));
 
         // Remove files associated with this addon

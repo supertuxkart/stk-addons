@@ -66,6 +66,31 @@ class File {
         writeNewsXML();
         return true;
     }
+
+    /**
+     * Recursively delete files. This does not touch the database.
+     * @param string $dir
+     * @return boolean
+     */
+    public static function deleteRecursive($dir)
+    {
+        if (is_dir($dir))
+        {
+            $dir = rtrim($dir, '/');
+            $oDir = dir($dir);
+            while (($sFile = $oDir->read()) !== false)
+            {
+                if ($sFile != '.' && $sFile != '..')
+                {
+                    (!is_link("$dir/$sFile") && is_dir("$dir/$sFile")) ? File::deleteRecursive("$dir/$sFile") : unlink("$dir/$sFile");
+                }
+            }
+            $oDir->close();
+            rmdir($dir);
+            return true;
+        }
+        return false;
+    }
     
     public static function getPath($file_id) {
         // Validate input

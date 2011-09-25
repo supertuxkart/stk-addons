@@ -28,29 +28,9 @@ class Cache {
      * Empty the cache folder
      */
     public static function clear() {
-        rmdir_recursive(CACHE_DIR);
+        File::deleteRecursive(CACHE_DIR);
         mkdir(CACHE_DIR);
     }
-}
-
-function rmdir_recursive($dir)
-{
-    if (is_dir($dir))
-    {
-        $dir = rtrim($dir, '/');
-        $oDir = dir($dir);
-        while (($sFile = $oDir->read()) !== false)
-        {
-            if ($sFile != '.' && $sFile != '..')
-            {
-                (!is_link("$dir/$sFile") && is_dir("$dir/$sFile")) ? rmdir_recursive("$dir/$sFile") : unlink("$dir/$sFile");
-            }
-        }
-        $oDir->close();
-        rmdir($dir);
-        return true;
-    }
-    return false;
 }
 
 ?>
