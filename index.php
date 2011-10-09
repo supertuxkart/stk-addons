@@ -30,13 +30,16 @@ define('ROOT','./');
 $security ="";
 require('include.php');
 include("include/top.php");
+
+$meta_description = htmlspecialchars(_('This is the official SuperTuxKart add-on repository. It contains extra karts and tracks for the SuperTuxKart game.'));
 ?>
+            <meta name="description" content="<?php echo $meta_description; ?>" />
 	</head>
 	<body>
 		<?php 
 		include(ROOT.'include/menu.php');
 		?>
-                <div style="text-align: center; width: 100%;"><img id="logo_center" src="image/logo_large.png" alt="SuperTuxKart Logo" /></div>
+                <div style="text-align: center; width: 100%;"><img id="logo_center" src="image/logo_large.png" alt="SuperTuxKart Logo" title="SuperTuxKart Logo" /></div>
 
 		<div id="select-addon-panel">
 		    <div class="icon-container">
