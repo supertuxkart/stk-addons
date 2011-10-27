@@ -94,6 +94,7 @@ function get_self()
                     <li><a href="<?php echo $page_url.'&amp;lang=fr_FR'; ?>"><img src="image/flag/fr.png" /></a></li>
                     <li><a href="<?php echo $page_url.'&amp;lang=ga_IE'; ?>"><img src="image/flag/ga.png" /></a></li>
                     <li><a href="<?php echo $page_url.'&amp;lang=gl_ES'; ?>"><img src="image/flag/gl.png" /></a></li>
+                    <li><a href="<?php echo $page_url.'&amp;lang=id_ID'; ?>"><img src="image/flag/id.png" /></a></li>
                     <li><a href="<?php echo $page_url.'&amp;lang=nl_NL'; ?>"><img src="image/flag/nl.png" /></a></li>
                     <li><a href="<?php echo $page_url.'&amp;lang=ru_RU'; ?>"><img src="image/flag/ru.png" /></a></li>
                     <li><a href="https://translations.launchpad.net/stk/stkaddons">Translate<br />STK-Addons</a></li>
