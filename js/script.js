@@ -71,6 +71,11 @@ function verify(codeSent)
     }
 }
 
+function clearPanelStatus() {
+    var div = document.getElementById('right-content_status');
+    div.innerHTML = '';
+}
+
 $(document).ready(function () {
     $("#news-messages").newsTicker();
     $('a.menu_head').click(function () {
@@ -89,6 +94,7 @@ $(document).ready(function () {
       var addonType = getUrlVars(url)['type'];
       var addonId = getUrlVars(url)['name'];
       loadFrame(addonId,'addons-panel.php?type=' + addonType);
+      clearPanelStatus();
       return false;
     });
     
@@ -97,6 +103,7 @@ $(document).ready(function () {
       var url = this.href;
       var view = getUrlVars(url)['view'];
       loadFrame(view,'manage-panel.php');
+      clearPanelStatus();
       return false;
     });
 
@@ -105,6 +112,7 @@ $(document).ready(function () {
       var url = this.href;
       var user = getUrlVars(url)['user'];
       loadFrame(user,'users-panel.php');
+      clearPanelStatus();
       return false;
     });
 });
