@@ -317,7 +317,7 @@ class coreAddon
             echo '<h3>'.htmlspecialchars(_('Revisions')).'</h3>';
 
             // Add upload button to the right of the Revisions label
-            if (User::$logged_in && $this->addonCurrent['uploader'] == $_SESSION['userid'])
+            if (User::$logged_in && ($this->addonCurrent['uploader'] == User::$user_id || $_SESSION['role']['manageaddons']))
             {
                 echo '<div style="float: right;"><form method="POST" action="upload.php?type='.$this->addonType.'&amp;name='.$this->addonCurrent['id'].'">';
                 echo '<input type="submit" value="'.htmlspecialchars(_('Upload Revision')).'" />';
