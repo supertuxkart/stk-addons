@@ -279,7 +279,7 @@ function parseUpload($file,$revision = false)
             File::deleteRecursive(UP_LOCATION.'temp/'.$fileid);
             throw new UploadException(htmlspecialchars(_('You are trying to add a new revision of an add-on that does not exist.')));
         }
-        if ($_SESSION['userid'] != $addon->addonCurrent['uploader']
+        if (User::$user_id != $addon->addonCurrent['uploader']
                 && !$_SESSION['role']['manageaddons'])
         {
             File::deleteRecursive(UP_LOCATION.'temp/'.$fileid);

@@ -32,7 +32,7 @@ $security = 'basicPage';
 define('ROOT','./');
 include('include.php');
 
-$_GET['user'] = (isset($_GET['user'])) ? mysql_real_escape_string($_GET['user']) : NULL;
+$_GET['user'] = (isset($_GET['user'])) ? mysql_real_escape_string($_GET['user']) : mysql_real_escape_string($_SESSION['user']);
 $action = (isset($_GET['action'])) ? $_GET['action'] : NULL;
 
 $title = htmlspecialchars(_('SuperTuxKart Add-ons')).' | '.htmlspecialchars(_('Users'));
@@ -103,8 +103,14 @@ while($userLoader->next())
             'label' => '<img class="icon"  src="image/user.png" />'.htmlspecialchars($userLoader->userCurrent['user']),
             'class' => $class
         );
-        if($userLoader->userCurrent['user'] == $_GET['user']) $js = 'loadFrame('.$userLoader->userCurrent['id'].',\'users-panel.php\')';
     }
+}
+if (isset($_GET['user'])) {
+    $_GET['id'] = $_GET['user'];
+    ob_start();
+    include(ROOT.'users-panel.php');
+    $content = ob_get_clean();
+    $panels->setContent($content);
 }
 $panels->setMenuItems($users);
 
