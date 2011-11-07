@@ -93,6 +93,40 @@ class Report
         $this->report_structure[$section]['content'] .= $query_result;
     }
     
+    /**
+     * Inserts a pie chart into the report. The query must be formed such that
+     * the first column returned is a label, and the second is a numerical
+     * value.
+     * @param type $section
+     * @param type $query
+     * @return type 
+     */
+    public function addPieChart($section,$query,$chartTitle) {
+        $query_result = "\t<h3>Pie Chart</h3>\n";
+        $query_result .= "\t<code>".htmlspecialchars($query)."</code>\n";
+        $handle = sql_query($query);
+        if (!$handle) 
+        {
+            $this->report_structure[$section]['content'] .= $query_result.'<p>ERROR.</p>';
+            return;
+        }
+        $count = mysql_num_rows($handle);
+        $query_result .= "\t<h3>Result</h3>\n";
+        $query_result .= "\t<p>($count rows returned)</p>\n";
+        
+        $values = array();
+        $labels = array();
+        for ($i = 0; $i < $count; $i++) {
+            $result = mysql_fetch_array($handle);
+            $labels[] = $result[0].' ('.$result[1].')';
+            $values[] = $result[1];
+        }
+        
+        $query_result .= '<img src="'.ROOT.'include/graph_pie.php?labels='.implode(',',$labels).'&amp;values='.implode(',',$values).'&amp;title='.urlencode($chartTitle).'" />';
+        
+        $this->report_structure[$section]['content'] .= $query_result;
+    }
+    
     public function __toString()
     {
         $return = "<html>\n<head>\n\t<title>{$this->report_title}</title>\n";

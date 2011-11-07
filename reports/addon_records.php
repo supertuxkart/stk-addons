@@ -28,6 +28,10 @@ $description = '<p>This report contains a list of all add-ons.</p>';
 $report->addDescription($description);
 
 $addon_section = $report->addSection("Add-Ons");
+$chart_query = 'SELECT `type`, COUNT(`id`) AS `count`
+    FROM `'.DB_PREFIX.'addons` GROUP BY `type`';
+$report->addPieChart($addon_section,$chart_query,'Add-On Types');
+
 $addon_query = 'SELECT `a`.`id`,`a`.`type`,`a`.`name`,`u`.`name` AS `uploader`,
     `a`.`creation_date`,`a`.`designer`,`a`.`description`,`a`.`license` 
     FROM `'.DB_PREFIX.'addons` `a`

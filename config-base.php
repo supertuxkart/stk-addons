@@ -40,4 +40,5 @@ define("NEWS_XML", $newsXmlPath);
 define("ASSET_XML", $assetXmlPath);
 define("NEWS_XML_LOCAL", $newsXmlPathLocal);
 define("ASSET_XML_LOCAL", $assetXmlPathLocal);
+define("JPG_ROOT",ROOT);
 ?>
