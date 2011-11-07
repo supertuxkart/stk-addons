@@ -30,7 +30,14 @@ $description = '<p>This report contains a list of all addon package files, and '
  .'dates were uploaded before that field was added.</p>';
 $report->addDescription($description);
 
-$addon_section = $report->addSection("Add-Ons");
+$chart_section = $report->addSection("File Downloads (by add-on type)");
+$chart_query = 'SELECT `addon_type`,SUM(`downloads`)
+    FROM `'.DB_PREFIX.'files`
+    WHERE `file_type` = \'addon\'
+    GROUP BY `addon_type`';
+$report->addPieChart($chart_section, $chart_query, 'Downloads by Type');
+
+$addon_section = $report->addSection("Add-Ons (by revision)");
 $addon_query = 'SELECT `addon_id`,`addon_type`,`file_path`,`date_added`,`downloads`
     FROM `'.DB_PREFIX.'files`
     WHERE `file_type` = \'addon\'
