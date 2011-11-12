@@ -5,9 +5,27 @@ include (ROOT.'config.php');
 include (JPG_ROOT."jpgraph/jpgraph.php");
 include (JPG_ROOT."jpgraph/jpgraph_pie.php");
 
-// Some data and the labels
+// Sanity checks, and preparing variables
+if (!isset($_GET['values']) || !isset($_GET['labels']) || !isset($_GET['title'])) {
+    header('HTTP/1.0 404 Not Found');
+    die('Not all necessary variables were set.');
+}
 $data   = explode(',',$_GET['values']);
 $labels = explode(',',$_GET['labels']);
+if (count($data) !== count($labels)) {
+    header('HTTP/1.0 404 Not Found');
+    die('Number of labels and number of values do not match.');
+}
+if (count($data) === 0 || count($labels) === 0) {
+    header('HTTP/1.0 404 Not Found');
+    die('There are no values to graph.');
+}
+foreach($data AS $test_data) {
+    if (!is_numeric($test_data)) {
+        header('HTTP/1.0 404 Not Found');
+        die('Non-numeric data given.');
+    }
+}
 
 // Create the Pie Graph.
 $graph = new PieGraph(400,300);
