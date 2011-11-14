@@ -837,7 +837,7 @@ function format_compat($format,$filetype)
             }
             if ($format == 2)
             {
-                return '0.7 - 0.7.2';
+                return '0.7 - 0.7.3';
             }
             return htmlspecialchars(_('Unknown'));
             break;
@@ -849,7 +849,7 @@ function format_compat($format,$filetype)
             }
             if ($format >= 3 && $format <= 5)
             {
-                return '0.7 - 0.7.2';
+                return '0.7 - 0.7.3';
             }
             return htmlspecialchars(_('Unknown'));
             break;
