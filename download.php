@@ -56,7 +56,7 @@ if (!file_exists($filepath))
 $uagent = $_SERVER['HTTP_USER_AGENT'];
 if (preg_match('#^(SuperTuxKart/[a-z0-9\.\-_]+)( \\(.*\\))?$#',$uagent,$matches)) {
     // Check if this user-agent is already known
-    $checkSql = 'SELECT * FROM `'.DB_PREFIX.'clients`
+    $checkSql = 'SELECT `agent_string` FROM `'.DB_PREFIX.'clients`
         WHERE `agent_string` = \''.mysql_real_escape_string($matches[1]).'\'';
     $checkHandle = sql_query($checkSql);
     if (mysql_num_rows($checkHandle) != 1)
@@ -74,6 +74,33 @@ if (preg_match('#^(SuperTuxKart/[a-z0-9\.\-_]+)( \\(.*\\))?$#',$uagent,$matches)
             header("HTTP/1.0 404 Not Found");
             exit;
         }
+    }
+    
+    // Increase daily count for this user-agent
+    $checkStatQuery = 'SELECT `id`
+        FROM `'.DB_PREFIX.'stats`
+        WHERE `type` = \'uagent '.mysql_real_escape_string($uagent).'\'
+        AND `date` = CURDATE()';
+    $checkStatHandle = sql_query($checkStatQuery);
+    if (!$checkStatHandle) {
+        header("HTTP/1.0 404 Not Found");
+        exit;
+    }
+    if (mysql_num_rows($checkStatHandle) === 0) {
+        // Insert new stat record
+        $insertStatQuery = 'INSERT INTO `'.DB_PREFIX.'stats`
+            (`type`,`date`,`value`) VALUES
+            (\'uagent '.mysql_real_escape_string($uagent).'\',CURDATE(),1)';
+    } else {
+        $insertStatQuery = 'UPDATE `'.DB_PREFIX.'stats`
+            SET `value` = `value` + 1
+            WHERE `type` = \'uagent '.mysql_real_escape_string($uagent).'\'
+            AND `date` = CURDATE()';
+    }
+    $insertStatHandle = sql_query($insertStatQuery);
+    if (!$insertStatHandle) {
+        header("HTTP/1.0 404 Not Found");
+        exit;
     }
 }
 
@@ -104,19 +131,8 @@ header("Pragma: public");
 header("Content-Type: $ctype");
 header("Content-Length: $filesize");
 header("Last-Modified: $mtimestring GMT");
-// Prevent caching of xml files
-if ($ctype != "image/png" && $ctype != "image/jpg" && $ctype != "application/zip")
-{
-    header("Cache-Control: no-cache, must-revalidate");
-    header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
-}
-else
-{
-    // Redirect to actual resource server to save bandwidth on the web host
-    header('Location: http://downloads.tuxfamily.org/stkaddons/assets/'.$assetpath);
-    exit;
-}
 
-// Send file
-readfile($filepath);
+// Redirect to actual resource server to save bandwidth on the web host
+header('Location: http://downloads.tuxfamily.org/stkaddons/assets/'.$assetpath);
+exit;
 ?>

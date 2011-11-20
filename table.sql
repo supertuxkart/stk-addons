@@ -121,6 +121,15 @@ CREATE TABLE `news` (
     KEY `date` (`date`,`active`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
+CREATE TABLE `stats` (
+    `id` int unsigned NOT NULL auto_increment,
+    `type` text NOT NULL,
+    `date` date NOT NULL,
+    `value` int(10) unsigned NOT NULL default '0',
+    PRIMARY KEY (`id`),
+    KEY (`date`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 CREATE TABLE `tracks_revs` (
     `id` char(23) NOT NULL,
     `addon_id` varchar(30) NOT NULL,
