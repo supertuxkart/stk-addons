@@ -28,6 +28,14 @@ $description = '<p>This report is designed to give day-to-day usage statistics, 
     'using download counts, collected daily.</p>';
 $report->addDescription($description);
 
+$uaTime1y_section = $report->addSection("File Downloads per OS in the Last Year");
+$uaTime1y_query = 'SELECT SUBSTRING(`type`,21) AS `label`,`date`,`value`
+    FROM `'.DB_PREFIX.'stats`
+    WHERE `date` >= CURDATE() - INTERVAL 1 YEAR
+    AND `type` LIKE \'uagent %\'
+    ORDER BY `date` DESC, `label` DESC';
+$report->addTimeGraph($uaTime1y_section,$uaTime1y_query, 'File Downloads per OS', 'ua_time_1y');
+
 $last30_section = $report->addSection("File Downloads in the Last 30 Days");
 $last30_query = 'SELECT `date`,SUM(`value`) AS count
     FROM `'.DB_PREFIX.'stats`

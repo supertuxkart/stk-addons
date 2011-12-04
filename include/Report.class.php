@@ -127,6 +127,78 @@ class Report
         $this->report_structure[$section]['content'] .= $query_result;
     }
     
+    /**
+     * Inserts a graph into the report. The query must be formed such that
+     * the first column returned is a label, the second is a date, and the third
+     * is a numerical value. This function can handle graphs with multiple
+     * lines.
+     * @param type $section
+     * @param type $query
+     * @return type 
+     */
+    public function addTimeGraph($section,$query,$chartTitle,$graphId = NULL) {
+        $query_result = "\t<h3>Graph</h3>\n";
+        $query_result .= "\t<code>".htmlspecialchars($query)."</code>\n";
+        $handle = sql_query($query);
+        if (!$handle) 
+        {
+            $this->report_structure[$section]['content'] .= $query_result.'<p>ERROR.</p>';
+            return;
+        }
+        $count = mysql_num_rows($handle);
+        $query_result .= "\t<h3>Result</h3>\n";
+        $query_result .= "\t<p>($count rows returned)</p>\n";
+        if ($count == 0) {
+            $this->report_structure[$section]['content'] .= $query_result;
+            return;
+        }
+
+        // Load all points from database
+        $points = array();
+        for ($i = 0; $i < $count; $i++) {
+            $result = mysql_fetch_array($handle);
+            $points[] = $result;
+        }
+        
+        // Group points by label
+        $lines = array();
+        foreach ($points AS $point) {
+            // Hash the line label in the key to remove bad characters
+            if (!array_key_exists(md5($point[0]),$lines))
+                $lines[md5($point[0])] = array('label' => $point[0], 'x' => array(), 'y' => array());
+            
+            $lines[md5($point[0])]['x'][] = $point[1];
+            $lines[md5($point[0])]['y'][] = $point[2];
+        }
+        $lines = array_values($lines);
+        
+        // Split into arrays of x-values, y-values and labels
+        $xvalues = array();
+        $yvalues = array();
+        $labels = array();
+        foreach ($lines AS $line) {
+            $xvalues[] = $line['x'];
+            $yvalues[] = $line['y'];
+            $labels[] = $line['label'];
+        }
+        // Make x-values numeric
+        for ($i = 0; $i < count($xvalues); $i++) {
+            for ($j = 0; $j < count($xvalues[$i]); $j++)
+                $xvalues[$i][$j] = strtotime($xvalues[$i][$j]);
+        }
+        
+        require_once(ROOT.'include/graph_date_line.php');
+        try {
+            $graph_file = graph_date_line($chartTitle, $xvalues, $yvalues, $labels, $graphId);
+            $query_result .= '<img src="'.$graph_file.'" />';
+        }
+        catch (Exception $e) {
+            $query_result .= $e->getMessage().'<br />';
+        }
+
+        $this->report_structure[$section]['content'] .= $query_result;
+    }
+    
     public function __toString()
     {
         $return = "<html>\n<head>\n\t<title>{$this->report_title}</title>\n";
