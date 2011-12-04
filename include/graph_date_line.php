@@ -5,6 +5,7 @@ require_once(ROOT.'config.php');
 require_once(JPG_ROOT.'jpgraph/jpgraph.php');
 require_once(JPG_ROOT.'jpgraph/jpgraph_line.php');
 require_once(JPG_ROOT.'jpgraph/jpgraph_utils.inc.php');
+require_once(JPG_ROOT.'jpgraph/jpgraph_text.inc.php');
 
 function graph_date_line($title, $xvalues, $yvalues, $labels, $graph_id = NULL, $xsize = 800, $ysize = 600) {
     if (!is_int($xsize) || !is_int($ysize))
@@ -20,7 +21,7 @@ function graph_date_line($title, $xvalues, $yvalues, $labels, $graph_id = NULL, 
         if (file_exists($local_cache_file)) {
             $mtime = filemtime($local_cache_file);
             $time = time();
-            if ($mtime + (60*60*24) > $time) {
+            if (($mtime + (60*60*24)) < $time) {
                 // Refresh plot
                 unlink($local_cache_file);
             }
@@ -87,6 +88,12 @@ function graph_date_line($title, $xvalues, $yvalues, $labels, $graph_id = NULL, 
     // Set legend position
     $graph->legend->Pos(0.5,0.99,"center","bottom");
     $graph->legend->SetFont(FF_DV_SANSSERIF,FS_NORMAL,6);
+    
+    $genLbl = new Text("Generated on: ".date('d-m-Y H:i:s')); 
+    $genLbl->SetPos(0.99,0.99,"right","bottom");
+    $genLbl->SetColor("red"); 
+    $genLbl->Show();
+    $graph->addText($genLbl);
 
     // Output graph
     $graph->Stroke($local_cache_file);
