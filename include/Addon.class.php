@@ -61,7 +61,7 @@ class Addon {
         $this->description = $result['description'];
         $this->license = $result['license'];
         $this->permalink = SITE_ROOT.'addons.php?type='.$this->type.'&amp;name='.$this->id;
-        
+
         // Get revisions
         $revsQuery = 'SELECT *
             FROM `'.DB_PREFIX.$this->type."_revs`
@@ -374,6 +374,30 @@ class Addon {
         if ($icon === false)
             return $this->image;
         return $this->icon;
+    }
+    
+    public function getImageHashes() {
+        $paths_query = 'SELECT `id`, `file_path`
+            FROM `'.DB_PREFIX.'files`
+            WHERE `addon_id` = \''.$this->id.'\'
+            AND `file_type` = \'image\'
+            LIMIT 50';
+        $paths_handle = sql_query($paths_query);
+        if (!$paths_handle)
+            throw new AddonException('DB error when fetching images associated with this add-on.');
+        if (mysql_num_rows($paths_handle) === 0)
+            return array();
+        
+        $return = array();
+        for ($i = 0; $i < mysql_num_rows($paths_handle); $i++) {
+            $result = mysql_fetch_assoc($paths_handle);
+            $row = array('id' => $result['id'],
+                'path' => $result['file_path'],
+                'hash' => md5_file(UP_LOCATION.$result['file_path']));
+            $return[] = $row;
+        }
+        
+        return $return;
     }
 
     public static function getName($id)

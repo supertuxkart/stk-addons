@@ -33,17 +33,15 @@ function parseUpload($file,$revision = false)
     
     // Check file-extension for uploaded file
     $fileext = check_extension($file['name'], $_POST['upload-type']);
-
-    // Generate a unique file name for the uploaded file
-    $fileid = uniqid(true);
     
     // Set upload directory
     if ($_POST['upload-type'] == 'image')
         $file_dir = 'images/';
     else
         $file_dir = NULL;
-    
-    // Make sure file at this path doesn't already exist
+
+    // Generate a unique file name for the uploaded file
+    $fileid = uniqid();
     while (file_exists(UP_LOCATION.$file_dir.$fileid.'.'.$fileext))
         $fileid = uniqid();
     
@@ -71,16 +69,16 @@ function parseUpload($file,$revision = false)
     }
     
     // Move the archive to a working directory
-    mkdir(UP_LOCATION.'temp/'.$fileid);
-    if (!move_uploaded_file($file['tmp_name'],UP_LOCATION.'temp/'.$fileid.'/'.$fileid.'.'.$fileext))
+    mkdir(CACHE_DIR.$fileid);
+    if (!move_uploaded_file($file['tmp_name'],CACHE_DIR.$fileid.'/'.$fileid.'.'.$fileext))
         throw new UploadException(htmlspecialchars(_('Failed to move uploaded file.')));
 
     // Extract archive
-    if (!extract_archive(UP_LOCATION.'temp/'.$fileid.'/'.$fileid.'.'.$fileext,
-            UP_LOCATION.'temp/'.$fileid.'/',
+    if (!extract_archive(CACHE_DIR.$fileid.'/'.$fileid.'.'.$fileext,
+            CACHE_DIR.$fileid.'/',
             $fileext))
     {
-        File::deleteRecursive(UP_LOCATION.'temp/'.$fileid);
+        File::deleteRecursive(CACHE_DIR.$fileid);
     }
 
     // Find XML file

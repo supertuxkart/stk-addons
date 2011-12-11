@@ -16,8 +16,8 @@ function graph_date_line($title, $xvalues, $yvalues, $labels, $graph_id = NULL, 
         throw new Exception('No data given.');
 
     if ($graph_id !== NULL) {
-        $local_cache_file = CACHE_DIR.'/cache_graph_'.$graph_id.'.png';
-        $remote_cache_file = DOWN_LOCATION.'temp/cache_graph_'.$graph_id.'.png';
+        $local_cache_file = CACHE_DIR.'cache_graph_'.$graph_id.'.png';
+        $remote_cache_file = CACHE_DL.'cache_graph_'.$graph_id.'.png';
         if (file_exists($local_cache_file)) {
             $mtime = filemtime($local_cache_file);
             $time = time();
@@ -29,8 +29,8 @@ function graph_date_line($title, $xvalues, $yvalues, $labels, $graph_id = NULL, 
         }
     } else {
         $rand = rand(10000,99999);
-        $local_cache_file = CACHE_DIR.'/cache_graph_'.$rand.'.png';
-        $remote_cache_file = DOWN_LOCATION.'temp/cache_graph_'.$rand.'.png';
+        $local_cache_file = CACHE_DIR.'cache_graph_'.$rand.'.png';
+        $remote_cache_file = CACHE_DL.'cache_graph_'.$rand.'.png';
     }
     
     // Create the Graph object
