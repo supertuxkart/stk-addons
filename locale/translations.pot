@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-10-29 18:56-0600\n"
+"POT-Creation-Date: 2011-12-11 14:51-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,69 +20,67 @@ msgstr ""
 msgid "The requested add-on does not exist."
 msgstr ""
 
-#: Addon.class.php:109 coreAddon.php:738
+#: Addon.class.php:108
+msgid ""
+"An add-on with this ID already exists. Please try to upload your add-on "
+"again later."
+msgstr ""
+
+#: Addon.class.php:110
 msgid "Creating a new add-on..."
 msgstr ""
 
-#: Addon.class.php:129 coreAddon.php:758
-msgid "This add-on already exists. Adding revision..."
+#: Addon.class.php:126
+msgid "Your add-on could not be uploaded."
 msgstr ""
 
-#: Addon.class.php:135 coreAddon.php:764
-msgid "Failed to update the name record for this add-on."
-msgstr ""
-
-#: Addon.class.php:144 coreAddon.php:773
-msgid "Failed to update the license record for this add-on."
-msgstr ""
-
-#: Addon.class.php:154 coreAddon.php:783
+#: Addon.class.php:133 coreAddon.php:767
 msgid "Failed to check for previous add-on revisions."
 msgstr ""
 
-#: Addon.class.php:200
+#: Addon.class.php:176
 msgid "The file you are trying to create already exists."
 msgstr ""
 
-#: Addon.class.php:220
+#: Addon.class.php:196
 msgid "You must be logged in to perform this action."
 msgstr ""
 
-#: Addon.class.php:223 Addon.class.php:270 parseUpload.php:286 users.php:58
+#: Addon.class.php:199 Addon.class.php:246 parseUpload.php:287 users.php:58
 #: users.php:75
 msgid "You do not have the necessary permissions to perform this action."
 msgstr ""
 
-#: Addon.class.php:231
+#: Addon.class.php:207
 msgid "Failed to find files associated with this addon."
 msgstr ""
 
-#: Addon.class.php:238
+#: Addon.class.php:214
 msgid "Failed to delete file:"
 msgstr ""
 
-#: Addon.class.php:246
+#: Addon.class.php:222
 msgid "Failed to remove file records for this addon."
 msgstr ""
 
-#: Addon.class.php:251
+#: Addon.class.php:227
 msgid "Failed to remove ratings for this add-on."
 msgstr ""
 
-#: Addon.class.php:258
+#: Addon.class.php:234
 msgid "Failed to remove add-on revisions."
 msgstr ""
 
-#: Addon.class.php:262
+#: Addon.class.php:238
 msgid "Failed to remove addon."
 msgstr ""
 
-#: Addon.class.php:273
+#: Addon.class.php:249
 msgid "Failed to delete file."
 msgstr ""
 
-#: Addon.class.php:313 coreAddon.php:540 coreAddon.php:832 coreAddon.php:842
-#: coreAddon.php:854 coreAddon.php:857
+#: Addon.class.php:289 coreAddon.php:540 coreAddon.php:844 coreAddon.php:854
+#: coreAddon.php:866 coreAddon.php:869
 msgid "Unknown"
 msgstr ""
 
@@ -444,6 +442,18 @@ msgstr ""
 
 #: coreAddon.php:731
 msgid "The add-on you are trying to create already exists."
+msgstr ""
+
+#: coreAddon.php:742
+msgid "This add-on already exists. Adding revision..."
+msgstr ""
+
+#: coreAddon.php:748
+msgid "Failed to update the name record for this add-on."
+msgstr ""
+
+#: coreAddon.php:757
+msgid "Failed to update the license record for this add-on."
 msgstr ""
 
 #: coreUser.php:87 createAccount.php:43 login.php:114
@@ -925,163 +935,163 @@ msgstr ""
 msgid "Failed to upload your file."
 msgstr ""
 
-#: parseUpload.php:54 parseUpload.php:76
+#: parseUpload.php:52 parseUpload.php:74
 msgid "Failed to move uploaded file."
 msgstr ""
 
-#: parseUpload.php:65 parseUpload.php:187
+#: parseUpload.php:63 parseUpload.php:188
 msgid "Failed to associate image file with addon."
 msgstr ""
 
-#: parseUpload.php:68
+#: parseUpload.php:66
 msgid "Successfully uploaded image."
 msgstr ""
 
-#: parseUpload.php:69 parseUpload.php:262
+#: parseUpload.php:67 parseUpload.php:263
 msgid "Continue."
 msgstr ""
 
-#: parseUpload.php:93
+#: parseUpload.php:91
 msgid "Invalid archive file. The archive must contain the addon's xml file."
 msgstr ""
 
-#: parseUpload.php:107
+#: parseUpload.php:105
 msgid ""
 "Some invalid files were found in the uploaded add-on. These files have been "
 "removed from the archive:"
 msgstr ""
 
-#: parseUpload.php:116
+#: parseUpload.php:114
 msgid "Upload was recognized as a kart."
 msgstr ""
 
-#: parseUpload.php:121
+#: parseUpload.php:119
 msgid "Upload was recognized as a track."
 msgstr ""
 
-#: parseUpload.php:129
+#: parseUpload.php:127
 msgid ""
 "Failed to read the add-on's XML file. Please make sure you are using the "
 "latest version of the kart or track exporter."
 msgstr ""
 
-#: parseUpload.php:134
+#: parseUpload.php:132
 msgid "Failed to write new XML file:"
 msgstr ""
 
-#: parseUpload.php:140
+#: parseUpload.php:138
 msgid "This track is an arena."
 msgstr ""
 
-#: parseUpload.php:149
+#: parseUpload.php:147
 msgid ""
 "A valid License.txt file was not found. Please add a License.txt file to "
 "your archive and re-submit it."
 msgstr ""
 
-#: parseUpload.php:208
+#: parseUpload.php:209
 msgid ""
 "Some images in this add-on do not have dimensions that are a power of two."
 msgstr ""
 
-#: parseUpload.php:209
+#: parseUpload.php:210
 msgid "This may cause display errors on some video cards."
 msgstr ""
 
-#: parseUpload.php:226
+#: parseUpload.php:227
 msgid "Invalid add-on type."
 msgstr ""
 
-#: parseUpload.php:233
+#: parseUpload.php:234
 msgid "Failed to re-pack archive file."
 msgstr ""
 
-#: parseUpload.php:242
+#: parseUpload.php:243
 msgid "Failed to associate archive file with addon."
 msgstr ""
 
-#: parseUpload.php:261
+#: parseUpload.php:262
 msgid "Successfully uploaded source archive."
 msgstr ""
 
-#: parseUpload.php:280
+#: parseUpload.php:281
 msgid "You are trying to add a new revision of an add-on that does not exist."
 msgstr ""
 
-#: parseUpload.php:292
+#: parseUpload.php:301
 msgid "Failed to create add-on."
 msgstr ""
 
-#: parseUpload.php:297
+#: parseUpload.php:307
 msgid ""
 "Your add-on was uploaded successfully. It will be reviewed by our moderators "
 "before becoming publicly available."
 msgstr ""
 
-#: parseUpload.php:298
+#: parseUpload.php:308
 msgid "Click here to upload the sources to your add-on now."
 msgstr ""
 
-#: parseUpload.php:299
+#: parseUpload.php:309
 msgid ""
 "(Uploading the sources to your add-on enables others to improve your work "
 "and also ensure your add-on will not be lost in the future if new "
 "SuperTuxKart versions are not compatible with the current format.)"
 msgstr ""
 
-#: parseUpload.php:300
+#: parseUpload.php:310
 msgid "Click here to view your add-on."
 msgstr ""
 
-#: parseUpload.php:309
+#: parseUpload.php:319
 msgid "Uploaded image files must be either PNG or Jpeg files."
 msgstr ""
 
-#: parseUpload.php:315
+#: parseUpload.php:325
 msgid "The file you uploaded was not the correct type."
 msgstr ""
 
-#: parseUpload.php:324
+#: parseUpload.php:334
 msgid "The file to extract does not exist."
 msgstr ""
 
-#: parseUpload.php:336 parseUpload.php:371
+#: parseUpload.php:346 parseUpload.php:381
 msgid "Could not open archive file. It may be corrupted."
 msgstr ""
 
-#: parseUpload.php:342 parseUpload.php:377
+#: parseUpload.php:352 parseUpload.php:387
 msgid "Failed to extract archive file."
 msgstr ""
 
-#: parseUpload.php:385
+#: parseUpload.php:395
 msgid "Unknown archive type."
 msgstr ""
 
-#: parseUpload.php:396
+#: parseUpload.php:406
 msgid "Upload is invalid."
 msgstr ""
 
-#: parseUpload.php:401
+#: parseUpload.php:411
 msgid "Unknown file upload error."
 msgstr ""
 
-#: parseUpload.php:405 parseUpload.php:407
+#: parseUpload.php:415 parseUpload.php:417
 msgid "Uploaded file is too large."
 msgstr ""
 
-#: parseUpload.php:409
+#: parseUpload.php:419
 msgid "Uploaded file is incomplete."
 msgstr ""
 
-#: parseUpload.php:411
+#: parseUpload.php:421
 msgid "No file was uploaded."
 msgstr ""
 
-#: parseUpload.php:413
+#: parseUpload.php:423
 msgid "There is no TEMP directory to store the uploaded file in."
 msgstr ""
 
-#: parseUpload.php:415
+#: parseUpload.php:425
 msgid "Unable to write uploaded file to disk."
 msgstr ""
 
