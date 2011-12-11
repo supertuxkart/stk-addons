@@ -150,8 +150,11 @@ function parseUpload($file,$revision = false)
 
         // Get addon id
         $addon_id = NULL;
-        if (isset($_GET['name']))
+        if (isset($_GET['name'])) {
             $addon_id = Addon::cleanId($_GET['name']);
+            if (!Addon::exists($addon_id))
+                $addon_id = NULL;
+        }
         if (!preg_match('/^[a-z0-9\-]+_?[0-9]*$/i',$addon_id) || $addon_id == NULL)
             $addon_id = Addon::generateId($addon_type,$parsed_xml['attributes']['name']);
 
@@ -285,13 +288,18 @@ function parseUpload($file,$revision = false)
         }
     }
 
-    if (!$addon->addAddon($fileid,$addon_id,$parsed_xml['attributes']))
-    {
-        echo '<span class="error">'.htmlspecialchars(_('Failed to create add-on.')).'</span><br />';
+    try {
+        if (!Addon::exists($addon_id))
+            $addon = Addon::create($addon_type, $parsed_xml['attributes'], $fileid);
+        else {
+            $addon = new Addon($addon_id);
+            $addon->createRevision($parsed_xml['attributes'], $fileid);
+        }
+    }
+    catch (AddonException $e) {
+        echo '<span class="error">'.$e->getMessage().'</span><br />';
     }
     File::deleteRecursive(UP_LOCATION.'temp/'.$fileid);
-    writeAssetXML();
-    writeNewsXML();
     echo htmlspecialchars(_('Your add-on was uploaded successfully. It will be reviewed by our moderators before becoming publicly available.')).'<br /><br />';
     echo '<a href="upload.php?type='.$addon_type.'&amp;name='.$addon_id.'&amp;action=file">'.htmlspecialchars(_('Click here to upload the sources to your add-on now.')).'</a><br />';
     echo htmlspecialchars(_('(Uploading the sources to your add-on enables others to improve your work and also ensure your add-on will not be lost in the future if new SuperTuxKart versions are not compatible with the current format.)')).'<br /><br />';

@@ -90,7 +90,17 @@ class Addon {
         }
     }
 
-    public function create($type, $id, $fileid, $attributes)
+    /**
+     * Create a new add-on record and an intial revision
+     * @global string $moderator_message Initial revision status message
+     *         FIXME: put this in $attributes somewhere
+     * @param string $type Add-on type
+     * @param array $attributes Contains properties of the add-on. Must have the
+     *        following elements: name, designer, license, image, fileid, status, (arena)
+     * @param string $fileid ID for revision file (see FIXME below)
+     * @return Addon Object for newly created add-on
+     */
+    public static function create($type, $attributes, $fileid)
     {
         global $moderator_message;
 
@@ -101,74 +111,45 @@ class Addon {
         if (!Addon::isAllowedType($type))
             throw new AddonException('An invalid add-on type was provided.');
         
-        $this->type = $type;
+        $id = Addon::generateId($type, $attributes['name']);
 
-        // If the addon doesn't exist, create it
-        if (!sql_exist('addons', 'id', $id))
-        {
-            echo htmlspecialchars(_('Creating a new add-on...')).'<br />';
-            $fields = array('id','type','name','uploader','designer','license');
-            $values = array($id,$this->type,
-                mysql_real_escape_string($attributes['name']),
-                mysql_real_escape_string(User::$user_id),
-                mysql_real_escape_string($attributes['designer']),
-                mysql_real_escape_string($attributes['license']));
-            if ($this->type == 'tracks')
-            {
-                $fields[] = 'props';
-                if ($attributes['arena'] == 'Y')
-                    $values[] = '1';
-                else
-                    $values[] = '0';
-            }
-            if (!sql_insert('addons',$fields,$values))
-                return false;
-        }
-        else
-        {
-            echo htmlspecialchars(_('This add-on already exists. Adding revision...')).'<br />';
-            // Update the addon name
-            if (!sql_update('addons',
-                    'id',mysql_real_escape_string($id),
-                    'name',mysql_real_escape_string($attributes['name'])))
-            {
-                echo '<span class="error">'.htmlspecialchars(_('Failed to update the name record for this add-on.')).'</span><br />';
-            }
-            // Update license file record
-            if (!sql_update('addons',
-                    'id',
-                    mysql_real_escape_string($id),
-                    'license',
-                    mysql_real_escape_string($attributes['license'])))
-            {
-                echo '<span class="error">'.htmlspecialchars(_('Failed to update the license record for this add-on.')).'</span><br />';
-            }
-        }
+        // Make sure the add-on doesn't already exist
+        if (Addon::exists($id))
+            throw new AddonException(htmlspecialchars(_('An add-on with this ID already exists. Please try to upload your add-on again later.')));
 
-        // Add the new revision
-        $prevRevQuerySql = 'SELECT `revision` FROM '.DB_PREFIX.$this->addonType.'_revs
-            WHERE `addon_id` = \''.$id.'\' ORDER BY `revision` DESC LIMIT 1';
-        $reqSql = sql_query($prevRevQuerySql);
-        if (!$reqSql)
+        // Make sure no revisions with this id exists
+        // FIXME: Check if this id is redundant or not. Could just
+        //        auto-increment this column if it is unused elsewhere.
+        if(sql_exist($type.'_revs', 'id', $fileid))
+            throw new AddonException(htmlspecialchars(_('The add-on you are trying to create already exists.')));
+
+        echo htmlspecialchars(_('Creating a new add-on...')).'<br />';
+        $fields = array('id','type','name','uploader','designer','license');
+        $values = array($id,$type,
+            mysql_real_escape_string($attributes['name']),
+            mysql_real_escape_string(User::$user_id),
+            mysql_real_escape_string($attributes['designer']),
+            mysql_real_escape_string($attributes['license']));
+        if ($type == 'tracks')
         {
-            echo '<span class="error">'.htmlspecialchars(_('Failed to check for previous add-on revisions.')).'</span><br />';
-            return false;
+            $fields[] = 'props';
+            if ($attributes['arena'] == 'Y')
+                $values[] = '1';
+            else
+                $values[] = '0';
         }
-        if (mysql_num_rows($reqSql) == 0)
-        {
-            $rev = 1;
-        }
-        else
-        {
-            $result = mysql_fetch_assoc($reqSql);
-            $rev = $result['revision'] + 1;
-        }
-        // Add revision entry
+        if (!sql_insert('addons',$fields,$values))
+            throw new AddonException(htmlspecialchars(_('Your add-on could not be uploaded.')));
+
+        // Add the first revision
+        $rev = 1;
+
+        // Generate revision entry
         $fields = array('id','addon_id','fileid','revision','format','image','status');
         $values = array($fileid,$id,$attributes['fileid'],$rev,
             mysql_real_escape_string($attributes['version']),
             $attributes['image'],$attributes['status']);
-        if ($this->addonType == 'karts')
+        if ($type == 'karts')
         {
             $fields[] = 'icon';
             $values[] = $attributes['image'];
@@ -179,25 +160,88 @@ class Addon {
             $fields[] = 'moderator_note';
             $values[] = $moderator_message;
         }
-        if (!sql_insert($this->addonType.'_revs',$fields,$values))
+        if (!sql_insert($type.'_revs',$fields,$values))
             return false;
         // Send mail to moderators
         moderator_email('New Addon Upload',
-                "{$_SESSION['user']} has uploaded a new file for the {$this->addonType} \'{$attributes['name']}\' ($id)");
-        return true;
+                "{$_SESSION['user']} has uploaded a new {$type} '{$attributes['name']}' ($id)");
+        writeAssetXML();
+        writeNewsXML();
+        return new Addon($id);
     }
     
-    public function createRevision($id, $fileid, $attributes) {
+    /**
+     * Create an add-on revision
+     * @param array $attributes
+     * @param string $fileid 
+     */
+    public function createRevision($attributes, $fileid) {
+        global $moderator_message;
+
         // Check if logged in
         if (!User::$logged_in)
             throw new AddonException('You must be logged in to create an add-on revision.');
-        
-        if (!$this->type)
-            throw new AddonException('The add-on type was not set yet.');
 
         // Make sure an add-on file with this id does not exist
-        if(sql_exist($this->type.'_revs', 'id', $fileid))
+        if (sql_exist($this->type.'_revs', 'id', $fileid))
             throw new AddonException(htmlspecialchars(_('The file you are trying to create already exists.')));
+        
+        // Make sure user has permission to upload a new revision for this add-on
+        if (User::$user_id !== $this->uploaderId && !$_SESSION['role']['manageaddons']) {
+            throw new AddonException(htmlspecialchars(_('You do not have the necessary permissions to perform this action.')));
+        }
+        
+        // Update the addon name
+        $this->setName($attributes['name']);
+
+        // Update license file record
+        $this->setLicense($attributes['license']);
+
+        // Prevent duplicate images from being created.
+        $images = $this->getImageHashes();
+        // Compare with new image
+        $new_image = File::getPath($attributes['image']);
+        $new_hash = md5_file(UP_LOCATION.$new_image);
+        for ($i = 0; $i < count($images); $i++) {
+            // Skip image that was just uploaded
+            if ($images[$i]['id'] == $attributes['image'])
+                continue;
+
+            if ($new_hash === $images[$i]['hash']) {
+                File::delete($attributes['image']);
+                $attributes['image'] = $images[$i]['id'];
+                break;
+            }
+        }
+
+        // Calculate the next revision number
+        $highest_rev = max(array_keys($this->revisions));
+        $rev = $highest_rev + 1;
+
+        // Add revision entry
+        $fields = array('id','addon_id','fileid','revision','format','image','status');
+        $values = array($fileid,$this->id,$attributes['fileid'],$rev,
+            mysql_real_escape_string($attributes['version']),
+            $attributes['image'],$attributes['status']);
+        if ($this->type == 'karts')
+        {
+            $fields[] = 'icon';
+            $values[] = $attributes['image'];
+        }
+        // Add moderator message if available
+        if (!empty($moderator_message))
+        {
+            $fields[] = 'moderator_note';
+            $values[] = $moderator_message;
+        }
+        if (!sql_insert($this->type.'_revs',$fields,$values))
+            throw new AddonException('Failed to create add-on revision.');
+        
+        // Send mail to moderators
+        moderator_email('New Addon Upload',
+                "{$_SESSION['user']} has uploaded a new revision for {$this->type} '{$attributes['name']}' ($this->id)");
+        writeAssetXML();
+        writeNewsXML();
     }
     
     /**
@@ -443,6 +487,23 @@ class Addon {
             $id = substr_replace($id,$substr,$i,1);
         }
         return $id;
+    }
+    
+    private function setLicense($license) {
+        if (!sql_update('addons',
+                'id',mysql_real_escape_string($this->id),
+                'license',mysql_real_escape_string($license)))
+            throw new AddonException(htmlspecialchars(_('Failed to update the license record for this add-on.')));
+        $this->license = $license;
+    }
+    
+    private function setName($name) {
+        if (!sql_update('addons',
+                'id',mysql_real_escape_string($this->id),
+                'name',mysql_real_escape_string($name)))
+            throw new AddonException(htmlspecialchars(_('Failed to update the name record for this add-on.')));
+        
+        $this->name = $name;
     }
     
     public function setNotes($fields) {
