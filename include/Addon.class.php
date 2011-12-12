@@ -488,6 +488,66 @@ class Addon {
         }
         return $id;
     }
+
+    /**
+     * Set the add-on's description
+     * @param string $description
+     */
+    public function setDescription($description) {
+        if (!User::$logged_in || (!$_SESSION['role']['manageaddons'] && $this->uploaderId != User::$user_id))
+            throw new AddonException(htmlspecialchars(_('You do not have the neccessary permissions to perform this action.')));
+        
+        $updateQuery = 'UPDATE `'.DB_PREFIX.'addons`
+            SET `description` = \''.mysql_real_escape_string(strip_tags($description)).'\'
+            WHERE `id` = \''.$this->id.'\'';
+        $updateSql = sql_query($updateQuery);
+        
+        if (!$updateSql)
+            throw new AddonException(htmlspecialchars(_('Failed to update the description record for this add-on.')));
+
+        writeAssetXML();
+        writeNewsXML();
+        $this->description = $description;
+    }
+    
+    /**
+     * Set the add-on's designer
+     * @param string $designer 
+     */
+    public function setDesigner($designer) {
+        if (!User::$logged_in || (!$_SESSION['role']['manageaddons'] && $this->uploaderId != User::$user_id))
+            throw new AddonException(htmlspecialchars(_('You do not have the neccessary permissions to perform this action.')));
+        
+        $updateQuery = 'UPDATE `'.DB_PREFIX.'addons`
+            SET `designer` = \''.mysql_real_escape_string(strip_tags($designer)).'\'
+            WHERE `id` = \''.$this->id.'\'';
+        $updateSql = sql_query($updateQuery);
+        
+        if (!$updateSql)
+            throw new AddonException(htmlspecialchars(_('Failed to update the designer record for this add-on.')));
+
+        writeAssetXML();
+        writeNewsXML();
+        $this->designer = $designer;
+    }
+    
+    /**
+     * Set the image for the latest revision of this add-on.
+     * @param integer $image_id
+     * @param string $field 
+     */
+    public function setImage($image_id, $field = 'image') {
+        if (!$_SESSION['role']['manageaddons'] && $this->uploaderId != User::$user_id)
+            throw new AddonException(htmlspecialchars(_('You do not have the neccessary permissions to perform this action.')));
+
+        $set_image_query = 'UPDATE `'.DB_PREFIX.$this->type.'_revs`
+            SET `'.$field.'` = '.(int)$image_id.'
+            WHERE `addon_id` = \''.$this->id.'\'
+            AND `status` & '.F_LATEST;
+        $set_image_handle = sql_query($set_image_query);
+        if (!$set_image_handle)
+            throw new AddonException(htmlspecialchars(_('Failed to update the image record for this add-on.')));
+    }
     
     private function setLicense($license) {
         if (!sql_update('addons',
@@ -539,7 +599,7 @@ class Addon {
         foreach ($notes AS $revision => $value)
         {
             $email_body .= '<strong>Revision '.$revision.'</strong><br /><br />';
-            $value = nl2br(strip_tags($value));
+            $value = stripslashes(strip_tags($value));
             $email_body .= $value.'<br /><br />';
         }
         // Get uploader email address

@@ -111,50 +111,6 @@ class coreAddon
                 '?type='.$this->addonType.'&amp;name='.$this->addonCurrent['id'];
         return true;
     }
-    
-    function set_image($image_id, $field = 'image')
-    {
-        if (!$_SESSION['role']['manageaddons'] && $this->addonCurrent['uploader'] != $_SESSION['userid'])
-            return false;
-
-        $set_image_query = 'UPDATE `'.DB_PREFIX.$this->addonType.'_revs`
-            SET `'.$field.'` = '.(int)$image_id.'
-            WHERE `addon_id` = \''.$this->addonCurrent['id'].'\'
-            AND `status` & '.F_LATEST;
-        $set_image_handle = sql_query($set_image_query);
-        if (!$set_image_handle)
-            return false;
-        return true;
-    }
-
-    /** Set an information of the addon.
-        \param $info The name of the information (e.g. 'name', 'version')
-        \param $value The new value of the information (e.g. 'Tux', 'Adiumy')
-    */
-    function setInformation($info, $value)
-    {
-        if (!User::$logged_in)
-            return false;
-
-        if ($_SESSION['role']['manageaddons'] != true && $this->addonCurrent['uploader'] != $_SESSION['userid'])
-            return false;
-        
-        $info = mysql_real_escape_string($info);
-        $value = mysql_real_escape_string($value);
-        if (strlen($info) == 0)
-            return false;
-        
-        $updateQuery = 'UPDATE `'.DB_PREFIX.'addons`
-            SET `'.$info.'` = \''.$value.'\'
-            WHERE `id` = \''.$this->addonCurrent['id'].'\'';
-        $updateSql = sql_query($updateQuery);
-        
-        if (!$updateSql)
-            return false;
-        writeAssetXML();
-        writeNewsXML();
-        return true;
-    }
 	
     /**
      * Initialize the addon rating info

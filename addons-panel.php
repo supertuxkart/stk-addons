@@ -63,25 +63,5 @@ else
 
 $addon = new coreAddon($type);
 $addon->selectById($id);
-switch ($action)
-{
-    default:
-        if ($action != NULL)
-        {
-            $addon->setInformation($action, $value);
-            $addon->selectById($id);
-        }
-        $addon->viewInformation();
-        break;
-    case 'file':
-	?>
-	<html>
-	<head>
-	<meta http-equiv="refresh" content="0;URL=addons.php?addons=<?php echo $type.'&amp;name='.$addon->addonCurrent['name'];?>">
-	</head>
-	</html>
-	<?php
-	$addon->setFile();
-	exit();
-}
+$addon->viewInformation();
 ?>

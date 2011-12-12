@@ -84,11 +84,15 @@ switch ($_GET['save'])
             break;
         if (!isset($_POST['designer']))
             break;
-        $edit_addon = new coreAddon($_GET['type']);
-        $edit_addon->selectById($_GET['name']);
-        if ($edit_addon->setInformation('description',$_POST['description'])
-                && $edit_addon->setInformation('designer',$_POST['designer']))
+        try {
+            $edit_addon = new Addon(Addon::cleanId($_GET['name']));
+            $edit_addon->setDescription($_POST['description']);
+            $edit_addon->setDesigner($_POST['designer']);
             echo htmlspecialchars(_('Saved properties.')).'<br />';
+        }
+        catch (AddonException $e) {
+            echo '<span class="error">'.$e->getMessage().'</span><br />';
+        }
         break;
     case 'rev':
         try {
@@ -147,18 +151,26 @@ switch ($_GET['save'])
         }
         break;
     case 'setimage':
-        $edit_addon = new coreAddon($_GET['type']);
-        $edit_addon->selectById($_GET['name']);
-        if ($edit_addon->set_image((int)$_GET['id']))
+        try {
+            $edit_addon = new Addon(Addon::cleanId($_GET['name']));
+            $edit_addon->setImage((int)$_GET['id']);
             echo htmlspecialchars(_('Set image.')).'<br />';
+        }
+        catch (AddonException $e) {
+            echo '<span class="error">'.$e->getMessage().'</span><br />';
+        }
         break;
     case 'seticon':
         if ($_GET['type'] != 'karts')
             break;
-        $edit_addon = new coreAddon($_GET['type']);
-        $edit_addon->selectById($_GET['name']);
-        if ($edit_addon->set_image((int)$_GET['id'],'icon'))
+        try {
+            $edit_addon = new Addon(Addon::cleanId($_GET['name']));
+            $edit_addon->setImage((int)$_GET['id'],'icon');
             echo htmlspecialchars(_('Set icon.')).'<br />';
+        }
+        catch (AddonException $e) {
+            echo '<span class="error">'.$e->getMessage().'</span><br />';
+        }
         break;
     case 'deletefile':
         try {
