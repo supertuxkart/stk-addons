@@ -63,28 +63,6 @@ class coreAddon
                     '?type='.$this->addonType.'&amp;name='.$this->addonCurrent['id'];
     }
 
-    function selectByUser($id)
-    {
-        $icon = NULL;
-        if ($this->addonType == 'karts')
-            $icon = ' r.icon,';
-        $querySql = 'SELECT a.*, r.fileid,
-                r.creation_date AS revision_timestamp, r.revision,
-                r.format, r.image,'.$icon.' r.status, r.moderator_note
-            FROM '.DB_PREFIX.'addons a
-            LEFT JOIN '.DB_PREFIX.$this->addonType.'_revs r
-            ON a.id = r.addon_id
-            WHERE a.uploader = \''.$id.'\'
-            AND `a`.`type` = \''.$this->addonType.'\'
-            AND `r`.`status` & '.F_LATEST;
-        $this->reqSql = sql_query($querySql);
-        $this->addonCurrent = sql_next($this->reqSql);
-        if ($this->addonCurrent)
-            $this->addonCurrent['permUrl'] = 'http://'.$_SERVER['SERVER_NAME'].
-                    str_replace("addons-panel.php", "addons.php", $_SERVER['SCRIPT_NAME']).
-                    '?type='.$this->addonType.'&amp;name='.$this->addonCurrent['id'];
-    }
-
     function loadAll()
     {
         $icon = NULL;
@@ -641,12 +619,6 @@ class coreAddon
         {
             $this->writeConfig();
         }
-    }
-
-    /** To get the permanent link of the current addon */ 
-    function permalink()
-    {
-        return 'addons.php?type='.$this->addonType.'&amp;name='.$this->addonCurrent['id'];
     }
 }
 
