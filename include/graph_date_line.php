@@ -35,9 +35,11 @@ function graph_date_line($title, $xvalues, $yvalues, $labels, $graph_id = NULL, 
     
     // Create the Graph object
     $graph = new Graph($xsize,$ysize);
+    
     // Set the graph title
     $graph->title->Set($title);
     $graph->title->SetFont(FF_DV_SANSSERIF,FS_BOLD,14);
+    $graph->title->SetColor('#000000');
     
     $graph->SetMargin(50, 50, 20, 150);
     
@@ -77,17 +79,24 @@ function graph_date_line($title, $xvalues, $yvalues, $labels, $graph_id = NULL, 
     
     // Now set the tick positions
     $graph->xaxis->SetTickPositions($tickPositions,$minTickPositions);
+    $graph->xaxis->SetLabelAngle(45);
 
     // The labels should be formatted at dates with "Year-month"
     $graph->xaxis->SetLabelFormatString('d-M-y',true);
     $graph->xaxis->SetFont(FF_DV_SANSSERIF,FS_NORMAL,8);
+    $graph->xaxis->SetColor('#000000');
+    $graph->xaxis->title->Set("Date");
+    $graph->xaxis->title->SetFont(FF_DV_SANSSERIF,FS_BOLD,10);
+    $graph->xaxis->title->SetColor('#000000');
+    
+    $graph->yaxis->SetColor('#000000');
 
     // Add a X-grid
     $graph->xgrid->Show();
     
     // Set legend position
     $graph->legend->Pos(0.5,0.99,"center","bottom");
-    $graph->legend->SetFont(FF_DV_SANSSERIF,FS_NORMAL,6);
+    $graph->legend->SetFont(FF_DV_SANSSERIF,FS_NORMAL,7);
     
     $genLbl = new Text("Generated on: ".date('d-m-Y H:i:s')); 
     $genLbl->SetPos(0.99,0.99,"right","bottom");
