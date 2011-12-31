@@ -1,13 +1,25 @@
 <?php
 error_reporting(E_ALL);
-define('ROOT','../');
+if (!defined('ROOT')) define('ROOT','../');
 require_once(ROOT.'config.php');
 require_once(JPG_ROOT.'jpgraph/jpgraph.php');
-require_once(JPG_ROOT.'jpgraph/jpgraph_line.php');
-require_once(JPG_ROOT.'jpgraph/jpgraph_utils.inc.php');
-require_once(JPG_ROOT.'jpgraph/jpgraph_text.inc.php');
 
+/**
+ * Create a graph with dates along the x-axis
+ * @param string $title
+ * @param array $xvalues
+ * @param array $yvalues
+ * @param array $labels
+ * @param string $graph_id
+ * @param integer $xsize
+ * @param integer $ysize
+ * @return string 
+ */
 function graph_date_line($title, $xvalues, $yvalues, $labels, $graph_id = NULL, $xsize = 800, $ysize = 600) {
+    require_once(JPG_ROOT.'jpgraph/jpgraph_line.php');
+    require_once(JPG_ROOT.'jpgraph/jpgraph_utils.inc.php');
+    require_once(JPG_ROOT.'jpgraph/jpgraph_text.inc.php');
+
     if (!is_int($xsize) || !is_int($ysize))
         throw new Exception('Invalid graph dimensions given.');
     if (count($xvalues) !== count($yvalues) || count($xvalues) !== count($labels))
@@ -98,6 +110,91 @@ function graph_date_line($title, $xvalues, $yvalues, $labels, $graph_id = NULL, 
     $graph->legend->Pos(0.5,0.99,"center","bottom");
     $graph->legend->SetFont(FF_DV_SANSSERIF,FS_NORMAL,7);
     
+    $genLbl = new Text("Generated on: ".date('d-m-Y H:i:s')); 
+    $genLbl->SetPos(0.99,0.99,"right","bottom");
+    $genLbl->SetColor("red"); 
+    $genLbl->Show();
+    $graph->addText($genLbl);
+
+    // Output graph
+    $graph->Stroke($local_cache_file);
+    return $remote_cache_file;
+}
+
+/**
+ * Generate a pie chart and cache it
+ * @param string $title
+ * @param array $values
+ * @param array $labels
+ * @param string $graph_id
+ * @return string 
+ */
+function graph_pie($title, $values, $labels, $graph_id = NULL) {
+    require_once (JPG_ROOT.'jpgraph/jpgraph_pie.php');
+    require_once(JPG_ROOT.'jpgraph/jpgraph_text.inc.php');
+
+    if (count($values) !== count($labels))
+        throw new Exception('Invalid data set provided.');
+    if (count($values) == 0)
+        throw new Exception('No data given.');
+    foreach($values AS $test_data) {
+        if (!is_numeric($test_data)) {
+            throw new Exception('Non-numeric data provided.');
+        }
+    }
+    
+    // Handle caching
+    if ($graph_id !== NULL) {
+        $local_cache_file = CACHE_DIR.'cache_graph_'.$graph_id.'.png';
+        $remote_cache_file = CACHE_DL.'cache_graph_'.$graph_id.'.png';
+        if (file_exists($local_cache_file)) {
+            $mtime = filemtime($local_cache_file);
+            $time = time();
+            if (($mtime + (60*60*24)) < $time) {
+                // Refresh plot
+                unlink($local_cache_file);
+            }
+            else return $remote_cache_file;
+        }
+    } else {
+        $rand = rand(10000,99999);
+        $local_cache_file = CACHE_DIR.'cache_graph_'.$rand.'.png';
+        $remote_cache_file = CACHE_DL.'cache_graph_'.$rand.'.png';
+    }
+
+    // Create the Pie Graph.
+    $graph = new PieGraph(400,300);
+    $graph->SetShadow();
+
+    // Set A title for the plot
+    $graph->title->Set($title);
+    $graph->title->SetFont(FF_DV_SANSSERIF,FS_BOLD,14);
+    $graph->title->SetColor('#000000');
+
+    // Create pie plot
+    $p1 = new PiePlot($values);
+    $p1->SetCenter(0.5,0.5);
+    $p1->SetSize(0.3);
+
+    // Setup the labels to be displayed
+    $p1->SetLabels($labels);
+
+    // This method adjust the position of the labels. This is given as fractions
+    // of the radius of the Pie. A value < 1 will put the center of the label
+    // inside the Pie and a value >= 1 will pout the center of the label outside the
+    // Pie. By default the label is positioned at 0.5, in the middle of each slice.
+    $p1->SetLabelPos(1);
+
+    // Setup the label formats and what value we want to be shown (The absolute)
+    // or the percentage.
+    $p1->SetLabelType(PIE_VALUE_PER);
+    $p1->value->Show();
+    $p1->value->SetFont(FF_DV_SANSSERIF,FS_NORMAL,9);
+
+    // Add and stroke
+    $graph->Add($p1);
+
+    // Add timestamp
     $genLbl = new Text("Generated on: ".date('d-m-Y H:i:s')); 
     $genLbl->SetPos(0.99,0.99,"right","bottom");
     $genLbl->SetColor("red"); 

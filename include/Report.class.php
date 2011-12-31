@@ -97,11 +97,12 @@ class Report
      * Inserts a pie chart into the report. The query must be formed such that
      * the first column returned is a label, and the second is a numerical
      * value.
-     * @param type $section
-     * @param type $query
-     * @return type 
+     * @param string $section
+     * @param string $query
+     * @param string $graphId
+     * @return void
      */
-    public function addPieChart($section,$query,$chartTitle) {
+    public function addPieChart($section,$query,$chartTitle,$graphId = NULL) {
         $query_result = "\t<h3>Pie Chart</h3>\n";
         $query_result .= "\t<code>".htmlspecialchars($query)."</code>\n";
         $handle = sql_query($query);
@@ -122,8 +123,15 @@ class Report
             $values[] = $result[1];
         }
         
-        $query_result .= '<img src="'.ROOT.'include/graph_pie.php?labels='.implode(',',$labels).'&amp;values='.implode(',',$values).'&amp;title='.urlencode($chartTitle).'" />';
-        
+        require_once(ROOT.'include/graphs.php');
+        try {
+            $graph_file = graph_pie($chartTitle, $values, $labels, $graphId);
+            $query_result .= '<img src="'.$graph_file.'" />';
+        }
+        catch (Exception $e) {
+            $query_result .= $e->getMessage().'<br />';
+        }
+
         $this->report_structure[$section]['content'] .= $query_result;
     }
     
@@ -187,7 +195,7 @@ class Report
                 $xvalues[$i][$j] = strtotime($xvalues[$i][$j]);
         }
         
-        require_once(ROOT.'include/graph_date_line.php');
+        require_once(ROOT.'include/graphs.php');
         try {
             $graph_file = graph_date_line($chartTitle, $xvalues, $yvalues, $labels, $graphId);
             $query_result .= '<img src="'.$graph_file.'" />';

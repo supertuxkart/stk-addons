@@ -35,7 +35,7 @@ $chart_query = 'SELECT `addon_type`,SUM(`downloads`)
     FROM `'.DB_PREFIX.'files`
     WHERE `file_type` = \'addon\'
     GROUP BY `addon_type`';
-$report->addPieChart($chart_section, $chart_query, 'Downloads by Type');
+$report->addPieChart($chart_section, $chart_query, 'Downloads by Type','files_pie');
 
 $addon_section = $report->addSection("Add-Ons (by revision)");
 $addon_query = 'SELECT `addon_id`,`addon_type`,`file_path`,`date_added`,`downloads`
