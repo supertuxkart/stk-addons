@@ -90,6 +90,15 @@ CREATE TABLE `history` (
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
+CREATE TABLE `logs` (
+    `id` int(10) unsigned NOT NULL auto_increment,
+    `date` timestamp NOT NULL default CURRENT_TIMESTAMP,
+    `user` int(10) unsigned NOT NULL,
+    `message` text NOT NULL,
+    `emailed` int(1) unsigned NOT NULL default 0,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 CREATE TABLE `karts_revs` (
     `id` char(23) NOT NULL,
     `addon_id` varchar(30) NOT NULL,
@@ -200,3 +209,9 @@ CREATE PROCEDURE set_logintime (IN userid INT(11), IN logintime TIMESTAMP)
     UPDATE `users`
     SET `last_login` = logintime
     WHERE `id` = userid;
+
+CREATE PROCEDURE log_event (IN in_user INT(10) unsigned, IN in_message TEXT)
+    INSERT INTO `logs`
+    (`user`,`message`)
+    VALUES
+    (in_user,in_message);

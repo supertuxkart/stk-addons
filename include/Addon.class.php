@@ -167,6 +167,7 @@ class Addon {
                 "{$_SESSION['user']} has uploaded a new {$type} '{$attributes['name']}' ($id)");
         writeAssetXML();
         writeNewsXML();
+        Log::newEvent("New add-on '{$attributes['name']}'");
         return new Addon($id);
     }
     
@@ -242,6 +243,7 @@ class Addon {
                 "{$_SESSION['user']} has uploaded a new revision for {$this->type} '{$attributes['name']}' ($this->id)");
         writeAssetXML();
         writeNewsXML();
+        Log::newEvent("New add-on revision for '{$attributes['name']}'");
     }
     
     /**
@@ -307,6 +309,7 @@ class Addon {
 
         writeAssetXML();
         writeNewsXML();
+        Log::newEvent("Deleted add-on '{$this->name}'");
     }
     
     public function deleteFile($file_id) {
@@ -617,6 +620,7 @@ class Addon {
                 $this->permalink,
                 $email_body,
                 $result['name']));
+        Log::newEvent("Added notes to '{$this->name}'");
     }
     
     public function getUploader() {
@@ -702,6 +706,7 @@ class Addon {
         }
         writeAssetXML();
         writeNewsXML();
+        Log::newEvent("Set status for add-on '{$this->name}'");
     }
 }
 ?>

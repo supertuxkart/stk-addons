@@ -57,6 +57,11 @@ $panels->setMenuItems(
                 'url'   => 'manage.php?view=cache',
                 'label' => htmlspecialchars(_('Cache Files')),
                 'class' => 'manage-list menu-item'
+            ),
+            array(
+                'url'   => 'manage.php?view=logs',
+                'label' => htmlspecialchars(_('Event Logs')),
+                'class' => 'manage-list menu-item'
             )
         ));
 

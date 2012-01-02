@@ -83,6 +83,10 @@ switch ($_POST['id'])
         echo '<h1>'.htmlspecialchars(_('Cache Files')).'</h1>';
         cache_panel();
         break;
+    case 'logs':
+        echo '<h1>'.htmlspecialchars(_('Event Logs')).'</h1>';
+        logs_panel();
+        break;
 }
 
 function settings_panel()
@@ -272,6 +276,29 @@ EOL;
 function cache_panel() {
     echo '<a href="manage.php?view=cache&amp;action=cache_clear">'.htmlspecialchars(_('Empty cache')).'</a><br />';
     echo 'TODO: List cache files.<br />';
+}
+
+function logs_panel() {
+    echo 'The table below lists the most recent logged events.<br /><br />';
+    
+    $events = Log::getEvents();
+    if (count($events) === 0) {
+        echo 'No events have been logged yet.<br />';
+        return;
+    }
+
+    echo '<table width="100%">
+        <thead>
+        <tr>
+        <th width="100px">Date</th><th>User</th><th>Description</th>
+        </tr></thead>
+        <tbody>';
+    for ($i = 0; $i < count($events); $i++) {
+        echo '<tr><td>'.$events[$i]['date'].'</td>
+            <td>'.$events[$i]['name'].'</td>
+            <td>'.$events[$i]['message'].'</td></tr>';
+    }
+    echo '</tbody></table>';
 }
 
 ?>
