@@ -19,6 +19,9 @@ function graph_date_line($title, $xvalues, $yvalues, $labels, $graph_id = NULL, 
     require_once(JPG_ROOT.'jpgraph/jpgraph_line.php');
     require_once(JPG_ROOT.'jpgraph/jpgraph_utils.inc.php');
     require_once(JPG_ROOT.'jpgraph/jpgraph_text.inc.php');
+    
+    // List of line styles to use
+    $line_styles = array('dashed','solid');
 
     if (!is_int($xsize) || !is_int($ysize))
         throw new Exception('Invalid graph dimensions given.');
@@ -61,6 +64,7 @@ function graph_date_line($title, $xvalues, $yvalues, $labels, $graph_id = NULL, 
     for ($i = 0; $i < count($xvalues); $i++) {
         // Create the plot line
         $p[$i] = new LinePlot($yvalues[$i],$xvalues[$i]);
+        $p[$i]->SetStyle($line_styles[rand(0,1)]);
         $p[$i]->SetLegend($labels[$i]);
         $graph->Add($p[$i]);
         
