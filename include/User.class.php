@@ -145,6 +145,35 @@ class User
         
         $_SESSION['pass'] = $new_password;
     }
+
+    /**
+     * Activate a new user
+     * @param string $username
+     * @param string $ver_code 
+     */
+    static function validate($username, $ver_code) {
+        $username = mysql_real_escape_string($username);
+        $ver_code = mysql_real_escape_string($ver_code);
+        $lookup_query = 'SELECT `id` FROM `'.DB_PREFIX."users`
+            WHERE `user` = '$username'
+            AND `verify` = '$ver_code'
+            AND `active` = 0";
+        $lookup_handle = sql_query($lookup_query);
+        if (!$lookup_handle)
+            throw new UserException('Failed to search for the user record to validate.');
+        if (mysql_num_rows($lookup_handle) === 0)
+            throw new UserException('Could not activate this user. Either they do not exist, the account is already active, or the verification code is incorrect.');
+
+        $query = "UPDATE `".DB_PREFIX."users`
+            SET `active` = '1', `verify` = ''
+            WHERE `verify` = '$ver_code'
+            AND `user` = '$username'";
+        $handle = sql_query($query);
+        if (!$handle)
+            throw new UserException('Failed to activate user.');
+        
+        Log::newEvent("New user activated: '$username'");
+    }
 }
 User::init();
 

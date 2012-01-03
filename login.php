@@ -117,6 +117,6 @@ else
     <input type="password" name="pass" /><br />
     <input type="submit" value="<?php echo htmlspecialchars(_('Log In')); ?>" />
 </form>
-<a href="createAccount.php"><?php echo htmlspecialchars(_('Create an account.')); ?></a>
+<a href="register.php"><?php echo htmlspecialchars(_('Create an account.')); ?></a>
 </div>
 <?php include("include/footer.php"); ?>

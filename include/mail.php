@@ -32,7 +32,7 @@ function sendMail($mail, $subject, $option)
     switch($subject)
     {
         case "newAccount":
-            $message_html = "<html><head></head><body>Thank you for registering an account on the SuperTuxKart Add-Ons Manager. Please click <a href=\"http://".$_SERVER["SERVER_NAME"].$option[1]."?action=valid&amp;num=$option[0]\">here</a> to activate your account.<br />Username: ".$option[2]."</body></html>";
+            $message_html = "<html><head></head><body>Thank you for registering an account on the SuperTuxKart Add-Ons Manager. Please click <a href=\"http://".$_SERVER["SERVER_NAME"].$option[1]."?action=valid&amp;num=$option[0]&amp;user=$option[2]\">here</a> to activate your account.<br />Username: ".$option[2]."</body></html>";
             $subject = "New Account at ".$_SERVER["SERVER_NAME"];
             break;
         case "bug":
