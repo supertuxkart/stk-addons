@@ -155,14 +155,8 @@ function news_message_panel()
 
 function files_panel()
 {
-    $filesSql = 'SELECT * FROM `'.DB_PREFIX.'files`
-        ORDER BY `addon_id` ASC';
-    $filesHandle = sql_query($filesSql);
-    if (!$filesHandle)
-        return false;
-    
-    if (mysql_num_rows($filesHandle) == 0)
-    {
+    $files = File::getAllFiles();
+    if (count($files) == 0) {
         echo htmlspecialchars(_('No files have been uploaded.'));
         return;
     }
@@ -184,21 +178,22 @@ function files_panel()
 </thead>
 <tbody>
 EOF;
-    for ($i = 0; $i < mysql_num_rows($filesHandle); $i++)
+    for ($i = 0; $i < count($files); $i++)
     {
-        $filesResult = mysql_fetch_assoc($filesHandle);
-
         // Get references to files
-        switch ($filesResult['file_type'])
+        switch ($files[$i]['file_type'])
         {
             default:
                 $references = 'TODO';
+                break;
+            case false:
+                $references = '<span class="error">No record found.</span>';
                 break;
             case 'addon':
                 $references = array();
                 // Look for tracks with this file
                 $refQuery = 'SELECT * FROM `'.DB_PREFIX.'tracks_revs`
-                    WHERE `fileid` = '.$filesResult['id'];
+                    WHERE `fileid` = '.$files[$i]['id'];
                 $refHandle = sql_query($refQuery);
                 for ($j = 0; mysql_num_rows($refHandle) > $j; $j++)
                 {
@@ -208,7 +203,7 @@ EOF;
 
                 // Look for karts with this file
                 $refQuery = 'SELECT * FROM `'.DB_PREFIX.'karts_revs`
-                    WHERE `fileid` = '.$filesResult['id'];
+                    WHERE `fileid` = '.$files[$i]['id'];
                 $refHandle = sql_query($refQuery);
                 for ($j = 0; mysql_num_rows($refHandle) > $j; $j++)
                 {
@@ -218,7 +213,7 @@ EOF;
                 
                 // Look for arenas with this file
                 $refQuery = 'SELECT * FROM `'.DB_PREFIX.'arenas_revs`
-                    WHERE `fileid` = '.$filesResult['id'];
+                    WHERE `fileid` = '.$files[$i]['id'];
                 $refHandle = sql_query($refQuery);
                 for ($j = 0; mysql_num_rows($refHandle) > $j; $j++)
                 {
@@ -233,10 +228,13 @@ EOF;
                 
                 break;
         }
+        if ($files[$i]['exists'] == false)
+            $references .= ' <span class="error">File not found.</span>';
+        $add_on = ($files[$i]['addon_id']) ? $files[$i]['addon_id'].' ('.$files[$i]['addon_type'].')' : NULL;
 
-        echo "<tr><td>{$filesResult['file_path']}</td>
-            <td>{$filesResult['addon_id']} ({$filesResult['addon_type']})</td>
-            <td>{$filesResult['file_type']}</td><td>$references</td></tr>";
+        echo "<tr><td>{$files[$i]['file_path']}</td>
+            <td>{$add_on}</td>
+            <td>{$files[$i]['file_type']}</td><td>$references</td></tr>";
     }
     echo '</tbody></table>';
 }

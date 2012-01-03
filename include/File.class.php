@@ -109,6 +109,59 @@ class File {
         $file = mysql_fetch_assoc($handle);
         return $file['file_path'];
     }
+    
+    public static function getAllFiles() {
+        // Look-up all file records in the database
+        $files_query = 'SELECT `id`,`addon_id`,`addon_type`,`file_type`,`file_path`
+            FROM `'.DB_PREFIX.'files`
+            ORDER BY `addon_id` ASC';
+        $filesHandle = sql_query($files_query);
+        if (!$filesHandle)
+            return false;
+        
+        // Look-up all existing files on the disk
+        $files = array();
+        $folder = UP_LOCATION;
+        $dir_handle = opendir($folder);
+        while (false !== ($entry = readdir($dir_handle))) {
+            if (is_dir($folder.$entry))
+                continue;
+            $files[] = $entry;
+        }
+        $folder = UP_LOCATION.'images/';
+        $dir_handle = opendir($folder);
+        while (false !== ($entry = readdir($dir_handle))) {
+            if (is_dir($folder.$entry))
+                continue;
+            $files[] = 'images/'.$entry;
+        }
+        
+        // Loop through database records and remove those entries from the list
+        // of files existing on the disk
+        $return_files = array();
+        for ($i = 0; $i < mysql_num_rows($filesHandle); $i++) {
+            $files_result = mysql_fetch_assoc($filesHandle);
+            $search = array_search($files_result['file_path'],$files);
+            if ($search !== false) {
+                unset($files[$search]);
+                $files_result['exists'] = true;
+            } else {
+                $files_result['exists'] = false;
+            }
+            $return_files[] = $files_result;
+        }
+        // Reset indices
+        $files = array_values($files);
+        for ($i = 0; $i < count($files); $i++) {
+            $return_files[] = array('id' => false,
+                'addon_id' => false,
+                'addon_type' => false,
+                'file_type' => false,
+                'file_path' => $files[$i],
+                'exists' => true);
+        }
+        return $return_files;
+    }
 }
 
 ?>
