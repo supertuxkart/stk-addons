@@ -89,15 +89,15 @@ function get_self()
             <div id="lang-menu">
                 <a class="menu_head" href="#"><?php echo htmlspecialchars(_("Languages"));?></a>
                 <ul class="menu_body">
-                    <li><a href="<?php echo $page_url.'&amp;lang=en_US'; ?>"><img src="image/flag/en.png" /></a></li>
-                    <li><a href="<?php echo $page_url.'&amp;lang=de_DE'; ?>"><img src="image/flag/de.png" /></a></li>
-                    <li><a href="<?php echo $page_url.'&amp;lang=fr_FR'; ?>"><img src="image/flag/fr.png" /></a></li>
-                    <li><a href="<?php echo $page_url.'&amp;lang=ga_IE'; ?>"><img src="image/flag/ga.png" /></a></li>
-                    <li><a href="<?php echo $page_url.'&amp;lang=gl_ES'; ?>"><img src="image/flag/gl.png" /></a></li>
-                    <li><a href="<?php echo $page_url.'&amp;lang=id_ID'; ?>"><img src="image/flag/id.png" /></a></li>
-                    <li><a href="<?php echo $page_url.'&amp;lang=nl_NL'; ?>"><img src="image/flag/nl.png" /></a></li>
-                    <li><a href="<?php echo $page_url.'&amp;lang=ru_RU'; ?>"><img src="image/flag/ru.png" /></a></li>
-                    <li><a href="https://translations.launchpad.net/stk/stkaddons">Translate<br />STK-Addons</a></li>
+                    <li class="flag"><a href="<?php echo $page_url.'&amp;lang=en_US'; ?>" style="background-position: 0px 0px;"></a></li>
+                    <li class="flag"><a href="<?php echo $page_url.'&amp;lang=de_DE'; ?>" style="background-position: 0px -33px;"></a></li>
+                    <li class="flag"><a href="<?php echo $page_url.'&amp;lang=fr_FR'; ?>" style="background-position: 0px -66px;"></a></li>
+                    <li class="flag"><a href="<?php echo $page_url.'&amp;lang=ga_IE'; ?>" style="background-position: 0px -99px;"></a></li>
+                    <li class="flag"><a href="<?php echo $page_url.'&amp;lang=gl_ES'; ?>" style="background-position: 48px 0px;"></a></li>
+                    <li class="flag"><a href="<?php echo $page_url.'&amp;lang=id_ID'; ?>" style="background-position: 48px -33px;"></a></li>
+                    <li class="flag"><a href="<?php echo $page_url.'&amp;lang=nl_NL'; ?>" style="background-position: 48px -66px;"></a></li>
+                    <li class="flag"><a href="<?php echo $page_url.'&amp;lang=ru_RU'; ?>" style="background-position: 48px -99px;"></a></li>
+                    <li class="label"><a href="https://translations.launchpad.net/stk/stkaddons">Translate<br />STK-Addons</a></li>
                 </ul>
             </div>
         <a href="http://supertuxkart.sourceforge.net"> <?php echo htmlspecialchars(_("STK Homepage"));?></a>
