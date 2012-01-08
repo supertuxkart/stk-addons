@@ -1,15 +1,0 @@
-@charset "utf-8";
-/* CSS Document */
-
-ul, li{margin:0; padding:0; list-style:none;}
-
-
-.menu_body {display:none;}
-.menu_body li a{color:#FFFFFF; text-decoration:none; padding:0px; display:block;}
-.menu_body li a:hover{padding:0px; font-weight:bold;}.container{
-float:right;
-background-color:white;
-	filter:alpha(opacity=90);
-   -moz-opacity:0.90;
-   opacity: 0.90;
-}

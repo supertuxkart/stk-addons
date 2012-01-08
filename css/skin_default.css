@@ -16,6 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
+ 
+ ul, li{margin:0; padding:0; list-style:none;}
+ 
 body {
     font-family: Verdana,Geneva,sans-serif;
     font-size: 13.5px;
@@ -75,17 +78,13 @@ label {
 }
 #index-menu > div {
     display: table-cell;
-    float: left;
-    margin: 0px 50px 0px 50px;
-    text-align: center;
+    padding: 0px 50px 0px 50px;
     width: 106px;
 }
 #index-menu a {
     background-image: url('../image/home-icons.png');
     background-repeat: no-repeat;
-    border: 0px;
     display: block;
-    margin: 0px;
     padding: 108px 0px 0px 0px;
     width: 106px;
 }
@@ -95,6 +94,8 @@ label {
     padding: 2px 15px 2px 15px;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
+    border-radius: 5px; /* This and line below for IE */
+    behavior: url('PIE.htc');
 }
 
 /* Language Menu */
@@ -104,6 +105,7 @@ label {
 #lang-menu ul.menu_body {
     border: 1px solid #4e4e4e;
     background: #efefef;
+    display: none;
     list-style: none;
     position: absolute;
     margin: 0px;
@@ -111,6 +113,8 @@ label {
     z-index: 9999;
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
+    border-radius: 4px; /* This and line below for IE */
+    behavior: url('PIE.htc');
 }
 #lang-menu li {
     display: block;
@@ -128,11 +132,9 @@ label {
     padding: 3px;
 }
 #lang-menu li a {
+    display: block;
     margin: 0px;
     padding: 0px;
-}
-#lang-menu li a:hover {
-    font-weight: normal;
 }
 #lang-menu li.flag a {
     background-image: url('../image/flags.png');
@@ -364,16 +366,6 @@ a:hover
 {
     width:300px;
 }
-#old_site{
-    width:273px;
-    float:left;
-    clear:both;
-    background-image:url("../image/background-old_site.png");
-    height:22px;
-    padding-top:3px;
-    text-align:center;
-    margin-left:10px;
-}
 #news_div{
     width:216px;
     float:left;
@@ -439,30 +431,6 @@ h2
     font-size:15px;
     font-family: Tahoma, Verdana,Geneva,sans-serif;
     font-weight:normal;
-}
-h2 .left
-{
-    width:7px;
-    min-height:22px;
-    background-image:url("../image/h2-left.png");
-    float:left;
-    display:block;
-}
-h2 .center
-{
-    min-height:22px;
-    background-image:url("../image/h2-center.png");
-    float:left;
-    display:block;
-    
-}
-h2 .right
-{
-    width:7px;
-    min-height:22px;
-    background-image:url("../image/h2-right.png");
-    float:right;
-    display:block;
 }
 a img 
 {

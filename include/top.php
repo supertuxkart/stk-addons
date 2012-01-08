@@ -40,4 +40,3 @@ if(!isset($title))
         <script type="text/javascript" src="<?php echo SITE_ROOT; ?>js/jquery.js"></script>
         <script type="text/javascript" src="<?php echo SITE_ROOT; ?>js/jquery.newsticker.js"></script>
         <script type="text/javascript" src="<?php echo SITE_ROOT; ?>js/script.js"></script>
-        <link href="<?php echo SITE_ROOT; ?>css/style_jquery.css" rel="stylesheet" type="text/css" />
