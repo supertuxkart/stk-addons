@@ -64,6 +64,39 @@ label {
     color:grey;
 }
 
+/* Home Icons */
+#index-menu {
+    display: table;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    height: 130px;
+    width: auto;
+}
+#index-menu > div {
+    display: table-cell;
+    float: left;
+    margin: 0px 50px 0px 50px;
+    text-align: center;
+    width: 106px;
+}
+#index-menu a {
+    background-image: url('../image/home-icons.png');
+    background-repeat: no-repeat;
+    border: 0px;
+    display: block;
+    margin: 0px;
+    padding: 108px 0px 0px 0px;
+    width: 106px;
+}
+#index-menu a span {
+    display: inline;
+    background: #efefef;
+    padding: 2px 15px 2px 15px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+}
+
 /* Language Menu */
 #lang-menu {
     display: inline;
@@ -114,30 +147,6 @@ label {
 {
     padding-top: 15px;
     display:inline;
-}
-
-#select-addon-panel
-{
-    display: table;
-    clear:both;
-    padding-top:20px;
-    text-align: center;
-    width: 100%;
-}
-#select-addon-panel > div.icon-container
-{
-    display: table-cell;
-    text-align: center;
-}
-#select-addon-panel > div.icon-container h2.menu
-{
-    width:74px;
-    margin:auto;
-    text-decoration:none;
-}
-#select-addon-panel > div.icon-container h2.menu .center
-{
-    width: 60px;
 }
 
 #news-panel

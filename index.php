@@ -41,45 +41,25 @@ $meta_description = htmlspecialchars(_('This is the official SuperTuxKart add-on
 		?>
                 <div style="text-align: center; width: 100%;"><img id="logo_center" src="image/logo_large.png" alt="SuperTuxKart Logo" title="SuperTuxKart Logo" /></div>
 
-		<div id="select-addon-panel">
-		    <div class="icon-container">
-                        <a href="addons.php?type=karts">
-                            <img src="image/karts.png" alt="<?php echo htmlspecialchars(_('Karts')); ?>" /><br />
-                            <h2 class="menu">
-                                <div class="left"></div>
-                                <div class="center"><?php echo htmlspecialchars(_("Karts")); ?></div>
-                                <div class="right"></div>
-                            </h2>
+		<div id="index-menu">
+		    <div>
+                        <a href="addons.php?type=karts" style="background-position: -106px 0px;">
+                            <span><?php echo htmlspecialchars(_("Karts")); ?></span>
                         </a>
 		    </div>
-                    <div class="icon-container">
-                        <a href="addons.php?type=tracks">
-                            <img src="image/tracks.png" alt="<?php echo htmlspecialchars(_('Tracks')); ?>" /><br />
-                            <h2 class="menu" >
-                                <div class="left"></div>
-                                <div class="center"><?php echo htmlspecialchars(_("Tracks")); ?></div>
-                                <div class="right"></div>
-                            </h2>
+                    <div>
+                        <a href="addons.php?type=tracks" style="background-position: 0px 0px;">
+                            <span><?php echo htmlspecialchars(_("Tracks")); ?></span>
                         </a>
 		    </div>
-                    <div class="icon-container">
-                        <a href="addons.php?type=arenas">
-                            <img src="image/arenas.png" alt="<?php echo htmlspecialchars(_('Arenas')); ?>" /><br />
-                            <h2 class="menu" >
-                                <div class="left"></div>
-                                <div class="center"><?php echo htmlspecialchars(_("Arenas")); ?></div>
-                                <div class="right"></div>
-                            </h2>
+                    <div>
+                        <a href="addons.php?type=arenas" style="background-position: -212px 0px;">
+                            <span><?php echo htmlspecialchars(_("Arenas")); ?></span>
                         </a>
 		    </div>
-                    <div class="icon-container">
-                        <a href="http://supertuxkart.sourceforge.net/Category:Stkaddons">
-                            <img src="image/help.png" alt="<?php echo htmlspecialchars(_('Help')); ?>" /><br />
-                            <h2 class="menu">
-                                <div class="left"></div>
-                                <div class="center"><?php echo htmlspecialchars(_("Help")); ?></div>
-                                <div class="right"></div>
-                            </h2>
+                    <div>
+                        <a href="http://supertuxkart.sourceforge.net/Category:Stkaddons" style="background-position: -318px 0px;">
+                            <span><?php echo htmlspecialchars(_("Help")); ?></span>
                         </a>
 		    </div>
 		</div>
