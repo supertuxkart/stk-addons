@@ -147,16 +147,16 @@ class coreAddon
 
             // Display badges for status flags
             if ($latestRev['status'] & F_FEATURED)
-                echo '<span class="f_featured">'.htmlspecialchars(_('Featured')).'</span>';
+                echo '<span class="badge f_featured">'.htmlspecialchars(_('Featured')).'</span>';
             if ($latestRev['status'] & F_ALPHA)
-                echo '<span class="f_alpha">'.htmlspecialchars(_('Alpha')).'</span>';
+                echo '<span class="badge f_alpha">'.htmlspecialchars(_('Alpha')).'</span>';
             if ($latestRev['status'] & F_BETA)
-                echo '<span class="f_beta">'.htmlspecialchars(_('Beta')).'</span>';
+                echo '<span class="badge f_beta">'.htmlspecialchars(_('Beta')).'</span>';
             if ($latestRev['status'] & F_RC)
-                echo '<span class="f_rc">'.htmlspecialchars(_('Release-Candidate')).'</span>';
+                echo '<span class="badge f_rc">'.htmlspecialchars(_('Release-Candidate')).'</span>';
             if ($latestRev['status'] & F_DFSG)
-                echo '<span class="f_dfsg">'.htmlspecialchars(_('DFSG Compliant')).'</span>';
-            echo '<br />'.$mAddon->getDescription().'
+                echo '<span class="badge f_dfsg">'.htmlspecialchars(_('DFSG Compliant')).'</span>';
+            echo '<br /><span id="addon-description">'.$mAddon->getDescription().'</span>
             <table class="info">';
             if ($this->addonType == 'arenas')
             {
