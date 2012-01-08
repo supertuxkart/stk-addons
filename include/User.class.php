@@ -69,7 +69,8 @@ class User
     {
         // Validate parameters
         $username = Validate::username($username);
-        $password = Validate::password($password);
+        $orig_pass = $password;
+        $password = Validate::password($password,NULL,$username);
 
         // Get user record
         $querySql = 'SELECT `id`, `user`, `pass`, `name`, `role`
@@ -109,6 +110,14 @@ class User
         }
         User::$user_id = $result['id'];
         User::$logged_in = true;
+        
+        // Convert unsalted password to a salted one
+        if (strlen($password) === 64) {
+            $password = Validate::password($orig_pass);
+            User::change_password($password);
+            Log::newEvent("Converted the password of '$username' to use a password salting algorithm");
+        }
+        
         return true;
     }
 

@@ -229,7 +229,7 @@ class coreUser
     {
         $new_password = Validate::password($_POST['newPass'], $_POST['newPass2']);
         
-        if(hash('sha256',$_POST['oldPass']) !== $this->userCurrent['pass'])
+        if(Validate::password($_POST['oldPass'],NULL,$_SESSION['user']) !== $this->userCurrent['pass'])
             throw new UserException(htmlspecialchars(_('Your old password is not correct.')));
 
         if(User::$user_id === $this->userCurrent['id'])

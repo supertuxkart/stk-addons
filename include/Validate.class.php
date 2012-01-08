@@ -53,7 +53,8 @@ class Validate {
         return mysql_real_escape_string(htmlspecialchars($username));
     }
     
-    public static function password($password1, $password2 = NULL) {
+    public static function password($password1, $password2 = NULL, $username = NULL) {
+        // Check password properties
         if (strlen($password1) < 6) {
             throw new UserException(htmlspecialchars(_('Your password must be at least 6 characters long.')));
         }
@@ -62,7 +63,29 @@ class Validate {
                 throw new UserException(htmlspecialchars(_('Your passwords do not match.')));
             }
         }
-        return hash('sha256',$password1);
+
+        // Salt password
+        $salt_length = 32;
+        if ($username === NULL)
+            $salt = md5(uniqid(NULL,true));
+        else {
+            // Get current user password entry to get salt
+            $query = 'SELECT `pass`
+                FROM `'.DB_PREFIX.'users`
+                WHERE `user` = \''.$username.'\'';
+            $handle = sql_query($query);
+            if (mysql_num_rows($handle) === 0)
+                $salt = md5(uniqid(NULL,true));
+            else {
+                $result = mysql_fetch_array($handle);
+                if (strlen($result[0]) == 64) {
+                    // Not a salted password
+                    return hash('sha256',$password1);
+                }
+                $salt = substr($result[0], 0, $salt_length);
+            }
+        }
+        return $salt.hash('sha256',$salt.$password1);
     }
     
     public static function realname($name) {

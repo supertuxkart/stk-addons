@@ -158,7 +158,7 @@ CREATE TABLE `tracks_revs` (
 CREATE TABLE `users` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `user` tinytext NOT NULL,
-  `pass` char(64) NOT NULL,
+  `pass` char(96) NOT NULL,
   `name` tinytext NOT NULL,
   `role` tinytext NOT NULL,
   `email` tinytext NOT NULL,
@@ -199,7 +199,7 @@ CREATE PROCEDURE increment_download (IN filepath TEXT)
     SET `downloads` = `downloads` + 1
     WHERE `file_path` = filepath;
 
-CREATE PROCEDURE register_user (IN in_user TEXT, IN in_pass CHAR(64), IN in_name TEXT, IN in_email TEXT, IN in_vercode TEXT, IN in_regdate DATE)
+CREATE PROCEDURE register_user (IN in_user TEXT, IN in_pass CHAR(96), IN in_name TEXT, IN in_email TEXT, IN in_vercode TEXT, IN in_regdate DATE)
     INSERT INTO `users`
     (`user`,`pass`,`name`,`role`,`email`,`active`,`verify`,`reg_date`)
     VALUES
