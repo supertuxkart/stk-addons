@@ -7,87 +7,108 @@ msgid ""
 msgstr ""
 "Project-Id-Version: stk\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-12-11 14:51-0700\n"
+"POT-Creation-Date: 2011-12-17 19:22-0700\n"
 "PO-Revision-Date: 2011-10-29 23:05+0000\n"
 "Last-Translator: Muhammad Radifar <Unknown>\n"
 "Language-Team: Indonesian <id@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-13 00:32+0000\n"
-"X-Generator: Launchpad (build 14458)\n"
+"X-Launchpad-Export-Date: 2012-01-08 17:56+0000\n"
+"X-Generator: Launchpad (build 14640)\n"
 
 #: Addon.class.php:53
 msgid "The requested add-on does not exist."
 msgstr ""
 
-#: Addon.class.php:108
+#: Addon.class.php:118
 msgid ""
 "An add-on with this ID already exists. Please try to upload your add-on "
 "again later."
 msgstr ""
 
-#: Addon.class.php:110
+#: Addon.class.php:124
+msgid "The add-on you are trying to create already exists."
+msgstr "Add-on yang anda coba buat telah ada."
+
+#: Addon.class.php:126
 msgid "Creating a new add-on..."
 msgstr "Membuat add-on baru..."
 
-#: Addon.class.php:126
+#: Addon.class.php:142
 msgid "Your add-on could not be uploaded."
 msgstr ""
 
-#: Addon.class.php:133 coreAddon.php:767
-msgid "Failed to check for previous add-on revisions."
-msgstr "Gagal mengecek revisi add-on sebelumnya."
-
-#: Addon.class.php:176
+#: Addon.class.php:187
 msgid "The file you are trying to create already exists."
 msgstr ""
 
-#: Addon.class.php:196
-msgid "You must be logged in to perform this action."
-msgstr ""
-
-#: Addon.class.php:199 Addon.class.php:246 parseUpload.php:287 users.php:58
-#: users.php:75
+#: Addon.class.php:191 Addon.class.php:267 Addon.class.php:314
+#: parseUpload.php:287 users.php:58 users.php:75
 msgid "You do not have the necessary permissions to perform this action."
 msgstr ""
 
-#: Addon.class.php:207
+#: Addon.class.php:264
+msgid "You must be logged in to perform this action."
+msgstr ""
+
+#: Addon.class.php:275
 msgid "Failed to find files associated with this addon."
 msgstr "Gagal menemukan berkas yang terkait dengan addon ini."
 
-#: Addon.class.php:214
+#: Addon.class.php:282
 msgid "Failed to delete file:"
 msgstr "Gagal menghapus berkas:"
 
-#: Addon.class.php:222
+#: Addon.class.php:290
 msgid "Failed to remove file records for this addon."
 msgstr "Gagal menghapus catatan berkas untuk addon ini."
 
-#: Addon.class.php:227
+#: Addon.class.php:295
 msgid "Failed to remove ratings for this add-on."
 msgstr ""
 
-#: Addon.class.php:234
+#: Addon.class.php:302
 msgid "Failed to remove add-on revisions."
 msgstr ""
 
-#: Addon.class.php:238
+#: Addon.class.php:306
 msgid "Failed to remove addon."
 msgstr "Gagal menghapus addon."
 
-#: Addon.class.php:249
+#: Addon.class.php:317
 msgid "Failed to delete file."
 msgstr ""
 
-#: Addon.class.php:289 coreAddon.php:540 coreAddon.php:844 coreAddon.php:854
-#: coreAddon.php:866 coreAddon.php:869
+#: Addon.class.php:357 coreAddon.php:444 coreAddon.php:631 coreAddon.php:641
+#: coreAddon.php:653 coreAddon.php:656
 msgid "Unknown"
 msgstr "Tak dikenal"
 
-#: Addon.class.php:426
+#: Addon.class.php:498 Addon.class.php:519 Addon.class.php:541
+#: Addon.class.php:571
 msgid "You do not have the neccessary permissions to perform this action."
 msgstr ""
+
+#: Addon.class.php:506
+msgid "Failed to update the description record for this add-on."
+msgstr ""
+
+#: Addon.class.php:527
+msgid "Failed to update the designer record for this add-on."
+msgstr ""
+
+#: Addon.class.php:549
+msgid "Failed to update the image record for this add-on."
+msgstr ""
+
+#: Addon.class.php:556
+msgid "Failed to update the license record for this add-on."
+msgstr "Gagal saat memperbarui catatan lisensi untuk add-on ini."
+
+#: Addon.class.php:564
+msgid "Failed to update the name record for this add-on."
+msgstr "Gagal memperbarui catatan nama untuk add-on ini."
 
 #: File.class.php:33
 msgid "Insufficient permissions."
@@ -151,6 +172,60 @@ msgstr ""
 msgid "About"
 msgstr ""
 
+#: about.php:43
+msgid ""
+"SuperTuxKart is a Free 3D kart racing game, with many tracks, characters and "
+"items for you to try."
+msgstr ""
+
+#: about.php:44
+msgid ""
+"Since version 0.7.1, SuperTuxKart has had the ability to fetch important "
+"messages from the STKAddons website. Since 0.7.2, the game has included a "
+"built-in add-on manager."
+msgstr ""
+
+#: about.php:45
+#, php-format
+msgid ""
+"SuperTuxKart now has over %d karts, %d tracks, and %d arenas available in-"
+"game thanks to the add-on service."
+msgstr ""
+
+#: about.php:46
+msgid ""
+"Of course, the artists who create all of this content must be thanked too. "
+"Without them, the add-on website would not be as great as it is today."
+msgstr ""
+
+#: about.php:47 about.php:52
+msgid "Website"
+msgstr ""
+
+#: about.php:47 about.php:52
+msgid "Donate!"
+msgstr ""
+
+#: about.php:50
+msgid ""
+"TuxFamily is a non-profit organization. It provides free services for "
+"projects and contents dealing with the free software philosophy (free as in "
+"free speech, not as in free beer). They accept any project released under a "
+"free license (GPL, BSD, CC-BY-SA, Art Libre...)."
+msgstr ""
+
+#: about.php:51
+msgid ""
+"TuxFamily operates the servers on which STKAddons runs, for free. Because of "
+"them, we can provide the add-on service for SuperTuxKart. Each month, over a "
+"million downloads are made by SuperTuxKart players. We thank them very much "
+"for their generosity to us and to other open source projects."
+msgstr ""
+
+#: about.php:54
+msgid "Credits"
+msgstr ""
+
 #: addons-panel.php:46
 msgid ""
 "This page cannot be loaded because an invalid add-on type was provided."
@@ -185,31 +260,31 @@ msgstr "Jenis addon tidak valid."
 msgid "Saved properties."
 msgstr "Perangai telah disimpan."
 
-#: addons.php:108
+#: addons.php:112
 msgid "Saved status."
 msgstr "Status telah disimpan."
 
-#: addons.php:120
+#: addons.php:124
 msgid "Saved notes."
 msgstr "Catatan telah disimpan."
 
-#: addons.php:131
+#: addons.php:135
 msgid "Deleted addon."
 msgstr "Addon telah dihapus."
 
-#: addons.php:143
+#: addons.php:147
 msgid "File updated."
 msgstr "Berkas telah diperbarui."
 
-#: addons.php:153
+#: addons.php:157
 msgid "Set image."
 msgstr "Set gambar."
 
-#: addons.php:161
+#: addons.php:169
 msgid "Set icon."
 msgstr "Set ikon."
 
-#: addons.php:167
+#: addons.php:179
 msgid "Deleted file."
 msgstr "Berkas telah dihapus."
 
@@ -237,63 +312,63 @@ msgstr "penggunaBiasa"
 msgid "The requested addon does not exist."
 msgstr "Addon yang diminta tidak ditemukan."
 
-#: coreAddon.php:239 coreAddon.php:380
+#: coreAddon.php:143 coreAddon.php:284
 msgid "Upload Image"
 msgstr "Unggah Gambar"
 
-#: coreAddon.php:246 coreAddon.php:574
+#: coreAddon.php:150 coreAddon.php:478
 msgid "Featured"
 msgstr "Menonjol"
 
-#: coreAddon.php:248 coreAddon.php:568
+#: coreAddon.php:152 coreAddon.php:472
 msgid "Alpha"
 msgstr "Alfa"
 
-#: coreAddon.php:250 coreAddon.php:569
+#: coreAddon.php:154 coreAddon.php:473
 msgid "Beta"
 msgstr "Beta"
 
-#: coreAddon.php:252 coreAddon.php:570
+#: coreAddon.php:156 coreAddon.php:474
 msgid "Release-Candidate"
 msgstr "Kandidat-Rilis"
 
-#: coreAddon.php:254 coreAddon.php:573
+#: coreAddon.php:158 coreAddon.php:477
 msgid "DFSG Compliant"
 msgstr "Sesuai dengan DFSG"
 
-#: coreAddon.php:259 manage-panel.php:168
+#: coreAddon.php:163 manage-panel.php:168
 msgid "Type:"
 msgstr "Tipe:"
 
-#: coreAddon.php:259
+#: coreAddon.php:163
 msgid "Arena"
 msgstr "Arena"
 
-#: coreAddon.php:261 coreAddon.php:541
+#: coreAddon.php:165 coreAddon.php:445
 msgid "Designer:"
 msgstr "Perancang:"
 
-#: coreAddon.php:262
+#: coreAddon.php:166
 msgid "Upload date:"
 msgstr "Tanggal pengunggahan:"
 
-#: coreAddon.php:263
+#: coreAddon.php:167
 msgid "Submitted by:"
 msgstr "Dikirim oleh:"
 
-#: coreAddon.php:264
+#: coreAddon.php:168
 msgid "Revision:"
 msgstr "Revisi:"
 
-#: coreAddon.php:265
+#: coreAddon.php:169
 msgid "Compatible with:"
 msgstr "Cocok dengan:"
 
-#: coreAddon.php:267
+#: coreAddon.php:171
 msgid "Your Rating: "
 msgstr "Rating anda: "
 
-#: coreAddon.php:286
+#: coreAddon.php:190
 msgid ""
 "Warning: This addon may not display correctly on some systems. It uses "
 "textures that may not be compatible with all video cards."
@@ -302,165 +377,149 @@ msgstr ""
 "tertentu.  Karena addon ini menggunakan tekstur-tektur yang mungkin tidak "
 "cocok dengan beberapa kartu grafis."
 
-#: coreAddon.php:299 coreAddon.php:304 coreAddon.php:358 coreAddon.php:363
+#: coreAddon.php:203 coreAddon.php:208 coreAddon.php:262 coreAddon.php:267
 msgid "File not found."
 msgstr "Berkas tidak ditemukan."
 
-#: coreAddon.php:308
+#: coreAddon.php:212
 msgid "License"
 msgstr "Lisensi"
 
-#: coreAddon.php:313
+#: coreAddon.php:217
 msgid "Permalink"
 msgstr "Tautan Permanen"
 
-#: coreAddon.php:317
+#: coreAddon.php:221
 msgid "Revisions"
 msgstr "Revisi"
 
-#: coreAddon.php:323
+#: coreAddon.php:227
 msgid "Upload Revision"
 msgstr "Unggah Revisi"
 
-#: coreAddon.php:353
+#: coreAddon.php:257
 #, php-format
 msgid "Download revision %u"
 msgstr "Unduh revisi %u"
 
-#: coreAddon.php:358 coreAddon.php:363
+#: coreAddon.php:262 coreAddon.php:267
 msgid "Revision"
 msgstr "Revisi"
 
-#: coreAddon.php:375
+#: coreAddon.php:279
 msgid "Images"
 msgstr "Gambar"
 
-#: coreAddon.php:409
+#: coreAddon.php:313
 msgid "No images have been uploaded for this addon yet."
 msgstr "Tidak ada gambar yang telah diunggah untuk addon ini."
 
-#: coreAddon.php:429 coreAddon.php:511
+#: coreAddon.php:333 coreAddon.php:415
 msgid "Unapprove"
 msgstr "Tolak"
 
-#: coreAddon.php:431 coreAddon.php:513
+#: coreAddon.php:335 coreAddon.php:417
 msgid "Approve"
 msgstr "Setujui"
 
-#: coreAddon.php:440
+#: coreAddon.php:344
 msgid "Set Icon"
 msgstr "Set Ikon"
 
-#: coreAddon.php:445
+#: coreAddon.php:349
 msgid "Set Image"
 msgstr "Set Gambar"
 
-#: coreAddon.php:447 coreAddon.php:516
+#: coreAddon.php:351 coreAddon.php:420
 msgid "Delete File"
 msgstr "Hapus Berkas"
 
-#: coreAddon.php:457
+#: coreAddon.php:361
 msgid "Source Files"
 msgstr "Berkas sumber (source)"
 
-#: coreAddon.php:462
+#: coreAddon.php:366
 msgid "Upload Source File"
 msgstr "Unggah berkas sumber"
 
-#: coreAddon.php:491
+#: coreAddon.php:395
 msgid "No source files have been uploaded for this addon yet."
 msgstr "Berkas sumber belum diunggah untuk addon ini."
 
-#: coreAddon.php:501
+#: coreAddon.php:405
 msgid "Not Approved"
 msgstr "Belum Disetujui"
 
-#: coreAddon.php:503
+#: coreAddon.php:407
 #, php-format
 msgid "Source File %u"
 msgstr "Berkas Sumber %u"
 
-#: coreAddon.php:505
+#: coreAddon.php:409
 msgid "Download"
 msgstr "Unduh"
 
-#: coreAddon.php:534
+#: coreAddon.php:438
 msgid "You do not have the necessary privileges to perform this action."
 msgstr ""
 
-#: coreAddon.php:536
+#: coreAddon.php:440
 msgid "Configuration"
 msgstr ""
 
-#: coreAddon.php:546
+#: coreAddon.php:450
 msgid "Description:"
 msgstr "Deskripsi:"
 
-#: coreAddon.php:546
+#: coreAddon.php:450
 #, php-format
 msgid "Max %u characters"
 msgstr "Maks %u karakter"
 
-#: coreAddon.php:552
+#: coreAddon.php:456
 msgid "Save Properties"
 msgstr "Simpan Perangai"
 
-#: coreAddon.php:558
+#: coreAddon.php:462
 msgid "Delete Addon"
 msgstr "Hapus Addon"
 
-#: coreAddon.php:562
+#: coreAddon.php:466
 msgid "Status Flags:"
 msgstr "Penanda Status:"
 
-#: coreAddon.php:566
+#: coreAddon.php:470
 msgid "Approved"
 msgstr "Disetujui"
 
-#: coreAddon.php:567
+#: coreAddon.php:471
 msgid "Invisible"
 msgstr "Tersembunyi"
 
-#: coreAddon.php:571
+#: coreAddon.php:475
 msgid "Latest"
 msgstr "Terkini"
 
-#: coreAddon.php:575
+#: coreAddon.php:479
 msgid "Invalid Textures"
 msgstr "Tekstur Tidak Valid"
 
-#: coreAddon.php:582 coreAddon.php:682
+#: coreAddon.php:486 coreAddon.php:586
 #, php-format
 msgid "Rev %u:"
 msgstr "Rev %u:"
 
-#: coreAddon.php:673
+#: coreAddon.php:577
 msgid "Save Changes"
 msgstr "Simpan Perubahan"
 
-#: coreAddon.php:677
+#: coreAddon.php:581
 msgid "Notes from Moderator to Submitter:"
 msgstr "Catatan dari Moderator kepada Pengirim:"
 
-#: coreAddon.php:694
+#: coreAddon.php:598
 msgid "Save Notes"
 msgstr "Simpan Catatan"
-
-#: coreAddon.php:731
-msgid "The add-on you are trying to create already exists."
-msgstr "Add-on yang anda coba buat telah ada."
-
-#: coreAddon.php:742
-msgid "This add-on already exists. Adding revision..."
-msgstr "Add-on ini telah ada. Menambahkan revisi..."
-
-#: coreAddon.php:748
-msgid "Failed to update the name record for this add-on."
-msgstr "Gagal memperbarui catatan nama untuk add-on ini."
-
-#: coreAddon.php:757
-msgid "Failed to update the license record for this add-on."
-msgstr "Gagal saat memperbarui catatan lisensi untuk add-on ini."
 
 #: coreUser.php:87 createAccount.php:43 login.php:114
 msgid "Username:"
@@ -1025,80 +1084,76 @@ msgid ""
 "You are trying to add a new revision of an add-on that does not exist."
 msgstr ""
 
-#: parseUpload.php:301
-msgid "Failed to create add-on."
-msgstr ""
-
-#: parseUpload.php:307
+#: parseUpload.php:303
 msgid ""
 "Your add-on was uploaded successfully. It will be reviewed by our moderators "
 "before becoming publicly available."
 msgstr ""
 
-#: parseUpload.php:308
+#: parseUpload.php:304
 msgid "Click here to upload the sources to your add-on now."
 msgstr ""
 
-#: parseUpload.php:309
+#: parseUpload.php:305
 msgid ""
 "(Uploading the sources to your add-on enables others to improve your work "
 "and also ensure your add-on will not be lost in the future if new "
 "SuperTuxKart versions are not compatible with the current format.)"
 msgstr ""
 
-#: parseUpload.php:310
+#: parseUpload.php:306
 msgid "Click here to view your add-on."
 msgstr ""
 
-#: parseUpload.php:319
+#: parseUpload.php:315
 msgid "Uploaded image files must be either PNG or Jpeg files."
 msgstr ""
 
-#: parseUpload.php:325
+#: parseUpload.php:321
 msgid "The file you uploaded was not the correct type."
 msgstr ""
 
-#: parseUpload.php:334
+#: parseUpload.php:330
 msgid "The file to extract does not exist."
 msgstr ""
 
-#: parseUpload.php:346 parseUpload.php:381
+#: parseUpload.php:342 parseUpload.php:377
 msgid "Could not open archive file. It may be corrupted."
 msgstr ""
 
-#: parseUpload.php:352 parseUpload.php:387
+#: parseUpload.php:348 parseUpload.php:383
 msgid "Failed to extract archive file."
 msgstr ""
 
-#: parseUpload.php:395
+#: parseUpload.php:391
 msgid "Unknown archive type."
 msgstr ""
 
-#: parseUpload.php:406
+#: parseUpload.php:402
 msgid "Upload is invalid."
 msgstr ""
 
-#: parseUpload.php:411
+#: parseUpload.php:407
 msgid "Unknown file upload error."
 msgstr ""
 
-#: parseUpload.php:415 parseUpload.php:417
+#: parseUpload.php:411 parseUpload.php:413
 msgid "Uploaded file is too large."
 msgstr ""
 
-#: parseUpload.php:419
+#: parseUpload.php:415
 msgid "Uploaded file is incomplete."
 msgstr ""
 
-#: parseUpload.php:421
+#: parseUpload.php:417
 msgid "No file was uploaded."
 msgstr ""
 
-#: parseUpload.php:423
+#: parseUpload.php:419
 msgid "There is no TEMP directory to store the uploaded file in."
 msgstr ""
 
-#: parseUpload.php:425
+#: parseUpload.php:421
 msgid "Unable to write uploaded file to disk."
 msgstr ""
 
