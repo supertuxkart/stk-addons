@@ -24,6 +24,8 @@ function loadAddon(id, page)
 }
 function loadFrame(id, page, value)
 {
+    var panelDiv = document.getElementById('right-content_body');
+    panelDiv.innerHTML = '<div id="loading"></div>';
     $.post(page, {id: id, value: value},
     function(data) {
         $("#right-content_body").html(data);
@@ -89,7 +91,7 @@ $(document).ready(function () {
     });
 
     $('a.addon-list').click(function() {
-      history.pushState({ path: this.path }, '', this.href);
+      history.pushState({path: this.path}, '', this.href);
       var url = this.href;
       var addonType = getUrlVars(url)['type'];
       var addonId = getUrlVars(url)['name'];
@@ -99,7 +101,7 @@ $(document).ready(function () {
     });
     
     $('a.manage-list').click(function() {
-      history.pushState({ path: this.path }, '', this.href);
+      history.pushState({path: this.path}, '', this.href);
       var url = this.href;
       var view = getUrlVars(url)['view'];
       loadFrame(view,'manage-panel.php');
@@ -108,7 +110,7 @@ $(document).ready(function () {
     });
 
     $('a.user-list').click(function() {
-      history.pushState({ path: this.path }, '', this.href);
+      history.pushState({path: this.path}, '', this.href);
       var url = this.href;
       var user = getUrlVars(url)['user'];
       loadFrame(user,'users-panel.php');

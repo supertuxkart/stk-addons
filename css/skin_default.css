@@ -33,14 +33,18 @@ label {
     font-weight: bold;
 }
 
-#top-menu
-{
+/* Top Bar */
+#top-menu {
+    background: #e1dbda; /* for non-css3 browsers */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#e1dbda', endColorstr='#d1ccca'); /* for IE */
+    background: -webkit-gradient(linear, left top, left bottom, from(#e1dbda), to(#d1ccca)); /* for webkit browsers */
+    background: -moz-linear-gradient(top,  #e1dbda,  #d1ccca); /* for firefox 3.6+ */ 
+    border: 0px;
+    border-bottom: 1px solid #958f8e;
     display: block;
     color: black;
     width: 100%;
     height: 35px;
-    background-image: url("../image/background-top.png");
-    background-repeat: repeat-x;
 }
 #top-menu-content
 {
@@ -90,12 +94,12 @@ label {
 }
 #index-menu a span {
     display: inline;
-    background: #efefef;
+    background: #efefef !important;
     padding: 2px 15px 2px 15px;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     border-radius: 5px; /* This and line below for IE */
-    behavior: url('PIE.htc');
+    behavior: url('css/PIE.htc');
 }
 
 /* Language Menu */
@@ -104,7 +108,10 @@ label {
 }
 #lang-menu ul.menu_body {
     border: 1px solid #4e4e4e;
-    background: #efefef;
+    background: #efefef; /* for non-css3 browsers */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#efefef', endColorstr='#dddddd'); /* for IE */
+    background: -webkit-gradient(linear, left top, left bottom, from(#efefef), to(#dddddd)); /* for webkit browsers */
+    background: -moz-linear-gradient(top,  #efefef,  #dddddd); /* for firefox 3.6+ */ 
     display: none;
     list-style: none;
     position: absolute;
@@ -114,7 +121,7 @@ label {
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
     border-radius: 4px; /* This and line below for IE */
-    behavior: url('PIE.htc');
+    behavior: url('css/PIE.htc');
 }
 #lang-menu li {
     display: block;
@@ -139,10 +146,52 @@ label {
 #lang-menu li.flag a {
     background-image: url('../image/flags.png');
     border: 1px solid #4e4e4e;
-    padding: 0px;
-    width: 48px;
+    color: #4e4e4e;
+    font-size: xx-small;
+    font-weight: bold;
     height: 33px;
     margin: 2px;
+    padding: 0px;
+    padding-right: 2px;
+    text-align: right;
+    text-decoration: none;
+    text-shadow: #efefef 0px 1px 0px;
+    width: 46px;
+    behavior: url('css/PIE.htc');
+}
+#lang-menu li.flag a:hover {
+    border: 1px solid #999999;
+    color: #999999;
+}
+
+/* Error Messages */
+span.error {
+    background: #FFCCCC;
+    border: 1px solid #CC0000;
+    color: #CC0000;
+    display: inline-block;
+    padding: 0px 2px 0px 2px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+span.warning {
+    background: #FFFFCC;
+    border: 1px solid #FFCC00;
+    color: #996600;
+    display: inline-block;
+    padding: 0px 2px 0px 2px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+
+/* Loading Message */
+#loading {
+    background-image: url('../image/loader.gif');
+    display: block;
+    height: 32px;
+    width: 32px;
 }
 
 #logo_center
@@ -435,26 +484,6 @@ h2
 a img 
 {
     border:none;
-}
-span.error
-{
-    background: #FFCCCC;
-    border: 1px solid #CC0000;
-    color: #CC0000;
-    display: inline-block;
-    padding: 0px 2px 0px 2px;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-}
-span.warning
-{
-    background: #FFFFCC;
-    border: 1px solid #FFCC00;
-    color: #996600;
-    display: inline-block;
-    padding: 0px 2px 0px 2px;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
 }
 
 /* Flag Badges */
