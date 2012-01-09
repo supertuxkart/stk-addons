@@ -30,6 +30,15 @@ CREATE TABLE `arenas_revs` (
     KEY `revision` (`revision`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+CREATE TABLE `client_sessions` (
+    `uid` INT(10) UNSIGNED NOT NULL DEFAULT 0,
+    `name` VARCHAR(64) NULL DEFAULT NULL,
+    `cid` CHAR(24) NOT NULL,
+    `last-request` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    INDEX (`uid` , `cid`),
+    UNIQUE (`name`)
+) ENGINE=MyISAM;
+
 CREATE TABLE `clients` (
     `id` int(11) NOT NULL auto_increment PRIMARY KEY,
     `agent_string` varchar(255) NOT NULL,
