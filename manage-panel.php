@@ -162,7 +162,6 @@ function files_panel()
     }
     
     $name_label = htmlspecialchars(_('Name:'));
-    $addon_label = htmlspecialchars(_('Add-on:'));
     $type_label = htmlspecialchars(_('Type:'));
     $references_label = htmlspecialchars(_('References:'));
 
@@ -171,15 +170,23 @@ function files_panel()
 <thead>
 <tr>
 <th>$name_label</th>
-<th>$addon_label</th>
 <th>$type_label</th>
 <th>$references_label</th>
 </tr>
 </thead>
 <tbody>
 EOF;
+    $last_id = NULL;
     for ($i = 0; $i < count($files); $i++)
     {
+        if ($last_id !== $files[$i]['addon_id']) {
+            if ($files[$i]['addon_id'] === false) {
+                echo '<tr><th colspan="3" align="left">unassociated</th></tr>';
+            } else {
+                echo '<tr><th colspan="3" align="left">'.$files[$i]['addon_id'].' ('.$files[$i]['addon_type'].')</th></tr>';
+            }
+            $last_id = $files[$i]['addon_id'];
+        }
         // Get references to files
         switch ($files[$i]['file_type'])
         {
@@ -230,10 +237,8 @@ EOF;
         }
         if ($files[$i]['exists'] == false)
             $references .= ' <span class="error">File not found.</span>';
-        $add_on = ($files[$i]['addon_id']) ? $files[$i]['addon_id'].' ('.$files[$i]['addon_type'].')' : NULL;
 
         echo "<tr><td>{$files[$i]['file_path']}</td>
-            <td>{$add_on}</td>
             <td>{$files[$i]['file_type']}</td><td>$references</td></tr>";
     }
     echo '</tbody></table>';
