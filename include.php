@@ -25,6 +25,7 @@ require(ROOT.'include/Cache.class.php');
 require(ROOT.'include/ConfigManager.php');
 require(ROOT.'include/Validate.class.php');
 require(ROOT.'include/File.class.php');
+require(ROOT.'include/Image.class.php');
 require(ROOT.'include/News.class.php');
 require(ROOT.'include/PanelInterface.class.php');
 require(ROOT.'include/Addon.class.php');

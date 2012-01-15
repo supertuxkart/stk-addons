@@ -23,33 +23,50 @@ function parseUpload($file,$revision = false)
     if (!is_array($file))
         throw new UploadException(htmlspecialchars(_('Failed to upload your file.')));
 
-    // Check for file upload errors
-    $upload_error = file_upload_error($file);
-    if ($upload_error !== false)
-        throw new UploadException($upload_error);
-
     // This won't be set when uploading addons/revisions
     if (!isset($_POST['upload-type'])) $_POST['upload-type'] = NULL;
-    
-    // Check file-extension for uploaded file
-    $fileext = check_extension($file['name'], $_POST['upload-type']);
-    
+
+    // Check for file upload errors and check file extension
+    File::checkUploadError($file['error']);
+    $fileext = File::checkUploadExtension($file['name'], $_POST['upload-type']);
+
     // Set upload directory
-    if ($_POST['upload-type'] == 'image')
-        $file_dir = 'images/';
-    else
-        $file_dir = NULL;
+    $file_dir = ($_POST['upload-type'] == 'image') ? 'images/' : NULL;
 
     // Generate a unique file name for the uploaded file
     $fileid = uniqid();
-    while (file_exists(UP_LOCATION.$file_dir.$fileid.'.'.$fileext))
+    while (file_exists(UP_LOCATION.$file_dir.$fileid.'.'.$fileext)) {
         $fileid = uniqid();
+    }
     
     // Handle image uploads
     if ($_POST['upload-type'] == 'image')
     {
         if (!move_uploaded_file($file['tmp_name'],UP_LOCATION.'images/'.$fileid.'.'.$fileext))
             throw new UploadException(htmlspecialchars(_('Failed to move uploaded file.')));
+
+        // Scan image validity with GD
+        $image_path = UP_LOCATION.'images/'.$fileid.'.'.$fileext;
+        $gdImageInfo = getimagesize($image_path);
+        if (!$gdImageInfo) {
+            // Image is not read-able - must be corrupt or otherwise invalid
+            unlink(UP_LOCATION.'images/'.$fileid.'.'.$fileext);
+            throw new UploadException(htmlspecialchars(_('The uploaded image file is invalid.')));
+        }
+        // Validate image size
+        if ($gdImageInfo[0] > ConfigManager::get_config('max_image_dimension')
+                || $gdImageInfo[1] > ConfigManager::get_config('max_image_dimension')) {
+            // Image is too large. Scale it.
+            try {
+                $image = new Image($image_path);
+                $image->scale(ConfigManager::get_config('max_image_dimension'),
+                        ConfigManager::get_config('max_image_dimension'));
+                $image->save($image_path);
+            }
+            catch (ImageException $e) {
+                throw new UploadException($e->getMessage());
+            }
+        }
         
         // Add database record for image
         $addon_id = Addon::cleanId($_GET['name']);
@@ -306,23 +323,6 @@ function parseUpload($file,$revision = false)
     echo '<a href="addons.php?type='.$addon_type.'&amp;name='.$addon_id.'">'.htmlspecialchars(_('Click here to view your add-on.')).'</a><br />';
 }
 
-function check_extension($filename,$type = NULL)
-{
-    // Check file-extension for uploaded file
-    if ($type == 'image')
-    {
-        if (!preg_match('/\.(png|jpg|jpeg)$/i',$filename,$fileext))
-            throw new UploadException(htmlspecialchars(_('Uploaded image files must be either PNG or Jpeg files.')));
-    }
-    else
-    {
-        // File extension must be .zip, .tgz, .tar, .tar.gz, tar.bz2, .tbz
-        if (!preg_match('/\.(zip|t[bg]z|tar|tar\.gz|tar\.bz2)$/i',$filename,$fileext))
-            throw new UploadException(htmlspecialchars(_('The file you uploaded was not the correct type.')));
-    }
-    return $fileext[1];
-}
-
 function extract_archive($file,$destination,$fileext = NULL)
 {
     if (!file_exists($file))
@@ -393,33 +393,6 @@ function extract_archive($file,$destination,$fileext = NULL)
             return false;
     }
     return true;
-}
-
-function file_upload_error($upload)
-{
-    if (!is_array($upload))
-    {
-        return htmlspecialchars(_('Upload is invalid.'));
-    }
-    switch ($upload['error'])
-    {
-        default:
-            return htmlspecialchars(_('Unknown file upload error.'));
-        case UPLOAD_ERR_OK:
-            return false;
-        case UPLOAD_ERR_INI_SIZE:
-            return htmlspecialchars(_('Uploaded file is too large.'));
-        case UPLOAD_ERR_FORM_SIZE:
-            return htmlspecialchars(_('Uploaded file is too large.'));
-        case UPLOAD_ERR_PARTIAL:
-            return htmlspecialchars(_('Uploaded file is incomplete.'));
-        case UPLOAD_ERR_NO_FILE:
-            return htmlspecialchars(_('No file was uploaded.'));
-        case UPLOAD_ERR_NO_TMP_DIR:
-            return htmlspecialchars(_('There is no TEMP directory to store the uploaded file in.'));
-        case UPLOAD_ERR_CANT_WRITE:
-            return htmlspecialchars(_('Unable to write uploaded file to disk.'));
-    }
 }
 
 function find_xml($dir)

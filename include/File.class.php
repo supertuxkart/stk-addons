@@ -41,16 +41,68 @@ class File {
         writeAssetXML();
         writeNewsXML();
     }
-    
-    public static function delete($file_id) {// Get file path
+
+    /**
+     * Check a file upload's error code, and provide a useful exception if an
+     * error did occur
+     * @param integer $error_code 
+     */
+    public static function checkUploadError($error_code) {
+        switch ($error_code)
+        {
+            default:
+                throw new UploadException(htmlspecialchars(_('Unknown file upload error.')));
+            case UPLOAD_ERR_OK:
+                break;
+            case UPLOAD_ERR_INI_SIZE:
+                throw new UploadException(htmlspecialchars(_('Uploaded file is too large.')));
+            case UPLOAD_ERR_FORM_SIZE:
+                throw new UploadException(htmlspecialchars(_('Uploaded file is too large.')));
+            case UPLOAD_ERR_PARTIAL:
+                throw new UploadException(htmlspecialchars(_('Uploaded file is incomplete.')));
+            case UPLOAD_ERR_NO_FILE:
+                throw new UploadException(htmlspecialchars(_('No file was uploaded.')));
+            case UPLOAD_ERR_NO_TMP_DIR:
+                throw new UploadException(htmlspecialchars(_('There is no TEMP directory to store the uploaded file in.')));
+            case UPLOAD_ERR_CANT_WRITE:
+                throw new UploadException(htmlspecialchars(_('Unable to write uploaded file to disk.')));
+        }
+    }
+
+    /**
+     * Check the filename for an uploaded file to make sure the extension is
+     * one that can be handled
+     * @param string $filename
+     * @param string $type
+     * @return string 
+     */
+    public static function checkUploadExtension($filename,$type = NULL) {
+        // Check file-extension for uploaded file
+        if ($type == 'image') {
+            if (!preg_match('/\.(png|jpg|jpeg)$/i',$filename,$fileext))
+                throw new UploadException(htmlspecialchars(_('Uploaded image files must be either PNG or Jpeg files.')));
+        } else {
+            // File extension must be .zip, .tgz, .tar, .tar.gz, tar.bz2, .tbz
+            if (!preg_match('/\.(zip|t[bg]z|tar|tar\.gz|tar\.bz2)$/i',$filename,$fileext))
+                throw new UploadException(htmlspecialchars(_('The file you uploaded was not the correct type.')));
+        }
+        return $fileext[1];
+    }
+
+    /**
+     * Delete a file and its corresponding database record
+     * @param integer $file_id
+     * @return boolean
+     */
+    public static function delete($file_id) {
+        // Get file path
         $get_file_query = 'SELECT `file_path` FROM `'.DB_PREFIX.'files`
             WHERE `id` = '.(int)$file_id.'
             LIMIT 1';
         $get_file_handle = sql_query($get_file_query);
         if (!$get_file_handle)
             return false;
-        if (mysql_num_rows($get_file_handle) == 1)
-        {
+        if (mysql_num_rows($get_file_handle) == 1) {
             $get_file = mysql_fetch_assoc($get_file_handle);
             if (file_exists(UP_LOCATION.$get_file['file_path']))
                 unlink(UP_LOCATION.$get_file['file_path']);
