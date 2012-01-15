@@ -23,7 +23,7 @@
  *
  * @author Stephen
  */
-class Image {
+class SImage {
     public $path;
     public $format;
     public $info;

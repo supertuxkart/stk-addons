@@ -58,7 +58,7 @@ function parseUpload($file,$revision = false)
                 || $gdImageInfo[1] > ConfigManager::get_config('max_image_dimension')) {
             // Image is too large. Scale it.
             try {
-                $image = new Image($image_path);
+                $image = new SImage($image_path);
                 $image->scale(ConfigManager::get_config('max_image_dimension'),
                         ConfigManager::get_config('max_image_dimension'));
                 $image->save($image_path);

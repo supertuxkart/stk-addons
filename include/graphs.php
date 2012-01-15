@@ -82,7 +82,7 @@ function graph_date_line($title, $xvalues, $yvalues, $labels, $graph_id = NULL, 
 
     // Get ticks
     $dateUtils = new DateScaleUtils();
-    list($tickPositions,$minTickPositions) = $dateUtils->GetTicksFromMinMax($xmin,$xmax);
+    list($tickPositions,$minTickPositions) = $dateUtils->GetTicksFromMinMax($xmin,$xmax,DSUTILS_MONTH);
     
     // We use an integer scale on the X-axis since the positions on the X axis
     // are assumed to be UNIX timestamps
