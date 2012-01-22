@@ -43,6 +43,70 @@ class File {
     }
 
     /**
+     * Extract an archive file
+     * @param string $file
+     * @param string $destination
+     * @param string $fileext 
+     */
+    public static function extractArchive($file,$destination,$fileext = NULL) {
+        if (!file_exists($file))
+            throw new FileException(htmlspecialchars(_('The file to extract does not exist.')));
+
+        if ($fileext == NULL)
+            $fileext = pathinfo($file, PATHINFO_EXTENSION);
+
+        // Extract archive
+        switch ($fileext) {
+            // Handle archives using ZipArchive class
+            case 'zip':
+                $archive = new ZipArchive;
+                if (!$archive->open($file)) {
+                    unlink($file);
+                    throw new FileException(htmlspecialchars(_('Could not open archive file. It may be corrupted.')));
+                }
+                if (!$archive->extractTo($destination)) {
+                    unlink($file);
+                    throw new FileException(htmlspecialchars(_('Failed to extract archive file.')).' (zip)');
+                }
+                $archive->close();
+                unlink($file);
+                break;
+
+            // Handle archives using Archive_Tar class
+            case 'tar':
+            case 'tar.gz':
+            case 'tgz':
+            case 'gz':
+            case 'tbz':
+            case 'tar.bz2':
+            case 'bz2':
+                require_once('Archive/Tar.php');
+                $compression = NULL;
+                if ($fileext == 'tar.gz' || $fileext == 'tgz' || $fileext == 'gz') {
+                    $compression = 'gz';
+                }
+                elseif ($fileext == 'tbz' || $fileext == 'tar.bz2' || $fileext == 'bz2') {
+                    $compression = 'bz2';
+                }
+                $archive = new Archive_Tar($file, $compression);
+                if (!$archive) {
+                    unlink($file);
+                    throw new FileException(htmlspecialchars(_('Could not open archive file. It may be corrupted.')));
+                }
+                if (!$archive->extract($destination)) {
+                    unlink($file);
+                    throw new FileException(htmlspecialchars(_('Failed to extract archive file.')).' ('.$compression.')');
+                }
+                unlink($file);
+                break;
+
+            default:
+                unlink($file);
+                throw new FileException(htmlspecialchars(_('Unknown archive type.')));
+        }
+    }
+    
+    /**
      * Check a file upload's error code, and provide a useful exception if an
      * error did occur
      * @param integer $error_code 
@@ -213,6 +277,44 @@ class File {
                 'exists' => true);
         }
         return $return_files;
+    }
+    
+    public static function newImage($upload_handle, $file_name, $addon_id, $addon_type) {
+        if (!move_uploaded_file($upload_handle['tmp_name'],UP_LOCATION.'images/'.$file_name))
+            throw new FileException(htmlspecialchars(_('Failed to move uploaded file.')));
+
+        // Scan image validity with GD
+        $image_path = UP_LOCATION.'images/'.$file_name;
+        $gdImageInfo = getimagesize($image_path);
+        if (!$gdImageInfo) {
+            // Image is not read-able - must be corrupt or otherwise invalid
+            unlink($image_path);
+            throw new FileException(htmlspecialchars(_('The uploaded image file is invalid.')));
+        }
+        // Validate image size
+        if ($gdImageInfo[0] > ConfigManager::get_config('max_image_dimension')
+                || $gdImageInfo[1] > ConfigManager::get_config('max_image_dimension')) {
+            // Image is too large. Scale it.
+            try {
+                $image = new SImage($image_path);
+                $image->scale(ConfigManager::get_config('max_image_dimension'),
+                        ConfigManager::get_config('max_image_dimension'));
+                $image->save($image_path);
+            }
+            catch (ImageException $e) {
+                throw new FileException($e->getMessage());
+            }
+        }
+        
+        // Add database record for image
+        $newImageQuery = 'CALL `'.DB_PREFIX.'create_file_record` '.
+            "('$addon_id','$addon_type','image','images/$file_name',@a)";
+        $newImageHandle = sql_query($newImageQuery);
+        if (!$newImageHandle)
+        {
+            unlink($image_path);
+            throw new FileException(htmlspecialchars(_('Failed to associate image file with addon.')));
+        }
     }
 }
 

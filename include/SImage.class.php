@@ -29,7 +29,7 @@ class SImage {
     public $info;
     private $imagedata;
     
-    public function Image($file) {
+    public function SImage($file) {
         if (!file_exists($file))
             throw new ImageException('Image file not found.');
 
@@ -80,6 +80,9 @@ class SImage {
 
         $old_x = $this->info[0];
         $old_y = $this->info[1];
+        
+        if ($old_y == 0 || $old_x == 0)
+            throw new ImageException('Image dimensions cannot be 0. Failed to scale image.');
         
         if ($max_x === 0) {
             // Scale based on image height

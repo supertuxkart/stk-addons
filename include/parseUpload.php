@@ -40,49 +40,18 @@ function parseUpload($file,$revision = false)
     }
     
     // Handle image uploads
-    if ($_POST['upload-type'] == 'image')
-    {
-        if (!move_uploaded_file($file['tmp_name'],UP_LOCATION.'images/'.$fileid.'.'.$fileext))
-            throw new UploadException(htmlspecialchars(_('Failed to move uploaded file.')));
-
-        // Scan image validity with GD
-        $image_path = UP_LOCATION.'images/'.$fileid.'.'.$fileext;
-        $gdImageInfo = getimagesize($image_path);
-        if (!$gdImageInfo) {
-            // Image is not read-able - must be corrupt or otherwise invalid
-            unlink(UP_LOCATION.'images/'.$fileid.'.'.$fileext);
-            throw new UploadException(htmlspecialchars(_('The uploaded image file is invalid.')));
+    if ($_POST['upload-type'] == 'image') {
+        try {
+            $addon_id = Addon::cleanId($_GET['name']);
+            $addon_type = mysql_real_escape_string($_GET['type']);
+            File::newImage($file, $fileid.'.'.$fileext, $addon_id, $addon_type);
+            echo htmlspecialchars(_('Successfully uploaded image.')).'<br />';
+            echo '<span style="font-size: large"><a href="addons.php?type='.$_GET['type'].'&amp;name='.$_GET['name'].'">'.htmlspecialchars(_('Continue.')).'</a></span><br />';
+            return true;
         }
-        // Validate image size
-        if ($gdImageInfo[0] > ConfigManager::get_config('max_image_dimension')
-                || $gdImageInfo[1] > ConfigManager::get_config('max_image_dimension')) {
-            // Image is too large. Scale it.
-            try {
-                $image = new SImage($image_path);
-                $image->scale(ConfigManager::get_config('max_image_dimension'),
-                        ConfigManager::get_config('max_image_dimension'));
-                $image->save($image_path);
-            }
-            catch (ImageException $e) {
-                throw new UploadException($e->getMessage());
-            }
+        catch (FileException $e) {
+            throw new UploadException($e->getMessage());
         }
-        
-        // Add database record for image
-        $addon_id = Addon::cleanId($_GET['name']);
-        $addon_type = mysql_real_escape_string($_GET['type']);
-        $newImageQuery = 'CALL `'.DB_PREFIX.'create_file_record` '.
-            "('$addon_id','$addon_type','image','images/$fileid.$fileext',@a)";
-        $newImageHandle = sql_query($newImageQuery);
-        if (!$newImageHandle)
-        {
-            unlink(UP_LOCATION.'images/'.$fileid.'.'.$fileext);
-            throw new UploadException(htmlspecialchars(_('Failed to associate image file with addon.')));
-        }
-        
-        echo htmlspecialchars(_('Successfully uploaded image.')).'<br />';
-        echo '<span style="font-size: large"><a href="addons.php?type='.$_GET['type'].'&amp;name='.$_GET['name'].'">'.htmlspecialchars(_('Continue.')).'</a></span><br />';
-        return true;
     }
     
     // Move the archive to a working directory
@@ -91,11 +60,14 @@ function parseUpload($file,$revision = false)
         throw new UploadException(htmlspecialchars(_('Failed to move uploaded file.')));
 
     // Extract archive
-    if (!extract_archive(CACHE_DIR.$fileid.'/'.$fileid.'.'.$fileext,
+    try {
+        File::extractArchive(CACHE_DIR.$fileid.'/'.$fileid.'.'.$fileext,
             CACHE_DIR.$fileid.'/',
-            $fileext))
-    {
+            $fileext);
+    }
+    catch (FileException $e) {
         File::deleteRecursive(CACHE_DIR.$fileid);
+        throw new UploadException($e->getMessage());
     }
 
     // Find XML file
@@ -321,78 +293,6 @@ function parseUpload($file,$revision = false)
     echo '<a href="upload.php?type='.$addon_type.'&amp;name='.$addon_id.'&amp;action=file">'.htmlspecialchars(_('Click here to upload the sources to your add-on now.')).'</a><br />';
     echo htmlspecialchars(_('(Uploading the sources to your add-on enables others to improve your work and also ensure your add-on will not be lost in the future if new SuperTuxKart versions are not compatible with the current format.)')).'<br /><br />';
     echo '<a href="addons.php?type='.$addon_type.'&amp;name='.$addon_id.'">'.htmlspecialchars(_('Click here to view your add-on.')).'</a><br />';
-}
-
-function extract_archive($file,$destination,$fileext = NULL)
-{
-    if (!file_exists($file))
-    {
-        echo '<span class="error">'.htmlspecialchars(_('The file to extract does not exist.')).'</span><br />';
-    }
-
-    if ($fileext == NULL)
-        $fileext = pathinfo($file, PATHINFO_EXTENSION);
-
-    // Extract archive
-    switch ($fileext) {
-        // Handle archives using ZipArchive class
-        case 'zip':
-            $archive = new ZipArchive;
-            if (!$archive->open($file)) {
-                echo '<span class="error">'.htmlspecialchars(_('Could not open archive file. It may be corrupted.')).'</span><br />';
-                unlink($file);
-                return false;
-            }
-            if (!$archive->extractTo($destination))
-            {
-                echo '<span class="error">'.htmlspecialchars(_('Failed to extract archive file.')).' (zip)</span><br />';
-                unlink($file);
-                return false;
-            }
-            $archive->close();
-            unlink($file);
-            break;
-
-        // Handle archives using Archive_Tar class
-        case 'tar':
-        case 'tar.gz':
-        case 'tgz':
-        case 'gz':
-        case 'tbz':
-        case 'tar.bz2':
-        case 'bz2':
-            require_once('Archive/Tar.php');
-            $compression = NULL;
-            if ($fileext == 'tar.gz' || $fileext == 'tgz' || $fileext == 'gz')
-            {
-                $compression = 'gz';
-            }
-            elseif ($fileext == 'tbz' || $fileext == 'tar.bz2' || $fileext == 'bz2')
-            {
-                $compression = 'bz2';
-            }
-            $archive = new Archive_Tar($file, $compression);
-            if (!$archive)
-            {
-                echo '<span class="error">'.htmlspecialchars(_('Could not open archive file. It may be corrupted.')).'</span><br />';
-                unlink($file);
-                return false;
-            }
-            if (!$archive->extract($destination))
-            {
-                echo '<span class="error">'.htmlspecialchars(_('Failed to extract archive file.')).' ('.$compression.')</span><br />';
-                unlink($file);
-                return false;
-            }
-            unlink($file);
-            break;
-
-        default:
-            echo '<span class="error">'.htmlspecialchars(_('Unknown archive type.')).'</span><br />';
-            unlink($file);
-            return false;
-    }
-    return true;
 }
 
 function find_xml($dir)
