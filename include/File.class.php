@@ -280,8 +280,19 @@ class File {
     }
     
     public static function newImage($upload_handle, $file_name, $addon_id, $addon_type) {
-        if (!move_uploaded_file($upload_handle['tmp_name'],UP_LOCATION.'images/'.$file_name))
-            throw new FileException(htmlspecialchars(_('Failed to move uploaded file.')));
+        if ($upload_handle !== NULL) {
+            if (!move_uploaded_file($upload_handle['tmp_name'],UP_LOCATION.'images/'.$file_name))
+                throw new FileException(htmlspecialchars(_('Failed to move uploaded file.')));
+        } else {
+            // Delete the existing image by this name
+            if (file_exists(UP_LOCATION.'images/'.$file_name)) {
+                $query = 'DELETE FROM `'.DB_PREFIX.'files`
+                    WHERE `file_path` = \'images/'.$file_name.'\'';
+                $handle = sql_query($query);
+                // Clean image cache
+                Cache::clear();
+            }
+        }
 
         // Scan image validity with GD
         $image_path = UP_LOCATION.'images/'.$file_name;
@@ -315,6 +326,122 @@ class File {
             unlink($image_path);
             throw new FileException(htmlspecialchars(_('Failed to associate image file with addon.')));
         }
+    }
+    
+    public static function newImageFromQuads($quad_file, $addon_id, $addon_type) {
+        $reader = xml_parser_create();
+        // Remove whitespace at beginning and end of file
+        $xmlContents = trim(file_get_contents($quad_file));
+
+        if (!xml_parse_into_struct($reader,$xmlContents,$vals,$index))
+            throw new FileException('XML Error: '.xml_error_string(xml_get_error_code($reader)));
+
+        // Cycle through all of the xml file's elements
+        $quads = array();
+        foreach ($vals AS $val)
+        {
+            if ($val['type'] == 'close' || $val['type'] == 'comment')
+                continue;
+
+            if (isset($val['attributes'])) {
+                if (isset($val['attributes']['INVISIBLE']) && $val['attributes']['INVISIBLE'] == 'yes')
+                    continue;
+                $quads[] = array_values($val['attributes']);
+            }
+        }
+
+        // Replace references to other quads with proper coordinates
+        for($i = 0; $i < count($quads); $i++) {
+            for ($j = 0; $j <= 3; $j++) {
+                if(preg_match('/^([0-9]+)\:([0-9])$/',$quads[$i][$j],$matches))
+                    $quads[$i][$j] = $quads[$matches[1]][$matches[2]];
+            }
+        }
+
+        // Split coordinates into arrays
+        $y_min = NULL;
+        $y_max = NULL;
+        $x_min = NULL;
+        $x_max = NULL;
+        $z_min = NULL;
+        $z_max = NULL;
+        for($i = 0; $i < count($quads); $i++) {
+            for ($j = 0; $j <= 3; $j++) {
+                $quads[$i][$j] = explode(' ',$quads[$i][$j]);
+                if (count($quads[$i][$j]) != 3)
+                    throw new FileException('Unexpected number of points for quad '.$i.'.');
+                
+                // Check max/min y-value
+                if ($quads[$i][$j][1] > $y_max || $y_max === NULL)
+                    $y_max = $quads[$i][$j][1];
+                if ($quads[$i][$j][1] < $y_min || $y_min === NULL)
+                    $y_min = $quads[$i][$j][1];
+                
+                // Check max/min x-value
+                if ($quads[$i][$j][0] > $x_max || $x_max === NULL)
+                    $x_max = $quads[$i][$j][0];
+                if ($quads[$i][$j][0] < $x_min || $x_min === NULL)
+                    $x_min = $quads[$i][$j][0];
+
+                // Check max/min x-value
+                if ($quads[$i][$j][2] > $z_max || $z_max === NULL)
+                    $z_max = $quads[$i][$j][2];
+                if ($quads[$i][$j][2] < $z_min || $z_min === NULL)
+                    $z_min = $quads[$i][$j][2];
+            }
+        }
+
+        // Convert y-values to a number from 0-255, and x and z-values to 0-1023
+        $y_range = $y_max - $y_min + 1;
+        $x_range = $x_max - $x_min + 1;
+        $z_range = $z_max - $z_min + 1;
+        for($i = 0; $i < count($quads); $i++) {
+            for ($j = 0; $j <= 3; $j++) {
+                $y = $quads[$i][$j][1] - $y_min;
+                $y = $y/$y_range * 255;
+                $quads[$i][$j][1] = (int)$y;
+                
+                $quads[$i][$j][0] = (int)(($quads[$i][$j][0] - $x_min)/$x_range * 1023);
+                $quads[$i][$j][2] = (int)(1024 - (($quads[$i][$j][2] - $z_min)/$z_range * 1023));
+            }
+        }
+        
+        // Prepare the image
+        $image = imagecreatetruecolor(1024,1024);
+        imagealphablending($image, false);
+        imagesavealpha($image, true);
+        // Set up colors
+        for ($i = 0; $i <= 255; $i++) {
+            $color[$i] = imagecolorallocate($image,(int)($i/1.5),(int)($i/1.5),$i);
+        }
+        $bg = imagecolorallocatealpha($image,255,255,255,127);
+        imagefilledrectangle($image, 0, 0, 1023, 1023, $bg);
+        
+        // Paint quads
+        for ($i = 0; $i < count($quads); $i++) {
+            imagefilledpolygon($image,
+                    array($quads[$i][0][0],
+                        $quads[$i][0][2],
+                        $quads[$i][1][0],
+                        $quads[$i][1][2],
+                        $quads[$i][2][0],
+                        $quads[$i][2][2],
+                        $quads[$i][3][0],
+                        $quads[$i][3][2]),
+                    4,
+                    $color[(int)(($quads[$i][0][1]
+                        + $quads[$i][1][1]
+                        + $quads[$i][2][1]
+                        + $quads[$i][3][1])
+                        /4)]);
+        }
+        
+        // Save output file
+        $out_file = UP_LOCATION.'images/'.$addon_id.'_map.png';
+        imagepng($image,$out_file);
+        
+        // Add image record to add-on
+        File::newImage(NULL, basename($out_file), $addon_id, $addon_type);
     }
 }
 

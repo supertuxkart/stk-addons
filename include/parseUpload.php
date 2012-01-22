@@ -278,16 +278,24 @@ function parseUpload($file,$revision = false)
     }
 
     try {
-        if (!Addon::exists($addon_id))
+        if (!Addon::exists($addon_id)) {
             $addon = Addon::create($addon_type, $parsed_xml['attributes'], $fileid);
-        else {
+        } else {
             $addon = new Addon($addon_id);
             $addon->createRevision($parsed_xml['attributes'], $fileid);
         }
+        
+        // If the add-on is a track, add an image of the driveline
+        if ($addon_type == 'tracks') {
+            if (file_exists($xml_dir.'/quads.xml')) {
+                File::newImageFromQuads($xml_dir.'/quads.xml', $addon_id, $addon_type);
+            }
+        }
     }
-    catch (AddonException $e) {
+    catch (Exception $e) {
         echo '<span class="error">'.$e->getMessage().'</span><br />';
     }
+    
     File::deleteRecursive(UP_LOCATION.'temp/'.$fileid);
     echo htmlspecialchars(_('Your add-on was uploaded successfully. It will be reviewed by our moderators before becoming publicly available.')).'<br /><br />';
     echo '<a href="upload.php?type='.$addon_type.'&amp;name='.$addon_id.'&amp;action=file">'.htmlspecialchars(_('Click here to upload the sources to your add-on now.')).'</a><br />';
