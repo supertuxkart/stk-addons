@@ -285,14 +285,19 @@ function parseUpload($file,$revision = false)
             $addon->createRevision($parsed_xml['attributes'], $fileid);
         }
         
-        // If the add-on is a track, add an image of the driveline
-        if ($addon_type == 'tracks') {
-            if (file_exists($xml_dir.'/quads.xml')) {
-                File::newImageFromQuads($xml_dir.'/quads.xml', $addon_id, $addon_type);
+        try {
+            // If the add-on is a track, add an image of the driveline
+            if ($addon_type == 'tracks') {
+                if (file_exists($xml_dir.'/quads.xml')) {
+                    File::newImageFromQuads($xml_dir.'/quads.xml', $addon_id, $addon_type);
+                }
             }
         }
+        catch (FileException $e) {
+            echo '<span class="warning">Error interpreting quads: '.$e->getMessage().'</span><br />';
+        }
     }
-    catch (Exception $e) {
+    catch (AddonException $e) {
         echo '<span class="error">'.$e->getMessage().'</span><br />';
     }
     
