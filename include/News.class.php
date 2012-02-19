@@ -64,7 +64,7 @@ class News {
             $insQuery = 'INSERT INTO `'.DB_PREFIX.'news`
                 (`content`,`web_display`,`dynamic`)
                 VALUES
-                (\'Newest add-on kart: '.mysql_real_escape_string($new_kart).'\',0,1)';
+                (\'Newest add-on kart: '.mysql_real_escape_string($new_kart).'\',1,1)';
             $insHandle = sql_query($insQuery);
             if (!$insHandle)
                 echo 'Failed to insert newest kart news entry.<br />';
@@ -93,7 +93,7 @@ class News {
             $insQuery = 'INSERT INTO `'.DB_PREFIX.'news`
                 (`content`,`web_display`,`dynamic`)
                 VALUES
-                (\'Newest add-on track: '.mysql_real_escape_string($new_track).'\',0,1)';
+                (\'Newest add-on track: '.mysql_real_escape_string($new_track).'\',1,1)';
             $insHandle = sql_query($insQuery);
             if (!$insHandle)
                 echo 'Failed to insert newest track news entry.<br />';
@@ -122,7 +122,7 @@ class News {
             $insQuery = 'INSERT INTO `'.DB_PREFIX.'news`
                 (`content`,`web_display`,`dynamic`)
                 VALUES
-                (\'Newest add-on arena: '.mysql_real_escape_string($new_arena).'\',0,1)';
+                (\'Newest add-on arena: '.mysql_real_escape_string($new_arena).'\',1,1)';
             $insHandle = sql_query($insQuery);
             if (!$insHandle)
                 echo 'Failed to insert newest kart news entry.<br />';

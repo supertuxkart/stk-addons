@@ -39,7 +39,14 @@ $meta_description = htmlspecialchars(_('This is the official SuperTuxKart add-on
 		<?php 
 		include(ROOT.'include/menu.php');
 		?>
-                <div style="text-align: center; width: 100%;"><img id="logo_center" src="image/logo_large.png" alt="SuperTuxKart Logo" title="SuperTuxKart Logo" /></div>
+                <div style="text-align: center; width: 100%;">
+                    <img id="logo_center"
+                         src="image/logo_large.png"
+                         alt="SuperTuxKart Logo"
+                         title="SuperTuxKart Logo"
+                         width="424"
+                         height="325" />
+                </div>
 
 		<div id="index-menu">
 		    <div>
@@ -66,12 +73,6 @@ $meta_description = htmlspecialchars(_('This is the official SuperTuxKart add-on
                 <div id="news-panel">
                     <ul id="news-messages">
                         <?php
-                        // Note the newest track and kart
-                        $new_kart = stat_newest('karts');
-                        $new_track = stat_newest('tracks');
-                        printf('<li>'.htmlspecialchars(_('The newest kart is %s.')).'</li>'."\n",Addon::getName($new_kart));
-                        printf('<li>'.htmlspecialchars(_('The newest track is %s.')).'</li>'."\n",Addon::getName($new_track));
-                        
                         // Note most downloaded track and kart
                         $pop_kart = stat_most_downloaded('karts');
                         $pop_track = stat_most_downloaded('tracks');
