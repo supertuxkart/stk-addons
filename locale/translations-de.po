@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: stk\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-12-17 19:22-0700\n"
-"PO-Revision-Date: 2012-01-02 12:47+0000\n"
-"Last-Translator: Daniel Winzen <d@winzen4.de>\n"
+"POT-Creation-Date: 2012-01-08 10:55-0700\n"
+"PO-Revision-Date: 2012-02-11 14:33+0000\n"
+"Last-Translator: Wolfs <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-01-08 17:56+0000\n"
-"X-Generator: Launchpad (build 14640)\n"
+"X-Launchpad-Export-Date: 2012-02-19 00:52+0000\n"
+"X-Generator: Launchpad (build 14814)\n"
 
 #: Addon.class.php:53
 msgid "The requested add-on does not exist."
@@ -41,75 +41,75 @@ msgstr "Erstelle neues Add-On ..."
 msgid "Your add-on could not be uploaded."
 msgstr "Dein Add-on konnte nicht hochgeladen werden."
 
-#: Addon.class.php:187
+#: Addon.class.php:188
 msgid "The file you are trying to create already exists."
 msgstr "Die neu zu erstellende Datei ist bereits vorhanden."
 
-#: Addon.class.php:191 Addon.class.php:267 Addon.class.php:314
+#: Addon.class.php:192 Addon.class.php:269 Addon.class.php:317
 #: parseUpload.php:287 users.php:58 users.php:75
 msgid "You do not have the necessary permissions to perform this action."
 msgstr "Du hast nicht die nötigen Rechte, um diese Aktion durchzuführen."
 
-#: Addon.class.php:264
+#: Addon.class.php:266
 msgid "You must be logged in to perform this action."
 msgstr "Die Ausführung dieser Aktion ist nur angemeldet möglich."
 
-#: Addon.class.php:275
+#: Addon.class.php:277
 msgid "Failed to find files associated with this addon."
 msgstr "Konnte zu dem Add-On gehörende Dateien nicht finden."
 
-#: Addon.class.php:282
+#: Addon.class.php:284
 msgid "Failed to delete file:"
 msgstr "Konnte Datei nicht löschen:"
 
-#: Addon.class.php:290
+#: Addon.class.php:292
 msgid "Failed to remove file records for this addon."
 msgstr "Datei-Versionsgeschichte konnte nicht entfernt werden."
 
-#: Addon.class.php:295
+#: Addon.class.php:297
 msgid "Failed to remove ratings for this add-on."
 msgstr "Bewertung des Add-ons konnte nicht entfernt werden."
 
-#: Addon.class.php:302
+#: Addon.class.php:304
 msgid "Failed to remove add-on revisions."
 msgstr "Überarbeitungen des Add-Ons konnten nicht entfernt werden."
 
-#: Addon.class.php:306
+#: Addon.class.php:308
 msgid "Failed to remove addon."
 msgstr "Konnte Add-On nicht löschen."
 
-#: Addon.class.php:317
+#: Addon.class.php:320
 msgid "Failed to delete file."
 msgstr "Datei konnte nicht gelöscht werden."
 
-#: Addon.class.php:357 coreAddon.php:444 coreAddon.php:631 coreAddon.php:641
+#: Addon.class.php:360 coreAddon.php:444 coreAddon.php:631 coreAddon.php:641
 #: coreAddon.php:653 coreAddon.php:656
 msgid "Unknown"
 msgstr "Unbekannt"
 
-#: Addon.class.php:498 Addon.class.php:519 Addon.class.php:541
-#: Addon.class.php:571
+#: Addon.class.php:501 Addon.class.php:522 Addon.class.php:544
+#: Addon.class.php:574
 msgid "You do not have the neccessary permissions to perform this action."
 msgstr "Du hast nicht die notwendigen Rechte, um diese Aktion auszuführen."
 
-#: Addon.class.php:506
+#: Addon.class.php:509
 msgid "Failed to update the description record for this add-on."
 msgstr "Die Beschreibung dieses Add-Ons konnte nicht aktualisiert werden."
 
-#: Addon.class.php:527
+#: Addon.class.php:530
 msgid "Failed to update the designer record for this add-on."
 msgstr ""
 "Der Designer-Eintrag dieses Add-Ons konnte nicht aktualisiert werden."
 
-#: Addon.class.php:549
+#: Addon.class.php:552
 msgid "Failed to update the image record for this add-on."
 msgstr ""
 
-#: Addon.class.php:556
+#: Addon.class.php:559
 msgid "Failed to update the license record for this add-on."
 msgstr "Der Lizenz-Eintrag dieses Add-Ons konnte nicht aktualisiert werden."
 
-#: Addon.class.php:564
+#: Addon.class.php:567
 msgid "Failed to update the name record for this add-on."
 msgstr ""
 
@@ -133,7 +133,7 @@ msgstr "Du muss angemeldet sein, um ein Passwort zu ändern."
 msgid "Failed to change your password."
 msgstr "Fehler beim Ändern deines Passworts."
 
-#: User.class.php:162 users.php:89
+#: User.class.php:191 users.php:89
 msgid "Me"
 msgstr "Mich"
 
@@ -166,8 +166,8 @@ msgstr "Deine Passwörter stimmen nicht überein."
 msgid "You must enter a name."
 msgstr "Du musst einen Namen eingeben."
 
-#: about.php:32 addons.php:48 createAccount.php:34 login.php:33 manage.php:25
-#: music.php:25
+#: about.php:32 addons.php:48 login.php:33 manage.php:25 music.php:25
+#: register.php:25
 msgid "STK Add-ons"
 msgstr "STK Add-Ons"
 
@@ -264,15 +264,15 @@ msgstr ""
 msgid "Unknown Type"
 msgstr "Unbekannter Typ"
 
-#: addons.php:39 index.php:57 index.php:60 menu.php:54 menu.php:65
+#: addons.php:39 index.php:52 menu.php:54 menu.php:65
 msgid "Tracks"
 msgstr "Strecken"
 
-#: addons.php:42 index.php:47 index.php:50 menu.php:59 menu.php:64
+#: addons.php:42 index.php:47 menu.php:59 menu.php:64
 msgid "Karts"
 msgstr "Karts"
 
-#: addons.php:45 index.php:67 index.php:70 menu.php:55 menu.php:60
+#: addons.php:45 index.php:57 menu.php:55 menu.php:60
 msgid "Arenas"
 msgstr "Arenen"
 
@@ -360,7 +360,7 @@ msgstr ""
 msgid "DFSG Compliant"
 msgstr "DFSG-Kompatibel"
 
-#: coreAddon.php:163 manage-panel.php:168
+#: coreAddon.php:163 manage-panel.php:166
 msgid "Type:"
 msgstr "Typ:"
 
@@ -545,7 +545,7 @@ msgstr "Anmerkungen der Moderatoren an den Absender:"
 msgid "Save Notes"
 msgstr "Notizen speichern"
 
-#: coreUser.php:87 createAccount.php:43 login.php:114
+#: coreUser.php:87 login.php:114 register.php:36
 msgid "Username:"
 msgstr "Benutzername:"
 
@@ -601,7 +601,7 @@ msgstr "Altes Passwort:"
 msgid "New Password:"
 msgstr "Neues Passwort:"
 
-#: coreUser.php:219 createAccount.php:43 createAccount.php:45
+#: coreUser.php:219 register.php:37 register.php:42
 #, php-format
 msgid "Must be at least %d characters long."
 msgstr "Muss mindestens %d Zeichen lang sein."
@@ -613,158 +613,6 @@ msgstr "Neues Passwort (Bestätigen):"
 #: coreUser.php:233
 msgid "Your old password is not correct."
 msgstr "Dein altes Passwort ist falsch."
-
-#: createAccount.php:34
-msgid "Register"
-msgstr "Registrieren"
-
-#: createAccount.php:45 login.php:116
-msgid "Password:"
-msgstr "Passwort:"
-
-#: createAccount.php:47
-msgid "Password (confirm):"
-msgstr "Passwort (Bestätigen):"
-
-#: createAccount.php:49 manage-panel.php:166
-msgid "Name:"
-msgstr "Name:"
-
-#: createAccount.php:51
-msgid "Email Address:"
-msgstr "E-Mail-Adresse:"
-
-#: createAccount.php:53
-msgid "Terms:"
-msgstr "Bedingungen:"
-
-#: createAccount.php:55
-msgid "STK Addons Terms and Conditions"
-msgstr ""
-
-#: createAccount.php:56
-msgid ""
-"You must agree to these terms in order to upload content to the STK Addons "
-"site."
-msgstr ""
-"Du musst diesen Bedingungen zustimmen, um Inhalte auf die STK Add-Ons Seite "
-"hochladen zu können."
-
-#: createAccount.php:57
-msgid ""
-"The STK Addons service is designed to be a repository exclusively for Super\n"
-"Tux Kart addon content. All uploaded content must be intended for this\n"
-"purpose. When you upload your content, it will be available publicly on the\n"
-"internet, and will be made available in-game for download."
-msgstr ""
-"Der STK Add-Ons Service ist ausschließlich als Plattform für SuperTuxKart\n"
-"Add-On-Inhalte gedacht. Alle hochgeladenen Inhalte müssen für diesen \n"
-"Zweck gedacht sein. Nach dem Hochladen deiner Inhalte werden sie öffen-\n"
-"tlich im Internet und innerhalb des Spiels verfügbar sein."
-
-#: createAccount.php:61
-msgid ""
-"Super Tux Kart aims to comply with the Debian Free Software Guidelines "
-"(DFSG).\n"
-"TuxFamily.org also requires that content they host comply with open "
-"licenses.\n"
-"You may not upload content which is locked down with a restrictive license.\n"
-"Licenses such as CC-BY-SA 3.0, or other DFSG-compliant licenses are "
-"required.\n"
-"All content taken from third-party sources must be attributed properly, and "
-"must\n"
-"also be available under an open license. Licenses and attribution should be\n"
-"included in a \"license.txt\" file in each uploaded archive. Uploads "
-"without\n"
-"proper licenses or attribution may be deleted without warning."
-msgstr ""
-"SuperTuxKart versucht, den Debian-Richtlinien für freie Software (DFSG) zu "
-"entsprechen. TuxFamily.org fordert ebenfalls, dass alle Inhalte, die von "
-"ihnen gehostet werden, offenen Lizenzen unterliegen. Du darfst keine Inhalte "
-"hochladen, die restriktiven Lizenzen unterliegen. Lizenzen wie CC-BY-SA 3.0, "
-"oder andere DFSG-kompatible Lizenzen sind erforderlich. Alle Inhalte, die "
-"von Dritten stammen, müssen unter Angabe des Autors als solche "
-"gekennzeichnet werden und ebenfalls offenen Lizenzen unterliegen. Alle "
-"Lizenzen und Angaben von Werken Dritter und deren Autoren müssen in einer "
-"\"License.txt\"-Datei angegeben werden und in jedem hochgeladenen Archiv "
-"enthalten sein. Hochgeladene Inhalte, die diesen Bedingungen nicht "
-"entsprechen, können ohne Vorwarnung gelöscht werden."
-
-#: createAccount.php:69
-msgid ""
-"Even with valid licenses and attribution, content may not contain any\n"
-"of the following:"
-msgstr ""
-"Selbst mit gültigen Lizenzen und Nennung Dritter dürfen die Inhalte\n"
-"folgendes NICHT enthalten:"
-
-#: createAccount.php:71 upload.php:251
-msgid "Profanity"
-msgstr "Obszönitäten"
-
-#: createAccount.php:72 upload.php:252
-msgid "Explicit images"
-msgstr "Pornographie"
-
-#: createAccount.php:73 upload.php:253
-msgid "Hateful messages and/or images"
-msgstr "Hasserfüllte Nachrichten und/oder Bilder"
-
-#: createAccount.php:74 upload.php:254
-msgid "Any other content that may be unsuitable for children"
-msgstr "Anderen Inhalte, die für Kinder ungeeignet sein könnten"
-
-#: createAccount.php:75
-msgid ""
-"If any of your uploads are found to contain any of the above, your upload\n"
-"will be removed, your account may be removed, and any other content you "
-"uploaded\n"
-"may be removed."
-msgstr ""
-
-#: createAccount.php:78
-msgid ""
-"By checking the box below, you are confirming that you understand these\n"
-"terms. If you have any questions or comments regarding these terms, one of "
-"the\n"
-"members of the development team would gladly assist you."
-msgstr ""
-
-#: createAccount.php:82
-msgid "I agree to the above terms"
-msgstr "Ich den obigen Bedingungen zu"
-
-#: createAccount.php:106
-msgid "You must agree to the terms to register."
-msgstr "Du musst den Bedingungen zustimmen, um dich zu registrieren."
-
-#: createAccount.php:113
-msgid "An error occurred trying to validate your username."
-msgstr ""
-
-#: createAccount.php:114 createAccount.php:129
-msgid "Please contact a website administrator."
-msgstr "Bitte kontaktiere einen Administrator der Webseite."
-
-#: createAccount.php:116
-msgid "Your username has already been used."
-msgstr "Dein Benutzername wird bereits benutzt."
-
-#: createAccount.php:128
-msgid "An error occurred while creating your account."
-msgstr "Ein Fehler ist aufgetreten während dein Konto erstellt wurde."
-
-#: createAccount.php:133
-msgid ""
-"Account creation was successful. Please activate your account using the link "
-"emailed to you."
-msgstr ""
-"Das Konto wurde erfolgreich erstellt. Bitte aktiviere es, indem du den Link "
-"in der E-Mail, die dir geschickt wurde, benutzt."
-
-#: createAccount.php:149
-msgid "Your account has been activated."
-msgstr "Dein Konto wurde aktiviert."
 
 #: disabled.php:40
 msgid "This page is currently disabled."
@@ -780,26 +628,26 @@ msgid ""
 "and tracks for the SuperTuxKart game."
 msgstr ""
 
-#: index.php:77 index.php:80
+#: index.php:62
 msgid "Help"
 msgstr "Hilfe"
 
-#: index.php:92
+#: index.php:72
 #, php-format
 msgid "The newest kart is %s."
 msgstr "Das neueste Kart ist %s."
 
-#: index.php:93
+#: index.php:73
 #, php-format
 msgid "The newest track is %s."
 msgstr "Die neueste Strecke ist %s."
 
-#: index.php:98
+#: index.php:78
 #, php-format
 msgid "The most downloaded kart is %s."
 msgstr "Das am häufigsten heruntergeladene Kart ist %s."
 
-#: index.php:99
+#: index.php:79
 #, php-format
 msgid "The most downloaded track is %s."
 msgstr "Die am häufigsten heruntergeladene Strecke ist %s."
@@ -829,6 +677,10 @@ msgstr "Du bist bereits angemeldet."
 #, php-format
 msgid "Welcome, %s!"
 msgstr "Hallo %s!"
+
+#: login.php:116 register.php:41
+msgid "Password:"
+msgstr "Passwort:"
 
 #: login.php:118
 msgid "Log In"
@@ -874,113 +726,121 @@ msgstr ""
 msgid "Cache Files"
 msgstr ""
 
-#: manage-panel.php:92
+#: manage-panel.php:87 manage.php:63
+msgid "Event Logs"
+msgstr ""
+
+#: manage-panel.php:96
 msgid "XML Download Frequency"
 msgstr ""
 
-#: manage-panel.php:93
+#: manage-panel.php:97
 msgid "Permitted Addon Filetypes"
 msgstr "Erlaubte Add-On-Dateitypen"
 
-#: manage-panel.php:94
+#: manage-panel.php:98
 msgid "Permitted Source Archive Filetypes"
 msgstr ""
 
-#: manage-panel.php:95
+#: manage-panel.php:99
 msgid "Administrator Email"
 msgstr "Administrator E-Mail"
 
-#: manage-panel.php:96
+#: manage-panel.php:100
 msgid "Moderator List Email"
 msgstr ""
 
-#: manage-panel.php:98 manage-panel.php:100
+#: manage-panel.php:102 manage-panel.php:104
 msgid "True"
 msgstr ""
 
-#: manage-panel.php:98 manage-panel.php:100
+#: manage-panel.php:102 manage-panel.php:104
 msgid "False"
 msgstr ""
 
-#: manage-panel.php:101
+#: manage-panel.php:105
 msgid "List Invisible Addons in XML"
 msgstr ""
 
-#: manage-panel.php:102
+#: manage-panel.php:106
 msgid "Blog RSS Feed"
 msgstr ""
 
-#: manage-panel.php:103
+#: manage-panel.php:107
 msgid "Save Settings"
 msgstr "Einstellungen speichern"
 
-#: manage-panel.php:110 manage-panel.php:132
+#: manage-panel.php:114 manage-panel.php:136
 msgid "Message:"
 msgstr "Nachricht:"
 
-#: manage-panel.php:111 manage-panel.php:134
+#: manage-panel.php:115 manage-panel.php:138
 msgid "Condition:"
 msgstr "Bedingung:"
 
-#: manage-panel.php:112
+#: manage-panel.php:116
 msgid "Display on Website:"
 msgstr "Auf der Website anzeigen:"
 
-#: manage-panel.php:113
+#: manage-panel.php:117
 msgid "Create Message"
 msgstr "Nachricht erstellen"
 
-#: manage-panel.php:126
+#: manage-panel.php:130
 msgid "No news messages currently exist."
 msgstr "Derzeit existieren keine Neuigkeiten."
 
-#: manage-panel.php:131
+#: manage-panel.php:135
 msgid "Date:"
 msgstr "Datum:"
 
-#: manage-panel.php:133
+#: manage-panel.php:137
 msgid "Author:"
 msgstr "Autor:"
 
-#: manage-panel.php:135
+#: manage-panel.php:139
 msgid "Web:"
 msgstr ""
 
-#: manage-panel.php:136
+#: manage-panel.php:140
 msgid "Actions:"
 msgstr ""
 
-#: manage-panel.php:162
+#: manage-panel.php:160
 msgid "No files have been uploaded."
 msgstr "Es wurden keine Dateien hochgeladen."
 
-#: manage-panel.php:167
+#: manage-panel.php:164 register.php:50
+msgid "Name:"
+msgstr "Name:"
+
+#: manage-panel.php:165
 msgid "Add-on:"
 msgstr "Add-On:"
 
-#: manage-panel.php:169
+#: manage-panel.php:167
 msgid "References:"
 msgstr ""
 
-#: manage-panel.php:242
+#: manage-panel.php:244
 msgid "Clients by User-Agent"
 msgstr ""
 
-#: manage-panel.php:249
+#: manage-panel.php:251
 msgid ""
 "There are currently no SuperTuxKart clients recorded. Your download script "
 "may not be configured properly."
 msgstr ""
 
-#: manage-panel.php:254
+#: manage-panel.php:256
 msgid "User-Agent String:"
 msgstr ""
 
-#: manage-panel.php:254
+#: manage-panel.php:256
 msgid "Game Version:"
 msgstr "Spielversion:"
 
-#: manage-panel.php:273
+#: manage-panel.php:275
 msgid "Empty cache"
 msgstr ""
 
@@ -988,25 +848,25 @@ msgstr ""
 msgid "Manage"
 msgstr "Verwalten"
 
-#: manage.php:71
+#: manage.php:76
 msgid "One or more fields has been left blank. Settings were not saved."
 msgstr ""
 "Ein oder mehrere Felder wurden leer gelassen. Die Einstellungen wurden nicht "
 "gespeichert."
 
-#: manage.php:76
+#: manage.php:81
 msgid "XML Download Frequency value is invalid."
 msgstr ""
 
-#: manage.php:88
+#: manage.php:93
 msgid "Saved settings."
 msgstr "Einstellungen wurden gespeichert."
 
-#: manage.php:106
+#: manage.php:111
 msgid "Created message."
 msgstr "Nachricht wurde erstellt."
 
-#: manage.php:110
+#: manage.php:115
 msgid "Failed to create message."
 msgstr "Fehler beim Erstellen der Nachricht."
 
@@ -1220,6 +1080,164 @@ msgstr ""
 #: parseUpload.php:421
 msgid "Unable to write uploaded file to disk."
 msgstr "Konnte hochgeladene Datei nicht auf die Festplatte schreiben."
+
+#: register.php:25
+msgid "Register"
+msgstr "Registrieren"
+
+#: register.php:30
+msgid "Account Registration"
+msgstr ""
+
+#: register.php:46
+msgid "Password (confirm):"
+msgstr "Passwort (Bestätigen):"
+
+#: register.php:54
+msgid "Email Address:"
+msgstr "E-Mail-Adresse:"
+
+#: register.php:58
+msgid "Terms:"
+msgstr "Bedingungen:"
+
+#: register.php:60
+msgid "STK Addons Terms and Conditions"
+msgstr ""
+
+#: register.php:61
+msgid ""
+"You must agree to these terms in order to upload content to the STK Addons "
+"site."
+msgstr ""
+"Du musst diesen Bedingungen zustimmen, um Inhalte auf die STK Add-Ons Seite "
+"hochladen zu können."
+
+#: register.php:62
+msgid ""
+"The STK Addons service is designed to be a repository exclusively for Super\n"
+"Tux Kart addon content. All uploaded content must be intended for this\n"
+"purpose. When you upload your content, it will be available publicly on the\n"
+"internet, and will be made available in-game for download."
+msgstr ""
+"Der STK Add-Ons Service ist ausschließlich als Plattform für SuperTuxKart\n"
+"Add-On-Inhalte gedacht. Alle hochgeladenen Inhalte müssen für diesen \n"
+"Zweck gedacht sein. Nach dem Hochladen deiner Inhalte werden sie öffen-\n"
+"tlich im Internet und innerhalb des Spiels verfügbar sein."
+
+#: register.php:66
+msgid ""
+"Super Tux Kart aims to comply with the Debian Free Software Guidelines "
+"(DFSG).\n"
+"TuxFamily.org also requires that content they host comply with open "
+"licenses.\n"
+"You may not upload content which is locked down with a restrictive license.\n"
+"Licenses such as CC-BY-SA 3.0, or other DFSG-compliant licenses are "
+"required.\n"
+"All content taken from third-party sources must be attributed properly, and "
+"must\n"
+"also be available under an open license. Licenses and attribution should be\n"
+"included in a \"license.txt\" file in each uploaded archive. Uploads "
+"without\n"
+"proper licenses or attribution may be deleted without warning."
+msgstr ""
+"SuperTuxKart versucht, den Debian-Richtlinien für freie Software (DFSG) zu "
+"entsprechen. TuxFamily.org fordert ebenfalls, dass alle Inhalte, die von "
+"ihnen gehostet werden, offenen Lizenzen unterliegen. Du darfst keine Inhalte "
+"hochladen, die restriktiven Lizenzen unterliegen. Lizenzen wie CC-BY-SA 3.0, "
+"oder andere DFSG-kompatible Lizenzen sind erforderlich. Alle Inhalte, die "
+"von Dritten stammen, müssen unter Angabe des Autors als solche "
+"gekennzeichnet werden und ebenfalls offenen Lizenzen unterliegen. Alle "
+"Lizenzen und Angaben von Werken Dritter und deren Autoren müssen in einer "
+"\"License.txt\"-Datei angegeben werden und in jedem hochgeladenen Archiv "
+"enthalten sein. Hochgeladene Inhalte, die diesen Bedingungen nicht "
+"entsprechen, können ohne Vorwarnung gelöscht werden."
+
+#: register.php:74
+msgid ""
+"Even with valid licenses and attribution, content may not contain any\n"
+"of the following:"
+msgstr ""
+"Selbst mit gültigen Lizenzen und Nennung Dritter dürfen die Inhalte\n"
+"folgendes NICHT enthalten:"
+
+#: register.php:76 upload.php:251
+msgid "Profanity"
+msgstr "Obszönitäten"
+
+#: register.php:77 upload.php:252
+msgid "Explicit images"
+msgstr "Pornographie"
+
+#: register.php:78 upload.php:253
+msgid "Hateful messages and/or images"
+msgstr "Hasserfüllte Nachrichten und/oder Bilder"
+
+#: register.php:79 upload.php:254
+msgid "Any other content that may be unsuitable for children"
+msgstr "Anderen Inhalte, die für Kinder ungeeignet sein könnten"
+
+#: register.php:80
+msgid ""
+"If any of your uploads are found to contain any of the above, your upload\n"
+"will be removed, your account may be removed, and any other content you "
+"uploaded\n"
+"may be removed."
+msgstr ""
+
+#: register.php:83
+msgid ""
+"By checking the box below, you are confirming that you understand these\n"
+"terms. If you have any questions or comments regarding these terms, one of "
+"the\n"
+"members of the development team would gladly assist you."
+msgstr ""
+
+#: register.php:90
+msgid "I agree to the above terms"
+msgstr "Ich den obigen Bedingungen zu"
+
+#: register.php:94
+msgid "Register!"
+msgstr ""
+
+#: register.php:119
+msgid "You must agree to the terms to register."
+msgstr "Du musst den Bedingungen zustimmen, um dich zu registrieren."
+
+#: register.php:126
+msgid "An error occurred trying to validate your username."
+msgstr ""
+
+#: register.php:127 register.php:142
+msgid "Please contact a website administrator."
+msgstr "Bitte kontaktiere einen Administrator der Webseite."
+
+#: register.php:129
+msgid "Your username has already been used."
+msgstr "Dein Benutzername wird bereits benutzt."
+
+#: register.php:141
+msgid "An error occurred while creating your account."
+msgstr "Ein Fehler ist aufgetreten während dein Konto erstellt wurde."
+
+#: register.php:146
+msgid ""
+"Account creation was successful. Please activate your account using the link "
+"emailed to you."
+msgstr ""
+"Das Konto wurde erfolgreich erstellt. Bitte aktiviere es, indem du den Link "
+"in der E-Mail, die dir geschickt wurde, benutzt."
+
+#: register.php:161
+msgid "Your account has been activated."
+msgstr "Dein Konto wurde aktiviert."
+
+#: register.php:165
+msgid "Could not validate your account. The link you followed is not valid."
+msgstr ""
+"Dein Konto konnte nicht verifiziert werden. Der Link, dem du gefolgt bist, "
+"ist nicht gültig."
 
 #: security.php:47
 msgid "You do not have the rights to access this page."

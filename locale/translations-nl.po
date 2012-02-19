@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: stk\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-12-17 19:22-0700\n"
-"PO-Revision-Date: 2011-12-02 21:23+0000\n"
-"Last-Translator: Ward Muylaert <Unknown>\n"
+"POT-Creation-Date: 2012-01-08 10:55-0700\n"
+"PO-Revision-Date: 2012-01-18 23:05+0000\n"
+"Last-Translator: Asciimonster <asciimonster@yahoo.co.uk>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-01-08 17:56+0000\n"
-"X-Generator: Launchpad (build 14640)\n"
+"X-Launchpad-Export-Date: 2012-02-19 00:52+0000\n"
+"X-Generator: Launchpad (build 14814)\n"
 
 #: Addon.class.php:53
 msgid "The requested add-on does not exist."
@@ -39,74 +39,74 @@ msgstr "Nieuwe add-on aanmaken..."
 msgid "Your add-on could not be uploaded."
 msgstr ""
 
-#: Addon.class.php:187
+#: Addon.class.php:188
 msgid "The file you are trying to create already exists."
 msgstr "Het bestand dat u probeert te maken bestaat reeds."
 
-#: Addon.class.php:191 Addon.class.php:267 Addon.class.php:314
+#: Addon.class.php:192 Addon.class.php:269 Addon.class.php:317
 #: parseUpload.php:287 users.php:58 users.php:75
 msgid "You do not have the necessary permissions to perform this action."
 msgstr "Je hebt onvoldoende rechten voor deze handeling."
 
-#: Addon.class.php:264
+#: Addon.class.php:266
 msgid "You must be logged in to perform this action."
 msgstr "U moet ingelogd zijn om deze actie uit te voeren."
 
-#: Addon.class.php:275
+#: Addon.class.php:277
 msgid "Failed to find files associated with this addon."
 msgstr "Kan geen bestanden bij deze add-on vinden"
 
-#: Addon.class.php:282
+#: Addon.class.php:284
 msgid "Failed to delete file:"
 msgstr "Kon bestand niet wissen:"
 
-#: Addon.class.php:290
+#: Addon.class.php:292
 msgid "Failed to remove file records for this addon."
 msgstr "Add-on bestanden verwijderen mislukt"
 
-#: Addon.class.php:295
+#: Addon.class.php:297
 msgid "Failed to remove ratings for this add-on."
 msgstr "Verwijderen van add-on beoordeling is mislukt."
 
-#: Addon.class.php:302
+#: Addon.class.php:304
 msgid "Failed to remove add-on revisions."
 msgstr ""
 
-#: Addon.class.php:306
+#: Addon.class.php:308
 msgid "Failed to remove addon."
 msgstr "Kon add-on niet verwijderen"
 
-#: Addon.class.php:317
+#: Addon.class.php:320
 msgid "Failed to delete file."
 msgstr "Bestandsverwijdering is mislukt."
 
-#: Addon.class.php:357 coreAddon.php:444 coreAddon.php:631 coreAddon.php:641
+#: Addon.class.php:360 coreAddon.php:444 coreAddon.php:631 coreAddon.php:641
 #: coreAddon.php:653 coreAddon.php:656
 msgid "Unknown"
 msgstr "Onbekend"
 
-#: Addon.class.php:498 Addon.class.php:519 Addon.class.php:541
-#: Addon.class.php:571
+#: Addon.class.php:501 Addon.class.php:522 Addon.class.php:544
+#: Addon.class.php:574
 msgid "You do not have the neccessary permissions to perform this action."
 msgstr "U mist de nodige permissies om deze actie uit te voeren."
 
-#: Addon.class.php:506
+#: Addon.class.php:509
 msgid "Failed to update the description record for this add-on."
 msgstr ""
 
-#: Addon.class.php:527
+#: Addon.class.php:530
 msgid "Failed to update the designer record for this add-on."
 msgstr ""
 
-#: Addon.class.php:549
+#: Addon.class.php:552
 msgid "Failed to update the image record for this add-on."
 msgstr ""
 
-#: Addon.class.php:556
+#: Addon.class.php:559
 msgid "Failed to update the license record for this add-on."
 msgstr "Kon licentie-informatie van deze add-on niet bijwerken."
 
-#: Addon.class.php:564
+#: Addon.class.php:567
 msgid "Failed to update the name record for this add-on."
 msgstr "Naam van deze add-on kon niet gewijzigd worden"
 
@@ -130,7 +130,7 @@ msgstr "Je moet ingelogd zijn om een wachtwoord te wijzigen"
 msgid "Failed to change your password."
 msgstr "Wachtwoord wijzigen mislukt"
 
-#: User.class.php:162 users.php:89
+#: User.class.php:191 users.php:89
 msgid "Me"
 msgstr "Mijzelf"
 
@@ -163,8 +163,8 @@ msgstr "De wachtwoorden komen niet overeen."
 msgid "You must enter a name."
 msgstr "Voer een naam in."
 
-#: about.php:32 addons.php:48 createAccount.php:34 login.php:33 manage.php:25
-#: music.php:25
+#: about.php:32 addons.php:48 login.php:33 manage.php:25 music.php:25
+#: register.php:25
 msgid "STK Add-ons"
 msgstr "STK Add-ons"
 
@@ -177,6 +177,8 @@ msgid ""
 "SuperTuxKart is a Free 3D kart racing game, with many tracks, characters and "
 "items for you to try."
 msgstr ""
+"SuperTuxKart is een gratis 3D racespel met vele circuits, karakters en "
+"wapens om uit te proberen."
 
 #: about.php:44
 msgid ""
@@ -184,6 +186,9 @@ msgid ""
 "messages from the STKAddons website. Since 0.7.2, the game has included a "
 "built-in add-on manager."
 msgstr ""
+"Versie 0.7.1 van Supertuxkart haalde enkel belangrijke berichten van de "
+"STKAddons website op. Versie 0.7.2 en verder heeft een uitgebreide, "
+"ingebouwde add-on manager."
 
 #: about.php:45
 #, php-format
@@ -191,6 +196,8 @@ msgid ""
 "SuperTuxKart now has over %d karts, %d tracks, and %d arenas available in-"
 "game thanks to the add-on service."
 msgstr ""
+"Sutertuxkart heeft nu meer dan %d karts, %d circuits, en %d arena's, welke "
+"direct in het spel geladen kunnen worden."
 
 #: about.php:46
 msgid ""
@@ -240,15 +247,15 @@ msgstr ""
 msgid "Unknown Type"
 msgstr "Onbekend type"
 
-#: addons.php:39 index.php:57 index.php:60 menu.php:54 menu.php:65
+#: addons.php:39 index.php:52 menu.php:54 menu.php:65
 msgid "Tracks"
 msgstr "Parcours"
 
-#: addons.php:42 index.php:47 index.php:50 menu.php:59 menu.php:64
+#: addons.php:42 index.php:47 menu.php:59 menu.php:64
 msgid "Karts"
 msgstr "Karts"
 
-#: addons.php:45 index.php:67 index.php:70 menu.php:55 menu.php:60
+#: addons.php:45 index.php:57 menu.php:55 menu.php:60
 msgid "Arenas"
 msgstr "Arena's"
 
@@ -336,7 +343,7 @@ msgstr "Release-Candidate"
 msgid "DFSG Compliant"
 msgstr "Voldoet aan DFSG"
 
-#: coreAddon.php:163 manage-panel.php:168
+#: coreAddon.php:163 manage-panel.php:166
 msgid "Type:"
 msgstr "Type:"
 
@@ -521,7 +528,7 @@ msgstr "Bericht van de moderator aan de uploader:"
 msgid "Save Notes"
 msgstr "Noties oplslaan"
 
-#: coreUser.php:87 createAccount.php:43 login.php:114
+#: coreUser.php:87 login.php:114 register.php:36
 msgid "Username:"
 msgstr "Gebruikersnaam:"
 
@@ -577,7 +584,7 @@ msgstr "Oud wachtwoord:"
 msgid "New Password:"
 msgstr "Nieuw wachtwoord:"
 
-#: coreUser.php:219 createAccount.php:43 createAccount.php:45
+#: coreUser.php:219 register.php:37 register.php:42
 #, php-format
 msgid "Must be at least %d characters long."
 msgstr "Moet minimaal %d tekens lang zijn."
@@ -589,167 +596,6 @@ msgstr "Nieuw wachtwoord (opnieuw):"
 #: coreUser.php:233
 msgid "Your old password is not correct."
 msgstr "Het oude wachtwoord is niet correct."
-
-#: createAccount.php:34
-msgid "Register"
-msgstr "Registreren"
-
-#: createAccount.php:45 login.php:116
-msgid "Password:"
-msgstr "Wachtwoord:"
-
-#: createAccount.php:47
-msgid "Password (confirm):"
-msgstr "Wachtwoord (opnieuw):"
-
-#: createAccount.php:49 manage-panel.php:166
-msgid "Name:"
-msgstr "Naam:"
-
-#: createAccount.php:51
-msgid "Email Address:"
-msgstr "E-mailadres:"
-
-#: createAccount.php:53
-msgid "Terms:"
-msgstr "Voorwaarden:"
-
-#: createAccount.php:55
-msgid "STK Addons Terms and Conditions"
-msgstr "STK add-ons termen en voorwaarden"
-
-#: createAccount.php:56
-msgid ""
-"You must agree to these terms in order to upload content to the STK Addons "
-"site."
-msgstr ""
-"Als je niet akkoord gaat met deze voorwaarden kun je GEEN content naar de "
-"STK add-ons pagina uploaden."
-
-#: createAccount.php:57
-msgid ""
-"The STK Addons service is designed to be a repository exclusively for Super\n"
-"Tux Kart addon content. All uploaded content must be intended for this\n"
-"purpose. When you upload your content, it will be available publicly on the\n"
-"internet, and will be made available in-game for download."
-msgstr ""
-"De STK add-on dienst is speciaal gemaakt voor SuperTuxKart. All geüploade\n"
-"content moet STK content zijn. Door het uploaden wordt het publiek \n"
-"downloadbaar in het spel zelf."
-
-#: createAccount.php:61
-msgid ""
-"Super Tux Kart aims to comply with the Debian Free Software Guidelines "
-"(DFSG).\n"
-"TuxFamily.org also requires that content they host comply with open "
-"licenses.\n"
-"You may not upload content which is locked down with a restrictive license.\n"
-"Licenses such as CC-BY-SA 3.0, or other DFSG-compliant licenses are "
-"required.\n"
-"All content taken from third-party sources must be attributed properly, and "
-"must\n"
-"also be available under an open license. Licenses and attribution should be\n"
-"included in a \"license.txt\" file in each uploaded archive. Uploads "
-"without\n"
-"proper licenses or attribution may be deleted without warning."
-msgstr ""
-"SuperTuxKart probeert te voldoen aan de Debian vrije software richtlijnen "
-"(DFSG). \n"
-"Tuxfamily.org, host van stkaddons.net, verlangt dat alle content aan deze "
-"richt-\n"
-"lijnen voldoet. Bestanden met beperkende licentieovereenkomsten mogen daarom "
-"niet \n"
-"geüpload worden. Enkel DFSG-compliant licenties zoals de CC-BY-SA 3.0 "
-"voldoen. \n"
-"Alle content van derden moet correct worden beschreven in het "
-"\"license.txt\" bestand, \n"
-"inclusief vermelding van de licentie waaronder het is uitgegeven. Het "
-"\"license.txt\" \n"
-"bestand dient bij elke upload te worden meegegeven. Uploads zonder dit "
-"bestand \n"
-"worden zonder waarschuwing verwijderd."
-
-#: createAccount.php:69
-msgid ""
-"Even with valid licenses and attribution, content may not contain any\n"
-"of the following:"
-msgstr ""
-"Ongeacht (correctheid van) licenties en bronverwijzingen mag de content \n"
-"geen van onderstaande zaken bevatten:"
-
-#: createAccount.php:71 upload.php:251
-msgid "Profanity"
-msgstr "Scheldwoorden/Schuttingtaal"
-
-#: createAccount.php:72 upload.php:252
-msgid "Explicit images"
-msgstr "(Sexueel) suggestieve afbeeldingen"
-
-#: createAccount.php:73 upload.php:253
-msgid "Hateful messages and/or images"
-msgstr "Hatelijke meldingen en/of afbeeldingen"
-
-#: createAccount.php:74 upload.php:254
-msgid "Any other content that may be unsuitable for children"
-msgstr "Enig ander materiaal dat niet voor kinderen bestemd is."
-
-#: createAccount.php:75
-msgid ""
-"If any of your uploads are found to contain any of the above, your upload\n"
-"will be removed, your account may be removed, and any other content you "
-"uploaded\n"
-"may be removed."
-msgstr ""
-"Als je upload één van bovenstaande zaken bevat, wordt de upload verwijderd. "
-"\n"
-"Tevens kan je account, inclusief al je andere uploads, verwijderd worden."
-
-#: createAccount.php:78
-msgid ""
-"By checking the box below, you are confirming that you understand these\n"
-"terms. If you have any questions or comments regarding these terms, one of "
-"the\n"
-"members of the development team would gladly assist you."
-msgstr ""
-"Door onderstaande box aan te vinken bevestig je dat je deze voorwaarden \n"
-"begrijpt. Onze ontwikkelaar helpen graag als je vragen of opmerkingen \n"
-"hebt aangaande deze voorwaarden."
-
-#: createAccount.php:82
-msgid "I agree to the above terms"
-msgstr "Ik stem in met bovenstaande voorwaarden"
-
-#: createAccount.php:106
-msgid "You must agree to the terms to register."
-msgstr "Je moet instemmen met de voorwaarden om te kunnen registreren."
-
-#: createAccount.php:113
-msgid "An error occurred trying to validate your username."
-msgstr "Er is een fout opgetreden bij het valideren van het wachtwoord"
-
-#: createAccount.php:114 createAccount.php:129
-msgid "Please contact a website administrator."
-msgstr "Neem cntact op met de websitebeheerder"
-
-#: createAccount.php:116
-msgid "Your username has already been used."
-msgstr "De gebruikersnaam is al in gebruik."
-
-#: createAccount.php:128
-msgid "An error occurred while creating your account."
-msgstr "Er is een fout opgetreden bij het aanmaken van je account."
-
-#: createAccount.php:133
-msgid ""
-"Account creation was successful. Please activate your account using the link "
-"emailed to you."
-msgstr ""
-"Aanmaken van het account is gelukt. Er wordt een e-mail gestuurd. Activeer "
-"het account door op de link in de e-mail te klikken."
-
-#: createAccount.php:149
-msgid "Your account has been activated."
-msgstr "Het account is geactiveerd."
 
 #: disabled.php:40
 msgid "This page is currently disabled."
@@ -765,26 +611,26 @@ msgid ""
 "and tracks for the SuperTuxKart game."
 msgstr ""
 
-#: index.php:77 index.php:80
+#: index.php:62
 msgid "Help"
 msgstr "Hulp"
 
-#: index.php:92
+#: index.php:72
 #, php-format
 msgid "The newest kart is %s."
 msgstr "De nieuwste kart is %s."
 
-#: index.php:93
+#: index.php:73
 #, php-format
 msgid "The newest track is %s."
 msgstr "Het nieuwste parcours is %s."
 
-#: index.php:98
+#: index.php:78
 #, php-format
 msgid "The most downloaded kart is %s."
 msgstr "De meest gedownloade kart is %s."
 
-#: index.php:99
+#: index.php:79
 #, php-format
 msgid "The most downloaded track is %s."
 msgstr "Het meest gedownloade parcours is %s."
@@ -814,6 +660,10 @@ msgstr "Je bent reeds ingelogd."
 #, php-format
 msgid "Welcome, %s!"
 msgstr "Welkom %s!"
+
+#: login.php:116 register.php:41
+msgid "Password:"
+msgstr "Wachtwoord:"
 
 #: login.php:118
 msgid "Log In"
@@ -859,99 +709,107 @@ msgstr "Clientversies"
 msgid "Cache Files"
 msgstr "Cache bestanden"
 
-#: manage-panel.php:92
+#: manage-panel.php:87 manage.php:63
+msgid "Event Logs"
+msgstr ""
+
+#: manage-panel.php:96
 msgid "XML Download Frequency"
 msgstr "XML dowload frequentie"
 
-#: manage-panel.php:93
+#: manage-panel.php:97
 msgid "Permitted Addon Filetypes"
 msgstr "Geldige add-on bestandstypen"
 
-#: manage-panel.php:94
+#: manage-panel.php:98
 msgid "Permitted Source Archive Filetypes"
 msgstr "Geldige bronarchief bestandstypen"
 
-#: manage-panel.php:95
+#: manage-panel.php:99
 msgid "Administrator Email"
 msgstr "E-mail van administrator"
 
-#: manage-panel.php:96
+#: manage-panel.php:100
 msgid "Moderator List Email"
 msgstr "Moderator E-mail"
 
-#: manage-panel.php:98 manage-panel.php:100
+#: manage-panel.php:102 manage-panel.php:104
 msgid "True"
 msgstr "Waar"
 
-#: manage-panel.php:98 manage-panel.php:100
+#: manage-panel.php:102 manage-panel.php:104
 msgid "False"
 msgstr "Onwaar"
 
-#: manage-panel.php:101
+#: manage-panel.php:105
 msgid "List Invisible Addons in XML"
 msgstr "Toon onzichtbare add-ons als XML"
 
-#: manage-panel.php:102
+#: manage-panel.php:106
 msgid "Blog RSS Feed"
 msgstr ""
 
-#: manage-panel.php:103
+#: manage-panel.php:107
 msgid "Save Settings"
 msgstr "Instellingen opslaan"
 
-#: manage-panel.php:110 manage-panel.php:132
+#: manage-panel.php:114 manage-panel.php:136
 msgid "Message:"
 msgstr "Bericht:"
 
-#: manage-panel.php:111 manage-panel.php:134
+#: manage-panel.php:115 manage-panel.php:138
 msgid "Condition:"
 msgstr "Voorwaarde:"
 
-#: manage-panel.php:112
+#: manage-panel.php:116
 msgid "Display on Website:"
 msgstr "Toon op webpagina:"
 
-#: manage-panel.php:113
+#: manage-panel.php:117
 msgid "Create Message"
 msgstr "Bericht aanmaken"
 
-#: manage-panel.php:126
+#: manage-panel.php:130
 msgid "No news messages currently exist."
 msgstr "Er zijn momenteel geen nieuwsberichten."
 
-#: manage-panel.php:131
+#: manage-panel.php:135
 msgid "Date:"
 msgstr "Datum:"
 
-#: manage-panel.php:133
+#: manage-panel.php:137
 msgid "Author:"
 msgstr "Auteur:"
 
-#: manage-panel.php:135
+#: manage-panel.php:139
 msgid "Web:"
 msgstr "Web:"
 
-#: manage-panel.php:136
+#: manage-panel.php:140
 msgid "Actions:"
 msgstr "Handelingen:"
 
-#: manage-panel.php:162
+#: manage-panel.php:160
 msgid "No files have been uploaded."
 msgstr "Geen geüploade bestanden."
 
-#: manage-panel.php:167
+#: manage-panel.php:164 register.php:50
+msgid "Name:"
+msgstr "Naam:"
+
+#: manage-panel.php:165
 msgid "Add-on:"
 msgstr "Add-on:"
 
-#: manage-panel.php:169
+#: manage-panel.php:167
 msgid "References:"
 msgstr "Referenties:"
 
-#: manage-panel.php:242
+#: manage-panel.php:244
 msgid "Clients by User-Agent"
 msgstr "Clients by User-Agent"
 
-#: manage-panel.php:249
+#: manage-panel.php:251
 msgid ""
 "There are currently no SuperTuxKart clients recorded. Your download script "
 "may not be configured properly."
@@ -959,15 +817,15 @@ msgstr ""
 "Er zijn momenteel geen SuperTuxKart clienten beschikbaar. Het download "
 "script werkt misschien niet."
 
-#: manage-panel.php:254
+#: manage-panel.php:256
 msgid "User-Agent String:"
 msgstr "User-Agent String:"
 
-#: manage-panel.php:254
+#: manage-panel.php:256
 msgid "Game Version:"
 msgstr "Versie van spel:"
 
-#: manage-panel.php:273
+#: manage-panel.php:275
 msgid "Empty cache"
 msgstr ""
 
@@ -975,23 +833,23 @@ msgstr ""
 msgid "Manage"
 msgstr "Beheren"
 
-#: manage.php:71
+#: manage.php:76
 msgid "One or more fields has been left blank. Settings were not saved."
 msgstr "Eén of meerdere velden zijn leeg. Instellingen zijn niet opgeslagen."
 
-#: manage.php:76
+#: manage.php:81
 msgid "XML Download Frequency value is invalid."
 msgstr "XML download fequentie is ongeldig."
 
-#: manage.php:88
+#: manage.php:93
 msgid "Saved settings."
 msgstr "Instellingen opgeslagen"
 
-#: manage.php:106
+#: manage.php:111
 msgid "Created message."
 msgstr "Bericht aangemaakt"
 
-#: manage.php:110
+#: manage.php:115
 msgid "Failed to create message."
 msgstr "Bericht aanmaken niet gelukt."
 
@@ -1201,6 +1059,171 @@ msgstr "Er is geen TEMP map om het te uploaden bestand in te bewaren."
 #: parseUpload.php:421
 msgid "Unable to write uploaded file to disk."
 msgstr "Kon geüploade bestand niet naar disk wegschrijven."
+
+#: register.php:25
+msgid "Register"
+msgstr "Registreren"
+
+#: register.php:30
+msgid "Account Registration"
+msgstr ""
+
+#: register.php:46
+msgid "Password (confirm):"
+msgstr "Wachtwoord (opnieuw):"
+
+#: register.php:54
+msgid "Email Address:"
+msgstr "E-mailadres:"
+
+#: register.php:58
+msgid "Terms:"
+msgstr "Voorwaarden:"
+
+#: register.php:60
+msgid "STK Addons Terms and Conditions"
+msgstr "STK add-ons termen en voorwaarden"
+
+#: register.php:61
+msgid ""
+"You must agree to these terms in order to upload content to the STK Addons "
+"site."
+msgstr ""
+"Als je niet akkoord gaat met deze voorwaarden kun je GEEN content naar de "
+"STK add-ons pagina uploaden."
+
+#: register.php:62
+msgid ""
+"The STK Addons service is designed to be a repository exclusively for Super\n"
+"Tux Kart addon content. All uploaded content must be intended for this\n"
+"purpose. When you upload your content, it will be available publicly on the\n"
+"internet, and will be made available in-game for download."
+msgstr ""
+"De STK add-on dienst is speciaal gemaakt voor SuperTuxKart. All geüploade\n"
+"content moet STK content zijn. Door het uploaden wordt het publiek \n"
+"downloadbaar in het spel zelf."
+
+#: register.php:66
+msgid ""
+"Super Tux Kart aims to comply with the Debian Free Software Guidelines "
+"(DFSG).\n"
+"TuxFamily.org also requires that content they host comply with open "
+"licenses.\n"
+"You may not upload content which is locked down with a restrictive license.\n"
+"Licenses such as CC-BY-SA 3.0, or other DFSG-compliant licenses are "
+"required.\n"
+"All content taken from third-party sources must be attributed properly, and "
+"must\n"
+"also be available under an open license. Licenses and attribution should be\n"
+"included in a \"license.txt\" file in each uploaded archive. Uploads "
+"without\n"
+"proper licenses or attribution may be deleted without warning."
+msgstr ""
+"SuperTuxKart probeert te voldoen aan de Debian vrije software richtlijnen "
+"(DFSG). \n"
+"Tuxfamily.org, host van stkaddons.net, verlangt dat alle content aan deze "
+"richt-\n"
+"lijnen voldoet. Bestanden met beperkende licentieovereenkomsten mogen daarom "
+"niet \n"
+"geüpload worden. Enkel DFSG-compliant licenties zoals de CC-BY-SA 3.0 "
+"voldoen. \n"
+"Alle content van derden moet correct worden beschreven in het "
+"\"license.txt\" bestand, \n"
+"inclusief vermelding van de licentie waaronder het is uitgegeven. Het "
+"\"license.txt\" \n"
+"bestand dient bij elke upload te worden meegegeven. Uploads zonder dit "
+"bestand \n"
+"worden zonder waarschuwing verwijderd."
+
+#: register.php:74
+msgid ""
+"Even with valid licenses and attribution, content may not contain any\n"
+"of the following:"
+msgstr ""
+"Ongeacht (correctheid van) licenties en bronverwijzingen mag de content \n"
+"geen van onderstaande zaken bevatten:"
+
+#: register.php:76 upload.php:251
+msgid "Profanity"
+msgstr "Scheldwoorden/Schuttingtaal"
+
+#: register.php:77 upload.php:252
+msgid "Explicit images"
+msgstr "(Sexueel) suggestieve afbeeldingen"
+
+#: register.php:78 upload.php:253
+msgid "Hateful messages and/or images"
+msgstr "Hatelijke meldingen en/of afbeeldingen"
+
+#: register.php:79 upload.php:254
+msgid "Any other content that may be unsuitable for children"
+msgstr "Enig ander materiaal dat niet voor kinderen bestemd is."
+
+#: register.php:80
+msgid ""
+"If any of your uploads are found to contain any of the above, your upload\n"
+"will be removed, your account may be removed, and any other content you "
+"uploaded\n"
+"may be removed."
+msgstr ""
+"Als je upload één van bovenstaande zaken bevat, wordt de upload verwijderd. "
+"\n"
+"Tevens kan je account, inclusief al je andere uploads, verwijderd worden."
+
+#: register.php:83
+msgid ""
+"By checking the box below, you are confirming that you understand these\n"
+"terms. If you have any questions or comments regarding these terms, one of "
+"the\n"
+"members of the development team would gladly assist you."
+msgstr ""
+"Door onderstaande box aan te vinken bevestig je dat je deze voorwaarden \n"
+"begrijpt. Onze ontwikkelaar helpen graag als je vragen of opmerkingen \n"
+"hebt aangaande deze voorwaarden."
+
+#: register.php:90
+msgid "I agree to the above terms"
+msgstr "Ik stem in met bovenstaande voorwaarden"
+
+#: register.php:94
+msgid "Register!"
+msgstr ""
+
+#: register.php:119
+msgid "You must agree to the terms to register."
+msgstr "Je moet instemmen met de voorwaarden om te kunnen registreren."
+
+#: register.php:126
+msgid "An error occurred trying to validate your username."
+msgstr "Er is een fout opgetreden bij het valideren van het wachtwoord"
+
+#: register.php:127 register.php:142
+msgid "Please contact a website administrator."
+msgstr "Neem cntact op met de websitebeheerder"
+
+#: register.php:129
+msgid "Your username has already been used."
+msgstr "De gebruikersnaam is al in gebruik."
+
+#: register.php:141
+msgid "An error occurred while creating your account."
+msgstr "Er is een fout opgetreden bij het aanmaken van je account."
+
+#: register.php:146
+msgid ""
+"Account creation was successful. Please activate your account using the link "
+"emailed to you."
+msgstr ""
+"Aanmaken van het account is gelukt. Er wordt een e-mail gestuurd. Activeer "
+"het account door op de link in de e-mail te klikken."
+
+#: register.php:161
+msgid "Your account has been activated."
+msgstr "Het account is geactiveerd."
+
+#: register.php:165
+msgid "Could not validate your account. The link you followed is not valid."
+msgstr ""
 
 #: security.php:47
 msgid "You do not have the rights to access this page."
