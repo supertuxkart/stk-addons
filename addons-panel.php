@@ -32,34 +32,21 @@ if (!defined('ROOT'))
     define('ROOT','./');
 include_once('include.php');
 
-if (!isset($_GET['value']))
-    $_GET['value'] = NULL;
+// POST used with javascript navigation
+// GET used with everything else
 if (!isset($_GET['id']))
     $_GET['id'] = NULL;
-if (!isset($_POST['value']))
-    $_POST['value'] = NULL;
 if (!isset($_POST['id']))
     $_POST['id'] = NULL;
 
 $type = (isset($_GET['type']))? $_GET['type'] : NULL;
-if ($type != 'tracks' && $type != 'karts' && $type != 'arenas')
+if (!Addon::isAllowedType($type))
     die(htmlspecialchars(_('This page cannot be loaded because an invalid add-on type was provided.')));
 
-if (!isset($_GET['action'])) $_GET['action'] = NULL;
-$action = $_GET['action'];
-if ($action != NULL && $action != 'file' && $action != 'remove' && $action != 'approve')
-    die(htmlspecialchars(_('This page cannot be loaded because an invalid action was provided.')));
-
 if(isset($_GET['id']))
-{
-    $value = mysql_real_escape_string($_GET['value']);
     $id = mysql_real_escape_string($_GET['id']);
-}
 else
-{
-    $value = mysql_real_escape_string($_POST['value']);
     $id = mysql_real_escape_string($_POST['id']);
-}
 
 $addon = new coreAddon($type);
 $addon->selectById($id);

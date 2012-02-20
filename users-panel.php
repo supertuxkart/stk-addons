@@ -34,17 +34,9 @@ if (!defined('ROOT'))
     define('ROOT','./');
 include_once('include.php');
 
-if (!isset($_GET['type']))
-    $_GET['type'] = NULL;
-if (!isset($_GET['action']))
-    $_GET['action'] = NULL;
-if (!isset($_GET['value']))
-    $_GET['value'] = NULL;
 if (!isset($_GET['id']))
     $_GET['id'] = NULL;
 $_GET['id'] = (int)$_GET['id'];
-if (!isset($_POST['value']))
-    $_POST['value'] = NULL;
 if (!isset($_POST['id']))
     $_POST['id'] = NULL;
 if (!is_numeric($_POST['id']) && !isset($_GET['user'])) {
@@ -53,40 +45,13 @@ if (!is_numeric($_POST['id']) && !isset($_GET['user'])) {
 }
 $_POST['id'] = (int)$_POST['id'];
 
-$type = mysql_real_escape_string($_GET['type']);
-$action = mysql_real_escape_string($_GET['action']);
-if($action=="file")
-{
-    $value = mysql_real_escape_string($_GET['value']);
-    $id = mysql_real_escape_string($_GET['id']);
-}
-else
-{
-    $value = mysql_real_escape_string($_POST['value']);
-    $id = mysql_real_escape_string($_POST['id']);
-}
+$id = mysql_real_escape_string($_POST['id']);
 
 $addon = new coreUser;
 if ($_POST['id'] !== 0)
     $addon->selectById($id);
 else
     $addon->selectByUser(mysql_real_escape_string($_GET['user']));
-if($action == "remove")
-{
-	$addon->remove();
-	exit();
-}
-if($action == "file")
-{
-	?>
-	<html>
-	<head>
-	<meta http-equiv="refresh" content="0;URL=users.php?title=<? echo $addon->userCurrent['user'];?>">
-	</head>
-	</html>
-	<?php
-	$addon->setFile($action);
-	exit();
-}
+
 $addon->viewInformation();
 ?>

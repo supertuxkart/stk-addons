@@ -76,6 +76,7 @@ switch ($action)
             break;
         }
         $addon->setConfig();
+        echo 'Saved configuration.';
         break;
 }
 $status = ob_get_clean();
