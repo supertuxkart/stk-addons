@@ -187,51 +187,50 @@ $status = ob_get_clean();
 $panels->setStatusContent($status);
 
 $addons = array();
-$addonLoader = new coreAddon($_GET['type']);
-$addonLoader->loadAll();
-while($addonLoader->next())
-{
-    if ($addonLoader->addonType == 'karts')
-    {
-        if ($addonLoader->addonCurrent['icon'] != 0)
-        {
-            $get_image_query = 'SELECT `file_path` FROM `'.DB_PREFIX.'files`
-                WHERE `id` = '.(int)$addonLoader->addonCurrent['icon'].'
-                AND `approved` = 1
-                LIMIT 1';
-            $get_image_handle = sql_query($get_image_query);
-            if (mysql_num_rows($get_image_handle) == 1)
-            {
-                $icon = mysql_fetch_assoc($get_image_handle);
-                $icon_path = $icon['file_path'];
+$addons_list = Addon::getAddonList($_GET['type']);
+foreach($addons_list AS $ad) {
+    try {
+        $adc = new Addon($ad);
+        
+        // Get link icon
+        if ($adc->getType() == 'karts') {
+            // Make sure an icon file is set for kart
+            if ($adc->getImage(true) != 0) {
+                $get_image_query = 'SELECT `file_path` FROM `'.DB_PREFIX.'files`
+                    WHERE `id` = '.(int)$adc->getImage(true).'
+                    AND `approved` = 1
+                    LIMIT 1';
+                $get_image_handle = sql_query($get_image_query);
+                if (mysql_num_rows($get_image_handle) == 1) {
+                    $icon = mysql_fetch_assoc($get_image_handle);
+                    $icon_path = $icon['file_path'];
+                }
+                else
+                    $icon_path = 'image/kart-icon.png';
             }
             else
-            {
                 $icon_path = 'image/kart-icon.png';
-            }
+            $icon = 'image.php?type=small&amp;pic='.$icon_path;
         }
         else
-        {
-            $icon_path = 'image/kart-icon.png';
-        }
-    }
-    if ($_GET['type'] == 'karts')
-        $icon = 'image.php?type=small&amp;pic='.$icon_path;
-    else
-        $icon = 'image/track-icon.png';
+            $icon = 'image/track-icon.png';
 
-    // Approved?
-    if(($addonLoader->addonCurrent['status'] & F_APPROVED) == F_APPROVED)
-        $class = 'addon-list menu-item';
-    elseif(User::$logged_in && ($_SESSION['role']['manageaddons'] == true || $_SESSION['userid'] == $addonLoader->addonCurrent['uploader']))
-        $class = 'addon-list menu-item unavailable';
-    else
-        continue;
-    $addons[] = array(
-        'class' => $class,
-        'url'   => "addons.php?type={$_GET['type']}&amp;name={$addonLoader->addonCurrent['id']}",
-        'label' => '<img class="icon"  src="'.$icon.'" />'.htmlspecialchars($addonLoader->addonCurrent['name'])
-    );
+        // Approved?
+        if(($adc->getStatus() & F_APPROVED) == F_APPROVED)
+            $class = 'addon-list menu-item';
+        elseif(User::$logged_in && ($_SESSION['role']['manageaddons'] == true || $_SESSION['userid'] == $adc->getUploader()))
+            $class = 'addon-list menu-item unavailable';
+        else
+            continue;
+        $addons[] = array(
+            'class' => $class,
+            'url'   => "addons.php?type={$_GET['type']}&amp;name={$adc->getId()}",
+            'label' => '<img class="icon"  src="'.$icon.'" />'.htmlspecialchars($adc->getName($adc->getId()))
+        );
+    }
+    catch (AddonException $e) {
+        echo '<span class="error">'.$e->getMessage().'</span><br />';
+    }
 }
 $panels->setMenuItems($addons);
 

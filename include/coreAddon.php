@@ -62,47 +62,22 @@ class coreAddon
                     str_replace("addons-panel.php", "addons.php", $_SERVER['SCRIPT_NAME']).
                     '?type='.$this->addonType.'&amp;name='.$this->addonCurrent['id'];
     }
-
-    function loadAll()
-    {
-        $icon = NULL;
-        if ($this->addonType == 'karts')
-            $icon = ' r.icon,';
-        $querySql = 'SELECT a.*, r.fileid, r.revision, r.format, r.image,'.$icon.' r.status
-            FROM '.DB_PREFIX.'addons a
-            LEFT JOIN '.DB_PREFIX.$this->addonType.'_revs r
-            ON a.id = r.addon_id
-            WHERE r.status & '.F_LATEST.'
-            AND `a`.`type` = \''.$this->addonType.'\'
-            ORDER BY `a`.`name` ASC, `a`.`id` ASC, `r`.`revision` ASC';
-        $this->reqSql = sql_query($querySql);
-        return $this->reqSql;
-    }
-
-    function next()
-    {
-        $this->addonCurrent = sql_next($this->reqSql);
-        if(!$this->addonCurrent)
-            return false;
-        $this->addonCurrent['permUrl'] = 'http://'.$_SERVER['SERVER_NAME'].
-                str_replace("addons-panel.php", "addons.php", $_SERVER['SCRIPT_NAME']).
-                '?type='.$this->addonType.'&amp;name='.$this->addonCurrent['id'];
-        return true;
-    }
-	
+    
     /**
-     * Initialize the addon rating info
+     * Output HTML to display flag badges
+     * @param integer $status The 'ststus' value to interperet
      */
-    function getRatingInfo()
-    {
-        $this->rating = new Ratings($this->addonCurrent['id']);
-            
-        //create the string with the number of ratings (for use in the function below)
-        if ($this->rating->getNumRatings() != 1) {
-            $this->numRatingsString = $this->rating->getNumRatings().' Votes';
-        } else {
-            $this->numRatingsString = $this->rating->getNumRatings().' Vote';
-        }
+    private static function badges($status) {
+        if ($status & F_FEATURED)
+            echo '<span class="badge f_featured">'.htmlspecialchars(_('Featured')).'</span>';
+        if ($status & F_ALPHA)
+            echo '<span class="badge f_alpha">'.htmlspecialchars(_('Alpha')).'</span>';
+        if ($status & F_BETA)
+            echo '<span class="badge f_beta">'.htmlspecialchars(_('Beta')).'</span>';
+        if ($status & F_RC)
+            echo '<span class="badge f_rc">'.htmlspecialchars(_('Release-Candidate')).'</span>';
+        if ($status & F_DFSG)
+            echo '<span class="badge f_dfsg">'.htmlspecialchars(_('DFSG Compliant')).'</span>';
     }
 	
     /** Print the information of the addon, it name, it description, it
@@ -145,17 +120,8 @@ class coreAddon
             }
             echo '</div>';
 
-            // Display badges for status flags
-            if ($latestRev['status'] & F_FEATURED)
-                echo '<span class="badge f_featured">'.htmlspecialchars(_('Featured')).'</span>';
-            if ($latestRev['status'] & F_ALPHA)
-                echo '<span class="badge f_alpha">'.htmlspecialchars(_('Alpha')).'</span>';
-            if ($latestRev['status'] & F_BETA)
-                echo '<span class="badge f_beta">'.htmlspecialchars(_('Beta')).'</span>';
-            if ($latestRev['status'] & F_RC)
-                echo '<span class="badge f_rc">'.htmlspecialchars(_('Release-Candidate')).'</span>';
-            if ($latestRev['status'] & F_DFSG)
-                echo '<span class="badge f_dfsg">'.htmlspecialchars(_('DFSG Compliant')).'</span>';
+            coreAddon::badges($latestRev['status']);
+
             echo '<br /><span id="addon-description">'.$mAddon->getDescription().'</span>
             <table class="info">';
             if ($this->addonType == 'arenas')
@@ -609,7 +575,17 @@ class coreAddon
         // Make sure addon exists
         if (!$this->addonCurrent)
             return false;
-        $this->getRatingInfo();
+        
+        // Get rating info
+        $this->rating = new Ratings($this->addonCurrent['id']);
+            
+        //create the string with the number of ratings (for use in the function below)
+        if ($this->rating->getNumRatings() != 1) {
+            $this->numRatingsString = $this->rating->getNumRatings().' Votes';
+        } else {
+            $this->numRatingsString = $this->rating->getNumRatings().' Vote';
+        }
+
         $this->writeInformation();
 
         if (User::$logged_in == false)

@@ -22,6 +22,8 @@ class Addon {
     public static $allowedTypes = array('karts','tracks','arenas');
     private $type;
     private $id;
+    private $image = 0;
+    private $icon = 0;
     private $name;
     private $uploaderId;
     private $creationDate;
@@ -80,12 +82,16 @@ class Addon {
                 'file'          => $rev['fileid'],
                 'format'        => $rev['format'],
                 'image'         => $rev['image'],
+                'icon'          => (isset($rev['icon'])) ? $rev['icon'] : 0,
                 'moderator_note'=> $rev['moderator_note'],
                 'status'        => $rev['status'],
                 'timestamp'     => $rev['creation_date']
             );
-            if ($currentRev['status'] & F_LATEST)
+            if ($currentRev['status'] & F_LATEST) {
                 $this->latestRevision = $rev['revision'];
+                $this->image = $rev['image'];
+                $this->icon = $rev['icon'];
+            }
             $this->revisions[$rev['revision']] = $currentRev;
         }
     }
@@ -347,6 +353,24 @@ class Addon {
         return $addon_id;
     }
     
+    public static function getAddonList($type) {
+        if (!Addon::isAllowedType($type))
+            return array();
+        $querySql = 'SELECT `id`
+            FROM `'.DB_PREFIX.'addons`
+            WHERE `type` = \''.$type.'\'
+            ORDER BY `name` ASC, `id` ASC';
+        $handle = sql_query($querySql);
+        if (!$handle)
+            return array();
+        $return = array();
+        for ($i = 1; $i <= mysql_num_rows($handle); $i++) {
+            $result = mysql_fetch_array($handle);
+            $return[] = $result[0];
+        }
+        return $return;
+    }
+    
     public function getAllRevisions() {
         return $this->revisions;
     }
@@ -365,8 +389,12 @@ class Addon {
         return $this->revisions[$this->latestRevision];
     }
     
+    public function getStatus() {
+        return $this->revisions[$this->latestRevision]['status'];
+    }
+    
     public function getType() {
-        return $type;
+        return $this->type;
     }
     
     public function getLicense() {
