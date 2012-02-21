@@ -260,6 +260,20 @@ span.f_dfsg {
 }
 
 /* Addon Rating */
+#rating-container {
+    background: #efefef;
+    border: 1px solid #cccccc;
+    clear: none;
+    float: right;
+    font-size: small;
+    font-weight: normal;
+    padding: 2px;
+    display: block;
+}
+#rating-container p {
+    margin: 0px;
+    text-align: center;
+}
 .rating { 
     position: relative;
     width: 55px;
@@ -465,6 +479,7 @@ a img
 }
 #right-content h1
 {
+    display: block;
     border-bottom: 1px solid #CCCCCC;
 }
 #right-content h3

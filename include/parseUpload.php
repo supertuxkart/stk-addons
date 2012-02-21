@@ -257,31 +257,21 @@ function parseUpload($file,$revision = false)
     if ($revision == false)
         $parsed_xml['attributes']['status'] += F_LATEST;
 
-    // Create addon
-    $addon = new coreAddon($addon_type);
-
-    // Make sure only the original uploader can make a new revision
-    if ($revision == true)
-    {
-        $addon->selectById($addon_id);
-        if (!$addon->addonCurrent)
-        {
-            File::deleteRecursive(UP_LOCATION.'temp/'.$fileid);
-            throw new UploadException(htmlspecialchars(_('You are trying to add a new revision of an add-on that does not exist.')));
-        }
-        if (User::$user_id != $addon->addonCurrent['uploader']
-                && !$_SESSION['role']['manageaddons'])
-        {
-            File::deleteRecursive(UP_LOCATION.'temp/'.$fileid);
-            throw new UploadException(htmlspecialchars(_('You do not have the necessary permissions to perform this action.')));
-        }
-    }
-
     try {
         if (!Addon::exists($addon_id)) {
+            // Check if we were trying to add a new revision
+            if ($revision == true) {
+                File::deleteRecursive(UP_LOCATION.'temp/'.$fileid);
+                throw new UploadException(htmlspecialchars(_('You are trying to add a new revision of an add-on that does not exist.')));
+            }
             $addon = Addon::create($addon_type, $parsed_xml['attributes'], $fileid);
         } else {
             $addon = new Addon($addon_id);
+            // Check if we are the original uploader, or a moderator
+            if (User::$user_id != $addon->getUploader() && !$_SESSION['role']['manageaddons']) {
+                File::deleteRecursive(UP_LOCATION.'temp/'.$fileid);
+                throw new UploadException(htmlspecialchars(_('You do not have the necessary permissions to perform this action.')));
+            }
             $addon->createRevision($parsed_xml['attributes'], $fileid);
         }
         

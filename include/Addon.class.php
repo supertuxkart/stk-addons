@@ -84,13 +84,14 @@ class Addon {
                 'image'         => $rev['image'],
                 'icon'          => (isset($rev['icon'])) ? $rev['icon'] : 0,
                 'moderator_note'=> $rev['moderator_note'],
+                'revision'      => $rev['revision'],
                 'status'        => $rev['status'],
                 'timestamp'     => $rev['creation_date']
             );
             if ($currentRev['status'] & F_LATEST) {
                 $this->latestRevision = $rev['revision'];
                 $this->image = $rev['image'];
-                $this->icon = $rev['icon'];
+                $this->icon = (isset($rev['icon'])) ? $rev['icon'] : 0;
             }
             $this->revisions[$rev['revision']] = $currentRev;
         }

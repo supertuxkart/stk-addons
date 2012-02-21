@@ -48,7 +48,11 @@ if(isset($_GET['id']))
 else
     $id = mysql_real_escape_string($_POST['id']);
 
-$addon = new coreAddon($type);
-$addon->selectById($id);
-$addon->viewInformation();
+try {
+    $viewer = new AddonViewer($id);
+    echo $viewer;
+}
+catch (Exception $e) {
+    echo '<span class="error">'.$e->getMessage().'</span><br />';
+}
 ?>

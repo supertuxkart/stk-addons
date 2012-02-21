@@ -109,6 +109,18 @@ class Ratings {
     public function getNumRatings() {
         return $this->count;
     }
+
+    /**
+     * Return a string saying 'x Vote(s)'
+     * @return string
+     */
+    public function getRatingString() {
+        if ($this->getNumRatings() != 1) {
+            return $this->getNumRatings().' Votes';
+        } else {
+            return $this->getNumRatings().' Vote';
+        }
+    }
     
     /**
      * Get the user's vote from the database
