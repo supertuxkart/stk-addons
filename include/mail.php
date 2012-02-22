@@ -35,6 +35,10 @@ function sendMail($mail, $subject, $option)
             $message_html = "<html><head></head><body>Thank you for registering an account on the SuperTuxKart Add-Ons Manager. Please click <a href=\"http://".$_SERVER["SERVER_NAME"].$option[1]."?action=valid&amp;num=$option[0]&amp;user=$option[2]\">here</a> to activate your account.<br />Username: ".$option[2]."</body></html>";
             $subject = "New Account at ".$_SERVER["SERVER_NAME"];
             break;
+        case "passReset":
+            $message_html = "<html><head></head><body>You have requested to reset your password on the SuperTuxKart Add-Ons Manager. Please click <a href=\"http://".$_SERVER["SERVER_NAME"].$option[1]."?action=valid&amp;num=$option[0]&amp;user=$option[2]\">here</a> to reset your password.<br />Username: ".$option[2]."</body></html>";
+            $subject = "Reset Password on ".$_SERVER["SERVER_NAME"];
+            break;
         case "bug":
             $message_html = "<html><head></head><body>Bug report :<br />User : ".$option[0]."<br />Description :".$option[1]." <br /><br /></body></html>";
             $subject = "stkaddons : bug report";

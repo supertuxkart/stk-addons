@@ -26,6 +26,9 @@ $assetXmlPathLocal = $dirUpload."xml/assets.xml";
 $style="default";
 $admin = "yourname@example.com";
 
+define('CAPTCHA_PUB',''); // reCAPTCHA public key
+define('CAPTCHA_PRIV',''); // reCAPTCHA private key
+
 define("DB_USER", 'root');
 define("DB_PASSWORD", 'pass');
 define("DB_NAME", 'stkbase');
