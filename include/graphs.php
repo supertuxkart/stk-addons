@@ -58,21 +58,66 @@ function graph_date_line($title, $xvalues, $yvalues, $labels, $graph_id = NULL, 
     
     $graph->SetMargin(50, 50, 20, 150);
     
-    // Sort out data set inputs and add plot lines
+    // Get the tallest line and get relatively small lines
+    $max_value = 0;
+    for ($i = 0; $i < count($yvalues); $i++) {
+        if (max($yvalues[$i]) > $max_value)
+            $max_value = max($yvalues[$i]);
+    }
+    $small_lines = array();
+    for ($i = 0; $i < count($yvalues); $i++) {
+        if (max($yvalues[$i]) < 0.01 * $max_value)
+            $small_lines[] = $i;
+    }
+    
+    // Sort out data set inputs and add plot lines which aren't 'small'
     $datasets = array();
     $allxvalues = array();
     for ($i = 0; $i < count($xvalues); $i++) {
+        $allxvalues = array_merge_recursive($allxvalues,$xvalues[$i]);
+
+        // Skip small lines
+        if (in_array($i,$small_lines))
+            continue;
+
         // Create the plot line
         $p[$i] = new LinePlot($yvalues[$i],$xvalues[$i]);
-        $p[$i]->SetStyle($line_styles[rand(0,1)]);
+        $p[$i]->SetStyle($line_styles[1]);
         $p[$i]->SetLegend($labels[$i]);
         $graph->Add($p[$i]);
-        
-        $allxvalues = array_merge_recursive($allxvalues,$xvalues[$i]);
     }
     $allxvalues = array_unique($allxvalues,SORT_NUMERIC);
     asort($allxvalues);
     $allxvalues = array_values($allxvalues);
+    
+    // Combine small lines
+    if (count($small_lines) > 0) {
+        $other_x = array();
+        $other_y = array();
+        // Loop through all x-values
+        for ($j = 0; $j < count($allxvalues); $j++) {
+            $sum = 0;
+            // Check if there is a point on each line for this x-value
+            foreach ($small_lines AS $i) {
+                for ($k = 0; $k < count($xvalues[$i]); $k++) {
+                    if($xvalues[$i][$k] == $allxvalues[$j])
+                        $sum += $yvalues[$i][$k];
+                }
+            }
+            // If no points were found, don't add the point
+            if ($sum == 0)
+                continue;
+            else {
+                $other_x[] = $allxvalues[$j];
+                $other_y[] = $sum;
+            }
+        }
+        // Create the plot line for other
+        $other = new LinePlot($other_y,$other_x);
+        $other->SetStyle($line_styles[0]); // dashed
+        $other->SetLegend('Other');
+        $graph->Add($other);
+    }
     
     // Add some grace to the end of the X-axis scale so that the first and last
     // data point isn't exactly at the very end or beginning of the scale
