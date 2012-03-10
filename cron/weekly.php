@@ -18,7 +18,7 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('ROOT','../stkaddons.net-web/htdocs/');
+define('ROOT','./web/');
 $security = '';
 require (ROOT.'include.php');
 

@@ -31,13 +31,13 @@ CREATE TABLE `arenas_revs` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `client_sessions` (
-    `uid` INT(10) UNSIGNED NOT NULL DEFAULT 0,
-    `name` VARCHAR(64) NULL DEFAULT NULL,
-    `cid` CHAR(24) NOT NULL,
-    `last-request` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    INDEX (`uid` , `cid`),
-    UNIQUE (`name`)
-) ENGINE=MyISAM;
+    `uid` int(10) unsigned NOT NULL DEFAULT '0',
+    `name` varchar(64) NOT NULL DEFAULT '',
+    `cid` char(24) NOT NULL,
+    `last-request` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`uid`,`name`),
+    KEY `uid` (`uid`,`cid`)
+) ENGINE=MEMORY DEFAULT CHARSET=utf8;
 
 CREATE TABLE `clients` (
     `id` int(11) NOT NULL auto_increment PRIMARY KEY,

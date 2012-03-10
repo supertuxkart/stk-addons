@@ -104,13 +104,9 @@ function graph_date_line($title, $xvalues, $yvalues, $labels, $graph_id = NULL, 
                         $sum += $yvalues[$i][$k];
                 }
             }
-            // If no points were found, don't add the point
-            if ($sum == 0)
-                continue;
-            else {
-                $other_x[] = $allxvalues[$j];
-                $other_y[] = $sum;
-            }
+            // Add the point to the graph
+            $other_x[] = $allxvalues[$j];
+            $other_y[] = $sum;
         }
         // Create the plot line for other
         $other = new LinePlot($other_y,$other_x);
