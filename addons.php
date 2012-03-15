@@ -52,6 +52,10 @@ $_GET['name'] = (isset($_GET['name'])) ? Addon::cleanId($_GET['name']) : NULL;
 $_GET['save'] = (isset($_GET['save'])) ? $_GET['save'] : NULL;
 $_GET['rev'] = (isset($_GET['rev'])) ? (int)$_GET['rev'] : NULL;
 
+// Throw a 404 if the requested addon wasn't found
+if($_GET['name'] != NULL && !Addon::exists($_GET['name']))
+    header("HTTP/1.0 404 Not Found");
+
 $addonName = Addon::getName($_GET['name']);
 if ($addonName !== false)
     $title .= ' | '.$addonName;
