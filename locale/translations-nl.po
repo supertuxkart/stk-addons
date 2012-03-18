@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: stk\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-01-08 10:55-0700\n"
-"PO-Revision-Date: 2012-01-18 23:05+0000\n"
-"Last-Translator: Asciimonster <asciimonster@yahoo.co.uk>\n"
+"PO-Revision-Date: 2012-03-07 21:56+0000\n"
+"Last-Translator: Ward Muylaert <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-19 00:52+0000\n"
-"X-Generator: Launchpad (build 14814)\n"
+"X-Launchpad-Export-Date: 2012-03-18 18:04+0000\n"
+"X-Generator: Launchpad (build 14951)\n"
 
 #: Addon.class.php:53
 msgid "The requested add-on does not exist."
@@ -26,6 +26,8 @@ msgid ""
 "An add-on with this ID already exists. Please try to upload your add-on "
 "again later."
 msgstr ""
+"Een add-on met deze ID bestaat reeds. Gelieve uw add-on later opnieuw te "
+"proberen te uploaden."
 
 #: Addon.class.php:124
 msgid "The add-on you are trying to create already exists."
@@ -37,7 +39,7 @@ msgstr "Nieuwe add-on aanmaken..."
 
 #: Addon.class.php:142
 msgid "Your add-on could not be uploaded."
-msgstr ""
+msgstr "Uw add-on kon niet geüpload worden."
 
 #: Addon.class.php:188
 msgid "The file you are trying to create already exists."
@@ -120,7 +122,7 @@ msgstr "Inloggen mislukt"
 
 #: User.class.php:91
 msgid "Your username or password is incorrect."
-msgstr "Foutief Gebruikersnaam of wachtwoord"
+msgstr "Foutieve gebruikersnaam of wachtwoord."
 
 #: User.class.php:137
 msgid "You must be logged in to change a password."
@@ -186,7 +188,7 @@ msgid ""
 "messages from the STKAddons website. Since 0.7.2, the game has included a "
 "built-in add-on manager."
 msgstr ""
-"Versie 0.7.1 van Supertuxkart haalde enkel belangrijke berichten van de "
+"Versie 0.7.1 van SuperTuxKart haalde enkel belangrijke berichten van de "
 "STKAddons website op. Versie 0.7.2 en verder heeft een uitgebreide, "
 "ingebouwde add-on manager."
 
@@ -196,7 +198,7 @@ msgid ""
 "SuperTuxKart now has over %d karts, %d tracks, and %d arenas available in-"
 "game thanks to the add-on service."
 msgstr ""
-"Sutertuxkart heeft nu meer dan %d karts, %d circuits, en %d arena's, welke "
+"SuperTuxKart heeft nu meer dan %d karts, %d circuits, en %d arena's, welke "
 "direct in het spel geladen kunnen worden."
 
 #: about.php:46
@@ -204,14 +206,16 @@ msgid ""
 "Of course, the artists who create all of this content must be thanked too. "
 "Without them, the add-on website would not be as great as it is today."
 msgstr ""
+"Natuurlijk moeten de artiesten die al deze werken maken ook bedankt worden. "
+"Zonder hen zou deze add-on website niet zo goed zijn als ze nu is."
 
 #: about.php:47 about.php:52
 msgid "Website"
-msgstr ""
+msgstr "Website"
 
 #: about.php:47 about.php:52
 msgid "Donate!"
-msgstr ""
+msgstr "Doneer!"
 
 #: about.php:50
 msgid ""
@@ -228,6 +232,11 @@ msgid ""
 "million downloads are made by SuperTuxKart players. We thank them very much "
 "for their generosity to us and to other open source projects."
 msgstr ""
+"TuxFamily beheert de servers waarop STKAddons gratis draait. Dankzij hen "
+"kunnen we de add-on service voor SuperTuxKart aanbieden. Elke maand worden "
+"meer dan een miljoen downloads voltooid door SuperTuxKart spelers. We "
+"bedanken TuxFamily voor hun vrijgevigheid aan ons en andere open source "
+"projecten."
 
 #: about.php:54
 msgid "Credits"
@@ -472,7 +481,7 @@ msgstr "U mist de nodige privileges om deze actie uit te voeren."
 
 #: coreAddon.php:440
 msgid "Configuration"
-msgstr ""
+msgstr "Configuratie"
 
 #: coreAddon.php:450
 msgid "Description:"
@@ -610,6 +619,8 @@ msgid ""
 "This is the official SuperTuxKart add-on repository. It contains extra karts "
 "and tracks for the SuperTuxKart game."
 msgstr ""
+"Dit is de officiële SuperTuxKart add-on collectie. Ze bevat extra karts en "
+"parcoursen voor het spel SuperTuxKart."
 
 #: index.php:62
 msgid "Help"
@@ -645,7 +656,7 @@ msgstr "Uitloggen niet geslaagd."
 
 #: login.php:55
 msgid "You have been logged out."
-msgstr "Je bent uigelogd."
+msgstr "U bent uitgelogd."
 
 #: login.php:56 login.php:69 login.php:95
 #, php-format
@@ -963,7 +974,7 @@ msgstr "Dit kan problemen geven met oudere videokaarten."
 
 #: parseUpload.php:227
 msgid "Invalid add-on type."
-msgstr ""
+msgstr "Incorrect add-on type."
 
 #: parseUpload.php:234
 msgid "Failed to re-pack archive file."
@@ -1224,6 +1235,7 @@ msgstr "Het account is geactiveerd."
 #: register.php:165
 msgid "Could not validate your account. The link you followed is not valid."
 msgstr ""
+"Uw account kon niet gevalideerd worden. De link die u volgde is ongeldig."
 
 #: security.php:47
 msgid "You do not have the rights to access this page."

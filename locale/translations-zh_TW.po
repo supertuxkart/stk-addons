@@ -1,16 +1,16 @@
-# French translation for stk
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Chinese (Traditional) translation for stk
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the stk package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: stk\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-01-08 10:55-0700\n"
-"PO-Revision-Date: 2011-12-22 17:46+0000\n"
-"Last-Translator: Auria <auria.mg@gmail.com>\n"
-"Language-Team: French <fr@li.org>\n"
+"PO-Revision-Date: 2012-03-04 07:39+0000\n"
+"Last-Translator: Bill <cges30901@gmail.com>\n"
+"Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,93 +19,92 @@ msgstr ""
 
 #: Addon.class.php:53
 msgid "The requested add-on does not exist."
-msgstr ""
+msgstr "要求的附加元件不存在。"
 
 #: Addon.class.php:118
 msgid ""
 "An add-on with this ID already exists. Please try to upload your add-on "
 "again later."
-msgstr ""
+msgstr "有這個ID的附加元件已經存在。請稍後再上傳附加元件。"
 
 #: Addon.class.php:124
 msgid "The add-on you are trying to create already exists."
-msgstr "L'ajout que vous tentez de créer existe déjà."
+msgstr "您正試圖建立的附加元件已經存在。"
 
 #: Addon.class.php:126
 msgid "Creating a new add-on..."
-msgstr "Création d'un nouvel ajout..."
+msgstr "建立一個新的附加元件..."
 
 #: Addon.class.php:142
 msgid "Your add-on could not be uploaded."
-msgstr ""
+msgstr "無法上傳你的附加元件。"
 
 #: Addon.class.php:188
 msgid "The file you are trying to create already exists."
-msgstr ""
+msgstr "您正試圖建立的檔案已經存在。"
 
 #: Addon.class.php:192 Addon.class.php:269 Addon.class.php:317
 #: parseUpload.php:287 users.php:58 users.php:75
 msgid "You do not have the necessary permissions to perform this action."
-msgstr ""
-"Vous n'avez pas les permissions requises pour effectuer cette action."
+msgstr "你沒有必要的權限來執行這個動作。"
 
 #: Addon.class.php:266
 msgid "You must be logged in to perform this action."
-msgstr "Vous devez être identifié pour effectuer cette action."
+msgstr "你必須登入才能執行此操作。"
 
 #: Addon.class.php:277
 msgid "Failed to find files associated with this addon."
-msgstr ""
+msgstr "沒有找到跟這個附加元件相關的檔案。"
 
 #: Addon.class.php:284
 msgid "Failed to delete file:"
-msgstr "Impossible de supprimmer le fichier:"
+msgstr "無法刪除文件："
 
 #: Addon.class.php:292
 msgid "Failed to remove file records for this addon."
-msgstr ""
+msgstr "移除這個附加元件的檔案記錄失敗。"
 
 #: Addon.class.php:297
 msgid "Failed to remove ratings for this add-on."
-msgstr ""
+msgstr "移除這個附加元件的評分失敗。"
 
 #: Addon.class.php:304
 msgid "Failed to remove add-on revisions."
-msgstr ""
+msgstr "移除這個附加元件的修訂版失敗。"
 
 #: Addon.class.php:308
 msgid "Failed to remove addon."
-msgstr ""
+msgstr "移除附加元件失敗。"
 
 #: Addon.class.php:320
 msgid "Failed to delete file."
-msgstr "Échec de la suppression du fichier."
+msgstr "刪除檔案失敗。"
 
 #: Addon.class.php:360 coreAddon.php:444 coreAddon.php:631 coreAddon.php:641
 #: coreAddon.php:653 coreAddon.php:656
 msgid "Unknown"
-msgstr "Inconnu(e)"
+msgstr "不明"
 
 #: Addon.class.php:501 Addon.class.php:522 Addon.class.php:544
 #: Addon.class.php:574
 msgid "You do not have the neccessary permissions to perform this action."
-msgstr "Vous n'avez pas la permission d'effectuer cette action."
+msgstr "你沒有必要的權限來執行這個動作。"
 
 #: Addon.class.php:509
 msgid "Failed to update the description record for this add-on."
-msgstr ""
+msgstr "更新這個附加元件的說明記錄失敗。"
 
 #: Addon.class.php:530
 msgid "Failed to update the designer record for this add-on."
-msgstr ""
+msgstr "更新這個附加元件的設計者記錄失敗。"
 
 #: Addon.class.php:552
 msgid "Failed to update the image record for this add-on."
-msgstr ""
+msgstr "更新這個附加元件的圖片記錄失敗。"
 
 #: Addon.class.php:559
 msgid "Failed to update the license record for this add-on."
-msgstr ""
+msgstr "更新這個附加元件的圖片記錄失敗。"
 
 #: Addon.class.php:567
 msgid "Failed to update the name record for this add-on."
@@ -113,75 +112,71 @@ msgstr ""
 
 #: File.class.php:33
 msgid "Insufficient permissions."
-msgstr "Permissions insuffisantes"
+msgstr "權限不足。"
 
 #: User.class.php:84
 msgid "Failed to log in."
-msgstr "L'authentification a échoué"
+msgstr "登入失敗。"
 
 #: User.class.php:91
 msgid "Your username or password is incorrect."
-msgstr "Votre nom d'utilisateur ou mot de passe est incorrect."
+msgstr "您的使用者名稱或密碼不正確。"
 
 #: User.class.php:137
 msgid "You must be logged in to change a password."
-msgstr ""
+msgstr "您必須登入才能更改密碼。"
 
 #: User.class.php:144
 msgid "Failed to change your password."
-msgstr "Le changement du mot de passe a échoué."
+msgstr "更改密碼失敗。"
 
 #: User.class.php:191 users.php:89
 msgid "Me"
-msgstr "Moi"
+msgstr "我"
 
 #: Validate.class.php:33
 msgid "You must enter an email address."
-msgstr "Vous devez entrer une adresse courriel."
+msgstr "您必須輸入一個電子郵件地址。"
 
 #: Validate.class.php:36
 #, php-format
 msgid "\"%s\" is not a valid email address."
-msgstr "\"%s\" n'est pas une adresse courriel valide."
+msgstr "\"%s\"不是一個有效的電子郵件地址。"
 
 #: Validate.class.php:48
 msgid "Your username must be at least 4 characters long."
-msgstr ""
-"Votre nom d'utilisateur doit avoir une longueur minimale de 4 caracètères."
+msgstr "您的使用者名稱至少要4個字元長。"
 
 #: Validate.class.php:51
 msgid "Your username can only contain alphanumeric characters."
 msgstr ""
-"Votre nom d'utilisateur ne peut contenir que des caractères alphanumériques."
 
 #: Validate.class.php:58
 msgid "Your password must be at least 6 characters long."
-msgstr "Le mot de passe doit avoir une longueur minimum de 6 caractères."
+msgstr "您的密碼至少要6個字元長。"
 
 #: Validate.class.php:62
 msgid "Your passwords do not match."
-msgstr "Vos mots de passes ne sont pas identiques."
+msgstr "您的密碼不符合。"
 
 #: Validate.class.php:70
 msgid "You must enter a name."
-msgstr "Vous devez spécifier un nom."
+msgstr "您必須輸入名稱。"
 
 #: about.php:32 addons.php:48 login.php:33 manage.php:25 music.php:25
 #: register.php:25
 msgid "STK Add-ons"
-msgstr "Packs d'ajouts STK"
+msgstr "STK附加元件"
 
 #: about.php:32 menu.php:84
 msgid "About"
-msgstr "À propos"
+msgstr "關於"
 
 #: about.php:43
 msgid ""
 "SuperTuxKart is a Free 3D kart racing game, with many tracks, characters and "
 "items for you to try."
-msgstr ""
-"SuperTuxKart est un jeu libre de course de karts en 3D qui contient "
-"plusieurs pistes, personnages et items."
+msgstr "SuperTuxKart是一個免費的3D賽車遊戲，有許多賽道，人物和物品可以嘗試。"
 
 #: about.php:44
 msgid ""
@@ -189,34 +184,28 @@ msgid ""
 "messages from the STKAddons website. Since 0.7.2, the game has included a "
 "built-in add-on manager."
 msgstr ""
-"Depuis la version 0.7.1, SuperTuxKart est capable d'aller chercher des "
-"nouvelles en ligne. Depuis 0.7.2, il est possible d'installer des packs "
-"d'ajouts dans le jeu."
+"自從版本0.7.1，SuperTuxKart已經有能力從STKAddons網站獲取重要消息。 0.7.2以來，遊戲包含了一個內建的附加元件管理器。"
 
 #: about.php:45
 #, php-format
 msgid ""
 "SuperTuxKart now has over %d karts, %d tracks, and %d arenas available in-"
 "game thanks to the add-on service."
-msgstr ""
-"SuperTuxKart a maintenant plus de %d karts, %d pistes et %d arènes "
-"disponibles dans le jeu grâce au service des packs d'ajouts."
+msgstr "感謝附加元件服務，SuperTuxKart現在有超過%d台卡丁車，%d個軌道和%d個競技場在遊戲中。"
 
 #: about.php:46
 msgid ""
 "Of course, the artists who create all of this content must be thanked too. "
 "Without them, the add-on website would not be as great as it is today."
 msgstr ""
-"Bien sur, les artistes qui ont créé ce contenu doivent être remerciés. Sans "
-"eux, le site des packs d'ajouts ne serait pas ce qu'il est aujourd'hui."
 
 #: about.php:47 about.php:52
 msgid "Website"
-msgstr "Site Web"
+msgstr "網站"
 
 #: about.php:47 about.php:52
 msgid "Donate!"
-msgstr "Faire un don !"
+msgstr "捐獻!"
 
 #: about.php:50
 msgid ""
@@ -225,9 +214,6 @@ msgid ""
 "free speech, not as in free beer). They accept any project released under a "
 "free license (GPL, BSD, CC-BY-SA, Art Libre...)."
 msgstr ""
-"TuxFamily est une organisation  à but non lucratif qui offre des services "
-"gratuits aux projets libres. Ils acceptent les projets sous license libre "
-"(GPL, BSD, CC-BY-SA, Art Libre, ...)"
 
 #: about.php:51
 msgid ""
@@ -236,15 +222,10 @@ msgid ""
 "million downloads are made by SuperTuxKart players. We thank them very much "
 "for their generosity to us and to other open source projects."
 msgstr ""
-"TuxFamily opère les serveurs sur lesquels STKAddons est hébergé, "
-"gratuitement. C'est grâce à eux que nous pouvons offrir le service des packs "
-"d'ajouts pour SuperTuxKart. Chaque mois, plus d'un millon de téléchargements "
-"sont effectués par les joueurs. Nous les remercions de leur grande "
-"générosité envers nous et envers les autres projets libres."
 
 #: about.php:54
 msgid "Credits"
-msgstr "À propos"
+msgstr "鳴謝"
 
 #: addons-panel.php:46
 msgid ""
@@ -257,59 +238,59 @@ msgstr ""
 
 #: addons.php:35
 msgid "Unknown Type"
-msgstr ""
+msgstr "未知的類型"
 
 #: addons.php:39 index.php:52 menu.php:54 menu.php:65
 msgid "Tracks"
-msgstr "Circuits"
+msgstr "賽道"
 
 #: addons.php:42 index.php:47 menu.php:59 menu.php:64
 msgid "Karts"
-msgstr "Karts"
+msgstr "賽車"
 
 #: addons.php:45 index.php:57 menu.php:55 menu.php:60
 msgid "Arenas"
-msgstr "Arènes"
+msgstr "競技場"
 
 #: addons.php:71 music.php:46
 msgid "Invalid addon type."
-msgstr "Type de pack d'ajout invalide"
+msgstr "無效的附加元件類型。"
 
 #: addons.php:91
 msgid "Saved properties."
-msgstr "Les propriétés ont été sauvegardées."
+msgstr ""
 
 #: addons.php:112
 msgid "Saved status."
-msgstr "Le statut a été sauvegardé."
+msgstr ""
 
 #: addons.php:124
 msgid "Saved notes."
-msgstr "Les notes ont été sauvegardées."
+msgstr ""
 
 #: addons.php:135
 msgid "Deleted addon."
-msgstr "L'ajout a été supprimé."
+msgstr ""
 
 #: addons.php:147
 msgid "File updated."
-msgstr "Fichier mis à jour."
+msgstr ""
 
 #: addons.php:157
 msgid "Set image."
-msgstr "Image sélectionnée."
+msgstr "設定圖片。"
 
 #: addons.php:169
 msgid "Set icon."
-msgstr "Définir l'icone."
+msgstr "設定圖示。"
 
 #: addons.php:179
 msgid "Deleted file."
-msgstr "Fichier supprimmé."
+msgstr ""
 
 #: allow.php:102
 msgid "root"
-msgstr ""
+msgstr "root"
 
 #: allow.php:103
 msgid "supAdministrator"
@@ -317,27 +298,27 @@ msgstr ""
 
 #: allow.php:104
 msgid "administrator"
-msgstr "administrateur"
+msgstr "管理員"
 
 #: allow.php:105
 msgid "moderator"
-msgstr "modérateur"
+msgstr ""
 
 #: allow.php:106
 msgid "basicUser"
-msgstr ""
+msgstr "基本使用者"
 
 #: coreAddon.php:56
 msgid "The requested addon does not exist."
-msgstr ""
+msgstr "所要求的附加元件不存在。"
 
 #: coreAddon.php:143 coreAddon.php:284
 msgid "Upload Image"
-msgstr "Ajouter Image"
+msgstr "上傳圖片"
 
 #: coreAddon.php:150 coreAddon.php:478
 msgid "Featured"
-msgstr "Recommendé"
+msgstr "特色"
 
 #: coreAddon.php:152 coreAddon.php:472
 msgid "Alpha"
@@ -345,7 +326,7 @@ msgstr "Alpha"
 
 #: coreAddon.php:154 coreAddon.php:473
 msgid "Beta"
-msgstr "Bêta"
+msgstr "Beta"
 
 #: coreAddon.php:156 coreAddon.php:474
 msgid "Release-Candidate"
@@ -353,228 +334,225 @@ msgstr ""
 
 #: coreAddon.php:158 coreAddon.php:477
 msgid "DFSG Compliant"
-msgstr "Conforme aux DFSG"
+msgstr ""
 
 #: coreAddon.php:163 manage-panel.php:166
 msgid "Type:"
-msgstr "Type :"
+msgstr "類型:"
 
 #: coreAddon.php:163
 msgid "Arena"
-msgstr "Arène"
+msgstr "競技場"
 
 #: coreAddon.php:165 coreAddon.php:445
 msgid "Designer:"
-msgstr "Auteur:"
+msgstr "設計者："
 
 #: coreAddon.php:166
 msgid "Upload date:"
-msgstr "Date de l'envoi:"
+msgstr "上傳日期："
 
 #: coreAddon.php:167
 msgid "Submitted by:"
-msgstr "Envoyé par:"
+msgstr "提交："
 
 #: coreAddon.php:168
 msgid "Revision:"
-msgstr "Révision:"
+msgstr "修訂版："
 
 #: coreAddon.php:169
 msgid "Compatible with:"
-msgstr "Compatible avec:"
+msgstr "相容於："
 
 #: coreAddon.php:171
 msgid "Your Rating: "
-msgstr "Votre vote : "
+msgstr "您的評價： "
 
 #: coreAddon.php:190
 msgid ""
 "Warning: This addon may not display correctly on some systems. It uses "
 "textures that may not be compatible with all video cards."
 msgstr ""
-"Avertissement: ce pack d'ajouts pourrait ne pas s'afficher correctement sur "
-"certains systèmes, parce qu'il contient des textures qui ne sont pas "
-"compatibles avec toutes les cartes graphiques."
 
 #: coreAddon.php:203 coreAddon.php:208 coreAddon.php:262 coreAddon.php:267
 msgid "File not found."
-msgstr "Fichier non trouvé."
+msgstr "找不到檔案。"
 
 #: coreAddon.php:212
 msgid "License"
-msgstr "Licence"
+msgstr "授權"
 
 #: coreAddon.php:217
 msgid "Permalink"
-msgstr "Lien permanent"
+msgstr "永久網址"
 
 #: coreAddon.php:221
 msgid "Revisions"
-msgstr "Révisions"
+msgstr "修訂版"
 
 #: coreAddon.php:227
 msgid "Upload Revision"
-msgstr "Envoyer la révision"
+msgstr "上傳修訂版"
 
 #: coreAddon.php:257
 #, php-format
 msgid "Download revision %u"
-msgstr "Télécharger la révision %u"
+msgstr "下載修訂版%u"
 
 #: coreAddon.php:262 coreAddon.php:267
 msgid "Revision"
-msgstr "Révision"
+msgstr "修訂版"
 
 #: coreAddon.php:279
 msgid "Images"
-msgstr "Images"
+msgstr "圖片"
 
 #: coreAddon.php:313
 msgid "No images have been uploaded for this addon yet."
-msgstr "Aucune image n'a été soumise pour ce pack d'addon."
+msgstr "還沒有這個附加元件的圖片被上傳"
 
 #: coreAddon.php:333 coreAddon.php:415
 msgid "Unapprove"
-msgstr "Désapprouver"
+msgstr ""
 
 #: coreAddon.php:335 coreAddon.php:417
 msgid "Approve"
-msgstr "Approuver"
+msgstr ""
 
 #: coreAddon.php:344
 msgid "Set Icon"
-msgstr "Utiliser comme icône"
+msgstr "設定圖示"
 
 #: coreAddon.php:349
 msgid "Set Image"
-msgstr "Utiliser comme image"
+msgstr "設定圖片"
 
 #: coreAddon.php:351 coreAddon.php:420
 msgid "Delete File"
-msgstr "Supprimer le fichier"
+msgstr "刪除檔案"
 
 #: coreAddon.php:361
 msgid "Source Files"
-msgstr "Fichiers sources"
+msgstr "原始檔案"
 
 #: coreAddon.php:366
 msgid "Upload Source File"
-msgstr "Envoyer les sources"
+msgstr "上傳原始檔案"
 
 #: coreAddon.php:395
 msgid "No source files have been uploaded for this addon yet."
-msgstr "Aucun fichier source n'a été fourni pour ce pack d'ajouts."
+msgstr "還沒有這個附加元件的原始檔案被上傳"
 
 #: coreAddon.php:405
 msgid "Not Approved"
-msgstr "Non approuvé"
+msgstr ""
 
 #: coreAddon.php:407
 #, php-format
 msgid "Source File %u"
-msgstr "Fichier Sources %u"
+msgstr "原始檔案%u"
 
 #: coreAddon.php:409
 msgid "Download"
-msgstr "Télécharger"
+msgstr "下載"
 
 #: coreAddon.php:438
 msgid "You do not have the necessary privileges to perform this action."
-msgstr ""
+msgstr "您沒有執行此動作的必須特權。"
 
 #: coreAddon.php:440
 msgid "Configuration"
-msgstr "Paramètres"
+msgstr "設置"
 
 #: coreAddon.php:450
 msgid "Description:"
-msgstr "Description :"
+msgstr "描述："
 
 #: coreAddon.php:450
 #, php-format
 msgid "Max %u characters"
-msgstr "Max %u caractères"
+msgstr ""
 
 #: coreAddon.php:456
 msgid "Save Properties"
-msgstr "Sauvegarder les propriétés"
+msgstr "保存屬性"
 
 #: coreAddon.php:462
 msgid "Delete Addon"
-msgstr "Supprimer le pack d'ajouts"
+msgstr "刪除附加元件"
 
 #: coreAddon.php:466
 msgid "Status Flags:"
-msgstr "Marqueurs d'état :"
+msgstr ""
 
 #: coreAddon.php:470
 msgid "Approved"
-msgstr "Approuvé"
+msgstr ""
 
 #: coreAddon.php:471
 msgid "Invisible"
-msgstr "Invisible"
+msgstr ""
 
 #: coreAddon.php:475
 msgid "Latest"
-msgstr "Le plus récent"
+msgstr "最新的"
 
 #: coreAddon.php:479
 msgid "Invalid Textures"
-msgstr "Textures Invalides"
+msgstr ""
 
 #: coreAddon.php:486 coreAddon.php:586
 #, php-format
 msgid "Rev %u:"
-msgstr "Rév %u:"
+msgstr ""
 
 #: coreAddon.php:577
 msgid "Save Changes"
-msgstr "Enregistrer les modifications"
+msgstr "儲存更改"
 
 #: coreAddon.php:581
 msgid "Notes from Moderator to Submitter:"
-msgstr "Notes du modérateur"
+msgstr ""
 
 #: coreAddon.php:598
 msgid "Save Notes"
-msgstr "Sauvegarder les notes"
+msgstr ""
 
 #: coreUser.php:87 login.php:114 register.php:36
 msgid "Username:"
-msgstr "Nom d'utilisateur :"
+msgstr "使用者名稱："
 
 #: coreUser.php:88
 msgid "Registration Date:"
-msgstr "Date d'enregistrement:"
+msgstr "註冊日期："
 
 #: coreUser.php:89
 msgid "Real Name:"
-msgstr "Nom réel :"
+msgstr "真實姓名："
 
 #: coreUser.php:90 coreUser.php:186
 msgid "Role:"
-msgstr "Rôle :"
+msgstr "角色："
 
 #: coreUser.php:93 coreUser.php:182
 msgid "Homepage:"
-msgstr "Page d'accueil :"
+msgstr "首頁："
 
 #: coreUser.php:98
 msgid "User's Karts"
-msgstr "Karts de l'utilisateur"
+msgstr "使用者的賽車"
 
 #: coreUser.php:108
 msgid "This user has not uploaded any karts."
-msgstr "Cet utilisateur n'a pas soumis de kart."
+msgstr "這個使用者還沒有上傳任何賽車。"
 
 #: coreUser.php:134
 msgid "User's Tracks"
-msgstr "Pistes de l'utilisateur"
+msgstr "使用者的賽道"
 
 #: coreUser.php:144
 msgid "This user has not uploaded any tracks."
-msgstr "Cet utilisateur n'a pas soumis de piste."
+msgstr "這個使用者還沒有上傳任何賽道。"
 
 #: coreUser.php:203
 msgid "User Activated:"
@@ -582,110 +560,108 @@ msgstr ""
 
 #: coreUser.php:211
 msgid "Save Configuration"
-msgstr "Enregistrer la configuration"
+msgstr "儲存設定"
 
 #: coreUser.php:215 coreUser.php:223
 msgid "Change Password"
-msgstr "Changer le mot de passe"
+msgstr "變更密碼"
 
 #: coreUser.php:217
 msgid "Old Password:"
-msgstr "Ancien mot de passe:"
+msgstr "舊密碼："
 
 #: coreUser.php:219
 msgid "New Password:"
-msgstr "Nouveau mot de passe:"
+msgstr "新密碼："
 
 #: coreUser.php:219 register.php:37 register.php:42
 #, php-format
 msgid "Must be at least %d characters long."
-msgstr "Un minimum de %d caractères est requis."
+msgstr ""
 
 #: coreUser.php:221
 msgid "New Password (Confirm):"
-msgstr "Nouveau mot de passe (confirmation):"
+msgstr "新密碼(確認)："
 
 #: coreUser.php:233
 msgid "Your old password is not correct."
-msgstr "Votre ancien mot de passe est incorrect."
+msgstr "您的舊密碼不正確。"
 
 #: disabled.php:40
 msgid "This page is currently disabled."
-msgstr ""
+msgstr "此頁目前已停用。"
 
 #: disabled.php:41 security.php:48
 msgid "You will be redirected to the home page."
-msgstr "Vous serez redirigés à la page d'accueil"
+msgstr ""
 
 #: index.php:34
 msgid ""
 "This is the official SuperTuxKart add-on repository. It contains extra karts "
 "and tracks for the SuperTuxKart game."
 msgstr ""
-"Bienvenue au site officiel des packs d'ajouts SuperTuxKart. Ce dépôt "
-"contient des pistes et personnages additionnels pour le jeu SuperTuxKart."
 
 #: index.php:62
 msgid "Help"
-msgstr "Aide"
+msgstr "說明"
 
 #: index.php:72
 #, php-format
 msgid "The newest kart is %s."
-msgstr "Le kart le plus récent est %s."
+msgstr "最新的賽車是%s。"
 
 #: index.php:73
 #, php-format
 msgid "The newest track is %s."
-msgstr "La piste la plus récente est %s."
+msgstr "最新的賽道是%s。"
 
 #: index.php:78
 #, php-format
 msgid "The most downloaded kart is %s."
-msgstr "Le kart le plus téléchargé est %s."
+msgstr "下載次數最多的賽車是%s。"
 
 #: index.php:79
 #, php-format
 msgid "The most downloaded track is %s."
-msgstr "La piste la plus téléchargée est %s."
+msgstr "下載次數最多的賽道是%s。"
 
 #: login.php:33 menu.php:80
 msgid "Login"
-msgstr "Connexion"
+msgstr "登入"
 
 #: login.php:48
 msgid "Failed to logout."
-msgstr ""
+msgstr "登出失敗。"
 
 #: login.php:55
 msgid "You have been logged out."
-msgstr "Vous avez été déconnecté."
+msgstr "您已經登出。"
 
 #: login.php:56 login.php:69 login.php:95
 #, php-format
 msgid "Click %shere%s if you do not automatically redirect."
-msgstr "Cliquez %sici%s si la redirection ne s'effectue pas automatiquement."
+msgstr ""
 
 #: login.php:68
 msgid "You are already logged in."
-msgstr "Vous êtes déjà connecté."
+msgstr "您已經登入。"
 
 #: login.php:94
 #, php-format
 msgid "Welcome, %s!"
-msgstr "Bienvenue, %s!"
+msgstr "歡迎，%s！"
 
 #: login.php:116 register.php:41
 msgid "Password:"
-msgstr "Mot de passe :"
+msgstr "密碼："
 
 #: login.php:118
 msgid "Log In"
-msgstr "S'identifier"
+msgstr "登入"
 
 #: login.php:120
 msgid "Create an account."
-msgstr "Créer un compte."
+msgstr "創建一個帳戶。"
 
 #: mail.php:68
 msgid "No moderator mailing-list email is set."
@@ -693,11 +669,11 @@ msgstr ""
 
 #: manage-panel.php:45
 msgid "Deleted message."
-msgstr "Message supprimé."
+msgstr ""
 
 #: manage-panel.php:49
 msgid "Failed to delete message."
-msgstr ""
+msgstr "刪除訊息失敗。"
 
 #: manage-panel.php:64
 msgid "Invalid page. You may have followed a broken link."
@@ -705,7 +681,7 @@ msgstr ""
 
 #: manage-panel.php:67 manage.php:38
 msgid "General Settings"
-msgstr "Paramètres généraux"
+msgstr "一般設定"
 
 #: manage-panel.php:71 manage.php:43
 msgid "News Messages"
@@ -713,7 +689,7 @@ msgstr ""
 
 #: manage-panel.php:75 manage.php:48
 msgid "Uploaded Files"
-msgstr "Fichiers Déposés"
+msgstr ""
 
 #: manage-panel.php:79 manage.php:53
 msgid "Client Versions"
@@ -765,15 +741,15 @@ msgstr ""
 
 #: manage-panel.php:107
 msgid "Save Settings"
-msgstr "Enregistrer les paramètres"
+msgstr "儲存設定"
 
 #: manage-panel.php:114 manage-panel.php:136
 msgid "Message:"
-msgstr "Message :"
+msgstr "訊息："
 
 #: manage-panel.php:115 manage-panel.php:138
 msgid "Condition:"
-msgstr "Condition :"
+msgstr ""
 
 #: manage-panel.php:116
 msgid "Display on Website:"
@@ -781,7 +757,7 @@ msgstr ""
 
 #: manage-panel.php:117
 msgid "Create Message"
-msgstr ""
+msgstr "建立訊息"
 
 #: manage-panel.php:130
 msgid "No news messages currently exist."
@@ -789,31 +765,31 @@ msgstr ""
 
 #: manage-panel.php:135
 msgid "Date:"
-msgstr "Date :"
+msgstr "日期："
 
 #: manage-panel.php:137
 msgid "Author:"
-msgstr "Auteur :"
+msgstr "作者："
 
 #: manage-panel.php:139
 msgid "Web:"
-msgstr "Web:"
+msgstr ""
 
 #: manage-panel.php:140
 msgid "Actions:"
-msgstr "Actions:"
+msgstr "動作："
 
 #: manage-panel.php:160
 msgid "No files have been uploaded."
-msgstr "Aucun fichier n'a été soumis."
+msgstr "沒有檔案被上傳。"
 
 #: manage-panel.php:164 register.php:50
 msgid "Name:"
-msgstr "Nom :"
+msgstr "名稱："
 
 #: manage-panel.php:165
 msgid "Add-on:"
-msgstr "Pack d'ajout:"
+msgstr ""
 
 #: manage-panel.php:167
 msgid "References:"
@@ -835,7 +811,7 @@ msgstr ""
 
 #: manage-panel.php:256
 msgid "Game Version:"
-msgstr ""
+msgstr "遊戲版本："
 
 #: manage-panel.php:275
 msgid "Empty cache"
@@ -843,13 +819,11 @@ msgstr ""
 
 #: manage.php:25 menu.php:75
 msgid "Manage"
-msgstr "Configurer"
+msgstr "管理"
 
 #: manage.php:76
 msgid "One or more fields has been left blank. Settings were not saved."
 msgstr ""
-"Un ou plusieurs champs n'ont pas été remplis : les paramètres n'ont pas été "
-"sauvegardés."
 
 #: manage.php:81
 msgid "XML Download Frequency value is invalid."
@@ -865,90 +839,84 @@ msgstr ""
 
 #: manage.php:115
 msgid "Failed to create message."
-msgstr ""
+msgstr "建立訊息失敗。"
 
 #: menu.php:43
 #, php-format
 msgid "Welcome, %s"
-msgstr "Bienvenue, %s"
+msgstr "歡迎，%s"
 
 #: menu.php:47
 msgid "Home"
-msgstr "Page d'accueil"
+msgstr ""
 
 #: menu.php:71
 msgid "Log out"
-msgstr "Se déconnecter"
+msgstr "登出"
 
 #: menu.php:72 users.php:38
 msgid "Users"
-msgstr "Utilisateurs"
+msgstr "使用者"
 
 #: menu.php:73
 msgid "Upload"
-msgstr "Envoyer"
+msgstr "上傳"
 
 #: menu.php:90
 msgid "Languages"
-msgstr "Langues"
+msgstr "語言"
 
 #: menu.php:103
 msgid "STK Homepage"
-msgstr "Page d'accueil SuperTuxKart"
+msgstr "STK首頁"
 
 #: music.php:25
 msgid "Music"
-msgstr "Musique"
+msgstr "音樂"
 
 #: parseUpload.php:24
 msgid "Failed to upload your file."
-msgstr "L'envoi de votre fichier a échoué."
+msgstr "上傳您的文件失敗。"
 
 #: parseUpload.php:52 parseUpload.php:74
 msgid "Failed to move uploaded file."
-msgstr "La mise en place de votre fichier a échoué."
+msgstr "移動上傳文件失敗。"
 
 #: parseUpload.php:63 parseUpload.php:188
 msgid "Failed to associate image file with addon."
-msgstr "L'image n'a pu être associée au pack d'ajouts."
+msgstr ""
 
 #: parseUpload.php:66
 msgid "Successfully uploaded image."
-msgstr "L'image a été déposée avec succès."
+msgstr ""
 
 #: parseUpload.php:67 parseUpload.php:263
 msgid "Continue."
-msgstr "Continuer."
+msgstr "繼續。"
 
 #: parseUpload.php:91
 msgid "Invalid archive file. The archive must contain the addon's xml file."
 msgstr ""
-"Fichier invalide. Vous devez soumettre une archive contenant le fichier XML "
-"de l'addon."
 
 #: parseUpload.php:105
 msgid ""
 "Some invalid files were found in the uploaded add-on. These files have been "
 "removed from the archive:"
 msgstr ""
-"Certains fichiers invalides ont été trouvés dans le fichier déposé. Ces "
-"fichiers ont été supprimés :"
 
 #: parseUpload.php:114
 msgid "Upload was recognized as a kart."
-msgstr "Le pack a été reconnu comme étant un kart."
+msgstr ""
 
 #: parseUpload.php:119
 msgid "Upload was recognized as a track."
-msgstr "Le pack a été reconnu comme étant un circuit."
+msgstr ""
 
 #: parseUpload.php:127
 msgid ""
 "Failed to read the add-on's XML file. Please make sure you are using the "
 "latest version of the kart or track exporter."
 msgstr ""
-"Impossible de lire le fichier XML du pack d'ajout. Assurez-vous d'utiliser "
-"la dernière version des exporteurs."
 
 #: parseUpload.php:132
 msgid "Failed to write new XML file:"
@@ -956,32 +924,26 @@ msgstr ""
 
 #: parseUpload.php:138
 msgid "This track is an arena."
-msgstr "Cette piste est une arène."
+msgstr "這個賽道是一個競技場。"
 
 #: parseUpload.php:147
 msgid ""
 "A valid License.txt file was not found. Please add a License.txt file to "
 "your archive and re-submit it."
 msgstr ""
-"Un fichier License.txt valide n'a pas été trouvé. Veuillez ajouter un "
-"fichier License.txt à votre archive et la soumettre à nouveau."
 
 #: parseUpload.php:209
 msgid ""
 "Some images in this add-on do not have dimensions that are a power of two."
 msgstr ""
-"Certaines images dans ce pack ont des dimensions qui ne sont pas des "
-"puissances de 2."
 
 #: parseUpload.php:210
 msgid "This may cause display errors on some video cards."
 msgstr ""
-"Cela pourrait causer des problèmes d'affichage sur certaines cartes "
-"graphiques."
 
 #: parseUpload.php:227
 msgid "Invalid add-on type."
-msgstr ""
+msgstr "無效的附加元件類型。"
 
 #: parseUpload.php:234
 msgid "Failed to re-pack archive file."
@@ -993,7 +955,7 @@ msgstr ""
 
 #: parseUpload.php:262
 msgid "Successfully uploaded source archive."
-msgstr "Le fichier source a été déposé avec succès."
+msgstr ""
 
 #: parseUpload.php:281
 msgid ""
@@ -1005,12 +967,10 @@ msgid ""
 "Your add-on was uploaded successfully. It will be reviewed by our moderators "
 "before becoming publicly available."
 msgstr ""
-"Votre pack d'ajout a été déposé avec succès. Il sera examiné par nos "
-"modérateurs avant d'être disponible publiquement."
 
 #: parseUpload.php:304
 msgid "Click here to upload the sources to your add-on now."
-msgstr "Cliquez ici pour déposer les sources de votre pack d'ajouts."
+msgstr ""
 
 #: parseUpload.php:305
 msgid ""
@@ -1018,22 +978,18 @@ msgid ""
 "and also ensure your add-on will not be lost in the future if new "
 "SuperTuxKart versions are not compatible with the current format.)"
 msgstr ""
-"(Inclure les sources de votre ajout permet aux autres d'améliorer votre "
-"travail et vous assure que l'ajout ne sera pas perdu dans le futur si de "
-"nouvelles versions de SuperTuxKart ne sont plus compatibles avec le format "
-"courant)"
 
 #: parseUpload.php:306
 msgid "Click here to view your add-on."
-msgstr "Cliquez ici pour voir votre pack d'ajouts."
+msgstr ""
 
 #: parseUpload.php:315
 msgid "Uploaded image files must be either PNG or Jpeg files."
-msgstr "Les images doivent être au format PNG ou JPEG."
+msgstr ""
 
 #: parseUpload.php:321
 msgid "The file you uploaded was not the correct type."
-msgstr "Le fichier que vous avez déposé n'est pas du bon type."
+msgstr "您上傳的文件不是正確的類型。"
 
 #: parseUpload.php:330
 msgid "The file to extract does not exist."
@@ -1041,19 +997,19 @@ msgstr ""
 
 #: parseUpload.php:342 parseUpload.php:377
 msgid "Could not open archive file. It may be corrupted."
-msgstr "Impossible d'ouvrir l'archive. Le fichier est peut-être corrompu."
+msgstr ""
 
 #: parseUpload.php:348 parseUpload.php:383
 msgid "Failed to extract archive file."
-msgstr "Impossible d'extraire l'archive."
+msgstr ""
 
 #: parseUpload.php:391
 msgid "Unknown archive type."
-msgstr "Type d'archive inconnu."
+msgstr ""
 
 #: parseUpload.php:402
 msgid "Upload is invalid."
-msgstr ""
+msgstr "上傳是無效的。"
 
 #: parseUpload.php:407
 msgid "Unknown file upload error."
@@ -1061,55 +1017,53 @@ msgstr ""
 
 #: parseUpload.php:411 parseUpload.php:413
 msgid "Uploaded file is too large."
-msgstr "Le fichier déposé est trop gros."
+msgstr "上傳的檔案太大。"
 
 #: parseUpload.php:415
 msgid "Uploaded file is incomplete."
-msgstr "The fichier déposé est incomplet."
+msgstr "上傳的檔案不完整。"
 
 #: parseUpload.php:417
 msgid "No file was uploaded."
-msgstr "Aucun fichier n'a été déposé."
+msgstr "沒有檔案被上傳。"
 
 #: parseUpload.php:419
 msgid "There is no TEMP directory to store the uploaded file in."
-msgstr ""
+msgstr "沒有TEMP目錄來存儲上傳的檔案"
 
 #: parseUpload.php:421
 msgid "Unable to write uploaded file to disk."
-msgstr ""
+msgstr "無法寫入上傳的檔案到磁碟。"
 
 #: register.php:25
 msgid "Register"
-msgstr "S'inscrire"
+msgstr "註冊"
 
 #: register.php:30
 msgid "Account Registration"
-msgstr ""
+msgstr "帳戶註冊"
 
 #: register.php:46
 msgid "Password (confirm):"
-msgstr "Mot de passe (confirmation):"
+msgstr "密碼(確認)："
 
 #: register.php:54
 msgid "Email Address:"
-msgstr "Adresse courriel:"
+msgstr "電子郵件地址："
 
 #: register.php:58
 msgid "Terms:"
-msgstr "Termes :"
+msgstr ""
 
 #: register.php:60
 msgid "STK Addons Terms and Conditions"
-msgstr "Terms et conditions Ajouts STK:"
+msgstr ""
 
 #: register.php:61
 msgid ""
 "You must agree to these terms in order to upload content to the STK Addons "
 "site."
 msgstr ""
-"Vous devez être d'accord avec ces termes pour poster du contenu sur le site "
-"des Ajouts SuperTuxKart."
 
 #: register.php:62
 msgid ""
@@ -1118,12 +1072,6 @@ msgid ""
 "purpose. When you upload your content, it will be available publicly on the\n"
 "internet, and will be made available in-game for download."
 msgstr ""
-"Le service des ajouts SuperTuxKart est conçu pour être un dépot "
-"exclusivement\n"
-"pour du contenu s'ajoutant à STK : tout contenu posté doit être prévu à cet\n"
-"effet. Le contenu posté sur ce site sera disponible publiquement sur "
-"l'Internet,\n"
-"et pourra être téléchargé depuis le jeu."
 
 #: register.php:66
 msgid ""
@@ -1141,45 +1089,28 @@ msgid ""
 "without\n"
 "proper licenses or attribution may be deleted without warning."
 msgstr ""
-"SuperTuxKart se conforme à la politique Debian Free Software Guidelines "
-"(DFSG).\n"
-"Tuxfamiliy.org requiert aussi que le contenu sur leurs serveurs utilise des "
-"licenses\n"
-"ouvertes. Vous ne pouvez donc pas poster de contenu encombré de licenses\n"
-"restrictives. Des licenses comme CC-BY-SA 3.0, or autres license compatibles "
-"DFSG,\n"
-"sont requises. Tout contenu provenant de tierces parties doit correctement "
-"attribuer\n"
-"son auteur, et doit être sous license libre. L'information de license et "
-"d'attribution doit\n"
-"être contenue dans un fichier \"license.txt\" dans chaque archive postée. "
-"Les envois\n"
-"sans licenses ou attribution appropriés pourraient être supprimés sans pré-"
-"avis."
 
 #: register.php:74
 msgid ""
 "Even with valid licenses and attribution, content may not contain any\n"
 "of the following:"
 msgstr ""
-"Même avec des licences valides et les crédits, le contenu ne peut\n"
-"contenir aucun des éléments suivants :"
 
 #: register.php:76 upload.php:251
 msgid "Profanity"
-msgstr "Vulgarité"
+msgstr ""
 
 #: register.php:77 upload.php:252
 msgid "Explicit images"
-msgstr "Des images explicites"
+msgstr ""
 
 #: register.php:78 upload.php:253
 msgid "Hateful messages and/or images"
-msgstr "Des messages ou images haineuses"
+msgstr ""
 
 #: register.php:79 upload.php:254
 msgid "Any other content that may be unsuitable for children"
-msgstr "Tout autre contenu pouvant ne pas être approprié pour des enfants"
+msgstr "任何其他可能不適合兒童觀看的內容"
 
 #: register.php:80
 msgid ""
@@ -1188,8 +1119,6 @@ msgid ""
 "uploaded\n"
 "may be removed."
 msgstr ""
-"Si un de vos envois contient un des éléments énumérés ci-haut, il sera\n"
-"supprimé et votre accompte pourrait être suspendu."
 
 #: register.php:83
 msgid ""
@@ -1198,21 +1127,18 @@ msgid ""
 "the\n"
 "members of the development team would gladly assist you."
 msgstr ""
-"En cochant la case ci-dessous, vous confirmez comprendre ces termes.\n"
-"Si vous avez des questions ou commentaires sur ces termes, un des\n"
-"membres de l'équipe de développement pourra vous assister avec plaisir."
 
 #: register.php:90
 msgid "I agree to the above terms"
-msgstr "Je suis d'accord avec les termes"
+msgstr "我同意上述條款"
 
 #: register.php:94
 msgid "Register!"
-msgstr ""
+msgstr "註冊！"
 
 #: register.php:119
 msgid "You must agree to the terms to register."
-msgstr "Vous devez être d'accord avec les termes pour vous enregistrer"
+msgstr "您必須同意條款才能註冊。"
 
 #: register.php:126
 msgid "An error occurred trying to validate your username."
@@ -1220,27 +1146,25 @@ msgstr ""
 
 #: register.php:127 register.php:142
 msgid "Please contact a website administrator."
-msgstr "Veuillez contacter un admnisitrateur du site web."
+msgstr "請聯繫網站管理員。"
 
 #: register.php:129
 msgid "Your username has already been used."
-msgstr "Ce nom d'utilisateur a déjà été utilisé"
+msgstr "您的使用者名稱已被使用。"
 
 #: register.php:141
 msgid "An error occurred while creating your account."
-msgstr "Une erreur est survenue en créant votre compte"
+msgstr "創建您的帳戶時發生錯誤。"
 
 #: register.php:146
 msgid ""
 "Account creation was successful. Please activate your account using the link "
 "emailed to you."
 msgstr ""
-"La création du compte s'est effectuée avec succès. Veuillez activer votre "
-"compte en cliquant sur le lien dans le courriel qui vous a été envoyé."
 
 #: register.php:161
 msgid "Your account has been activated."
-msgstr "Votre compte a été activé"
+msgstr ""
 
 #: register.php:165
 msgid "Could not validate your account. The link you followed is not valid."
@@ -1248,89 +1172,81 @@ msgstr ""
 
 #: security.php:47
 msgid "You do not have the rights to access this page."
-msgstr "Vous n'avez pas l'authorisation de visiter cette page."
+msgstr ""
 
 #: security.php:69
 msgid "You must be logged in to access this page."
-msgstr "Vous devez être connecté pour accéder à cette page."
+msgstr ""
 
 #: security.php:70
 msgid "You will be redirected to the login page."
-msgstr "Vous serez redirigés à la page d'identification."
+msgstr ""
 
 #: top.php:31 users.php:38
 msgid "SuperTuxKart Add-ons"
-msgstr "Packs d'ajouts SuperTuxKart"
+msgstr "SuperTuxKart附加元件"
 
 #: upload.php:118
 msgid ""
 "Your response to the agreement was unacceptable. You may not upload this "
 "content to the STK Addons website."
 msgstr ""
-"Votre réponse aux termes d'utilisation est inacceptable. Vous ne pouvez pas "
-"soumettre ce contenu sur le site des Ajouts SuperTuxKart."
 
 #: upload.php:154
 msgid "Please upload a new revision of your kart or track."
-msgstr "Veuillez déposer la nouvelle version de votre piste ou kart."
+msgstr ""
 
 #: upload.php:158
 msgid "What type of file are you uploading?"
-msgstr "Quel est le type de fichier à déposer?"
+msgstr "你正在上傳什麼類型的檔案？"
 
 #: upload.php:160
 msgid "Source Archive"
-msgstr "Archive Source"
+msgstr ""
 
 #: upload.php:161
 msgid "Image File"
-msgstr "Fichier Image"
+msgstr "圖片檔"
 
 #: upload.php:168
 msgid "Please upload a kart or track."
-msgstr "Veuillez déposer un kart ou une piste"
+msgstr "請上傳賽車或賽道。"
 
 #: upload.php:169
 msgid "Do not use this form if you are updating an existing add-on."
 msgstr ""
-"N'utilisez pas ce formulaire pour mettre à jour un pack d'ajout existant."
 
 #: upload.php:172
 msgid "File:"
-msgstr "Fichier:"
+msgstr "檔案："
 
 #: upload.php:173
 msgid "Supported archive types are:"
-msgstr "Les types d'archives supportés sont:"
+msgstr ""
 
 #: upload.php:174
 msgid "Agreement:"
-msgstr "Termes de l'accord :"
+msgstr ""
 
 #: upload.php:179
 msgid ""
 "I am the sole author of every file (model, texture, sound effect, etc.) in "
 "this package"
 msgstr ""
-"Je suis le seul auteur de chaque fichier (modèle, texture, effet sonore, "
-"etc.) de ce paquet"
 
 #: upload.php:186
 msgid ""
 "I have included a License.txt file describing the license under which my "
 "work is released, and my name (or nickname) if I want credit."
 msgstr ""
-"J'ai inclus un fichier License.txt qui décrit la license sous laquelle je "
-"publie mon travail, ainsi que mon nom (ou surnom) si je désire être crédité "
-"pour mon travail."
 
 #: upload.php:186 upload.php:199 upload.php:244 upload.php:255
 msgid "Required"
-msgstr "Requis"
+msgstr ""
 
 #: upload.php:192
 msgid "I have included open content made by people other than me"
-msgstr "J'ai inclus du contenu libre créé par d'autres gens que moi"
+msgstr ""
 
 #: upload.php:199
 msgid ""
@@ -1338,17 +1254,14 @@ msgid ""
 "material is used in this package, along with the license under which their "
 "work is released."
 msgstr ""
-"J'ai inclus un fichier License.txt qui comprend le nom de chaque auteur dont "
-"j'ai utilisé le matériel pour ce paquet, ainsi que la license sous laquelle "
-"ils ont publié leur travail."
 
 #: upload.php:203
 msgid "This package includes files released under:"
-msgstr "Ce paquet comprend des fichiers publiés sous la/les license(s):"
+msgstr ""
 
 #: upload.php:203
 msgid "Must check at least one"
-msgstr "Vous devez cocher au moins un élément"
+msgstr ""
 
 #: upload.php:208
 msgid "GNU GPL"
@@ -1364,23 +1277,21 @@ msgstr "Creative Commons BY SA 3.0"
 
 #: upload.php:223
 msgid "CC0 (Public Domain)"
-msgstr "CC0 (Public Domain)"
+msgstr ""
 
 #: upload.php:228
 msgid "BSD License"
-msgstr "Licence BSD"
+msgstr "BSD 授權"
 
 #: upload.php:233
 msgid "Other open license"
-msgstr "Une autre license libre"
+msgstr ""
 
 #: upload.php:238
 msgid ""
 "Files released under other licenses will be rejected unless it can be "
 "verified that the license is open."
 msgstr ""
-"Les fichiers sous d'autres licences seront rejetés sauf s'il est possible de "
-"vérifier que cette licence est libre."
 
 #: upload.php:244
 msgid ""
@@ -1389,22 +1300,18 @@ msgid ""
 "for any copyright violation that may result from not following the above "
 "rules."
 msgstr ""
-"Je reconnais que si mon fichier ne respecte pas les règles mentionnées ci-"
-"haut, il pourrait être retiré en tout temps sans pré-avis; de plus, j'assume "
-"l'entière responsabilité pour tout violation de copyright qui résulterait "
-"d'un manquement aux règles précédentes."
 
 #: upload.php:250
 msgid "My package does not include:"
-msgstr "Mon paquet n'inclut pas:"
+msgstr ""
 
 #: upload.php:262
 msgid "Upload file"
-msgstr "Envoyer le fichier"
+msgstr "上傳檔案"
 
 #: users.php:63
 msgid "Your password has been changed successfully."
-msgstr "Votre mot de passe a été modifié avec succès."
+msgstr "您的密碼已成功變更。"
 
 #: xmlWrite.php:137
 msgid "The following file could not be found:"

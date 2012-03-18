@@ -93,10 +93,11 @@ function get_self()
                     <li class="flag"><a href="<?php echo $page_url.'&amp;lang=de_DE'; ?>" style="background-position: 0px -33px;">DE</a></li>
                     <li class="flag"><a href="<?php echo $page_url.'&amp;lang=fr_FR'; ?>" style="background-position: 0px -66px;">FR</a></li>
                     <li class="flag"><a href="<?php echo $page_url.'&amp;lang=ga_IE'; ?>" style="background-position: 0px -99px;">GA</a></li>
-                    <li class="flag"><a href="<?php echo $page_url.'&amp;lang=gl_ES'; ?>" style="background-position: 48px 0px;">GL</a></li>
-                    <li class="flag"><a href="<?php echo $page_url.'&amp;lang=id_ID'; ?>" style="background-position: 48px -33px;">ID</a></li>
-                    <li class="flag"><a href="<?php echo $page_url.'&amp;lang=nl_NL'; ?>" style="background-position: 48px -66px;">NL</a></li>
-                    <li class="flag"><a href="<?php echo $page_url.'&amp;lang=ru_RU'; ?>" style="background-position: 48px -99px;">RU</a></li>
+                    <li class="flag"><a href="<?php echo $page_url.'&amp;lang=gl_ES'; ?>" style="background-position: -48px 0px;">GL</a></li>
+                    <li class="flag"><a href="<?php echo $page_url.'&amp;lang=id_ID'; ?>" style="background-position: -48px -33px;">ID</a></li>
+                    <li class="flag"><a href="<?php echo $page_url.'&amp;lang=nl_NL'; ?>" style="background-position: -48px -66px;">NL</a></li>
+                    <li class="flag"><a href="<?php echo $page_url.'&amp;lang=ru_RU'; ?>" style="background-position: -48px -99px;">RU</a></li>
+                    <li class="flag"><a href="<?php echo $page_url.'&amp;lang=zh_TW'; ?>" style="background-position: -96px 0px;">ZH (T)</a></li>
                     <li class="label"><a href="https://translations.launchpad.net/stk/stkaddons">Translate<br />STK-Addons</a></li>
                 </ul>
             </div>
