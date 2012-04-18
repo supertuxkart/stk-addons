@@ -186,9 +186,10 @@ class File {
     /**
      * Recursively delete files. This does not touch the database.
      * @param string $dir
+     * @param string $exclude_regex
      * @return boolean
      */
-    public static function deleteRecursive($dir)
+    public static function deleteRecursive($dir, $exclude_regex = NULL)
     {
         if (is_dir($dir))
         {
@@ -198,11 +199,13 @@ class File {
             {
                 if ($sFile != '.' && $sFile != '..')
                 {
-                    (!is_link("$dir/$sFile") && is_dir("$dir/$sFile")) ? File::deleteRecursive("$dir/$sFile") : unlink("$dir/$sFile");
+                    if ($exclude_regex !== NULL && preg_match($exclude_regex, $sFile))
+                        continue;
+                    (!is_link("$dir/$sFile") && is_dir("$dir/$sFile")) ? File::deleteRecursive("$dir/$sFile") : @unlink("$dir/$sFile");
                 }
             }
             $oDir->close();
-            rmdir($dir);
+            @rmdir($dir);
             return true;
         }
         return false;

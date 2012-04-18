@@ -25,11 +25,12 @@
  */
 class Cache {
     /**
-     * Empty the cache folder
+     * Empty the cache folder, leave certain files in place
      */
     public static function clear() {
-        File::deleteRecursive(CACHE_DIR);
-        mkdir(CACHE_DIR);
+        $exclude_regex = '/^(cache_graph_.*\.png)$/i';
+        File::deleteRecursive(CACHE_DIR,$exclude_regex);
+        @mkdir(CACHE_DIR);
     }
 }
 
