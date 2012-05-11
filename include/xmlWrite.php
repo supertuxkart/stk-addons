@@ -1,6 +1,6 @@
 <?php
 /**
- * copyright 2011 Stephen Just <stephenjust@users.sourceforge.net>
+ * Copyright 2011-2012 Stephen Just <stephenjust@users.sourceforge.net>
  *
  * This file is part of stkaddons
  *
@@ -152,11 +152,14 @@ function generateAssetXML()
                 {
                     $writer->writeAttribute('image',DOWN_LOCATION.$image_path);
                 }
-            }
+	    }
             $writer->writeAttribute('format',$result['format']);
             $writer->writeAttribute('revision',$result['revision']);
             $writer->writeAttribute('status',$result['status']);
             $writer->writeAttribute('size',filesize(UP_LOCATION.$file_path));
+	    // Get add-on rating
+	    $rating = new Ratings($result['id']);
+	    $writer->writeAttribute('rating',$rating->getAvgRating());
             $writer->endElement();
         }
     }
