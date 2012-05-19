@@ -39,13 +39,14 @@ class Ratings {
     /**
      * Constructor
      * @param string $addon_id ID of addon to use
+     * @param ClientSession $session
      */
-    public function Ratings($addon_id) {
+    public function Ratings($addon_id, $session = NULL) {
         $this->addon_id = $addon_id;
         
         $this->fetchAvgRating();
         $this->fetchNumRatings();
-        $this->fetchUserVote();
+        $this->fetchUserVote($session);
     }
 
     /**
@@ -124,15 +125,21 @@ class Ratings {
     
     /**
      * Get the user's vote from the database
+     * @param ClientSession $session
      */
-    private function fetchUserVote() {
-        if (!User::$logged_in)
-            return;
+    private function fetchUserVote($session = NULL) {
+	if ($session !== NULL) {
+	    $userid = $session->getUserId();
+	} else {
+	    if (!User::$logged_in)
+		return;
+	    $userid = $_SESSION['userid'];
+	}
         
         $query = "SELECT `id`,`vote`
             FROM `".DB_PREFIX."votes`
-            WHERE `addon_id` = '".$this->addon_id."'
-            AND `user_id` = '".$_SESSION['userid']."'";
+            WHERE `addon_id` = '$this->addon_id'
+            AND `user_id` = '$userid'";
         $handle = sql_query($query);
         
         if (mysql_num_rows($handle) == 0)
@@ -171,6 +178,39 @@ class Ratings {
                 (`user_id`, `addon_id`, `vote`)
                 VALUES
                 ('".$_SESSION['userid']."', '".$this->addon_id."', ".$vote.");";
+        } else {
+            $query = 'UPDATE `'.DB_PREFIX.'votes`
+                SET `vote` = '.$vote.'
+                WHERE `id` = '.$this->user_vote_id;
+        }
+        $handle = sql_query($query);
+        if (!$handle)
+            return false;
+        
+        $this->fetchAvgRating();
+        $this->fetchNumRatings();
+        $this->fetchUserVote();
+        return true;
+    }
+
+    /**
+     * Set the user's vote (when using client)
+     * @param integer $vote
+     * @param ClientSession $session
+     * @return boolean Success
+     */
+    public function setClientVote($vote, $session) {
+        // Round to integer
+        $vote = intval($vote);
+        
+        if ($vote < $this->min_rating || $vote > $this->max_rating)
+            return false;
+        
+        if ($this->user_vote === false) {
+            $query = "INSERT INTO `".DB_PREFIX."votes`
+                (`user_id`, `addon_id`, `vote`)
+                VALUES
+                ('".$session->getUserId()."', '".$this->addon_id."', ".$vote.");";
         } else {
             $query = 'UPDATE `'.DB_PREFIX.'votes`
                 SET `vote` = '.$vote.'
