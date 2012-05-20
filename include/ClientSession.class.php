@@ -293,9 +293,8 @@ class ClientSessionAnonymous extends ClientSession
     {
         $session_id = ClientSession::calcSessionId();
 
-        // TODO: Do we allow nicknames which are also registered usernames?
         $name = Validate::username($name);
-        if (sql_exist('client_sessions', 'name', $name)) {
+        if (sql_exist('client_sessions', 'name', $name) || User::exists($name)) {
             throw new ClientSessionConnectException("Nickname $name already used");
         }
         else {

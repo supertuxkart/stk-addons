@@ -155,6 +155,23 @@ class User
         $_SESSION['pass'] = $new_password;
     }
 
+    static function exists($username) {
+	try { Validate::username($username); }
+	catch (UserException $e) {
+	    return false;
+	}
+	
+	$query = 'SELECT `id`
+                FROM `'.DB_PREFIX."users`
+                WHERE `user` = '$username'";
+	$handle = sql_query($query);
+	if (!$handle)
+	    return false;
+	if (mysql_num_rows($handle) === 0)
+	    return false;
+	return true;
+    }
+    
     /**
      * Activate a new user
      * @param string $username
