@@ -73,7 +73,13 @@ class AddonViewer
         $file_path = $this->addon->getFile((int)$this->latestRev['revision']);
         if ($file_path !== false) {
             if (file_exists(UP_LOCATION.$file_path)) {
-                $string = '<a href="'.DOWN_LOCATION.$file_path.'"><img src="image/download.png" alt="Download" title="Download" /></a>';
+		$button_text = htmlspecialchars(sprintf(_('Download %s'),$this->addon->getName($this->addon->getId())));
+		$shrink_text = (strlen($button_text) > 20) ? 'style="font-size: 1.1em !important;"' : NULL;
+		$string = '<div id="dl_button">';
+		$string .= '<div class="left"></div><div class="center" '.$shrink_text.'>';
+                $string .= '<a href="'.DOWN_LOCATION.$file_path.'">'.$button_text.'</a>';
+		$string .= '</div><div class="right"></div>';
+		$string .= '</div><br />';
             } else {
                 $string = '<span class="error">'.htmlspecialchars(_('File not found.')).'</span><br />';
             }

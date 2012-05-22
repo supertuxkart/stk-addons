@@ -253,6 +253,33 @@ span.f_dfsg {
     color: #000000;
 }
 
+/* Download Button */
+#dl_button {
+    clear: both;
+    overflow: auto;
+}
+#dl_button .left {
+    background: url('../image/dl-button-left.png') no-repeat;
+    float: left;
+    height: 80px;
+    width: 70px;
+}
+#dl_button .center {
+    background: url('../image/dl-button-center.png') repeat-x;
+    float: left;
+    font-size: 1.3em;
+    font-weight: bold;
+    height: 80px;
+    line-height: 80px;
+    padding-right: 1em;
+}
+#dl_button .right {
+    background: url('../image/dl-button-right.png') no-repeat;
+    float: left;
+    height: 80px;
+    width: 8px;
+}
+
 /* Addon Description in Panel */
 #addon-description {
     clear: left;
@@ -484,6 +511,7 @@ a img
 }
 #right-content h3
 {
+    clear: both;
     display: block;
     border-bottom: 1px dashed #CCCCCC;
 }
