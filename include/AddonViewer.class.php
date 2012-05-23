@@ -77,7 +77,7 @@ class AddonViewer
 		$shrink_text = (strlen($button_text) > 20) ? 'style="font-size: 1.1em !important;"' : NULL;
 		$string = '<div id="dl_button">';
 		$string .= '<div class="left"></div><div class="center" '.$shrink_text.'>';
-                $string .= '<a href="'.DOWN_LOCATION.$file_path.'">'.$button_text.'</a>';
+                $string .= '<a href="'.DOWN_LOCATION.$file_path.'" rel="nofollow">'.$button_text.'</a>';
 		$string .= '</div><div class="right"></div>';
 		$string .= '</div><br />';
             } else {
@@ -293,7 +293,7 @@ EOL;
             $file_path = $this->addon->getFile($rev_n);
             if ($file_path !== false) {
                 if (file_exists(UP_LOCATION.$file_path)) {
-                    echo '<a href="'.DOWN_LOCATION.$file_path.'">';
+                    echo '<a href="'.DOWN_LOCATION.$file_path.'" rel="nofollow">';
                     printf(htmlspecialchars(_('Download revision %u')),$rev_n);
                     echo '</a>';
                 } else {
@@ -361,7 +361,7 @@ EOL;
             $approved = NULL;
             if ($source_file['approved'] == 0) $approved = ' ('.htmlspecialchars(_('Not Approved')).')';
             printf('<td><strong>'.htmlspecialchars(_('Source File %u')).'</strong>'.$approved.'</td>',$n);
-            echo '<td><a href="'.DOWN_LOCATION.$source_file['file_path'].'">'.htmlspecialchars(_('Download')).'</a>';
+            echo '<td><a href="'.DOWN_LOCATION.$source_file['file_path'].'" rel="nofollow">'.htmlspecialchars(_('Download')).'</a>';
             if (User::$logged_in)
             {
                 if ($_SESSION['role']['manageaddons'])

@@ -142,7 +142,13 @@ switch ($_GET['action']) {
                         .' '._('Please contact a website administrator.')));
 
             // Send verification email
-            sendMail($email, "newAccount", array($verification_code, $_SERVER["PHP_SELF"], $username));
+	    try {
+		Mail::newAccountNotification($email, $username, $verification_code, $_SERVER['PHP_SELF']);
+	    }
+	    catch (Exception $e) {
+		echo '<span class="error">'.$e->getMessage().'</span><br /><br />';
+		Log::newEvent("Registration email for '$username' failed.");
+	    }
             echo htmlspecialchars(_("Account creation was successful. Please activate your account using the link emailed to you."));
             Log::newEvent("Registration submitted for user '$username'");
         }

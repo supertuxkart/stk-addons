@@ -628,11 +628,12 @@ class Addon {
 
         // Generate email
         $email_body = NULL;
+	$notes = array_reverse($notes, true);
         foreach ($notes AS $revision => $value)
         {
-            $email_body .= '<strong>Revision '.$revision.'</strong><br /><br />';
-            $value = stripslashes(strip_tags($value));
-            $email_body .= $value.'<br /><br />';
+            $email_body .= "\n== Revision $revision ==\n";
+            $value = strip_tags(str_replace('\r\n',"\n",$value));
+            $email_body .= "$value\n\n";
         }
         // Get uploader email address
         $user = $this->uploaderId;
@@ -643,12 +644,12 @@ class Addon {
             throw new AddonException('Failed to find user record.');
 
         $result = mysql_fetch_assoc($userHandle);
-        sendMail($result['email'],
-                'moderatorNotification',
-                array($this->name,
-                $this->permalink,
-                $email_body,
-                $result['name']));
+	try {
+	    Mail::addonNoteNotification($result['email'], $this->id, $email_body);
+	}
+	catch (Exception $e) {
+	    throw new AddonException('Failed to send email to user. '.$e->getMessage());
+	}
         Log::newEvent("Added notes to '{$this->name}'");
     }
     

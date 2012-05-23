@@ -144,7 +144,13 @@ switch ($_GET['action']) {
                         .' '._('Please contact a website administrator.')));
 
             // Send verification email
-            sendMail($email, "passReset", array('reset-'.$verification_code, $_SERVER["PHP_SELF"], $username));
+	    try {
+		Mail::passwordResetNotification($email, $username, 'reset-'.$verification_code, $_SERVER['PHP_SELF']);
+	    }
+	    catch (Exception $e) {
+		echo '<span class="error">'.$e->getMessage().'</span><br /><br />';
+		Log::newEvent('Password reset email for \''.$username.'\' could not be sent.');
+	    }
             echo htmlspecialchars(_("Password reset link sent. Please reset your password using the link emailed to you."));
             Log::newEvent("Password reset request for user '$username'");
         }
