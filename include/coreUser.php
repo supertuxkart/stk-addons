@@ -94,81 +94,9 @@ class coreUser
         }
         echo '</table>';
 
-        // List of karts created by the current user
-        echo '<h3>'.htmlspecialchars(_('User\'s Karts')).'</h3>';
-        $kartSql = 'SELECT `a`.*, `r`.`status`
-            FROM `'.DB_PREFIX.'addons` `a`
-            LEFT JOIN `'.DB_PREFIX.'karts_revs` `r`
-            ON `a`.`id` = `r`.`addon_id`
-            WHERE `a`.`uploader` = \''.$this->userCurrent['id'].'\'
-            AND `a`.`type` = \'karts\'';
-        $kartHandle = sql_query($kartSql);
-        if (mysql_num_rows($kartHandle) == 0)
-        {
-            echo htmlspecialchars(_('This user has not uploaded any karts.')).'<br />';
-        }
-        else
-        {
-            // Print kart list
-            echo '<ul>';
-            for ($i = 0; $i < mysql_num_rows($kartHandle); $i++)
-            {
-                $kartResult = mysql_fetch_assoc($kartHandle);
-                if ($kartResult['status'] & F_APPROVED)
-                {
-                    echo '<li><a href="addons.php?type=karts&amp;name='.$kartResult['id'].'">'
-                        .$kartResult['name'].'</a></li>';
-                }
-                else
-                {
-                    if ($_SESSION['role']['manageaddons'] == false
-                            && $kartResult['uploader'] != $_SESSION['userid'])
-                        continue;
-                    echo '<li class="unavailable"><a href="addons.php?type=karts&amp;name='.$kartResult['id'].'">'
-                        .$kartResult['name'].'</a></li>';
-                }
-            }
-            echo '</ul><br />';
-        }
-
-        echo '<h3>'.htmlspecialchars(_('User\'s Tracks')).'</h3>';
-        $trackSql = 'SELECT `a`.*, `r`.`status`
-            FROM `'.DB_PREFIX.'addons` `a`
-            LEFT JOIN `'.DB_PREFIX.'tracks_revs` `r`
-            ON `a`.`id` = `r`.`addon_id`
-            WHERE `a`.`uploader` = \''.$this->userCurrent['id'].'\'
-            AND `a`.`type` = \'tracks\'';
-        $trackHandle = sql_query($trackSql);
-        if (mysql_num_rows($trackHandle) == 0)
-        {
-            echo htmlspecialchars(_('This user has not uploaded any tracks.')).'<br />';
-        }
-        else
-        {
-            // Print track list
-            echo '<ul>';
-            for ($i = 0; $i < mysql_num_rows($trackHandle); $i++)
-            {
-                $trackResult = mysql_fetch_assoc($trackHandle);
-                // Only list the latest revision of the track
-                if (!($trackResult['status'] & F_LATEST))
-                    continue;
-                if ($trackResult['status'] & F_APPROVED)
-                {
-                    echo '<li><a href="addons.php?type=tracks&amp;name='.$trackResult['id'].'">'
-                        .$trackResult['name'].'</a></li>';
-                }
-                else
-                {
-                    if ($_SESSION['role']['manageaddons'] == false
-                            && $trackResult['uploader'] != $_SESSION['userid'])
-                        continue;
-                    echo '<li class="unavailable"><a href="addons.php?type=tracks&amp;name='.$trackResult['id'].'">'
-                        .$trackResult['name'].'</a></li>';
-                }
-            }
-            echo '</ul><br />';
-        }
+	$this->writeAddonList('karts');
+        $this->writeAddonList('tracks');
+	$this->writeAddonList('arenas');
     }
 
     function writeConfig()
@@ -222,9 +150,63 @@ class coreUser
             <input type="password" name="newPass2" /><br />
             <input type="submit" value="'.htmlspecialchars(_('Change Password')).'" />
             </form>';
-            }
 	}
- 
+    }
+
+    function writeAddonList($type) {
+	switch ($type) {
+	    default:
+		return;
+		
+	    case 'tracks':
+		$heading = htmlspecialchars(_('User\'s Tracks'));
+		$no_items = htmlspecialchars(_('This user has not uploaded any tracks.'));
+		break;
+	    
+	    case 'karts':
+		$heading = htmlspecialchars(_('User\'s Karts'));
+		$no_items = htmlspecialchars(_('This user has not uploaded any karts.'));
+		break;
+
+	    case 'arenas':
+		$heading = htmlspecialchars(_('User\'s Arenas'));
+		$no_items = htmlspecialchars(_('This user has not uploaded any arenas.'));
+		break;
+	}
+
+        echo "<h3>$heading</h3>\n";
+        $query = 'SELECT `a`.*, `r`.`status`
+            FROM `'.DB_PREFIX.'addons` `a`
+            LEFT JOIN `'.DB_PREFIX.$type.'_revs` `r`
+            ON `a`.`id` = `r`.`addon_id`
+            WHERE `a`.`uploader` = \''.$this->userCurrent['id'].'\'
+            AND `a`.`type` = \''.$type.'\'';
+        $handle = sql_query($query);
+        if (mysql_num_rows($handle) == 0) {
+            echo "$no_items<br />\n";
+	    return;
+        }
+	// Print list
+	echo '<ul>';
+	for ($i = 0; $i < mysql_num_rows($handle); $i++) {
+	    $result = mysql_fetch_assoc($handle);
+	    // Only list the latest revision of the add-on
+	    if (!($result['status'] & F_LATEST))
+		continue;
+	    if ($result['status'] & F_APPROVED)
+		echo '<li><a href="addons.php?type='.$type.'&amp;name='.$result['id'].'">'
+		    .$result['name'].'</a></li>';
+	    else {
+		if ($_SESSION['role']['manageaddons'] == false
+			&& $result['uploader'] != $_SESSION['userid'])
+		    continue;
+		echo '<li class="unavailable"><a href="addons.php?type='.$type.'&amp;name='.$result['id'].'">'
+		    .$result['name'].'</a></li>';
+	    }
+	}
+	echo '</ul>';
+    }
+    
     function setPass()
     {
         $new_password = Validate::password($_POST['newPass'], $_POST['newPass2']);
