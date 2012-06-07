@@ -354,13 +354,22 @@ class Addon {
         return $addon_id;
     }
     
-    public static function getAddonList($type) {
+    public static function getAddonList($type, $featuredFirst = false) {
         if (!Addon::isAllowedType($type))
             return array();
-        $querySql = 'SELECT `id`
-            FROM `'.DB_PREFIX.'addons`
-            WHERE `type` = \''.$type.'\'
-            ORDER BY `name` ASC, `id` ASC';
+	if ($featuredFirst)
+	    $querySql = 'SELECT `a`.`id`, (`r`.`status` & '.F_FEATURED.') AS `featured`
+		FROM `'.DB_PREFIX.'addons` `a`
+		LEFT JOIN `'.DB_PREFIX.$type.'_revs` `r`
+		ON `a`.`id` = `r`.`addon_id`
+		WHERE `a`.`type` = \''.$type.'\'
+		AND `r`.`status` & '.F_LATEST.'
+		ORDER BY `featured` DESC, `a`.`name` ASC, `a`.`id` ASC';
+	else
+	    $querySql = 'SELECT `id`
+		FROM `'.DB_PREFIX.'addons`
+		WHERE `type` = \''.$type.'\'
+		ORDER BY `name` ASC, `id` ASC';
         $handle = sql_query($querySql);
         if (!$handle)
             return array();

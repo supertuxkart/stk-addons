@@ -453,8 +453,17 @@ a img
 }
 #left-menu_body .menu-item:hover
 {
-    background-color:black;
-    color:white;
+    background-color: #000000;
+    color: #FFFFFF;
+}
+#left-menu_body .featured
+{
+    color: #333399;
+}
+#left-menu_body .featured:hover
+{
+    background-color: #333399;
+    color: #FFFFFF;
 }
 .unavailable
 {

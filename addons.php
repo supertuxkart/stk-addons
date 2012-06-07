@@ -191,7 +191,7 @@ $status = ob_get_clean();
 $panels->setStatusContent($status);
 
 $addons = array();
-$addons_list = Addon::getAddonList($_GET['type']);
+$addons_list = Addon::getAddonList($_GET['type'], true);
 foreach($addons_list AS $ad) {
     try {
         $adc = new Addon($ad);
@@ -226,6 +226,8 @@ foreach($addons_list AS $ad) {
             $class = 'addon-list menu-item unavailable';
         else
             continue;
+	if (($adc->getStatus() & F_FEATURED) == F_FEATURED)
+	    $class .= ' featured';
         $addons[] = array(
             'class' => $class,
             'url'   => "addons.php?type={$_GET['type']}&amp;name={$adc->getId()}",
