@@ -226,12 +226,13 @@ foreach($addons_list AS $ad) {
             $class = 'addon-list menu-item unavailable';
         else
             continue;
+	$icon_html = '<img class="icon" src="'.$icon.'" />';
 	if (($adc->getStatus() & F_FEATURED) == F_FEATURED)
-	    $class .= ' featured';
+	    $icon_html = '<div class="icon"><div class="icon-featured"></div>'.$icon_html.'</div>';
         $addons[] = array(
             'class' => $class,
             'url'   => "addons.php?type={$_GET['type']}&amp;name={$adc->getId()}",
-            'label' => '<img class="icon"  src="'.$icon.'" />'.htmlspecialchars($adc->getName($adc->getId()))
+            'label' => $icon_html.htmlspecialchars($adc->getName($adc->getId()))
         );
     }
     catch (AddonException $e) {

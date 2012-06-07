@@ -308,7 +308,7 @@ span.f_dfsg {
 }
 .rating .emptystars {
     position: absolute;
-    background: transparent url(../image/stars.png) top left no-repeat;
+    background: transparent url('../image/stars.png') top left no-repeat;
     top: 0px;
     left: 0px;
     width: 55px;
@@ -317,7 +317,8 @@ span.f_dfsg {
 }
 .rating .fullstars {
     position: absolute;
-    background: transparent url(../image/stars_full.png) top left no-repeat;
+    background: transparent url('../image/stars.png') top left no-repeat;
+    background-position-y: -17px;
     top: 0px;
     left: 0px;
     height: 17px;
@@ -456,14 +457,21 @@ a img
     background-color: #000000;
     color: #FFFFFF;
 }
-#left-menu_body .featured
-{
-    color: #333399;
+#left-menu_body li div.icon {
+    position: relative;
+    float: left;
+    width: 25px;
+    height: 25px;
 }
-#left-menu_body .featured:hover
+#left-menu_body .icon-featured
 {
-    background-color: #333399;
-    color: #FFFFFF;
+    background: url('../image/emblem-favorite.png') no-repeat right;
+    float: left;
+    height: 25px;
+    width: 25px;
+    position: absolute;
+    left: 5px;
+    top: 5px;
 }
 .unavailable
 {
