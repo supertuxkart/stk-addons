@@ -30,8 +30,7 @@ $addonId = mysql_real_escape_string(stripslashes($_GET['addonId']));
 $rating = new Ratings($addonId);
 if (isset($_GET['rating'])) {
     $rating->setUserVote($_GET['rating']);
-    $new_rating = intval(stripslashes($_GET['rating']));
-    echo '<div class="rating"><div class="emptystars"></div><div class="fullstars" style="width: '.$rating->getUserVotePercent().'%"></div></div>';
+    echo $rating->displayUserRating();
     exit;
 }
 

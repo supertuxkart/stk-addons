@@ -61,6 +61,19 @@ class Ratings {
             return false;
         return true;
     }
+
+    public function displayUserRating() {
+	$current_rating = $this->getUserVote();
+	$sel_1 = ($current_rating == 1) ? 'checked' : NULL;
+	$sel_2 = ($current_rating == 2) ? 'checked' : NULL;
+	$sel_3 = ($current_rating == 3) ? 'checked' : NULL;
+	$string = '<span id="user-rating">';
+	$string .= '<input type="radio" name="rating" id="rating-1" onclick="addRating(1,\''.$this->addon_id.'\',\'user-rating\',\'rating-container\');" '.$sel_1.'/><label for="rating-1"><div class="rating"><div class="emptystars"></div><div class="fullstars" style="width: 33%"></div></div></label><br />'; // 1 star
+	$string .= '<input type="radio" name="rating" id="rating-2" onclick="addRating(2,\''.$this->addon_id.'\',\'user-rating\',\'rating-container\');" '.$sel_2.'/><label for="rating-2"><div class="rating"><div class="emptystars"></div><div class="fullstars" style="width: 66%"></div></div></label><br />'; // 2 stars
+	$string .= '<input type="radio" name="rating" id="rating-3" onclick="addRating(3,\''.$this->addon_id.'\',\'user-rating\',\'rating-container\');" '.$sel_3.'/><label for="rating-3"><div class="rating"><div class="emptystars"></div><div class="fullstars" style="width: 100%"></div></div></label>'; // 3 stars
+	$string .= '</span>';
+	return $string;
+    }
     
     /**
      * Calculate the average rating (rounded to the nearest integer)

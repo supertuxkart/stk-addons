@@ -208,20 +208,8 @@ class AddonViewer
         <tr><td><strong>'.htmlspecialchars(_('Compatible with:')).'</strong></td><td>'.format_compat($latestRev['format'],$this->addon->getType()).'</td></tr>';
         if (User::$logged_in) {
             $string .= '<tr><td><strong>'.htmlspecialchars(_('Your Rating: ')).'</strong></td><td>';
-            if ($this->rating->getUserVote() !== false) {
-                if ($this->rating->getUserVote() != 1) {
-                    $string .= htmlspecialchars($this->rating->getUserVote())." stars";
-                } else {
-                    $string .= "1 star";
-                }
-            } else {
-                $string .= '<span id="user-rating">';
-                $string .= '<a href="javascript:addRating(1,\''.$this->addon->getId().'\',\'user-rating\',\'rating-container\');"><div class="rating"><div class="emptystars"></div><div class="fullstars" style="width: 33%"></div></div></a><br />'; // 1 star
-                $string .= '<a href="javascript:addRating(2,\''.$this->addon->getId().'\',\'user-rating\',\'rating-container\');"><div class="rating"><div class="emptystars"></div><div class="fullstars" style="width: 66%"></div></div></a><br />'; // 2 stars
-                $string .= '<a href="javascript:addRating(3,\''.$this->addon->getId().'\',\'user-rating\',\'rating-container\');"><div class="rating"><div class="emptystars"></div><div class="fullstars" style="width: 100%"></div></div></a>'; // 3 stars
-                $string .= '</span>';
-            }
-        }
+            $string .= $this->rating->displayUserRating();
+	}
         $string .= '</td></tr></table>';
 
         if ($latestRev['status'] & F_TEX_NOT_POWER_OF_2)

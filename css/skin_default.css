@@ -324,6 +324,9 @@ span.f_dfsg {
     height: 17px;
     z-index: 102;
 }
+#user-rating .rating {
+    display: inline-block;
+}
 
 #logo_center
 {
