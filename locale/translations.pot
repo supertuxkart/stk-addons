@@ -8,161 +8,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-08 10:55-0700\n"
+"POT-Creation-Date: 2012-06-16 17:02-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: Addon.class.php:53
-msgid "The requested add-on does not exist."
-msgstr ""
-
-#: Addon.class.php:118
-msgid ""
-"An add-on with this ID already exists. Please try to upload your add-on "
-"again later."
-msgstr ""
-
-#: Addon.class.php:124
-msgid "The add-on you are trying to create already exists."
-msgstr ""
-
-#: Addon.class.php:126
-msgid "Creating a new add-on..."
-msgstr ""
-
-#: Addon.class.php:142
-msgid "Your add-on could not be uploaded."
-msgstr ""
-
-#: Addon.class.php:188
-msgid "The file you are trying to create already exists."
-msgstr ""
-
-#: Addon.class.php:192 Addon.class.php:269 Addon.class.php:317
-#: parseUpload.php:287 users.php:58 users.php:75
-msgid "You do not have the necessary permissions to perform this action."
-msgstr ""
-
-#: Addon.class.php:266
-msgid "You must be logged in to perform this action."
-msgstr ""
-
-#: Addon.class.php:277
-msgid "Failed to find files associated with this addon."
-msgstr ""
-
-#: Addon.class.php:284
-msgid "Failed to delete file:"
-msgstr ""
-
-#: Addon.class.php:292
-msgid "Failed to remove file records for this addon."
-msgstr ""
-
-#: Addon.class.php:297
-msgid "Failed to remove ratings for this add-on."
-msgstr ""
-
-#: Addon.class.php:304
-msgid "Failed to remove add-on revisions."
-msgstr ""
-
-#: Addon.class.php:308
-msgid "Failed to remove addon."
-msgstr ""
-
-#: Addon.class.php:320
-msgid "Failed to delete file."
-msgstr ""
-
-#: Addon.class.php:360 coreAddon.php:444 coreAddon.php:631 coreAddon.php:641
-#: coreAddon.php:653 coreAddon.php:656
-msgid "Unknown"
-msgstr ""
-
-#: Addon.class.php:501 Addon.class.php:522 Addon.class.php:544
-#: Addon.class.php:574
-msgid "You do not have the neccessary permissions to perform this action."
-msgstr ""
-
-#: Addon.class.php:509
-msgid "Failed to update the description record for this add-on."
-msgstr ""
-
-#: Addon.class.php:530
-msgid "Failed to update the designer record for this add-on."
-msgstr ""
-
-#: Addon.class.php:552
-msgid "Failed to update the image record for this add-on."
-msgstr ""
-
-#: Addon.class.php:559
-msgid "Failed to update the license record for this add-on."
-msgstr ""
-
-#: Addon.class.php:567
-msgid "Failed to update the name record for this add-on."
-msgstr ""
-
-#: File.class.php:33
-msgid "Insufficient permissions."
-msgstr ""
-
-#: User.class.php:84
-msgid "Failed to log in."
-msgstr ""
-
-#: User.class.php:91
-msgid "Your username or password is incorrect."
-msgstr ""
-
-#: User.class.php:137
-msgid "You must be logged in to change a password."
-msgstr ""
-
-#: User.class.php:144
-msgid "Failed to change your password."
-msgstr ""
-
-#: User.class.php:191 users.php:89
-msgid "Me"
-msgstr ""
-
-#: Validate.class.php:33
-msgid "You must enter an email address."
-msgstr ""
-
-#: Validate.class.php:36
-#, php-format
-msgid "\"%s\" is not a valid email address."
-msgstr ""
-
-#: Validate.class.php:48
-msgid "Your username must be at least 4 characters long."
-msgstr ""
-
-#: Validate.class.php:51
-msgid "Your username can only contain alphanumeric characters."
-msgstr ""
-
-#: Validate.class.php:58
-msgid "Your password must be at least 6 characters long."
-msgstr ""
-
-#: Validate.class.php:62
-msgid "Your passwords do not match."
-msgstr ""
-
-#: Validate.class.php:70
-msgid "You must enter a name."
-msgstr ""
-
-#: about.php:32 addons.php:48 login.php:33 manage.php:25 music.php:25
+#: about.php:32 addons.php:48 login.php:33 manage.php:25 password-reset.php:25
 #: register.php:25
 msgid "STK Add-ons"
 msgstr ""
@@ -225,64 +80,366 @@ msgstr ""
 msgid "Credits"
 msgstr ""
 
-#: addons-panel.php:46
-msgid "This page cannot be loaded because an invalid add-on type was provided."
+#: Addon.class.php:55
+msgid "The requested add-on does not exist."
 msgstr ""
 
-#: addons-panel.php:51
-msgid "This page cannot be loaded because an invalid action was provided."
+#: Addon.class.php:125
+msgid ""
+"An add-on with this ID already exists. Please try to upload your add-on "
+"again later."
+msgstr ""
+
+#: Addon.class.php:131
+msgid "The add-on you are trying to create already exists."
+msgstr ""
+
+#: Addon.class.php:133
+msgid "Creating a new add-on..."
+msgstr ""
+
+#: Addon.class.php:149
+msgid "Your add-on could not be uploaded."
+msgstr ""
+
+#: Addon.class.php:195
+msgid "The file you are trying to create already exists."
+msgstr ""
+
+#: Addon.class.php:199 Addon.class.php:276 Addon.class.php:324
+#: parseUpload.php:273 users.php:58 users.php:75
+msgid "You do not have the necessary permissions to perform this action."
+msgstr ""
+
+#: Addon.class.php:273
+msgid "You must be logged in to perform this action."
+msgstr ""
+
+#: Addon.class.php:284
+msgid "Failed to find files associated with this addon."
+msgstr ""
+
+#: Addon.class.php:291
+msgid "Failed to delete file:"
+msgstr ""
+
+#: Addon.class.php:299
+msgid "Failed to remove file records for this addon."
+msgstr ""
+
+#: Addon.class.php:304
+msgid "Failed to remove ratings for this add-on."
+msgstr ""
+
+#: Addon.class.php:311
+msgid "Failed to remove add-on revisions."
+msgstr ""
+
+#: Addon.class.php:315
+msgid "Failed to remove addon."
+msgstr ""
+
+#: Addon.class.php:327
+msgid "Failed to delete file."
+msgstr ""
+
+#: Addon.class.php:394 AddonViewer.class.php:404 AddonViewer.class.php:571
+#: AddonViewer.class.php:581 AddonViewer.class.php:593
+#: AddonViewer.class.php:596
+msgid "Unknown"
+msgstr ""
+
+#: Addon.class.php:539 Addon.class.php:560 Addon.class.php:582
+#: Addon.class.php:612
+msgid "You do not have the neccessary permissions to perform this action."
+msgstr ""
+
+#: Addon.class.php:547
+msgid "Failed to update the description record for this add-on."
+msgstr ""
+
+#: Addon.class.php:568
+msgid "Failed to update the designer record for this add-on."
+msgstr ""
+
+#: Addon.class.php:590
+msgid "Failed to update the image record for this add-on."
+msgstr ""
+
+#: Addon.class.php:597
+msgid "Failed to update the license record for this add-on."
+msgstr ""
+
+#: Addon.class.php:605
+msgid "Failed to update the name record for this add-on."
 msgstr ""
 
 #: addons.php:35
 msgid "Unknown Type"
 msgstr ""
 
-#: addons.php:39 index.php:52 menu.php:54 menu.php:65
+#: addons.php:39 index.php:59 menu.php:54 menu.php:65
 msgid "Tracks"
 msgstr ""
 
-#: addons.php:42 index.php:47 menu.php:59 menu.php:64
+#: addons.php:42 index.php:54 menu.php:59 menu.php:64
 msgid "Karts"
 msgstr ""
 
-#: addons.php:45 index.php:57 menu.php:55 menu.php:60
+#: addons.php:45 index.php:64 menu.php:55 menu.php:60
 msgid "Arenas"
 msgstr ""
 
-#: addons.php:71 music.php:46
+#: addons.php:75
 msgid "Invalid addon type."
 msgstr ""
 
-#: addons.php:91
+#: addons.php:95
 msgid "Saved properties."
 msgstr ""
 
-#: addons.php:112
+#: addons.php:116
 msgid "Saved status."
 msgstr ""
 
-#: addons.php:124
+#: addons.php:128
 msgid "Saved notes."
 msgstr ""
 
-#: addons.php:135
+#: addons.php:139
 msgid "Deleted addon."
 msgstr ""
 
-#: addons.php:147
+#: addons.php:151
 msgid "File updated."
 msgstr ""
 
-#: addons.php:157
+#: addons.php:161
 msgid "Set image."
 msgstr ""
 
-#: addons.php:169
+#: addons.php:173
 msgid "Set icon."
 msgstr ""
 
-#: addons.php:179
+#: addons.php:183
 msgid "Deleted file."
+msgstr ""
+
+#: addons-panel.php:44
+msgid "This page cannot be loaded because an invalid add-on type was provided."
+msgstr ""
+
+#: AddonViewer.class.php:76
+#, php-format
+msgid "Download %s"
+msgstr ""
+
+#: AddonViewer.class.php:84 AddonViewer.class.php:87 AddonViewer.class.php:288
+#: AddonViewer.class.php:291
+msgid "File not found."
+msgstr ""
+
+#: AddonViewer.class.php:113 AddonViewer.class.php:127
+msgid "Upload Image"
+msgstr ""
+
+#: AddonViewer.class.php:122
+msgid "Images"
+msgstr ""
+
+#: AddonViewer.class.php:152
+msgid "No images have been uploaded for this addon yet."
+msgstr ""
+
+#: AddonViewer.class.php:169 AddonViewer.class.php:358
+msgid "Unapprove"
+msgstr ""
+
+#: AddonViewer.class.php:171 AddonViewer.class.php:360
+msgid "Approve"
+msgstr ""
+
+#: AddonViewer.class.php:177
+msgid "Set Icon"
+msgstr ""
+
+#: AddonViewer.class.php:181
+msgid "Set Image"
+msgstr ""
+
+#: AddonViewer.class.php:183 AddonViewer.class.php:363
+msgid "Delete File"
+msgstr ""
+
+#: AddonViewer.class.php:199 manage-panel.php:166
+msgid "Type:"
+msgstr ""
+
+#: AddonViewer.class.php:199
+msgid "Arena"
+msgstr ""
+
+#: AddonViewer.class.php:204 AddonViewer.class.php:405
+msgid "Designer:"
+msgstr ""
+
+#: AddonViewer.class.php:205
+msgid "Upload date:"
+msgstr ""
+
+#: AddonViewer.class.php:206
+msgid "Submitted by:"
+msgstr ""
+
+#: AddonViewer.class.php:207
+msgid "Revision:"
+msgstr ""
+
+#: AddonViewer.class.php:208
+msgid "Compatible with:"
+msgstr ""
+
+#: AddonViewer.class.php:210
+msgid "Your Rating: "
+msgstr ""
+
+#: AddonViewer.class.php:217
+msgid ""
+"Warning: This addon may not display correctly on some systems. It uses "
+"textures that may not be compatible with all video cards."
+msgstr ""
+
+#: AddonViewer.class.php:224
+msgid "License"
+msgstr ""
+
+#: AddonViewer.class.php:232
+msgid "Permalink"
+msgstr ""
+
+#: AddonViewer.class.php:251
+msgid "Revisions"
+msgstr ""
+
+#: AddonViewer.class.php:257
+msgid "Upload Revision"
+msgstr ""
+
+#: AddonViewer.class.php:285
+#, php-format
+msgid "Download revision %u"
+msgstr ""
+
+#: AddonViewer.class.php:288 AddonViewer.class.php:291
+msgid "Revision"
+msgstr ""
+
+#: AddonViewer.class.php:306
+msgid "Source Files"
+msgstr ""
+
+#: AddonViewer.class.php:311
+msgid "Upload Source File"
+msgstr ""
+
+#: AddonViewer.class.php:339
+msgid "No source files have been uploaded for this addon yet."
+msgstr ""
+
+#: AddonViewer.class.php:350
+msgid "Not Approved"
+msgstr ""
+
+#: AddonViewer.class.php:351
+#, php-format
+msgid "Source File %u"
+msgstr ""
+
+#: AddonViewer.class.php:352
+msgid "Download"
+msgstr ""
+
+#: AddonViewer.class.php:380 AddonViewer.class.php:438
+msgid "Featured"
+msgstr ""
+
+#: AddonViewer.class.php:382 AddonViewer.class.php:432
+msgid "Alpha"
+msgstr ""
+
+#: AddonViewer.class.php:384 AddonViewer.class.php:433
+msgid "Beta"
+msgstr ""
+
+#: AddonViewer.class.php:386 AddonViewer.class.php:434
+msgid "Release-Candidate"
+msgstr ""
+
+#: AddonViewer.class.php:388 AddonViewer.class.php:437
+msgid "DFSG Compliant"
+msgstr ""
+
+#: AddonViewer.class.php:398
+msgid "You do not have the necessary privileges to perform this action."
+msgstr ""
+
+#: AddonViewer.class.php:400
+msgid "Configuration"
+msgstr ""
+
+#: AddonViewer.class.php:410
+msgid "Description:"
+msgstr ""
+
+#: AddonViewer.class.php:410
+#, php-format
+msgid "Max %u characters"
+msgstr ""
+
+#: AddonViewer.class.php:416
+msgid "Save Properties"
+msgstr ""
+
+#: AddonViewer.class.php:422
+msgid "Delete Addon"
+msgstr ""
+
+#: AddonViewer.class.php:426
+msgid "Status Flags:"
+msgstr ""
+
+#: AddonViewer.class.php:430
+msgid "Approved"
+msgstr ""
+
+#: AddonViewer.class.php:431
+msgid "Invisible"
+msgstr ""
+
+#: AddonViewer.class.php:435
+msgid "Latest"
+msgstr ""
+
+#: AddonViewer.class.php:439
+msgid "Invalid Textures"
+msgstr ""
+
+#: AddonViewer.class.php:446 AddonViewer.class.php:546
+#, php-format
+msgid "Rev %u:"
+msgstr ""
+
+#: AddonViewer.class.php:537
+msgid "Save Changes"
+msgstr ""
+
+#: AddonViewer.class.php:541
+msgid "Notes from Moderator to Submitter:"
+msgstr ""
+
+#: AddonViewer.class.php:558
+msgid "Save Notes"
 msgstr ""
 
 #: allow.php:102
@@ -305,217 +462,7 @@ msgstr ""
 msgid "basicUser"
 msgstr ""
 
-#: coreAddon.php:56
-msgid "The requested addon does not exist."
-msgstr ""
-
-#: coreAddon.php:143 coreAddon.php:284
-msgid "Upload Image"
-msgstr ""
-
-#: coreAddon.php:150 coreAddon.php:478
-msgid "Featured"
-msgstr ""
-
-#: coreAddon.php:152 coreAddon.php:472
-msgid "Alpha"
-msgstr ""
-
-#: coreAddon.php:154 coreAddon.php:473
-msgid "Beta"
-msgstr ""
-
-#: coreAddon.php:156 coreAddon.php:474
-msgid "Release-Candidate"
-msgstr ""
-
-#: coreAddon.php:158 coreAddon.php:477
-msgid "DFSG Compliant"
-msgstr ""
-
-#: coreAddon.php:163 manage-panel.php:166
-msgid "Type:"
-msgstr ""
-
-#: coreAddon.php:163
-msgid "Arena"
-msgstr ""
-
-#: coreAddon.php:165 coreAddon.php:445
-msgid "Designer:"
-msgstr ""
-
-#: coreAddon.php:166
-msgid "Upload date:"
-msgstr ""
-
-#: coreAddon.php:167
-msgid "Submitted by:"
-msgstr ""
-
-#: coreAddon.php:168
-msgid "Revision:"
-msgstr ""
-
-#: coreAddon.php:169
-msgid "Compatible with:"
-msgstr ""
-
-#: coreAddon.php:171
-msgid "Your Rating: "
-msgstr ""
-
-#: coreAddon.php:190
-msgid ""
-"Warning: This addon may not display correctly on some systems. It uses "
-"textures that may not be compatible with all video cards."
-msgstr ""
-
-#: coreAddon.php:203 coreAddon.php:208 coreAddon.php:262 coreAddon.php:267
-msgid "File not found."
-msgstr ""
-
-#: coreAddon.php:212
-msgid "License"
-msgstr ""
-
-#: coreAddon.php:217
-msgid "Permalink"
-msgstr ""
-
-#: coreAddon.php:221
-msgid "Revisions"
-msgstr ""
-
-#: coreAddon.php:227
-msgid "Upload Revision"
-msgstr ""
-
-#: coreAddon.php:257
-#, php-format
-msgid "Download revision %u"
-msgstr ""
-
-#: coreAddon.php:262 coreAddon.php:267
-msgid "Revision"
-msgstr ""
-
-#: coreAddon.php:279
-msgid "Images"
-msgstr ""
-
-#: coreAddon.php:313
-msgid "No images have been uploaded for this addon yet."
-msgstr ""
-
-#: coreAddon.php:333 coreAddon.php:415
-msgid "Unapprove"
-msgstr ""
-
-#: coreAddon.php:335 coreAddon.php:417
-msgid "Approve"
-msgstr ""
-
-#: coreAddon.php:344
-msgid "Set Icon"
-msgstr ""
-
-#: coreAddon.php:349
-msgid "Set Image"
-msgstr ""
-
-#: coreAddon.php:351 coreAddon.php:420
-msgid "Delete File"
-msgstr ""
-
-#: coreAddon.php:361
-msgid "Source Files"
-msgstr ""
-
-#: coreAddon.php:366
-msgid "Upload Source File"
-msgstr ""
-
-#: coreAddon.php:395
-msgid "No source files have been uploaded for this addon yet."
-msgstr ""
-
-#: coreAddon.php:405
-msgid "Not Approved"
-msgstr ""
-
-#: coreAddon.php:407
-#, php-format
-msgid "Source File %u"
-msgstr ""
-
-#: coreAddon.php:409
-msgid "Download"
-msgstr ""
-
-#: coreAddon.php:438
-msgid "You do not have the necessary privileges to perform this action."
-msgstr ""
-
-#: coreAddon.php:440
-msgid "Configuration"
-msgstr ""
-
-#: coreAddon.php:450
-msgid "Description:"
-msgstr ""
-
-#: coreAddon.php:450
-#, php-format
-msgid "Max %u characters"
-msgstr ""
-
-#: coreAddon.php:456
-msgid "Save Properties"
-msgstr ""
-
-#: coreAddon.php:462
-msgid "Delete Addon"
-msgstr ""
-
-#: coreAddon.php:466
-msgid "Status Flags:"
-msgstr ""
-
-#: coreAddon.php:470
-msgid "Approved"
-msgstr ""
-
-#: coreAddon.php:471
-msgid "Invisible"
-msgstr ""
-
-#: coreAddon.php:475
-msgid "Latest"
-msgstr ""
-
-#: coreAddon.php:479
-msgid "Invalid Textures"
-msgstr ""
-
-#: coreAddon.php:486 coreAddon.php:586
-#, php-format
-msgid "Rev %u:"
-msgstr ""
-
-#: coreAddon.php:577
-msgid "Save Changes"
-msgstr ""
-
-#: coreAddon.php:581
-msgid "Notes from Moderator to Submitter:"
-msgstr ""
-
-#: coreAddon.php:598
-msgid "Save Notes"
-msgstr ""
-
-#: coreUser.php:87 login.php:114 register.php:36
+#: coreUser.php:87 login.php:114 password-reset.php:39 register.php:36
 msgid "Username:"
 msgstr ""
 
@@ -527,60 +474,69 @@ msgstr ""
 msgid "Real Name:"
 msgstr ""
 
-#: coreUser.php:90 coreUser.php:186
+#: coreUser.php:90 coreUser.php:114
 msgid "Role:"
 msgstr ""
 
-#: coreUser.php:93 coreUser.php:182
+#: coreUser.php:93 coreUser.php:110
 msgid "Homepage:"
 msgstr ""
 
-#: coreUser.php:98
-msgid "User's Karts"
-msgstr ""
-
-#: coreUser.php:108
-msgid "This user has not uploaded any karts."
-msgstr ""
-
-#: coreUser.php:134
-msgid "User's Tracks"
-msgstr ""
-
-#: coreUser.php:144
-msgid "This user has not uploaded any tracks."
-msgstr ""
-
-#: coreUser.php:203
+#: coreUser.php:131
 msgid "User Activated:"
 msgstr ""
 
-#: coreUser.php:211
+#: coreUser.php:139
 msgid "Save Configuration"
 msgstr ""
 
-#: coreUser.php:215 coreUser.php:223
+#: coreUser.php:143 coreUser.php:151 password-reset.php:81
 msgid "Change Password"
 msgstr ""
 
-#: coreUser.php:217
+#: coreUser.php:145
 msgid "Old Password:"
 msgstr ""
 
-#: coreUser.php:219
+#: coreUser.php:147 password-reset.php:72
 msgid "New Password:"
 msgstr ""
 
-#: coreUser.php:219 register.php:37 register.php:42
+#: coreUser.php:147 password-reset.php:40 password-reset.php:73
+#: register.php:37 register.php:42
 #, php-format
 msgid "Must be at least %d characters long."
 msgstr ""
 
-#: coreUser.php:221
+#: coreUser.php:149
 msgid "New Password (Confirm):"
 msgstr ""
 
-#: coreUser.php:233
+#: coreUser.php:162
+msgid "User's Tracks"
+msgstr ""
+
+#: coreUser.php:163
+msgid "This user has not uploaded any tracks."
+msgstr ""
+
+#: coreUser.php:167
+msgid "User's Karts"
+msgstr ""
+
+#: coreUser.php:168
+msgid "This user has not uploaded any karts."
+msgstr ""
+
+#: coreUser.php:172
+msgid "User's Arenas"
+msgstr ""
+
+#: coreUser.php:173
+msgid "This user has not uploaded any arenas."
+msgstr ""
+
+#: coreUser.php:215
 msgid "Your old password is not correct."
 msgstr ""
 
@@ -592,37 +548,91 @@ msgstr ""
 msgid "You will be redirected to the home page."
 msgstr ""
 
+#: File.class.php:33
+msgid "Insufficient permissions."
+msgstr ""
+
+#: File.class.php:53
+msgid "The file to extract does not exist."
+msgstr ""
+
+#: File.class.php:65 File.class.php:94
+msgid "Could not open archive file. It may be corrupted."
+msgstr ""
+
+#: File.class.php:69 File.class.php:98
+msgid "Failed to extract archive file."
+msgstr ""
+
+#: File.class.php:105
+msgid "Unknown archive type."
+msgstr ""
+
+#: File.class.php:118
+msgid "Unknown file upload error."
+msgstr ""
+
+#: File.class.php:122 File.class.php:124
+msgid "Uploaded file is too large."
+msgstr ""
+
+#: File.class.php:126
+msgid "Uploaded file is incomplete."
+msgstr ""
+
+#: File.class.php:128
+msgid "No file was uploaded."
+msgstr ""
+
+#: File.class.php:130
+msgid "There is no TEMP directory to store the uploaded file in."
+msgstr ""
+
+#: File.class.php:132
+msgid "Unable to write uploaded file to disk."
+msgstr ""
+
+#: File.class.php:147
+msgid "Uploaded image files must be either PNG or Jpeg files."
+msgstr ""
+
+#: File.class.php:151
+msgid "The file you uploaded was not the correct type."
+msgstr ""
+
+#: File.class.php:288 parseUpload.php:60
+msgid "Failed to move uploaded file."
+msgstr ""
+
+#: File.class.php:306
+msgid "The uploaded image file is invalid."
+msgstr ""
+
+#: File.class.php:330 parseUpload.php:177
+msgid "Failed to associate image file with addon."
+msgstr ""
+
 #: index.php:34
 msgid ""
 "This is the official SuperTuxKart add-on repository. It contains extra karts "
 "and tracks for the SuperTuxKart game."
 msgstr ""
 
-#: index.php:62
+#: index.php:69
 msgid "Help"
-msgstr ""
-
-#: index.php:72
-#, php-format
-msgid "The newest kart is %s."
-msgstr ""
-
-#: index.php:73
-#, php-format
-msgid "The newest track is %s."
-msgstr ""
-
-#: index.php:78
-#, php-format
-msgid "The most downloaded kart is %s."
 msgstr ""
 
 #: index.php:79
 #, php-format
+msgid "The most downloaded kart is %s."
+msgstr ""
+
+#: index.php:80
+#, php-format
 msgid "The most downloaded track is %s."
 msgstr ""
 
-#: login.php:33 menu.php:80
+#: login.php:33 menu.php:80 password-reset.php:226
 msgid "Login"
 msgstr ""
 
@@ -660,8 +670,60 @@ msgstr ""
 msgid "Create an account."
 msgstr ""
 
-#: mail.php:68
+#: login.php:121
+msgid "Forgot password?"
+msgstr ""
+
+#: mail.php:78
 msgid "No moderator mailing-list email is set."
+msgstr ""
+
+#: manage.php:25 menu.php:75
+msgid "Manage"
+msgstr ""
+
+#: manage.php:38 manage-panel.php:67
+msgid "General Settings"
+msgstr ""
+
+#: manage.php:43 manage-panel.php:71
+msgid "News Messages"
+msgstr ""
+
+#: manage.php:48 manage-panel.php:75
+msgid "Uploaded Files"
+msgstr ""
+
+#: manage.php:53 manage-panel.php:79
+msgid "Client Versions"
+msgstr ""
+
+#: manage.php:58 manage-panel.php:83
+msgid "Cache Files"
+msgstr ""
+
+#: manage.php:63 manage-panel.php:87
+msgid "Event Logs"
+msgstr ""
+
+#: manage.php:76
+msgid "One or more fields has been left blank. Settings were not saved."
+msgstr ""
+
+#: manage.php:81
+msgid "XML Download Frequency value is invalid."
+msgstr ""
+
+#: manage.php:94
+msgid "Saved settings."
+msgstr ""
+
+#: manage.php:112
+msgid "Created message."
+msgstr ""
+
+#: manage.php:116
+msgid "Failed to create message."
 msgstr ""
 
 #: manage-panel.php:45
@@ -674,30 +736,6 @@ msgstr ""
 
 #: manage-panel.php:64
 msgid "Invalid page. You may have followed a broken link."
-msgstr ""
-
-#: manage-panel.php:67 manage.php:38
-msgid "General Settings"
-msgstr ""
-
-#: manage-panel.php:71 manage.php:43
-msgid "News Messages"
-msgstr ""
-
-#: manage-panel.php:75 manage.php:48
-msgid "Uploaded Files"
-msgstr ""
-
-#: manage-panel.php:79 manage.php:53
-msgid "Client Versions"
-msgstr ""
-
-#: manage-panel.php:83 manage.php:58
-msgid "Cache Files"
-msgstr ""
-
-#: manage-panel.php:87 manage.php:63
-msgid "Event Logs"
 msgstr ""
 
 #: manage-panel.php:96
@@ -737,105 +775,81 @@ msgid "Blog RSS Feed"
 msgstr ""
 
 #: manage-panel.php:107
+msgid "Maximum Uploaded Image Dimension"
+msgstr ""
+
+#: manage-panel.php:108
 msgid "Save Settings"
 msgstr ""
 
-#: manage-panel.php:114 manage-panel.php:136
+#: manage-panel.php:115 manage-panel.php:137
 msgid "Message:"
 msgstr ""
 
-#: manage-panel.php:115 manage-panel.php:138
+#: manage-panel.php:116 manage-panel.php:139
 msgid "Condition:"
 msgstr ""
 
-#: manage-panel.php:116
+#: manage-panel.php:117
 msgid "Display on Website:"
 msgstr ""
 
-#: manage-panel.php:117
+#: manage-panel.php:118
 msgid "Create Message"
 msgstr ""
 
-#: manage-panel.php:130
+#: manage-panel.php:131
 msgid "No news messages currently exist."
 msgstr ""
 
-#: manage-panel.php:135
+#: manage-panel.php:136
 msgid "Date:"
 msgstr ""
 
-#: manage-panel.php:137
+#: manage-panel.php:138
 msgid "Author:"
 msgstr ""
 
-#: manage-panel.php:139
+#: manage-panel.php:140
 msgid "Web:"
 msgstr ""
 
-#: manage-panel.php:140
+#: manage-panel.php:141
 msgid "Actions:"
 msgstr ""
 
-#: manage-panel.php:160
+#: manage-panel.php:161
 msgid "No files have been uploaded."
 msgstr ""
 
-#: manage-panel.php:164 register.php:50
+#: manage-panel.php:165 register.php:50
 msgid "Name:"
-msgstr ""
-
-#: manage-panel.php:165
-msgid "Add-on:"
 msgstr ""
 
 #: manage-panel.php:167
 msgid "References:"
 msgstr ""
 
-#: manage-panel.php:244
+#: manage-panel.php:250
 msgid "Clients by User-Agent"
 msgstr ""
 
-#: manage-panel.php:251
+#: manage-panel.php:257
 msgid ""
 "There are currently no SuperTuxKart clients recorded. Your download script "
 "may not be configured properly."
 msgstr ""
 
-#: manage-panel.php:256
+#: manage-panel.php:262
 msgid "User-Agent String:"
 msgstr ""
 
-#: manage-panel.php:256
+#: manage-panel.php:262
 msgid "Game Version:"
 msgstr ""
 
-#: manage-panel.php:275
+#: manage-panel.php:281
 msgid "Empty cache"
-msgstr ""
-
-#: manage.php:25 menu.php:75
-msgid "Manage"
-msgstr ""
-
-#: manage.php:76
-msgid "One or more fields has been left blank. Settings were not saved."
-msgstr ""
-
-#: manage.php:81
-msgid "XML Download Frequency value is invalid."
-msgstr ""
-
-#: manage.php:93
-msgid "Saved settings."
-msgstr ""
-
-#: manage.php:111
-msgid "Created message."
-msgstr ""
-
-#: manage.php:115
-msgid "Failed to create message."
 msgstr ""
 
 #: menu.php:43
@@ -863,172 +877,174 @@ msgstr ""
 msgid "Languages"
 msgstr ""
 
-#: menu.php:103
+#: menu.php:104
 msgid "STK Homepage"
-msgstr ""
-
-#: music.php:25
-msgid "Music"
 msgstr ""
 
 #: parseUpload.php:24
 msgid "Failed to upload your file."
 msgstr ""
 
-#: parseUpload.php:52 parseUpload.php:74
-msgid "Failed to move uploaded file."
-msgstr ""
-
-#: parseUpload.php:63 parseUpload.php:188
-msgid "Failed to associate image file with addon."
-msgstr ""
-
-#: parseUpload.php:66
+#: parseUpload.php:48
 msgid "Successfully uploaded image."
 msgstr ""
 
-#: parseUpload.php:67 parseUpload.php:263
+#: parseUpload.php:49 parseUpload.php:252
 msgid "Continue."
 msgstr ""
 
-#: parseUpload.php:91
+#: parseUpload.php:80
 msgid "Invalid archive file. The archive must contain the addon's xml file."
 msgstr ""
 
-#: parseUpload.php:105
+#: parseUpload.php:94
 msgid ""
 "Some invalid files were found in the uploaded add-on. These files have been "
 "removed from the archive:"
 msgstr ""
 
-#: parseUpload.php:114
+#: parseUpload.php:103
 msgid "Upload was recognized as a kart."
 msgstr ""
 
-#: parseUpload.php:119
+#: parseUpload.php:108
 msgid "Upload was recognized as a track."
 msgstr ""
 
-#: parseUpload.php:127
+#: parseUpload.php:116
 msgid ""
 "Failed to read the add-on's XML file. Please make sure you are using the "
 "latest version of the kart or track exporter."
 msgstr ""
 
-#: parseUpload.php:132
+#: parseUpload.php:121
 msgid "Failed to write new XML file:"
 msgstr ""
 
-#: parseUpload.php:138
+#: parseUpload.php:127
 msgid "This track is an arena."
 msgstr ""
 
-#: parseUpload.php:147
+#: parseUpload.php:136
 msgid ""
 "A valid License.txt file was not found. Please add a License.txt file to "
 "your archive and re-submit it."
 msgstr ""
 
-#: parseUpload.php:209
+#: parseUpload.php:198
 msgid ""
 "Some images in this add-on do not have dimensions that are a power of two."
 msgstr ""
 
-#: parseUpload.php:210
+#: parseUpload.php:199
 msgid "This may cause display errors on some video cards."
 msgstr ""
 
-#: parseUpload.php:227
+#: parseUpload.php:216
 msgid "Invalid add-on type."
 msgstr ""
 
-#: parseUpload.php:234
+#: parseUpload.php:223
 msgid "Failed to re-pack archive file."
 msgstr ""
 
-#: parseUpload.php:243
+#: parseUpload.php:232
 msgid "Failed to associate archive file with addon."
 msgstr ""
 
-#: parseUpload.php:262
+#: parseUpload.php:251
 msgid "Successfully uploaded source archive."
 msgstr ""
 
-#: parseUpload.php:281
+#: parseUpload.php:265
 msgid "You are trying to add a new revision of an add-on that does not exist."
 msgstr ""
 
-#: parseUpload.php:303
+#: parseUpload.php:295
 msgid ""
 "Your add-on was uploaded successfully. It will be reviewed by our moderators "
 "before becoming publicly available."
 msgstr ""
 
-#: parseUpload.php:304
+#: parseUpload.php:296
 msgid "Click here to upload the sources to your add-on now."
 msgstr ""
 
-#: parseUpload.php:305
+#: parseUpload.php:297
 msgid ""
 "(Uploading the sources to your add-on enables others to improve your work "
 "and also ensure your add-on will not be lost in the future if new "
 "SuperTuxKart versions are not compatible with the current format.)"
 msgstr ""
 
-#: parseUpload.php:306
+#: parseUpload.php:298
 msgid "Click here to view your add-on."
 msgstr ""
 
-#: parseUpload.php:315
-msgid "Uploaded image files must be either PNG or Jpeg files."
+#: password-reset.php:25 password-reset.php:30
+msgid "Reset Password"
 msgstr ""
 
-#: parseUpload.php:321
-msgid "The file you uploaded was not the correct type."
+#: password-reset.php:36
+msgid ""
+"In order to reset your password, please enter your username and your email "
+"address. A password reset link will be emailed to you. Your old password "
+"will become inactive until your password is reset."
 msgstr ""
 
-#: parseUpload.php:330
-msgid "The file to extract does not exist."
+#: password-reset.php:44 register.php:54
+msgid "Email Address:"
 msgstr ""
 
-#: parseUpload.php:342 parseUpload.php:377
-msgid "Could not open archive file. It may be corrupted."
+#: password-reset.php:58
+msgid "Send Reset Link"
 msgstr ""
 
-#: parseUpload.php:348 parseUpload.php:383
-msgid "Failed to extract archive file."
+#: password-reset.php:69
+msgid "Please enter a new password for your account."
 msgstr ""
 
-#: parseUpload.php:391
-msgid "Unknown archive type."
+#: password-reset.php:77
+msgid "New Password (confirm):"
 msgstr ""
 
-#: parseUpload.php:402
-msgid "Upload is invalid."
+#: password-reset.php:127 register.php:126
+msgid "An error occurred trying to validate your username."
 msgstr ""
 
-#: parseUpload.php:407
-msgid "Unknown file upload error."
+#: password-reset.php:128 password-reset.php:144 password-reset.php:177
+#: password-reset.php:209 register.php:127 register.php:142
+msgid "Please contact a website administrator."
 msgstr ""
 
-#: parseUpload.php:411 parseUpload.php:413
-msgid "Uploaded file is too large."
+#: password-reset.php:130
+msgid "Username and email address combination not found."
 msgstr ""
 
-#: parseUpload.php:415
-msgid "Uploaded file is incomplete."
+#: password-reset.php:143 password-reset.php:176 password-reset.php:208
+msgid "An error occurred while resetting your password."
 msgstr ""
 
-#: parseUpload.php:417
-msgid "No file was uploaded."
+#: password-reset.php:154
+msgid ""
+"Password reset link sent. Please reset your password using the link emailed "
+"to you."
 msgstr ""
 
-#: parseUpload.php:419
-msgid "There is no TEMP directory to store the uploaded file in."
+#: password-reset.php:179
+msgid "Invalid verification code."
 msgstr ""
 
-#: parseUpload.php:421
-msgid "Unable to write uploaded file to disk."
+#: password-reset.php:185
+msgid "Could not reset your password. The link you followed is not valid."
+msgstr ""
+
+#: password-reset.php:223 User.class.php:153
+msgid "Failed to change your password."
+msgstr ""
+
+#: password-reset.php:225
+msgid "Changed password."
 msgstr ""
 
 #: register.php:25
@@ -1041,10 +1057,6 @@ msgstr ""
 
 #: register.php:46
 msgid "Password (confirm):"
-msgstr ""
-
-#: register.php:54
-msgid "Email Address:"
 msgstr ""
 
 #: register.php:58
@@ -1136,14 +1148,6 @@ msgstr ""
 msgid "You must agree to the terms to register."
 msgstr ""
 
-#: register.php:126
-msgid "An error occurred trying to validate your username."
-msgstr ""
-
-#: register.php:127 register.php:142
-msgid "Please contact a website administrator."
-msgstr ""
-
 #: register.php:129
 msgid "Your username has already been used."
 msgstr ""
@@ -1152,17 +1156,17 @@ msgstr ""
 msgid "An error occurred while creating your account."
 msgstr ""
 
-#: register.php:146
+#: register.php:152
 msgid ""
 "Account creation was successful. Please activate your account using the link "
 "emailed to you."
 msgstr ""
 
-#: register.php:161
+#: register.php:167
 msgid "Your account has been activated."
 msgstr ""
 
-#: register.php:165
+#: register.php:171
 msgid "Could not validate your account. The link you followed is not valid."
 msgstr ""
 
@@ -1305,8 +1309,53 @@ msgstr ""
 msgid "Upload file"
 msgstr ""
 
+#: User.class.php:85
+msgid "Failed to log in."
+msgstr ""
+
+#: User.class.php:92
+msgid "Your username or password is incorrect."
+msgstr ""
+
+#: User.class.php:146
+msgid "You must be logged in to change a password."
+msgstr ""
+
+#: User.class.php:217 users.php:90
+msgid "Me"
+msgstr ""
+
 #: users.php:63
 msgid "Your password has been changed successfully."
+msgstr ""
+
+#: Validate.class.php:33
+msgid "You must enter an email address."
+msgstr ""
+
+#: Validate.class.php:36
+#, php-format
+msgid "\"%s\" is not a valid email address."
+msgstr ""
+
+#: Validate.class.php:48
+msgid "Your username must be at least 4 characters long."
+msgstr ""
+
+#: Validate.class.php:51
+msgid "Your username can only contain alphanumeric characters."
+msgstr ""
+
+#: Validate.class.php:59
+msgid "Your password must be at least 6 characters long."
+msgstr ""
+
+#: Validate.class.php:63
+msgid "Your passwords do not match."
+msgstr ""
+
+#: Validate.class.php:93
+msgid "You must enter a name."
 msgstr ""
 
 #: xmlWrite.php:137

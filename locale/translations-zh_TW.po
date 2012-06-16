@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: stk\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-01-08 10:55-0700\n"
-"PO-Revision-Date: 2012-03-04 07:39+0000\n"
+"PO-Revision-Date: 2012-05-06 08:54+0000\n"
 "Last-Translator: Bill <cges30901@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-03-18 18:04+0000\n"
-"X-Generator: Launchpad (build 14951)\n"
+"X-Launchpad-Export-Date: 2012-06-16 22:52+0000\n"
+"X-Generator: Launchpad (build 15419)\n"
 
 #: Addon.class.php:53
 msgid "The requested add-on does not exist."
@@ -58,7 +58,7 @@ msgstr "沒有找到跟這個附加元件相關的檔案。"
 
 #: Addon.class.php:284
 msgid "Failed to delete file:"
-msgstr "無法刪除文件："
+msgstr "刪除文件失敗："
 
 #: Addon.class.php:292
 msgid "Failed to remove file records for this addon."
@@ -149,7 +149,7 @@ msgstr "您的使用者名稱至少要4個字元長。"
 
 #: Validate.class.php:51
 msgid "Your username can only contain alphanumeric characters."
-msgstr ""
+msgstr "您的使用者名稱只能包含字母和數字。"
 
 #: Validate.class.php:58
 msgid "Your password must be at least 6 characters long."
@@ -318,7 +318,7 @@ msgstr "上傳圖片"
 
 #: coreAddon.php:150 coreAddon.php:478
 msgid "Featured"
-msgstr "特色"
+msgstr "特色程式"
 
 #: coreAddon.php:152 coreAddon.php:472
 msgid "Alpha"
@@ -354,7 +354,7 @@ msgstr "上傳日期："
 
 #: coreAddon.php:167
 msgid "Submitted by:"
-msgstr "提交："
+msgstr "提交者："
 
 #: coreAddon.php:168
 msgid "Revision:"
@@ -462,7 +462,7 @@ msgstr "您沒有執行此動作的必須特權。"
 
 #: coreAddon.php:440
 msgid "Configuration"
-msgstr "設置"
+msgstr "設定"
 
 #: coreAddon.php:450
 msgid "Description:"
@@ -471,7 +471,7 @@ msgstr "描述："
 #: coreAddon.php:450
 #, php-format
 msgid "Max %u characters"
-msgstr ""
+msgstr "最多%u個字元"
 
 #: coreAddon.php:456
 msgid "Save Properties"
@@ -577,7 +577,7 @@ msgstr "新密碼："
 #: coreUser.php:219 register.php:37 register.php:42
 #, php-format
 msgid "Must be at least %d characters long."
-msgstr ""
+msgstr "至少要%d個字元長。"
 
 #: coreUser.php:221
 msgid "New Password (Confirm):"
@@ -593,7 +593,7 @@ msgstr "此頁目前已停用。"
 
 #: disabled.php:41 security.php:48
 msgid "You will be redirected to the home page."
-msgstr ""
+msgstr "您將被重定向到首頁。"
 
 #: index.php:34
 msgid ""
@@ -640,7 +640,7 @@ msgstr "您已經登出。"
 #: login.php:56 login.php:69 login.php:95
 #, php-format
 msgid "Click %shere%s if you do not automatically redirect."
-msgstr ""
+msgstr "如果你沒有自動重定向，點擊%s這裡%s。"
 
 #: login.php:68
 msgid "You are already logged in."
@@ -661,7 +661,7 @@ msgstr "登入"
 
 #: login.php:120
 msgid "Create an account."
-msgstr "創建一個帳戶。"
+msgstr "創建一個帳戶"
 
 #: mail.php:68
 msgid "No moderator mailing-list email is set."
@@ -685,7 +685,7 @@ msgstr "一般設定"
 
 #: manage-panel.php:71 manage.php:43
 msgid "News Messages"
-msgstr ""
+msgstr "新聞訊息"
 
 #: manage-panel.php:75 manage.php:48
 msgid "Uploaded Files"
@@ -753,7 +753,7 @@ msgstr ""
 
 #: manage-panel.php:116
 msgid "Display on Website:"
-msgstr ""
+msgstr "在網站上顯示："
 
 #: manage-panel.php:117
 msgid "Create Message"
@@ -761,7 +761,7 @@ msgstr "建立訊息"
 
 #: manage-panel.php:130
 msgid "No news messages currently exist."
-msgstr ""
+msgstr "目前沒有新聞訊息存在。"
 
 #: manage-panel.php:135
 msgid "Date:"
@@ -773,7 +773,7 @@ msgstr "作者："
 
 #: manage-panel.php:139
 msgid "Web:"
-msgstr ""
+msgstr "網頁："
 
 #: manage-panel.php:140
 msgid "Actions:"
@@ -785,15 +785,15 @@ msgstr "沒有檔案被上傳。"
 
 #: manage-panel.php:164 register.php:50
 msgid "Name:"
-msgstr "名稱："
+msgstr "姓名："
 
 #: manage-panel.php:165
 msgid "Add-on:"
-msgstr ""
+msgstr "附加元件："
 
 #: manage-panel.php:167
 msgid "References:"
-msgstr ""
+msgstr "參考："
 
 #: manage-panel.php:244
 msgid "Clients by User-Agent"
@@ -848,7 +848,7 @@ msgstr "歡迎，%s"
 
 #: menu.php:47
 msgid "Home"
-msgstr ""
+msgstr "首頁"
 
 #: menu.php:71
 msgid "Log out"
@@ -939,7 +939,7 @@ msgstr ""
 
 #: parseUpload.php:210
 msgid "This may cause display errors on some video cards."
-msgstr ""
+msgstr "在一些顯示卡上，這可能會導致顯示錯誤。"
 
 #: parseUpload.php:227
 msgid "Invalid add-on type."
@@ -981,11 +981,11 @@ msgstr ""
 
 #: parseUpload.php:306
 msgid "Click here to view your add-on."
-msgstr ""
+msgstr "點擊這裡查看您的附加元件。"
 
 #: parseUpload.php:315
 msgid "Uploaded image files must be either PNG or Jpeg files."
-msgstr ""
+msgstr "上傳的圖片必須是PNG或Jpeg檔。"
 
 #: parseUpload.php:321
 msgid "The file you uploaded was not the correct type."
@@ -993,19 +993,19 @@ msgstr "您上傳的文件不是正確的類型。"
 
 #: parseUpload.php:330
 msgid "The file to extract does not exist."
-msgstr ""
+msgstr "要解壓縮的文件不存在。"
 
 #: parseUpload.php:342 parseUpload.php:377
 msgid "Could not open archive file. It may be corrupted."
-msgstr ""
+msgstr "無法打開壓縮檔。它可能已損壞。"
 
 #: parseUpload.php:348 parseUpload.php:383
 msgid "Failed to extract archive file."
-msgstr ""
+msgstr "無法解壓縮壓縮檔。"
 
 #: parseUpload.php:391
 msgid "Unknown archive type."
-msgstr ""
+msgstr "未知的壓縮檔類型。"
 
 #: parseUpload.php:402
 msgid "Upload is invalid."
@@ -1053,7 +1053,7 @@ msgstr "電子郵件地址："
 
 #: register.php:58
 msgid "Terms:"
-msgstr ""
+msgstr "條款："
 
 #: register.php:60
 msgid "STK Addons Terms and Conditions"
@@ -1102,7 +1102,7 @@ msgstr ""
 
 #: register.php:77 upload.php:252
 msgid "Explicit images"
-msgstr ""
+msgstr "色情圖片"
 
 #: register.php:78 upload.php:253
 msgid "Hateful messages and/or images"
@@ -1119,6 +1119,9 @@ msgid ""
 "uploaded\n"
 "may be removed."
 msgstr ""
+"如果您上傳的內容被發現含有上述任何東西，你的上傳\n"
+"將被刪除，您的帳戶可能被刪除，您上傳的任何其他內容\n"
+"可能會被刪除。"
 
 #: register.php:83
 msgid ""
@@ -1180,7 +1183,7 @@ msgstr ""
 
 #: security.php:70
 msgid "You will be redirected to the login page."
-msgstr ""
+msgstr "您將被重定向到登入頁。"
 
 #: top.php:31 users.php:38
 msgid "SuperTuxKart Add-ons"
@@ -1194,7 +1197,7 @@ msgstr ""
 
 #: upload.php:154
 msgid "Please upload a new revision of your kart or track."
-msgstr ""
+msgstr "請上傳您的賽車或塞道的新修訂版。"
 
 #: upload.php:158
 msgid "What type of file are you uploading?"
@@ -1222,7 +1225,7 @@ msgstr "檔案："
 
 #: upload.php:173
 msgid "Supported archive types are:"
-msgstr ""
+msgstr "支援的的壓縮檔類型有："
 
 #: upload.php:174
 msgid "Agreement:"
@@ -1242,7 +1245,7 @@ msgstr ""
 
 #: upload.php:186 upload.php:199 upload.php:244 upload.php:255
 msgid "Required"
-msgstr ""
+msgstr "必填"
 
 #: upload.php:192
 msgid "I have included open content made by people other than me"
@@ -1261,7 +1264,7 @@ msgstr ""
 
 #: upload.php:203
 msgid "Must check at least one"
-msgstr ""
+msgstr "至少需要選擇一個"
 
 #: upload.php:208
 msgid "GNU GPL"
@@ -1277,7 +1280,7 @@ msgstr "Creative Commons BY SA 3.0"
 
 #: upload.php:223
 msgid "CC0 (Public Domain)"
-msgstr ""
+msgstr "CC0 (公共領域)"
 
 #: upload.php:228
 msgid "BSD License"
@@ -1285,7 +1288,7 @@ msgstr "BSD 授權"
 
 #: upload.php:233
 msgid "Other open license"
-msgstr ""
+msgstr "其他開放授權"
 
 #: upload.php:238
 msgid ""
@@ -1315,4 +1318,4 @@ msgstr "您的密碼已成功變更。"
 
 #: xmlWrite.php:137
 msgid "The following file could not be found:"
-msgstr ""
+msgstr "找不到以下檔案："
