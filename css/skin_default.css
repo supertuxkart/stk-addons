@@ -317,8 +317,7 @@ span.f_dfsg {
 }
 .rating .fullstars {
     position: absolute;
-    background: transparent url('../image/stars.png') top left no-repeat;
-    background-position-y: -17px;
+    background: transparent url('../image/stars.png') bottom left no-repeat;
     top: 0px;
     left: 0px;
     height: 17px;
