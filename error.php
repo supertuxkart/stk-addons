@@ -45,20 +45,26 @@ echo '<img src="'.SITE_ROOT.'image/tux-sad.png" alt="Sad Tux" width="200" height
 
 switch ($error_code) {
     default:
-	echo '<h1>An Error Occurred</h1>';
-	echo '<p>Something broke! We\'ll try to fix it as soon as we can!</p>';
+	// I18N: Heading for general error page
+	$error_head = htmlspecialchars(_('An Error Occurred'));
+	// I18N: Error message for general error page
+	$error_text = htmlspecialchars(_('Something broke! We\'ll try to fix it as soon as we can!'));
 	break;
     case '403':
-	printf('<h1>%s</h1>',htmlspecialchars(_('403 - Forbidden')));
-	printf('<p>%s</p>',
-		htmlspecialchars(_('You\'re not supposed to be here. Click one of the links in the menu above to find some better content.')));
+	// I18N: Heading for HTTP 403 Forbidden error page
+	$error_head = htmlspecialchars(_('403 - Forbidden'));
+	// I18N: Error message for HTTP 403 Forbidden error page
+	$error_text = htmlspecialchars(_('You\'re not supposed to be here. Click one of the links in the menu above to find some better content.'));
 	break;
     case '404':
-	printf('<h1>%s</h1>',htmlspecialchars(_('404 - Not Found')));
-	printf('<p>%s</p>',
-		htmlspecialchars(_('We can\'t find what you are looking for. The link you followed may be broken.')));
+	// I18N: Heading for HTTP 404 Not Found error page
+	$error_head = htmlspecialchars(_('404 - Not Found'));
+	// I18N: Error message for HTTP 404 Not Found error page
+	$error_text = htmlspecialchars(_('We can\'t find what you are looking for. The link you followed may be broken.'));
 	break;
 }
+printf('<h1>%s</h1>',$error_head);
+printf('<p>%s</p>',$error_text);
 
 echo '</div>';
 include('include/footer.php');
