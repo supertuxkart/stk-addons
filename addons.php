@@ -60,7 +60,6 @@ $addonName = Addon::getName($_GET['name']);
 if ($addonName !== false)
     $title .= ' | '.$addonName;
 
-include("include/view.php");
 include("include/top.php");
 
 ?>
