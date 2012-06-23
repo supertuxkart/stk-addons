@@ -111,46 +111,13 @@ switch ($_GET['action']) {
         try
         {
             if (!isset($_POST['terms'])) $_POST['terms'] = NULL;
-            // Check all form input
-            $username = Validate::username($_POST['user']);
-            $password = Validate::password($_POST['pass1'], $_POST['pass2']);
-            $email = Validate::email($_POST['mail']);
-            $name = Validate::realname($_POST['name']);
-            $terms = Validate::checkbox($_POST['terms'],htmlspecialchars(_('You must agree to the terms to register.')));
-
-            // Make sure requested username is not taken
-            $check_name_query = "SELECT `user` FROM `".DB_PREFIX."users` WHERE `user` = '$username'";
-            $check_name_handle = sql_query($check_name_query);
-            if (!$check_name_handle)
-                throw new UserException(htmlspecialchars(
-                        _('An error occurred trying to validate your username.')
-                        .' '._('Please contact a website administrator.')));
-            if (mysql_num_rows($check_name_handle) !== 0)
-                throw new UserException(htmlspecialchars(_('Your username has already been used.')));
-
-            // No exception occurred - continue with registration
-
-            // Generate verification code
-            $verification_code = cryptUrl(12);
-            $creation_date = date('Y-m-d');
-            $create_query = 'CALL `'.DB_PREFIX."register_user`
-                ('$username','$password','$name','$email','$verification_code','$creation_date')";
-            $create_handle = sql_query($create_query);
-            if (!$create_handle)
-                throw new UserException(htmlspecialchars(
-                        _('An error occurred while creating your account.')
-                        .' '._('Please contact a website administrator.')));
-
-            // Send verification email
-	    try {
-		Mail::newAccountNotification($email, $username, $verification_code, $_SERVER['PHP_SELF']);
-	    }
-	    catch (Exception $e) {
-		echo '<span class="error">'.$e->getMessage().'</span><br /><br />';
-		Log::newEvent("Registration email for '$username' failed.");
-	    }
+	    User::register($_POST['user'],
+		    $_POST['pass1'],
+		    $_POST['pass2'],
+		    $_POST['mail'],
+		    $_POST['name'],
+		    $_POST['terms']);
             echo htmlspecialchars(_("Account creation was successful. Please activate your account using the link emailed to you."));
-            Log::newEvent("Registration submitted for user '$username'");
         }
         catch (UserException $e)
         {

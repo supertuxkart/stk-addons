@@ -200,6 +200,68 @@ class User
         
         Log::newEvent("New user activated: '$username'");
     }
+
+    /**
+     * Register a new user account
+     * @param string $username Must be unique
+     * @param string $password
+     * @param string $password_conf
+     * @param string $email Must be unique
+     * @param string $name
+     * @param string $terms
+     * @throws UserException 
+     */
+    public static function register($username, $password, $password_conf, $email, $name, $terms) {
+	// Sanitize inputs
+	$username = Validate::username($username);
+	$password = Validate::password($password, $password_conf);
+	$email = Validate::email($email);
+	$name = Validate::realname($name);
+	$terms = Validate::checkbox($terms,htmlspecialchars(_('You must agree to the terms to register.')));
+
+	// Make sure requested username is not taken
+	$check_name_query = "SELECT `user` FROM `".DB_PREFIX."users` WHERE `user` = '$username'";
+	$check_name_handle = sql_query($check_name_query);
+	if (!$check_name_handle)
+	    throw new UserException(htmlspecialchars(
+		    _('An error occurred trying to validate your username.')
+		    .' '._('Please contact a website administrator.')));
+	if (mysql_num_rows($check_name_handle) !== 0)
+	    throw new UserException(htmlspecialchars(_('Your username has already been used.')));
+
+	// Make sure the email address is unique
+	$check_email_query = "SELECT `email` FROM `".DB_PREFIX."users` WHERE `email` = '$email'";
+	$check_email_handle = sql_query($check_email_query);
+	if (!$check_email_handle)
+	    throw new UserException(htmlspecialchars(
+		    _('An error occurred trying to validate your email address.')
+		    .' '._('Please contact a website administrator.')));
+	if (mysql_num_rows($check_email_handle) !== 0)
+	    throw new UserException(htmlspecialchars(_('Your email address has already been used.')));
+
+	// No exception occurred - continue with registration
+
+	// Generate verification code
+	$verification_code = cryptUrl(12);
+	$creation_date = date('Y-m-d');
+	$create_query = 'CALL `'.DB_PREFIX."register_user`
+	    ('$username','$password','$name','$email','$verification_code','$creation_date')";
+	$create_handle = sql_query($create_query);
+	if (!$create_handle)
+	    throw new UserException(htmlspecialchars(
+		    _('An error occurred while creating your account.')
+		    .' '._('Please contact a website administrator.')));
+
+	// Send verification email
+	try {
+	    Mail::newAccountNotification($email, $username, $verification_code, $_SERVER['PHP_SELF']);
+	}
+	catch (Exception $e) {
+	    Log::newEvent("Registration email for '$username' failed.");
+	    throw new UserException($e->getMessage().' '._('Please contact a website administrator.'));
+	}
+	Log::newEvent("Registration submitted for user '$username'");
+    }
 }
 User::init();
 
