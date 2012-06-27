@@ -71,7 +71,7 @@ function get_self()
         echo'<a href="login.php?action=logout">'.htmlspecialchars(_("Log out")).'</a>';
         echo'<a href="users.php">'.htmlspecialchars(_("Users")).'</a>';
         echo'<a href="upload.php">'.htmlspecialchars(_("Upload")).'</a>';
-        if ($_SESSION['role']['managesettings'])
+        if ($_SESSION['role']['manageaddons'])
             echo '<a href="manage.php">'.htmlspecialchars(_('Manage')).'</a>';
     }
     else

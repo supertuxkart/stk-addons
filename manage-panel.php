@@ -21,7 +21,7 @@
 if (!defined('ROOT'))
     define('ROOT','./');
 if (!isset($security))
-    $security = 'managesettings';
+    $security = 'manageaddons';
 require_once('include.php');
 
 if (!isset($_GET['action'])) $_GET['action'] = NULL;
@@ -173,6 +173,7 @@ function overview_panel()
 
 function settings_panel()
 {
+    if (!$_SESSION['role']['managesettings']) return;
     echo '<form method="POST" action="manage.php?view=general&amp;action=save_config">';
     echo '<table>';
     echo '<tr><td>'.htmlspecialchars(_('XML Download Frequency')).'</td><td><input type="text" name="xml_frequency" value="'.ConfigManager::get_config('xml_frequency').'" size="6" maxlength="8" /></td></tr>';
@@ -193,6 +194,7 @@ function settings_panel()
 
 function news_message_panel()
 {
+    if (!$_SESSION['role']['managesettings']) return;
     echo '<form method="POST" action="manage.php?view=news&amp;action=new_news"><table><tr>';
     echo '<td>'.htmlspecialchars(_('Message:')).'</td><td><input type="text" name="message" id="news_message" size="60" maxlength="140" /></td></tr><tr>';
     echo '<td>'.htmlspecialchars(_('Condition:')).'</td><td><input type="text" name="condition" id="news_condition" size="60" maxlength="255" /></td></tr><tr>';
@@ -329,6 +331,7 @@ EOF;
 
 function clients_panel()
 {
+    if (!$_SESSION['role']['managesettings']) return;
     echo '<h3>'.htmlspecialchars(_('Clients by User-Agent')).'</h3>';
     // Read recorded user-agents from database
     $clientsSql = 'SELECT * FROM `'.DB_PREFIX.'clients`
@@ -360,6 +363,7 @@ EOL;
 }
 
 function cache_panel() {
+    if (!$_SESSION['role']['managesettings']) return;
     echo '<a href="manage.php?view=cache&amp;action=cache_clear">'.htmlspecialchars(_('Empty cache')).'</a><br />';
     echo 'TODO: List cache files.<br />';
 }

@@ -19,7 +19,7 @@
  */
 
 define('ROOT','./');
-$security = 'managesettings';
+$security = 'manageaddons';
 require('include.php');
 
 $title = htmlspecialchars(_('STK Add-ons').' | '._('Manage'));
@@ -31,44 +31,52 @@ if (!isset($_GET['action'])) $_GET['action'] = NULL;
 
 $panels = new PanelInterface();
 
-$panels->setMenuItems(
+$menu_items = 
         array(
             array(
                 'url'   => 'manage.php?view=overview',
                 'label' => htmlspecialchars(_('Overview')),
                 'class' => 'manage-list menu-item'
-            ),
-            array(
+            )
+	);
+if ($_SESSION['role']['managesettings']) {
+    $menu_items[] = array(
                 'url'   => 'manage.php?view=general',
                 'label' => htmlspecialchars(_('General Settings')),
                 'class' => 'manage-list menu-item'
-            ),
+            );
+    $menu_items[] = 
             array(
                 'url'   => 'manage.php?view=news',
                 'label' => htmlspecialchars(_('News Messages')),
                 'class' => 'manage-list menu-item'
-            ),
-            array(
-                'url'   => 'manage.php?view=files',
-                'label' => htmlspecialchars(_('Uploaded Files')),
-                'class' => 'manage-list menu-item'
-            ),
+            );
+    $menu_items[] =
             array(
                 'url'   => 'manage.php?view=clients',
                 'label' => htmlspecialchars(_('Client Versions')),
                 'class' => 'manage-list menu-item'
-            ),
+            );
+    $menu_items[] =
             array(
                 'url'   => 'manage.php?view=cache',
                 'label' => htmlspecialchars(_('Cache Files')),
                 'class' => 'manage-list menu-item'
-            ),
+            );
+}
+$menu_items[] = 
+            array(
+                'url'   => 'manage.php?view=files',
+                'label' => htmlspecialchars(_('Uploaded Files')),
+                'class' => 'manage-list menu-item'
+            );
+$menu_items[] =
             array(
                 'url'   => 'manage.php?view=logs',
                 'label' => htmlspecialchars(_('Event Logs')),
                 'class' => 'manage-list menu-item'
-            )
-        ));
+            );
+$panels->setMenuItems($menu_items);
 
 ob_start();
 switch ($_GET['action'])
