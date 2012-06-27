@@ -484,6 +484,21 @@ class Addon {
         
         return $return;
     }
+    
+    public function getImages() {
+        $query = 'SELECT * FROM `'.DB_PREFIX.'files`
+            WHERE `addon_id` = \''.$this->id.'\'
+            AND `file_type` = \'image\'';
+        $handle = sql_query($query);
+	if (!$handle) return array();
+	
+	$num = mysql_num_rows($handle);
+	$result = array();
+	for ($i = 1; $i <= $num; $i++) {
+	    $result[] = mysql_fetch_assoc($handle);
+	}
+	return $result;
+    }
 
     public static function getName($id)
     {
@@ -501,6 +516,21 @@ class Addon {
             return false;
         $result = mysql_fetch_assoc($handle);
         return $result['name'];
+    }
+
+    public function getSourceFiles() {
+        $query = 'SELECT * FROM `'.DB_PREFIX.'files`
+            WHERE `addon_id` = \''.$this->id.'\'
+            AND `file_type` = \'source\'';
+        $handle = sql_query($query);
+	if (!$handle) return array();
+	
+	$num = mysql_num_rows($handle);
+	$result = array();
+	for ($i = 1; $i <= $num; $i++) {
+	    $result[] = mysql_fetch_assoc($handle);
+	}
+	return $result;
     }
     
     public static function isAllowedType($type) {

@@ -63,11 +63,18 @@ switch ($_POST['id'])
     default:
         echo '<span class="error">'.htmlspecialchars(_('Invalid page. You may have followed a broken link.')).'</span><br />';
         exit;
+    case 'overview':
+	// I18N: Moderator panel
+	echo '<h1>'.htmlspecialchars(_('Overview')).'</h1>';
+	overview_panel();
+	break;
     case 'general':
+	// I18N: Moderator panel
         echo '<h1>'.htmlspecialchars(_('General Settings')).'</h1>';
         settings_panel();
         break;
     case 'news':
+	// I18N: Moderator panel
         echo '<h1>'.htmlspecialchars(_('News Messages')).'</h1>';
         news_message_panel();
         break;
@@ -84,9 +91,84 @@ switch ($_POST['id'])
         cache_panel();
         break;
     case 'logs':
+	// I18N: Moderator panel
         echo '<h1>'.htmlspecialchars(_('Event Logs')).'</h1>';
         logs_panel();
         break;
+}
+
+function overview_panel()
+{
+    // Get all add-ons
+    $addons = array_merge(Addon::getAddonList('karts'),
+		    Addon::getAddonList('tracks'),
+		    Addon::getAddonList('arenas'));
+
+    // I18N: Heading in moderator overview panel
+    echo '<h2>'.htmlspecialchars(_('Unapproved Add-Ons')).'</h2>';
+    // Loop through each add-on
+    $empty_section = true;
+    foreach ($addons as $addon) {
+	$a = new Addon($addon);
+	$revisions = $a->getAllRevisions();
+	$unapproved = array();
+	$revision = current($revisions);
+	for ($i = 0; $i < count($revisions); $i++) {
+	    if (!($revision['status'] && F_APPROVED))
+		$unapproved[] = $revision['revision'];
+	    $revision = next($revisions);
+	}
+	if ($unapproved !== array()) {
+	    $empty_section = false;
+	    echo '<strong><a href="'.$a->getLink().'">'.Addon::getName($addon).'</a></strong><br />';
+	    echo htmlspecialchars(_('Revisions:')).' '.implode(', ',$unapproved);
+	    echo '<br /><br />';
+	}
+    }
+    if ($empty_section === true)
+	echo htmlspecialchars(_('No unapproved add-ons.')).'<br /><br />';
+    
+    
+    echo '<h2>'.htmlspecialchars(_('Unapproved Files')).'</h1>';
+    echo '<h3>'.htmlspecialchars(_('Images:')).'</h3>';
+    $empty_section = true;
+    foreach ($addons as $addon) {
+	$a = new Addon($addon);
+	$images = $a->getImages();
+	$unapproved = array();
+	for ($i = 0; $i < count($images); $i++) {
+	    if ($images[$i]['approved'] == 0)
+		$unapproved[] = '<img src="'.ROOT.'image.php?type=medium&amp;pic='.$images[$i]['file_path'].'" />';
+	}
+	if ($unapproved !== array()) {
+	    $empty_section = false;
+	    echo '<strong><a href="'.$a->getLink().'">'.Addon::getName($addon).'</a></strong><br />';
+	    echo htmlspecialchars(_('Images:')).'<br />'.implode('<br />',$unapproved);
+	    echo '<br /><br />';
+	}
+    }
+    if ($empty_section === true)
+	echo htmlspecialchars(_('No unapproved images.')).'<br /><br />';
+    
+    echo '<h3>'.htmlspecialchars(_('Source Archives:')).'</h3>';
+    $empty_section = true;
+    foreach ($addons as $addon) {
+	$a = new Addon($addon);
+	$images = $a->getSourceFiles();
+	$unapproved = 0;
+	for ($i = 0; $i < count($images); $i++) {
+	    if ($images[$i]['approved'] == 0)
+		$unapproved++;
+	}
+	if ($unapproved !== 0) {
+	    $empty_section = false;
+	    echo '<strong><a href="'.$a->getLink().'">'.Addon::getName($addon).'</a></strong><br />';
+	    printf(htmlspecialchars(ngettext('%d File','%d Files',$unapproved)),$unapproved);
+	    echo '<br /><br />';
+	}
+    }
+    if ($empty_section === true)
+	echo htmlspecialchars(_('No unapproved source archives.')).'<br /><br />';
 }
 
 function settings_panel()

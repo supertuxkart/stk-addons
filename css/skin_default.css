@@ -401,13 +401,6 @@ h1 .right
     display:block;
 }
 
-h2
-{
-    clear:both;
-    font-size:15px;
-    font-family: Tahoma, Verdana,Geneva,sans-serif;
-    font-weight:normal;
-}
 a img 
 {
     border:none;
@@ -527,6 +520,12 @@ a img
 {
     display: block;
     border-bottom: 1px solid #CCCCCC;
+}
+#right-content h2
+{
+    border-bottom: 1px solid #CCCCCC;
+    font-size: 1.4em;
+    font-weight: normal;
 }
 #right-content h3
 {

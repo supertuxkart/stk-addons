@@ -34,6 +34,11 @@ $panels = new PanelInterface();
 $panels->setMenuItems(
         array(
             array(
+                'url'   => 'manage.php?view=overview',
+                'label' => htmlspecialchars(_('Overview')),
+                'class' => 'manage-list menu-item'
+            ),
+            array(
                 'url'   => 'manage.php?view=general',
                 'label' => htmlspecialchars(_('General Settings')),
                 'class' => 'manage-list menu-item'
@@ -124,7 +129,7 @@ $status_content = ob_get_clean();
 $panels->setStatusContent($status_content);
 
 if (!isset($_GET['view']))
-    $_GET['view'] = 'general';
+    $_GET['view'] = 'overview';
 $_POST['id'] = $_GET['view'];
 
 ob_start();
