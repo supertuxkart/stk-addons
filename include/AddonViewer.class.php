@@ -104,12 +104,12 @@ class AddonViewer
         if ($image_handle && mysql_num_rows($image_handle) == 1)
         {
             $image_result = mysql_fetch_assoc($image_handle);
-            $string .= '<img class="preview" src="image.php?type=big&amp;pic='.$image_result['file_path'].'" />';
+            $string .= '<img class="preview" src="'.SITE_ROOT.'image.php?type=big&amp;pic='.$image_result['file_path'].'" />';
         }
         // Add upload button below image (or in place of image)
         if (User::$logged_in && $this->addon->getUploader() == $_SESSION['userid'])
         {
-            $string .= '<br /><form method="POST" action="upload.php?type='.$this->addon->getType().'&amp;name='.$this->addon->getId().'&amp;action=file">';
+            $string .= '<br /><form method="POST" action="'.SITE_ROOT.'upload.php?type='.$this->addon->getType().'&amp;name='.$this->addon->getId().'&amp;action=file">';
             $string .= '<input type="submit" value="'.htmlspecialchars(_('Upload Image')).'" />';
             $string .= '</form>';
         }
@@ -123,7 +123,7 @@ class AddonViewer
         // Add upload button to the right of the Images label
         if (User::$logged_in && $this->addon->getUploader() == $_SESSION['userid'])
         {
-            echo '<div style="float: right;"><form method="POST" action="upload.php?type='.$this->addon->getType().'&amp;name='.$this->addon->getId().'&amp;action=file">';
+            echo '<div style="float: right;"><form method="POST" action="'.SITE_ROOT.'upload.php?type='.$this->addon->getType().'&amp;name='.$this->addon->getId().'&amp;action=file">';
             echo '<input type="submit" value="'.htmlspecialchars(_('Upload Image')).'" />';
             echo '</form></div>';
         }
@@ -161,26 +161,26 @@ class AddonViewer
                 $div_style = 'image_thumb_container unapproved';
             echo '<div class="'.$div_style.'">';
             echo '<a href="'.DOWN_LOCATION.$source_file['file_path'].'" target="_blank" style="target-new: tab;">';
-            echo '<img src="image.php?type=medium&amp;pic='.$source_file['file_path'].'" />';
+            echo '<img src="'.SITE_ROOT.'image.php?type=medium&amp;pic='.$source_file['file_path'].'" />';
             echo '</a><br />';
             if (User::$logged_in) {
                 if ($_SESSION['role']['manageaddons']) {
                     if ($source_file['approved'] == 1)
-                        echo '<a href="'.$this->addon->getLink().'&amp;save=unapprove&amp;id='.$source_file['id'].'">'.htmlspecialchars(_('Unapprove')).'</a>';
+                        echo '<a href="'.File::rewrite($this->addon->getLink().'&amp;save=unapprove&amp;id='.$source_file['id']).'">'.htmlspecialchars(_('Unapprove')).'</a>';
                     else
-                        echo '<a href="'.$this->addon->getLink().'&amp;save=approve&amp;id='.$source_file['id'].'">'.htmlspecialchars(_('Approve')).'</a>';
+                        echo '<a href="'.File::rewrite($this->addon->getLink().'&amp;save=approve&amp;id='.$source_file['id']).'">'.htmlspecialchars(_('Approve')).'</a>';
                     echo '<br />';
                 }
                 if ($_SESSION['role']['manageaddons'] || $this->addon->getUploader() == $_SESSION['userid']) {
                     if ($this->addon->getType() == 'karts') {
                         if ($this->addon->getImage(true) != $source_file['id']) {
-                            echo '<a href="'.$this->addon->getLink().'&amp;save=seticon&amp;id='.$source_file['id'].'">'.htmlspecialchars(_('Set Icon')).'</a><br />';
+                            echo '<a href="'.File::rewrite($this->addon->getLink().'&amp;save=seticon&amp;id='.$source_file['id']).'">'.htmlspecialchars(_('Set Icon')).'</a><br />';
                         }
                     }
                     if ($this->addon->getImage() != $source_file['id']) {
-                        echo '<a href="'.$this->addon->getLink().'&amp;save=setimage&amp;id='.$source_file['id'].'">'.htmlspecialchars(_('Set Image')).'</a><br />';
+                        echo '<a href="'.File::rewrite($this->addon->getLink().'&amp;save=setimage&amp;id='.$source_file['id']).'">'.htmlspecialchars(_('Set Image')).'</a><br />';
                     }
-                    echo '<a href="'.$this->addon->getLink().'&amp;save=deletefile&amp;id='.$source_file['id'].'">'.htmlspecialchars(_('Delete File')).'</a><br />';
+                    echo '<a href="'.File::rewrite($this->addon->getLink().'&amp;save=deletefile&amp;id='.$source_file['id']).'">'.htmlspecialchars(_('Delete File')).'</a><br />';
                 }
             }
             echo '</div>';
@@ -203,7 +203,7 @@ class AddonViewer
         $addonUser->selectById($this->addon->getUploader());
         $string .= '<tr><td><strong>'.htmlspecialchars(_('Designer:')).'</strong></td><td>'.htmlspecialchars($this->addon->getDesigner()).'</td></tr>
         <tr><td><strong>'.htmlspecialchars(_('Upload date:')).'</strong></td><td>'.$latestRev['timestamp'].'</td></tr>
-        <tr><td><strong>'.htmlspecialchars(_('Submitted by:')).'</strong></td><td><a href="users.php?user='.$addonUser->userCurrent['user'].'">'.htmlspecialchars($addonUser->userCurrent['name']).'</a></td></tr>
+        <tr><td><strong>'.htmlspecialchars(_('Submitted by:')).'</strong></td><td><a href="'.SITE_ROOT.'users.php?user='.$addonUser->userCurrent['user'].'">'.htmlspecialchars($addonUser->userCurrent['name']).'</a></td></tr>
         <tr><td><strong>'.htmlspecialchars(_('Revision:')).'</strong></td><td>'.$latestRev['revision'].'</td></tr>
         <tr><td><strong>'.htmlspecialchars(_('Compatible with:')).'</strong></td><td>'.format_compat($latestRev['format'],$this->addon->getType()).'</td></tr>';
         if (User::$logged_in) {
@@ -230,7 +230,7 @@ class AddonViewer
     private function displayLink() {
         // Print a permanent reference link (permalink) to this addon
         return '<h3>'.htmlspecialchars(_('Permalink')).'</h3>
-        <a href="'.$this->addon->getLink().'">'.$this->addon->getLink().'</a><br /><br />';
+        <a href="'.File::rewrite($this->addon->getLink()).'">'.File::rewrite($this->addon->getLink()).'</a><br /><br />';
     }
     
     private function displayRating() {
@@ -253,7 +253,7 @@ EOL;
         // Add upload button to the right of the Revisions label
         if (User::$logged_in && ($this->addon->getUploader() == User::$user_id || $_SESSION['role']['manageaddons']))
         {
-            echo '<div style="float: right;"><form method="POST" action="upload.php?type='.$this->addon->getType().'&amp;name='.$this->addon->getId().'">';
+            echo '<div style="float: right;"><form method="POST" action="'.SITE_ROOT.'upload.php?type='.$this->addon->getType().'&amp;name='.$this->addon->getId().'">';
             echo '<input type="submit" value="'.htmlspecialchars(_('Upload Revision')).'" />';
             echo '</form></div>';
         }
@@ -307,7 +307,7 @@ EOL;
         // Add upload button to the right of the Source Files label
         if (User::$logged_in && $this->addon->getUploader() == $_SESSION['userid'])
         {
-            echo '<div style="float: right;"><form method="POST" action="upload.php?type='.$this->addon->getType().'&amp;name='.$this->addon->getId().'&amp;action=file">';
+            echo '<div style="float: right;"><form method="POST" action="'.SITE_ROOT.'upload.php?type='.$this->addon->getType().'&amp;name='.$this->addon->getId().'&amp;action=file">';
             echo '<input type="submit" value="'.htmlspecialchars(_('Upload Source File')).'" />';
             echo '</form></div>';
         }
@@ -355,12 +355,12 @@ EOL;
                 if ($_SESSION['role']['manageaddons'])
                 {
                     if ($source_file['approved'] == 1)
-                        echo ' | <a href="'.$this->addon->getLink().'&amp;save=unapprove&amp;id='.$source_file['id'].'">'.htmlspecialchars(_('Unapprove')).'</a>';
+                        echo ' | <a href="'.File::rewrite($this->addon->getLink().'&amp;save=unapprove&amp;id='.$source_file['id']).'">'.htmlspecialchars(_('Unapprove')).'</a>';
                     else
-                        echo ' | <a href="'.$this->addon->getLink().'&amp;save=approve&amp;id='.$source_file['id'].'">'.htmlspecialchars(_('Approve')).'</a>';
+                        echo ' | <a href="'.File::rewrite($this->addon->getLink().'&amp;save=approve&amp;id='.$source_file['id']).'">'.htmlspecialchars(_('Approve')).'</a>';
                 }
                 if ($this->addon->getUploader() == $_SESSION['userid'] || $_SESSION['role']['manageaddons'])
-                    echo ' | <a href="'.$this->addon->getLink().'&amp;save=deletefile&amp;id='.$source_file['id'].'">'.htmlspecialchars(_('Delete File')).'</a><br />';
+                    echo ' | <a href="'.File::rewrite($this->addon->getLink().'&amp;save=deletefile&amp;id='.$source_file['id']).'">'.htmlspecialchars(_('Delete File')).'</a><br />';
             }
             $n++;
             echo '</td></tr>';
@@ -398,7 +398,7 @@ EOL;
             throw new AddonException(htmlspecialchars(_('You do not have the necessary privileges to perform this action.')));
 
         echo '<br /><hr /><br /><h3>'.htmlspecialchars(_('Configuration')).'</h3>';
-        echo '<form name="changeProps" action="'.$this->addon->getLink().'&amp;save=props" method="POST">';
+        echo '<form name="changeProps" action="'.File::rewrite($this->addon->getLink().'&amp;save=props').'" method="POST">';
 
         // Edit designer
         $designer = ($this->addon->getDesigner() == htmlspecialchars(_('Unknown'))) ? NULL : $this->addon->getDesigner();
@@ -420,11 +420,11 @@ EOL;
         if ($this->addon->getUploader() == $_SESSION['userid']
                 || $_SESSION['role']['manageaddons'])
             echo '<input type="button" value="'.htmlspecialchars(_('Delete Addon')).'"
-                onClick="confirm_delete(\''.$this->addon->getLink().'&amp;save=delete\')" /><br /><br />';
+                onClick="confirm_delete(\''.File::rewrite($this->addon->getLink().'&amp;save=delete').'\')" /><br /><br />';
 
         // Set status flags
         echo '<strong>'.htmlspecialchars(_('Status Flags:')).'</strong><br />';
-        echo '<form method="POST" action="'.$this->addon->getLink().'&amp;save=status">';
+        echo '<form method="POST" action="'.File::rewrite($this->addon->getLink().'&amp;save=status').'">';
         echo '<table id="addon_flags" class="info"><thead><tr><th></th>';
         if ($_SESSION['role']['manageaddons'])
             echo '<th>'.img_label(htmlspecialchars(_('Approved'))).'</th>
@@ -540,7 +540,7 @@ EOL;
         // Moderator notes
         echo '<strong>'.htmlspecialchars(_('Notes from Moderator to Submitter:')).'</strong><br />';
         if ($_SESSION['role']['manageaddons'])
-            echo '<form method="POST" action="'.$this->addon->getLink().'&amp;save=notes">';
+            echo '<form method="POST" action="'.File::rewrite($this->addon->getLink().'&amp;save=notes').'">';
         $fields = array();
         foreach ($this->addon->getAllRevisions() AS $rev_n => $revision) {
             printf(htmlspecialchars(_('Rev %u:')).'<br />',$rev_n);

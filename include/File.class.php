@@ -446,6 +446,31 @@ class File {
         // Add image record to add-on
         File::newImage(NULL, basename($out_file), $addon_id, $addon_type);
     }
+    
+    public static function rewrite($link) {
+	$link = str_replace(SITE_ROOT, NULL, $link);
+	$rules = ConfigManager::get_config('apache_rewrites');
+	$rules = preg_split('/(\\r)?\\n/',$rules);
+	
+	foreach ($rules AS $rule) {
+	    // Check for invalid lines
+	    if (!preg_match('/^([^\ ]+) ([^\ ]+)( L)?$/i', $rule, $parts)) continue;
+
+	    // Check rewrite regular expression
+	    $search = '@'.$parts[1].'@i';
+	    $new_link = $parts[2];
+	    if (!preg_match($search, $link, $matches)) continue;
+	    for ($i = 1; $i < count($matches); $i++) {
+		$new_link = str_replace('$'.$i, $matches[$i], $new_link);
+	    }
+	    $link = $new_link;
+	    
+	    if (isset($parts[3]) && ($parts[3] == ' L'))
+		break;
+	}
+	
+	return SITE_ROOT.$link;
+    }
 }
 
 ?>

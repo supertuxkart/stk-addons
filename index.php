@@ -51,7 +51,7 @@ $meta_description = htmlspecialchars(_('This is the official SuperTuxKart add-on
 
 		<div id="index-menu">
 		    <div>
-                        <a href="addons.php?type=karts" style="background-position: -106px 0px;">
+                        <a href="<?php echo File::rewrite('addons.php?type=karts'); ?>" style="background-position: -106px 0px;">
                             <span>
 				<?php
 				    // I18N: Menu link
@@ -61,7 +61,7 @@ $meta_description = htmlspecialchars(_('This is the official SuperTuxKart add-on
                         </a>
 		    </div>
                     <div>
-                        <a href="addons.php?type=tracks" style="background-position: 0px 0px;">
+                        <a href="<?php echo File::rewrite('addons.php?type=tracks'); ?>" style="background-position: 0px 0px;">
                             <span>
 				<?php
 				    // I18N: Menu link
@@ -71,7 +71,7 @@ $meta_description = htmlspecialchars(_('This is the official SuperTuxKart add-on
                         </a>
 		    </div>
                     <div>
-                        <a href="addons.php?type=arenas" style="background-position: -212px 0px;">
+                        <a href="<?php echo File::rewrite('addons.php?type=arenas'); ?>" style="background-position: -212px 0px;">
                             <span>
 				<?php
 				    // I18N: Menu link

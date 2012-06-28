@@ -412,6 +412,7 @@ class Addon {
     }
     
     public function getLink() {
+	// Don't rewrite here, because we might be editing the URL later
         return $this->permalink;
     }
 

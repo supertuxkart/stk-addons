@@ -188,6 +188,7 @@ function settings_panel()
     echo '<tr><td>'.htmlspecialchars(_('List Invisible Addons in XML')).'</td><td><select name="list_invisible">'.$invisible_opts.'</option></td></tr>';
     echo '<tr><td>'.htmlspecialchars(_('Blog RSS Feed')).'</td><td><input name="blog_feed" value="'.ConfigManager::get_config('blog_feed').'" /></td></tr>';
     echo '<tr><td>'.htmlspecialchars(_('Maximum Uploaded Image Dimension')).'</td><td><input name="max_image_dimension" value="'.ConfigManager::get_config('max_image_dimension').'" /></td></tr>';
+    echo '<tr><td>'.htmlspecialchars(_('Apache Rewrites')).'</td><td><textarea name="apache_rewrites">'.htmlspecialchars(ConfigManager::get_config('apache_rewrites')).'</textarea></td></tr>';
     echo '<tr><td></td><td><input type="submit" value="'.htmlspecialchars(_('Save Settings')).'" /></td></tr>';
     echo '</table>';
 }

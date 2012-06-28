@@ -43,7 +43,7 @@ function get_self()
         printf(htmlspecialchars(_('Welcome, %s')),$_SESSION['real_name']);
         echo '&nbsp;&nbsp;&nbsp;';
     }
-    echo '<a href="index.php">';
+    echo '<a href="'.SITE_ROOT.'index.php">';
     echo htmlspecialchars(_("Home"));
     echo '</a>';
 
@@ -51,36 +51,36 @@ function get_self()
     {
         if ($_GET['type'] == 'karts')
         {
-            echo '<a href="addons.php?type=tracks">'.htmlspecialchars(_('Tracks')).'</a>';
-            echo '<a href="addons.php?type=arenas">'.htmlspecialchars(_('Arenas')).'</a>';
+            echo '<a href="'.File::rewrite('addons.php?type=tracks').'">'.htmlspecialchars(_('Tracks')).'</a>';
+            echo '<a href="'.File::rewrite('addons.php?type=arenas').'">'.htmlspecialchars(_('Arenas')).'</a>';
         }
         elseif ($_GET['type'] == 'tracks')
         {
-            echo '<a href="addons.php?type=karts">'.htmlspecialchars(_('Karts')).'</a>';
-            echo '<a href="addons.php?type=arenas">'.htmlspecialchars(_('Arenas')).'</a>';
+            echo '<a href="'.File::rewrite('addons.php?type=karts').'">'.htmlspecialchars(_('Karts')).'</a>';
+            echo '<a href="'.File::rewrite('addons.php?type=arenas').'">'.htmlspecialchars(_('Arenas')).'</a>';
         }
         else
         {
-            echo '<a href="addons.php?type=karts">'.htmlspecialchars(_('Karts')).'</a>';
-            echo '<a href="addons.php?type=tracks">'.htmlspecialchars(_('Tracks')).'</a>';
+            echo '<a href="'.File::rewrite('addons.php?type=karts').'">'.htmlspecialchars(_('Karts')).'</a>';
+            echo '<a href="'.File::rewrite('addons.php?type=tracks').'">'.htmlspecialchars(_('Tracks')).'</a>';
         }
     }
 
     if(User::$logged_in)
     {
-        echo'<a href="login.php?action=logout">'.htmlspecialchars(_("Log out")).'</a>';
-        echo'<a href="users.php">'.htmlspecialchars(_("Users")).'</a>';
-        echo'<a href="upload.php">'.htmlspecialchars(_("Upload")).'</a>';
+        echo'<a href="'.SITE_ROOT.'login.php?action=logout">'.htmlspecialchars(_("Log out")).'</a>';
+        echo'<a href="'.SITE_ROOT.'users.php">'.htmlspecialchars(_("Users")).'</a>';
+        echo'<a href="'.SITE_ROOT.'upload.php">'.htmlspecialchars(_("Upload")).'</a>';
         if ($_SESSION['role']['manageaddons'])
-            echo '<a href="manage.php">'.htmlspecialchars(_('Manage')).'</a>';
+            echo '<a href="'.SITE_ROOT.'manage.php">'.htmlspecialchars(_('Manage')).'</a>';
     }
     else
     {
-        echo'<a href="login.php">';
+        echo'<a href="'.SITE_ROOT.'login.php">';
         echo htmlspecialchars(_('Login'));
         echo '</a>';
     }
-    echo'<a href="about.php">';
+    echo'<a href="'.SITE_ROOT.'about.php">';
     echo htmlspecialchars(_('About'));
     echo '</a>';
      ?>

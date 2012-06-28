@@ -38,6 +38,7 @@ if(!isset($title))
         <meta http-equiv="X-UA-Compatible" content="IE=9" />
         <title><?php echo $title;?></title>
         <link href="<?php echo SITE_ROOT; ?>css/skin_<?php echo $style;?>.css" rel="stylesheet" media="all" type="text/css" />
+	<script type="text/javascript">var siteRoot='<?php echo SITE_ROOT; ?>';</script>
         <script type="text/javascript" src="<?php echo SITE_ROOT; ?>js/jquery.js"></script>
         <script type="text/javascript" src="<?php echo SITE_ROOT; ?>js/jquery.newsticker.js"></script>
         <script type="text/javascript" src="<?php echo SITE_ROOT; ?>js/script.js"></script>

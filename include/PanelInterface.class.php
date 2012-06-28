@@ -52,7 +52,13 @@ class PanelInterface {
         $content .= "\t\t\t<ul>\n";
         for ($i = 0; $i < count($this->menu_items); $i++) {
             $content .= "\t\t\t\t<li>\n";
-            $content .= "\t\t\t\t\t<a class=\"{$this->menu_items[$i]['class']}\" href=\"{$this->menu_items[$i]['url']}\">\n";
+	    if (isset($this->menu_items[$i]['disp'])) {
+		$content .= "\t\t\t\t\t<a class=\"{$this->menu_items[$i]['class']}\" href=\"{$this->menu_items[$i]['disp']}\">\n";
+		$content .= "\t\t\t\t\t\t<div id=\"i\" style=\"display: none;\">{$this->menu_items[$i]['url']}</div>\n";
+	    } else {
+		$content .= "\t\t\t\t\t<a class=\"{$this->menu_items[$i]['class']}\" href=\"{$this->menu_items[$i]['url']}\">\n";
+		
+	    }
             $content .= "\t\t\t\t\t\t{$this->menu_items[$i]['label']}\n";
             $content .= "\t\t\t\t\t</a>\n";
             $content .= "\t\t\t\t</li>\n";

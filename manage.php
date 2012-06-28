@@ -95,14 +95,15 @@ switch ($_GET['action'])
         }
         else
         {
-            ConfigManager::set_config('xml_frequency',(int)$_POST['xml_frequency']);
-            ConfigManager::set_config('allowed_addon_exts',mysql_real_escape_string($_POST['allowed_addon_exts']));
-            ConfigManager::set_config('allowed_source_exts',mysql_real_escape_string($_POST['allowed_source_exts']));
-            ConfigManager::set_config('admin_email',mysql_real_escape_string($_POST['admin_email']));
-            ConfigManager::set_config('list_email',mysql_real_escape_string($_POST['list_email']));
-            ConfigManager::set_config('list_invisible',(int)$_POST['list_invisible']);
-            ConfigManager::set_config('blog_feed', mysql_real_escape_string($_POST['blog_feed']));
+            ConfigManager::set_config('xml_frequency',	    (int)$_POST['xml_frequency']);
+            ConfigManager::set_config('allowed_addon_exts', $_POST['allowed_addon_exts']);
+            ConfigManager::set_config('allowed_source_exts',$_POST['allowed_source_exts']);
+            ConfigManager::set_config('admin_email',	    $_POST['admin_email']);
+            ConfigManager::set_config('list_email',	    $_POST['list_email']);
+            ConfigManager::set_config('list_invisible',	    (int)$_POST['list_invisible']);
+            ConfigManager::set_config('blog_feed',	    $_POST['blog_feed']);
             ConfigManager::set_config('max_image_dimension',(int)$_POST['max_image_dimension']);
+	    ConfigManager::set_config('apache_rewrites',    $_POST['apache_rewrites']);
         }
         echo htmlspecialchars(_('Saved settings.')).'<br />';
         break;

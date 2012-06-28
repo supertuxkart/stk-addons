@@ -94,8 +94,12 @@ $(document).ready(function () {
       history.pushState({path: this.path}, '', this.href);
       var url = this.href;
       var addonType = getUrlVars(url)['type'];
+      if (addonType == undefined) {
+	  url = siteRoot + $(this).children('#i').html().replace('&amp;','&');
+	  addonType = getUrlVars(url)['type'];
+      }
       var addonId = getUrlVars(url)['name'];
-      loadFrame(addonId,'addons-panel.php?type=' + addonType);
+      loadFrame(addonId,siteRoot + 'addons-panel.php?type=' + addonType);
       clearPanelStatus();
       return false;
     });
@@ -104,7 +108,7 @@ $(document).ready(function () {
       history.pushState({path: this.path}, '', this.href);
       var url = this.href;
       var view = getUrlVars(url)['view'];
-      loadFrame(view,'manage-panel.php');
+      loadFrame(view,siteRoot + 'manage-panel.php');
       clearPanelStatus();
       return false;
     });
@@ -113,7 +117,7 @@ $(document).ready(function () {
       history.pushState({path: this.path}, '', this.href);
       var url = this.href;
       var user = getUrlVars(url)['user'];
-      loadFrame(user,'users-panel.php');
+      loadFrame(user,siteRoot + 'users-panel.php');
       clearPanelStatus();
       return false;
     });
@@ -138,8 +142,8 @@ function textLimit(field, num) {
     }
 }
 function addRating(rating,addonId,sel_storage,disp_storage) {
-    loadHTML('./include/addRating.php?rating='+encodeURI(rating)+'&addonId='+encodeURI(addonId),sel_storage);
-    loadHTML('./include/addRating.php?addonId='+encodeURI(addonId),disp_storage);
+    loadHTML(siteRoot + 'include/addRating.php?rating='+encodeURI(rating)+'&addonId='+encodeURI(addonId),sel_storage);
+    loadHTML(siteRoot + 'include/addRating.php?addonId='+encodeURI(addonId),disp_storage);
 }
 
 // AJAX functions
