@@ -19,15 +19,17 @@
  */
 
 // Get the current page address (without "lang" parameter)
-$page_url = $_SERVER['PHP_SELF']."?";
-foreach($_GET as $key => $value)
-{
-    if($key != "lang") $page_url .= $key."=".$value."&amp;";
-}
+$page_url = $_SERVER['REQUEST_URI'];
+if (strstr($page_url,'?') === false)
+	$page_url .= '?';
+// Clean up the new url
+$page_url = preg_replace('/lang=[a-z_]+/i',NULL,$page_url);
+$page_url = preg_replace('/[&]+/i','&',$page_url);
+$page_url = preg_replace('/\?&/i','?',$page_url);
 // Time for the language cookie to expire is 1 year in the future
 $timestamp_expire = time() + 365*24*3600;
 // Set language cookie if it is not set
-if(!isset($_COOKIE['lang']))
+if(!isset($_COOKIE['lang']) && !isset($_GET['lang']))
 {
     setcookie('lang', 'en_EN', $timestamp_expire);
 }
@@ -48,4 +50,9 @@ if (isset($_COOKIE['lang'])) setlocale(LC_ALL, $_COOKIE['lang'].'.UTF-8');
 bindtextdomain('translations', ROOT.'locale');
 textdomain('translations');
 bind_textdomain_codeset('translations', 'UTF-8');
+
+/**
+ * Language string for the currently configured language 
+ */
+define('LANG', $_COOKIE['lang']);
 ?>

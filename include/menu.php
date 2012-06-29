@@ -89,18 +89,32 @@ function get_self()
             <div id="lang-menu">
                 <a class="menu_head" href="#"><?php echo htmlspecialchars(_("Languages"));?></a>
                 <ul class="menu_body">
-                    <li class="flag"><a href="<?php echo $page_url.'&amp;lang=en_US'; ?>" style="background-position: 0px 0px;">EN</a></li>
-                    <li class="flag"><a href="<?php echo $page_url.'&amp;lang=ca_ES'; ?>" style="background-position: -96px -99px;">CA</a></li>
-                    <li class="flag"><a href="<?php echo $page_url.'&amp;lang=de_DE'; ?>" style="background-position: 0px -33px;">DE</a></li>
-                    <li class="flag"><a href="<?php echo $page_url.'&amp;lang=es_ES'; ?>" style="background-position: -96px -66px;">ES</a></li>
-                    <li class="flag"><a href="<?php echo $page_url.'&amp;lang=fr_FR'; ?>" style="background-position: 0px -66px;">FR</a></li>
-                    <li class="flag"><a href="<?php echo $page_url.'&amp;lang=ga_IE'; ?>" style="background-position: 0px -99px;">GA</a></li>
-                    <li class="flag"><a href="<?php echo $page_url.'&amp;lang=gl_ES'; ?>" style="background-position: -48px 0px;">GL</a></li>
-                    <li class="flag"><a href="<?php echo $page_url.'&amp;lang=id_ID'; ?>" style="background-position: -48px -33px;">ID</a></li>
-                    <li class="flag"><a href="<?php echo $page_url.'&amp;lang=it_IT'; ?>" style="background-position: -96px -33px;">IT</a></li>
-                    <li class="flag"><a href="<?php echo $page_url.'&amp;lang=nl_NL'; ?>" style="background-position: -48px -66px;">NL</a></li>
-                    <li class="flag"><a href="<?php echo $page_url.'&amp;lang=ru_RU'; ?>" style="background-position: -48px -99px;">RU</a></li>
-                    <li class="flag"><a href="<?php echo $page_url.'&amp;lang=zh_TW'; ?>" style="background-position: -96px 0px;">ZH (T)</a></li>
+		    <?php
+		    // Generate language menu entries
+		    // Format is: language code, image x-offset, y-offset, label
+		    $langs = array(
+			array('en_US',0,0,'EN'),
+			array('ca_ES',-96,-99,'CA'),
+			array('de_DE',0,-33,'DE'),
+			array('es_ES',-96,-66,'ES'),
+			array('fr_FR',0,-66,'FR'),
+			array('ga_IE',0,-99,'GA'),
+			array('gl_ES',-48,0,'GL'),
+			array('id_ID',-48,-33,'ID'),
+			array('it_IT',-96,-33,'IT'),
+			array('nl_NL',-48,-66,'NL'),
+			array('ru_RU',-48,-99,'RU'),
+			array('zh_TW',-96,0,'ZH (T)')
+		    );
+		    for ($i = 0; $i < count($langs); $i++) {
+			$url = $_SERVER['REQUEST_URI'];
+			if (strstr($url,'?') === false)
+			    $url .= '?lang='.$langs[$i][0];
+			else
+			    $url .= '&amp;lang='.$langs[$i][0];
+			printf("\t\t\t<li class=\"flag\"><a href=\"%s\" style=\"background-position: %dpx %dpx;\">%s</a></li>\n",$url,$langs[$i][1],$langs[$i][2],$langs[$i][3]);
+		    }
+		    ?>
                     <li class="label"><a href="https://translations.launchpad.net/stk/stkaddons">Translate<br />STK-Addons</a></li>
                 </ul>
             </div>

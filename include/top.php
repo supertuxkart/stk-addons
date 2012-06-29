@@ -35,6 +35,10 @@ if(!isset($title))
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+	<?php
+	if (defined('LANG'))
+	    echo "<meta http-equiv=\"content-language\" content=\"".LANG."\" />\n";
+	?>
         <meta http-equiv="X-UA-Compatible" content="IE=9" />
         <title><?php echo $title;?></title>
         <link href="<?php echo SITE_ROOT; ?>css/skin_<?php echo $style;?>.css" rel="stylesheet" media="all" type="text/css" />
