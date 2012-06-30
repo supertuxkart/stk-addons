@@ -18,6 +18,8 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+// Add-On Flags
+//
 // Do not change existing flags! Doing so will cause errors with existing
 // add-ons, and possible game incompatibility. To add new flags, create a new
 // constant, and set it to the next power of 2. The current database schema

@@ -19,6 +19,7 @@
  */
 
 require(ROOT.'config.php');
+require(ROOT.'include/Constants.php');
 require(ROOT.'include/exceptions.php');
 require(ROOT.'include/Log.class.php');
 require(ROOT.'include/Cache.class.php');
@@ -31,7 +32,6 @@ require(ROOT.'include/PanelInterface.class.php');
 require(ROOT.'include/Addon.class.php');
 require(ROOT.'include/AddonViewer.class.php');
 require(ROOT.'include/locale.php');
-require(ROOT.'include/assetFlags.php');
 require(ROOT.'include/sql.php');
 require(ROOT.'include/User.class.php');
 require(ROOT.'include/Ratings.class.php');
