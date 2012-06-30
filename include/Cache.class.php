@@ -51,6 +51,28 @@ class Cache {
 	return true;
     }
     
+    public static function clearAddon($addon) {
+	$addon = Addon::cleanId($addon);
+	if (!Addon::exists($addon)) return false;
+	
+	// Get list of cache files
+	$select_query = 'SELECT `file`
+		FROM `'.DB_PREFIX.'cache`
+		WHERE `addon` = \''.$addon.'\'';
+	$select_handle = sql_query($select_query);
+	if (!$select_handle) return false;
+	$num_files = mysql_num_rows($select_handle);
+	for ($i = 1; $i <= $num_files; $i++) {
+	    $result = mysql_fetch_assoc($select_handle);
+	    unlink(CACHE_DIR.$result['file']);
+	    
+	    $del_query = 'DELETE FROM `'.DB_PREFIX.'cache`
+		WHERE `file` = \''.$result['file'].'\'';
+	    $del_handle = sql_query($del_query);
+	    if (!$del_handle) return false;
+	}
+    }
+    
     /**
      * Add a database record for a cache file
      * @param string $path Relative to cache root

@@ -330,7 +330,7 @@ class File {
                     WHERE `file_path` = \'images/'.$file_name.'\'';
                 $handle = sql_query($query);
                 // Clean image cache
-                Cache::clear();
+                Cache::clearAddon($addon_id);
             }
         }
 

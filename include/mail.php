@@ -15,8 +15,6 @@
                                                                               
  You should have received a copy of the GNU General Public License along with 
  stkaddons.  If not, see <http://www.gnu.org/licenses/>.   */
-?>
-<?php
 
 class Mail {
     public static function newAccountNotification($email, $username, $ver_code, $ver_page) {
@@ -93,4 +91,3 @@ function moderator_email($subject, $message_html)
     mail($mail_address,$subject,$message,$header);
 }
 ?>
-

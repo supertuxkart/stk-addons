@@ -15,12 +15,10 @@
 
  You should have received a copy of the GNU General Public License along with
  stkaddons.  If not, see <http://www.gnu.org/licenses/>.   */
-?>
-<?php
+
 define('ROOT','./');
 $security='';
 include('include.php');
-
 resizeImage($_GET['pic']);
 
 ?>

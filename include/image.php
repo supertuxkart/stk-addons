@@ -37,13 +37,17 @@ function resizeImage($file)
             break;
     }
     $cache_name = $size.'--'.basename($file);
+    $local_path = UP_LOCATION.$file;
 
     // Check if image exists, and if it does, check its format
     $orig_file = File::exists($file);
     if ($orig_file === -1)
     {
-	header('HTTP/1.1 404 Not Found');
-	return;
+	if (!file_exists(ROOT.$file)) {
+	    header('HTTP/1.1 404 Not Found');
+	    return;
+	} else
+	    $local_path = ROOT.$file;
     }
     
     // Check if a cached version is available
@@ -54,7 +58,7 @@ function resizeImage($file)
     }
     
     // Start processing the original file
-    $imageinfo = getimagesize(UP_LOCATION.$file);
+    $imageinfo = @getimagesize($local_path);
     switch ($imageinfo[2])
     {
 	default:
@@ -62,11 +66,11 @@ function resizeImage($file)
 	    $format = 'png';
 	    break;
 	case IMAGETYPE_PNG:
-	    $source = imagecreatefrompng(UP_LOCATION.$file);
+	    $source = imagecreatefrompng($local_path);
 	    $format = 'png';
 	    break;
 	case IMAGETYPE_JPEG:
-	    $source = imagecreatefromjpeg(UP_LOCATION.$file);
+	    $source = imagecreatefromjpeg($local_path);
 	    $format = 'jpg';
 	    break;
     }

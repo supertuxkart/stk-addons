@@ -275,6 +275,9 @@ class Addon {
         if($_SESSION['role']['manageaddons'] != true && User::$user_id != $this->uploaderId)
             throw new AddonException(htmlentities(_('You do not have the necessary permissions to perform this action.')));
 
+	// Remove cache files for this add-on
+	Cache::clearAddon($this->id);
+	
         // Remove files associated with this addon
         $get_files_query = 'SELECT *
             FROM `'.DB_PREFIX."files`
