@@ -106,18 +106,26 @@ function overview_panel()
 
     // I18N: Heading in moderator overview panel
     echo '<h2>'.htmlspecialchars(_('Unapproved Add-Ons')).'</h2>';
+    // I18N: Notice on unapproved add-on list in moderator overview panel
+    echo '<p>'.htmlspecialchars(_('Note that only add-ons where the newest revision is unapproved will appear here.')).'</p>';
     // Loop through each add-on
     $empty_section = true;
     foreach ($addons as $addon) {
 	$a = new Addon($addon);
 	$revisions = $a->getAllRevisions();
+	reset($revisions);
 	$unapproved = array();
 	$revision = current($revisions);
 	for ($i = 0; $i < count($revisions); $i++) {
-	    if (!($revision['status'] && F_APPROVED))
+	    if (!($revision['status'] & F_APPROVED))
 		$unapproved[] = $revision['revision'];
-	    $revision = next($revisions);
+	    if ($i+1 < count($revisions))
+		$revision = next($revisions);
 	}
+	// Don't list if the latest revision is approved
+	if ($revision['status'] & F_APPROVED)
+	    $unapproved = array();
+	
 	if ($unapproved !== array()) {
 	    $empty_section = false;
 	    echo '<strong><a href="'.$a->getLink().'">'.Addon::getName($addon).'</a></strong><br />';
