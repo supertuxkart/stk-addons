@@ -30,6 +30,13 @@ CREATE TABLE `arenas_revs` (
     KEY `revision` (`revision`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+CREATE TABLE `cache` (
+    `file` varchar(30) NOT NULL,
+    `addon` varchar(30) DEFAULT NULL,
+    `props` text DEFAULT NULL,
+    UNIQUE `file` (`file`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 CREATE TABLE `client_sessions` (
     `uid` int(10) unsigned NOT NULL DEFAULT '0',
     `name` varchar(64) NOT NULL DEFAULT '',

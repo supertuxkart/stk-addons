@@ -39,36 +39,36 @@ function resizeImage($file)
     $cache_name = $size.'--'.basename($file);
 
     // Check if image exists, and if it does, check its format
-    if (!file_exists(UP_LOCATION.$file))
+    $orig_file = File::exists($file);
+    if ($orig_file === -1)
     {
-        $source = imagecreatefrompng(ROOT.'image/notfound.png');
-        $format = 'png';
-    }
-    else
-    {
-        $imageinfo = getimagesize(UP_LOCATION.$file);
-        switch ($imageinfo[2])
-        {
-            default:
-                $source = imagecreatefrompng(ROOT.'image/notfound.png');
-                $format = 'png';
-                break;
-            case IMAGETYPE_PNG:
-                $source = imagecreatefrompng(UP_LOCATION.$file);
-                $format = 'png';
-                break;
-            case IMAGETYPE_JPEG:
-                $source = imagecreatefromjpeg(UP_LOCATION.$file);
-                $format = 'jpg';
-                break;
-        }
+	header('HTTP/1.1 404 Not Found');
+	return;
     }
     
-    // Use cached file if possible
-    if (file_exists(CACHE_DIR.'/'.$cache_name)) {
+    // Check if a cached version is available
+    if (Cache::fileExists($cache_name) !== array()) {
         header('Cached-Image: true');
         header('Location: '.CACHE_DL.'/'.$cache_name);
         return;
+    }
+    
+    // Start processing the original file
+    $imageinfo = getimagesize(UP_LOCATION.$file);
+    switch ($imageinfo[2])
+    {
+	default:
+	    $source = imagecreatefrompng(ROOT.'image/notfound.png');
+	    $format = 'png';
+	    break;
+	case IMAGETYPE_PNG:
+	    $source = imagecreatefrompng(UP_LOCATION.$file);
+	    $format = 'png';
+	    break;
+	case IMAGETYPE_JPEG:
+	    $source = imagecreatefromjpeg(UP_LOCATION.$file);
+	    $format = 'jpg';
+	    break;
     }
 
     // Get length and width of original image
@@ -96,7 +96,7 @@ function resizeImage($file)
     // Resize image
     imagecopyresampled($destination, $source, 0, 0, 0, 0, $width_destination, $height_destination, $width_source, $height_source);
     // Display image and cache the result
-        header('Cached-Image: false');
+    header('Cached-Image: false');
     if ($format === 'png') {
         header('Content-Type: image/png');
         imagepng($destination,CACHE_DIR.'/'.$cache_name,9);
@@ -106,6 +106,10 @@ function resizeImage($file)
         imagejpeg($destination,CACHE_DIR.'/'.$cache_name,90);
         imagejpeg($destination,NULL,90);
     }
+    
+    // Create a record of the cached file
+    $orig_file_addon = File::getAddon($orig_file);
+    Cache::createFile($cache_name, $orig_file_addon, sprintf('w=%d,h=%d',$width_destination,$height_destination));
 }
 
 function img_label($text)

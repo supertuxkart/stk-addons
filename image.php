@@ -18,8 +18,8 @@
 ?>
 <?php
 define('ROOT','./');
-include('config.php');
-include('include/image.php');
+$security='';
+include('include.php');
 
 resizeImage($_GET['pic']);
 

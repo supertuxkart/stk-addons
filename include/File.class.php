@@ -43,6 +43,25 @@ class File {
     }
 
     /**
+     * Check if a file exists (based on record in database file table)
+     * @param string $path Relative to upload directory
+     * @return integer File id, or -1 if file record does not exist
+     */
+    public static function exists($path) {
+	$path = mysql_real_escape_string($path);
+	$query = 'SELECT `id`
+		FROM `'.DB_PREFIX.'files`
+		WHERE `file_path` = \''.$path.'\'';
+	$handle = sql_query($query);
+	if (!$handle)
+	    return -1;
+	if (mysql_num_rows($handle) == 0)
+	    return -1;
+	$result = mysql_fetch_array($handle);
+	return $result[0];
+    }
+    
+    /**
      * Extract an archive file
      * @param string $file
      * @param string $destination
@@ -209,6 +228,24 @@ class File {
             return true;
         }
         return false;
+    }
+    
+    public static function getAddon($file_id) {
+        // Validate input
+        if (!is_numeric($file_id))
+            return false;
+        if ($file_id == 0)
+            return false;
+
+        // Look up file path from database
+        $query = 'SELECT `addon_id` FROM `'.DB_PREFIX.'files`
+            WHERE `id` = '.(int)$file_id.'
+            LIMIT 1';
+        $handle = sql_query($query);
+        if (mysql_num_rows($handle) == 0)
+            return false;
+        $file = mysql_fetch_assoc($handle);
+        return $file['addon_id'];
     }
     
     public static function getPath($file_id) {
