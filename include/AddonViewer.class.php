@@ -436,7 +436,7 @@ EOL;
         if ($_SESSION['role']['manageaddons'])
             echo '<th>'.img_label(htmlspecialchars(_('DFSG Compliant'))).'</th>
                 <th>'.img_label(htmlspecialchars(_('Featured'))).'</th>';
-        echo '<th>'.img_label(htmlspecialchars(_('Invalid Textures'))).'</th>';
+        echo '<th>'.img_label(htmlspecialchars(_('Invalid Textures'))).'</th><th></th>';
         echo '</tr></thead>';
         $fields = array();
         $fields[] = 'latest';
@@ -529,6 +529,11 @@ EOL;
             else
                 echo '<input type="checkbox" name="texpower-'.$rev_n.'" disabled />';
             echo '</td>';
+	    
+	    // Delete revision button
+	    echo '<td>';
+	    echo '<input type="button" value="'.sprintf(htmlspecialchars(_('Delete revision %d')),$rev_n).'" onClick="confirm_delete(\''.File::rewrite($this->addon->getLink().'&amp;save=del_rev&amp;rev='.$rev_n).'\');" />';
+	    echo '</td>';
 
             echo '</tr>';
         }

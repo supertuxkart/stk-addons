@@ -76,10 +76,13 @@ CREATE TABLE `files` (
     `addon_type` ENUM('karts','tracks','arenas'),
     `file_type` ENUM('source','image','addon'),
     `file_path` text NOT NULL,
+    `date_added` timestamp NOT NULL default CURRENT_TIMESTAMP,
     `approved` int(1) NOT NULL default 0,
     `downloads` int UNSIGNED NOT NULL default 0,
+    `delete_date` date NOT NULL default '0000-00-00',
     PRIMARY KEY (`id`),
-    FULLTEXT (`file_path`)
+    FULLTEXT (`file_path`),
+    INDEX (`delete_date`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `help` (

@@ -142,6 +142,17 @@ switch ($_GET['save'])
             echo '<span class="error">'.$e->getMessage().'</span><br />';
         }
         break;
+    case 'del_rev':
+	try {
+	    $delRev = new Addon($_GET['name']);
+	    $delRev->deleteRevision($_GET['rev']);
+	    unset($delRev);
+	    echo htmlspecialchars(_('Deleted add-on revision.')).'<br />';
+	}
+	catch (AddonException $e) {
+	    echo '<span class="error">'.$e->getMessage().'</span><br />';
+	}
+	break;
     case 'approve':
     case 'unapprove':
         try {

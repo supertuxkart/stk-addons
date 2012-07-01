@@ -202,6 +202,26 @@ class File {
         return true;
     }
 
+    public static function deleteQueuedFiles() {
+	$date = date('Y-m-d');
+	$q = 'SELECT `id`
+	    FROM `'.DB_PREFIX.'files`
+	    WHERE `delete_date` <= \''.$date.'\'
+	    AND `delete_date` <> \'0000-00-00\'';
+	$h = sql_query($q);
+	if (!$h) throw new Exception('Failed to read deletion queue.');
+	
+	$num_files = mysql_num_rows($h);
+	for ($i = 0; $i < $num_files; $i++) {
+	    $r = mysql_fetch_array($h);
+//	    if (File::delete($r[0])) {
+//		echo 'Deleted file '.$r[0]."<br />\n";
+		Log::newEvent('(simulated) Processed queued deletion of file '.$r[0]);
+//	    }
+	}
+	return true;
+    }
+    
     /**
      * Recursively delete files. This does not touch the database.
      * @param string $dir
@@ -482,6 +502,23 @@ class File {
         
         // Add image record to add-on
         File::newImage(NULL, basename($out_file), $addon_id, $addon_type);
+    }
+    
+    /**
+     * Mark a file to be deleted by a cron script a day after all clients should
+     * have updated their XML files
+     * @param integer $file_id
+     * @return boolean 
+     */
+    public static function queueDelete($file_id) {
+	$del_date = date('Y-m-d',time() + ConfigManager::get_config('xml_frequency') + (60*60*24));
+	$query = 'UPDATE `'.DB_PREFIX.'files`
+	    SET  `delete_date` = \''.$del_date.'\'
+	    WHERE  `id` = '.(int)$file_id;
+	$handle = sql_query($query);
+	if (!$handle)
+	    return false;
+	return true;
     }
     
     public static function rewrite($link) {
