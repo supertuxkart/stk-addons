@@ -45,12 +45,10 @@ else
     $assetpath = $file;
 $filepath = UP_LOCATION.$assetpath;
 
-if (!file_exists($filepath))
-{
-    // File does not exist
-    header("HTTP/1.0 404 Not Found");
-    exit;
-}
+// Don't bother checking if the file exists - if it doesn't exist, you'll get
+// a 404 error anyways after redirecting. Yes, this may make the stats below
+// inaccurate, but the actual 404's that used to be thrown here were relatively
+// rare anyways.
 
 // Check user-agent
 $uagent = $_SERVER['HTTP_USER_AGENT'];
@@ -104,35 +102,11 @@ if (preg_match('#^(SuperTuxKart/[a-z0-9\.\-_]+)( \\(.*\\))?$#',$uagent,$matches)
     }
 }
 
-// File exists
-// Send headers
-$filesize = filesize($filepath);
-
-// Determine content type
-$path_parts = pathinfo($filepath);
-$ext = strtolower($path_parts['extension']);
-switch ($ext) {
-    case "xml": $ctype="application/xml"; break;
-    case "dtd": $ctype="application/xml-dtd"; break;
-    case "zip": $ctype="application/zip"; break;
-    case "png": $ctype="image/png"; break;
-    case "jpeg":
-    case "jpg": $ctype="image/jpg"; break;
-    default: $ctype="application/force-download";
-}
-$mtime = filemtime($filepath);
-$mtimestring = gmdate('D, d M Y H:i:s',$mtime);
-
 // Update download count for addons
 $counterQuery = 'CALL `'.DB_PREFIX.'increment_download` (\''.$assetpath.'\')';
 $counterHandle = sql_query($counterQuery);
 
-header("Pragma: public");
-header("Content-Type: $ctype");
-header("Content-Length: $filesize");
-header("Last-Modified: $mtimestring GMT");
-
-// Redirect to actual resource server to save bandwidth on the web host
+// Redirect to actual resource
 header('Location: http://downloads.tuxfamily.org/stkaddons/assets/'.$assetpath);
 exit;
 ?>
