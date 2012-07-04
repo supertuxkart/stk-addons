@@ -17,12 +17,10 @@
  stkaddons.  If not, see <http://www.gnu.org/licenses/>.   */
 
 $dirUpload = "/media/serveur/stkaddons/upload/";
+$dirUploadCron = $dirUpload;
 $dirBase = "http://127.0.0.1/stkaddons/";
 $dirDownload = $dirBase."upload/";
-$newsXmlPath = $dirBase."xml/news.xml";
-$assetXmlPath = $dirBase."xml/assets.xml";
-$newsXmlPathLocal = $dirUpload."xml/news.xml";
-$assetXmlPathLocal = $dirUpload."xml/assets.xml";
+
 $style="default";
 $admin = "yourname@example.com";
 
@@ -34,14 +32,17 @@ define("DB_PASSWORD", 'pass');
 define("DB_NAME", 'stkbase');
 define("DB_PREFIX", '');
 define("DB_HOST", 'localhost');
-define("UP_LOCATION", $dirUpload);
+if (!defined('CRON'))
+    define("UP_LOCATION", $dirUpload);
+else
+    define("UP_LOCATION", $dirUploadCron);
 define("DOWN_LOCATION", $dirDownload);
 define("SITE_ROOT", "http://stkaddons.tuxfamily.org/");
 define("CACHE_DIR", ROOT.'assets/temp/');
 define("CACHE_DL", $dirBase.'assets/temp/');
-define("NEWS_XML", $newsXmlPath);
-define("ASSET_XML", $assetXmlPath);
-define("NEWS_XML_LOCAL", $newsXmlPathLocal);
-define("ASSET_XML_LOCAL", $assetXmlPathLocal);
+define("NEWS_XML",  DOWN_LOCATION."xml/news.xml");
+define("ASSET_XML", DOWN_LOCATION."xml/assets.xml");
+define("NEWS_XML_LOCAL", UP_LOCATION."xml/news.xml");
+define("ASSET_XML_LOCAL", UP_LOCATION."xml/news.xml");
 define("JPG_ROOT",ROOT);
 ?>

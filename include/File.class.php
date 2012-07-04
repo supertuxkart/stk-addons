@@ -187,8 +187,8 @@ class File {
             return false;
         if (mysql_num_rows($get_file_handle) == 1) {
             $get_file = mysql_fetch_assoc($get_file_handle);
-            if (file_exists(UP_LOCATION.$get_file['file_path']))
-                unlink(UP_LOCATION.$get_file['file_path']);
+	    if (file_exists(UP_LOCATION.$get_file['file_path']))
+		unlink(UP_LOCATION.$get_file['file_path']);
         }
 
         // Delete file record
@@ -214,10 +214,10 @@ class File {
 	$num_files = mysql_num_rows($h);
 	for ($i = 0; $i < $num_files; $i++) {
 	    $r = mysql_fetch_array($h);
-//	    if (File::delete($r[0])) {
-//		echo 'Deleted file '.$r[0]."<br />\n";
-		Log::newEvent('(simulated) Processed queued deletion of file '.$r[0]);
-//	    }
+	    if (File::delete($r[0])) {
+		print 'Deleted file '.$r[0]."<br />\n";
+		Log::newEvent('Processed queued deletion of file '.$r[0]);
+	    }
 	}
 	return true;
     }

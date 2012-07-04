@@ -81,7 +81,7 @@ $meta_description = htmlspecialchars(_('This is the official SuperTuxKart add-on
                         </a>
 		    </div>
                     <div>
-                        <a href="http://supertuxkart.sourceforge.net/Category:Stkaddons" style="background-position: -318px 0px;">
+                        <a href="http://trac.stkaddons.net/" style="background-position: -318px 0px;">
                             <span>
 				<?php
 				    // I18N: Menu link
