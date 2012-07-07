@@ -108,10 +108,15 @@ function get_self()
 		    );
 		    for ($i = 0; $i < count($langs); $i++) {
 			$url = $_SERVER['REQUEST_URI'];
+			// Generate the url to change the language
 			if (strstr($url,'?') === false)
 			    $url .= '?lang='.$langs[$i][0];
-			else
+			else {
+			    // Make sure any existing instances of lang are removed
+			    $url = preg_replace('/(&amp;)*lang=[a-z_]+/i',NULL,$url);
 			    $url .= '&amp;lang='.$langs[$i][0];
+			    $url = str_replace('?&amp;','?',$url);
+			}
 			printf("\t\t\t<li class=\"flag\"><a href=\"%s\" style=\"background-position: %dpx %dpx;\">%s</a></li>\n",$url,$langs[$i][1],$langs[$i][2],$langs[$i][3]);
 		    }
 		    ?>

@@ -31,21 +31,21 @@ $timestamp_expire = time() + 365*24*3600;
 // Set language cookie if it is not set
 if(!isset($_COOKIE['lang']) && !isset($_GET['lang']))
 {
-    setcookie('lang', 'en_EN', $timestamp_expire);
+    setcookie('lang', 'en_US', $timestamp_expire);
+    putenv('LC_ALL=en_US.UTF-8');
+    setlocale(LC_ALL, 'en_US.UTF-8');
 }
-if (isset($_GET['lang'])) { // If the user has chosen a language
+elseif (isset($_GET['lang']))
+{ // If the user has chosen a language
     setcookie('lang', $_GET['lang'], $timestamp_expire);
-    // Need to reload page to make sure translations are visible
-    echo <<< EOF
-<html>
-    <head>
-        <meta http-equiv="refresh" content="0;URL=$page_url">
-    </head>
-</html>
-EOF;
-    exit;
+    putenv('LC_ALL='.$_GET['lang'].'.UTF-8');
+    setlocale(LC_ALL, $_GET['lang'].'.UTF-8');
 }
-if (isset($_COOKIE['lang'])) setlocale(LC_ALL, $_COOKIE['lang'].'.UTF-8');
+else
+{
+    putenv('LC_ALL='.$_COOKIE['lang'].'.UTF-8');
+    setlocale(LC_ALL, $_COOKIE['lang'].'.UTF-8');
+}
 
 bindtextdomain('translations', ROOT.'locale');
 textdomain('translations');
