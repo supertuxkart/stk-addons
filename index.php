@@ -29,90 +29,48 @@ Description: index page
 define('ROOT','./');
 $security ="";
 require('include.php');
-include("include/top.php");
 
+Template::setFile('index.tpl');
 // I18N: Website meta description
-$meta_description = htmlspecialchars(_('This is the official SuperTuxKart add-on repository. It contains extra karts and tracks for the SuperTuxKart game.'));
-?>
-            <meta name="description" content="<?php echo $meta_description; ?>" />
-	</head>
-	<body>
-		<?php 
-		include(ROOT.'include/menu.php');
-		?>
-                <div style="text-align: center; width: 100%;">
-                    <img id="logo_center"
-                         src="image/logo_large.png"
-                         alt="SuperTuxKart Logo"
-                         title="SuperTuxKart Logo"
-                         width="424"
-                         height="325" />
-                </div>
+Template::$meta_desc = htmlspecialchars(_('This is the official SuperTuxKart add-on repository. It contains extra karts and tracks for the SuperTuxKart game.'));
 
-		<div id="index-menu">
-		    <div>
-                        <a href="<?php echo File::rewrite('addons.php?type=karts'); ?>" style="background-position: -106px 0px;">
-                            <span>
-				<?php
-				    // I18N: Menu link
-				    echo htmlspecialchars(_("Karts"));
-				?>
-			    </span>
-                        </a>
-		    </div>
-                    <div>
-                        <a href="<?php echo File::rewrite('addons.php?type=tracks'); ?>" style="background-position: 0px 0px;">
-                            <span>
-				<?php
-				    // I18N: Menu link
-				    echo htmlspecialchars(_("Tracks"));
-				?>
-			    </span>
-                        </a>
-		    </div>
-                    <div>
-                        <a href="<?php echo File::rewrite('addons.php?type=arenas'); ?>" style="background-position: -212px 0px;">
-                            <span>
-				<?php
-				    // I18N: Menu link
-				    echo htmlspecialchars(_("Arenas"));
-				?>
-			    </span>
-                        </a>
-		    </div>
-                    <div>
-                        <a href="http://trac.stkaddons.net/" style="background-position: -318px 0px;">
-                            <span>
-				<?php
-				    // I18N: Menu link
-				    echo htmlspecialchars(_("Help"));
-				?>
-			    </span>
-                        </a>
-		    </div>
-		</div>
-                <div id="news-panel">
-                    <ul id="news-messages">
-                        <?php
-                        // Note most downloaded track and kart
-                        $pop_kart = stat_most_downloaded('karts');
-                        $pop_track = stat_most_downloaded('tracks');
-                        printf('<li>'.htmlspecialchars(_('The most downloaded kart is %s.')).'</li>'."\n",Addon::getName($pop_kart));
-                        printf('<li>'.htmlspecialchars(_('The most downloaded track is %s.')).'</li>'."\n",Addon::getName($pop_track));
-                        
-                        $newsSql = 'SELECT * FROM `'.DB_PREFIX.'news`
-                            WHERE `active` = 1
-                            AND `web_display` = 1
-                            ORDER BY `date` DESC';
-                        $handle = sql_query($newsSql);
-                        for ($result = sql_next($handle); $result; $result = sql_next($handle))
-                        {
-                            printf("<li>%s</li>\n",htmlentities($result['content']));
-                        }
-                        ?>
-                    </ul>
-                </div>
-		<?php
-		include("include/footer.php"); ?>
-	</body>
-</html>
+$tpl = array();
+// Display index menu
+$index_menu = array(
+    array('href' => File::rewrite('addons.php?type=karts'),
+	'label' => htmlspecialchars(_('Karts')),
+	'type' => 'karts'),
+    array('href' => File::rewrite('addons.php?type=tracks'),
+	'label' => htmlspecialchars(_('Tracks')),
+	'type' => 'tracks'),
+    array('href' => File::rewrite('addons.php?type=arenas'),
+	'label' => htmlspecialchars(_('Arenas')),
+	'type' => 'arenas'),
+    array('href' => 'http://trac.stkaddons.net',
+	'label' => 'Help',
+	'type' => 'help')
+);
+$tpl['index_menu'] = $index_menu;
+
+// Display news messages
+$news_messages = array();
+// Note most downloaded track and kart
+$pop_kart = stat_most_downloaded('karts');
+$pop_track = stat_most_downloaded('tracks');
+$news_messages[] = sprintf(htmlspecialchars(_('The most downloaded kart is %s.')),Addon::getName($pop_kart));
+$news_messages[] = sprintf(htmlspecialchars(_('The most downloaded track is %s.')),Addon::getName($pop_track));
+
+$newsSql = 'SELECT * FROM `'.DB_PREFIX.'news`
+    WHERE `active` = 1
+    AND `web_display` = 1
+    ORDER BY `date` DESC';
+$handle = sql_query($newsSql);
+for ($result = sql_next($handle); $result; $result = sql_next($handle)) {
+    $news_messages[] = htmlentities($result['content']);
+}
+$tpl['news_messages'] = $news_messages;
+
+Template::assignments($tpl);
+
+Template::display();
+?>

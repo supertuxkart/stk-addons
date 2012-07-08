@@ -19,6 +19,7 @@
  */
 
 require(ROOT.'config.php');
+require_once(ROOT.'include/Template.class.php');
 require(ROOT.'include/Constants.php');
 require(ROOT.'include/exceptions.php');
 require(ROOT.'include/Log.class.php');

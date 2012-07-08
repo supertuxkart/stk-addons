@@ -27,11 +27,6 @@ Description: menu
 
 ***************************************************************************/
 
-function get_self()
-{
-    $list = get_included_files();
-    return $list[0];
-}
 ?>
 <div id="global">
 <div id="top-menu">

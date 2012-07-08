@@ -24,8 +24,12 @@ $dirDownload = $dirBase."upload/";
 $style="default";
 $admin = "yourname@example.com";
 
+// CAPTCHA properties
 define('CAPTCHA_PUB',''); // reCAPTCHA public key
 define('CAPTCHA_PRIV',''); // reCAPTCHA private key
+
+// Template properties (Fixme: define this in user prefs)
+define('TPL_PATH', 'tpl/default/');
 
 define("DB_USER", 'root');
 define("DB_PASSWORD", 'pass');

@@ -18,6 +18,12 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+function get_self()
+{
+    $list = get_included_files();
+    return $list[0];
+}
+
 /**
  * Class to hold all file-related operations
  *
@@ -522,6 +528,10 @@ class File {
     }
     
     public static function rewrite($link) {
+	// Don't rewrite external links
+	if (substr($link,0,7) == 'http://' && substr($link,0,strlen(SITE_ROOT)) != SITE_ROOT)
+	    return $link;
+
 	$link = str_replace(SITE_ROOT, NULL, $link);
 	$rules = ConfigManager::get_config('apache_rewrites');
 	$rules = preg_split('/(\\r)?\\n/',$rules);
@@ -544,6 +554,10 @@ class File {
 	}
 	
 	return SITE_ROOT.$link;
+    }
+    
+    public static function link($href, $label) {
+	return '<a href="'.File::rewrite($href).'">'.$label.'</a>';
     }
 }
 

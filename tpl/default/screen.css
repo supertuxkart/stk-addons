@@ -1,0 +1,659 @@
+/**
+ * copyright 2012 Stephen Just <stephenjust@users.sourceforge.net>
+ *
+ * This file is part of stkaddons
+ *
+ * stkaddons is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * stkaddons is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
+ */
+ 
+body {
+    font-family: Verdana,Geneva,sans-serif;
+    font-size: 13.5px;
+    background-repeat:no-repeat;
+    background-position: top left;
+    padding:0px;
+    margin:0px;
+    color:black;
+}
+
+#body-frame {
+    margin:auto;
+    width:1000px;
+    background-image: url("images/background.jpg");
+    background-repeat: no-repeat;
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: 623px;
+}
+#footer {
+    color: #000;
+    font-size: small;
+    text-align: center;
+}
+
+/* Top Bar */
+#top-menu {
+    background: #e1dbda; /* for non-css3 browsers */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#e1dbda', endColorstr='#d1ccca'); /* for IE */
+    background: -webkit-gradient(linear, left top, left bottom, from(#e1dbda), to(#d1ccca)); /* for webkit browsers */
+    background: -moz-linear-gradient(top,  #e1dbda,  #d1ccca); /* for firefox 3.6+ */ 
+    border: 0px;
+    border-bottom: 1px solid #958f8e;
+    color: #000;
+    display: block;
+    margin: auto;
+    width: 1000px;
+    height: 35px;
+}
+#top-menu-content
+{
+    padding-top: 8px;
+    margin: 0px 20px 0px 20px;
+}
+#top-menu .left
+{
+    float: left;
+}
+#top-menu .right
+{
+    float: right;
+}
+#top-menu a
+{
+    color:black;
+    padding-left: 10px;
+    padding-right: 10px;
+    text-decoration:underline;
+}
+#top-menu a:hover
+{
+    color:grey;
+}
+
+label {
+    font-weight: bold;
+}
+
+/* Home Page */
+#index-logo {
+    display: block;
+    margin: 15px auto 0px auto;
+    width: 424px;
+    height: 325px;
+}
+#index-menu {
+    display: table;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    height: 130px;
+    width: auto;
+}
+#index-menu > div {
+    display: table-cell;
+    padding: 0px 50px 0px 50px;
+    width: 106px;
+}
+#index-menu a {
+    background-image: url('images/index-icons.png');
+    background-repeat: no-repeat;
+    display: block;
+    padding: 108px 0px 0px 0px;
+    width: 106px;
+}
+#index-menu a.karts {
+    background-position: -106px 0px;
+}
+#index-menu a.tracks {
+    background-position: 0px 0px;
+}
+#index-menu a.arenas {
+    background-position: -212px 0px;
+}
+#index-menu a.help {
+    background-position: -318px 0px;
+}
+#index-menu a span {
+    display: inline;
+    background: #efefef !important;
+    padding: 2px 15px 2px 15px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px; /* This and line below for IE */
+    behavior: url('css/PIE.htc');
+}
+/* News Bar */
+#index-news {
+    display: block;
+    background-image: url('images/news-panel.png');
+    width: 1000px;
+    height: 125px;
+}
+#news-messages {
+    display: table;
+    list-style: none;
+    font-size: 1.8em;
+    width: 100%;
+    height: 100%;
+}
+#news-messages > li {
+    display: table-cell;
+    padding-top: 20px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* Language Menu */
+#lang-menu {
+    display: inline;
+}
+#lang-menu ul.menu_body {
+    border: 1px solid #4e4e4e;
+    background: #efefef; /* for non-css3 browsers */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#efefef', endColorstr='#dddddd'); /* for IE */
+    background: -webkit-gradient(linear, left top, left bottom, from(#efefef), to(#dddddd)); /* for webkit browsers */
+    background: -moz-linear-gradient(top,  #efefef,  #dddddd); /* for firefox 3.6+ */ 
+    display: none;
+    list-style: none;
+    position: absolute;
+    padding: 0px;
+    margin: 0px;
+    width: 163px;
+    z-index: 9999;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px; /* This and line below for IE */
+    behavior: url('css/PIE.htc');
+}
+#lang-menu li {
+    display: block;
+    float: left;
+    margin: 0px;
+    padding: 0px;
+    width: 54px;
+    height: 38px;
+}
+#lang-menu li.label {
+    clear: left;
+    float: none;
+    width: auto;
+    height: auto;
+    padding: 3px;
+}
+#lang-menu li a {
+    display: block;
+    margin: 0px;
+    padding: 0px;
+}
+#lang-menu li.flag a {
+    background-image: url('images/flags.png');
+    border: 1px solid #4e4e4e;
+    color: #4e4e4e;
+    font-size: xx-small;
+    font-weight: bold;
+    height: 33px;
+    margin: 2px;
+    padding: 0px;
+    padding-right: 2px;
+    text-align: right;
+    text-decoration: none;
+    text-shadow: #efefef 0px 1px 0px;
+    width: 46px;
+    behavior: url('css/PIE.htc');
+}
+#lang-menu li.flag a:hover {
+    border: 1px solid #999999;
+    color: #999999;
+}
+
+/* Error Messages */
+span.error {
+    background: #FFCCCC;
+    border: 1px solid #CC0000;
+    color: #CC0000;
+    display: inline-block;
+    padding: 0px 2px 0px 2px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+span.warning {
+    background: #FFFFCC;
+    border: 1px solid #FFCC00;
+    color: #996600;
+    display: inline-block;
+    padding: 0px 2px 0px 2px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+
+/* Loading Message */
+#loading {
+    background-image: url('../image/loader.gif');
+    display: block;
+    height: 32px;
+    width: 32px;
+}
+
+/* Flag Badges */
+span.badge {
+    display: block;
+    float: left;
+    margin: 1px;
+    padding: 3px;
+    white-space: nowrap;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+span.f_featured {
+    background-color: #FFFFCC;
+    border: 1px solid #996600;
+    color: #996600;
+}
+span.f_alpha {
+    background-color: #CCCCFF;
+    border: 1px solid #000099;
+    color: #000099;
+}
+span.f_beta {
+    background-color: #CCFFFF;
+    border: 1px solid #009999;
+    color: #009999;
+}
+span.f_rc {
+    background-color: #CCFFCC;
+    border: 1px solid #009900;
+    color: #009900;
+}
+span.f_dfsg {
+    background-color: #CCCCCC;
+    border: 1px solid #000000;
+    color: #000000;
+}
+
+/* Download Button */
+#dl_button {
+    clear: both;
+    overflow: auto;
+}
+#dl_button .left {
+    background: url('../image/dl-button-left.png') no-repeat;
+    float: left;
+    height: 80px;
+    width: 70px;
+}
+#dl_button .center {
+    background: url('../image/dl-button-center.png') repeat-x;
+    float: left;
+    font-size: 1.3em;
+    font-weight: bold;
+    height: 80px;
+    line-height: 80px;
+    padding-right: 1em;
+}
+#dl_button .right {
+    background: url('../image/dl-button-right.png') no-repeat;
+    float: left;
+    height: 80px;
+    width: 8px;
+}
+
+/* Addon Description in Panel */
+#addon-description {
+    clear: left;
+    display: block;
+}
+
+/* Addon Rating */
+#rating-container {
+    background: #efefef;
+    border: 1px solid #cccccc;
+    clear: none;
+    float: right;
+    font-size: small;
+    font-weight: normal;
+    padding: 2px;
+    display: block;
+}
+#rating-container p {
+    margin: 0px;
+    text-align: center;
+}
+.rating { 
+    position: relative;
+    width: 55px;
+    height: 17px;
+}
+.rating .emptystars {
+    position: absolute;
+    background: transparent url('../image/stars.png') top left no-repeat;
+    top: 0px;
+    left: 0px;
+    width: 55px;
+    height: 17px;
+    z-index: 101;
+}
+.rating .fullstars {
+    position: absolute;
+    background: transparent url('../image/stars.png') bottom left no-repeat;
+    top: 0px;
+    left: 0px;
+    height: 17px;
+    z-index: 102;
+}
+#user-rating .rating {
+    display: inline-block;
+}
+
+#upload_agreement td
+{
+    vertical-align: top;
+}
+
+a
+{
+    color: #000000;
+    text-decoration:none;
+}
+a:hover
+{
+    color: #999999;
+}
+#content
+{
+    padding: 5px;
+    background-image:url("../image/content.png");
+    clear:both;
+    max-height: 575px;
+    overflow-y: scroll;
+}
+.preview
+{
+    width:300px;
+}
+
+h1
+{
+    clear:both;
+    font-size:23px;
+    font-family: Tahoma, Verdana,Geneva,sans-serif;
+    font-weight:normal;
+}
+h1 .left
+{
+    width:14px;
+    min-height:44px;
+    background-image:url("../image/h1-left.png");
+    float:left;
+    display:block;
+}
+h1 .center
+{
+    min-height:44px;
+    background-image:url("../image/h1-center.png");
+    float:left;
+    display:block;
+    width:572px;
+}
+h1 .right
+{
+    width:14px;
+    min-height:44px;
+    background-image:url("../image/h1-right.png");
+    float:left;
+    display:block;
+}
+
+a img 
+{
+    border:none;
+}
+
+/* Layout for panels */
+#left-menu
+{
+    float: left;
+    width: 250px;
+    padding: 30px;
+}
+#left-menu_top
+{
+    background-image: url('../image/left-menu_top.png');
+    height: 10px;
+    width: 100%;
+}
+#left-menu_body
+{
+    background-image: url('../image/left-menu.png');
+    overflow-x: hidden;
+    overflow-y: scroll;
+    width: 210px;
+    height: 456px;
+    padding: 0px 20px 0px 20px;
+}
+#left-menu_bottom
+{
+    background-image: url('../image/left-menu_bottom.png');
+    height: 10px;
+    width: 100%;
+}
+#left-menu_body ul
+{
+    list-style: none;
+    margin: 0px 10px 0px 0px;
+    padding: 5px 5px 5px 0px;
+}
+#left-menu_body .menu-item
+{
+    display:block;
+    font-size: 1.5em;
+    padding: 2px;
+    margin-bottom: 2px;
+}
+#left-menu_body .menu-item:hover
+{
+    background-color: #000000;
+    color: #FFFFFF;
+}
+#left-menu_body li div.icon {
+    position: relative;
+    float: left;
+    width: 25px;
+    height: 25px;
+}
+#left-menu_body .icon-featured
+{
+    background: url('../image/emblem-favorite.png') no-repeat right;
+    float: left;
+    height: 25px;
+    width: 25px;
+    position: absolute;
+    left: 5px;
+    top: 5px;
+}
+.unavailable
+{
+    color: #999999;
+}
+.unavailable a
+{
+    color: #999999;
+}
+
+#right-content {
+    float: left;
+    width: 620px;
+    padding: 30px;
+}
+#right-content_top
+{
+    background-image:url("../image/content-addon_top.png");
+    height: 10px;
+    width: 100%;
+}
+#right-content_status
+{
+    background-image:url("../image/content-addon.png");
+    overflow-x: hidden;
+    width: 580px;
+    padding: 0px 20px 0px 20px;
+}
+#right-content_body
+{
+    background-image:url("../image/content-addon.png");
+    width:580px;
+    height:456px;
+    padding: 0px 20px 0px 20px;
+    overflow-y:scroll;
+    overflow-x: hidden;
+}
+#right-content_bottom
+{
+    background-image:url("../image/content-addon_bottom.png");
+    height: 10px;
+    width: 100%;
+}
+#addon-image
+{
+    display: block;
+    float: right;
+    text-align: center;
+}
+#right-content h1
+{
+    display: block;
+    border-bottom: 1px solid #CCCCCC;
+}
+#right-content h2
+{
+    border-bottom: 1px solid #CCCCCC;
+    font-size: 1.4em;
+    font-weight: normal;
+}
+#right-content h3
+{
+    clear: both;
+    display: block;
+    border-bottom: 1px dashed #CCCCCC;
+}
+
+#right-content table.info
+{
+    border: 0px;
+    border-spacing: 0px 2px;
+    margin: 5px 2px 5px 2px;
+}
+#right-content table.info tbody tr
+{
+    background: #DDDDDD;
+}
+#right-content table.info tbody tr:nth-child(even)
+{
+    background: #EEEEEE;
+}
+
+/* Addon image tiles */
+div.image_thumbs
+{
+    overflow: auto;
+}
+div.image_thumb_container
+{
+    display: block;
+    background: #CCCCDD;
+    border: 1px solid #666677;
+    border-radius: 3px;
+    float: left;
+    padding: 3px;
+    margin: 1px;
+    min-width: 78px;
+    min-height: 78px;
+    text-align: center;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+}
+div.unapproved
+{
+    border: 1px solid #CC0000;
+    background: #DDCCCC
+}
+
+#addon_flags th
+{
+    vertical-align: bottom;
+}
+
+.icon
+{
+    height:25px;
+    margin-left:2px;
+    margin-right:10px;
+}
+/* Obselete - do not use */
+.menu-addons:hover
+{
+    background-color:black;
+    color:white;
+}
+.menu-addons
+{
+    display:block;
+    padding:2px;
+    margin-bottom:2px;
+}
+/* End obselete */
+.help-hidden div
+{
+    display:none;
+}
+span.help-hidden
+{
+    color:white;
+    background-color:black;
+    width:250px;
+    display:block;
+    font-weight:bold;
+    text-align:center;
+}
+div.help-hidden
+{
+    border:1px solid grey;
+    width:250px;
+}
+
+/* Error Pages */
+#error-container {
+    background: rgba(255,255,255,0.75);
+    margin: 2em 10em 2em 10em;
+    border-radius: 10px;
+    padding: 1.5em;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+}
+#error-container h1 {
+    margin-top: 0px;
+    font-size: 3em;
+    font-weight: bold;
+    text-align: center;
+    clear: none;
+}
+#error-container p {
+    font-size: 1.5em;
+    clear: none;
+}
+#error-container img {
+    float: left;
+}
