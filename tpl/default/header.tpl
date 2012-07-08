@@ -2,8 +2,8 @@
 <html>
     <head>
 	<title>{$title|default:"SuperTuxKart Add-ons"}</title>
-	{foreach $meta_tags as $meta}
-	<meta http-equiv="{$meta.field}" content="{$meta.content}" />
+	{foreach $meta_tags as $meta_field => $meta_content}
+	<meta http-equiv="{$meta_field}" content="{$meta_content}" />
 	{/foreach}
 	<meta http-equiv="X-UA-Compatible" content="IE=9" />
 	{foreach $script_inline as $script}

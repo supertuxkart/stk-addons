@@ -35,6 +35,9 @@ Template::setFile('index.tpl');
 Template::$meta_desc = htmlspecialchars(_('This is the official SuperTuxKart add-on repository. It contains extra karts and tracks for the SuperTuxKart game.'));
 
 $tpl = array();
+// I18N: Index page title
+$tpl['title'] = htmlspecialchars(_('SuperTuxKart Add-ons'));
+
 // Display index menu
 $index_menu = array(
     array('href' => File::rewrite('addons.php?type=karts'),

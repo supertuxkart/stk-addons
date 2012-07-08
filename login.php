@@ -28,96 +28,89 @@ Description: login page
 ***************************************************************************/
 define('ROOT','./');
 $security = "";
-// Include basic files
 include(ROOT.'include.php');
-$title = htmlspecialchars(_('STK Add-ons').' | '._('Login'));
 
 // define possibly undefined variables
 $_POST['user'] = (isset($_POST['user'])) ? $_POST['user'] : NULL;
 $_POST['pass'] = (isset($_POST['pass'])) ? $_POST['pass'] : NULL;
 $_GET['action'] = (isset($_GET['action'])) ? $_GET['action'] : NULL;
 
-if ($_GET['action'] == 'logout')
-{
-    User::logout();
-    include(ROOT.'include/menu.php');
-    if (User::$logged_in === true)
-    {
-        include(ROOT.'include/top.php');
-        echo '</head><body><div id="content">';
-        echo '<span class="error">'.htmlspecialchars(_('Failed to logout.')).'</span><br />';
-    }
-    else
-    {
-        include(ROOT.'include/top.php');
-        echo '<meta http-equiv="refresh" content="3;URL=index.php"></head><body>';
-        echo '<div id="content">';
-        echo htmlspecialchars(_('You have been logged out.')).'<br />';
-        printf(htmlspecialchars(_('Click %shere%s if you do not automatically redirect.')),'<a href="index.php">','</a>').'<br />';
-    }
-    include(ROOT.'include/footer.php');
-    exit;
-}
+$tpl = array();
+// Prepare forms
+$login_form = array(
+    'display' => true,
+    'form' => array(
+	'start' => '<form action="'.File::rewrite('login.php?action=submit').'" method="POST">',
+	'end'	=> '</form>',
+	'username' => array(
+	    'label' => htmlspecialchars(_('Username:')),
+	    'field' => '<input type="text" name="user" />'
+	),
+	'password' => array(
+	    'label' => htmlspecialchars(_('Password:')),
+	    'field' => '<input type="password" name="pass" />'
+	),
+	'submit' => '<input type="submit" value="'.htmlspecialchars(_('Log In')).'" />'
+    ),
+    'links' => array(
+	'register'	=> File::link('register.php',htmlspecialchars(_('Create an account.'))),
+	'reset_password'=> File::link('password-reset.php',htmlspecialchars(_('Forgot password?')))
+    )
+);
 
-if (User::$logged_in === true)
-{
-    include(ROOT.'include/top.php');
-    echo '<meta http-equiv="refresh" content="3;URL=index.php"></head><body>';
-    include(ROOT.'include/menu.php');
-    echo '<div id="content">';
-    echo htmlspecialchars(_('You are already logged in.')).' ';
-    printf(htmlspecialchars(_('Click %shere%s if you do not automatically redirect.')),'<a href="index.php">','</a>').'<br />';
-    include('include/footer.php');
-    exit;
-}
+$errors = '';
+switch ($_GET['action']) {
+    case 'logout':
+	$login_form['display'] = false;
 
-if ($_GET['action'] == 'submit')
-{
-    $error = false;
-    try
-    {
-        // Variable validation is done by the function below
-        User::login($_POST['user'],$_POST['pass']);
-    }
-    catch (UserException $e)
-    {
-        $error = $e->getMessage();
-    }
-    include(ROOT.'include/top.php');
-    if ($error === false)
-        echo '<meta http-equiv="refresh" content="3;URL=index.php">';
-    echo '</head><body>';
-    include(ROOT.'include/menu.php');
-    echo '<div id="content">';
-    if (User::$logged_in === true)
-    {
-        printf(htmlspecialchars(_('Welcome, %s!')).'<br />',$_SESSION['real_name']);
-        printf(htmlspecialchars(_('Click %shere%s if you do not automatically redirect.')),'<a href="index.php">','</a>').'<br />';
-        include('include/footer.php');
-        exit;
-    }
-    else
-    {
-        echo '<span class="error">'.$error.'</span><br />';
-    }
+	User::logout();
+	if (User::$logged_in === true)
+	    $errors .= htmlspecialchars(_('Failed to logout.'));
+	else {
+	    Template::$meta_tags['refresh'] = '3;URL=index.php';
+	    $conf = htmlspecialchars(_('You have been logged out.')).'<br />';
+	    $conf .= sprintf(htmlspecialchars(_('Click %shere%s if you do not automatically redirect.')),'<a href="index.php">','</a>').'<br />';
+	    $tpl['confirmation'] = $conf;
+	}
+	
+	break;
     
+    case 'submit':
+	$login_form['display'] = false;
+
+	try
+	{
+	    // Variable validation is done by the function below
+	    User::login($_POST['user'],$_POST['pass']);
+	}
+	catch (UserException $e)
+	{
+	    $errors .= $e->getMessage();
+	}
+	if (User::$logged_in === true) {
+	    Template::$meta_tags['refresh'] = '3;URL=index.php';
+	    $conf = sprintf(htmlspecialchars(_('Welcome, %s!')).'<br />',$_SESSION['real_name']);
+	    $conf .= sprintf(htmlspecialchars(_('Click %shere%s if you do not automatically redirect.')),'<a href="index.php">','</a>').'<br />';
+	    $tpl['confirmation'] = $conf;
+	}
+	break;
+    
+    default:
+	if (User::$logged_in) {
+	    $login_form['display'] = false;
+	    Template::$meta_tags['refresh'] = '3;URL=index.php';
+	    $conf = htmlspecialchars(_('You are already logged in.')).' ';
+	    $conf .= sprintf(htmlspecialchars(_('Click %shere%s if you do not automatically redirect.')),'<a href="index.php">','</a>').'<br />';
+	    $tpl['confirmation'] = $conf;
+	}
+	break;
 }
-else
-{
-    include(ROOT.'include/top.php');
-    echo '</head><body>';
-    include(ROOT.'include/menu.php');
-    echo '<div id="content">';
-}
-?>
-<form action="login.php?action=submit" method="POST">
-    <?php echo htmlspecialchars(_('Username:')); ?><br />
-    <input type="text" name="user" /><br />
-    <?php echo htmlspecialchars(_('Password:')); ?><br />
-    <input type="password" name="pass" /><br />
-    <input type="submit" value="<?php echo htmlspecialchars(_('Log In')); ?>" />
-</form>
-<a href="register.php"><?php echo htmlspecialchars(_('Create an account.')); ?></a><br />
-<a href="password-reset.php"><?php echo htmlspecialchars(_('Forgot password?')); ?></a>
-</div>
-<?php include("include/footer.php"); ?>
+
+Template::setFile('login.tpl');
+
+$tpl['title'] = htmlspecialchars(_('STK Add-ons').' | '._('Login'));
+$tpl['login'] = $login_form;
+
+Template::assignments($tpl);
+
+Template::display();

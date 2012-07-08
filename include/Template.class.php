@@ -29,6 +29,7 @@ class Template {
     private static $tpl_root = TPL_PATH; // FIXME: Define this based on user setting
     
     public static $meta_desc = NULL;
+    public static $meta_tags = array();
     
     private static function createSmarty() {
 	if (Template::$smarty != NULL)
@@ -56,11 +57,11 @@ class Template {
     
     private static function setupHead() {
 	// Fill meta tags
-	$meta_tags = array(
-	    array('field' => 'content-type',    'content' => 'text/html; charset=UTF-8'),
-	    array('field' => 'content-language','content' => LANG),
-	    array('field' => 'description',	'content' => Template::$meta_desc)
-	);
+	$meta_tags = array_merge(array(
+	    'content-type'	=> 'text/html; charset=UTF-8',
+	    'content-language'	=> LANG,
+	    'description'	=> Template::$meta_desc
+	),Template::$meta_tags);
 	Template::$smarty->assign('meta_tags',$meta_tags);
 
 	// Fill script tags

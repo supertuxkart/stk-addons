@@ -34,6 +34,7 @@ body {
     background-repeat: no-repeat;
     overflow-y: auto;
     overflow-x: hidden;
+    min-height: 500px;
     max-height: 623px;
 }
 #footer {
@@ -54,7 +55,8 @@ body {
     display: block;
     margin: auto;
     width: 1000px;
-    height: 35px;
+    min-height: 35px;
+    overflow: auto;
 }
 #top-menu-content
 {
@@ -138,18 +140,19 @@ label {
     display: block;
     background-image: url('images/news-panel.png');
     width: 1000px;
-    height: 125px;
+    height: 100px;
 }
 #news-messages {
     display: table;
     list-style: none;
     font-size: 1.8em;
+    padding: 0px;
     width: 100%;
     height: 100%;
 }
 #news-messages > li {
     display: table-cell;
-    padding-top: 20px;
+    padding: 10px 10px 0 10px;
     text-align: center;
     vertical-align: middle;
 }
@@ -239,6 +242,19 @@ span.warning {
     border-radius: 3px;
 }
 
+/* General content */
+#content {
+    border-radius: 2px;
+    margin: 5px;
+    padding: 5px;
+    background-image: url('images/content.png');
+    clear: both;
+    max-height: 575px;
+    overflow-y: scroll;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+}
+
 /* Loading Message */
 #loading {
     background-image: url('../image/loader.gif');
@@ -311,58 +327,6 @@ span.f_dfsg {
     width: 8px;
 }
 
-/* Addon Description in Panel */
-#addon-description {
-    clear: left;
-    display: block;
-}
-
-/* Addon Rating */
-#rating-container {
-    background: #efefef;
-    border: 1px solid #cccccc;
-    clear: none;
-    float: right;
-    font-size: small;
-    font-weight: normal;
-    padding: 2px;
-    display: block;
-}
-#rating-container p {
-    margin: 0px;
-    text-align: center;
-}
-.rating { 
-    position: relative;
-    width: 55px;
-    height: 17px;
-}
-.rating .emptystars {
-    position: absolute;
-    background: transparent url('../image/stars.png') top left no-repeat;
-    top: 0px;
-    left: 0px;
-    width: 55px;
-    height: 17px;
-    z-index: 101;
-}
-.rating .fullstars {
-    position: absolute;
-    background: transparent url('../image/stars.png') bottom left no-repeat;
-    top: 0px;
-    left: 0px;
-    height: 17px;
-    z-index: 102;
-}
-#user-rating .rating {
-    display: inline-block;
-}
-
-#upload_agreement td
-{
-    vertical-align: top;
-}
-
 a
 {
     color: #000000;
@@ -372,266 +336,10 @@ a:hover
 {
     color: #999999;
 }
-#content
-{
-    padding: 5px;
-    background-image:url("../image/content.png");
-    clear:both;
-    max-height: 575px;
-    overflow-y: scroll;
-}
-.preview
-{
-    width:300px;
-}
-
-h1
-{
-    clear:both;
-    font-size:23px;
-    font-family: Tahoma, Verdana,Geneva,sans-serif;
-    font-weight:normal;
-}
-h1 .left
-{
-    width:14px;
-    min-height:44px;
-    background-image:url("../image/h1-left.png");
-    float:left;
-    display:block;
-}
-h1 .center
-{
-    min-height:44px;
-    background-image:url("../image/h1-center.png");
-    float:left;
-    display:block;
-    width:572px;
-}
-h1 .right
-{
-    width:14px;
-    min-height:44px;
-    background-image:url("../image/h1-right.png");
-    float:left;
-    display:block;
-}
 
 a img 
 {
     border:none;
-}
-
-/* Layout for panels */
-#left-menu
-{
-    float: left;
-    width: 250px;
-    padding: 30px;
-}
-#left-menu_top
-{
-    background-image: url('../image/left-menu_top.png');
-    height: 10px;
-    width: 100%;
-}
-#left-menu_body
-{
-    background-image: url('../image/left-menu.png');
-    overflow-x: hidden;
-    overflow-y: scroll;
-    width: 210px;
-    height: 456px;
-    padding: 0px 20px 0px 20px;
-}
-#left-menu_bottom
-{
-    background-image: url('../image/left-menu_bottom.png');
-    height: 10px;
-    width: 100%;
-}
-#left-menu_body ul
-{
-    list-style: none;
-    margin: 0px 10px 0px 0px;
-    padding: 5px 5px 5px 0px;
-}
-#left-menu_body .menu-item
-{
-    display:block;
-    font-size: 1.5em;
-    padding: 2px;
-    margin-bottom: 2px;
-}
-#left-menu_body .menu-item:hover
-{
-    background-color: #000000;
-    color: #FFFFFF;
-}
-#left-menu_body li div.icon {
-    position: relative;
-    float: left;
-    width: 25px;
-    height: 25px;
-}
-#left-menu_body .icon-featured
-{
-    background: url('../image/emblem-favorite.png') no-repeat right;
-    float: left;
-    height: 25px;
-    width: 25px;
-    position: absolute;
-    left: 5px;
-    top: 5px;
-}
-.unavailable
-{
-    color: #999999;
-}
-.unavailable a
-{
-    color: #999999;
-}
-
-#right-content {
-    float: left;
-    width: 620px;
-    padding: 30px;
-}
-#right-content_top
-{
-    background-image:url("../image/content-addon_top.png");
-    height: 10px;
-    width: 100%;
-}
-#right-content_status
-{
-    background-image:url("../image/content-addon.png");
-    overflow-x: hidden;
-    width: 580px;
-    padding: 0px 20px 0px 20px;
-}
-#right-content_body
-{
-    background-image:url("../image/content-addon.png");
-    width:580px;
-    height:456px;
-    padding: 0px 20px 0px 20px;
-    overflow-y:scroll;
-    overflow-x: hidden;
-}
-#right-content_bottom
-{
-    background-image:url("../image/content-addon_bottom.png");
-    height: 10px;
-    width: 100%;
-}
-#addon-image
-{
-    display: block;
-    float: right;
-    text-align: center;
-}
-#right-content h1
-{
-    display: block;
-    border-bottom: 1px solid #CCCCCC;
-}
-#right-content h2
-{
-    border-bottom: 1px solid #CCCCCC;
-    font-size: 1.4em;
-    font-weight: normal;
-}
-#right-content h3
-{
-    clear: both;
-    display: block;
-    border-bottom: 1px dashed #CCCCCC;
-}
-
-#right-content table.info
-{
-    border: 0px;
-    border-spacing: 0px 2px;
-    margin: 5px 2px 5px 2px;
-}
-#right-content table.info tbody tr
-{
-    background: #DDDDDD;
-}
-#right-content table.info tbody tr:nth-child(even)
-{
-    background: #EEEEEE;
-}
-
-/* Addon image tiles */
-div.image_thumbs
-{
-    overflow: auto;
-}
-div.image_thumb_container
-{
-    display: block;
-    background: #CCCCDD;
-    border: 1px solid #666677;
-    border-radius: 3px;
-    float: left;
-    padding: 3px;
-    margin: 1px;
-    min-width: 78px;
-    min-height: 78px;
-    text-align: center;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-}
-div.unapproved
-{
-    border: 1px solid #CC0000;
-    background: #DDCCCC
-}
-
-#addon_flags th
-{
-    vertical-align: bottom;
-}
-
-.icon
-{
-    height:25px;
-    margin-left:2px;
-    margin-right:10px;
-}
-/* Obselete - do not use */
-.menu-addons:hover
-{
-    background-color:black;
-    color:white;
-}
-.menu-addons
-{
-    display:block;
-    padding:2px;
-    margin-bottom:2px;
-}
-/* End obselete */
-.help-hidden div
-{
-    display:none;
-}
-span.help-hidden
-{
-    color:white;
-    background-color:black;
-    width:250px;
-    display:block;
-    font-weight:bold;
-    text-align:center;
-}
-div.help-hidden
-{
-    border:1px solid grey;
-    width:250px;
 }
 
 /* Error Pages */

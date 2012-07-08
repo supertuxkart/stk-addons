@@ -28,7 +28,6 @@
 	    {if $show_manage==true}
 		{$menu.manage}
 	    {/if}
-	    {$menu.about}
 	</div>
 	<div class="right">
 	    {include file=#lang_menu#}
