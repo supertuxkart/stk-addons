@@ -550,6 +550,8 @@ class File {
             if (isset($val['attributes'])) {
                 if (isset($val['attributes']['INVISIBLE']) && $val['attributes']['INVISIBLE'] == 'yes')
                     continue;
+		if (isset($val['attributes']['DIRECTION']))
+		    unset($val['attributes']['DIRECTION']);
                 $quads[] = array_values($val['attributes']);
             }
         }

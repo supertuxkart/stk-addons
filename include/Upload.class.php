@@ -156,8 +156,13 @@ class Upload {
 	    }
 	    $this->properties['image_file'] = $image_file;
 
+	    try {
 	    if (isset($this->properties['quad_file']))
 		File::newImageFromQuads($this->properties['quad_file'], $addon_id, $this->upload_type);
+	    }
+	    catch (FileException $e) {
+		echo '<span class="error">'.$e->getMessage().'</span><br />';
+	    }
 	    
 	    $filetype = 'addon';
 	}
