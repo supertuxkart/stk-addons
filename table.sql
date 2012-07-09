@@ -8,7 +8,7 @@ CREATE TABLE `addons` (
     `creation_date` timestamp NOT NULL default CURRENT_TIMESTAMP,
     `designer` tinytext NOT NULL,
     `props` int UNSIGNED NOT NULL DEFAULT '0',
-    `description` varchar(140),
+    `description` varchar(140) NOT NULL DEFUALT '',
     `license` varchar(4096) NULL DEFAULT NULL,
     UNIQUE KEY `id` (`id`),
     INDEX (`type`)

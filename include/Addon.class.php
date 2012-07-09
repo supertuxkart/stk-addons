@@ -110,6 +110,10 @@ class Addon {
     public static function create($type, $attributes, $fileid)
     {
         global $moderator_message;
+	foreach ($attributes['missing_textures'] AS $tex) {
+	    $moderator_message .= "Texture not found: $tex\n";
+	    echo '<span class="warning">'.htmlspecialchars(sprintf(_('Texture not found: %s'),$tex)).'</span><br />';
+	}
 
         // Check if logged in
         if (!User::$logged_in)
@@ -185,6 +189,10 @@ class Addon {
      */
     public function createRevision($attributes, $fileid) {
         global $moderator_message;
+	foreach ($attributes['missing_textures'] AS $tex) {
+	    $moderator_message .= "Texture not found: $tex\n";
+	    echo '<span class="warning">'.htmlspecialchars(sprintf(_('Texture not found: %s'),$tex)).'</span><br />';
+	}
 
         // Check if logged in
         if (!User::$logged_in)

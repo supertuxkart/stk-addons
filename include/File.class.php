@@ -131,6 +131,144 @@ class File {
         }
     }
     
+    public static function compress($directory, $out_file) {
+	$zip = new ZipArchive();
+	$filename = $out_file;
+
+	if(file_exists($filename))
+	    unlink($filename);
+
+	if ($zip->open($filename, ZIPARCHIVE::CREATE)!==TRUE)
+	{
+	    echo("Cannot open <$filename>\n");
+	    return false;
+	}
+
+	// Find files to add to archive
+	foreach(scandir($directory) as $file)
+	{
+	    if($file == ".." || $file == "." || is_dir($directory.$file))
+		continue;
+	    if(!$zip->addFile($directory.$file, $file)) {
+		echo "Can't add this file: ".$file."\n";
+		return false;
+	    }
+	    if(!file_exists($directory.$file))
+	    {
+		echo "Can't add this file (it doesn't exist): ".$file."\n";
+		return false;
+	    }
+	}
+
+	$succes = $zip->close();
+	if(!$succes)
+	{
+	    echo "Can't close the zip\n";
+	    return false;
+	}
+	return true;
+    }
+    
+    public static function flattenDirectory($current_dir, $destination_dir) {
+	if (!is_dir($current_dir) || !is_dir($destination_dir))
+	    throw new FileException('Invalid source or destination directory.');
+	
+	$dir_contents = scandir($current_dir);
+	foreach ($dir_contents AS $file) {
+	    if (($file == '.') || ($file == '..'))
+		continue;
+	    if (is_dir($current_dir.$file)) {
+		File::flattenDirectory($current_dir.$file.'/', $destination_dir);
+		File::deleteRecursive($current_dir.$file);
+		continue;
+	    }
+	    
+	    if ($current_dir != $destination_dir)
+		rename($current_dir.$file, $destination_dir.$file);
+	}
+    }
+
+    public static function imageCheck($path)
+    {
+	if (!file_exists($path))
+	    return false;
+	if (!is_dir($path))
+	    return false;
+	// Check supported image types
+	$imagetypes = imagetypes();
+	$imageFileExts = array();
+	if ($imagetypes & IMG_GIF)
+	    $imageFileExts[] = 'gif';
+	if ($imagetypes & IMG_PNG)
+	    $imageFileExts[] = 'png';
+	if ($imagetypes & IMG_JPG)
+	{
+	    $imageFileExts[] = 'jpg';
+	    $imageFileExts[] = 'jpeg';
+	}
+	if ($imagetypes & IMG_WBMP)
+	    $imageFileExts[] = 'wbmp';
+	if ($imagetypes & IMG_XPM)
+	    $imageFileExts[] = 'xpm';
+
+
+	foreach (scandir($path) AS $file)
+	{
+	    // Don't check current and parent directory
+	    if ($file == '.' || $file == '..' || is_dir($path.$file))
+		continue;
+	    // Make sure the whole path is there
+	    $file = $path.$file;
+		    
+	    // Don't check files that aren't images
+	    if (!preg_match('/\.('.implode('|',$imageFileExts).')$/i',$file))
+		continue;
+
+	    // If we're still in the loop, there is an image to check
+	    $image_size = getimagesize($file);
+	    // Make sure dimensions are powers of 2
+	    if (($image_size[0] & ($image_size[0]-1)) || ($image_size[0] <= 0))
+		return false;
+	    if (($image_size[1] & ($image_size[1]-1)) || ($image_size[1] <= 0))
+		return false;
+	}
+	return true;
+    }
+
+    public static function typeCheck($path, $source = false)
+    {
+	if (!file_exists($path))
+	    return false;
+	if (!is_dir($path))
+	    return false;
+	// Make a list of approved file types
+	if ($source === false)
+	    $approved_types = ConfigManager::get_config('allowed_addon_exts');
+	else
+	    $approved_types = ConfigManager::get_config('allowed_source_exts');
+	$approved_types = explode(',',$approved_types);
+	$removed_files = array();
+
+	foreach (scandir($path) AS $file)
+	{
+	    // Don't check current and parent directory
+	    if ($file == '.' || $file == '..' || is_dir($path.$file))
+		continue;
+	    // Make sure the whole path is there
+	    $file = $path.$file;
+	    
+	    // Remove files with unapproved extensions
+	    if (!preg_match('/\.('.implode('|',$approved_types).')$/i',$file))
+	    {
+		$removed_files[] = basename($file);
+		unlink($file);
+	    }
+	}
+	if (count($removed_files) == 0)
+	    return true;
+	return $removed_files;
+    }
+    
     /**
      * Check a file upload's error code, and provide a useful exception if an
      * error did occur
@@ -351,9 +489,9 @@ class File {
                 throw new FileException(htmlspecialchars(_('Failed to move uploaded file.')));
         } else {
             // Delete the existing image by this name
-            if (file_exists(UP_LOCATION.'images/'.$file_name)) {
+            if (file_exists(UP_LOCATION.'images/'.basename($file_name))) {
                 $query = 'DELETE FROM `'.DB_PREFIX.'files`
-                    WHERE `file_path` = \'images/'.$file_name.'\'';
+                    WHERE `file_path` = \'images/'.basename($file_name).'\'';
                 $handle = sql_query($query);
                 // Clean image cache
                 Cache::clearAddon($addon_id);
@@ -361,7 +499,7 @@ class File {
         }
 
         // Scan image validity with GD
-        $image_path = UP_LOCATION.'images/'.$file_name;
+        $image_path = UP_LOCATION.'images/'.basename($file_name);
         $gdImageInfo = getimagesize($image_path);
         if (!$gdImageInfo) {
             // Image is not read-able - must be corrupt or otherwise invalid
@@ -385,7 +523,7 @@ class File {
         
         // Add database record for image
         $newImageQuery = 'CALL `'.DB_PREFIX.'create_file_record` '.
-            "('$addon_id','$addon_type','image','images/$file_name',@a)";
+            "('$addon_id','$addon_type','image','images/".basename($file_name)."',@a)";
         $newImageHandle = sql_query($newImageQuery);
         if (!$newImageHandle)
         {

@@ -21,6 +21,7 @@
 define('ROOT','./');
 $security = 'addAddon';
 include('include.php');
+require_once(ROOT.'include/Upload.class.php');
 include('include/top.php');
 
 // Define possibly undefined variables
@@ -128,14 +129,24 @@ if($_GET['action'] == "submit")
         else
             $moderator_message .= 'Auto-message: Content contains third-party open content.'."\n";
         try {
-            if (isset($_GET['name']))
-                parseUpload($_FILES['file_addon'],true);
-            else
-                parseUpload($_FILES['file_addon']);
+	    if (!isset($_POST['upload-type'])) $_POST['upload-type'] = NULL;
+	    switch ($_POST['upload-type']) {
+		case 'image':
+		    $expected_type = 'image';
+		    break;
+		case 'source':
+		    $expected_type = 'source';
+		    break;
+		default:
+		    $expected_type = 'addon';
+		    break;
+	    }
+	    $upload = new Upload($_FILES['file_addon'],$expected_type);
         }
         catch (UploadException $e) {
             echo '<span class="error">'.$e->getMessage().'</span><br />';
         }
+	$upload->removeTempFiles();
     }
     echo '</div>';
     include('include/footer.php');

@@ -38,7 +38,6 @@ require(ROOT.'include/User.class.php');
 require(ROOT.'include/Ratings.class.php');
 require(ROOT.'include/security.php');
 require(ROOT.'include/coreUser.php');
-require(ROOT.'include/parseUpload.php');
 require(ROOT.'include/image.php');
 require(ROOT.'include/mail.php');
 require(ROOT.'include/statistics.php');
