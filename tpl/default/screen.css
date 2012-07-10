@@ -254,6 +254,15 @@ span.warning {
     -moz-border-radius: 2px;
     -webkit-border-radius: 2px;
 }
+#content h1 {
+    border-bottom: 1px solid #CCC;
+    font-family: Tahoma, Verdana, Geneva, sans-serif;
+    font-weight: normal;
+}
+#content h2 {
+    font-family: Tahoma, Verdana,Geneva,sans-serif;
+    font-weight: normal;
+}
 
 /* Loading Message */
 #loading {
