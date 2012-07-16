@@ -346,6 +346,8 @@ class Addon {
 	    throw new AddonException(htmlspecialchars(_('The revision you are trying to delete does not exist.')));
 	if (count($this->revisions) == 1)
 	    throw new AddonException(htmlspecialchars(_('You cannot delete the last revision of an add-on.')));
+	if (($this->revisions[$rev]['status'] & F_LATEST))
+	    throw new AddonException(htmlspecialchars(_('You cannot delete the latest revision of an add-on. Please mark a different revision to be the latest revision first.')));
 	
 	// Queue addon file for deletion
 	if (!File::queueDelete($this->revisions[$rev]['file']))
