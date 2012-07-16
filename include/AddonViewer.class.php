@@ -41,18 +41,6 @@ class AddonViewer
     function __toString() {
         $return = '';
         try {
-            $return .= $this->displayHeader();
-            $return .= $this->displayRating();
-            $return .= $this->displayImage();
-            $return .= AddonViewer::badges($this->addon->getStatus());
-            $return .= $this->displayInformation();
-            $return .= $this->displayDLButton();
-            $return .= $this->displayLicense();
-            $return .= $this->displayLink();
-            $return .= $this->displayRevisions();
-            $return .= $this->displayImageList();
-            $return .= $this->displaySourceFiles();
-            
             if (User::$logged_in) {
                 //write configuration for the submiter and administrator
                 if($_SESSION['role']['manageaddons'] == true
@@ -67,198 +55,124 @@ class AddonViewer
         }
         return $return;
     }
-
-    private function displayDLButton() {
-        // Get download path
-        $file_path = $this->addon->getFile((int)$this->latestRev['revision']);
-        if ($file_path !== false) {
-            if (file_exists(UP_LOCATION.$file_path)) {
-		$button_text = htmlspecialchars(sprintf(_('Download %s'),$this->addon->getName($this->addon->getId())));
-		$shrink_text = (strlen($button_text) > 20) ? 'style="font-size: 1.1em !important;"' : NULL;
-		$string = '<div id="dl_button">';
-		$string .= '<div class="left"></div><div class="center" '.$shrink_text.'>';
-                $string .= '<a href="'.DOWN_LOCATION.$file_path.'" rel="nofollow">'.$button_text.'</a>';
-		$string .= '</div><div class="right"></div>';
-		$string .= '</div><br />';
-            } else {
-                $string = '<span class="error">'.htmlspecialchars(_('File not found.')).'</span><br />';
-            }
-        } else {
-            $string = '<span class="error">'.htmlspecialchars(_('File not found.')).'</span><br />';
-        }
-        return $string;
-    }
     
-    private function displayHeader() {
-        return '<h1>'.htmlspecialchars(Addon::getName($this->addon->getId()));
-    }
-    
-    private function displayImage() {
+    private function getImageProps() {
         // Get image
         $query = 'SELECT `file_path` FROM `'.DB_PREFIX.'files`
             WHERE `id` = '.$this->addon->getImage().'
             AND `approved` = 1
             LIMIT 1';
         $image_handle = sql_query($query);
+	$array = array(
+	    'image' => array('display' => false),
+	    'image_upload' => array('display' => false));
         $string = '<div id="addon-image">';
-        if ($image_handle && mysql_num_rows($image_handle) == 1)
-        {
-            $image_result = mysql_fetch_assoc($image_handle);
-            $string .= '<img class="preview" src="'.SITE_ROOT.'image.php?type=big&amp;pic='.$image_result['file_path'].'" />';
-        }
-        // Add upload button below image (or in place of image)
-        if (User::$logged_in && $this->addon->getUploader() == $_SESSION['userid'])
-        {
-            $string .= '<br /><form method="POST" action="'.SITE_ROOT.'upload.php?type='.$this->addon->getType().'&amp;name='.$this->addon->getId().'&amp;action=file">';
-            $string .= '<input type="submit" value="'.htmlspecialchars(_('Upload Image')).'" />';
-            $string .= '</form>';
-        }
-        $string .= '</div>';
-        return $string;
-    }
-    
-    private function displayImageList() {
-        ob_start();
-        echo '<h3>'.htmlspecialchars(_('Images')).'</h3>';
-        // Add upload button to the right of the Images label
-        if (User::$logged_in && $this->addon->getUploader() == $_SESSION['userid'])
-        {
-            echo '<div style="float: right;"><form method="POST" action="'.SITE_ROOT.'upload.php?type='.$this->addon->getType().'&amp;name='.$this->addon->getId().'&amp;action=file">';
-            echo '<input type="submit" value="'.htmlspecialchars(_('Upload Image')).'" />';
-            echo '</form></div>';
-        }
-        $imageFilesQuery = 'SELECT * FROM `'.DB_PREFIX.'files`
-            WHERE `addon_id` = \''.$this->addon->getId().'\'
-            AND `file_type` = \'image\'';
-        $imageFilesHandle = sql_query($imageFilesQuery);
-    
-        // Create an array of all of the images that the current user can see
-        $image_files = array();
-        for ($i = 1; $i <= mysql_num_rows($imageFilesHandle); $i++) {
-            $imageFilesResult = mysql_fetch_assoc($imageFilesHandle);
-            if (User::$logged_in &&
-                    ($this->addon->getUploader() == $_SESSION['userid']
-                    || $_SESSION['role']['manageaddons']))
-            {
-                $image_files[] = $imageFilesResult;
-                continue;
-            }
-            if ($imageFilesResult['approved'] == 1) {
-                $image_files[] = $imageFilesResult;
-            }
-        }
-        
-        if (count($image_files) == 0) {
-            echo htmlspecialchars(_('No images have been uploaded for this addon yet.')).'<br />';
-            return ob_get_clean();
-        }
+        if ($image_handle && mysql_num_rows($image_handle) == 1) {
+	    $image_result = mysql_fetch_assoc($image_handle);
+	    $array['image'] = array(
+		'display' => true,
+		'url' => SITE_ROOT.'image.php?type=big&amp;pic='.$image_result['file_path']
+	    );
+	}
 
-        echo '<div class="image_thumbs">';
-        foreach ($image_files AS $source_file) {
-            if ($source_file['approved'] == 1)
-                $div_style = 'image_thumb_container';
-            else
-                $div_style = 'image_thumb_container unapproved';
-            echo '<div class="'.$div_style.'">';
-            echo '<a href="'.DOWN_LOCATION.$source_file['file_path'].'" target="_blank" style="target-new: tab;">';
-            echo '<img src="'.SITE_ROOT.'image.php?type=medium&amp;pic='.$source_file['file_path'].'" />';
-            echo '</a><br />';
-            if (User::$logged_in) {
-                if ($_SESSION['role']['manageaddons']) {
-                    if ($source_file['approved'] == 1)
-                        echo '<a href="'.File::rewrite($this->addon->getLink().'&amp;save=unapprove&amp;id='.$source_file['id']).'">'.htmlspecialchars(_('Unapprove')).'</a>';
-                    else
-                        echo '<a href="'.File::rewrite($this->addon->getLink().'&amp;save=approve&amp;id='.$source_file['id']).'">'.htmlspecialchars(_('Approve')).'</a>';
-                    echo '<br />';
-                }
-                if ($_SESSION['role']['manageaddons'] || $this->addon->getUploader() == $_SESSION['userid']) {
-                    if ($this->addon->getType() == 'karts') {
-                        if ($this->addon->getImage(true) != $source_file['id']) {
-                            echo '<a href="'.File::rewrite($this->addon->getLink().'&amp;save=seticon&amp;id='.$source_file['id']).'">'.htmlspecialchars(_('Set Icon')).'</a><br />';
-                        }
-                    }
-                    if ($this->addon->getImage() != $source_file['id']) {
-                        echo '<a href="'.File::rewrite($this->addon->getLink().'&amp;save=setimage&amp;id='.$source_file['id']).'">'.htmlspecialchars(_('Set Image')).'</a><br />';
-                    }
-                    echo '<a href="'.File::rewrite($this->addon->getLink().'&amp;save=deletefile&amp;id='.$source_file['id']).'">'.htmlspecialchars(_('Delete File')).'</a><br />';
-                }
-            }
-            echo '</div>';
-        }
-        echo '</div>';
-        echo '<br />';
-        $string = ob_get_clean();
-        return $string;
+        // Add upload button below image (or in place of image)
+        if (User::$logged_in && ($this->addon->getUploader() == $_SESSION['userid'] || $_SESSION['role']['manageaddons']))
+	    $array['image_upload'] = array(
+		'display' => true,
+		'target' => SITE_ROOT.'upload.php?type='.$this->addon->getType().'&amp;name='.$this->addon->getId().'&amp;action=file',
+		'button_label' => htmlspecialchars(_('Upload Image'))
+	    );
+        return $array;
     }
     
-    private function displayInformation() {
-        $string = '<br /><span id="addon-description">'.$this->addon->getDescription().'</span>
-        <table class="info">';
-        if ($this->addon->getType() == 'arenas')
-        {
-            $string .= '<tr><td><strong>'.htmlspecialchars(_('Type:')).'</strong></td><td>'.htmlspecialchars(_('Arena')).'</td></tr>';
-        }
-        $latestRev = $this->addon->getLatestRevision();
+    public function fillTemplate() {
+	$tpl = array();
+	$tpl['addon'] = array(
+	    'name' => $this->addon->getName($this->addon->getId()),
+	    'description' => $this->addon->getDescription(),
+	    'type' => $this->addon->getType(),
+	    'rating' => array(
+		'label' => $this->rating->getRatingString(),
+		'percent' => $this->rating->getAvgRatingPercent()
+	    ),
+	    'badges' => AddonViewer::badges($this->addon->getStatus())
+	);
+	
         $addonUser = new coreUser();
         $addonUser->selectById($this->addon->getUploader());
-        $string .= '<tr><td><strong>'.htmlspecialchars(_('Designer:')).'</strong></td><td>'.htmlspecialchars($this->addon->getDesigner()).'</td></tr>
-        <tr><td><strong>'.htmlspecialchars(_('Upload date:')).'</strong></td><td>'.$latestRev['timestamp'].'</td></tr>
-        <tr><td><strong>'.htmlspecialchars(_('Submitted by:')).'</strong></td><td><a href="'.SITE_ROOT.'users.php?user='.$addonUser->userCurrent['user'].'">'.htmlspecialchars($addonUser->userCurrent['name']).'</a></td></tr>
-        <tr><td><strong>'.htmlspecialchars(_('Revision:')).'</strong></td><td>'.$latestRev['revision'].'</td></tr>
-        <tr><td><strong>'.htmlspecialchars(_('Compatible with:')).'</strong></td><td>'.format_compat($latestRev['format'],$this->addon->getType()).'</td></tr>';
-        if (User::$logged_in) {
-            $string .= '<tr><td><strong>'.htmlspecialchars(_('Your Rating: ')).'</strong></td><td>';
-            $string .= $this->rating->displayUserRating();
-	}
-        $string .= '</td></tr></table>';
-
-        if ($latestRev['status'] & F_TEX_NOT_POWER_OF_2)
-        {
-            $string .= htmlspecialchars(_('Warning: This addon may not display correctly on some systems. It uses textures that may not be compatible with all video cards.'))."<br />\n";
+        $latestRev = $this->addon->getLatestRevision();
+	$info = array(
+	    'type' => array(
+		'label' => htmlspecialchars(_('Type:')),
+		'value' => htmlspecialchars(_('Arena')) // Not shown except for arenas
+	    ),
+	    'designer' => array(
+		'label' => htmlspecialchars(_('Designer:')),
+		'value' => htmlspecialchars($this->addon->getDesigner())
+	    ),
+	    'upload_date' => array(
+		'label' => htmlspecialchars(_('Upload date:')),
+		'value' => $latestRev['timestamp']
+	    ),
+	    'submitter' => array(
+		'label' => htmlspecialchars(_('Submitted by:')),
+		'value' => '<a href="'.SITE_ROOT.'users.php?user='.$addonUser->userCurrent['user'].'">'.htmlspecialchars($addonUser->userCurrent['name']).'</a>'
+	    ),
+	    'revision' => array(
+		'label' => htmlspecialchars(_('Revision:')),
+		'value' => $latestRev['revision']
+	    ),
+	    'compatibility' => array(
+		'label' => htmlspecialchars(_('Compatible with:')),
+		'value' => format_compat($latestRev['format'],$this->addon->getType())
+	    ),
+	    'license' => array(
+		'label' => htmlspecialchars(_('License')),
+		'value' => htmlspecialchars($this->addon->getLicense())
+	    ),
+	    'link' => array(
+		'label' => htmlspecialchars(_('Permalink')),
+		'value' => File::rewrite($this->addon->getLink())
+	    )
+	);
+	$tpl['addon']['info'] = $info;
+	$tpl['addon']['warnings'] = NULL;
+	if ($latestRev['status'] & F_TEX_NOT_POWER_OF_2)
+	    $tpl['addon']['warnings'] = htmlspecialchars(_('Warning: This addon may not display correctly on some systems. It uses textures that may not be compatible with all video cards.'));
+	
+	$tpl['addon']['vote'] = array(
+	    'display' => User::$logged_in,
+	    'label' => htmlspecialchars(_('Your Rating:')),
+	    'controls' => $this->rating->displayUserRating()
+	);
+	
+	// Download button
+	$file_path = $this->addon->getFile((int)$this->latestRev['revision']);
+        if ($file_path !== false && File::exists($file_path)) {
+	    $button_text = htmlspecialchars(sprintf(_('Download %s'),$this->addon->getName($this->addon->getId())));
+	    $shrink = (strlen($button_text) > 20) ? 'style="font-size: 1.1em !important;"' : NULL;
+	    $tpl['addon']['dl'] = array(
+		'display' => true,
+		'label' => $button_text,
+		'url' => DOWN_LOCATION.$file_path,
+		'shrink' => $shrink
+	    );
+        } else {
+	    $tpl['addon']['dl'] = array('display' => false);
         }
-        return $string;
-    }
-    
-    private function displayLicense() {
-        $string = '<br />
-            <h3>'.htmlspecialchars(_('License')).'</h3>
-            <textarea name="license" rows="4" cols="60">'.htmlspecialchars($this->addon->getLicense()).'</textarea>
-            <br /><br />';
-        return $string;
-    }
-    
-    private function displayLink() {
-        // Print a permanent reference link (permalink) to this addon
-        return '<h3>'.htmlspecialchars(_('Permalink')).'</h3>
-        <a href="'.File::rewrite($this->addon->getLink()).'">'.File::rewrite($this->addon->getLink()).'</a><br /><br />';
-    }
-    
-    private function displayRating() {
-        $string = <<< EOL
-            <div id="rating-container">
-                <div class="rating">
-                    <div class="emptystars"></div>
-                    <div class="fullstars" style="width: {$this->rating->getAvgRatingPercent()}%;"></div>
-                </div>
-                <p>{$this->rating->getRatingString()}</p>
-            </div></h1>
-EOL;
-        return $string;
-    }
-
-    private function displayRevisions() {
-        ob_start();
-        echo '<h3>'.htmlspecialchars(_('Revisions')).'</h3>';
-
-        // Add upload button to the right of the Revisions label
-        if (User::$logged_in && ($this->addon->getUploader() == User::$user_id || $_SESSION['role']['manageaddons']))
-        {
-            echo '<div style="float: right;"><form method="POST" action="'.SITE_ROOT.'upload.php?type='.$this->addon->getType().'&amp;name='.$this->addon->getId().'">';
-            echo '<input type="submit" value="'.htmlspecialchars(_('Upload Revision')).'" />';
-            echo '</form></div>';
-        }
-
-        echo '<table>';
+	
+	// Revision list
+	$rev_list = array(
+	    'label' => htmlspecialchars(_('Revisions')),
+	    'upload' => array(
+		'display' => false,
+		'target' => SITE_ROOT.'upload.php?type='.$this->addon->getType().'&amp;name='.$this->addon->getId(),
+		'button_label' => htmlspecialchars(_('Upload Revision'))
+	    ),
+	    'revisions' => array()
+	);
+	if (User::$logged_in && ($this->addon->getUploader() == User::$user_id || $_SESSION['role']['manageaddons']))
+	    $rev_list['upload']['display'] = true;
         $revisions = $this->addon->getAllRevisions();
         foreach ($revisions AS $rev_n => $revision) {
             if (!User::$logged_in) {
@@ -274,45 +188,96 @@ EOL;
                         && !($revision['status'] & F_APPROVED))
                     continue;
             }
-
-            // Display revisions
-            echo '<tr><td>'.$revision['timestamp'].'</td><td>';
-            // Get download path
-            $file_path = $this->addon->getFile($rev_n);
-            if ($file_path !== false) {
-                if (file_exists(UP_LOCATION.$file_path)) {
-                    echo '<a href="'.DOWN_LOCATION.$file_path.'" rel="nofollow">';
-                    printf(htmlspecialchars(_('Download revision %u')),$rev_n);
-                    echo '</a>';
-                } else {
-                    echo htmlspecialchars(_('Revision')).' '.$rev_n.' - '.htmlspecialchars(_('File not found.'));
+	    $rev = array(
+		'number' => $rev_n,
+		'timestamp' => $revision['timestamp'],
+		'file' => array(
+		    'path' => $this->addon->getFile($rev_n)
+		),
+		'dl_label' => htmlspecialchars(sprintf(_('Download revision %u'),$rev_n))
+	    );
+	    if (!File::exists($rev['file']['path']))
+		continue;
+	    $rev_list['revisions'][] = $rev;
+	}
+	$tpl['addon']['revision_list'] = $rev_list;
+	
+	// Image list
+	$im_list = array(
+	    'label' => htmlspecialchars(_('Images')),
+	    'upload' => array(
+		'display' => false,
+		'target' => SITE_ROOT.'upload.php?type='.$this->addon->getType().'&amp;name='.$this->addon->getId().'&amp;action=file',
+		'button_label' => htmlspecialchars(_('Upload Image'))
+	    ),
+	    'images' => array(),
+	    'no_images_message' => htmlspecialchars(_('No images have been uploaded for this addon yet.'))
+	);
+	if (User::$logged_in && ($this->addon->getUploader() == User::$user_id || $_SESSION['role']['manageaddons']))
+	    $im_list['upload']['display'] = true;
+	// Get images
+        $imageFilesQuery = 'SELECT * FROM `'.DB_PREFIX.'files`
+            WHERE `addon_id` = \''.$this->addon->getId().'\'
+            AND `file_type` = \'image\'';
+        $imageFilesHandle = sql_query($imageFilesQuery);
+	
+        // Create an array of all of the images that the current user can see
+        $image_files = array();
+        for ($i = 1; $i <= mysql_num_rows($imageFilesHandle); $i++) {
+            $imageFilesResult = mysql_fetch_assoc($imageFilesHandle);
+	    $imageFilesResult['url'] = DOWN_LOCATION.$imageFilesResult['file_path'];
+	    $imageFilesResult['thumb']['url'] = SITE_ROOT.'image.php?type=medium&amp;pic='.$imageFilesResult['file_path'];
+	    $admin_links = NULL;
+            if (User::$logged_in) {
+                if ($_SESSION['role']['manageaddons']) {
+                    if ($imageFilesResult['approved'] == 1)
+                        $admin_links .= '<a href="'.File::rewrite($this->addon->getLink().'&amp;save=unapprove&amp;id='.$imageFilesResult['id']).'">'.htmlspecialchars(_('Unapprove')).'</a>';
+                    else
+                        $admin_links .= '<a href="'.File::rewrite($this->addon->getLink().'&amp;save=approve&amp;id='.$imageFilesResult['id']).'">'.htmlspecialchars(_('Approve')).'</a>';
+                    $admin_links .= '<br />';
                 }
-            } else {
-                echo htmlspecialchars(_('Revision')).' '.$rev_n.' - '.htmlspecialchars(_('File not found.'));
+                if ($_SESSION['role']['manageaddons'] || $this->addon->getUploader() == $_SESSION['userid']) {
+                    if ($this->addon->getType() == 'karts') {
+                        if ($this->addon->getImage(true) != $imageFilesResult['id']) {
+                            $admin_links .= '<a href="'.File::rewrite($this->addon->getLink().'&amp;save=seticon&amp;id='.$imageFilesResult['id']).'">'.htmlspecialchars(_('Set Icon')).'</a><br />';
+                        }
+                    }
+                    if ($this->addon->getImage() != $imageFilesResult['id']) {
+                        $admin_links .= '<a href="'.File::rewrite($this->addon->getLink().'&amp;save=setimage&amp;id='.$imageFilesResult['id']).'">'.htmlspecialchars(_('Set Image')).'</a><br />';
+                    }
+                    $admin_links .= '<a href="'.File::rewrite($this->addon->getLink().'&amp;save=deletefile&amp;id='.$imageFilesResult['id']).'">'.htmlspecialchars(_('Delete File')).'</a><br />';
+                }
             }
-            echo '</td></tr>';
+	    $imageFilesResult['admin_links'] = $admin_links;
+            if (User::$logged_in &&
+                    ($this->addon->getUploader() == $_SESSION['userid']
+                    || $_SESSION['role']['manageaddons']))
+            {
+                $image_files[] = $imageFilesResult;
+                continue;
+            }
+            if ($imageFilesResult['approved'] == 1) {
+                $image_files[] = $imageFilesResult;
+            }
         }
-        echo '</table><br />';
-        $string = ob_get_clean();
-        return $string;
-    }
-    
-    /**
-     * Generate HTML for the list of source files for an add-on
-     * @return string 
-     */
-    private function displaySourceFiles() {
-        ob_start();
-        echo '<h3>'.htmlspecialchars(_('Source Files')).'</h3>';
-        // Add upload button to the right of the Source Files label
-        if (User::$logged_in && $this->addon->getUploader() == $_SESSION['userid'])
-        {
-            echo '<div style="float: right;"><form method="POST" action="'.SITE_ROOT.'upload.php?type='.$this->addon->getType().'&amp;name='.$this->addon->getId().'&amp;action=file">';
-            echo '<input type="submit" value="'.htmlspecialchars(_('Upload Source File')).'" />';
-            echo '</form></div>';
-        }
-        
-        // Search database for source files
+	$im_list['images'] = $image_files;
+	$tpl['addon']['image_list'] = $im_list;
+
+	// Source files
+	$s_list = array(
+	    'label' => htmlspecialchars(_('Source Files')),
+	    'upload' => array(
+		'display' => false,
+		'target' => SITE_ROOT.'upload.php?type='.$this->addon->getType().'&amp;name='.$this->addon->getId().'&amp;action=file',
+		'button_label' => htmlspecialchars(_('Upload Source File'))
+	    ),
+	    'files' => array(),
+	    'no_files_message' => htmlspecialchars(_('No source files have been uploaded for this addon yet.'))
+	);
+	if (User::$logged_in && ($this->addon->getUploader() == User::$user_id || $_SESSION['role']['manageaddons']))
+	    $s_list['upload']['display'] = true;
+	
+	// Search database for source files
         $query = 'SELECT * FROM `'.DB_PREFIX."files`
             WHERE `addon_type` = '{$this->addon->getType()}'
             AND `addon_id` = '{$this->addon->getId()}'
@@ -323,6 +288,21 @@ EOL;
         $source_files = array();
         for ($i = 1; $i <= mysql_num_rows($sourceFilesHandle); $i++) {
             $sourceFilesResult = mysql_fetch_assoc($sourceFilesHandle);
+	    $sourceFilesResult['label'] = sprintf(htmlspecialchars(_('Source File %u')),count($source_files) + 1);
+	    $sourceFilesResult['details'] = NULL;
+            if ($sourceFilesResult['approved'] == 0) $sourceFilesResult['details'] .= '('.htmlspecialchars(_('Not Approved')).') ';
+	    $sourceFilesResult['details'] .= '<a href="'.DOWN_LOCATION.$sourceFilesResult['file_path'].'" rel="nofollow">'.htmlspecialchars(_('Download')).'</a>';
+	    if (User::$logged_in) {
+                if ($_SESSION['role']['manageaddons'])
+                {
+                    if ($sourceFilesResult['approved'] == 1)
+                        $sourceFilesResult['details'] .= ' | <a href="'.File::rewrite($this->addon->getLink().'&amp;save=unapprove&amp;id='.$sourceFilesResult['id']).'">'.htmlspecialchars(_('Unapprove')).'</a>';
+                    else
+                        $sourceFilesResult['details'] .= ' | <a href="'.File::rewrite($this->addon->getLink().'&amp;save=approve&amp;id='.$sourceFilesResult['id']).'">'.htmlspecialchars(_('Approve')).'</a>';
+                }
+                if ($this->addon->getUploader() == $_SESSION['userid'] || $_SESSION['role']['manageaddons'])
+                    $sourceFilesResult['details'] .= ' | <a href="'.File::rewrite($this->addon->getLink().'&amp;save=deletefile&amp;id='.$sourceFilesResult['id']).'">'.htmlspecialchars(_('Delete File')).'</a><br />';
+            }
             if (User::$logged_in &&
                     ($this->addon->getUploader() == $_SESSION['userid']
                     || $_SESSION['role']['manageaddons'])) {
@@ -333,41 +313,11 @@ EOL;
                 $source_files[] = $sourceFilesResult;
             }
         }
-
-        // Check for 0 entries
-        if (count($source_files) == 0) {
-            echo htmlspecialchars(_('No source files have been uploaded for this addon yet.')).'<br />';
-            $string = ob_get_clean();
-            return $string;
-        }
-        
-        // Generate the table of entries
-        echo '<table>';
-        $n = 1;
-        foreach ($source_files AS $source_file) {
-            echo '<tr>';
-            $approved = NULL;
-            if ($source_file['approved'] == 0) $approved = ' ('.htmlspecialchars(_('Not Approved')).')';
-            printf('<td><strong>'.htmlspecialchars(_('Source File %u')).'</strong>'.$approved.'</td>',$n);
-            echo '<td><a href="'.DOWN_LOCATION.$source_file['file_path'].'" rel="nofollow">'.htmlspecialchars(_('Download')).'</a>';
-            if (User::$logged_in)
-            {
-                if ($_SESSION['role']['manageaddons'])
-                {
-                    if ($source_file['approved'] == 1)
-                        echo ' | <a href="'.File::rewrite($this->addon->getLink().'&amp;save=unapprove&amp;id='.$source_file['id']).'">'.htmlspecialchars(_('Unapprove')).'</a>';
-                    else
-                        echo ' | <a href="'.File::rewrite($this->addon->getLink().'&amp;save=approve&amp;id='.$source_file['id']).'">'.htmlspecialchars(_('Approve')).'</a>';
-                }
-                if ($this->addon->getUploader() == $_SESSION['userid'] || $_SESSION['role']['manageaddons'])
-                    echo ' | <a href="'.File::rewrite($this->addon->getLink().'&amp;save=deletefile&amp;id='.$source_file['id']).'">'.htmlspecialchars(_('Delete File')).'</a><br />';
-            }
-            $n++;
-            echo '</td></tr>';
-        }
-        echo '</table><br />';
-        $string = ob_get_clean();
-        return $string;
+	$s_list['files'] = $source_files;
+	$tpl['addon']['source_list'] = $s_list;
+	$tpl['addon'] = array_merge($tpl['addon'], $this->getImageProps());
+	
+	Template::assignments($tpl);
     }
     
     /**

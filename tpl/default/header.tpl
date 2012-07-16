@@ -13,6 +13,7 @@
 	<script type="{$script.type|default:'text/javascript'}" src="{$script.src}"></script>
 	{/foreach}
 	<link rel="stylesheet" media="screen" href="{#css_screen#}" />
+	<link rel="stylesheet" media="print" href="{#css_print#}" />
     </head>
     <body>
 	{include file=#top_menu#}

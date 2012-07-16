@@ -80,7 +80,7 @@ function clearPanelStatus() {
 
 $(document).ready(function () {
     $("#news-messages").newsTicker();
-    $('a.menu_head').click(function () {
+    $('#lang-menu > a').click(function () {
         $('ul.menu_body').slideToggle('medium');
     });
     $('#advance_button').click(function () {

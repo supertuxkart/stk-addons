@@ -26,7 +26,7 @@ require_once('libs/Smarty.class.php');
 class Template {
     private static $smarty = NULL;
     private static $tpl_file = NULL;
-    private static $tpl_root = TPL_PATH; // FIXME: Define this based on user setting
+    private static $tpl_root = NULL;
     
     public static $meta_desc = NULL;
     public static $meta_tags = array();
@@ -37,8 +37,25 @@ class Template {
 
 	Template::$smarty = new Smarty;
 	Template::$smarty->compile_dir = TMP.'tpl_c/';
+	Template::setTemplate();
     }
 
+    public static function setTemplate($template = 'default') {
+	Template::createSmarty();
+	
+	// Handle mobile templates automatically
+	$i_mobile = strpos($_SERVER['HTTP_USER_AGENT'],"iPhone");
+	if (($i_mobile == true) && file_exists(ROOT.'tpl/'.$template.'-iphone')) {
+	    $template = $template.'-iphone';
+	}
+	
+	Template::$tpl_root = ROOT.'tpl/'.$template.'/';
+    }
+    
+    public static function getTemplate() {
+	return Template::$tpl_file;
+    }
+    
     public static function setFile($tpl_file) {
 	Template::createSmarty();
 
@@ -52,7 +69,7 @@ class Template {
 	Template::setupHead();
 	Template::setupMenu();
 
-	Template::$smarty->display(Template::$tpl_root.Template::$tpl_file);
+	Template::$smarty->display(Template::$tpl_root.Template::$tpl_file,Template::$tpl_root);
     }
     
     private static function setupHead() {
@@ -70,7 +87,7 @@ class Template {
 	);
 	Template::$smarty->assign('script_inline',$script_inline);
 	$script_includes = array(
-	    array('src' => SITE_ROOT.'js/jquery.js'),
+	    array('src' => 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js'),
 	    array('src' => SITE_ROOT.'js/jquery.newsticker.js'),
 	    array('src' => SITE_ROOT.'js/script.js')
 	);
@@ -151,4 +168,6 @@ class Template {
 	}
     }
 }
+
+class TemplateException extends Exception {}
 ?>

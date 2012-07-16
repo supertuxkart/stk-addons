@@ -15,8 +15,7 @@
                                                                               
  You should have received a copy of the GNU General Public License along with 
  stkaddons.  If not, see <http://www.gnu.org/licenses/>.   */
-?>
-<?php
+
 /***************************************************************************
 Project: STK Addon Manager
 
@@ -31,6 +30,8 @@ if (!isset($security))
 if (!defined('ROOT'))
     define('ROOT','./');
 include_once('include.php');
+if (Template::getTemplate() == NULL)
+    Template::setFile('addons-panel.tpl');
 
 // POST used with javascript navigation
 // GET used with everything else
@@ -50,6 +51,8 @@ else
 
 try {
     $viewer = new AddonViewer($id);
+    $viewer->fillTemplate();
+    Template::display();
     echo $viewer;
 }
 catch (Exception $e) {
