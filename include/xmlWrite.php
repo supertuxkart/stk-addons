@@ -159,7 +159,7 @@ function generateAssetXML()
             $writer->writeAttribute('size',filesize(UP_LOCATION.$file_path));
 	    // Get add-on rating
 	    $rating = new Ratings($result['id']);
-	    $writer->writeAttribute('rating',$rating->getAvgRating());
+	    $writer->writeAttribute('rating',sprintf('%.3f',$rating->getAvgRating()));
             $writer->endElement();
         }
     }

@@ -34,12 +34,14 @@ if(!isset($_COOKIE['lang']) && !isset($_GET['lang']))
     setcookie('lang', 'en_US', $timestamp_expire);
     putenv('LC_ALL=en_US.UTF-8');
     setlocale(LC_ALL, 'en_US.UTF-8');
+    $_COOKIE['lang'] = 'en_US';
 }
 elseif (isset($_GET['lang']))
 { // If the user has chosen a language
     setcookie('lang', $_GET['lang'], $timestamp_expire);
     putenv('LC_ALL='.$_GET['lang'].'.UTF-8');
     setlocale(LC_ALL, $_GET['lang'].'.UTF-8');
+    $_COOKIE['lang'] = $_GET['lang'];
 }
 else
 {
