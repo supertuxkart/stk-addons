@@ -372,6 +372,16 @@ class AddonViewer
             echo '<input type="button" value="'.htmlspecialchars(_('Delete Addon')).'"
                 onClick="confirm_delete(\''.File::rewrite($this->addon->getLink().'&amp;save=delete').'\')" /><br /><br />';
 
+	// Mark whether or not an add-on has ever been included in STK
+	if ($_SESSION['role']['manageaddons']) {
+	    echo '<strong>'.htmlspecialchars(_('Included in Game Versions:')).'</strong><br />';
+	    echo '<form method="POST" action="'.File::rewrite($this->addon->getLink().'&amp;save=include').'">';
+	    echo htmlspecialchars(_('Start:')).' <input type="text" name="incl_start" size="6" value="'.htmlspecialchars($this->addon->getIncludeMin()).'" /><br />';
+	    echo htmlspecialchars(_('End:')).' <input type="text" name="incl_end" size="6" value="'.htmlspecialchars($this->addon->getIncludeMax()).'" /><br />';
+	    echo '<input type="submit" value="'.htmlspecialchars(_('Save')).'" /><br />';
+	    echo '</form><br />';
+	}
+
         // Set status flags
         echo '<strong>'.htmlspecialchars(_('Status Flags:')).'</strong><br />';
         echo '<form method="POST" action="'.File::rewrite($this->addon->getLink().'&amp;save=status').'">';

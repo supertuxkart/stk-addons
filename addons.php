@@ -79,124 +79,83 @@ $js = "";
 
 ob_start();
 // Execute actions
-switch ($_GET['save'])
-{
-    default: break;
-    case 'props':
-        if (!isset($_POST['description']))
-            break;
-        if (!isset($_POST['designer']))
-            break;
-        try {
-            $edit_addon = new Addon(Addon::cleanId($_GET['name']));
-            $edit_addon->setDescription($_POST['description']);
-            $edit_addon->setDesigner($_POST['designer']);
-            echo htmlspecialchars(_('Saved properties.')).'<br />';
-        }
-        catch (AddonException $e) {
-            echo '<span class="error">'.$e->getMessage().'</span><br />';
-        }
-        break;
-    case 'rev':
-        try {
-            parseUpload($_FILES['file_addon'],true);
-        }
-        catch (UploadException $e)
-        {
-            echo '<span class="error">'.$e->getMessage().'</span><br />';
-        }
-        break;
-    case 'status':
-        if (!isset($_GET['name']) || !isset($_POST['fields']))
-            break;
-        try {
-            $addon = new Addon($_GET['name']);
-            $addon->setStatus($_POST['fields']);
-            echo htmlspecialchars(_('Saved status.')).'<br />';
-        }
-        catch (AddonException $e) {
-            echo '<span class="error">'.$e->getMessage().'</span><br />';
-        }
-        break;
-    case 'notes':
-        if (!isset($_GET['name']) || !isset($_POST['fields']))
-            break;
-        try {
-            $mAddon = new Addon($_GET['name']);
-            $mAddon->setNotes($_POST['fields']);
-            echo htmlspecialchars(_('Saved notes.')).'<br />';
-        }
-        catch (AddonException $e) {
-            echo '<span class="error">'.$e->getMessage().'</span><br />';
-        }
-        break;
-    case 'delete':
-        try {
-            $delAddon = new Addon($_GET['name']);
-            $delAddon->delete();
-            unset($delAddon);
-            echo htmlspecialchars(_('Deleted addon.')).'<br />';
-        }
-        catch (AddonException $e)
-        {
-            echo '<span class="error">'.$e->getMessage().'</span><br />';
-        }
-        break;
-    case 'del_rev':
-	try {
+try {
+    switch ($_GET['save']) {
+	default: break;
+	case 'props':
+	    if (!isset($_POST['description']))
+		break;
+	    if (!isset($_POST['designer']))
+		break;
+
+	    $edit_addon = new Addon(Addon::cleanId($_GET['name']));
+	    $edit_addon->setDescription($_POST['description']);
+	    $edit_addon->setDesigner($_POST['designer']);
+	    echo htmlspecialchars(_('Saved properties.')).'<br />';
+	    break;
+	case 'rev':
+	    parseUpload($_FILES['file_addon'],true);
+	    break;
+	case 'status':
+	    if (!isset($_GET['name']) || !isset($_POST['fields']))
+		break;
+	    $addon = new Addon($_GET['name']);
+	    $addon->setStatus($_POST['fields']);
+	    echo htmlspecialchars(_('Saved status.')).'<br />';
+	    break;
+	case 'notes':
+	    if (!isset($_GET['name']) || !isset($_POST['fields']))
+		break;
+	    $mAddon = new Addon($_GET['name']);
+	    $mAddon->setNotes($_POST['fields']);
+	    echo htmlspecialchars(_('Saved notes.')).'<br />';
+	    break;
+	case 'delete':
+	    $delAddon = new Addon($_GET['name']);
+	    $delAddon->delete();
+	    unset($delAddon);
+	    echo htmlspecialchars(_('Deleted addon.')).'<br />';
+	    break;
+	case 'del_rev':
 	    $delRev = new Addon($_GET['name']);
 	    $delRev->deleteRevision($_GET['rev']);
 	    unset($delRev);
 	    echo htmlspecialchars(_('Deleted add-on revision.')).'<br />';
-	}
-	catch (AddonException $e) {
-	    echo '<span class="error">'.$e->getMessage().'</span><br />';
-	}
-	break;
-    case 'approve':
-    case 'unapprove':
-        try {
-            $approve = ($_GET['save'] == 'approve') ? true : false;
-            File::approve((int)$_GET['id'], $approve);
-            echo htmlspecialchars(_('File updated.')).'<br />';
-        }
-        catch (FileException $e) {
-            echo '<span class="error">'.$e->getMessage().'</span><br />';
-        }
-        break;
-    case 'setimage':
-        try {
-            $edit_addon = new Addon(Addon::cleanId($_GET['name']));
-            $edit_addon->setImage((int)$_GET['id']);
-            echo htmlspecialchars(_('Set image.')).'<br />';
-        }
-        catch (AddonException $e) {
-            echo '<span class="error">'.$e->getMessage().'</span><br />';
-        }
-        break;
-    case 'seticon':
-        if ($_GET['type'] != 'karts')
-            break;
-        try {
-            $edit_addon = new Addon(Addon::cleanId($_GET['name']));
-            $edit_addon->setImage((int)$_GET['id'],'icon');
-            echo htmlspecialchars(_('Set icon.')).'<br />';
-        }
-        catch (AddonException $e) {
-            echo '<span class="error">'.$e->getMessage().'</span><br />';
-        }
-        break;
-    case 'deletefile':
-        try {
-            $mAddon = new Addon($_GET['name']);
-            $mAddon->deleteFile((int)$_GET['id']);
-            echo htmlspecialchars(_('Deleted file.')).'<br />';
-        }
-        catch (AddonException $e) {
-            echo '<span class="error">'.$e->getMessage().'</span><br />';
-        }
-        break;
+	    break;
+	case 'approve':
+	case 'unapprove':
+	    $approve = ($_GET['save'] == 'approve') ? true : false;
+	    File::approve((int)$_GET['id'], $approve);
+	    echo htmlspecialchars(_('File updated.')).'<br />';
+	    break;
+	case 'setimage':
+	    $edit_addon = new Addon(Addon::cleanId($_GET['name']));
+	    $edit_addon->setImage((int)$_GET['id']);
+	    echo htmlspecialchars(_('Set image.')).'<br />';
+	    break;
+	case 'seticon':
+	    if ($_GET['type'] != 'karts')
+		break;
+	    $edit_addon = new Addon(Addon::cleanId($_GET['name']));
+	    $edit_addon->setImage((int)$_GET['id'],'icon');
+	    echo htmlspecialchars(_('Set icon.')).'<br />';
+	    break;
+	case 'deletefile':
+	    $mAddon = new Addon($_GET['name']);
+	    $mAddon->deleteFile((int)$_GET['id']);
+	    echo htmlspecialchars(_('Deleted file.')).'<br />';
+	    break;
+	case 'include':
+	    $mAddon = new Addon($_GET['name']);
+	    $mAddon->setIncludeVersions($_POST['incl_start'], $_POST['incl_end']);
+	    echo htmlspecialchars(_('Marked game versions in which this add-on is included.'));
+	    break;
+    }
 }
+catch (Exception $e) {
+    echo '<span class="error">'.$e->getMessage().'</span><br />';
+}
+
 $status = ob_get_clean();
 $panels->setStatusContent($status);
 

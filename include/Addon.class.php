@@ -33,6 +33,8 @@ class Addon {
     private $permalink;
     private $revisions = array();
     private $latestRevision;
+    private $minInclude;
+    private $maxInclude;
     
     /**
      * Instance constructor
@@ -43,7 +45,7 @@ class Addon {
         $this->id = $id;
 
         $query = 'SELECT `type`,`name`,`uploader`,`creation_date`,
-                `designer`,`description`,`license`
+                `designer`,`description`,`license`,`min_include_ver`,`max_include_ver`
             FROM `'.DB_PREFIX."addons`
             WHERE `id` = '$id'";
 
@@ -63,6 +65,8 @@ class Addon {
         $this->description = $result['description'];
         $this->license = $result['license'];
         $this->permalink = SITE_ROOT.'addons.php?type='.$this->type.'&amp;name='.$this->id;
+	$this->minInclude = $result['min_include_ver'];
+	$this->maxInclude = $result['max_include_ver'];
 
         // Get revisions
         $revsQuery = 'SELECT *
@@ -539,6 +543,13 @@ class Addon {
 	}
 	return $result;
     }
+    
+    public function getIncludeMin() {
+	return $this->minInclude;
+    }
+    public function getIncludeMax() {
+	return $this->maxInclude;
+    }
 
     public static function getName($id)
     {
@@ -658,6 +669,24 @@ class Addon {
         $set_image_handle = sql_query($set_image_query);
         if (!$set_image_handle)
             throw new AddonException(htmlspecialchars(_('Failed to update the image record for this add-on.')));
+    }
+    
+    public function setIncludeVersions($start_ver, $end_ver) {
+	if (!$_SESSION['role']['manageaddons'])
+	    throw new AddonException(htmlspecialchars(_('You do not have the neccessary permissions to perform this action.')));
+	
+	$start_ver = mysql_real_escape_string($start_ver);
+	$end_ver = mysql_real_escape_string($end_ver);
+	$query = 'UPDATE `'.DB_PREFIX."addons`
+	    SET `min_include_ver` = '$start_ver', `max_include_ver` = '$end_ver'
+	    WHERE `id` = '{$this->id}'";
+	$handle = sql_query($query);
+	if (!$handle) throw new AddonException('An error occurred while setting the min/max include versions.');
+	
+	writeAssetXML();
+        writeNewsXML();
+        $this->minInclude = $start_ver;
+	$this->maxInclude = $end_ver;
     }
     
     private function setLicense($license) {

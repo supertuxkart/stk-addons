@@ -157,6 +157,8 @@ function generateAssetXML()
             $writer->writeAttribute('revision',$result['revision']);
             $writer->writeAttribute('status',$result['status']);
             $writer->writeAttribute('size',filesize(UP_LOCATION.$file_path));
+	    $writer->writeAttribute('min-include-version',$result['min_include_ver']);
+	    $writer->writeAttribute('max-include-version',$result['max_include_ver']);
 	    // Get add-on rating
 	    $rating = new Ratings($result['id']);
 	    $writer->writeAttribute('rating',sprintf('%.3f',$rating->getAvgRating()));
