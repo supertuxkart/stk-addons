@@ -128,7 +128,7 @@ class AddonViewer
 	    ),
 	    'license' => array(
 		'label' => htmlspecialchars(_('License')),
-		'value' => htmlspecialchars($this->addon->getLicense())
+		'value' => htmlspecialchars($this->addon->getLicense(),NULL,NULL,false)
 	    ),
 	    'link' => array(
 		'label' => htmlspecialchars(_('Permalink')),
@@ -192,7 +192,7 @@ class AddonViewer
 		'number' => $rev_n,
 		'timestamp' => $revision['timestamp'],
 		'file' => array(
-		    'path' => $this->addon->getFile($rev_n)
+		    'path' => DOWN_LOCATION.$this->addon->getFile($rev_n)
 		),
 		'dl_label' => htmlspecialchars(sprintf(_('Download revision %u'),$rev_n))
 	    );

@@ -75,7 +75,7 @@ class Upload {
 	if (!isset($this->properties['license_file'])) {
 	    throw new UploadException(htmlspecialchars(_('A valid License.txt file was not found. Please add a License.txt file to your archive and re-submit it.')));
 	}
-	$this->properties['xml_attributes']['license'] = file_get_contents($this->properties['license_file']);
+	$this->properties['xml_attributes']['license'] = htmlentities(file_get_contents($this->properties['license_file'], false));
 	
 	// Get addon id from page request if possible
         $addon_id = NULL;
