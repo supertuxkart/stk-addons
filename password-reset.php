@@ -22,80 +22,58 @@
 define('ROOT','./');
 $security ="";
 include('include.php');
-$title = htmlspecialchars(_('STK Add-ons').' | '._('Reset Password'));
-include(ROOT.'include/top.php');
-echo '</head><body>';
-include(ROOT.'include/menu.php');
-echo '<div id="content">';
-echo '<h1>'.htmlspecialchars(_('Reset Password')).'</h1>';
 
-function display_reset_form() {
-    $form = '<form id="reset_pw" action="password-reset.php?action=reset" method="POST">
-    <table><tbody>
-    <tr>
-        <td colspan="2">'.htmlspecialchars(_('In order to reset your password, please enter your username and your email address. A password reset link will be emailed to you. Your old password will become inactive until your password is reset.')).'</td>
-    </tr>
-    <tr>
-        <td><label for="reg_user">'.htmlspecialchars(_('Username:')).'<br />
-        <span style="font-size: x-small; color: #666666; font-weight: normal;">('.htmlspecialchars(sprintf(_('Must be at least %d characters long.'),'4')).')</span></label></td>
-        <td><input type="text" name="user" id="reg_user" /></td>
-    </tr>
-    <tr>
-        <td><label for="reg_email">'.htmlspecialchars(_('Email Address:')).'</label></td>
-        <td><input type="text" name="mail" id="reg_email" /></td>
-    </tr>
-    <tr>
-        <td></td><td>';
-    
-    // CAPTCHA
-    require_once(ROOT.'include/recaptchalib.php');
-    $publickey = CAPTCHA_PUB; // you got this from the signup page
-    $form .= recaptcha_get_html($publickey);
-    
-    $form .='</td>
-    </tr>
-    <tr>
-        <td></td><td><input type="submit" value="'.htmlspecialchars(_('Send Reset Link')).'" /></td>
-    </tr>
-    </tbody></table>
-    </form>';
-    return $form;
-}
+Template::setFile('password-reset.tpl');
+$tpl = array();
+$tpl['title'] = htmlspecialchars(_('Reset Password').' - '._('STK Add-ons'));
 
-function display_password_prompt($username,$verification_code) {
-    $form = '<form id="change_pw" action="password-reset.php?action=change" method="POST">
-    <table><tbody>
-    <tr>
-        <td colspan="2">'.htmlspecialchars(_('Please enter a new password for your account.')).'</td>
-    </tr>
-    <tr>
-        <td><label for="reg_pass">'.htmlspecialchars(_('New Password:')).'<br />
-        <span style="font-size: x-small; color: #666666; font-weight: normal;">('.htmlspecialchars(sprintf(_('Must be at least %d characters long.'),'6')).')</span></label></td>
-        <td><input type="password" name="pass1" id="reg_pass" /></td>
-    </tr>
-    <tr>
-        <td><label for="reg_pass2">'.htmlspecialchars(_('New Password (confirm):')).'</label></td>
-        <td><input type="password" name="pass2" id="reg_pass2" /></td>
-    </tr>
-    <tr>
-        <td></td><td><input type="submit" value="'.htmlspecialchars(_('Change Password')).'" /></td>
-    </tr>
-    </tbody></table>
-    <input type="hidden" name="user" value="'.$username.'" />
-    <input type="hidden" name="verify" value="'.$verification_code.'" />
-    </form>';
-    return $form;
-}
+// CAPTCHA
+require_once(ROOT.'include/recaptchalib.php');
+$publickey = CAPTCHA_PUB; // you got this from the signup page
+$captcha = recaptcha_get_html($publickey);
+
+// Fill out various templates
+$pw_res = array(
+    'title' => htmlspecialchars(_('Reset Password')),
+    'info' => NULL,
+    'reset_form' => array(
+	'display' => true,
+	'form' => array(
+	    'start' => '<form id="reset_pw" action="password-reset.php?action=reset" method="POST">',
+	    'end' => '</form>'
+	),
+	'info' => htmlspecialchars(_('In order to reset your password, please enter your username and your email address. A password reset link will be emailed to you. Your old password will become inactive until your password is reset.')),
+	'username' => array(
+	    'label' => '<label for="reg_user">'.htmlspecialchars(_('Username:')).'</label>',
+	    'field' => '<input type="text" name="user" id="reg_user" />'
+	),
+	'email' => array(
+	    'label' => '<label for="reg_email">'.htmlspecialchars(_('Email Address:')).'</label>',
+	    'field' => '<input type="text" name="mail" id="reg_email" />'
+	),
+	'captcha' => array(
+	    'label' => NULL,
+	    'field' => $captcha
+	),
+	'submit' => array(
+	    'field' => '<input type="submit" value="'.htmlspecialchars(_('Send Reset Link')).'" />'
+	)
+    ),
+    'pass_form' => array(
+	'display' => false
+    )
+);
+
 
 // define possibly undefined variables
 $_GET['action'] = (isset($_GET['action'])) ? $_GET['action'] : NULL;
 
 switch ($_GET['action']) {
     default:
-        echo display_reset_form();
         break;
 
     case 'reset':
+	$pw_res['reset_form']['display'] = false;
         // Look up username and try to reset
         try
         {
@@ -148,15 +126,15 @@ switch ($_GET['action']) {
 		Mail::passwordResetNotification($email, $username, 'reset-'.$verification_code, $_SERVER['PHP_SELF']);
 	    }
 	    catch (Exception $e) {
-		echo '<span class="error">'.$e->getMessage().'</span><br /><br />';
+		$pw_res['info'] .= '<span class="error">'.$e->getMessage().'</span><br /><br />';
 		Log::newEvent('Password reset email for \''.$username.'\' could not be sent.');
 	    }
-            echo htmlspecialchars(_("Password reset link sent. Please reset your password using the link emailed to you."));
+            $pw_res['info'] .= htmlspecialchars(_("Password reset link sent. Please reset your password using the link emailed to you."));
             Log::newEvent("Password reset request for user '$username'");
         }
         catch (UserException $e)
         {
-            echo '<span class="error">'.$e->getMessage().'</span><br /><br />';
+            $pw_res['info'] .= '<span class="error">'.$e->getMessage().'</span><br /><br />';
         }
         break;
 
@@ -166,6 +144,7 @@ switch ($_GET['action']) {
             $_GET['num'] = (isset($_GET['num'])) ? $_GET['num'] : NULL;
             $username = mysql_real_escape_string($_GET['user']);
             $verification_code = mysql_real_escape_string($_GET['num']);
+	    
             $lookup_query = 'SELECT `user` FROM `'.DB_PREFIX.'users`
                 WHERE `user` = \''.$username.'\'
                 AND `verify` = \''.$verification_code.'\'
@@ -178,11 +157,33 @@ switch ($_GET['action']) {
             if (mysql_num_rows($lookup_handle) !== 1)
                 throw new UserException(htmlspecialchars(_('Invalid verification code.')));
             
-            echo display_password_prompt($username,$verification_code);
+	    $pw_res['reset_form']['display'] = false;
+	    $pw_res['pass_form'] = array(
+		'display' => true,
+		'form' => array(
+		    'start' => '<form id="change_pw" action="password-reset.php?action=change" method="POST">',
+		    'end' => '<input type="hidden" name="user" value="'.$username.'" />'.
+			'<input type="hidden" name="verify" value="'.$verification_code.'" />'.
+			'</form>'
+		),
+		'info' => htmlspecialchars(_('Please enter a new password for your account.')),
+		'new_pass' => array(
+		    'label' => '<label for="reg_pass">'.htmlspecialchars(_('New Password:')).'<br />'.
+			'<span style="font-size: x-small; color: #666666; font-weight: normal;">('.htmlspecialchars(sprintf(_('Must be at least %d characters long.'),'6')).')</span></label>',
+		    'field' => '<input type="password" name="pass1" id="reg_pass" />'
+		),
+		'new_pass2' => array(
+		    'label' => '<label for="reg_pass2">'.htmlspecialchars(_('New Password (confirm):')).'</label>',
+		    'field' => '<input type="password" name="pass2" id="reg_pass2" />'
+		),
+		'submit' => array(
+		    'field' => '<input type="submit" value="'.htmlspecialchars(_('Change Password')).'" />'
+		)
+	    );
         }
         catch (UserException $e) {
-            echo '<span class="error">'.$e->getMessage().'</span><br /><br />';
-            echo htmlspecialchars(_('Could not reset your password. The link you followed is not valid.'));
+            $pw_res['info'] .= '<span class="error">'.$e->getMessage().'</span><br /><br />';
+            $pw_res['info'] .= htmlspecialchars(_('Could not reset your password. The link you followed is not valid.'));
         }
         break;
         
@@ -222,22 +223,42 @@ switch ($_GET['action']) {
             if (!$handle)
                 throw new UserException(htmlspecialchars(_('Failed to change your password.')));
 
-            echo htmlspecialchars(_('Changed password.')).'<br />';
-            echo '<a href="login.php">'.htmlspecialchars(_('Login')).'</a>';
+	    $pw_res['reset_form']['display'] = false;
+            $pw_res['info'] .= htmlspecialchars(_('Changed password.')).'<br />';
+            $pw_res['info'] .= '<a href="login.php">'.htmlspecialchars(_('Login')).'</a>';
         }
         catch (UserException $e) {
-            echo '<span class="error">'.$e->getMessage().'</span><br /><br />';
-            echo display_password_prompt($username, $verification_code);
+            $pw_res['info'] .= '<span class="error">'.$e->getMessage().'</span><br /><br />';
+	    $pw_res['reset_form']['display'] = false;
+	    $pw_res['pass_form'] = array(
+		'display' => true,
+		'form' => array(
+		    'start' => '<form id="change_pw" action="password-reset.php?action=change" method="POST">',
+		    'end' => '<input type="hidden" name="user" value="'.$username.'" />'.
+			'<input type="hidden" name="verify" value="'.$verification_code.'" />'.
+			'</form>'
+		),
+		'info' => htmlspecialchars(_('Please enter a new password for your account.')),
+		'new_pass' => array(
+		    'label' => '<label for="reg_pass">'.htmlspecialchars(_('New Password:')).'<br />'.
+			'<span style="font-size: x-small; color: #666666; font-weight: normal;">('.htmlspecialchars(sprintf(_('Must be at least %d characters long.'),'6')).')</span></label>',
+		    'field' => '<input type="password" name="pass1" id="reg_pass" />'
+		),
+		'new_pass2' => array(
+		    'label' => '<label for="reg_pass2">'.htmlspecialchars(_('New Password (confirm):')).'</label>',
+		    'field' => '<input type="password" name="pass2" id="reg_pass2" />'
+		),
+		'submit' => array(
+		    'field' => '<input type="submit" value="'.htmlspecialchars(_('Change Password')).'" />'
+		)
+	    );
         }
         
         break;
 }
-    echo '
-</div>';
-     include("include/footer.php"); ?>
-</body>
-</html>
-<?php
-$str = cryptUrl(12);
+
+$tpl['pass_reset'] = $pw_res;
+Template::assignments($tpl);
+Template::display();
 
 ?>
