@@ -79,6 +79,28 @@ else
     echo '<strong>PEAR File_Archive Not Available.</strong><br />';
 }
 
+// Check for PEAR::Mail
+@ include_once('Mail.php');
+if (class_exists('Mail'))
+{
+    echo 'PEAR::Mail Available.<br />';
+}
+else
+{
+    echo '<strong>PEAR::Mail Not Available.</strong><br />';
+}
+
+// Check for PEAR::Net_SMTP
+@ include_once('Net/SMTP.php');
+if (class_exists('Net_SMTP'))
+{
+    echo 'PEAR::Net_SMTP Available.<br />';
+}
+else
+{
+    echo '<strong>PEAR::Net_SMTP Not Available.</strong><br />';
+}
+
 // Check for Fileinfo ext
 if (function_exists('finfo_open'))
 {

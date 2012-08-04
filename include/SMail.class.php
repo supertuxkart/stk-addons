@@ -16,25 +16,62 @@
  You should have received a copy of the GNU General Public License along with 
  stkaddons.  If not, see <http://www.gnu.org/licenses/>.   */
 
-class Mail {
-    public static function newAccountNotification($email, $username, $ver_code, $ver_page) {
+
+// Include PEAR::Mail
+require_once('Mail.php');
+
+class SMail {
+    private $factory;
+    private $headers;
+
+    public function __construct() {
+	if (MAIL_METHOD == 'smtp') {
+	    @$this->factory = Mail::factory(MAIL_METHOD,array(
+		'host' => SMTP_HOST,
+		'port' => SMTP_PORT,
+		'auth' => SMTP_AUTH,
+		'username' => SMTP_USER,
+		'password' => SMTP_PASS
+	    ));
+	} else {
+	    @$this->factory = Mail::factory(MAIL_METHOD,array(
+		'sendmail_path' => SENDMAIL_PATH,
+		'sendmail_args' => SENDMAIL_ARGS
+	    ));
+	}
+	$this->headers = array(
+	    'From' => '"STK-Addons Administrator" <'.ConfigManager::get_config('admin_email').'>',
+	    'Content-Type' => 'text/plain; charset="UTF-8"',
+	    'Content-Transfer-Encoding' => '8bit'
+	);
+    }
+    
+    public function newAccountNotification($email, $username, $ver_code, $ver_page) {
 	$url_username = urlencode($username);
 	$message = "Thank you for registering an account on the SuperTuxKart Add-Ons Manager.\n".
-		"Please go to http://{$_SERVER["SERVER_NAME"]}$ver_page?action=valid&num=$ver_code&user=$url_username to activate your account.\n\n".
+		"Please go to $ver_page?action=valid&num=$ver_code&user=$url_username to activate your account.\n\n".
 		"Username: $username";
         $subject = "New Account at ".$_SERVER["SERVER_NAME"];
 	
-	Mail::send($email, $subject, $message);
+	$this->headers['To'] = $email;
+	$this->headers['Subject'] = $subject;
+	$result = @$this->factory->send($email, $this->headers, $message);
+	if (@PEAR::isError($result))
+	    throw new Exception($result->getMessage());
     }
     
-    public static function passwordResetNotification($email, $username, $ver_code, $ver_page) {
+    public function passwordResetNotification($email, $username, $ver_code, $ver_page) {
 	$url_username = urlencode($username);
 	$message = "You have requested to reset your password on the SuperTuxKart Add-Ons Manager.\n".
 		"Please go to http://{$_SERVER["SERVER_NAME"]}$ver_page?action=valid&num=$ver_code&user=$url_username to reset your password.\n\n".
 		"Username: $username";
         $subject = "Reset Password on ".$_SERVER["SERVER_NAME"];
 	
-	Mail::send($email, $subject, $message);
+	$this->headers['To'] = $email;
+	$this->headers['Subject'] = $subject;
+	$result = @$this->factory->send($email, $this->headers, $message);
+	if (@PEAR::isError($result))
+	    throw new Exception($result->getMessage());
     }
     
     public static function addonNoteNotification($email, $addon_id, $notes) {
@@ -43,28 +80,11 @@ class Mail {
 	$message .= $notes;
 	$subject = "New message for add-on '$addon_name'";
 	
-	Mail::send($email, $subject, $message);
-    }
-
-    private static function send($to, $subject, $message) {
-	$from = '"STK-Addons Administrator" <'.ConfigManager::get_config('admin_email').'>';
-	$replyto = '"STK-Addons Administrator" <'.ConfigManager::get_config('admin_email').'>';
-	
-	$headers = "From: $from\r\nReply-To: $replyto";
-	$subject = strip_tags($subject);
-	$message = strip_tags($message);
-	$message = "This is an automated email message. Please do not reply directly, as it may not be received.\n".
-		"If you have any questions, please contact the website administrator directly at ".ConfigManager::get_config('admin_email').".\n\n".$message;
-	try {
-	    $to = Validate::email($to);
-	}
-	catch (UserException $e) {
-	    throw new Exception('Invalid email address.');
-	}
-	
-	$success = @mail($to,$subject,$message,$headers);
-	if (!$success)
-	    throw new Exception('Failed to send email message.');
+	$this->headers['To'] = $email;
+	$this->headers['Subject'] = $subject;
+	$result = @$this->factory->send($email, $this->headers, $message);
+	if (@PEAR::isError($result))
+	    throw new Exception($result->getMessage());
     }
 }
 

@@ -753,7 +753,8 @@ class Addon {
 
         $result = mysql_fetch_assoc($userHandle);
 	try {
-	    Mail::addonNoteNotification($result['email'], $this->id, $email_body);
+	    $mail = new SMail;
+	    $mail->addonNoteNotification($result['email'], $this->id, $email_body);
 	}
 	catch (Exception $e) {
 	    throw new AddonException('Failed to send email to user. '.$e->getMessage());

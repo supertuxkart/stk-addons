@@ -36,6 +36,16 @@ define("DB_PASSWORD", 'pass');
 define("DB_NAME", 'stkbase');
 define("DB_PREFIX", '');
 define("DB_HOST", 'localhost');
+
+define('MAIL_METHOD', 'sendmail'); // 'smtp' or 'sendmail' supported
+define('SENDMAIL_PATH', '/usr/bin/sendmail'); // Path to sendmail
+define('SENDMAIL_ARGS', '-i'); // Sendmail arguments
+define('SMTP_HOST', NULL); // SMTP server host
+define('SMTP_PORT', NULL); // SMTP server port (usually 25)
+define('SMTP_AUTH', NULL); // Whether or not to use SMTP authentication, true/false
+define('SMTP_USER', NULL); // SMTP username
+define('SMTP_PASS', NULL); // SMTP password
+
 if (!defined('CRON'))
     define("UP_LOCATION", $dirUpload);
 else

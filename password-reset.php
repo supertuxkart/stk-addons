@@ -123,7 +123,8 @@ switch ($_GET['action']) {
 
             // Send verification email
 	    try {
-		Mail::passwordResetNotification($email, $username, 'reset-'.$verification_code, $_SERVER['PHP_SELF']);
+		$mail = new SMail;
+		$mail->passwordResetNotification($email, $username, 'reset-'.$verification_code, $_SERVER['PHP_SELF']);
 	    }
 	    catch (Exception $e) {
 		$pw_res['info'] .= '<span class="error">'.$e->getMessage().'</span><br /><br />';

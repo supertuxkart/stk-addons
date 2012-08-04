@@ -28,6 +28,7 @@ require(ROOT.'include/ConfigManager.php');
 require(ROOT.'include/Validate.class.php');
 require(ROOT.'include/File.class.php');
 require(ROOT.'include/SImage.class.php');
+require(ROOT.'include/SMail.class.php');
 require(ROOT.'include/News.class.php');
 require(ROOT.'include/PanelInterface.class.php');
 require(ROOT.'include/Addon.class.php');
@@ -39,7 +40,6 @@ require(ROOT.'include/Ratings.class.php');
 require(ROOT.'include/security.php');
 require(ROOT.'include/coreUser.php');
 require(ROOT.'include/image.php');
-require(ROOT.'include/mail.php');
 require(ROOT.'include/statistics.php');
 require(ROOT.'include/xmlWrite.php');
 ?>

@@ -254,7 +254,8 @@ class User
 
 	// Send verification email
 	try {
-	    Mail::newAccountNotification($email, $username, $verification_code, SITE_ROOT.'register.php');
+	    $mail = new SMail;
+	    $mail->newAccountNotification($email, $username, $verification_code, SITE_ROOT.'register.php');
 	}
 	catch (Exception $e) {
 	    Log::newEvent("Registration email for '$username' failed.");

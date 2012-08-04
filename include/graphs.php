@@ -1,5 +1,5 @@
 <?php
-error_reporting(E_ALL);
+error_reporting(E_ALL ^ E_STRICT);
 if (!defined('ROOT')) define('ROOT','../');
 require_once(ROOT.'config.php');
 require_once(JPG_ROOT.'jpgraph/jpgraph.php');
