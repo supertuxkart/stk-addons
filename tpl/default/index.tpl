@@ -17,11 +17,13 @@
 	{/foreach}
     </div>{* #index-menu *}
     <div id="index-news">
+	<noscript><div style="display: none;"></noscript>
 	<ul id="news-messages">
 	    {foreach $news_messages as $message}
 		<li>{$message}</li>
 	    {/foreach}
 	</ul>
+	<noscript></div></noscript>
     </div>
 </div>{* #index-body *}
 {include file=#footer#}

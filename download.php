@@ -54,7 +54,7 @@ $filepath = UP_LOCATION.$assetpath;
 $uagent = $_SERVER['HTTP_USER_AGENT'];
 if (preg_match('#^(SuperTuxKart/[a-z0-9\.\-_]+)( \\(.*\\))?$#',$uagent,$matches)) {
     // Check if this user-agent is already known
-    $checkSql = 'SELECT `agent_string` FROM `'.DB_PREFIX.'clients`
+    $checkSql = 'SELECT `agent_string`, `disabled` FROM `'.DB_PREFIX.'clients`
         WHERE `agent_string` = \''.mysql_real_escape_string($matches[1]).'\'';
     $checkHandle = sql_query($checkSql);
     if (mysql_num_rows($checkHandle) != 1)
