@@ -93,7 +93,11 @@ class AddonViewer
 	    'type' => $this->addon->getType(),
 	    'rating' => array(
 		'label' => $this->rating->getRatingString(),
-		'percent' => $this->rating->getAvgRatingPercent()
+		'percent' => $this->rating->getAvgRatingPercent(),
+		'decimal' => $this->rating->getAvgRating(),
+		'count' => $this->rating->getNumRatings(),
+		'min_rating' => 1,
+		'max_rating' => 3
 	    ),
 	    'badges' => AddonViewer::badges($this->addon->getStatus())
 	);

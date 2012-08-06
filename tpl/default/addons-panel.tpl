@@ -1,63 +1,71 @@
 {config_load file="tpl/default/tpl.conf"}
-<h1>{$addon.name}
-    <div id="rating-container">
-	<div class="rating">
-	    <div class="emptystars"></div>
-	    <div class="fullstars" style="width: {$addon.rating.percent}%;"></div>
+<div itemscope itemtype="http://www.schema.org/CreativeWork">
+    <h1><span itemprop="name">{$addon.name}</span>
+	<div id="rating-container" itemprop="aggregateRating" itemscope itemtype="http://www.schema.org/AggregateRating">
+	    <div style="display: none;">
+		<span itemprop="worstRating">{$addon.rating.min_rating}</span>
+		<span itemprop="bestRating">{$addon.rating.max_rating}</span>
+		<span itemprop="ratingValue">{$addon.rating.decimal}</span>
+		<span itemprop="ratingCount">{$addon.rating.count}</span>
+	    </div>
+	    <div class="rating">
+		<div class="emptystars"></div>
+		<div class="fullstars" style="width: {$addon.rating.percent}%;"></div>
+	    </div>
+	    <p>{$addon.rating.label}</p>
 	</div>
-	<p>{$addon.rating.label}</p>
+    </h1>
+
+    <div id="addon-image">
+	{if $addon.image.display == true}
+	<img class="preview" src="{$addon.image.url}" itemprop="image" />
+	{/if}
+	{if $addon.image_upload.display == true}
+	<br />
+	<form method="POST" action="{$addon.image_upload.target}">
+	    <input type="submit" value="{$addon.image_upload.button_label}" />
+	</form>
+	{/if}
     </div>
-</h1>
 
-<div id="addon-image">
-    {if $addon.image.display == true}
-    <img class="preview" src="{$addon.image.url}" />
-    {/if}
-    {if $addon.image_upload.display == true}
+    {$addon.badges}
     <br />
-    <form method="POST" action="{$addon.image_upload.target}">
-	<input type="submit" value="{$addon.image_upload.button_label}" />
-    </form>
-    {/if}
+    <span id="addon-description" itemprop="description">{$addon.description}</span>
+    <table class="info">
+	{if $addon.type == 'arenas'}
+	<tr>
+	    <td><strong>{$addon.info.type.label}</strong></td>
+	    <td>{$addon.info.type.value}</td>
+	</tr>
+	{/if}
+	<tr>
+	    <td><strong>{$addon.info.designer.label}</strong></td>
+	    <td itemprop="author">{$addon.info.designer.value}</td>
+	</tr>
+	<tr>
+	    <td><strong>{$addon.info.upload_date.label}</strong></td>
+	    <td itemprop="dateModified">{$addon.info.upload_date.value}</td>
+	</tr>
+	<tr>
+	    <td><strong>{$addon.info.submitter.label}</strong></td>
+	    <td>{$addon.info.submitter.value}</td>
+	</tr>
+	<tr>
+	    <td><strong>{$addon.info.revision.label}</strong></td>
+	    <td itemprop="version">{$addon.info.revision.value}</td>
+	</tr>
+	<tr>
+	    <td><strong>{$addon.info.compatibility.label}</strong></td>
+	    <td>{$addon.info.compatibility.value}</td>
+	</tr>
+	{if $addon.vote.display == true}
+	<tr>
+	    <td><strong>{$addon.vote.label}</strong></td>
+	    <td>{$addon.vote.controls}</td>
+	</tr>
+	{/if}
+    </table>
 </div>
-
-{$addon.badges}
-<br />
-<span id="addon-description">{$addon.description}</span>
-<table class="info">
-    {if $addon.type == 'arenas'}
-    <tr>
-	<td><strong>{$addon.info.type.label}</strong></td>
-	<td>{$addon.info.type.value}</td>
-    </tr>
-    {/if}
-    <tr>
-	<td><strong>{$addon.info.designer.label}</strong></td>
-	<td>{$addon.info.designer.value}</td>
-    </tr>
-    <tr>
-	<td><strong>{$addon.info.upload_date.label}</strong></td>
-	<td>{$addon.info.upload_date.value}</td>
-    </tr>
-    <tr>
-	<td><strong>{$addon.info.submitter.label}</strong></td>
-	<td>{$addon.info.submitter.value}</td>
-    </tr>
-    <tr>
-	<td><strong>{$addon.info.revision.label}</strong></td>
-	<td>{$addon.info.revision.value}</td>
-    </tr>
-    <tr>
-	<td><strong>{$addon.info.compatibility.label}</strong></td>
-	<td>{$addon.info.compatibility.value}</td>
-    </tr>
-    {if $addon.vote.display == true}
-    <tr>
-	<td><strong>{$addon.vote.label}</strong></td>
-	<td>{$addon.vote.controls}</td>
-    </tr>
-    {/if}
-</table>
 
 {$addon.warnings}
 
