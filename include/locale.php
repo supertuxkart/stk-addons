@@ -29,15 +29,17 @@ $page_url = preg_replace('/\?&/i','?',$page_url);
 // Time for the language cookie to expire is 1 year in the future
 $timestamp_expire = time() + 365*24*3600;
 // Set language cookie if it is not set
-if(!isset($_COOKIE['lang']) && !isset($_GET['lang']))
+// Initialize cookie
+if(!isset($_COOKIE['lang']))
 {
     setcookie('lang', 'en_US', $timestamp_expire);
     putenv('LC_ALL=en_US.UTF-8');
     setlocale(LC_ALL, 'en_US.UTF-8');
     $_COOKIE['lang'] = 'en_US';
 }
-elseif (isset($_GET['lang']))
-{ // If the user has chosen a language
+// Set cookie based on request
+if (isset($_GET['lang']))
+{
     setcookie('lang', $_GET['lang'], $timestamp_expire);
     putenv('LC_ALL='.$_GET['lang'].'.UTF-8');
     setlocale(LC_ALL, $_GET['lang'].'.UTF-8');
