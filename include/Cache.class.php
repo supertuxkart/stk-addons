@@ -114,6 +114,62 @@ class Cache {
 	$result = mysql_fetch_assoc($handle);
 	return $result;
     }
+    
+    /**
+     * Get image properties for a cacheable image
+     * @param integer $id
+     * @param array $props
+     * @return array
+     * @throws Exception 
+     */
+    public static function getImage($id, $props = array()) {
+	$return = array(
+	    'url' => NULL,
+	    'approved' => NULL,
+	    'exists' => NULL
+	);
+	
+	$id = (int)$id;
+	
+	$query = 'SELECT `file_path`, `approved`
+	    FROM `'.DB_PREFIX.'files`
+            WHERE `id` = '.$id.'
+            LIMIT 1';
+	$handle = sql_query($query);
+	if (!$handle) throw new Exception('Failed to look up image file.');
+	// FIXME: handle this case better
+	if (mysql_num_rows($handle) == 0) {
+	    $return = array(
+		'url' => SITE_ROOT.'image/notfound.png',
+		'approved' => true,
+		'exists' => false
+	    );
+	    return $return;
+	}
+	$image = mysql_fetch_assoc($handle);
+	$return['url'] = DOWN_LOCATION.$image['file_path'];
+	$return['approved'] = (boolean)$image['approved'];
+	$return['exists'] = true;
+	
+	$cache_prefix = NULL;
+	if (array_key_exists('size', $props)) {
+	    if ($props['size'] === 'big') {
+		$cache_prefix = '300--';
+	    } elseif ($props['size'] === 'medium') {
+		$cache_prefix = '75--';
+	    } elseif ($props['size'] === 'small') {
+		$cache_prefix = '25--';
+	    }
+	    
+	    $return['url'] = SITE_ROOT.'image.php?type='.$props['size'].'&amp;pic='.$image['file_path'];
+	}
+	
+	if (Cache::fileExists($cache_prefix.basename($image['file_path']))) {
+	    $return['url'] = CACHE_DL.$cache_prefix.basename($image['file_path']);
+	}
+	
+	return $return;
+    }
 }
 
 ?>

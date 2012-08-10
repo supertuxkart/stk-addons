@@ -56,35 +56,6 @@ class AddonViewer
         return $return;
     }
     
-    private function getImageProps() {
-        // Get image
-        $query = 'SELECT `file_path` FROM `'.DB_PREFIX.'files`
-            WHERE `id` = '.$this->addon->getImage().'
-            AND `approved` = 1
-            LIMIT 1';
-        $image_handle = sql_query($query);
-	$array = array(
-	    'image' => array('display' => false),
-	    'image_upload' => array('display' => false));
-        $string = '<div id="addon-image">';
-        if ($image_handle && mysql_num_rows($image_handle) == 1) {
-	    $image_result = mysql_fetch_assoc($image_handle);
-	    $array['image'] = array(
-		'display' => true,
-		'url' => SITE_ROOT.'image.php?type=big&amp;pic='.$image_result['file_path']
-	    );
-	}
-
-        // Add upload button below image (or in place of image)
-        if (User::$logged_in && ($this->addon->getUploader() == $_SESSION['userid'] || $_SESSION['role']['manageaddons']))
-	    $array['image_upload'] = array(
-		'display' => true,
-		'target' => SITE_ROOT.'upload.php?type='.$this->addon->getType().'&amp;name='.$this->addon->getId().'&amp;action=file',
-		'button_label' => htmlspecialchars(_('Upload Image'))
-	    );
-        return $array;
-    }
-    
     public function fillTemplate() {
 	$tpl = array();
 	$tpl['addon'] = array(
@@ -99,8 +70,35 @@ class AddonViewer
 		'min_rating' => 1,
 		'max_rating' => 3
 	    ),
-	    'badges' => AddonViewer::badges($this->addon->getStatus())
+	    'badges' => AddonViewer::badges($this->addon->getStatus()),
+	    'image' => array(
+		'display' => false,
+		'url' => NULL
+	    ),
+	    'image_upload' => array(
+		'display' => false,
+		'target' => NULL,
+		'button_label' => NULL
+	    )
 	);
+	
+	// Get image
+	$image = Cache::getImage($this->addon->getImage(),array('size' => 'big'));
+	if ($this->addon->getImage() != 0
+		&& $image['exists'] == true
+		&& $image['approved'] == true) {
+	    $tpl['addon']['image'] = array(
+		'display' => true,
+		'url' => $image['url']
+	    );
+	}
+	// Add upload button below image (or in place of image)
+        if (User::$logged_in && ($this->addon->getUploader() == $_SESSION['userid'] || $_SESSION['role']['manageaddons']))
+	    $tpl['addon']['image_upload'] = array(
+		'display' => true,
+		'target' => SITE_ROOT.'upload.php?type='.$this->addon->getType().'&amp;name='.$this->addon->getId().'&amp;action=file',
+		'button_label' => htmlspecialchars(_('Upload Image'))
+	    );
 	
         $addonUser = new coreUser();
         $addonUser->selectById($this->addon->getUploader());
@@ -230,7 +228,8 @@ class AddonViewer
         for ($i = 1; $i <= mysql_num_rows($imageFilesHandle); $i++) {
             $imageFilesResult = mysql_fetch_assoc($imageFilesHandle);
 	    $imageFilesResult['url'] = DOWN_LOCATION.$imageFilesResult['file_path'];
-	    $imageFilesResult['thumb']['url'] = SITE_ROOT.'image.php?type=medium&amp;pic='.$imageFilesResult['file_path'];
+	    $imageCache = Cache::getImage($imageFilesResult['id'], array('size' => 'medium'));
+	    $imageFilesResult['thumb']['url'] = $imageCache['url'];
 	    $admin_links = NULL;
             if (User::$logged_in) {
                 if ($_SESSION['role']['manageaddons']) {
@@ -319,7 +318,6 @@ class AddonViewer
         }
 	$s_list['files'] = $source_files;
 	$tpl['addon']['source_list'] = $s_list;
-	$tpl['addon'] = array_merge($tpl['addon'], $this->getImageProps());
 	
 	Template::assignments($tpl);
     }

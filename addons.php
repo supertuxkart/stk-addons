@@ -45,7 +45,7 @@ switch ($_GET['type']) {
         $type_label = htmlspecialchars(_('Arenas'));
         break;
 }
-$title = htmlspecialchars(_('STK Add-ons').' | ').$type_label;
+$title = $type_label.' - '.htmlspecialchars(_('SuperTuxKart Add-ons'));
 
 // Validate addon-id parameter
 $_GET['name'] = (isset($_GET['name'])) ? Addon::cleanId($_GET['name']) : NULL;
@@ -58,7 +58,7 @@ if($_GET['name'] != NULL && !Addon::exists($_GET['name']))
 
 $addonName = Addon::getName($_GET['name']);
 if ($addonName !== false)
-    $title .= ' | '.$addonName;
+    $title = $addonName.' - '.$title;
 
 include("include/top.php");
 
@@ -169,24 +169,17 @@ foreach($addons_list AS $ad) {
         if ($adc->getType() == 'karts') {
             // Make sure an icon file is set for kart
             if ($adc->getImage(true) != 0) {
-                $get_image_query = 'SELECT `file_path` FROM `'.DB_PREFIX.'files`
-                    WHERE `id` = '.(int)$adc->getImage(true).'
-                    AND `approved` = 1
-                    LIMIT 1';
-                $get_image_handle = sql_query($get_image_query);
-                if (mysql_num_rows($get_image_handle) == 1) {
-                    $icon = mysql_fetch_assoc($get_image_handle);
-                    $icon_path = $icon['file_path'];
-                }
-                else
-                    $icon_path = 'image/kart-icon.png';
-            }
-            else
-                $icon_path = 'image/kart-icon.png';
-            $icon = 'image.php?type=small&amp;pic='.$icon_path;
+		$im = Cache::getImage($adc->getImage(true),array('size' => 'small'));
+		if ($im['exists'] && $im['approved']) {
+		    $icon = $im['url'];
+		} else {
+		    $icon = SITE_ROOT.'image/kart-icon.png';
+		}
+            } else
+                $icon = SITE_ROOT.'image/kart-icon.png';
         }
         else
-            $icon = 'image/track-icon.png';
+            $icon = SITE_ROOT.'image/track-icon.png';
 
         // Approved?
         if(($adc->getStatus() & F_APPROVED) == F_APPROVED)
@@ -195,7 +188,7 @@ foreach($addons_list AS $ad) {
             $class = 'addon-list menu-item unavailable';
         else
             continue;
-	$icon_html = '<img class="icon" src="'.SITE_ROOT.$icon.'" />';
+	$icon_html = '<img class="icon" src="'.$icon.'" height="25" width="25" />';
 	if (($adc->getStatus() & F_FEATURED) == F_FEATURED)
 	    $icon_html = '<div class="icon"><div class="icon-featured"></div>'.$icon_html.'</div>';
         $addons[] = array(
