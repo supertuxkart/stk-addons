@@ -95,7 +95,7 @@ $(document).ready(function () {
       var url = this.href;
       var addonType = getUrlVars(url)['type'];
       if (addonType == undefined) {
-	  url = siteRoot + $(this).children('#i').html().replace('&amp;','&');
+	  url = siteRoot + $(this).children('meta').attr("content").replace('&amp;','&');
 	  addonType = getUrlVars(url)['type'];
       }
       var addonId = getUrlVars(url)['name'];

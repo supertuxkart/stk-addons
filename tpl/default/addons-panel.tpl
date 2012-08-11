@@ -2,12 +2,10 @@
 <div itemscope itemtype="http://www.schema.org/CreativeWork">
     <h1><span itemprop="name">{$addon.name}</span>
 	<div id="rating-container" itemprop="aggregateRating" itemscope itemtype="http://www.schema.org/AggregateRating">
-	    <div style="display: none;">
-		<span itemprop="worstRating">{$addon.rating.min_rating}</span>
-		<span itemprop="bestRating">{$addon.rating.max_rating}</span>
-		<span itemprop="ratingValue">{$addon.rating.decimal}</span>
-		<span itemprop="ratingCount">{$addon.rating.count}</span>
-	    </div>
+	    <meta itemprop="worstRating" content="{$addon.rating.min_rating}" />
+	    <meta itemprop="bestRating" content="{$addon.rating.max_rating}" />
+	    <meta itemprop="ratingValue" content="{$addon.rating.decimal}" />
+	    <meta itemprop="ratingCount" content="{$addon.rating.count}" />
 	    <div class="rating">
 		<div class="emptystars"></div>
 		<div class="fullstars" style="width: {$addon.rating.percent}%;"></div>

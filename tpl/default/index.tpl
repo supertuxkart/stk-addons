@@ -10,8 +10,9 @@
     <div id="index-menu">
 	{foreach $index_menu as $index}
 	    <div>
-		<a href="{$index.href}" class="{$index.type}">
-		    <span>{$index.label}</span>
+		<a href="{$index.href}" class="{$index.type}" itemscope itemtype="http://schema.org/SiteNavigationElement">
+		    <span itemprop="text">{$index.label}</span>
+		    <meta itemprop="url" content="{$index.href}" />
 		</a>
 	    </div>
 	{/foreach}

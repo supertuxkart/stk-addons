@@ -54,7 +54,7 @@ class PanelInterface {
             $content .= "\t\t\t\t<li>\n";
 	    if (isset($this->menu_items[$i]['disp'])) {
 		$content .= "\t\t\t\t\t<a class=\"{$this->menu_items[$i]['class']}\" href=\"{$this->menu_items[$i]['disp']}\">\n";
-		$content .= "\t\t\t\t\t\t<div id=\"i\" style=\"display: none;\">{$this->menu_items[$i]['url']}</div>\n";
+		$content .= "\t\t\t\t\t\t<meta itemprop=\"realUrl\" content=\"{$this->menu_items[$i]['url']}\" />\n";
 	    } else {
 		$content .= "\t\t\t\t\t<a class=\"{$this->menu_items[$i]['class']}\" href=\"{$this->menu_items[$i]['url']}\">\n";
 		
