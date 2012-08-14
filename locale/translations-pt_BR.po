@@ -1,16 +1,16 @@
-# German translation for stk
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Brazilian Portuguese translation for stk
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the stk package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: stk\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-06-22 13:23-0600\n"
-"PO-Revision-Date: 2012-06-15 17:18+0000\n"
-"Last-Translator: Wolfs <Unknown>\n"
-"Language-Team: German <de@li.org>\n"
+"PO-Revision-Date: 2012-08-14 14:33+0000\n"
+"Last-Translator: Douglas Moura <Unknown>\n"
+"Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,20 +19,20 @@ msgstr ""
 
 #: ../about.php:32 ../include/menu.php:84
 msgid "About"
-msgstr "Über"
+msgstr "Sobre"
 
 #: ../about.php:32 ../addons.php:48 ../login.php:33 ../manage.php:25
 #: ../password-reset.php:25 ../register.php:25
 msgid "STK Add-ons"
-msgstr "STK Add-Ons"
+msgstr "Complementos do STK"
 
 #: ../about.php:43
 msgid ""
 "SuperTuxKart is a Free 3D kart racing game, with many tracks, characters and "
 "items for you to try."
 msgstr ""
-"SuperTuxKart ist ein freies 3D Kart Rennspiel mit vielen verschiedenen "
-"Strecken, Fahrzeugen und Bonusgegenständen."
+"SuperTuxKart é um jogo de kart 3D livre, com muitas pistas, personagens e "
+"ítens para você."
 
 #: ../about.php:44
 msgid ""
@@ -40,9 +40,9 @@ msgid ""
 "messages from the STKAddons website. Since 0.7.2, the game has included a "
 "built-in add-on manager."
 msgstr ""
-"Seit Version 0.7.1 ist SuperTuxKart in der Lage, wichtige Nachrichten von "
-"der STKAddons-Seite zu holen. Seit 0.7.2 enthält das Spiel einen eingebauten "
-"Add-On-Manager."
+"Desde a versão 0.7.1, SuperTuxKart pode buscar mensagens importantes do site "
+"STKAddons, e desde a versão 0.7.2, o jogo inclui um gerenciador de "
+"complementos."
 
 #: ../about.php:45
 #, php-format
@@ -50,25 +50,25 @@ msgid ""
 "SuperTuxKart now has over %d karts, %d tracks, and %d arenas available in-"
 "game thanks to the add-on service."
 msgstr ""
-"SuperTuxKart enthält jetzt dank des Add-On-Services mehr als %d Karts, %d "
-"Strecken und %d Arenen."
+"Hoje o SuperTuxKart tema mais %d karts, %d pistas e %d arenas disponíveis no "
+"jogo, graças aos complementos."
 
 #: ../about.php:46
 msgid ""
 "Of course, the artists who create all of this content must be thanked too. "
 "Without them, the add-on website would not be as great as it is today."
 msgstr ""
-"Natürlich muss auch den Künstlern, die all diese Inhalte erstellen, gedankt "
-"werden. Ohne sie würde die Add-On-Seite nicht so großartig sein, wie sie es "
-"heute ist."
+"Claro, os artistas que criaram todo este conteúdo merecem nosso "
+"agradecimento. Sem eles, o site de complementos não seria tão grande como é "
+"hoje."
 
 #: ../about.php:47 ../about.php:52
 msgid "Donate!"
-msgstr "Spenden!"
+msgstr "Doe!"
 
 #: ../about.php:47 ../about.php:52
 msgid "Website"
-msgstr "Webseite"
+msgstr "Site"
 
 #: ../about.php:50
 msgid ""
@@ -77,11 +77,10 @@ msgid ""
 "free speech, not as in free beer). They accept any project released under a "
 "free license (GPL, BSD, CC-BY-SA, Art Libre...)."
 msgstr ""
-"TuxFamily ist eine gemeinnützige Organisation. Sie bietet kostenlose Dienste "
-"für Projekte und Inhalte an, die der Philosophie der freien Software folgen "
-"(frei wie in freie Sprache, nicht wie in Freibier). Sie akzeptieren jedes "
-"Projekt, das unter einer freien Lizenz veröffentlicht wird (GPL, BSD, CC-BY-"
-"SA, Art Libre ...)."
+"TuxFamily é uma organização sem fins lucrativos. Disponibiliza serviços "
+"gratuitos para projetos e conteúdos que compartilham da filosofia do "
+"software livre. TuxFamily aceita qualquer projeto liberado sob uma licença "
+"livre (GPL, BSD, CC-BY-SA, Art Libre...)."
 
 #: ../about.php:51
 msgid ""
@@ -90,32 +89,32 @@ msgid ""
 "million downloads are made by SuperTuxKart players. We thank them very much "
 "for their generosity to us and to other open source projects."
 msgstr ""
-"TuxFamily stellt die Server, auf denen STKAddons betrieben wird, kostenlos "
-"bereit. Durch sie sind wird in der Lage, den Add-On-Service für SuperTuxKart "
-"anzubieten. Jeden Monat tätigen SuperTuxKart-Spieler über eine Million "
-"Downloads. Wir bedanken uns bei TuxFamily sehr herzlich für ihre "
-"Großzügigkeit uns und anderen OpenSource-Projekten gegenüber."
+"TuxFamily opera os servidores do site STKAddons, de graça. Por causa deles, "
+"podemos disponibilizar um serviço de complementos para o SuperTuxKart. A "
+"cada mês, milhões de downloads são feitos pelos jogadores do SuperTuxKart. "
+"Somos muito agradecidos pela generosidade da TuxFamily conosco e para com "
+"outros projetos de código aberto."
 
 #: ../about.php:54
 msgid "Credits"
-msgstr "Mitwirkende"
+msgstr "Créditos"
 
 #: ../addons-panel.php:44
 msgid ""
 "This page cannot be loaded because an invalid add-on type was provided."
 msgstr ""
-"Diese Seite kann nicht geladen werden, weil ein ungültiger Add-On-Typ "
-"angegeben wurde."
+"Esta página não pôde ser carregada pois um tipo de complemento inválido foi "
+"solicitado."
 
 #: ../addons.php:35
 msgid "Unknown Type"
-msgstr "Unbekannter Typ"
+msgstr "Tipo desconhecido"
 
 #. I18N: Menu link
 #: ../addons.php:39 ../include/menu.php:54 ../include/menu.php:65
 #: ../index.php:68
 msgid "Tracks"
-msgstr "Strecken"
+msgstr "Trilhas"
 
 #. I18N: Menu link
 #: ../addons.php:42 ../include/menu.php:59 ../include/menu.php:64
@@ -127,66 +126,66 @@ msgstr "Karts"
 #: ../addons.php:45 ../include/menu.php:55 ../include/menu.php:60
 #: ../index.php:78
 msgid "Arenas"
-msgstr "Arenen"
+msgstr "Arenas"
 
 #: ../addons.php:74
 msgid "Invalid addon type."
-msgstr "Ungültiger Add-On-Typ."
+msgstr "Tipo de complemento inválido."
 
 #: ../addons.php:94
 msgid "Saved properties."
-msgstr "Eigenschaften gespeichert."
+msgstr "Propriedades salvas."
 
 #: ../addons.php:115
 msgid "Saved status."
-msgstr "Status gespeichert."
+msgstr "Status salvo."
 
 #: ../addons.php:127
 msgid "Saved notes."
-msgstr "Notizen gespeichert."
+msgstr "Notas salvas."
 
 #: ../addons.php:138
 msgid "Deleted addon."
-msgstr "Add-On gelöscht."
+msgstr "Complemento excluído."
 
 #: ../addons.php:150
 msgid "File updated."
-msgstr "Datei aktualisiert."
+msgstr "Arquivo atualizado."
 
 #: ../addons.php:160
 msgid "Set image."
-msgstr "Bild festgelegt."
+msgstr "Definir imagem."
 
 #: ../addons.php:172
 msgid "Set icon."
-msgstr "Icon festgelegt."
+msgstr "Definir ícone."
 
 #: ../addons.php:182
 msgid "Deleted file."
-msgstr "Datei gelöscht."
+msgstr "Arquivo excluído."
 
 #: ../disabled.php:40
 msgid "This page is currently disabled."
-msgstr "Diese Seite ist derzeit nicht verfügbar."
+msgstr "Esta página está atualmente desabilitada."
 
 #: ../disabled.php:41 ../include/security.php:48
 msgid "You will be redirected to the home page."
-msgstr "Du wirst zur Startseite umgeleitet."
+msgstr "Você será redirecionado para a página inicial."
 
 #. I18N: Heading for general error page
 #: ../error.php:49
 msgid "An Error Occurred"
-msgstr ""
+msgstr "Ocorreu um erro"
 
 #. I18N: Error message for general error page
 #: ../error.php:51
 msgid "Something broke! We'll try to fix it as soon as we can!"
-msgstr ""
+msgstr "Tem algo errado. Tentaremos corrigir isto o mais rápido possível."
 
 #. I18N: Heading for HTTP 403 Forbidden error page
 #: ../error.php:55
 msgid "403 - Forbidden"
-msgstr ""
+msgstr "403 - Acesso proibido"
 
 #. I18N: Error message for HTTP 403 Forbidden error page
 #: ../error.php:57
@@ -194,157 +193,159 @@ msgid ""
 "You're not supposed to be here. Click one of the links in the menu above to "
 "find some better content."
 msgstr ""
+"Você não deveria estar aqui. Clique em um dos links do menu abaixo para "
+"encontrar um conteúdo melhor."
 
 #. I18N: Heading for HTTP 404 Not Found error page
 #: ../error.php:61
 msgid "404 - Not Found"
-msgstr ""
+msgstr "404 - Não encontrado"
 
 #. I18N: Error message for HTTP 404 Not Found error page
 #: ../error.php:63
 msgid ""
 "We can't find what you are looking for. The link you followed may be broken."
 msgstr ""
+"Não foi possível encontrar a página solicitada. Este link está quebrado."
 
 #: ../include/Addon.class.php:55
 msgid "The requested add-on does not exist."
-msgstr "Das gewünschte Add-on ist nicht vorhanden."
+msgstr "O complemento requisitado não existe."
 
 #: ../include/Addon.class.php:125
 msgid ""
 "An add-on with this ID already exists. Please try to upload your add-on "
 "again later."
 msgstr ""
-"Es existiert bereits ein Add-on mit dieser ID. Bitte versuche später noch "
-"einmal, dein Add-On hochzuladen."
+"Um complemento com este ID já existe. Por favor, tente enviar seu "
+"complemento novamente mais tarde."
 
 #: ../include/Addon.class.php:131
 msgid "The add-on you are trying to create already exists."
-msgstr "Das Add-On, das du gerade erstellen willst, existiert bereits."
+msgstr "O complemento que você está tentando criar já existe."
 
 #: ../include/Addon.class.php:133
 msgid "Creating a new add-on..."
-msgstr "Erstelle neues Add-On ..."
+msgstr "Criando novo complemento..."
 
 #: ../include/Addon.class.php:149
 msgid "Your add-on could not be uploaded."
-msgstr "Dein Add-on konnte nicht hochgeladen werden."
+msgstr "Seu complemento não pôde ser enviado."
 
 #: ../include/Addon.class.php:195
 msgid "The file you are trying to create already exists."
-msgstr "Die neu zu erstellende Datei ist bereits vorhanden."
+msgstr "O arquivo que você está tentando criar já existe."
 
 #: ../include/Addon.class.php:199 ../include/Addon.class.php:276
 #: ../include/Addon.class.php:324 ../include/parseUpload.php:273
 #: ../users.php:58 ../users.php:75
 msgid "You do not have the necessary permissions to perform this action."
-msgstr "Du hast nicht die nötigen Rechte, um diese Aktion durchzuführen."
+msgstr "Você não tem as permissões necessárias para executar esta ação."
 
 #: ../include/Addon.class.php:273
 msgid "You must be logged in to perform this action."
-msgstr "Die Ausführung dieser Aktion ist nur angemeldet möglich."
+msgstr "Você precisa está logado para executar esta ação."
 
 #: ../include/Addon.class.php:284
 msgid "Failed to find files associated with this addon."
-msgstr "Konnte zu dem Add-On gehörende Dateien nicht finden."
+msgstr "Falha ao procurar arquivos associados à este complemento."
 
 #: ../include/Addon.class.php:291
 msgid "Failed to delete file:"
-msgstr "Konnte Datei nicht löschen:"
+msgstr "Falha ao excluir o arquivo:"
 
 #: ../include/Addon.class.php:299
 msgid "Failed to remove file records for this addon."
-msgstr "Datei-Versionsgeschichte konnte nicht entfernt werden."
+msgstr "Falha ao remover as gravações deste arquivo."
 
 #: ../include/Addon.class.php:304
 msgid "Failed to remove ratings for this add-on."
-msgstr "Bewertung des Add-ons konnte nicht entfernt werden."
+msgstr "Falha ao remover as avaliações deste arquivo."
 
 #: ../include/Addon.class.php:311
 msgid "Failed to remove add-on revisions."
-msgstr "Überarbeitungen des Add-Ons konnten nicht entfernt werden."
+msgstr "Falha ao remover as revisões deste arquivo."
 
 #: ../include/Addon.class.php:315
 msgid "Failed to remove addon."
-msgstr "Konnte Add-On nicht löschen."
+msgstr "Falha ao remover este complemento."
 
 #: ../include/Addon.class.php:327
 msgid "Failed to delete file."
-msgstr "Datei konnte nicht gelöscht werden."
+msgstr "Falha ao excluir o arquivo."
 
 #: ../include/Addon.class.php:394 ../include/AddonViewer.class.php:404
 #: ../include/AddonViewer.class.php:571 ../include/AddonViewer.class.php:581
 #: ../include/AddonViewer.class.php:593 ../include/AddonViewer.class.php:596
 msgid "Unknown"
-msgstr "Unbekannt"
+msgstr "Desconhecido"
 
 #: ../include/Addon.class.php:539 ../include/Addon.class.php:560
 #: ../include/Addon.class.php:582 ../include/Addon.class.php:612
 msgid "You do not have the neccessary permissions to perform this action."
-msgstr "Du hast nicht die notwendigen Rechte, um diese Aktion auszuführen."
+msgstr "Você não tem as permissões necessárias para executar esta ação."
 
 #: ../include/Addon.class.php:547
 msgid "Failed to update the description record for this add-on."
-msgstr "Die Beschreibung dieses Add-Ons konnte nicht aktualisiert werden."
+msgstr "Falha ao atualizar a descrição deste complemento."
 
 #: ../include/Addon.class.php:568
 msgid "Failed to update the designer record for this add-on."
-msgstr ""
-"Der Designer-Eintrag dieses Add-Ons konnte nicht aktualisiert werden."
+msgstr "Falha ao atualizar o designer deste complemento."
 
 #: ../include/Addon.class.php:590
 msgid "Failed to update the image record for this add-on."
-msgstr ""
+msgstr "Falha ao atualizar a imagem deste complemento."
 
 #: ../include/Addon.class.php:597
 msgid "Failed to update the license record for this add-on."
-msgstr "Der Lizenz-Eintrag dieses Add-Ons konnte nicht aktualisiert werden."
+msgstr "Falha ao atualizar a licença deste complemento."
 
 #: ../include/Addon.class.php:605
 msgid "Failed to update the name record for this add-on."
-msgstr ""
+msgstr "Falha ao atualizar o nome salvo deste complemento."
 
 #: ../include/AddonViewer.class.php:76
 #, php-format
 msgid "Download %s"
-msgstr ""
+msgstr "Baixar %s"
 
 #: ../include/AddonViewer.class.php:84 ../include/AddonViewer.class.php:87
 #: ../include/AddonViewer.class.php:288 ../include/AddonViewer.class.php:291
 msgid "File not found."
-msgstr "Datei nicht gefunden."
+msgstr "Arquivo não encontrado."
 
 #: ../include/AddonViewer.class.php:113 ../include/AddonViewer.class.php:127
 msgid "Upload Image"
-msgstr "Bild hochladen"
+msgstr "Enviar imagem"
 
 #: ../include/AddonViewer.class.php:122
 msgid "Images"
-msgstr "Bilder"
+msgstr "Imagens"
 
 #: ../include/AddonViewer.class.php:152
 msgid "No images have been uploaded for this addon yet."
-msgstr "Für dieses Add-On wurden noch keine Bilder hochgeladen."
+msgstr "Nenhum imagem foi enviada para este complemento."
 
 #: ../include/AddonViewer.class.php:169 ../include/AddonViewer.class.php:358
 msgid "Unapprove"
-msgstr "Nicht genehmigen"
+msgstr "Rejeitar"
 
 #: ../include/AddonViewer.class.php:171 ../include/AddonViewer.class.php:360
 msgid "Approve"
-msgstr "Genehmigen"
+msgstr "Aprovar"
 
 #: ../include/AddonViewer.class.php:177
 msgid "Set Icon"
-msgstr "Icon festlegen"
+msgstr "Definir ícone"
 
 #: ../include/AddonViewer.class.php:181
 msgid "Set Image"
-msgstr "Bild festlegen"
+msgstr "Definir Imagem"
 
 #: ../include/AddonViewer.class.php:183 ../include/AddonViewer.class.php:363
 msgid "Delete File"
-msgstr "Datei löschen"
+msgstr "Excluir arquivo"
 
 #: ../include/AddonViewer.class.php:199
 msgid "Arena"
@@ -352,98 +353,98 @@ msgstr "Arena"
 
 #: ../include/AddonViewer.class.php:199 ../manage-panel.php:166
 msgid "Type:"
-msgstr "Typ:"
+msgstr "Tipo:"
 
 #: ../include/AddonViewer.class.php:204 ../include/AddonViewer.class.php:405
 msgid "Designer:"
-msgstr "Ersteller:"
+msgstr "Designer:"
 
 #: ../include/AddonViewer.class.php:205
 msgid "Upload date:"
-msgstr "Hochgeladen am:"
+msgstr "Enviado dia:"
 
 #: ../include/AddonViewer.class.php:206
 msgid "Submitted by:"
-msgstr "Veröffentlicht von:"
+msgstr "Enviado por:"
 
 #: ../include/AddonViewer.class.php:207
 msgid "Revision:"
-msgstr "Revision:"
+msgstr "Revisão:"
 
 #: ../include/AddonViewer.class.php:208
 msgid "Compatible with:"
-msgstr "Kompatibel mit:"
+msgstr "Compatível com:"
 
 #: ../include/AddonViewer.class.php:210
 msgid "Your Rating: "
-msgstr "Deine Bewertung: "
+msgstr "Sua avaliação: "
 
 #: ../include/AddonViewer.class.php:217
 msgid ""
 "Warning: This addon may not display correctly on some systems. It uses "
 "textures that may not be compatible with all video cards."
 msgstr ""
-"Warnung: Dieses Add-On könnte auf einigen Systemen nicht richtig dargestellt "
-"werden. Es benutzt Texturen, die nicht mit allen Grafikkarten kompatibel "
-"sein könnten."
+"Aviso: este complemento pode não ser exibido corretamente em alguns "
+"sistemas. Ele usa texturas que podem não ser compatíveis com todas as placas "
+"de vídeo."
 
 #: ../include/AddonViewer.class.php:224
 msgid "License"
-msgstr "Lizenz"
+msgstr "Licença"
 
 #: ../include/AddonViewer.class.php:232
 msgid "Permalink"
-msgstr "Permalink"
+msgstr "Link permanente"
 
 #: ../include/AddonViewer.class.php:251
 msgid "Revisions"
-msgstr "Revisionen"
+msgstr "Revisões"
 
 #: ../include/AddonViewer.class.php:257
 msgid "Upload Revision"
-msgstr "Überarbeitung hochladen"
+msgstr "Enviar revisão"
 
 #: ../include/AddonViewer.class.php:285
 #, php-format
 msgid "Download revision %u"
-msgstr "Revision %u herunterladen"
+msgstr "Baixar revisão %u"
 
 #: ../include/AddonViewer.class.php:288 ../include/AddonViewer.class.php:291
 msgid "Revision"
-msgstr "Revision"
+msgstr "Revisão"
 
 #: ../include/AddonViewer.class.php:306
 msgid "Source Files"
-msgstr "Quelldateien"
+msgstr "Arquivos fonte"
 
 #: ../include/AddonViewer.class.php:311
 msgid "Upload Source File"
-msgstr "Quelldatei hochladen"
+msgstr "Enviar arquivo fonte"
 
 #: ../include/AddonViewer.class.php:339
 msgid "No source files have been uploaded for this addon yet."
-msgstr "Für dieses Add-On wurden noch keine Quelldateien hochgeladen."
+msgstr "Nenhum arquivo fonte foi enviado para este complemento."
 
 #: ../include/AddonViewer.class.php:350
 msgid "Not Approved"
-msgstr "Nicht genehmigt"
+msgstr "Não aprovado"
 
 #: ../include/AddonViewer.class.php:351
 #, php-format
 msgid "Source File %u"
-msgstr "Quelldatei %u"
+msgstr "Arquivo fonte %u"
 
 #: ../include/AddonViewer.class.php:352
 msgid "Download"
-msgstr "Herunterladen"
+msgstr "Baixar"
 
 #: ../include/AddonViewer.class.php:380 ../include/AddonViewer.class.php:438
 msgid "Featured"
-msgstr "Vorgestellt"
+msgstr "Em destaque"
 
 #: ../include/AddonViewer.class.php:382 ../include/AddonViewer.class.php:432
 msgid "Alpha"
-msgstr "Alpha"
+msgstr "Alfa"
 
 #: ../include/AddonViewer.class.php:384 ../include/AddonViewer.class.php:433
 msgid "Beta"
@@ -451,56 +452,56 @@ msgstr "Beta"
 
 #: ../include/AddonViewer.class.php:386 ../include/AddonViewer.class.php:434
 msgid "Release-Candidate"
-msgstr "Vorabversion"
+msgstr "Release-Candidate"
 
 #: ../include/AddonViewer.class.php:388 ../include/AddonViewer.class.php:437
 msgid "DFSG Compliant"
-msgstr "DFSG-Kompatibel"
+msgstr "Compatível com DFSG"
 
 #: ../include/AddonViewer.class.php:398
 msgid "You do not have the necessary privileges to perform this action."
-msgstr "Für die Ausführung dieser Aktion fehlen dir die notwendigen Rechte."
+msgstr "Você não tem os privilégios necessários para executar esta ação."
 
 #: ../include/AddonViewer.class.php:400
 msgid "Configuration"
-msgstr "Einstellungen"
+msgstr "Configuração"
 
 #: ../include/AddonViewer.class.php:410
 msgid "Description:"
-msgstr "Beschreibung:"
+msgstr "Descrição:"
 
 #: ../include/AddonViewer.class.php:410
 #, php-format
 msgid "Max %u characters"
-msgstr "Maximal %u Zeichen"
+msgstr "Limite de %u caracteres"
 
 #: ../include/AddonViewer.class.php:416
 msgid "Save Properties"
-msgstr "Eigenschaften speichern"
+msgstr "Salvar propriedades"
 
 #: ../include/AddonViewer.class.php:422
 msgid "Delete Addon"
-msgstr "Add-On löschen"
+msgstr "Excluir complemento"
 
 #: ../include/AddonViewer.class.php:426
 msgid "Status Flags:"
-msgstr "Zustandsmarker:"
+msgstr "Bandeira de status:"
 
 #: ../include/AddonViewer.class.php:430
 msgid "Approved"
-msgstr "Genehmigt"
+msgstr "Aprovado"
 
 #: ../include/AddonViewer.class.php:431
 msgid "Invisible"
-msgstr "Unsichtbar"
+msgstr "Invisível"
 
 #: ../include/AddonViewer.class.php:435
 msgid "Latest"
-msgstr "Neueste"
+msgstr "Últimos"
 
 #: ../include/AddonViewer.class.php:439
 msgid "Invalid Textures"
-msgstr "Ungültige Texturen"
+msgstr "Texturas inválidas"
 
 #: ../include/AddonViewer.class.php:446 ../include/AddonViewer.class.php:546
 #, php-format
@@ -509,372 +510,372 @@ msgstr "Rev %u:"
 
 #: ../include/AddonViewer.class.php:537
 msgid "Save Changes"
-msgstr "Änderungen speichern"
+msgstr "Salvar alterações"
 
 #: ../include/AddonViewer.class.php:541
 msgid "Notes from Moderator to Submitter:"
-msgstr "Anmerkungen der Moderatoren an den Absender:"
+msgstr "Notas do moderador para quem enviou:"
 
 #: ../include/AddonViewer.class.php:558
 msgid "Save Notes"
-msgstr "Notizen speichern"
+msgstr "Salvar notas"
 
 #: ../include/File.class.php:33
 msgid "Insufficient permissions."
-msgstr "Nicht ausreichende Berechtigungen."
+msgstr "Permissões insuficientes."
 
 #: ../include/File.class.php:53
 msgid "The file to extract does not exist."
-msgstr "Die Datei, die extrahiert werden soll, existiert nicht."
+msgstr "O arquivo para extração não existe."
 
 #: ../include/File.class.php:65 ../include/File.class.php:94
 msgid "Could not open archive file. It may be corrupted."
-msgstr "Konnte die Archivdatei nicht öffnen. Sie könnte beschädigt sein."
+msgstr "Não foi possível abrir o arquivo. Ele pode estar corrompido."
 
 #: ../include/File.class.php:69 ../include/File.class.php:98
 msgid "Failed to extract archive file."
-msgstr "Konnte Archivdatei nicht extrahieren."
+msgstr "Falha ao extrair o arquivo."
 
 #: ../include/File.class.php:105
 msgid "Unknown archive type."
-msgstr "Unbekannter Archiv-Typ."
+msgstr "Tipo de arquivo desconhecido."
 
 #: ../include/File.class.php:118
 msgid "Unknown file upload error."
-msgstr "Unbekannter Fehler beim Hochladen der Datei."
+msgstr "Erro desconhecido ao enviar o arquivo."
 
 #: ../include/File.class.php:122 ../include/File.class.php:124
 msgid "Uploaded file is too large."
-msgstr "Hochgeladene Datei ist zu groß."
+msgstr "Arquivo enviado é muito grande."
 
 #: ../include/File.class.php:126
 msgid "Uploaded file is incomplete."
-msgstr "Hochgeladene Datei ist unvollständig."
+msgstr "O envio de arquivos está incompleto."
 
 #: ../include/File.class.php:128
 msgid "No file was uploaded."
-msgstr "Es wurde keine Datei hochgeladen."
+msgstr "Nenhum arquivo enviado."
 
 #: ../include/File.class.php:130
 msgid "There is no TEMP directory to store the uploaded file in."
-msgstr ""
-"Es gibt kein TEMP-Verzeichnis, in dem die hochgeladene Datei gespeichert "
-"werden kann."
+msgstr "Não existe diretório temporário para armazenar o arquivo enviado."
 
 #: ../include/File.class.php:132
 msgid "Unable to write uploaded file to disk."
-msgstr "Konnte hochgeladene Datei nicht auf die Festplatte schreiben."
+msgstr "Impossível gravar arquivo enviado no disco."
 
 #: ../include/File.class.php:147
 msgid "Uploaded image files must be either PNG or Jpeg files."
-msgstr "Hochgeladene Bilder müssen entweder PNG- oder JPEG-Dateien sein."
+msgstr "Imagens enviadas precisar ser arquivos PNG ou JPEG."
 
 #: ../include/File.class.php:151
 msgid "The file you uploaded was not the correct type."
-msgstr "Die hochgeladene Datei ist vom falschen Dateityp."
+msgstr "O arquivo enviado não tem um formato aceito."
 
 #: ../include/File.class.php:288 ../include/parseUpload.php:60
 msgid "Failed to move uploaded file."
-msgstr "Konnte hochgeladene Datei nicht verschieben."
+msgstr "Falha ao mover arquivo enviado."
 
 #: ../include/File.class.php:306
 msgid "The uploaded image file is invalid."
-msgstr ""
+msgstr "A imagem enviada é inválida."
 
 #: ../include/File.class.php:330 ../include/parseUpload.php:177
 msgid "Failed to associate image file with addon."
-msgstr "Konnte Bilddatei nicht mit Add-On verknüpfen."
+msgstr "Falha ao associar arquivo de imagem ao complemento."
 
 #: ../include/User.class.php:85
 msgid "Failed to log in."
-msgstr "Anmeldung fehlgeschlagen."
+msgstr "Falha no login."
 
 #: ../include/User.class.php:92
 msgid "Your username or password is incorrect."
-msgstr "Dein Benutzername oder Passwort ist falsch."
+msgstr "Seu usuário ou senha são inválidos."
 
 #: ../include/User.class.php:146
 msgid "You must be logged in to change a password."
-msgstr "Du muss angemeldet sein, um ein Passwort zu ändern."
+msgstr "Você precisa estar logado para alterar a senha."
 
 #: ../include/User.class.php:153 ../password-reset.php:223
 msgid "Failed to change your password."
-msgstr "Fehler beim Ändern deines Passworts."
+msgstr "Falha ao alterar sua senha."
 
 #: ../include/User.class.php:217 ../users.php:90
 msgid "Me"
-msgstr "Mich"
+msgstr "Eu"
 
 #: ../include/Validate.class.php:33
 msgid "You must enter an email address."
-msgstr "Du musst eine E-Mail-Adresse eingeben."
+msgstr "Você deve informar um endereço de email"
 
 #: ../include/Validate.class.php:36
 #, php-format
 msgid "\"%s\" is not a valid email address."
-msgstr "\"%s\" ist keine gültige E-Mail-Adresse."
+msgstr "\"%s\" não é um endereço de e-mail válido."
 
 #: ../include/Validate.class.php:48
 msgid "Your username must be at least 4 characters long."
-msgstr "Dein Benutzername muss mindestens 4 Zeichen lang sein."
+msgstr "Seu usuáio precisa de pelo menos 4 caracteres."
 
 #: ../include/Validate.class.php:51
 msgid "Your username can only contain alphanumeric characters."
-msgstr "Dein Benutzername darf nur alphanumerische Zeichen enthalten."
+msgstr "Seu usuário só pode conter caracteres alfanuméricos."
 
 #: ../include/Validate.class.php:59
 msgid "Your password must be at least 6 characters long."
-msgstr "Dein Passwort muss mindestens 6 Zeichen lang sein."
+msgstr "Sua senha precisa ter pelo menos 6 caracteres."
 
 #: ../include/Validate.class.php:63
 msgid "Your passwords do not match."
-msgstr "Deine Passwörter stimmen nicht überein."
+msgstr "Suas senhas não combinam."
 
 #: ../include/Validate.class.php:93
 msgid "You must enter a name."
-msgstr "Du musst einen Namen eingeben."
+msgstr "Você deve informar um nome."
 
 #: ../include/allow.php:102
 msgid "root"
-msgstr "root"
+msgstr "raiz"
 
 #: ../include/allow.php:103
 msgid "supAdministrator"
-msgstr "supAdministrator"
+msgstr "super administrador"
 
 #: ../include/allow.php:104
 msgid "administrator"
-msgstr "administrator"
+msgstr "administrador"
 
 #: ../include/allow.php:105
 msgid "moderator"
-msgstr "moderator"
+msgstr "moderador"
 
 #: ../include/allow.php:106
 msgid "basicUser"
-msgstr "basicUser"
+msgstr "usuário básico"
 
 #: ../include/coreUser.php:87 ../login.php:114 ../password-reset.php:39
 #: ../register.php:36
 msgid "Username:"
-msgstr "Benutzername:"
+msgstr "Nome de usuário:"
 
 #: ../include/coreUser.php:88
 msgid "Registration Date:"
-msgstr "Registriert am:"
+msgstr "Data de registro:"
 
 #: ../include/coreUser.php:89
 msgid "Real Name:"
-msgstr "Vollständiger Name:"
+msgstr "Nome verdadeiro:"
 
 #: ../include/coreUser.php:90 ../include/coreUser.php:114
 msgid "Role:"
-msgstr "Rolle:"
+msgstr "Função:"
 
 #: ../include/coreUser.php:93 ../include/coreUser.php:110
 msgid "Homepage:"
-msgstr "Homepage:"
+msgstr "Página inicial:"
 
 #: ../include/coreUser.php:131
 msgid "User Activated:"
-msgstr "Benutzer aktiv:"
+msgstr "Usuário ativado:"
 
 #: ../include/coreUser.php:139
 msgid "Save Configuration"
-msgstr "Einstellungen speichern"
+msgstr "Salvar configurações"
 
 #: ../include/coreUser.php:143 ../include/coreUser.php:151
 #: ../password-reset.php:81
 msgid "Change Password"
-msgstr "Passwort ändern"
+msgstr "Alterar senha"
 
 #: ../include/coreUser.php:145
 msgid "Old Password:"
-msgstr "Altes Passwort:"
+msgstr "Senha antiga:"
 
 #: ../include/coreUser.php:147 ../password-reset.php:40
 #: ../password-reset.php:73 ../register.php:37 ../register.php:42
 #, php-format
 msgid "Must be at least %d characters long."
-msgstr "Muss mindestens %d Zeichen lang sein."
+msgstr "Precisa de pelo menos %d caracteres."
 
 #: ../include/coreUser.php:147 ../password-reset.php:72
 msgid "New Password:"
-msgstr "Neues Passwort:"
+msgstr "Nova senha:"
 
 #: ../include/coreUser.php:149
 msgid "New Password (Confirm):"
-msgstr "Neues Passwort (Bestätigen):"
+msgstr "Nova senha (confirmação):"
 
 #: ../include/coreUser.php:162
 msgid "User's Tracks"
-msgstr "Strecken des Benutzers"
+msgstr "Pistas do usuário"
 
 #: ../include/coreUser.php:163
 msgid "This user has not uploaded any tracks."
-msgstr "Dieser Benutzer hat keine Strecken hochgeladen."
+msgstr "Este usuário não enviou nenhum pista."
 
 #: ../include/coreUser.php:167
 msgid "User's Karts"
-msgstr "Karts des Benutzers"
+msgstr "Karts do usuário"
 
 #: ../include/coreUser.php:168
 msgid "This user has not uploaded any karts."
-msgstr "Dieser Benutzer hat keine Karts hochgeladen."
+msgstr "Este usuário não enviou nenhum kart."
 
 #: ../include/coreUser.php:172
 msgid "User's Arenas"
-msgstr ""
+msgstr "Arenas do usuário"
 
 #: ../include/coreUser.php:173
 msgid "This user has not uploaded any arenas."
-msgstr ""
+msgstr "Este usuário não enviou nenhuma arena."
 
 #: ../include/coreUser.php:215
 msgid "Your old password is not correct."
-msgstr "Dein altes Passwort ist falsch."
+msgstr "Sua senha antiga está errada."
 
 #: ../include/mail.php:78
 msgid "No moderator mailing-list email is set."
-msgstr "Für den Moderator der Mailliste ist keine Email-Adresse angegeben."
+msgstr "Nenhuma lista de emails do moderador está definida."
 
 #: ../include/menu.php:43
 #, php-format
 msgid "Welcome, %s"
-msgstr "Herzlich willkommen, %s"
+msgstr "Bem-vindo, %s"
 
 #: ../include/menu.php:47
 msgid "Home"
-msgstr "Startseite"
+msgstr "Início"
 
 #: ../include/menu.php:71
 msgid "Log out"
-msgstr "Abmelden"
+msgstr "Sair"
 
 #: ../include/menu.php:72 ../users.php:38
 msgid "Users"
-msgstr "Benutzer"
+msgstr "Usuários"
 
 #: ../include/menu.php:73
 msgid "Upload"
-msgstr "Hochladen"
+msgstr "Enviar arquivo"
 
 #: ../include/menu.php:75 ../manage.php:25
 msgid "Manage"
-msgstr "Verwalten"
+msgstr "Administrar"
 
 #: ../include/menu.php:80 ../login.php:33 ../password-reset.php:226
 msgid "Login"
-msgstr "Anmelden"
+msgstr "Login"
 
 #: ../include/menu.php:90
 msgid "Languages"
-msgstr "Sprachen"
+msgstr "Idiomas"
 
 #: ../include/menu.php:107
 msgid "STK Homepage"
-msgstr "STK Homepage"
+msgstr "STK - Página inicial"
 
 #: ../include/parseUpload.php:24
 msgid "Failed to upload your file."
-msgstr "Fehler beim Hochladen deiner Datei."
+msgstr "Falha ao enviar seu arquivo."
 
 #: ../include/parseUpload.php:48
 msgid "Successfully uploaded image."
-msgstr "Das Bild wurde erfolgreich hochgeladen."
+msgstr "Imagem enviada com sucesso."
 
 #: ../include/parseUpload.php:49 ../include/parseUpload.php:252
 msgid "Continue."
-msgstr "Weiter."
+msgstr "Continuar."
 
 #: ../include/parseUpload.php:80
 msgid "Invalid archive file. The archive must contain the addon's xml file."
 msgstr ""
-"Ungültiges Archiv. Das Archiv muss die XML-Datei des Add-Ons enthalten."
+"Arquivo inválido. O arquivo precisar conter o arquivo xml do complemento."
 
 #: ../include/parseUpload.php:94
 msgid ""
 "Some invalid files were found in the uploaded add-on. These files have been "
 "removed from the archive:"
 msgstr ""
-"Einige ungültige Dateien wurden im hochgeladenen Add-On gefunden. Diese "
-"Dateien wurden aus dem Archiv entfernt:"
+"Alguns arquivos inválidos foram encontrados no complemento enviado. Os "
+"seguintes arquivos foram removidos:"
 
 #: ../include/parseUpload.php:103
 msgid "Upload was recognized as a kart."
-msgstr "Hochgeladene Datei wurde als Kart erkannt."
+msgstr "Envio reconhecido como kart."
 
 #: ../include/parseUpload.php:108
 msgid "Upload was recognized as a track."
-msgstr "Hochgeladene Datei wurde als Strecke erkannt."
+msgstr "Envio reconhecido como pista."
 
 #: ../include/parseUpload.php:116
 msgid ""
 "Failed to read the add-on's XML file. Please make sure you are using the "
 "latest version of the kart or track exporter."
 msgstr ""
-"Konnte die XML-Datei des Add-Ons nicht lesen. Bitte überprüfe, ob du die "
-"neueste Version des Kart- oder Streckenexportscripts verwendest."
+"Falha ao ler o XML do complemento. Por favor, certifique-se que você está "
+"usando a última versão do exportador de kart ou pista."
 
 #: ../include/parseUpload.php:121
 msgid "Failed to write new XML file:"
-msgstr "Konnte neue XML-Datei nicht schreiben:"
+msgstr "Falha ao escrever novo arquivo XML:"
 
 #: ../include/parseUpload.php:127
 msgid "This track is an arena."
-msgstr "Diese Strecke ist eine Arena."
+msgstr "Esta pista é uma arena."
 
 #: ../include/parseUpload.php:136
 msgid ""
 "A valid License.txt file was not found. Please add a License.txt file to "
 "your archive and re-submit it."
 msgstr ""
-"Eine gültige \"License.txt\"-Datei wurde nicht gefunden. Bitte füge eine "
-"\"License.txt\"-Datei zu deinem Archiv hinzu und lade es erneut hoch."
+"Um arquivo License.txt válido não foi encontrado. Por favor, adicione um "
+"License.txt e envie novamente."
 
 #: ../include/parseUpload.php:198
 msgid ""
 "Some images in this add-on do not have dimensions that are a power of two."
 msgstr ""
-"Einige Bilder in diesem Add-On haben Abmessungen, die keine Zweierpotenzen "
-"sind."
+"Algumas imagens neste complemento não tem dimensões que são uma potência de "
+"dois."
 
 #: ../include/parseUpload.php:199
 msgid "This may cause display errors on some video cards."
-msgstr "Dies könnte bei einigen Grafikkarten Fehler verursachen."
+msgstr "Isto pode causar erros de exibição em algumas placas de vídeo."
 
 #: ../include/parseUpload.php:216
 msgid "Invalid add-on type."
-msgstr "Ungültiger Add-On-Typ."
+msgstr "Tipo de complemento inválido."
 
 #: ../include/parseUpload.php:223
 msgid "Failed to re-pack archive file."
-msgstr "Konnte die Archivdatei nicht neu packen."
+msgstr "Falha ao reempacotar arquivo."
 
 #: ../include/parseUpload.php:232
 msgid "Failed to associate archive file with addon."
-msgstr "Konnte die Archivdatei nicht dem Add-On zuordnen."
+msgstr "Falha ao associar arquivo com complemento."
 
 #: ../include/parseUpload.php:251
 msgid "Successfully uploaded source archive."
-msgstr "Quellarchiv erfolgreich hochgeladen."
+msgstr "Arquivo-fonte enviado com sucesso."
 
 #: ../include/parseUpload.php:265
 msgid ""
 "You are trying to add a new revision of an add-on that does not exist."
 msgstr ""
+"Você está tentando adicionar uma nova revisão de um complemento que não "
+"existe."
 
 #: ../include/parseUpload.php:295
 msgid ""
 "Your add-on was uploaded successfully. It will be reviewed by our moderators "
 "before becoming publicly available."
 msgstr ""
-"Dein Add-On wurde erfolgreich hochgeladen. Es wird von unseren Moderatoren "
-"überprüft werden, bevor es öffentlich verfügbar wird."
+"Seu complemento foi enviado com sucesso. Nosso moderadores farão uma revisão "
+"antes de disponibilizar para o público."
 
 #: ../include/parseUpload.php:296
 msgid "Click here to upload the sources to your add-on now."
-msgstr "Klicke hier, um die Quellen deines Add-ons jetzt hochzuladen."
+msgstr "Clique aqui para enviar os arquivos-fonte do seu complemento."
 
 #: ../include/parseUpload.php:297
 msgid ""
@@ -882,34 +883,33 @@ msgid ""
 "and also ensure your add-on will not be lost in the future if new "
 "SuperTuxKart versions are not compatible with the current format.)"
 msgstr ""
-"(Die Quellen deines Add-Ons hochzuladen hilft anderen, dein Werk zu "
-"verbessern und stellt außerdem sicher, dass dein Add-On in der Zukunft nicht "
-"verloren geht, wenn neue SuperTuxKart-Versionen nicht mehr mit dem aktuellen "
-"Format kompatibel sind.)"
+"(Ao enviar os arquivos-fontes, você possibilita que outras pessoas melhorem "
+"o seu trabalho e assegura que o seu complemento não será perdido no futuro "
+"se novas versões do SuperTuxKart não forem compatíveis com o formato atual.)"
 
 #: ../include/parseUpload.php:298
 msgid "Click here to view your add-on."
-msgstr "Klicke hier, um dein Add-On anzuzeigen."
+msgstr "Clique aqui para ver seu complemento."
 
 #: ../include/security.php:47
 msgid "You do not have the rights to access this page."
-msgstr "Sie haben nicht die nötigen Rechte, um auf diese Seite zuzugreifen."
+msgstr "Você não tem permissões suficientes para acessar esta página."
 
 #: ../include/security.php:69
 msgid "You must be logged in to access this page."
-msgstr "Sie müssen eingeloggt sein, um auf diese Seite zuzugreifen."
+msgstr "Você deve estar logado para acessar esta página."
 
 #: ../include/security.php:70
 msgid "You will be redirected to the login page."
-msgstr "Du wirst zur Anmeldungsseite umgeleitet."
+msgstr "Você será redirecionado para a página de login."
 
 #: ../include/top.php:31 ../users.php:38
 msgid "SuperTuxKart Add-ons"
-msgstr "SuperTuxKart Add-Ons"
+msgstr "Complementos do SuperTuxKart"
 
 #: ../include/xmlWrite.php:137
 msgid "The following file could not be found:"
-msgstr "Die folgende Datei konnte nicht gefunden werden:"
+msgstr "O seguinte arquivo não pôde ser encontrado:"
 
 #. I18N: Website meta description
 #: ../index.php:35
@@ -917,166 +917,165 @@ msgid ""
 "This is the official SuperTuxKart add-on repository. It contains extra karts "
 "and tracks for the SuperTuxKart game."
 msgstr ""
-"Dies ist das offizielle Addon-Verzeichnis von Super TuxKart. Es enthält "
-"zusätzliche Karts und Strecken für das SuperTuxKart-Spiel."
+"Este é o repositório oficial de complementos do SuperTuxKart. Contém karts e "
+"pistas extras para o jogo."
 
 #. I18N: Menu link
 #: ../index.php:88
 msgid "Help"
-msgstr "Hilfe"
+msgstr "Ajuda"
 
 #: ../index.php:100
 #, php-format
 msgid "The most downloaded kart is %s."
-msgstr "Das am häufigsten heruntergeladene Kart ist %s."
+msgstr "O kart mais baixado é %s."
 
 #: ../index.php:101
 #, php-format
 msgid "The most downloaded track is %s."
-msgstr "Die am häufigsten heruntergeladene Strecke ist %s."
+msgstr "A pista mais baixada é %s."
 
 #: ../login.php:48
 msgid "Failed to logout."
-msgstr "Konnte dich nicht abmelden."
+msgstr "Falha ao sair."
 
 #: ../login.php:55
 msgid "You have been logged out."
-msgstr "Du wurdest abgemeldet."
+msgstr "Você saiu."
 
 #: ../login.php:56 ../login.php:69 ../login.php:95
 #, php-format
 msgid "Click %shere%s if you do not automatically redirect."
-msgstr "Klicke %shier%s, wenn du nicht automatisch weitergeleitet wirst."
+msgstr "Clique %saqui%s se você não for redirecionado automaticamente."
 
 #: ../login.php:68
 msgid "You are already logged in."
-msgstr "Du bist bereits angemeldet."
+msgstr "Você já está logado."
 
 #: ../login.php:94
 #, php-format
 msgid "Welcome, %s!"
-msgstr "Hallo %s!"
+msgstr "Bem-vindo, %s!"
 
 #: ../login.php:116 ../register.php:41
 msgid "Password:"
-msgstr "Passwort:"
+msgstr "Senha:"
 
 #: ../login.php:118
 msgid "Log In"
-msgstr "Anmelden"
+msgstr "Iniciar sessão"
 
 #: ../login.php:120
 msgid "Create an account."
-msgstr "Konto erstellen."
+msgstr "Criar uma conta."
 
 #: ../login.php:121
 msgid "Forgot password?"
-msgstr ""
+msgstr "Esqueceu a senha?"
 
 #: ../manage-panel.php:45
 msgid "Deleted message."
-msgstr "Nachricht gelöscht."
+msgstr "Mensagem excluída."
 
 #: ../manage-panel.php:49
 msgid "Failed to delete message."
-msgstr "Konnte Nachricht nicht löschen."
+msgstr "Falha ao excluir a mensagem."
 
 #: ../manage-panel.php:64
 msgid "Invalid page. You may have followed a broken link."
-msgstr ""
-"Ungültige Seite. Möglicherweise bist du einem ungültigen Link gefolgt."
+msgstr "Página inválida. Você seguiu um link quebrado."
 
 #: ../manage-panel.php:67 ../manage.php:38
 msgid "General Settings"
-msgstr "Allgemeine Einstellungen"
+msgstr "Configurações gerais"
 
 #: ../manage-panel.php:71 ../manage.php:43
 msgid "News Messages"
-msgstr "Neuigkeiten"
+msgstr "Mensagens novas"
 
 #: ../manage-panel.php:75 ../manage.php:48
 msgid "Uploaded Files"
-msgstr "Hochgeladene Dateien"
+msgstr "Arquivos enviados"
 
 #: ../manage-panel.php:79 ../manage.php:53
 msgid "Client Versions"
-msgstr ""
+msgstr "Versões do cliente"
 
 #: ../manage-panel.php:83 ../manage.php:58
 msgid "Cache Files"
-msgstr "Zwischengespeicherte Dateien"
+msgstr "Arquivos de cache"
 
 #: ../manage-panel.php:87 ../manage.php:63
 msgid "Event Logs"
-msgstr "Ereignisaufzeichnungen"
+msgstr "Logs de evento"
 
 #: ../manage-panel.php:96
 msgid "XML Download Frequency"
-msgstr ""
+msgstr "Frequência de download do XML"
 
 #: ../manage-panel.php:97
 msgid "Permitted Addon Filetypes"
-msgstr "Erlaubte Add-On-Dateitypen"
+msgstr "Extensões permitidas para complementos"
 
 #: ../manage-panel.php:98
 msgid "Permitted Source Archive Filetypes"
-msgstr "Als Quellarchiv zugelassene Dateitypen"
+msgstr "Extensões permitidas para arquivos-fonte"
 
 #: ../manage-panel.php:99
 msgid "Administrator Email"
-msgstr "Administrator E-Mail"
+msgstr "E-mail do administrador"
 
 #: ../manage-panel.php:100
 msgid "Moderator List Email"
-msgstr ""
+msgstr "Lista de e-mail do moderador"
 
 #: ../manage-panel.php:102 ../manage-panel.php:104
 msgid "False"
-msgstr ""
+msgstr "Falso"
 
 #: ../manage-panel.php:102 ../manage-panel.php:104
 msgid "True"
-msgstr ""
+msgstr "Verdadeiro"
 
 #: ../manage-panel.php:105
 msgid "List Invisible Addons in XML"
-msgstr ""
+msgstr "Lista de complementos invisíveis no XML"
 
 #: ../manage-panel.php:106
 msgid "Blog RSS Feed"
-msgstr ""
+msgstr "RSS Feed do blog"
 
 #: ../manage-panel.php:107
 msgid "Maximum Uploaded Image Dimension"
-msgstr ""
+msgstr "Dimensão máxima para o envio de imagens"
 
 #: ../manage-panel.php:108
 msgid "Save Settings"
-msgstr "Einstellungen speichern"
+msgstr "Salvar configurações"
 
 #: ../manage-panel.php:115 ../manage-panel.php:137
 msgid "Message:"
-msgstr "Nachricht:"
+msgstr "Mensagem:"
 
 #: ../manage-panel.php:116 ../manage-panel.php:139
 msgid "Condition:"
-msgstr "Bedingung:"
+msgstr "Condição:"
 
 #: ../manage-panel.php:117
 msgid "Display on Website:"
-msgstr "Auf der Website anzeigen:"
+msgstr "Exibir no site:"
 
 #: ../manage-panel.php:118
 msgid "Create Message"
-msgstr "Nachricht erstellen"
+msgstr "Criar mensagem"
 
 #: ../manage-panel.php:131
 msgid "No news messages currently exist."
-msgstr "Derzeit existieren keine Neuigkeiten."
+msgstr "Não existe nenhuma mensagem."
 
 #: ../manage-panel.php:136
 msgid "Date:"
-msgstr "Datum:"
+msgstr "Data:"
 
 #: ../manage-panel.php:138
 msgid "Author:"
@@ -1084,71 +1083,72 @@ msgstr "Autor:"
 
 #: ../manage-panel.php:140
 msgid "Web:"
-msgstr "Webseite:"
+msgstr "Página da web:"
 
 #: ../manage-panel.php:141
 msgid "Actions:"
-msgstr ""
+msgstr "Ações:"
 
 #: ../manage-panel.php:161
 msgid "No files have been uploaded."
-msgstr "Es wurden keine Dateien hochgeladen."
+msgstr "Nenhum arquivo foi enviado."
 
 #: ../manage-panel.php:165 ../register.php:50
 msgid "Name:"
-msgstr "Name:"
+msgstr "Nome:"
 
 #: ../manage-panel.php:167
 msgid "References:"
-msgstr ""
+msgstr "Referências:"
 
 #: ../manage-panel.php:250
 msgid "Clients by User-Agent"
-msgstr ""
+msgstr "Clientes por User-Agent"
 
 #: ../manage-panel.php:257
 msgid ""
 "There are currently no SuperTuxKart clients recorded. Your download script "
 "may not be configured properly."
 msgstr ""
+"Atualmente, não existe um cliente SuperTuxKart gravado. Seu script de "
+"download pode não ter sido configurado apropriadamente."
 
 #: ../manage-panel.php:262
 msgid "Game Version:"
-msgstr "Spielversion:"
+msgstr "Versão do jogo:"
 
 #: ../manage-panel.php:262
 msgid "User-Agent String:"
-msgstr ""
+msgstr "String do User-Agent:"
 
 #: ../manage-panel.php:281
 msgid "Empty cache"
-msgstr "Zwischenspeicher leeren"
+msgstr "Esvaziar cache"
 
 #: ../manage.php:76
 msgid "One or more fields has been left blank. Settings were not saved."
 msgstr ""
-"Ein oder mehrere Felder wurden leer gelassen. Die Einstellungen wurden nicht "
-"gespeichert."
+"Um ou mais campos foram deixados em branco. Configurações não foram salvas."
 
 #: ../manage.php:81
 msgid "XML Download Frequency value is invalid."
-msgstr ""
+msgstr "Valor da frequência de download do XML é inválido."
 
 #: ../manage.php:94
 msgid "Saved settings."
-msgstr "Einstellungen wurden gespeichert."
+msgstr "Configurações salvas."
 
 #: ../manage.php:112
 msgid "Created message."
-msgstr "Nachricht wurde erstellt."
+msgstr "Mensagem criada."
 
 #: ../manage.php:116
 msgid "Failed to create message."
-msgstr "Fehler beim Erstellen der Nachricht."
+msgstr "Falha ao criar mensagem."
 
 #: ../password-reset.php:25 ../password-reset.php:30
 msgid "Reset Password"
-msgstr ""
+msgstr "Redefinir senha"
 
 #: ../password-reset.php:36
 msgid ""
@@ -1156,87 +1156,93 @@ msgid ""
 "address. A password reset link will be emailed to you. Your old password "
 "will become inactive until your password is reset."
 msgstr ""
+"Para redefinir sua senha, por favor insira seu usuário e endereço de email. "
+"Um link para redefinir sua senha será enviado para você. Sua senha antiga "
+"ficará inativa até que uma nova seja definida."
 
 #: ../password-reset.php:44 ../register.php:54
 msgid "Email Address:"
-msgstr "E-Mail-Adresse:"
+msgstr "Endereço de e-mail:"
 
 #: ../password-reset.php:58
 msgid "Send Reset Link"
-msgstr ""
+msgstr "Enviar link para redefinição"
 
 #: ../password-reset.php:69
 msgid "Please enter a new password for your account."
-msgstr ""
+msgstr "Insira uma nova senha para sua conta."
 
 #: ../password-reset.php:77
 msgid "New Password (confirm):"
-msgstr ""
+msgstr "Nova senha (confirmar):"
 
 #: ../password-reset.php:127 ../register.php:126
 msgid "An error occurred trying to validate your username."
-msgstr "Bei der Überprüfung deines Nutzernamens ist ein Fehler aufgetreten."
+msgstr "Ocorreu um erro ao tentar validar seu usuário."
 
 #: ../password-reset.php:128 ../password-reset.php:144
 #: ../password-reset.php:177 ../password-reset.php:209 ../register.php:127
 #: ../register.php:142
 msgid "Please contact a website administrator."
-msgstr "Bitte kontaktiere einen Administrator der Webseite."
+msgstr "Por favor, entre em contato com o administrador do sistema."
 
 #: ../password-reset.php:130
 msgid "Username and email address combination not found."
-msgstr ""
+msgstr "Combinação de usuário e e-mail não encontrada."
 
 #: ../password-reset.php:143 ../password-reset.php:176
 #: ../password-reset.php:208
 msgid "An error occurred while resetting your password."
-msgstr ""
+msgstr "Ocorreu um erro durante a redefinição de sua senha."
 
 #: ../password-reset.php:154
 msgid ""
 "Password reset link sent. Please reset your password using the link emailed "
 "to you."
 msgstr ""
+"Link para redefinir a senha enviado. Por favor, redefina sua senha usando o "
+"link enviado para você."
 
 #: ../password-reset.php:179
 msgid "Invalid verification code."
-msgstr ""
+msgstr "Código de verificação inválido."
 
 #: ../password-reset.php:185
 msgid "Could not reset your password. The link you followed is not valid."
 msgstr ""
+"Não foi possível redefinir sua senha. O link que você seguiu é inválido."
 
 #: ../password-reset.php:225
 msgid "Changed password."
-msgstr ""
+msgstr "Senha alterada."
 
 #: ../register.php:25
 msgid "Register"
-msgstr "Registrieren"
+msgstr "Registrar"
 
 #: ../register.php:30
 msgid "Account Registration"
-msgstr ""
+msgstr "Registro de conta"
 
 #: ../register.php:46
 msgid "Password (confirm):"
-msgstr "Passwort (Bestätigen):"
+msgstr "Senha (confirmar):"
 
 #: ../register.php:58
 msgid "Terms:"
-msgstr "Bedingungen:"
+msgstr "Termos:"
 
 #: ../register.php:60
 msgid "STK Addons Terms and Conditions"
-msgstr ""
+msgstr "Termos e condições dos complentos do STK"
 
 #: ../register.php:61
 msgid ""
 "You must agree to these terms in order to upload content to the STK Addons "
 "site."
 msgstr ""
-"Du musst diesen Bedingungen zustimmen, um Inhalte auf die STK Add-Ons Seite "
-"hochladen zu können."
+"Você precisa aceitar estes termos para poder enviar conteúdo ao site de "
+"complementos do STK."
 
 #: ../register.php:62
 msgid ""
@@ -1245,10 +1251,13 @@ msgid ""
 "purpose. When you upload your content, it will be available publicly on the\n"
 "internet, and will be made available in-game for download."
 msgstr ""
-"Der STK Add-Ons Service ist ausschließlich als Plattform für SuperTuxKart\n"
-"Add-On-Inhalte gedacht. Alle hochgeladenen Inhalte müssen für diesen \n"
-"Zweck gedacht sein. Nach dem Hochladen deiner Inhalte werden sie öffen-\n"
-"tlich im Internet und innerhalb des Spiels verfügbar sein."
+"O serviço de complemento do STK foi desenvolvido para ser um repositório "
+"exclusivo para\n"
+"complementos do Super Tux Kart. Todo conteúdo enviado precisa ser destinado "
+"à este propósito.\n"
+"Quando você envia seu conteúdo, ele estará disponível publicamente na "
+"internet, e poderá ser\n"
+"baixado através do próprio jogo."
 
 #: ../register.php:66
 msgid ""
@@ -1266,41 +1275,41 @@ msgid ""
 "without\n"
 "proper licenses or attribution may be deleted without warning."
 msgstr ""
-"SuperTuxKart versucht, den Debian-Richtlinien für freie Software (DFSG) zu "
-"entsprechen. TuxFamily.org fordert ebenfalls, dass alle Inhalte, die von "
-"ihnen gehostet werden, offenen Lizenzen unterliegen. Du darfst keine Inhalte "
-"hochladen, die restriktiven Lizenzen unterliegen. Lizenzen wie CC-BY-SA 3.0, "
-"oder andere DFSG-kompatible Lizenzen sind erforderlich. Alle Inhalte, die "
-"von Dritten stammen, müssen unter Angabe des Autors als solche "
-"gekennzeichnet werden und ebenfalls offenen Lizenzen unterliegen. Alle "
-"Lizenzen und Angaben von Werken Dritter und deren Autoren müssen in einer "
-"\"License.txt\"-Datei angegeben werden und in jedem hochgeladenen Archiv "
-"enthalten sein. Hochgeladene Inhalte, die diesen Bedingungen nicht "
-"entsprechen, können ohne Vorwarnung gelöscht werden."
+"Super Tux Kart tem como objetivo cumprir com o Debian Free Software "
+"Guidelines (DFSG).\n"
+"TuxFamily.org também exige que todo conteúdo hospedado esteja em "
+"conformidade com licenças livres.\n"
+"Você não pode enviar conteúdo bloqueado ou com licenças restritivas.\n"
+"Exigimos licenças como CC-BY-SA 3.0 ou compatíveis com DFSG.\n"
+"Todo conteúdo pego de terceiros precisa ser atribuído de forma apropriada, e "
+"precisa\n"
+"ser regido por uma licença livre. Licenças e atribuições devem ser "
+"incluídas\n"
+"em um arquivo \"license.txt\" em cada envio de arquivos. Envios sem as "
+"devidas\n"
+"licenças podem ser excluídos sem aviso prévio."
 
 #: ../register.php:74
 msgid ""
 "Even with valid licenses and attribution, content may not contain any\n"
 "of the following:"
-msgstr ""
-"Selbst mit gültigen Lizenzen und Nennung Dritter dürfen die Inhalte\n"
-"folgendes NICHT enthalten:"
+msgstr "Mesmo com atribuições e licenças válidas, o conteúdo não pode ter:"
 
 #: ../register.php:76 ../upload.php:251
 msgid "Profanity"
-msgstr "Obszönitäten"
+msgstr "Profanação"
 
 #: ../register.php:77 ../upload.php:252
 msgid "Explicit images"
-msgstr "Pornographie"
+msgstr "Imagens explícitas"
 
 #: ../register.php:78 ../upload.php:253
 msgid "Hateful messages and/or images"
-msgstr "Hasserfüllte Nachrichten und/oder Bilder"
+msgstr "Imagens ou mensagens de ódio"
 
 #: ../register.php:79 ../upload.php:254
 msgid "Any other content that may be unsuitable for children"
-msgstr "Anderen Inhalte, die für Kinder ungeeignet sein könnten"
+msgstr "Qualquer outro conteúdo inadequado para crianças"
 
 #: ../register.php:80
 msgid ""
@@ -1309,9 +1318,9 @@ msgid ""
 "uploaded\n"
 "may be removed."
 msgstr ""
-"Wenn einer deiner Uploads ein oben genanntes Element enthält, wird er "
-"gelöscht werden. Zudem können dein Benutzerkonto sowie andere von dir "
-"hochgeladene Inhalte entfernt werden."
+"Se um dos seus envios conter alguma coisa acima, esse conteúdo,\n"
+"sua conta e qualquer outro conteúdo que você enviou\n"
+"serão removidos."
 
 #: ../register.php:83
 msgid ""
@@ -1320,115 +1329,116 @@ msgid ""
 "the\n"
 "members of the development team would gladly assist you."
 msgstr ""
+"Clicando na caixa abaixo, você confirma que entende estes\n"
+"termos. Se você tem alguma dúvida ou comentário acerca destes termos, um "
+"dos\n"
+"membros da equipe de desenvolvimento ficará feliz em ajudá-lo."
 
 #: ../register.php:90
 msgid "I agree to the above terms"
-msgstr "Ich den obigen Bedingungen zu"
+msgstr "Eu aceito os termos acima"
 
 #: ../register.php:94
 msgid "Register!"
-msgstr ""
+msgstr "Criar Conta!"
 
 #: ../register.php:119
 msgid "You must agree to the terms to register."
-msgstr "Du musst den Bedingungen zustimmen, um dich zu registrieren."
+msgstr "Você precisa aceitar os termos para criar sua conta."
 
 #: ../register.php:129
 msgid "Your username has already been used."
-msgstr "Dein Benutzername wird bereits benutzt."
+msgstr "Este usuário já está sendo utilizado."
 
 #: ../register.php:141
 msgid "An error occurred while creating your account."
-msgstr "Ein Fehler ist aufgetreten während dein Konto erstellt wurde."
+msgstr "Ocorreu um erro durante a criação da sua conta."
 
 #: ../register.php:152
 msgid ""
 "Account creation was successful. Please activate your account using the link "
 "emailed to you."
 msgstr ""
-"Das Konto wurde erfolgreich erstellt. Bitte aktiviere es, indem du den Link "
-"in der E-Mail, die dir geschickt wurde, benutzt."
+"Conta criada com sucesso. Por favor, ative-a usando o link enviado para o "
+"seu e-mail."
 
 #: ../register.php:167
 msgid "Your account has been activated."
-msgstr "Dein Konto wurde aktiviert."
+msgstr "Sua conta foi ativada."
 
 #: ../register.php:171
 msgid "Could not validate your account. The link you followed is not valid."
 msgstr ""
-"Dein Konto konnte nicht verifiziert werden. Der Link, dem du gefolgt bist, "
-"ist nicht gültig."
+"Não foi possível validar sua conta. O link que você seguiu é inválido."
 
 #: ../upload.php:118
 msgid ""
 "Your response to the agreement was unacceptable. You may not upload this "
 "content to the STK Addons website."
 msgstr ""
-"Deine Antwort auf die Bedingungen war nicht ausreichend. Du darfst diesen "
-"Inhalt nicht auf die STK Add-Ons-Webseite hochladen."
+"Sua resposta aos termos é inaceitável. Você não pode enviar este conteúdo "
+"para o site de complementos do STK."
 
 #: ../upload.php:154
 msgid "Please upload a new revision of your kart or track."
-msgstr "Bitte lade eine neue Version deines Karts oder deiner Strecke hoch."
+msgstr "Por favor, envie uma nova revisão de seu kart ou pista."
 
 #: ../upload.php:158
 msgid "What type of file are you uploading?"
-msgstr "Welche Art von Datei willst du hochladen?"
+msgstr "Que tipo de arquivo você está enviando?"
 
 #: ../upload.php:160
 msgid "Source Archive"
-msgstr "Quellarchiv"
+msgstr "Arquivo-fonte"
 
 #: ../upload.php:161
 msgid "Image File"
-msgstr "Bilddatei"
+msgstr "Arquivo de imagem"
 
 #: ../upload.php:168
 msgid "Please upload a kart or track."
-msgstr "Bitte lade ein Kart oder eine Strecke hoch."
+msgstr "Por favor envie um kart ou pista."
 
 #: ../upload.php:169
 msgid "Do not use this form if you are updating an existing add-on."
 msgstr ""
-"Benutze dieses Formular nicht, wenn du ein bereits existierendes Add-On "
-"aktualisieren willst."
+"Não use este formulário se você estiver atualizando um complemento existente."
 
 #: ../upload.php:172
 msgid "File:"
-msgstr "Datei:"
+msgstr "Arquivo:"
 
 #: ../upload.php:173
 msgid "Supported archive types are:"
-msgstr "Unterstützte Archiv-Typen sind:"
+msgstr "Tipos de arquivos suportados:"
 
 #: ../upload.php:174
 msgid "Agreement:"
-msgstr "Vereinbarung:"
+msgstr "Termos:"
 
 #: ../upload.php:179
 msgid ""
 "I am the sole author of every file (model, texture, sound effect, etc.) in "
 "this package"
 msgstr ""
-"Ich bin der alleinige Autor jeder Datei (Modell, Textur, Sound-Effekte, "
-"etc.) in diesem Archiv"
+"Eu sou o único autor de todo o arquivo (modelo, textura, efeitos de som, "
+"etc.) neste pacote"
 
 #: ../upload.php:186
 msgid ""
 "I have included a License.txt file describing the license under which my "
 "work is released, and my name (or nickname) if I want credit."
 msgstr ""
-"Ich habe eine \"License.txt\"-Datei hinzugefügt, welche die Lizenz, unter "
-"der mein Werk veröffentlicht wird, und meinen Namen enthält"
+"Eu incluí um arquivo License.txt descrevendo a licença sob a qual meu "
+"trabalho foi lançado, e meu nome (ou apelido) se eu desejar crédito."
 
 #: ../upload.php:186 ../upload.php:199 ../upload.php:244 ../upload.php:255
 msgid "Required"
-msgstr "Erforderlich"
+msgstr "Obrigatório"
 
 #: ../upload.php:192
 msgid "I have included open content made by people other than me"
-msgstr ""
-"Ich habe offene Inhalte eingebunden, die von anderen Personen erstellt wurden"
+msgstr "Eu incluí conteúdo aberto criado por outras pessoas como eu"
 
 #: ../upload.php:199
 msgid ""
@@ -1436,19 +1446,16 @@ msgid ""
 "material is used in this package, along with the license under which their "
 "work is released."
 msgstr ""
-"Ich habe eine \"License.txt\"-Datei hinzugefügt, welche den Namen jedes "
-"Autors, dessen Werke verwendet werden, zusammen mit der Lizenz, unter der "
-"sein Werk veröffentlicht wurde, enthält."
+"Eu incluí um arquivo License.txt incluindo o nome de cada autor do material "
+"usado neste pacote, incluindo a licença sob a qual seu trabalho foi lançado."
 
 #: ../upload.php:203
 msgid "Must check at least one"
-msgstr "Es muss mindestens eine ausgewählt werden"
+msgstr "Você deve escolher pelo menos um"
 
 #: ../upload.php:203
 msgid "This package includes files released under:"
-msgstr ""
-"Dieses Archiv enthält Dateien, die unter folgenden Lizenzen veröffentlicht "
-"wurden:"
+msgstr "Este pacote inclui arquivos lançados sob:"
 
 #: ../upload.php:208
 msgid "GNU GPL"
@@ -1468,19 +1475,19 @@ msgstr "CC0 (Public Domain)"
 
 #: ../upload.php:228
 msgid "BSD License"
-msgstr "BSD-Lizenz"
+msgstr "Licença BSD"
 
 #: ../upload.php:233
 msgid "Other open license"
-msgstr "Andere offene Lizenz"
+msgstr "Outra licença aberta"
 
 #: ../upload.php:238
 msgid ""
 "Files released under other licenses will be rejected unless it can be "
 "verified that the license is open."
 msgstr ""
-"Dateien, die unter anderen Lizenzen veröffentlicht wurden, werden abgelehnt, "
-"bis überprüft werden kann, dass die Lizenz offen ist."
+"Arquivos lançados sob outras licenças serão rejeitados, a menos que possamos "
+"verificar que a licença é aberta."
 
 #: ../upload.php:244
 msgid ""
@@ -1489,19 +1496,19 @@ msgid ""
 "for any copyright violation that may result from not following the above "
 "rules."
 msgstr ""
-"Ich erkenne an, dass, falls meine Datei die obigen Bestimmungen nicht "
-"erfüllt, diese jederzeit ohne Vorwarnung entfernt werden kann; ich übernehme "
-"außerdem die gesamte Verantwortung für alle Urheberrechts-Verletzungen, die "
-"dadurch verursacht wurden, dass obige Bestimmungen verletzt worden sind."
+"Eu reconheço que se meus arquivos não cumprirem as regras acima, eles "
+"poderão ser removidos a qualquer momento sem prévio aviso; Eu assumo inteira "
+"responsabilidade por qualquer violação de direitos autorais que podem "
+"resultar por não seguir as regras acima."
 
 #: ../upload.php:250
 msgid "My package does not include:"
-msgstr "Mein Archiv enthält folgendes nicht:"
+msgstr "Meu pacote não inclui:"
 
 #: ../upload.php:262
 msgid "Upload file"
-msgstr "Datei hochladen"
+msgstr "Enviar arquivo"
 
 #: ../users.php:63
 msgid "Your password has been changed successfully."
-msgstr "Dein Passwort wurde erfolgreich geändert."
+msgstr "Sua senha foi alterada com sucesso."

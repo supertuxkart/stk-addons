@@ -98,6 +98,7 @@ Description: menu
 			array('id_ID',-48,-33,'ID'),
 			array('it_IT',-96,-33,'IT'),
 			array('nl_NL',-48,-66,'NL'),
+			array('pt_BR',-144,0,'PT'),
 			array('ru_RU',-48,-99,'RU'),
 			array('zh_TW',-96,0,'ZH (T)')
 		    );
@@ -108,7 +109,7 @@ Description: menu
 			    $url .= '?lang='.$langs[$i][0];
 			else {
 			    // Make sure any existing instances of lang are removed
-			    $url = preg_replace('/(&amp;)*lang=[a-z_]+/i',NULL,$url);
+			    $url = preg_replace('/(&(amp;)?)*lang=[a-z_]+/i',NULL,$url);
 			    $url .= '&amp;lang='.$langs[$i][0];
 			    $url = str_replace('?&amp;','?',$url);
 			}
