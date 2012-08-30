@@ -53,8 +53,12 @@ class Upload {
     }
     
     private function doUpload() {
+	if (@ !mkdir($this->temp, /* Directory */
+		0755, /* Permissions */
+		true /* Recursive create */)) {
+	    throw new UploadException('Failed to create temporary directory for upload: '.htmlspecialchars($this->temp));
+	}
 	// Copy file to temp folder
-	mkdir($this->temp);
 	if ((move_uploaded_file($this->file_tmp,$this->temp.$this->file_name) === false) && !file_exists($this->temp.$this->file_name))
 	    throw new UploadException(htmlspecialchars(_('Failed to move uploaded file.')));
 	
@@ -70,6 +74,15 @@ class Upload {
 	
 	Upload::removeInvalidFiles();
 	Upload::parseFiles();
+	
+	// --------------------------------------------------------------------
+	// FIXME: This is only a temporary measure!
+	// --------------------------------------------------------------------
+	if ($this->properties['xml_attributes']['version'] > 5 && $this->upload_type == "tracks") {
+	    throw new UploadException('You uploaded a track with version '.$this->properties['xml_attributes']['version'].' of the track format.<br />'
+		    .'This new format is not yet supported by stkaddons. The stkaddons developer is working on distributing add-ons in a sort of "main package/dependency" manner to save internet bandwidth for users by sharing resources. The developer is using the format change to ensure STK 0.7.x can still access their own addons without disruption.<br />'
+		    .'Thank you for your patience. The developer hopes to have this finished before any "beta" versions of STK 0.8 are released.');
+	}
 
 	// Make sure the parser found a license file
 	if (!isset($this->properties['license_file'])) {

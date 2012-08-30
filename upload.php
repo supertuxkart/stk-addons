@@ -146,7 +146,7 @@ if($_GET['action'] == "submit")
         catch (UploadException $e) {
             echo '<span class="error">'.$e->getMessage().'</span><br />';
         }
-	$upload->removeTempFiles();
+	if (isset($upload)) $upload->removeTempFiles();
     }
     echo '</div>';
     include('include/footer.php');

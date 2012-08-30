@@ -107,9 +107,10 @@ function generateAssetXML()
     foreach ($addon_types AS $type)
     {
         // Fetch addon list
+	$iconQuery = ($type == "kart") ? '`r`.`icon`,' : NULL;
         $querySql = 'SELECT `k`.*, `r`.`fileid`,
                 `r`.`creation_date` AS `date`,`r`.`revision`,`r`.`format`,
-                `r`.`image`,`r`.`status`, `u`.`user`
+                `r`.`image`,'.$iconQuery.'`r`.`status`, `u`.`user`
             FROM '.DB_PREFIX.'addons k
             LEFT JOIN '.DB_PREFIX.$type.'s_revs r
             ON (`k`.`id`=`r`.`addon_id`)
@@ -152,6 +153,16 @@ function generateAssetXML()
                 {
                     $writer->writeAttribute('image',DOWN_LOCATION.$image_path);
                 }
+	    }
+	    if ($type == "kart") {
+		$icon_path = File::getPath($result['icon']);
+		if ($icon_path !== false)
+		{
+		    if (file_exists(UP_LOCATION.$icon_path))
+		    {
+			$writer->writeAttribute('icon',DOWN_LOCATION.$icon_path);
+		    }
+		}
 	    }
             $writer->writeAttribute('format',$result['format']);
             $writer->writeAttribute('revision',$result['revision']);
