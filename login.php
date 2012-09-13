@@ -65,7 +65,7 @@ switch ($_GET['action']) {
 
 	User::logout();
 	if (User::$logged_in === true)
-	    $errors .= htmlspecialchars(_('Failed to logout.'));
+	    $tpl['confirmation'] = htmlspecialchars(_('Failed to logout.'));
 	else {
 	    Template::$meta_tags['refresh'] = '3;URL=index.php';
 	    $conf = htmlspecialchars(_('You have been logged out.')).'<br />';
@@ -92,6 +92,8 @@ switch ($_GET['action']) {
 	    $conf = sprintf(htmlspecialchars(_('Welcome, %s!')).'<br />',$_SESSION['real_name']);
 	    $conf .= sprintf(htmlspecialchars(_('Click %shere%s if you do not automatically redirect.')),'<a href="index.php">','</a>').'<br />';
 	    $tpl['confirmation'] = $conf;
+	} else {
+	    $tpl['confirmation'] = $errors;
 	}
 	break;
     
