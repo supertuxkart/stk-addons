@@ -17,6 +17,7 @@
 	    </div>
 	{/foreach}
     </div>{* #index-menu *}
+    <div id="index-news-shadow"></div>
     <div id="index-news">
 	<noscript><div style="display: none;"></noscript>
 	<ul id="news-messages">
