@@ -19,8 +19,8 @@
  */
 
 define('ROOT','./');
-$security = 'manageaddons';
 require('include.php');
+AccessControl::setLevel('manageaddons');
 
 $title = htmlspecialchars(_('STK Add-ons').' | '._('Manage'));
 

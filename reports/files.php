@@ -19,7 +19,6 @@
  */
 
 define('ROOT','../');
-$security = "";
 include(ROOT.'include.php');
 include(ROOT.'include/Report.class.php');
 

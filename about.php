@@ -28,7 +28,6 @@ Description: credits page
 ***************************************************************************/
 
 define('ROOT','./');
-$security ="";
 include('include.php');
 
 Template::setFile('about.tpl');

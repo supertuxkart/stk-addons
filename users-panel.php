@@ -28,11 +28,10 @@ Licence: GPLv3
 Description: page who is called in ajax and who give user informations
 
 ***************************************************************************/
-if (!isset($security))
-    $security ="";
 if (!defined('ROOT'))
     define('ROOT','./');
 include_once('include.php');
+AccessControl::setLevel('basicPage');
 
 if (!isset($_GET['id']))
     $_GET['id'] = NULL;

@@ -26,7 +26,7 @@ Licence: GPLv3
 Description: index page
 
 ***************************************************************************/
-$security ="";
+
 define('ROOT','./');
 include("include.php");
 $_GET['type'] = (isset($_GET['type'])) ? $_GET['type'] : NULL;

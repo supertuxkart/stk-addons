@@ -20,7 +20,6 @@
  */
 
 define('ROOT','./');
-$security ="";
 include('include.php');
 
 Template::setFile('password-reset.tpl');

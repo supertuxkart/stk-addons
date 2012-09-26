@@ -19,8 +19,8 @@
  */
 
 define('ROOT','./');
-$security = 'addAddon';
 include('include.php');
+AccessControl::setLevel('addAddon');
 require_once(ROOT.'include/Upload.class.php');
 include('include/top.php');
 

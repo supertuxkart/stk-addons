@@ -27,8 +27,8 @@ Description: index page
 
 ***************************************************************************/
 define('ROOT','./');
-$security ="";
 require('include.php');
+AccessControl::setLevel(NULL);
 
 Template::setFile('index.tpl');
 // I18N: Website meta description

@@ -263,6 +263,25 @@ class User
 	}
 	Log::newEvent("Registration submitted for user '$username'");
     }
+    
+    /**
+     * Get the role of the current user
+     * @return string Role identifier
+     */
+    public static function getRole() {
+	if (!User::$logged_in) {
+	    return 'unregistered';
+	} else {
+	    $query = 'SELECT `role`
+		FROM `'.DB_PREFIX.'users`
+		WHERE `user` = \''.mysql_real_escape_string($_SESSION['user']).'\'';
+	    $handle = sql_query($query);
+	    if (!$handle) return 'unregistered';
+	    
+	    $result = mysql_fetch_array($handle);
+	    return $result[0];
+	}
+    }
 }
 User::init();
 

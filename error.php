@@ -34,7 +34,6 @@ switch ($error_code) {
 }
 
 define('ROOT','./');
-$security ="";
 require('include.php');
 include('include/top.php');
 echo '</head><body>';

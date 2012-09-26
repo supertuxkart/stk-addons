@@ -27,7 +27,6 @@ Description: login page
 
 ***************************************************************************/
 define('ROOT','./');
-$security = "";
 include(ROOT.'include.php');
 
 // define possibly undefined variables

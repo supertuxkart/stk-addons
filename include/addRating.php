@@ -20,8 +20,9 @@
 
 session_start();
 define('ROOT','../');
-$security = "";
 include_once('../include.php');
+AccessControl::setLevel('basicPage');
+
 if (!isset($_GET['addonId']))
     die('No addon.');
 if (!User::$logged_in)

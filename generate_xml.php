@@ -19,7 +19,6 @@
  */
 
 define('ROOT','./');
-$security = '';
 include_once('include.php');
 
 $xml = writeNewsXML();

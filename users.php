@@ -28,9 +28,9 @@ Licence: GPLv3
 Description: people
 
 ***************************************************************************/
-$security = 'basicPage';
 define('ROOT','./');
 include('include.php');
+AccessControl::setLevel('basicPage');
 
 $_GET['user'] = (isset($_GET['user'])) ? mysql_real_escape_string($_GET['user']) : mysql_real_escape_string($_SESSION['user']);
 $action = (isset($_GET['action'])) ? $_GET['action'] : NULL;

@@ -19,6 +19,7 @@
  */
 
 require(ROOT.'config.php');
+require_once(ROOT.'include/AccessControl.class.php');
 require_once(ROOT.'include/Template.class.php');
 require(ROOT.'include/Constants.php');
 require(ROOT.'include/exceptions.php');
@@ -26,7 +27,7 @@ require(ROOT.'include/Log.class.php');
 require(ROOT.'include/Cache.class.php');
 require(ROOT.'include/ConfigManager.php');
 require(ROOT.'include/Validate.class.php');
-require(ROOT.'include/File.class.php');
+require_once(ROOT.'include/File.class.php');
 require(ROOT.'include/SImage.class.php');
 require(ROOT.'include/SMail.class.php');
 require(ROOT.'include/News.class.php');
@@ -34,10 +35,9 @@ require(ROOT.'include/PanelInterface.class.php');
 require(ROOT.'include/Addon.class.php');
 require(ROOT.'include/AddonViewer.class.php');
 require(ROOT.'include/locale.php');
-require(ROOT.'include/sql.php');
-require(ROOT.'include/User.class.php');
+require_once(ROOT.'include/sql.php');
+require_once(ROOT.'include/User.class.php');
 require(ROOT.'include/Ratings.class.php');
-require(ROOT.'include/security.php');
 require(ROOT.'include/coreUser.php');
 require(ROOT.'include/image.php');
 require(ROOT.'include/statistics.php');

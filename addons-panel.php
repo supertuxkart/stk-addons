@@ -25,8 +25,7 @@ Licence: GPLv3
 Description: page who is called in ajax and who give kart and track informations
 
 ***************************************************************************/
-if (!isset($security))
-    $security ="";
+
 if (!defined('ROOT'))
     define('ROOT','./');
 include_once('include.php');

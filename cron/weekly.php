@@ -19,7 +19,6 @@
  */
 
 define('ROOT','./web/');
-$security = '';
 require (ROOT.'include.php');
 
 log_email();

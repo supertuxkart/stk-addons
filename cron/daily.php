@@ -20,7 +20,6 @@
 
 define('ROOT','../');
 define('CRON',1);
-$security = '';
 require (ROOT.'include.php');
 
 File::deleteQueuedFiles();

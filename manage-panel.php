@@ -20,9 +20,8 @@
 
 if (!defined('ROOT'))
     define('ROOT','./');
-if (!isset($security))
-    $security = 'manageaddons';
 require_once('include.php');
+AccessControl::setLevel('manageaddons');
 
 if (!isset($_GET['action'])) $_GET['action'] = NULL;
 
