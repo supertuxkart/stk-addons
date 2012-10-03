@@ -766,12 +766,37 @@ class Addon {
         return $this->uploaderId;
     }
     
+    /**
+     * Check if any of an addon's revisions have been approved
+     * @return boolean 
+     */
+    public function hasApprovedRevision() {
+	foreach ($this->revisions AS $rev) {
+	    if ($rev['status'] & F_APPROVED)
+		return true;
+	}
+	return false;
+    }
+    
+    /**
+     * Set the status flags of an addon
+     * @param string $fields
+     * @throws AddonException 
+     */
     public function setStatus($fields) {
         $fields = explode(',',$fields);
-        $status = array();
+	// Initialise the status field to its present values
+	// (Remove any checkboxes that the user could have checked)
+	$status = array();
+        foreach($this->revisions AS $rev_n => $rev) {
+	    $mask = F_LATEST + F_ALPHA + F_BETA + F_RC;
+	    if ($_SESSION['role']['manageaddons'])
+		$mask = $mask + F_APPROVED + F_INVISIBLE + F_DFSG + F_FEATURED;
+	    
+	    $status[$rev_n] = ($rev['status'] & ~$mask);
+	}
         // Iterate through each field
-        foreach ($fields AS $field)
-        {
+        foreach ($fields AS $field) {
             if (!isset($_POST[$field]))
                 $_POST[$field] = NULL;
             if ($field == 'latest')
@@ -782,11 +807,13 @@ class Addon {
             // not been created yet.
             if (!isset($status[$fieldinfo[1]]))
                 $status[$fieldinfo[1]] = 0;
-            if ($field == 'latest')
-            {
+	    
+	    // Mark the "latest" revision
+            if ($field == 'latest') {
                 $status[(int)$_POST['latest']] += F_LATEST;
                 continue;
             }
+	    
             // Update status values for all flags
             if ($_POST[$field] == 'on')
             {
@@ -795,50 +822,45 @@ class Addon {
                 {
                     default: break;
                     case 'approved':
-                        $status[$revision] += F_APPROVED;
+			if (!$_SESSION['role']['manageaddons'])
+			    break;
+			$status[$revision] += F_APPROVED;
                         break;
                     case 'invisible':
-                        $status[$revision] += F_INVISIBLE;
+			if (!$_SESSION['role']['manageaddons'])
+			    break;
+			$status[$revision] += F_INVISIBLE;
                         break;
                     case 'alpha':
-                        $status[$revision] += F_ALPHA;
+			$status[$revision] += F_ALPHA;
                         break;
                     case 'beta':
-                        $status[$revision] += F_BETA;
+			$status[$revision] += F_BETA;
                         break;
                     case 'rc':
-                        $status[$revision] += F_RC;
+			$status[$revision] += F_RC;
                         break;
                     case 'dfsg':
-                        $status[$revision] += F_DFSG;
+			if (!$_SESSION['role']['manageaddons'])
+			    break;
+			$status[$revision] += F_DFSG;
                         break;
                     case 'featured':
-                        $status[$revision] += F_FEATURED;
+			if (!$_SESSION['role']['manageaddons'])
+			    break;
+			$status[$revision] += F_FEATURED;
                         break;
                 }
             }
         }
-        $error = 0;
-        foreach ($status AS $revision => $value)
-        {
-            // Check if F_TEX_NOT_POWER_OF_2 is set in database
-            $getStatusQuery = 'SELECT `status`
-                FROM `'.DB_PREFIX.$this->type.'_revs`
-                WHERE `addon_id` = \''.$this->id.'\'
-                AND `revision` = '.$revision;
-            $getStatusSql = sql_query($getStatusQuery);
-            if (!$getStatusSql)
-                throw new AddonException('Failed to read status from the database.');
-            
-            $getStatusResult = mysql_fetch_assoc($getStatusSql);
-            if ($getStatusResult['status'] & F_TEX_NOT_POWER_OF_2)
-                $value += F_TEX_NOT_POWER_OF_2;
 
-            // Write new addon
+	// Loop through each addon revision
+        foreach ($status AS $revision => $value) {
+            // Write new addon status
             $query = 'UPDATE `'.DB_PREFIX.$this->type.'_revs`
                 SET `status` = '.$value.'
                 WHERE `addon_id` = \''.$this->id.'\'
-                AND `revision` = '.$revision;
+                AND `revision` = \''.$revision.'\'';
             $reqSql = sql_query($query);
             if (!$reqSql)
                 throw new AddonException('Failed to write add-on status.');

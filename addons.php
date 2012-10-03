@@ -182,7 +182,7 @@ foreach($addons_list AS $ad) {
             $icon = SITE_ROOT.'image/track-icon.png';
 
         // Approved?
-        if(($adc->getStatus() & F_APPROVED) == F_APPROVED)
+        if($adc->hasApprovedRevision())
             $class = 'addon-list menu-item';
         elseif(User::$logged_in && ($_SESSION['role']['manageaddons'] == true || $_SESSION['userid'] == $adc->getUploader()))
             $class = 'addon-list menu-item unavailable';
