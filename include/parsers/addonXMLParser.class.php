@@ -35,13 +35,13 @@ class addonXMLParser extends Parser {
 	$this->file_contents = fread($this->file,$this->file_size);
 	// Fix common XML errors
 	$this->file_contents = trim($this->file_contents);
-	$this->file_contents = str_replace('& ','&amp;',$this->file_contents);
+	$this->file_contents = str_replace('& ','&amp; ',$this->file_contents);
 
 	// Get type of xml file
 	$reader = xml_parser_create();
 	if (!xml_parse_into_struct($reader,
 		$this->file_contents,$values,$index))
-	    throw new XMLParserException('XML Error: '.xml_error_string(xml_get_error_code($reader)));
+	    throw new XMLParserException('XML Error: '.xml_error_string(xml_get_error_code($reader)).' - file: '.$this->file_name);
 	
 	$this->file_type = $values[0]['tag'];
 	$this->values = $values;

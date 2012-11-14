@@ -73,7 +73,12 @@ class Upload {
 	File::flattenDirectory($this->temp, $this->temp);
 	
 	Upload::removeInvalidFiles();
-	Upload::parseFiles();
+	try {
+	    Upload::parseFiles();
+	}
+	catch (ParserException $e) {
+	    throw new UploadException("Parser Exception: ".$e->getMessage());
+	}
 	
 	// --------------------------------------------------------------------
 	// FIXME: This is only a temporary measure!

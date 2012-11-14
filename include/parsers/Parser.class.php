@@ -21,6 +21,7 @@
 abstract class Parser {
     protected $binary_file = false;
     protected $file = NULL;
+    protected $file_name = NULL;
     protected $file_size = 0;
     protected $writeable = false;
 
@@ -39,6 +40,7 @@ abstract class Parser {
 	$read_flag = ($write) ? 'r+' : 'r';
 	if ($binary) $read_flag .= 'b';
 	$handle = fopen($file, $read_flag);
+	$this->file_name = basename($file);
 	if (!$handle)
 	    throw new ParserException('Error opening file');
 	$this->file = $handle;
