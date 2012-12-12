@@ -1,16 +1,16 @@
-# Indonesian translation for stk
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Gaelic; Scottish translation for stk
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the stk package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: stk\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-06-22 13:23-0600\n"
-"PO-Revision-Date: 2011-10-29 23:05+0000\n"
-"Last-Translator: Muhammad Radifar <Unknown>\n"
-"Language-Team: Indonesian <id@li.org>\n"
+"PO-Revision-Date: 2012-11-22 10:56+0000\n"
+"Last-Translator: GunChleoc <Unknown>\n"
+"Language-Team: Gaelic; Scottish <gd@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,18 +19,20 @@ msgstr ""
 
 #: ../about.php:32 ../include/menu.php:84
 msgid "About"
-msgstr ""
+msgstr "Mu dheidhinn"
 
 #: ../about.php:32 ../addons.php:48 ../login.php:33 ../manage.php:25
 #: ../password-reset.php:25 ../register.php:25
 msgid "STK Add-ons"
-msgstr ""
+msgstr "Tuilleadain STK"
 
 #: ../about.php:43
 msgid ""
 "SuperTuxKart is a Free 3D kart racing game, with many tracks, characters and "
 "items for you to try."
 msgstr ""
+"'S e geama rèisidh an-asgaidh a th' ann an SuperTuxKart le iomadh shlidhe, "
+"caractar is nìthean as urrainn dhut feuchainn."
 
 #: ../about.php:44
 msgid ""
@@ -45,6 +47,8 @@ msgid ""
 "SuperTuxKart now has over %d karts, %d tracks, and %d arenas available in-"
 "game thanks to the add-on service."
 msgstr ""
+"Tha barrachd air %d cartaichean, %d slighean is %d cearcaill ri fhaighinn sa "
+"gheama SuperTuxKart a-nis taing dha sheirbheis nan tuilleadan."
 
 #: ../about.php:46
 msgid ""
@@ -54,11 +58,11 @@ msgstr ""
 
 #: ../about.php:47 ../about.php:52
 msgid "Donate!"
-msgstr ""
+msgstr "An toir thu tìodhlac dhuinn?"
 
 #: ../about.php:47 ../about.php:52
 msgid "Website"
-msgstr ""
+msgstr "Làrach-lìn"
 
 #: ../about.php:50
 msgid ""
@@ -78,94 +82,95 @@ msgstr ""
 
 #: ../about.php:54
 msgid "Credits"
-msgstr ""
+msgstr "Cliù"
 
 #: ../addons-panel.php:44
 msgid ""
 "This page cannot be loaded because an invalid add-on type was provided."
 msgstr ""
-"Halaman ini tidak bisa dimuat karena masukan jenis add-on yang tidak valid."
 
 #: ../addons.php:35
 msgid "Unknown Type"
-msgstr ""
+msgstr "Seòrsa neo-aithnichte"
 
 #. I18N: Menu link
 #: ../addons.php:39 ../include/menu.php:54 ../include/menu.php:65
 #: ../index.php:68
 msgid "Tracks"
-msgstr ""
+msgstr "Slighean"
 
 #. I18N: Menu link
 #: ../addons.php:42 ../include/menu.php:59 ../include/menu.php:64
 #: ../index.php:58
 msgid "Karts"
-msgstr ""
+msgstr "Cartan"
 
 #. I18N: Menu link
 #: ../addons.php:45 ../include/menu.php:55 ../include/menu.php:60
 #: ../index.php:78
 msgid "Arenas"
-msgstr ""
+msgstr "Cearcaill"
 
 #: ../addons.php:74
 msgid "Invalid addon type."
-msgstr "Jenis addon tidak valid."
+msgstr "Seòrsa tuilleadaain mì-dhligheach."
 
 #: ../addons.php:94
 msgid "Saved properties."
-msgstr "Perangai telah disimpan."
+msgstr "Buadhan air an sàbhaladh."
 
 #: ../addons.php:115
 msgid "Saved status."
-msgstr "Status telah disimpan."
+msgstr "Staid air a shàbhaladh."
 
 #: ../addons.php:127
 msgid "Saved notes."
-msgstr "Catatan telah disimpan."
+msgstr "Nòtaichean air an sàbhaladh."
 
 #: ../addons.php:138
 msgid "Deleted addon."
-msgstr "Addon telah dihapus."
+msgstr "Chaidh sguabadh às dhan tuilleadan."
 
 #: ../addons.php:150
 msgid "File updated."
-msgstr "Berkas telah diperbarui."
+msgstr "Chaidh faidhle ùrachadh."
 
 #: ../addons.php:160
 msgid "Set image."
-msgstr "Set gambar."
+msgstr "Dealbh air suidheachadh."
 
 #: ../addons.php:172
 msgid "Set icon."
-msgstr "Set ikon."
+msgstr "Ìomhaigheag air suidheachadh."
 
 #: ../addons.php:182
 msgid "Deleted file."
-msgstr "Berkas telah dihapus."
+msgstr "Air sguabadh às dha dh'fhaidhle."
 
 #: ../disabled.php:40
 msgid "This page is currently disabled."
-msgstr ""
+msgstr "Tha an duilleag seo à comas an-dràsta."
 
 #: ../disabled.php:41 ../include/security.php:48
 msgid "You will be redirected to the home page."
-msgstr ""
+msgstr "Thèid d' ath-stiùireadh dhan duileagh dhachaigh."
 
 #. I18N: Heading for general error page
 #: ../error.php:49
 msgid "An Error Occurred"
-msgstr ""
+msgstr "Thachair mearachd"
 
 #. I18N: Error message for general error page
 #: ../error.php:51
 msgid "Something broke! We'll try to fix it as soon as we can!"
 msgstr ""
+"Tha rudeigin briste! Nì sinn ar dìcheall gus a charadh cho luath 's a "
+"ghabhas!"
 
 #. I18N: Heading for HTTP 403 Forbidden error page
 #: ../error.php:55
 msgid "403 - Forbidden"
-msgstr ""
+msgstr "403 - Toirmisgte"
 
 #. I18N: Error message for HTTP 403 Forbidden error page
 #: ../error.php:57
@@ -173,253 +178,273 @@ msgid ""
 "You're not supposed to be here. Click one of the links in the menu above to "
 "find some better content."
 msgstr ""
+"Cha bu chòir dhut a bhith an-seo. Dèan briogadh air aon dhe na ceanglaichean "
+"sa chlàr-taice gu h-àrd gus susbaint as fhearr a lorg."
 
 #. I18N: Heading for HTTP 404 Not Found error page
 #: ../error.php:61
 msgid "404 - Not Found"
-msgstr ""
+msgstr "404 - Gun lorg"
 
 #. I18N: Error message for HTTP 404 Not Found error page
 #: ../error.php:63
 msgid ""
 "We can't find what you are looking for. The link you followed may be broken."
 msgstr ""
+"Chan urrainn dhuinn lorg na tha thu a' sireadh. 'S dòcha gu bheil an ceangal "
+"a lean thu briste."
 
 #: ../include/Addon.class.php:55
 msgid "The requested add-on does not exist."
-msgstr ""
+msgstr "Chan eil an tuilleadan a dh'iarr thu ann."
 
 #: ../include/Addon.class.php:125
 msgid ""
 "An add-on with this ID already exists. Please try to upload your add-on "
 "again later."
 msgstr ""
+"Tha tuilleadan leis an ID seo ann mu thràth. Feuch an luchdaich thu an "
+"tuilleadan agad suas a-rithist an ceann greis."
 
 #: ../include/Addon.class.php:131
 msgid "The add-on you are trying to create already exists."
-msgstr "Add-on yang anda coba buat telah ada."
+msgstr ""
+"Tha an tuilleadan tha tha thu a' feuchainn ri cruthachadh ann mu thràth."
 
 #: ../include/Addon.class.php:133
 msgid "Creating a new add-on..."
-msgstr "Membuat add-on baru..."
+msgstr "A' cruthachadh tuilleadan ùr..."
 
 #: ../include/Addon.class.php:149
 msgid "Your add-on could not be uploaded."
-msgstr ""
+msgstr "Cha do ghabh an tuilleadan agad luchdadh suas."
 
 #: ../include/Addon.class.php:195
 msgid "The file you are trying to create already exists."
-msgstr ""
+msgstr "Tha am faidle a tha thu a' feuchainn ri cruthachadh ann mu thràth."
 
 #: ../include/Addon.class.php:199 ../include/Addon.class.php:276
 #: ../include/Addon.class.php:324 ../include/parseUpload.php:273
 #: ../users.php:58 ../users.php:75
 msgid "You do not have the necessary permissions to perform this action."
 msgstr ""
+"Chan eil na ceadan agad a tha a dhìth gus an gnìomh seo a choileanadh."
 
 #: ../include/Addon.class.php:273
 msgid "You must be logged in to perform this action."
 msgstr ""
+"Feumaidh tu logadh a-steach mus urrainn dhut an gnìomh seo a choileanadh."
 
 #: ../include/Addon.class.php:284
 msgid "Failed to find files associated with this addon."
-msgstr "Gagal menemukan berkas yang terkait dengan addon ini."
+msgstr ""
+"Cha deach na faidhlichean co-cheangailte ris an tuilleadan seo a lorg."
 
 #: ../include/Addon.class.php:291
 msgid "Failed to delete file:"
-msgstr "Gagal menghapus berkas:"
+msgstr "Dh'fhàillig le sguabadh às dhan fhaihle:"
 
 #: ../include/Addon.class.php:299
 msgid "Failed to remove file records for this addon."
-msgstr "Gagal menghapus catatan berkas untuk addon ini."
+msgstr ""
+"Dh'fhàillig le toirt air falbh nan reacordan faidhle airson an tuilleadain "
+"seo."
 
 #: ../include/Addon.class.php:304
 msgid "Failed to remove ratings for this add-on."
 msgstr ""
+"Dh'fhàillig le toirt air falbh nan luachaidhean airson an tuilleadain seo."
 
 #: ../include/Addon.class.php:311
 msgid "Failed to remove add-on revisions."
 msgstr ""
+"Dh'fhàillig le toirt air falbh nan tionndaidhean aig an tuilleadan seo."
 
 #: ../include/Addon.class.php:315
 msgid "Failed to remove addon."
-msgstr "Gagal menghapus addon."
+msgstr "Dh'fhàillig le toirt air falbh aig an tuilleadan."
 
 #: ../include/Addon.class.php:327
 msgid "Failed to delete file."
-msgstr ""
+msgstr "Dh'fhàillig le sguabadh às dhan fhaidhle."
 
 #: ../include/Addon.class.php:394 ../include/AddonViewer.class.php:404
 #: ../include/AddonViewer.class.php:571 ../include/AddonViewer.class.php:581
 #: ../include/AddonViewer.class.php:593 ../include/AddonViewer.class.php:596
 msgid "Unknown"
-msgstr "Tak dikenal"
+msgstr "Neo-aithnichte"
 
 #: ../include/Addon.class.php:539 ../include/Addon.class.php:560
 #: ../include/Addon.class.php:582 ../include/Addon.class.php:612
 msgid "You do not have the neccessary permissions to perform this action."
 msgstr ""
+"Chan eil na ceadan agad a tha a dhìth gus an gnìomh seo a choileanadh."
 
 #: ../include/Addon.class.php:547
 msgid "Failed to update the description record for this add-on."
 msgstr ""
+"Dh'fhàillig le luchdadh suas aig reacord tuairisgeil airson an tuilleadain "
+"seo."
 
 #: ../include/Addon.class.php:568
 msgid "Failed to update the designer record for this add-on."
 msgstr ""
+"Dh'fhàillig le luchdadh suas aig reacord dealbhadair airson an tuilleadain "
+"seo."
 
 #: ../include/Addon.class.php:590
 msgid "Failed to update the image record for this add-on."
 msgstr ""
+"Dh'fhàillig le luchdadh suas aig reacord dheabhan airson an tuilleadain seo."
 
 #: ../include/Addon.class.php:597
 msgid "Failed to update the license record for this add-on."
-msgstr "Gagal saat memperbarui catatan lisensi untuk add-on ini."
+msgstr ""
+"Dh'fhàillig le luchdadh suas aig reacord ceadachais airson an tuilleadain "
+"seo."
 
 #: ../include/Addon.class.php:605
 msgid "Failed to update the name record for this add-on."
-msgstr "Gagal memperbarui catatan nama untuk add-on ini."
+msgstr ""
+"Dh'fhàillig le luchdadh suas aig reacord ainm airson an tuilleadain seo."
 
 #: ../include/AddonViewer.class.php:76
 #, php-format
 msgid "Download %s"
-msgstr ""
+msgstr "Luchdaich a-nuas %s"
 
 #: ../include/AddonViewer.class.php:84 ../include/AddonViewer.class.php:87
 #: ../include/AddonViewer.class.php:288 ../include/AddonViewer.class.php:291
 msgid "File not found."
-msgstr "Berkas tidak ditemukan."
+msgstr "Cha deach am faidhle a lorg."
 
 #: ../include/AddonViewer.class.php:113 ../include/AddonViewer.class.php:127
 msgid "Upload Image"
-msgstr "Unggah Gambar"
+msgstr "Luchdaich dealbh suas"
 
 #: ../include/AddonViewer.class.php:122
 msgid "Images"
-msgstr "Gambar"
+msgstr "Dealbhan"
 
 #: ../include/AddonViewer.class.php:152
 msgid "No images have been uploaded for this addon yet."
-msgstr "Tidak ada gambar yang telah diunggah untuk addon ini."
+msgstr ""
 
 #: ../include/AddonViewer.class.php:169 ../include/AddonViewer.class.php:358
 msgid "Unapprove"
-msgstr "Tolak"
+msgstr ""
 
 #: ../include/AddonViewer.class.php:171 ../include/AddonViewer.class.php:360
 msgid "Approve"
-msgstr "Setujui"
+msgstr ""
 
 #: ../include/AddonViewer.class.php:177
 msgid "Set Icon"
-msgstr "Set Ikon"
+msgstr ""
 
 #: ../include/AddonViewer.class.php:181
 msgid "Set Image"
-msgstr "Set Gambar"
+msgstr ""
 
 #: ../include/AddonViewer.class.php:183 ../include/AddonViewer.class.php:363
 msgid "Delete File"
-msgstr "Hapus Berkas"
+msgstr ""
 
 #: ../include/AddonViewer.class.php:199
 msgid "Arena"
-msgstr "Arena"
+msgstr "Cearcall"
 
 #: ../include/AddonViewer.class.php:199 ../manage-panel.php:166
 msgid "Type:"
-msgstr "Tipe:"
+msgstr "Seòrsa:"
 
 #: ../include/AddonViewer.class.php:204 ../include/AddonViewer.class.php:405
 msgid "Designer:"
-msgstr "Perancang:"
+msgstr ""
 
 #: ../include/AddonViewer.class.php:205
 msgid "Upload date:"
-msgstr "Tanggal pengunggahan:"
+msgstr ""
 
 #: ../include/AddonViewer.class.php:206
 msgid "Submitted by:"
-msgstr "Dikirim oleh:"
+msgstr ""
 
 #: ../include/AddonViewer.class.php:207
 msgid "Revision:"
-msgstr "Revisi:"
+msgstr "Tionndadh:"
 
 #: ../include/AddonViewer.class.php:208
 msgid "Compatible with:"
-msgstr "Cocok dengan:"
+msgstr "Co-chòrdail ri:"
 
 #: ../include/AddonViewer.class.php:210
 msgid "Your Rating: "
-msgstr "Rating anda: "
+msgstr "An rangachadh agad: "
 
 #: ../include/AddonViewer.class.php:217
 msgid ""
 "Warning: This addon may not display correctly on some systems. It uses "
 "textures that may not be compatible with all video cards."
 msgstr ""
-"Peringatan: Addon ini mungkin tidak dapat tampil dengan benar pada sistem "
-"tertentu.  Karena addon ini menggunakan tekstur-tektur yang mungkin tidak "
-"cocok dengan beberapa kartu grafis."
 
 #: ../include/AddonViewer.class.php:224
 msgid "License"
-msgstr "Lisensi"
+msgstr "Ceadachas"
 
 #: ../include/AddonViewer.class.php:232
 msgid "Permalink"
-msgstr "Tautan Permanen"
+msgstr ""
 
 #: ../include/AddonViewer.class.php:251
 msgid "Revisions"
-msgstr "Revisi"
+msgstr "Tionndaidhean"
 
 #: ../include/AddonViewer.class.php:257
 msgid "Upload Revision"
-msgstr "Unggah Revisi"
+msgstr "Luchdaidh tionndadh suas"
 
 #: ../include/AddonViewer.class.php:285
 #, php-format
 msgid "Download revision %u"
-msgstr "Unduh revisi %u"
+msgstr "Luchdaich tionndadh %u a-nuas"
 
 #: ../include/AddonViewer.class.php:288 ../include/AddonViewer.class.php:291
 msgid "Revision"
-msgstr "Revisi"
+msgstr "Tionndadh"
 
 #: ../include/AddonViewer.class.php:306
 msgid "Source Files"
-msgstr "Berkas sumber (source)"
+msgstr "Faidhlichean bun-tùis"
 
 #: ../include/AddonViewer.class.php:311
 msgid "Upload Source File"
-msgstr "Unggah berkas sumber"
+msgstr ""
 
 #: ../include/AddonViewer.class.php:339
 msgid "No source files have been uploaded for this addon yet."
-msgstr "Berkas sumber belum diunggah untuk addon ini."
+msgstr ""
 
 #: ../include/AddonViewer.class.php:350
 msgid "Not Approved"
-msgstr "Belum Disetujui"
+msgstr ""
 
 #: ../include/AddonViewer.class.php:351
 #, php-format
 msgid "Source File %u"
-msgstr "Berkas Sumber %u"
+msgstr ""
 
 #: ../include/AddonViewer.class.php:352
 msgid "Download"
-msgstr "Unduh"
+msgstr "Luchdaich a-nuas"
 
 #: ../include/AddonViewer.class.php:380 ../include/AddonViewer.class.php:438
 msgid "Featured"
-msgstr "Menonjol"
+msgstr ""
 
 #: ../include/AddonViewer.class.php:382 ../include/AddonViewer.class.php:432
 msgid "Alpha"
-msgstr "Alfa"
+msgstr "Alpha"
 
 #: ../include/AddonViewer.class.php:384 ../include/AddonViewer.class.php:433
 msgid "Beta"
@@ -427,11 +452,11 @@ msgstr "Beta"
 
 #: ../include/AddonViewer.class.php:386 ../include/AddonViewer.class.php:434
 msgid "Release-Candidate"
-msgstr "Kandidat-Rilis"
+msgstr "Release-Candidate"
 
 #: ../include/AddonViewer.class.php:388 ../include/AddonViewer.class.php:437
 msgid "DFSG Compliant"
-msgstr "Sesuai dengan DFSG"
+msgstr ""
 
 #: ../include/AddonViewer.class.php:398
 msgid "You do not have the necessary privileges to perform this action."
@@ -439,65 +464,65 @@ msgstr ""
 
 #: ../include/AddonViewer.class.php:400
 msgid "Configuration"
-msgstr ""
+msgstr "Rèiteachadh"
 
 #: ../include/AddonViewer.class.php:410
 msgid "Description:"
-msgstr "Deskripsi:"
+msgstr ""
 
 #: ../include/AddonViewer.class.php:410
 #, php-format
 msgid "Max %u characters"
-msgstr "Maks %u karakter"
+msgstr ""
 
 #: ../include/AddonViewer.class.php:416
 msgid "Save Properties"
-msgstr "Simpan Perangai"
+msgstr ""
 
 #: ../include/AddonViewer.class.php:422
 msgid "Delete Addon"
-msgstr "Hapus Addon"
+msgstr ""
 
 #: ../include/AddonViewer.class.php:426
 msgid "Status Flags:"
-msgstr "Penanda Status:"
+msgstr ""
 
 #: ../include/AddonViewer.class.php:430
 msgid "Approved"
-msgstr "Disetujui"
+msgstr ""
 
 #: ../include/AddonViewer.class.php:431
 msgid "Invisible"
-msgstr "Tersembunyi"
+msgstr ""
 
 #: ../include/AddonViewer.class.php:435
 msgid "Latest"
-msgstr "Terkini"
+msgstr "As ùire"
 
 #: ../include/AddonViewer.class.php:439
 msgid "Invalid Textures"
-msgstr "Tekstur Tidak Valid"
+msgstr ""
 
 #: ../include/AddonViewer.class.php:446 ../include/AddonViewer.class.php:546
 #, php-format
 msgid "Rev %u:"
-msgstr "Rev %u:"
+msgstr ""
 
 #: ../include/AddonViewer.class.php:537
 msgid "Save Changes"
-msgstr "Simpan Perubahan"
+msgstr "Sàbhail Atharraichean"
 
 #: ../include/AddonViewer.class.php:541
 msgid "Notes from Moderator to Submitter:"
-msgstr "Catatan dari Moderator kepada Pengirim:"
+msgstr ""
 
 #: ../include/AddonViewer.class.php:558
 msgid "Save Notes"
-msgstr "Simpan Catatan"
+msgstr ""
 
 #: ../include/File.class.php:33
 msgid "Insufficient permissions."
-msgstr "Wewenang tidak cukup."
+msgstr ""
 
 #: ../include/File.class.php:53
 msgid "The file to extract does not exist."
@@ -561,152 +586,153 @@ msgstr ""
 
 #: ../include/User.class.php:85
 msgid "Failed to log in."
-msgstr "Gagal masuk."
+msgstr ""
 
 #: ../include/User.class.php:92
 msgid "Your username or password is incorrect."
-msgstr "Nama-pengguna atau password anda salah."
+msgstr ""
 
 #: ../include/User.class.php:146
 msgid "You must be logged in to change a password."
-msgstr "Anda harus masuk untuk mengubah password."
+msgstr ""
 
 #: ../include/User.class.php:153 ../password-reset.php:223
 msgid "Failed to change your password."
-msgstr "Gagal mengubah password anda."
+msgstr ""
 
 #: ../include/User.class.php:217 ../users.php:90
 msgid "Me"
-msgstr "Saya"
+msgstr "Mise"
 
 #: ../include/Validate.class.php:33
 msgid "You must enter an email address."
-msgstr "Anda harus memasukkan alamat email."
+msgstr ""
 
 #: ../include/Validate.class.php:36
 #, php-format
 msgid "\"%s\" is not a valid email address."
-msgstr "%s bukanlah alamat email yang valid."
+msgstr ""
 
 #: ../include/Validate.class.php:48
 msgid "Your username must be at least 4 characters long."
-msgstr "Nama-pengguna anda harus paling tidak sepanjang 4 karakter."
+msgstr ""
 
 #: ../include/Validate.class.php:51
 msgid "Your username can only contain alphanumeric characters."
-msgstr "Nama-pengguna anda hanya bisa terdiri dari huruf dan angka."
+msgstr ""
 
 #: ../include/Validate.class.php:59
 msgid "Your password must be at least 6 characters long."
-msgstr "Password anda harus paling tidak sepanjang 6 karakter."
+msgstr ""
 
 #: ../include/Validate.class.php:63
 msgid "Your passwords do not match."
-msgstr "Password anda tidak sesuai"
+msgstr ""
 
 #: ../include/Validate.class.php:93
 msgid "You must enter a name."
-msgstr "Anda harus memasukkan sebuah nama."
+msgstr ""
 
 #: ../include/allow.php:102
 msgid "root"
-msgstr "root"
+msgstr ""
 
 #: ../include/allow.php:103
 msgid "supAdministrator"
-msgstr "supAdministrator"
+msgstr ""
 
 #: ../include/allow.php:104
 msgid "administrator"
-msgstr "administrator"
+msgstr ""
 
 #: ../include/allow.php:105
 msgid "moderator"
-msgstr "moderator"
+msgstr ""
 
 #: ../include/allow.php:106
 msgid "basicUser"
-msgstr "penggunaBiasa"
+msgstr ""
 
 #: ../include/coreUser.php:87 ../login.php:114 ../password-reset.php:39
 #: ../register.php:36
 msgid "Username:"
-msgstr "Nama-pengguna:"
+msgstr "Ainm-cleachdaiche:"
 
 #: ../include/coreUser.php:88
 msgid "Registration Date:"
-msgstr "Tanggal Pendaftaran:"
+msgstr ""
 
 #: ../include/coreUser.php:89
 msgid "Real Name:"
-msgstr "Nama Asli"
+msgstr ""
 
 #: ../include/coreUser.php:90 ../include/coreUser.php:114
 msgid "Role:"
-msgstr "Peran:"
+msgstr ""
 
 #: ../include/coreUser.php:93 ../include/coreUser.php:110
 msgid "Homepage:"
-msgstr "Halaman awal"
+msgstr "Duilleag-dhachaigh:"
 
 #: ../include/coreUser.php:131
 msgid "User Activated:"
-msgstr "Pengguna Telah Diaktifkan:"
+msgstr ""
 
 #: ../include/coreUser.php:139
 msgid "Save Configuration"
-msgstr "Simpan Konfigurasi"
+msgstr ""
 
 #: ../include/coreUser.php:143 ../include/coreUser.php:151
 #: ../password-reset.php:81
 msgid "Change Password"
-msgstr "Ubah Password"
+msgstr "Atharraich facal-faire"
 
 #: ../include/coreUser.php:145
 msgid "Old Password:"
-msgstr "Password lama:"
+msgstr ""
 
 #: ../include/coreUser.php:147 ../password-reset.php:40
 #: ../password-reset.php:73 ../register.php:37 ../register.php:42
 #, php-format
 msgid "Must be at least %d characters long."
-msgstr "Harus paling tidak sepanjang %d karakter."
+msgstr ""
 
 #: ../include/coreUser.php:147 ../password-reset.php:72
 msgid "New Password:"
-msgstr "Password Baru:"
+msgstr ""
 
 #: ../include/coreUser.php:149
 msgid "New Password (Confirm):"
-msgstr "Password Baru (Konfirmasi):"
+msgstr ""
 
 #: ../include/coreUser.php:162
 msgid "User's Tracks"
-msgstr "Lintasan Buatan Pengguna Ini"
+msgstr "Slighean an cleachdaiche"
 
 #: ../include/coreUser.php:163
 msgid "This user has not uploaded any tracks."
-msgstr "Pengguna ini belum mengunggah lintasan apapun."
+msgstr ""
+"Chan eil an cleachdaiche seo air slighe sam bith a luchdadh suas fhathast."
 
 #: ../include/coreUser.php:167
 msgid "User's Karts"
-msgstr "Kart Buatan Pengguna Ini"
+msgstr "Cartan an cleachdaiche"
 
 #: ../include/coreUser.php:168
 msgid "This user has not uploaded any karts."
-msgstr "Pengguna ini belum mengunggah kart apapun."
+msgstr ""
 
 #: ../include/coreUser.php:172
 msgid "User's Arenas"
-msgstr ""
+msgstr "Cearcaill an cleachdaiche"
 
 #: ../include/coreUser.php:173
 msgid "This user has not uploaded any arenas."
-msgstr ""
+msgstr "Chan eil an cluicheadair air cearcall sam bhith a luchdadh suas."
 
 #: ../include/coreUser.php:215
 msgid "Your old password is not correct."
-msgstr "Password lama anda tidak benar."
+msgstr ""
 
 #: ../include/mail.php:78
 msgid "No moderator mailing-list email is set."
@@ -715,39 +741,39 @@ msgstr ""
 #: ../include/menu.php:43
 #, php-format
 msgid "Welcome, %s"
-msgstr ""
+msgstr "Fàilte, %s"
 
 #: ../include/menu.php:47
 msgid "Home"
-msgstr ""
+msgstr "Dhachaigh"
 
 #: ../include/menu.php:71
 msgid "Log out"
-msgstr ""
+msgstr "Log a-mach"
 
 #: ../include/menu.php:72 ../users.php:38
 msgid "Users"
-msgstr ""
+msgstr "Cleachdaichean"
 
 #: ../include/menu.php:73
 msgid "Upload"
-msgstr ""
+msgstr "Luchdaich suas"
 
 #: ../include/menu.php:75 ../manage.php:25
 msgid "Manage"
-msgstr ""
+msgstr "Rianaich"
 
 #: ../include/menu.php:80 ../login.php:33 ../password-reset.php:226
 msgid "Login"
-msgstr ""
+msgstr "Log a-steach"
 
 #: ../include/menu.php:90
 msgid "Languages"
-msgstr ""
+msgstr "Cànanan"
 
 #: ../include/menu.php:107
 msgid "STK Homepage"
-msgstr ""
+msgstr "Duilleag-dhachaigh STK"
 
 #: ../include/parseUpload.php:24
 msgid "Failed to upload your file."
@@ -759,7 +785,7 @@ msgstr ""
 
 #: ../include/parseUpload.php:49 ../include/parseUpload.php:252
 msgid "Continue."
-msgstr ""
+msgstr "Lean air."
 
 #: ../include/parseUpload.php:80
 msgid "Invalid archive file. The archive must contain the addon's xml file."
@@ -777,13 +803,16 @@ msgstr ""
 
 #: ../include/parseUpload.php:108
 msgid "Upload was recognized as a track."
-msgstr ""
+msgstr "Chaidh an luchdadh suas aithneachadh mar shlighe."
 
 #: ../include/parseUpload.php:116
 msgid ""
 "Failed to read the add-on's XML file. Please make sure you are using the "
 "latest version of the kart or track exporter."
 msgstr ""
+"Dh'fhàillig le leughadh an fhaidhle XML aig an tuilleadan. Dèan cinnteach gu "
+"bheil thu a' cleachdadh an tionndadh as ùire aig a' chart no às-phortaiche "
+"shlighean."
 
 #: ../include/parseUpload.php:121
 msgid "Failed to write new XML file:"
@@ -791,7 +820,7 @@ msgstr ""
 
 #: ../include/parseUpload.php:127
 msgid "This track is an arena."
-msgstr ""
+msgstr "'S e cearcall a th' anns an t-slighe"
 
 #: ../include/parseUpload.php:136
 msgid ""
@@ -828,6 +857,7 @@ msgstr ""
 msgid ""
 "You are trying to add a new revision of an add-on that does not exist."
 msgstr ""
+"Tha thu a' feuchainn ri tionndadh aig tuilleadan nach eil ann a chur ris."
 
 #: ../include/parseUpload.php:295
 msgid ""
@@ -864,11 +894,11 @@ msgstr ""
 
 #: ../include/top.php:31 ../users.php:38
 msgid "SuperTuxKart Add-ons"
-msgstr ""
+msgstr "Tuilleadain SuperTuxKart"
 
 #: ../include/xmlWrite.php:137
 msgid "The following file could not be found:"
-msgstr ""
+msgstr "Cha deach am faidhle seo a lorg:"
 
 #. I18N: Website meta description
 #: ../index.php:35
@@ -876,11 +906,13 @@ msgid ""
 "This is the official SuperTuxKart add-on repository. It contains extra karts "
 "and tracks for the SuperTuxKart game."
 msgstr ""
+"Seo stòras oifigeil dhe thuilleadain SuperTuxKart. Tha cartaichean is "
+"slighean a bharrachd airson a' gheama SuperTuxKart ann."
 
 #. I18N: Menu link
 #: ../index.php:88
 msgid "Help"
-msgstr ""
+msgstr "Cobhair"
 
 #: ../index.php:100
 #, php-format
@@ -890,7 +922,7 @@ msgstr ""
 #: ../index.php:101
 #, php-format
 msgid "The most downloaded track is %s."
-msgstr ""
+msgstr "Is %s an t-slighe a chaidh luchdadh a-nuas nas trice."
 
 #: ../login.php:48
 msgid "Failed to logout."
@@ -898,7 +930,7 @@ msgstr ""
 
 #: ../login.php:55
 msgid "You have been logged out."
-msgstr ""
+msgstr "Chaidh do logadh a-mach."
 
 #: ../login.php:56 ../login.php:69 ../login.php:95
 #, php-format
@@ -912,19 +944,19 @@ msgstr ""
 #: ../login.php:94
 #, php-format
 msgid "Welcome, %s!"
-msgstr ""
+msgstr "Fàilte, %s!"
 
 #: ../login.php:116 ../register.php:41
 msgid "Password:"
-msgstr "Password:"
+msgstr "Facal-faire:"
 
 #: ../login.php:118
 msgid "Log In"
-msgstr ""
+msgstr "Log a-steach"
 
 #: ../login.php:120
 msgid "Create an account."
-msgstr ""
+msgstr "Cruthaich cunntas."
 
 #: ../login.php:121
 msgid "Forgot password?"
@@ -944,7 +976,7 @@ msgstr ""
 
 #: ../manage-panel.php:67 ../manage.php:38
 msgid "General Settings"
-msgstr ""
+msgstr "Roghainnean coitcheann"
 
 #: ../manage-panel.php:71 ../manage.php:43
 msgid "News Messages"
@@ -1032,11 +1064,11 @@ msgstr ""
 
 #: ../manage-panel.php:136
 msgid "Date:"
-msgstr ""
+msgstr "Ceann-latha:"
 
 #: ../manage-panel.php:138
 msgid "Author:"
-msgstr ""
+msgstr "Ùghdar"
 
 #: ../manage-panel.php:140
 msgid "Web:"
@@ -1044,7 +1076,7 @@ msgstr ""
 
 #: ../manage-panel.php:141
 msgid "Actions:"
-msgstr ""
+msgstr "Gnìomhan:"
 
 #: ../manage-panel.php:161
 msgid "No files have been uploaded."
@@ -1052,7 +1084,7 @@ msgstr ""
 
 #: ../manage-panel.php:165 ../register.php:50
 msgid "Name:"
-msgstr "Nama:"
+msgstr "Aimn:"
 
 #: ../manage-panel.php:167
 msgid "References:"
@@ -1174,7 +1206,7 @@ msgstr ""
 
 #: ../register.php:46
 msgid "Password (confirm):"
-msgstr "Password (konfirmasi):"
+msgstr ""
 
 #: ../register.php:58
 msgid "Terms:"
@@ -1295,7 +1327,7 @@ msgstr ""
 
 #: ../upload.php:154
 msgid "Please upload a new revision of your kart or track."
-msgstr ""
+msgstr "An luchdaich thu suas tionndadh ùr aig a' chart no slighe agad?"
 
 #: ../upload.php:158
 msgid "What type of file are you uploading?"
@@ -1311,7 +1343,7 @@ msgstr ""
 
 #: ../upload.php:168
 msgid "Please upload a kart or track."
-msgstr ""
+msgstr "An luchdaich thu suas cart no slighe?"
 
 #: ../upload.php:169
 msgid "Do not use this form if you are updating an existing add-on."

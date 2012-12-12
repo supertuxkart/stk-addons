@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: stk\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-06-22 13:23-0600\n"
-"PO-Revision-Date: 2012-06-15 17:18+0000\n"
+"PO-Revision-Date: 2012-10-23 14:55+0000\n"
 "Last-Translator: Wolfs <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-14 22:16+0000\n"
-"X-Generator: Launchpad (build 15801)\n"
+"X-Launchpad-Export-Date: 2012-12-12 19:32+0000\n"
+"X-Generator: Launchpad (build 16361)\n"
 
 #: ../about.php:32 ../include/menu.php:84
 msgid "About"
@@ -176,17 +176,18 @@ msgstr "Du wirst zur Startseite umgeleitet."
 #. I18N: Heading for general error page
 #: ../error.php:49
 msgid "An Error Occurred"
-msgstr ""
+msgstr "Ein Fehler ist aufgetreten"
 
 #. I18N: Error message for general error page
 #: ../error.php:51
 msgid "Something broke! We'll try to fix it as soon as we can!"
 msgstr ""
+"Es ist etwas defekt! Wir versuchen es so schnell wie möglich zu reparieren!"
 
 #. I18N: Heading for HTTP 403 Forbidden error page
 #: ../error.php:55
 msgid "403 - Forbidden"
-msgstr ""
+msgstr "403 - Verboten"
 
 #. I18N: Error message for HTTP 403 Forbidden error page
 #: ../error.php:57
@@ -198,13 +199,15 @@ msgstr ""
 #. I18N: Heading for HTTP 404 Not Found error page
 #: ../error.php:61
 msgid "404 - Not Found"
-msgstr ""
+msgstr "404 - Nicht gefunden"
 
 #. I18N: Error message for HTTP 404 Not Found error page
 #: ../error.php:63
 msgid ""
 "We can't find what you are looking for. The link you followed may be broken."
 msgstr ""
+"Wir können nicht finden, wonach gesucht wurde. Der Link dem du gefolgt bist, "
+"ist nicht aktuell."
 
 #: ../include/Addon.class.php:55
 msgid "The requested add-on does not exist."
@@ -302,12 +305,12 @@ msgstr "Der Lizenz-Eintrag dieses Add-Ons konnte nicht aktualisiert werden."
 
 #: ../include/Addon.class.php:605
 msgid "Failed to update the name record for this add-on."
-msgstr ""
+msgstr "Der Name dieses Add-Ons konnte nicht aktualisiert werden."
 
 #: ../include/AddonViewer.class.php:76
 #, php-format
 msgid "Download %s"
-msgstr ""
+msgstr "%s herunterladen"
 
 #: ../include/AddonViewer.class.php:84 ../include/AddonViewer.class.php:87
 #: ../include/AddonViewer.class.php:288 ../include/AddonViewer.class.php:291
@@ -579,7 +582,7 @@ msgstr "Konnte hochgeladene Datei nicht verschieben."
 
 #: ../include/File.class.php:306
 msgid "The uploaded image file is invalid."
-msgstr ""
+msgstr "Das hochgeladene Bild ist nicht gültig."
 
 #: ../include/File.class.php:330 ../include/parseUpload.php:177
 msgid "Failed to associate image file with addon."
@@ -724,11 +727,11 @@ msgstr "Dieser Benutzer hat keine Karts hochgeladen."
 
 #: ../include/coreUser.php:172
 msgid "User's Arenas"
-msgstr ""
+msgstr "Spielfelder des Benutzers"
 
 #: ../include/coreUser.php:173
 msgid "This user has not uploaded any arenas."
-msgstr ""
+msgstr "Dieser Benutzer hat noch keine Spielfelder hochgeladen."
 
 #: ../include/coreUser.php:215
 msgid "Your old password is not correct."
@@ -971,7 +974,7 @@ msgstr "Konto erstellen."
 
 #: ../login.php:121
 msgid "Forgot password?"
-msgstr ""
+msgstr "Passwort vergessen?"
 
 #: ../manage-panel.php:45
 msgid "Deleted message."
@@ -1000,7 +1003,7 @@ msgstr "Hochgeladene Dateien"
 
 #: ../manage-panel.php:79 ../manage.php:53
 msgid "Client Versions"
-msgstr ""
+msgstr "Anwendungsversionen"
 
 #: ../manage-panel.php:83 ../manage.php:58
 msgid "Cache Files"
@@ -1148,7 +1151,7 @@ msgstr "Fehler beim Erstellen der Nachricht."
 
 #: ../password-reset.php:25 ../password-reset.php:30
 msgid "Reset Password"
-msgstr ""
+msgstr "Passwort zurücksetzen"
 
 #: ../password-reset.php:36
 msgid ""
@@ -1167,11 +1170,11 @@ msgstr ""
 
 #: ../password-reset.php:69
 msgid "Please enter a new password for your account."
-msgstr ""
+msgstr "Bitte gib ein neues Passwort für dein Konto ein."
 
 #: ../password-reset.php:77
 msgid "New Password (confirm):"
-msgstr ""
+msgstr "Neues Passwort (bestätigen):"
 
 #: ../password-reset.php:127 ../register.php:126
 msgid "An error occurred trying to validate your username."
@@ -1216,7 +1219,7 @@ msgstr "Registrieren"
 
 #: ../register.php:30
 msgid "Account Registration"
-msgstr ""
+msgstr "Konto-Registrierung"
 
 #: ../register.php:46
 msgid "Password (confirm):"
