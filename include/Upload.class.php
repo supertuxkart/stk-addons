@@ -67,14 +67,16 @@ class Upload {
 	    return;
 	}
 	
-	File::extractArchive($this->temp.$this->file_name,
-	    $this->temp,
-	    $this->file_ext);
-	File::flattenDirectory($this->temp, $this->temp);
-	
-	Upload::removeInvalidFiles();
 	try {
+	    File::extractArchive($this->temp.$this->file_name,
+		$this->temp,
+		$this->file_ext);
+	    File::flattenDirectory($this->temp, $this->temp);
+	    Upload::removeInvalidFiles();
 	    Upload::parseFiles();
+	}
+	catch (FileException $e) {
+	    throw new UploadException("File Exception: ".$e);
 	}
 	catch (ParserException $e) {
 	    throw new UploadException("Parser Exception: ".$e->getMessage());
@@ -276,10 +278,11 @@ class Upload {
     
     private function removeInvalidFiles() {
 	// Check for invalid files
-	if ($this->expected_type != 'source')
+	if ($this->expected_type != 'source') {
 	    $invalid_files = File::typeCheck($this->temp);
-	else
+	} else {
 	    $invalid_files = File::typeCheck($this->temp, true);
+	}
 	
 	if (is_array($invalid_files) && count($invalid_files != 0)) {
 	    echo '<span class="warning">'.htmlspecialchars(_('Some invalid files were found in the uploaded add-on. These files have been removed from the archive:')).' '.implode(', ',$invalid_files).'</span><br />';
@@ -368,11 +371,13 @@ class Upload {
 
 	// List missing textures
 	$this->properties['b3d_textures'] = $b3d_textures;
-	$this->properties['missing_textures'] = array();
+	$missing_textures = array();
 	foreach ($this->properties['b3d_textures'] AS $tex) {
 	    if (!file_exists($this->temp.$tex))
-		$this->properties['missing_textures'][] = $tex;
+		$missing_textures[] = $tex;
 	}
+	// Remove duplicate values
+	$this->properties['missing_textures'] = array_unique($missing_textures, SORT_STRING);
     }
     
     private function editInfoFile() {

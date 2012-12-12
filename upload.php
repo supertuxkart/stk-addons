@@ -85,6 +85,12 @@ include(ROOT.'include/menu.php');
 if($_GET['action'] == "submit")
 {
     echo '<div id="content">';
+    if (count($_POST) == 0) {
+	echo '<span class="error">Maximum POST size exceeded. Your file is too large!</span><br />';
+	echo '</div>';
+	include('include/footer.php');
+	exit;
+    }
     // Check to make sure all form license boxes are good
     $agreement_form = 1;
     while ($agreement_form == 1)
@@ -146,6 +152,10 @@ if($_GET['action'] == "submit")
         catch (UploadException $e) {
             echo '<span class="error">'.$e->getMessage().'</span><br />';
         }
+	catch (Exception $e) {
+	    echo '<span class="error">Unexpected exception: '.$e->getMessage().'<br />
+		<strong>If this is ever visible, that\'s a bug!</strong><span><br />';
+	}
 	if (isset($upload)) $upload->removeTempFiles();
     }
     echo '</div>';
@@ -181,7 +191,7 @@ if($_GET['action'] == "submit")
         }
         ?>
         <label><?php echo htmlspecialchars(_("File:")); ?><br /><input type="file" name="file_addon" /><br /></label>
-        <?php echo htmlspecialchars(_('Supported archive types are:')); ?> .zip, .tar, .tgz, .tar.gz, .tbz, .tar.bz2<br /><br />
+        <?php echo htmlspecialchars(_('Supported archive types are:')); ?> .zip, .tar, .tgz, .tar.gz<!-- , .tbz, .tar.bz2 --><br /><br />
         <strong><?php echo htmlspecialchars(_('Agreement:')); ?></strong><br />
         <table width="800" id="upload_agreement">
             <tr>

@@ -157,7 +157,8 @@ class AddonViewer
 		'display' => true,
 		'label' => $button_text,
 		'url' => DOWN_LOCATION.$file_path,
-		'shrink' => $shrink
+		'shrink' => $shrink,
+		'use_client_message' => htmlspecialchars(_('Download this add-on in game!'))
 	    );
         } else {
 	    $tpl['addon']['dl'] = array('display' => false);

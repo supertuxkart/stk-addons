@@ -68,13 +68,8 @@
 {$addon.warnings}
 
 {if $addon.dl.display == true}
-<div id="dl_button">
-    <div class="left"></div>
-    <div class="center" {$addon.dl.shrink|default: ''}>
-	<a href="{$addon.dl.url}" rel="nofollow">{$addon.dl.label}</a>
-    </div>
-    <div class="right"></div>
-</div>
+<br /><br />
+{$addon.dl.use_client_message}
 {/if}
 
 <h3>{$addon.info.license.label}</h3>
