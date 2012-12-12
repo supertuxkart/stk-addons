@@ -101,5 +101,12 @@ class Validate {
         }
         return $box;
     }
+    
+    public static function versionString($string) {
+	if (!preg_match('/^(svn|[\d]+\.[\d]+\.[\d](-rc[\d])?)$/i', $string)) {
+	    throw new Exception('Invalid version string! Format should be: W.X.Y[-rcZ]');
+	}
+	return true;
+    }
 }
 ?>

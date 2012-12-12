@@ -675,8 +675,10 @@ class Addon {
 	if (!$_SESSION['role']['manageaddons'])
 	    throw new AddonException(htmlspecialchars(_('You do not have the neccessary permissions to perform this action.')));
 	
-	$start_ver = mysql_real_escape_string($start_ver);
-	$end_ver = mysql_real_escape_string($end_ver);
+	Validate::versionString($start_ver);
+	Validate::versionString($end_ver);
+	$start_ver = mysql_real_escape_string(strtolower($start_ver));
+	$end_ver = mysql_real_escape_string(strtolower($end_ver));
 	$query = 'UPDATE `'.DB_PREFIX."addons`
 	    SET `min_include_ver` = '$start_ver', `max_include_ver` = '$end_ver'
 	    WHERE `id` = '{$this->id}'";
