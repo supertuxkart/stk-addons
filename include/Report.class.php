@@ -119,18 +119,13 @@ class Report
         $labels = array();
         for ($i = 0; $i < $count; $i++) {
             $result = mysql_fetch_array($handle);
-            $labels[] = $result[0].' ('.$result[1].')';
+            $labels[] = $result[0];
             $values[] = $result[1];
         }
         
         require_once(ROOT.'include/graphs.php');
-        try {
-            $graph_file = graph_pie($chartTitle, $values, $labels, $graphId);
-            $query_result .= '<img src="'.$graph_file.'" />';
-        }
-        catch (Exception $e) {
-            $query_result .= $e->getMessage().'<br />';
-        }
+	$data_file = graph_data_to_json($values, $labels, 'pie', $graphId);
+	$query_result .= '<div class="pie_chart" id="'.$graphId.'">'.$chartTitle."\n".$data_file.'</div>';
 
         $this->report_structure[$section]['content'] .= $query_result;
     }
@@ -211,6 +206,9 @@ class Report
     {
         $return = "<html>\n<head>\n\t<title>{$this->report_title}</title>\n";
         $return .= "\t<script src=\"".ROOT."js/sorttable.js\" type=\"text/javascript\"></script>\n";
+	$return .= "\t<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js\" type=\"text/javascript\"></script>\n";
+	$return .= "\t<script src=\"https://www.google.com/jsapi\" type=\"text/javascript\"></script>\n";
+	$return .= "\t<script src=\"".ROOT."js/reports.js\" type=\"text/javascript\"></script>\n";
         $return .= "\t<link href=\"".ROOT."css/report.css\" rel=\"StyleSheet\" type=\"text/css\" />\n</head>\n";
         $return .= "<body>\n\t<h1>{$this->report_title}</h1>\n";
         $return .= "\t<blockquote>{$this->report_description}</blockquote>\n";
