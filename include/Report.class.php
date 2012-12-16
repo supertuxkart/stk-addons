@@ -191,13 +191,8 @@ class Report
         }
         
         require_once(ROOT.'include/graphs.php');
-        try {
-            $graph_file = graph_date_line($chartTitle, $xvalues, $yvalues, $labels, $graphId);
-            $query_result .= '<img src="'.$graph_file.'" />';
-        }
-        catch (Exception $e) {
-            $query_result .= $e->getMessage().'<br />';
-        }
+	$data_file = graph_data_to_json(array($xvalues, $yvalues), $labels, 'time', $graphId);
+	$query_result .= '<div class="time_chart" id="'.$graphId.'">'.$chartTitle."\n".$data_file.'</div>';
 
         $this->report_structure[$section]['content'] .= $query_result;
     }
