@@ -170,6 +170,10 @@ function generateAssetXML()
             $writer->writeAttribute('size',filesize(UP_LOCATION.$file_path));
 	    $writer->writeAttribute('min-include-version',$result['min_include_ver']);
 	    $writer->writeAttribute('max-include-version',$result['max_include_ver']);
+	    $image_list_path = ConfigManager::get_config('image_json_path');
+	    $image_list_path = str_replace('$aid', $result['id'], $image_list_path);
+	    $image_list_path = str_replace('$atype', $result['type'], $image_list_path);
+	    $writer->writeAttribute('image-list', $image_list_path);
 	    // Get add-on rating
 	    $rating = new Ratings($result['id']);
 	    $writer->writeAttribute('rating',sprintf('%.3f',$rating->getAvgRating()));
@@ -186,8 +190,131 @@ function generateAssetXML()
 
     return $return;
 }
-function writeAssetXML()
-{
+function generateAssetXML2() {
+    // Define addon types
+    $addon_types = array('kart','track','arena');
+    $image_list_path_format = ConfigManager::get_config('image_json_path');
+    
+    $writer = new XMLWriter();
+    // Output to memory
+    $writer->openMemory();
+    $writer->startDocument('1.0');
+    // Indent is 4 spaces
+    $writer->setIndent(true);
+    $writer->setIndentString('    ');
+    // Use news DTD
+    $writer->writeDtd('assets',NULL,'../docs/assets2.dtd');
+
+    // Open document tag
+    $writer->startElement('assets');
+    $writer->writeAttribute('version',2);
+    // File creation time
+    $writer->writeAttribute('mtime',time());
+    // Time between updates
+    $writer->writeAttribute('frequency', ConfigManager::get_config('xml_frequency'));
+
+    foreach ($addon_types AS $type) {
+	$writer->startElement($type);
+	
+	// Get list of addons
+	$addon_query = 'SELECT `a`.*, `u`.`user`
+	    FROM `'.DB_PREFIX.'addons` `a`
+            LEFT JOIN `'.DB_PREFIX.'users` `u`
+            ON (`a`.`uploader` = `u`.`id`)
+	    WHERE `a`.`type` = \''.$type.'s\'';
+	$addon_q_handle = sql_query($addon_query);
+	if (!$addon_q_handle) {
+	    throw new AddonException('Failed to load addon records for writing XML!');
+	}
+	$num_addons = mysql_num_rows($addon_q_handle);
+	
+	// Loop through each addon
+	for ($i = 0; $i < $num_addons; $i++) {
+	    $addon_result = mysql_fetch_assoc($addon_q_handle);
+	    $writer->startElement('addon');
+	    $writer->writeAttribute('id', $addon_result['id']);
+	    $writer->writeAttribute('name', $addon_result['name']);
+	    $writer->writeAttribute('designer', $addon_result['designer']);
+	    $writer->writeAttribute('description', $addon_result['description']);
+            $writer->writeAttribute('uploader',$addon_result['user']);
+	    $writer->writeAttribute('min-include-version',$addon_result['min_include_ver']);
+	    $writer->writeAttribute('max-include-version',$addon_result['max_include_ver']);
+	    // Write image list path
+	    $image_list_path = str_replace(array('$aid', '$atype'),
+		    array($addon_result['id'], $addon_result['type']),
+		    $image_list_path_format);
+	    $writer->writeAttribute('image-list', $image_list_path);
+	    // Get add-on rating
+	    $rating = new Ratings($addon_result['id']);
+	    $writer->writeAttribute('rating',sprintf('%.3f',$rating->getAvgRating()));
+	    
+	    // Search for revisions
+	    $rev_query = 'SELECT * FROM `'.DB_PREFIX.$type.'s_revs`
+		WHERE `addon_id` = \''.$addon_result['id'].'\'';
+	    $rev_handle = sql_query($rev_query);
+	    if (!$rev_handle) {
+		$writer->fullEndElement();
+		continue;
+	    }
+	    $num_revs = mysql_num_rows($rev_handle);
+	    
+	    // Loop through revisions
+	    for ($j = 0; $j < $num_revs; $j++) {
+		$revision = mysql_fetch_assoc($rev_handle);
+		// Skip invisible entries
+		if (ConfigManager::get_config('list_invisible') == 0 &&
+			$revision['status'] & F_INVISIBLE) {
+		    continue;
+		}
+		$file_path = File::getPath($revision['fileid']);
+		if ($file_path === false || !file_exists(UP_LOCATION.$file_path)){
+		    continue;
+		}
+		$writer->startElement('revision');
+		
+		$writer->writeAttribute('file',DOWN_LOCATION.$file_path);
+		$writer->writeAttribute('date',strtotime($revision['creation_date']));
+		$writer->writeAttribute('format',$revision['format']);
+		$writer->writeAttribute('revision',$revision['revision']);
+		$writer->writeAttribute('status',$revision['status']);
+		$writer->writeAttribute('size',filesize(UP_LOCATION.$file_path));
+		
+		// Add image and icon to record
+		$image_path = File::getPath($revision['image']);
+		if ($image_path !== false) {
+		    if (file_exists(UP_LOCATION.$image_path)) {
+			$writer->writeAttribute('image',DOWN_LOCATION.$image_path);
+		    }
+		}
+		if ($type == "kart") {
+		    $icon_path = File::getPath($revision['icon']);
+		    if ($icon_path !== false) {
+			if (file_exists(UP_LOCATION.$icon_path)) {
+			    $writer->writeAttribute('icon',DOWN_LOCATION.$icon_path);
+			}
+		    }
+		}
+		
+		
+		$writer->fullEndElement();
+	    }
+	    
+	    $writer->fullEndElement();
+	}
+	$writer->fullEndElement();
+    }
+
+    // End document tag
+    $writer->fullEndElement();
+    $writer->endDocument();
+
+    // Return XML file
+    $return = $writer->flush();
+
+    return $return;
+}
+function writeAssetXML() {
+    writeFile(generateAssetXML2(), ASSET_XML2_LOCAL);
     return writeFile(generateAssetXML(), ASSET_XML_LOCAL);
 }
 
