@@ -114,6 +114,10 @@ try {
 	    if (!isset($_POST['web_display'])) $_POST['web_display'] = 0;
 	    elseif ($_POST['web_display'] == 'on') $_POST['web_display'] = 1;
 	    else $_POST['web_display'] = 1;
+	    
+	    if (!isset($_POST['important'])) $_POST['important'] = 0;
+	    elseif ($_POST['important'] == 'on') $_POST['important'] = 1;
+	    else $_POST['important'] = 0;
 
 	    $new_message = mysql_real_escape_string($_POST['message']);
 	    $condition = mysql_real_escape_string($_POST['condition']);
@@ -128,10 +132,11 @@ try {
 	    }
 	    
 	    $web_display = (int)$_POST['web_display'];
+	    $important = (int)$_POST['important'];
 	    $reqSql = 'INSERT INTO `'.DB_PREFIX."news`
-		(`author_id`,`content`,`condition`,`web_display`,`active`)
+		(`author_id`,`content`,`condition`,`important`,`web_display`,`active`)
 		VALUES
-		({$_SESSION['userid']},'$new_message','$condition',$web_display,1)";
+		({$_SESSION['userid']},'$new_message','$condition',$important,$web_display,1)";
 	    $handle = sql_query($reqSql);
 	    if ($handle) {
 		echo htmlspecialchars(_('Created message.')).'<br />';

@@ -207,6 +207,7 @@ function news_message_panel()
     echo '<td>'.htmlspecialchars(_('Message:')).'</td><td><input type="text" name="message" id="news_message" size="60" maxlength="140" /></td></tr><tr>';
     echo '<td>'.htmlspecialchars(_('Condition:')).'</td><td><input type="text" name="condition" id="news_condition" size="60" maxlength="255" /></td></tr><tr>';
     echo '<td>'.htmlspecialchars(_('Display on Website:')).'</td><td><input type="checkbox" name="web_display" id="web_display" checked /></td></tr>';
+    echo '<td>'.htmlspecialchars(_('Important (creates notification):')).'</td><td><input type="checkbox" name="important" id="important" /></td></tr>';
     echo '<td></td><td><input type="submit" value="'.htmlspecialchars(_('Create Message')).'" /></td></tr></table>';
     echo '</form>';
     echo 'Todo:<ol><li>Allow selecting from a list of conditions rather than typing. Too typo-prone.</li><li>Type semicolon-delimited expressions, e.g. <tt>stkversion > 0.7.0;addonid not installed;</tt>.</li><li>Allow editing in future, in case of goofs or changes.</li></ol>';
@@ -230,6 +231,7 @@ function news_message_panel()
             <th>'.htmlspecialchars(_('Author:')).'</th>
             <th>'.htmlspecialchars(_('Condition:')).'</th>
             <th>'.htmlspecialchars(_('Web:')).'</th>
+	    <th>'.htmlspecialchars(_('Important:')).'</th>
             <th>'.htmlspecialchars(_('Actions:')).'</th></tr>';
         for ($result = sql_next($handle); $result; $result = sql_next($handle))
         {
@@ -239,6 +241,7 @@ function news_message_panel()
             echo '<td>'.$result['user'].'</td>';
             echo '<td>'.$result['condition'].'</td>';
             echo '<td>'.$result['web_display'].'</td>';
+	    echo '<td>'.$result['important'].'</td>';
             echo '<td><a href="#" onClick="loadFrame(\'news\', \'manage-panel.php?action=del_news\', '.$result['id'].')">Delete</a></td>';
             echo '</tr>';
         }

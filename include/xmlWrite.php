@@ -64,6 +64,9 @@ function generateNewsXML()
 	$writer->writeAttribute('content',$result['content']);
         if (strlen($result['condition']) > 0)
             $writer->writeAttribute('condition',$result['condition']);
+	if ($result['important']) {
+	    $writer->writeAttribute('important', 'true');
+	}
 	$writer->endElement();
     }
 
@@ -303,6 +306,34 @@ function generateAssetXML2() {
 	}
 	$writer->fullEndElement();
     }
+    
+    // Write music section
+    $writer->startElement('music');
+    
+    $music_query = 'SELECT * FROM `'.DB_PREFIX.'music`';
+    $music_handle = sql_query($music_query);
+    if ($music_handle) {
+	for ($i = 0; $i < mysql_num_rows($music_handle); $i++) {
+	    $music = mysql_fetch_assoc($music_handle);
+	    
+	    if (!file_exists(UP_LOCATION.'music/'.$music['file'])) {
+		continue;
+	    }
+	    $writer->startElement('addon');
+	    $writer->writeAttribute('id', $music['id']);
+	    $writer->writeAttribute('title', $music['title']);
+	    $writer->writeAttribute('artist', $music['artist']);
+	    $writer->writeAttribute('license', $music['license']);
+	    $writer->writeAttribute('gain', $music['gain']);
+	    $writer->writeAttribute('length', $music['length']);
+	    $writer->writeAttribute('file', DOWN_LOCATION.'music/'.$music['file']);
+	    $writer->writeAttribute('size', filesize(UP_LOCATION.'music/'.$music['file']));
+	    $writer->writeAttribute('xml-filename', $music['xml_filename']);
+	    $writer->endElement();
+	}
+    }
+    
+    $writer->fullEndElement();
 
     // End document tag
     $writer->fullEndElement();
