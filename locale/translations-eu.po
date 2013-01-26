@@ -1,45 +1,43 @@
-# Gaelic; Scottish translation for stk
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Basque translation for stk
+# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
 # This file is distributed under the same license as the stk package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-# GunChleoc <fios@foramnagaidhlig.net>, 2013.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: stk\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-12 06:38-0700\n"
-"PO-Revision-Date: 2013-01-26 15:01+0000\n"
-"Last-Translator: GunChleoc <Unknown>\n"
-"Language-Team: Fòram na Gàidhlig http://www.foramnagaidhlig.net\n"
+"PO-Revision-Date: 2013-01-24 20:05+0000\n"
+"Last-Translator: Asier Iturralde Sarasola <Unknown>\n"
+"Language-Team: Basque <eu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n==1 || n==11) ? 0 : (n==2 || n==12) ? 1 : "
-"(n > 2 && n < 20) ? 2 : 3;\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Launchpad-Export-Date: 2013-01-26 19:48+0000\n"
 "X-Generator: Launchpad (build 16451)\n"
-"Language: gd\n"
 
 #: ../about.php:35 ../include/Template.class.php:111 ../include/menu.php:79
 msgid "About"
-msgstr "Mu dheidhinn"
+msgstr "Honi buruz"
 
 #: ../about.php:35 ../login.php:112 ../manage.php:25 ../password-reset.php:27
 #: ../register.php:24
 msgid "STK Add-ons"
-msgstr "STK Add-ons"
+msgstr "STK gehigarriak"
 
 #: ../about.php:38
 msgid "About STK Add-Ons"
-msgstr "Mu dheidhinn STK Add-Ons"
+msgstr "STK gehigarriei buruz"
 
 #: ../about.php:42
 msgid ""
 "SuperTuxKart is a Free 3D kart racing game, with many tracks, characters and "
 "items for you to try."
 msgstr ""
-"'S e geama rèisidh an-asgaidh a th' ann an SuperTuxKart le iomadh shlighe, "
-"caractar is nithean as urrainn dhut feuchainn."
+"SuperTuxKart 3Dko kart lasterketa joko libre bat da. Hainbat zirkuitu, "
+"pertsonaia eta elementu ditu. Proba ezazu!"
 
 #: ../about.php:43
 msgid ""
@@ -47,9 +45,9 @@ msgid ""
 "messages from the STKAddons website. Since 0.7.2, the game has included a "
 "built-in add-on manager."
 msgstr ""
-"On tionndadh 0.7.1 a-mach, tha an comas aig SuperTuxKart gus "
-"teachdaireachdan cudromach fhaighinn on làrach-lìn STKAddons. On tionndadh "
-"0.7.2 a-mach, tha stiùiriche nan tuilleadan am broinn a' gheama fhèin."
+"SuperTuxKart-ek 0.7.1 bertsiotik aurrera STK gehigarrien webgunetik mezu "
+"garrantzitsuak jaso ditzake. 0.7.2 bertsiotik aurrera gehigarrien "
+"kudeatzailea jokoan txertatuta dago."
 
 #: ../about.php:44
 #, php-format
@@ -57,25 +55,22 @@ msgid ""
 "SuperTuxKart now has over %d karts, %d tracks, and %d arenas available in-"
 "game thanks to the add-on service."
 msgstr ""
-"Tha barrachd air %d cartaichean, %d slighean is %d cearcaill ri fhaighinn sa "
-"gheama SuperTuxKart a-nis taing dha sheirbheis nan tuilleadan."
+"SuperTuxKart-ek une honetan %d kart, %d zirkuitu eta %d borroka-zelai ditu "
+"eskuragarri gehigarrien zerbitzuari esker."
 
 #: ../about.php:45
 msgid ""
 "Of course, the artists who create all of this content must be thanked too. "
 "Without them, the add-on website would not be as great as it is today."
 msgstr ""
-"Gu nàdarra, bu chòir dhuinn taing a thoirt dhan luchd-ealain a chruthaicheas "
-"an t-susbaint seo uile. Às an aonais, cha bhiodh làrach-lìn nan tuilleadan "
-"cho math 's a tha e an-diugh."
 
 #: ../about.php:46 ../about.php:54
 msgid "Donate!"
-msgstr "An toir thu tìodhlac dhuinn?"
+msgstr "Eman dirulaguntza!"
 
 #: ../about.php:46 ../about.php:54
 msgid "Website"
-msgstr "Làrach-lìn"
+msgstr "Webgunea"
 
 #: ../about.php:52
 msgid ""
@@ -84,11 +79,10 @@ msgid ""
 "free speech, not as in free beer). They accept any project released under a "
 "free license (GPL, BSD, CC-BY-SA, Art Libre...)."
 msgstr ""
-"'S e buidheann neo-phrothaid a th' anns an TuxFamily. Solairidh e "
-"seirbheisean an-asgaidh airson phròiseactan is shusbaintean a dhèiligeas ri "
-"feallsanachd a' bhathar-bhuig shaoir (saor mar ann an saor-labhairt seach "
-"leann saor 's an-asgaidh). Gabhaidh iad ri pròiseact sam bith a thèid "
-"fhoillseachadh fo cheadachas saor (GPL, BSD, CC-BY-SA, Art Libre...)."
+"TuxFamily irabazi asmorik gabeko erakunde bat da. Doako zerbitzuak "
+"eskaintzen ditu software librearen filosofiarekin bat datozen proiektu eta "
+"edukientzat. Lizentzi libre bat erabiliz (GPL, BSD, CC-BY-SA, Art Libre...) "
+"argitaratutako edozein proiektu onartzen dute."
 
 #: ../about.php:53
 msgid ""
@@ -97,114 +91,102 @@ msgid ""
 "million downloads are made by SuperTuxKart players. We thank them very much "
 "for their generosity to us and to other open source projects."
 msgstr ""
-"Tha TuxFamily a' solar nam frithealaichean air a bheil STKAddons a' ruith an-"
-"asgaidh. Air an sàilleibh, 's urrainn dhuinn seirbheis nan tuilleadain "
-"airson SuperTuxKart a thoirt dhut. Gach mìos, nì cluicheadairean "
-"SuperTuxKart barrachd air millean luchdaidhean a-nuas. Tha sinn glè "
-"thaingeil airson na fiùghantachd a bheir iad duinn fhèin cho math ri "
-"pròiseactan open source eile."
 
 #: ../addons-panel.php:44
 msgid ""
 "This page cannot be loaded because an invalid add-on type was provided."
 msgstr ""
-"Cha ghabh an duilleag seo luchdadh oir chaidh seòrsa tuilleadain mì-"
-"dhligheach a sholar."
 
 #: ../addons.php:35
 msgid "Unknown Type"
-msgstr "Seòrsa neo-aithnichte"
+msgstr "Mota ezezaguna"
 
 #: ../addons.php:39 ../include/Template.class.php:109 ../include/menu.php:49
 #: ../include/menu.php:60 ../index.php:47
 msgid "Tracks"
-msgstr "Slighean"
+msgstr "Zirkuituak"
 
 #: ../addons.php:42 ../include/Template.class.php:108 ../include/menu.php:54
 #: ../include/menu.php:59 ../index.php:44
 msgid "Karts"
-msgstr "Cartan"
+msgstr "Kartak"
 
 #: ../addons.php:45 ../include/Template.class.php:110 ../include/menu.php:50
 #: ../include/menu.php:55 ../index.php:50
 msgid "Arenas"
-msgstr "Cearcaill"
+msgstr "Borroka-zelaiak"
 
 #. I18N: Index page title
 #: ../addons.php:48 ../include/top.php:31 ../index.php:39 ../users.php:38
 msgid "SuperTuxKart Add-ons"
-msgstr "SuperTuxKart Add-ons"
+msgstr "SuperTuxKart gehigarriak"
 
 #: ../addons.php:74
 msgid "Invalid addon type."
-msgstr "Seòrsa tuilleadain mì-dhligheach."
+msgstr "Gehigarri mota baliogabea."
 
 #: ../addons.php:94
 msgid "Saved properties."
-msgstr "Buadhan air an sàbhaladh."
+msgstr "Propietateak gordeta."
 
 #: ../addons.php:104
 msgid "Saved status."
-msgstr "Staid air a shàbhaladh."
+msgstr "Egoera gordeta."
 
 #: ../addons.php:111
 msgid "Saved notes."
-msgstr "Nòtaichean air an sàbhaladh."
+msgstr "Oharrak gordeta."
 
 #: ../addons.php:117
 msgid "Deleted addon."
-msgstr "Chaidh sguabadh às dhan tuilleadan."
+msgstr "Gehigarria ezabatuta."
 
 #: ../addons.php:123
 msgid "Deleted add-on revision."
-msgstr "Chaidh ath-sgrùdadh an tuilleadain a sguabadh às."
+msgstr "Gehigarriaren berrikuspena ezabatuta."
 
 #: ../addons.php:129
 msgid "File updated."
-msgstr "Chaidh faidhle ùrachadh."
+msgstr "Fitxategia eguneratuta."
 
 #: ../addons.php:134
 msgid "Set image."
-msgstr "Dealbh air suidheachadh."
+msgstr "Ezarri irudia."
 
 #: ../addons.php:141
 msgid "Set icon."
-msgstr "Ìomhaigheag air suidheachadh."
+msgstr "Ezarri ikonoa."
 
 #: ../addons.php:146
 msgid "Deleted file."
-msgstr "Air sguabadh às dha dh'fhaidhle."
+msgstr "Fitxategia ezabatuta."
 
 #: ../addons.php:151
 msgid "Marked game versions in which this add-on is included."
 msgstr ""
-"Chaidh tionndaidhean a' gheama a chomharrachadh aig a bheil an tuilleadan "
-"seo nam broinn."
 
 #: ../disabled.php:40
 msgid "This page is currently disabled."
-msgstr "Tha an duilleag seo à comas an-dràsta."
+msgstr "Orri hau une honetan desgaituta dago."
 
 #: ../disabled.php:41 ../include/AccessControl.class.php:91
 msgid "You will be redirected to the home page."
-msgstr "Thèid d' ath-stiùireadh dhan duilleag dhachaigh."
+msgstr ""
 
 #. I18N: Heading for general error page
 #: ../error.php:48
 msgid "An Error Occurred"
-msgstr "Thachair mearachd"
+msgstr "Errore bat gertatu da"
 
 #. I18N: Error message for general error page
 #: ../error.php:50
 msgid "Something broke! We'll try to fix it as soon as we can!"
-msgstr ""
-"Tha rudeigin briste! Nì sinn ar dìcheall gus a chàradh cho luath 's a "
-"ghabhas!"
+msgstr "Zerbait hondatu da! Ahal bezain laster konpontzen saiatuko gara!"
 
 #. I18N: Heading for HTTP 403 Forbidden error page
 #: ../error.php:54
 msgid "403 - Forbidden"
-msgstr "403 - Toirmisgte"
+msgstr "403 - Debekatua"
 
 #. I18N: Error message for HTTP 403 Forbidden error page
 #: ../error.php:56
@@ -212,313 +194,284 @@ msgid ""
 "You're not supposed to be here. Click one of the links in the menu above to "
 "find some better content."
 msgstr ""
-"Cha bu chòir dhut a bhith an-seo. Dèan briogadh air aon dhe na ceanglaichean "
-"sa chlàr-taice gu h-àrd gus susbaint as fhearr a lorg."
 
 #. I18N: Heading for HTTP 404 Not Found error page
 #: ../error.php:60
 msgid "404 - Not Found"
-msgstr "404 - Gun lorg"
+msgstr "404 - Ez da aurkitu"
 
 #. I18N: Error message for HTTP 404 Not Found error page
 #: ../error.php:62
 msgid ""
 "We can't find what you are looking for. The link you followed may be broken."
 msgstr ""
-"Chan urrainn dhuinn lorg na tha thu a' sireadh. 'S dòcha gu bheil an ceangal "
-"a lean thu briste."
+"Ezin dugu aurkitu bila zabiltzana. Jarraitu duzun esteka hondatuta egon "
+"daiteke."
 
 #: ../include/AccessControl.class.php:90
 msgid "You do not have permission to access this page."
-msgstr "Chan eil cead agad gus an duilleag seo inntrigeadh."
+msgstr ""
 
 #: ../include/Addon.class.php:57
 msgid "The requested add-on does not exist."
-msgstr "Chan eil an tuilleadan a dh'iarr thu ann."
+msgstr "Eskatutako gehigarria ez da existitzen."
 
 #: ../include/Addon.class.php:119 ../include/Addon.class.php:198
 #, php-format
 msgid "Texture not found: %s"
-msgstr "Cha deach an inneach a lorg: %s"
+msgstr "Ez da testura aurkitu: %s"
 
 #: ../include/Addon.class.php:133
 msgid ""
 "An add-on with this ID already exists. Please try to upload your add-on "
 "again later."
 msgstr ""
-"Tha tuilleadan leis an ID seo ann mu thràth. Feuch an luchdaich thu an "
-"tuilleadan agad suas a-rithist an ceann greis."
 
 #: ../include/Addon.class.php:139
 msgid "The add-on you are trying to create already exists."
-msgstr ""
-"Tha an tuilleadan tha tha thu a' feuchainn ri cruthachadh ann mu thràth."
+msgstr "Sortu nahi duzun gehigarria dagoeneko existitzen da."
 
 #: ../include/Addon.class.php:141
 msgid "Creating a new add-on..."
-msgstr "A' cruthachadh tuilleadan ùr..."
+msgstr "Gehigarri berri bat sortzen..."
 
 #: ../include/Addon.class.php:157
 msgid "Your add-on could not be uploaded."
-msgstr "Cha do ghabh an tuilleadan agad luchdadh suas."
+msgstr "Ezin izan da zure gehigarria kargatu."
 
 #: ../include/Addon.class.php:207
 msgid "The file you are trying to create already exists."
-msgstr "Tha am faidhle a tha thu a' feuchainn ri cruthachadh ann mu thràth."
+msgstr "Sortu nahi duzun fitxategia dagoeneko existitzen da."
 
 #: ../include/Addon.class.php:211 ../include/Addon.class.php:288
 #: ../include/Addon.class.php:339 ../include/Addon.class.php:347
 #: ../include/Upload.class.php:247 ../users.php:58 ../users.php:75
 msgid "You do not have the necessary permissions to perform this action."
 msgstr ""
-"Chan eil na ceadan agad a tha a dhìth gus an gnìomh seo a choileanadh."
 
 #: ../include/Addon.class.php:285
 msgid "You must be logged in to perform this action."
-msgstr ""
-"Feumaidh tu logadh a-steach mus urrainn dhut an gnìomh seo a choileanadh."
+msgstr "Ekintza hau burutzeko saioa hasita egon behar duzu."
 
 #: ../include/Addon.class.php:299
 msgid "Failed to find files associated with this addon."
 msgstr ""
-"Cha deach faidhle sam bith a lorg a tha dàimheach ris an tuilleadan seo."
+"Gehigarri honekin erlazionaturiko fitxategiak aurkitzeak huts egin du."
 
 #: ../include/Addon.class.php:306
 msgid "Failed to delete file:"
-msgstr "Dh'fhàillig le sguabadh às dhan fhaihle:"
+msgstr "Fitxategia ezabatzeak huts egin du:"
 
 #: ../include/Addon.class.php:314
 msgid "Failed to remove file records for this addon."
 msgstr ""
-"Dh'fhàillig le toirt air falbh nan reacordan faidhle airson an tuilleadain "
-"seo."
 
 #: ../include/Addon.class.php:319
 msgid "Failed to remove ratings for this add-on."
-msgstr ""
-"Dh'fhàillig le toirt air falbh nan luachaidhean airson an tuilleadain seo."
+msgstr "Gehigarri honen balorazioak ezabatzeak huts egin du."
 
 #: ../include/Addon.class.php:326
 msgid "Failed to remove add-on revisions."
-msgstr ""
-"Dh'fhàillig le toirt air falbh nan ath-sgrùdaidhean aig an tuilleadan seo."
+msgstr "Gehigarriaren berrikuspena ezabatzeak huts egin du."
 
 #: ../include/Addon.class.php:330
 msgid "Failed to remove addon."
-msgstr "Dh'fhàillig le toirt air falbh aig an tuilleadan."
+msgstr "Gehigarria ezabatzeak huts egin du."
 
 #: ../include/Addon.class.php:342
 msgid "Failed to delete file."
-msgstr "Dh'fhàillig le sguabadh às dhan fhaidhle."
+msgstr "Fitxategia ezabatzeak huts egin du."
 
 #: ../include/Addon.class.php:350
 msgid "The revision you are trying to delete does not exist."
-msgstr ""
-"Chan eil an t-ath-sgrùdadh ann a tha thu a' fheuchainn ri sguabadh às."
+msgstr "Ezabatu nahi duzun berrikuspena ez da existitzen."
 
 #: ../include/Addon.class.php:352
 msgid "You cannot delete the last revision of an add-on."
-msgstr ""
-"Chan urrainn dhut an t-ath-sgrùdadh mu dheireadh aig tuilleadan a sguabadh "
-"às."
+msgstr "Ezin duzu gehigarri baten azken  berrikuspena ezabatu."
 
 #: ../include/Addon.class.php:354
 msgid ""
 "You cannot delete the latest revision of an add-on. Please mark a different "
 "revision to be the latest revision first."
 msgstr ""
-"Chan urrainn dhut an t-ath-sgrùdadh mu dheireadh aig tuilleadan a sguabadh "
-"às. Feuch an cuir thu comharra ri ath-sgrùdadh eile gur e an tionndadh mu "
-"dheireadh a th' ann."
+"Ezin duzu gehigarri baten azken berrikuspena ezabatu. Mesedez, lehenik "
+"markatu beste berrikuspen bat azken berrikuspen bezala."
 
 #: ../include/Addon.class.php:358
 msgid "The add-on file could not be queued for deletion."
 msgstr ""
-"Cha do ghabh faidhle an tuilleadain a chur sa chiutha airson sguabadh às."
 
 #: ../include/Addon.class.php:366
 msgid "The add-on revision could not be deleted."
-msgstr "Cha do ghabh ath-sgrùdadh an tuilleadain a sguabadh às."
+msgstr "Ezin izan da gehigarriaren berrikuspena ezabatu."
 
 #: ../include/Addon.class.php:437 ../include/AddonViewer.class.php:357
 #: ../include/AddonViewer.class.php:539 ../include/AddonViewer.class.php:549
 #: ../include/AddonViewer.class.php:561 ../include/AddonViewer.class.php:564
 msgid "Unknown"
-msgstr "Neo-aithnichte"
+msgstr "Ezezaguna"
 
 #: ../include/Addon.class.php:620 ../include/Addon.class.php:641
 #: ../include/Addon.class.php:663 ../include/Addon.class.php:676
 #: ../include/Addon.class.php:711
 msgid "You do not have the neccessary permissions to perform this action."
-msgstr ""
-"Chan eil na ceadan agad a tha a dhìth gus an gnìomh seo a choileanadh."
+msgstr "Ez daukazu baimenik ekintza hau gauzatzeko."
 
 #: ../include/Addon.class.php:628
 msgid "Failed to update the description record for this add-on."
 msgstr ""
-"Dh'fhàillig le luchdadh suas aig reacord tuairisgeil airson an tuilleadain "
-"seo."
 
 #: ../include/Addon.class.php:649
 msgid "Failed to update the designer record for this add-on."
 msgstr ""
-"Dh'fhàillig le luchdadh suas aig reacord dealbhadair airson an tuilleadain "
-"seo."
 
 #: ../include/Addon.class.php:671
 msgid "Failed to update the image record for this add-on."
 msgstr ""
-"Dh'fhàillig le luchdadh suas aig reacord deilbh airson an tuilleadain seo."
 
 #: ../include/Addon.class.php:696
 msgid "Failed to update the license record for this add-on."
 msgstr ""
-"Dh'fhàillig le luchdadh suas aig reacord ceadachais airson an tuilleadain "
-"seo."
 
 #: ../include/Addon.class.php:704
 msgid "Failed to update the name record for this add-on."
 msgstr ""
-"Dh'fhàillig le luchdadh suas aig reacord ainm airson an tuilleadain seo."
 
 #: ../include/AddonViewer.class.php:100 ../include/AddonViewer.class.php:214
 msgid "Upload Image"
-msgstr "Luchdaich dealbh suas"
+msgstr "Kargatu irudia"
 
 #: ../include/AddonViewer.class.php:108 ../manage-panel.php:258
 msgid "Type:"
-msgstr "Seòrsa:"
+msgstr "Mota:"
 
 #: ../include/AddonViewer.class.php:109
 msgid "Arena"
-msgstr "Cearcall"
+msgstr "Borroka-zelaia"
 
 #: ../include/AddonViewer.class.php:112 ../include/AddonViewer.class.php:358
 msgid "Designer:"
-msgstr "Dealbhaiche:"
+msgstr "Diseinatzailea:"
 
 #: ../include/AddonViewer.class.php:116
 msgid "Upload date:"
-msgstr "Ceann-latha luchdaidh suas:"
+msgstr "Kargatze-data:"
 
 #: ../include/AddonViewer.class.php:120
 msgid "Submitted by:"
-msgstr "Air a chur a-nall le:"
+msgstr "Honek bidalia:"
 
 #: ../include/AddonViewer.class.php:124
 msgid "Revision:"
-msgstr "Ath-sgrùdadh:"
+msgstr "Berrikuspena:"
 
 #: ../include/AddonViewer.class.php:128
 msgid "Compatible with:"
-msgstr "Co-chòrdail ri:"
+msgstr "Hauekin bateragarria:"
 
 #: ../include/AddonViewer.class.php:132
 msgid "License"
-msgstr "Ceadachas"
+msgstr "Lizentzia"
 
 #: ../include/AddonViewer.class.php:136
 msgid "Permalink"
-msgstr "Buan-cheangal"
+msgstr "Esteka iraunkorra"
 
 #: ../include/AddonViewer.class.php:143
 msgid ""
 "Warning: This addon may not display correctly on some systems. It uses "
 "textures that may not be compatible with all video cards."
 msgstr ""
-"Rabhadh: 's mathaid nach tèid an tuilleadan seo a thaisbeanadh gu ceart air "
-"cuid a shiostaman. Cleachdaidh e innich nach eil co-chòrdail ris a h-uile "
-"cairt ghrafaigeachd, 's dòcha."
+"Oharra: Gehigarri hau ez da behar bezala ikusiko sistema batzuetan. Bideo-"
+"txartel batzuekin bateraezinak diren testurak erabiltzen ditu."
 
 #: ../include/AddonViewer.class.php:147
 msgid "Your Rating:"
-msgstr "An rang agad:"
+msgstr "Zure balorazioa:"
 
 #: ../include/AddonViewer.class.php:154
 #, php-format
 msgid "Download %s"
-msgstr "Luchdaich a-nuas %s"
+msgstr "Deskargatu %s"
 
 #: ../include/AddonViewer.class.php:161
 msgid "Download this add-on in game!"
-msgstr "Luchdaich an tuilleadan seo a-nuas sa gheama fhèin!"
+msgstr "Deskargatu gehigarri hau jokotik!"
 
 #: ../include/AddonViewer.class.php:169
 msgid "Revisions"
-msgstr "Ath-sgrùdaidhean"
+msgstr "Berrikuspenak"
 
 #: ../include/AddonViewer.class.php:173
 msgid "Upload Revision"
-msgstr "Luchdaich ath-sgrùdadh suas"
+msgstr "Kargatu berrikuspena"
 
 #: ../include/AddonViewer.class.php:200
 #, php-format
 msgid "Download revision %u"
-msgstr "Luchdaich an t-ath-sgrùdadh %u a-nuas"
+msgstr "Deskargatu %u berrikuspena"
 
 #: ../include/AddonViewer.class.php:210
 msgid "Images"
-msgstr "Dealbhan"
+msgstr "Irudiak"
 
 #: ../include/AddonViewer.class.php:217
 msgid "No images have been uploaded for this addon yet."
-msgstr ""
-"Cha deach dealbh sam bith a luchdadh suas airson an tuilleadain seo fhathast."
+msgstr "Ez da irudirik kargatu gehigarri honentzat oraindik."
 
 #: ../include/AddonViewer.class.php:238 ../include/AddonViewer.class.php:303
 msgid "Unapprove"
-msgstr "Cuir easaonta ris"
+msgstr ""
 
 #: ../include/AddonViewer.class.php:240 ../include/AddonViewer.class.php:305
 msgid "Approve"
-msgstr "Cuir aonta ris"
+msgstr "Onartu"
 
 #: ../include/AddonViewer.class.php:246
 msgid "Set Icon"
-msgstr "Suidhich ìomhaigheag"
+msgstr "Ezarri ikonoa"
 
 #: ../include/AddonViewer.class.php:250
 msgid "Set Image"
-msgstr "Suidhich dealbh"
+msgstr "Ezarri irudia"
 
 #: ../include/AddonViewer.class.php:252 ../include/AddonViewer.class.php:308
 msgid "Delete File"
-msgstr "Sguab às am faidhle"
+msgstr "Ezabatu fitxategia"
 
 #: ../include/AddonViewer.class.php:272
 msgid "Source Files"
-msgstr "Faidhlichean bun-tùis"
+msgstr "Iturburu-fitxategiak"
 
 #: ../include/AddonViewer.class.php:276
 msgid "Upload Source File"
-msgstr "Luchdaich suas faidhle bun-tùis"
+msgstr "Kargatu iturburu-fitxategia"
 
 #: ../include/AddonViewer.class.php:279
 msgid "No source files have been uploaded for this addon yet."
-msgstr ""
-"Cha deach faidhle bun-tùis a luchdadh suas airson an tuilleadain seo "
-"fhathast."
+msgstr "Ez da iturburu-fitxategirik kargatu gehigarri honentzat oraindik."
 
 #: ../include/AddonViewer.class.php:295
 #, php-format
 msgid "Source File %u"
-msgstr "Faidhle bun-tùis %u"
+msgstr "Iturburu-fitxategia %u"
 
 #: ../include/AddonViewer.class.php:297
 msgid "Not Approved"
-msgstr "Gun aonta"
+msgstr ""
 
 #: ../include/AddonViewer.class.php:298
 msgid "Download"
-msgstr "Luchdaich a-nuas"
+msgstr "Deskargatu"
 
 #: ../include/AddonViewer.class.php:333 ../include/AddonViewer.class.php:401
 msgid "Featured"
-msgstr "Brosnaichte"
+msgstr "Nabarmenduak"
 
 #: ../include/AddonViewer.class.php:335 ../include/AddonViewer.class.php:395
 msgid "Alpha"
-msgstr "Alpha"
+msgstr "Alfa"
 
 #: ../include/AddonViewer.class.php:337 ../include/AddonViewer.class.php:396
 msgid "Beta"
@@ -526,256 +479,243 @@ msgstr "Beta"
 
 #: ../include/AddonViewer.class.php:339 ../include/AddonViewer.class.php:397
 msgid "Release-Candidate"
-msgstr "Release-Candidate"
+msgstr ""
 
 #: ../include/AddonViewer.class.php:341 ../include/AddonViewer.class.php:400
 msgid "DFSG Compliant"
-msgstr "A' gèilleadh ri DFSG"
+msgstr ""
 
 #: ../include/AddonViewer.class.php:351
 msgid "You do not have the necessary privileges to perform this action."
 msgstr ""
-"Chan eil na pribhleidean agad a tha a dhìth gus an gnìomh seo a dhèanamh."
 
 #: ../include/AddonViewer.class.php:353
 msgid "Configuration"
-msgstr "Rèiteachadh"
+msgstr "Konfigurazioa"
 
 #: ../include/AddonViewer.class.php:363
 msgid "Description:"
-msgstr "Tuairisgeul:"
+msgstr "Deskribapena:"
 
 #: ../include/AddonViewer.class.php:363
 #, php-format
 msgid "Max %u characters"
-msgstr "%u caractaran air a char as motha"
+msgstr "Gehienez %u karaktere"
 
 #: ../include/AddonViewer.class.php:369
 msgid "Save Properties"
-msgstr "Sàbhail na buadhan"
+msgstr "Gorde propietateak"
 
 #: ../include/AddonViewer.class.php:375
 msgid "Delete Addon"
-msgstr "Sguab às an tuilleadan"
+msgstr "Ezabatu gehigarria"
 
 #: ../include/AddonViewer.class.php:380
 msgid "Included in Game Versions:"
-msgstr "Am broinn tionndaidhean a' gheama:"
+msgstr ""
 
 #: ../include/AddonViewer.class.php:382
 msgid "Start:"
-msgstr "Toiseach:"
+msgstr "Hasiera:"
 
 #: ../include/AddonViewer.class.php:383
 msgid "End:"
-msgstr "Crìoch:"
+msgstr "Amaiera:"
 
 #: ../include/AddonViewer.class.php:384
 msgid "Save"
-msgstr "Sàbhail"
+msgstr "Gorde"
 
 #: ../include/AddonViewer.class.php:389
 msgid "Status Flags:"
-msgstr "Brataich staide:"
+msgstr ""
 
 #: ../include/AddonViewer.class.php:393
 msgid "Approved"
-msgstr "Air aontachadh ris"
+msgstr "Onartua"
 
 #: ../include/AddonViewer.class.php:394
 msgid "Invisible"
-msgstr "Neo-fhaicsinneach"
+msgstr "Ikusezina"
 
 #: ../include/AddonViewer.class.php:398
 msgid "Latest"
-msgstr "As ùire"
+msgstr "Azkena"
 
 #: ../include/AddonViewer.class.php:402
 msgid "Invalid Textures"
-msgstr "Innich mì-dhligheach"
+msgstr "Testura baliogabeak"
 
 #: ../include/AddonViewer.class.php:409 ../include/AddonViewer.class.php:514
 #, php-format
 msgid "Rev %u:"
-msgstr "Rev %u:"
+msgstr "%u berrikuspena:"
 
 #: ../include/AddonViewer.class.php:498
 #, php-format
 msgid "Delete revision %d"
-msgstr "Sguab às an t-ath-sgrùdadh %d"
+msgstr "Ezabatu %d berrikuspena"
 
 #: ../include/AddonViewer.class.php:505
 msgid "Save Changes"
-msgstr "Sàbhail na h-atharraichean"
+msgstr "Gorde aldaketak"
 
 #: ../include/AddonViewer.class.php:509
 msgid "Notes from Moderator to Submitter:"
-msgstr "Nòtaichean aig a' mhaor dhan neach cuir a-null:"
+msgstr "Moderatzailearen oharrak bidaltzailearentzat:"
 
 #: ../include/AddonViewer.class.php:526
 msgid "Save Notes"
-msgstr "Sàbhail na nòtaichean"
+msgstr "Gorde oharrak"
 
 #: ../include/File.class.php:39
 msgid "Insufficient permissions."
-msgstr "Ceadan a dhìth."
+msgstr ""
 
 #: ../include/File.class.php:78
 msgid "The file to extract does not exist."
-msgstr "Chan eil am faidhle ri dì-dhùmhlachadh ann."
+msgstr ""
 
 #: ../include/File.class.php:90 ../include/File.class.php:119
 msgid "Could not open archive file. It may be corrupted."
-msgstr ""
-"Cha do ghabh am faidhle tasglainn fhosgladh. 'S dòcha gu bheil e coirbte."
+msgstr "Ezin izan da artxibo-fitxategia ireki. Hondatuta egon daiteke."
 
 #: ../include/File.class.php:94 ../include/File.class.php:123
 msgid "Failed to extract archive file."
-msgstr "Dh'fhàillig le dì-dhùmhlachadh an fhaidhle tasglainn."
+msgstr "Artxibo-fitxategia erauzteak huts egin du."
 
 #: ../include/File.class.php:130
 msgid "Unknown archive type."
-msgstr "Seòrsa tasglainn neo-aithnichte."
+msgstr "Fitxategi mota ezezaguna."
 
 #: ../include/File.class.php:281 ../include/Upload.class.php:400
 msgid "Unknown file upload error."
-msgstr "Mearachd neo-aithnichte le luchdadh suas an fhaidhle."
+msgstr "Errore ezezaguna fitxategia kargatzean."
 
 #: ../include/File.class.php:285 ../include/File.class.php:287
 #: ../include/Upload.class.php:404 ../include/Upload.class.php:406
 msgid "Uploaded file is too large."
-msgstr "Tha am faidhle air a luchdadh suas ro mhòr."
+msgstr "Kargatutako fitxategia handiegia da."
 
 #: ../include/File.class.php:289 ../include/Upload.class.php:408
 msgid "Uploaded file is incomplete."
-msgstr "Chan eil am faidhle air a luchdadh suas coileanta."
+msgstr "Fitxategia kargatzea osatu gabe dago."
 
 #: ../include/File.class.php:291 ../include/Upload.class.php:410
 msgid "No file was uploaded."
-msgstr "Cha deach faidhle sam bith a luchdadh suas."
+msgstr "Ez da fitxategirik kargatu."
 
 #: ../include/File.class.php:293 ../include/Upload.class.php:412
 msgid "There is no TEMP directory to store the uploaded file in."
 msgstr ""
-"Tha pasgan TEMP a dhìth gus am faidhle air a luchdadh suas a stòradh ann."
 
 #: ../include/File.class.php:295 ../include/Upload.class.php:414
 msgid "Unable to write uploaded file to disk."
 msgstr ""
-"Chan ghabh am faidhle air a luchdadh suas a sgrìobhadh air an diosga."
 
 #: ../include/File.class.php:310 ../include/Upload.class.php:427
 msgid "Uploaded image files must be either PNG or Jpeg files."
 msgstr ""
-"Feumaidh faidhlichean deilbh air an luchdadh suas a bhith nam faidhlichean "
-"PNG no Jpeg."
+"Kargatutako irudi-fitxategiek PNG edo Jpeg fitxategiak izan behar dute."
 
 #: ../include/File.class.php:314 ../include/Upload.class.php:431
 msgid "The file you uploaded was not the correct type."
-msgstr "Chan eil am faidhle a luchdaich thu suas dhen t-seòrsa a bu chòir."
+msgstr "Kargatu duzun irudia ez zen mota zuzenekoa."
 
 #: ../include/File.class.php:489 ../include/Upload.class.php:63
 msgid "Failed to move uploaded file."
-msgstr "Dh'fhàillig le gluasad an fhaidhle air a luchdadh suas."
+msgstr "Kargatutako fitxategia mugitzeak huts egin du."
 
 #: ../include/File.class.php:507
 msgid "The uploaded image file is invalid."
-msgstr "Tha am faidhle deilbh air a luchdadh suas mì-dhligheach."
+msgstr "Kargatutako irudi-fitxategia baliogabea da."
 
 #: ../include/File.class.php:531 ../include/Upload.class.php:158
 msgid "Failed to associate image file with addon."
-msgstr ""
-"Cha do ghabh am faidhle deilbh a dhèanamh dàimheach ris an tuilleadan."
+msgstr "Irudia gehigarriarekin erlazionatzeak huts egin du."
 
 #: ../include/SMail.class.php:96
 msgid "No moderator mailing-list email is set."
-msgstr "Cha deach post-d aig liosta-puist nam maor a shuidheachadh."
+msgstr ""
 
 #: ../include/Template.class.php:101 ../include/menu.php:38
 #, php-format
 msgid "Welcome, %s"
-msgstr "Fàilte, %s"
+msgstr "Ongi etorri, %s"
 
 #: ../include/Template.class.php:102 ../include/menu.php:42
 msgid "Home"
-msgstr "Dhachaigh"
+msgstr ""
 
 #: ../include/Template.class.php:103 ../include/menu.php:75 ../login.php:112
 #: ../password-reset.php:228
 msgid "Login"
-msgstr "Log a-steach"
+msgstr "Hasi saioa"
 
 #: ../include/Template.class.php:104 ../include/menu.php:66
 msgid "Log out"
-msgstr "Log a-mach"
+msgstr "Amaitu saioa"
 
 #: ../include/Template.class.php:105 ../include/menu.php:67 ../users.php:38
 msgid "Users"
-msgstr "Cleachdaichean"
+msgstr "Erabiltzaileak"
 
 #: ../include/Template.class.php:106 ../include/menu.php:68
 msgid "Upload"
-msgstr "Luchdaich suas"
+msgstr "Kargatu"
 
 #: ../include/Template.class.php:107 ../include/menu.php:70 ../manage.php:25
 msgid "Manage"
-msgstr "Rianaich"
+msgstr "Kudeatu"
 
 #: ../include/Template.class.php:112 ../include/menu.php:122
 msgid "STK Homepage"
-msgstr "Duilleag-dhachaigh STK"
+msgstr "STKren orri nagusia"
 
 #: ../include/Template.class.php:131 ../include/menu.php:85
 msgid "Languages"
-msgstr "Cànanan"
+msgstr "Hizkuntzak"
 
 #: ../include/Upload.class.php:96
 msgid ""
 "A valid License.txt file was not found. Please add a License.txt file to "
 "your archive and re-submit it."
 msgstr ""
-"Cha deach faidhle License.txt dligheach a lorg. Feuch an cuir thu faidhle "
-"License.txt ris an tasglann agad is cuir a-null a-rithist e."
 
 #: ../include/Upload.class.php:193
 msgid "Invalid add-on type."
-msgstr "Seòrsa tuilleadain mì-dhligheach."
+msgstr "Gehigarri mota baliogabea."
 
 #: ../include/Upload.class.php:199
 msgid "Failed to re-pack archive file."
-msgstr "Dh'fhàillig le ath-phasgadh an fhaidhle tasglainn."
+msgstr "Artxibo-fitxategia birpaketatzeak huts egin du."
 
 #: ../include/Upload.class.php:207
 msgid "Failed to associate archive file with addon."
-msgstr ""
-"Cha do ghabh am faidhle tasglainn a dhèanamh dàimheach ris an tuilleadan."
+msgstr "Artxiboa gehigarriarekin erlazionatzeak huts egin du."
 
 #: ../include/Upload.class.php:223
 msgid "Successfully uploaded source archive."
-msgstr "Chaidh tasglann a' bhun-tùis a luchdadh suas gu soirbheachail."
+msgstr ""
 
 #: ../include/Upload.class.php:224 ../include/Upload.class.php:271
 msgid "Continue."
-msgstr "Lean air adhart."
+msgstr "Jarraitu."
 
 #: ../include/Upload.class.php:240
 msgid ""
 "You are trying to add a new revision of an add-on that does not exist."
 msgstr ""
-"Tha thu a' feuchainn ri ath-sgrùdadh ùr a chur ri tuilleadan nach eil ann."
 
 #: ../include/Upload.class.php:256
 msgid ""
 "Your add-on was uploaded successfully. It will be reviewed by our moderators "
 "before becoming publicly available."
 msgstr ""
-"Chaidh an tuilleadan agad a luchdadh suas gu soirbheachail. Nì na maoir "
-"againn lèirmheas air mus tèid fhoillseachadh."
 
 #: ../include/Upload.class.php:257
 msgid "Click here to upload the sources to your add-on now."
 msgstr ""
-"Briog an-seo gus bun-tùsan an tuilleadain agad a luchdadh suas an-dràsta."
 
 #: ../include/Upload.class.php:258
 msgid ""
@@ -783,233 +723,214 @@ msgid ""
 "and also ensure your add-on will not be lost in the future if new "
 "SuperTuxKart versions are not compatible with the current format.)"
 msgstr ""
-"(Ma luchdaicheas tu bun-tùsan an tuilleadain agad suas, bheir seo comas dha "
-"càch gus piseach a thoirt air an obair agad is nì seo cinnteach cuideachd "
-"nach tèid an tuilleadan agad air chall san àm ri teachd mura bhios "
-"tionndaidhean ùra dhe SuperTuxKart co-chòrdail ris an fhòrmat làithreach "
-"tuilleadh.)"
 
 #: ../include/Upload.class.php:259
 msgid "Click here to view your add-on."
-msgstr "Briog an-seo gus an tuilleadan agad a shealltainn."
+msgstr "Klikatu hemen zure gehigarria ikusteko."
 
 #: ../include/Upload.class.php:270
 msgid "Successfully uploaded image."
-msgstr "Chaidh an dealbh a luchdadh suas gu soirbheachail."
+msgstr "Irudia behar bezala kargatu da."
 
 #: ../include/Upload.class.php:288
 msgid ""
 "Some invalid files were found in the uploaded add-on. These files have been "
 "removed from the archive:"
 msgstr ""
-"Chaidh faidhle mì-dhligheach no dhà a lorg san tuilleadan air a luchdadh "
-"suas. Chaidh na faidhlichean seo a sguabadh às bhon tasglann:"
 
 #: ../include/Upload.class.php:367
 msgid ""
 "Some images in this add-on do not have dimensions that are a power of two."
 msgstr ""
-"Cha dealbh no dhà san tuilleadan seo aig nach eil dimeinseanan dha chumhachd "
-"a dhà."
 
 #: ../include/Upload.class.php:368
 msgid "This may cause display errors on some video cards."
-msgstr ""
-"'S mathaid gun adhbharaich seo mearachdan taisbeanaidh le cuid a chairtean "
-"grafaigeachd."
+msgstr "Honek arazoak eragin ditzake zenbait bideo-txartelekin."
 
 #: ../include/User.class.php:85
 msgid "Failed to log in."
-msgstr "Dh'fhàillig leis an logadh a-steach."
+msgstr "Saioa hasteak huts egin du."
 
 #: ../include/User.class.php:92
 msgid "Your username or password is incorrect."
-msgstr "Tha an t-ainm-cleachdaiche no facal-faire agad cearr."
+msgstr "Zure erabiltzaile-izena edo pasahitza okerra da."
 
 #: ../include/User.class.php:146
 msgid "You must be logged in to change a password."
-msgstr "Feumaidh tu logadh a-steach gus facal-faire atharrachadh."
+msgstr "Saioa hasi behar duzu pasahitza aldatzeko."
 
 #: ../include/User.class.php:153 ../password-reset.php:224
 msgid "Failed to change your password."
-msgstr "Dh'fhàillig le atharrachadh an fhacail-fhaire agad."
+msgstr "Zure pasahitza aldatzeak huts egin du."
 
 #: ../include/User.class.php:220
 msgid "You must agree to the terms to register."
-msgstr "Feumaidh tu aontachadh ris na teirmichean airson clàradh."
+msgstr "Baldintzak onartu behar dituzu erregistratzeko."
 
 #: ../include/User.class.php:227 ../password-reset.php:104
 msgid "An error occurred trying to validate your username."
 msgstr ""
-"Thachair mearachd a' feuchainn ris an ainm-cleachdaiche agad a dhearbhadh."
 
 #: ../include/User.class.php:228 ../include/User.class.php:238
 #: ../include/User.class.php:253 ../include/User.class.php:262
 #: ../password-reset.php:105 ../password-reset.php:121
 #: ../password-reset.php:156 ../password-reset.php:210
 msgid "Please contact a website administrator."
-msgstr "Cuir fios gu rianaire an làraich-lìn."
+msgstr "Mesedez, jarri harremanetan webgunearen administratzailearekin."
 
 #: ../include/User.class.php:230
 msgid "Your username has already been used."
-msgstr "Chaidh an t-ainm-cleachdaiche agad a chleachdadh roimhe."
+msgstr ""
 
 #: ../include/User.class.php:237
 msgid "An error occurred trying to validate your email address."
 msgstr ""
-"Thachair mearachd le feuchainn ris an seòladh puist-d agad a dhearbhadh."
 
 #: ../include/User.class.php:240
 msgid "Your email address has already been used."
-msgstr "Chaidh an seòladh puist-d agad a chleachdadh roimhe."
+msgstr ""
 
 #: ../include/User.class.php:252
 msgid "An error occurred while creating your account."
-msgstr "Thachair mearachd le cruthachadh a' chunntais agad."
+msgstr "Errore bat gertatu da zure kontua sortzean."
 
 #: ../include/User.class.php:299 ../users.php:90
 msgid "Me"
-msgstr "Mise"
+msgstr "Ni"
 
 #: ../include/Validate.class.php:33
 msgid "You must enter an email address."
-msgstr "Feumaidh tu seòladh puist-d a chur a-steach."
+msgstr "E-posta helbide bat sartu behar duzu."
 
 #: ../include/Validate.class.php:36
 #, php-format
 msgid "\"%s\" is not a valid email address."
-msgstr "Chan eil \"%s\" na seòladh puist-d dligheach."
+msgstr "\"%s\" ez da baliozko e-posta helbidea."
 
 #: ../include/Validate.class.php:48
 msgid "Your username must be at least 4 characters long."
-msgstr ""
-"Feumaidh an t-ainm-cleachdaiche agad a bhith 4 caractaran a dh'fhaid air a "
-"char as giorra."
+msgstr "Zure erabiltzaile-izenak gutxienez 4 karaktere izan behar ditu."
 
 #: ../include/Validate.class.php:51
 msgid "Your username can only contain alphanumeric characters."
 msgstr ""
-"Chan fhaod ach litrichean is àireamhan a bhith san ainm-cleachdaiche agad."
 
 #: ../include/Validate.class.php:59
 msgid "Your password must be at least 6 characters long."
-msgstr ""
-"Feumaidh am facal-faire agad a bhith 6 caractaran a dh'fhaid air a char as "
-"giorra."
+msgstr "Zure pasahitzak gutxienez 6 karaktere izan behar ditu."
 
 #: ../include/Validate.class.php:63
 msgid "Your passwords do not match."
-msgstr "Chan eil an dà fhacal-faire agad a' co-fhreagairt ri chèile."
+msgstr "Zure pasahitzak ez datoz bat."
 
 #: ../include/Validate.class.php:93
 msgid "You must enter a name."
-msgstr "Feumaidh tu ainm a chur a-steach."
+msgstr "Izen bat sartu behar duzu."
 
 #: ../include/allow.php:102
 msgid "root"
-msgstr "root"
+msgstr ""
 
 #: ../include/allow.php:103
 msgid "supAdministrator"
-msgstr "osRianaire"
+msgstr ""
 
 #: ../include/allow.php:104
 msgid "administrator"
-msgstr "rianaire"
+msgstr "administratzailea"
 
 #: ../include/allow.php:105
 msgid "moderator"
-msgstr "maor"
+msgstr "moderatzailea"
 
 #: ../include/allow.php:106
 msgid "basicUser"
-msgstr "cleachdaicheÀbaisteach"
+msgstr ""
 
 #: ../include/coreUser.php:87 ../login.php:45 ../password-reset.php:46
 #: ../register.php:35
 msgid "Username:"
-msgstr "Ainm-cleachdaiche:"
+msgstr "Erabiltzaile-izena:"
 
 #: ../include/coreUser.php:88
 msgid "Registration Date:"
-msgstr "Ceann-latha a' chlàraidh:"
+msgstr "Erregistratze-data:"
 
 #: ../include/coreUser.php:89
 msgid "Real Name:"
-msgstr "Fìor ainm:"
+msgstr "Benetako izena:"
 
 #: ../include/coreUser.php:90 ../include/coreUser.php:114
 msgid "Role:"
-msgstr "Dreuchd:"
+msgstr ""
 
 #: ../include/coreUser.php:93 ../include/coreUser.php:110
 msgid "Homepage:"
-msgstr "Duilleag-dhachaigh:"
+msgstr ""
 
 #: ../include/coreUser.php:131
 msgid "User Activated:"
-msgstr "Cleachdaiche air gnìomhachadh:"
+msgstr ""
 
 #: ../include/coreUser.php:139
 msgid "Save Configuration"
-msgstr "Sàbhail an rèiteachadh"
+msgstr "Gorde konfigurazioa"
 
 #: ../include/coreUser.php:143 ../include/coreUser.php:151
 #: ../password-reset.php:180 ../password-reset.php:252
 msgid "Change Password"
-msgstr "Atharraich am facal-faire"
+msgstr "Aldatu pasahitza"
 
 #: ../include/coreUser.php:145
 msgid "Old Password:"
-msgstr "An seann fhacal-faire:"
+msgstr "Pasahitz zaharra:"
 
 #: ../include/coreUser.php:147 ../password-reset.php:172
 #: ../password-reset.php:244 ../register.php:36 ../register.php:41
 #, php-format
 msgid "Must be at least %d characters long."
-msgstr "Feumaidh e a bhith %d caractaran a dh'fhaid air a char as giorra."
+msgstr "Gutxienez %d karaktere izan behar ditu."
 
 #: ../include/coreUser.php:147 ../password-reset.php:171
 #: ../password-reset.php:243
 msgid "New Password:"
-msgstr "Am facal-faire ùr:"
+msgstr "Pasahitz berria:"
 
 #: ../include/coreUser.php:149
 msgid "New Password (Confirm):"
-msgstr "Am facal-faire ùr (dearbhaich):"
+msgstr "Pasahitz berria (Berretsi):"
 
 #: ../include/coreUser.php:162
 msgid "User's Tracks"
-msgstr "Slighean an cleachdaiche"
+msgstr "Erabiltzailearen zirkuituak"
 
 #: ../include/coreUser.php:163
 msgid "This user has not uploaded any tracks."
-msgstr ""
-"Chan eil an cleachdaiche seo air slighe sam bith a luchdadh suas fhathast."
+msgstr "Erabiltzaile honek ez du zirkuiturik kargatu."
 
 #: ../include/coreUser.php:167
 msgid "User's Karts"
-msgstr "Cartan an cleachdaiche"
+msgstr "Erabiltzailearen kartak"
 
 #: ../include/coreUser.php:168
 msgid "This user has not uploaded any karts."
-msgstr "Chan eil an cleachdaiche seo air cart sam bith a luchdadh suas."
+msgstr "Erabiltzaile honek ez du kartik kargatu."
 
 #: ../include/coreUser.php:172
 msgid "User's Arenas"
-msgstr "Cearcaill an cleachdaiche"
+msgstr "Erabiltzailearen borroka-zelaiak"
 
 #: ../include/coreUser.php:173
 msgid "This user has not uploaded any arenas."
-msgstr "Chan eil an cluicheadair air cearcall sam bhith a luchdadh suas."
+msgstr "Erabiltzaile honek ez du borroka-zelairik kargatu."
 
 #: ../include/coreUser.php:215
 msgid "Your old password is not correct."
-msgstr "Chan eil an seann fhacal-faire agad ceart."
+msgstr "Zure pasahitz zaharra ez da zuzena."
 
 #: ../include/xmlWrite.php:138
 msgid "The following file could not be found:"
-msgstr "Cha deach am faidhle seo a lorg:"
+msgstr "Ezin  izan da hurrengo fitxategia aurkitu:"
 
 #. I18N: Website meta description
 #: ../index.php:35
@@ -1017,106 +938,105 @@ msgid ""
 "This is the official SuperTuxKart add-on repository. It contains extra karts "
 "and tracks for the SuperTuxKart game."
 msgstr ""
-"Seo stòras oifigeil dhe thuilleadain SuperTuxKart. Tha cartaichean is "
-"slighean a bharrachd airson a' gheama SuperTuxKart ann."
+"Hau SuperTuxKart-en gehigarrien biltegi ofiziala da. SuperTuxKart "
+"jokoarentzako kart eta zirkuitu gehigarriak daude hemen."
 
 #: ../index.php:63
 #, php-format
 msgid "The most downloaded kart is %s."
-msgstr "'S e %s an cart a chaidh a luchdadh a-nuas nas trice."
+msgstr "Kartik deskargatuena hau da: %s"
 
 #: ../index.php:64
 #, php-format
 msgid "The most downloaded track is %s."
-msgstr "Is %s an t-slighe a chaidh luchdadh a-nuas nas trice."
+msgstr "Zirkuiturik deskargatuena hau da: %s"
 
 #: ../login.php:49 ../register.php:40
 msgid "Password:"
-msgstr "Facal-faire:"
+msgstr "Pasahitza:"
 
 #: ../login.php:52
 msgid "Log In"
-msgstr "Log a-steach"
+msgstr "Hasi saioa"
 
 #: ../login.php:55
 msgid "Create an account."
-msgstr "Cruthaich cunntas."
+msgstr "Sortu kontu bat."
 
 #: ../login.php:56
 msgid "Forgot password?"
-msgstr "Gun chuimhne air an fhacal-fhaire agad?"
+msgstr "Pasahitza ahaztu duzu?"
 
 #: ../login.php:67
 msgid "Failed to logout."
-msgstr "Dh'fhàillig leis an logadh a-mach."
+msgstr "Saioa amaitzeak huts egin du."
 
 #: ../login.php:70
 msgid "You have been logged out."
-msgstr "Chaidh do logadh a-mach."
+msgstr "Saioa amaitu duzu."
 
 #: ../login.php:71 ../login.php:92 ../login.php:104
 #, php-format
 msgid "Click %shere%s if you do not automatically redirect."
 msgstr ""
-"Briog %san-seo%s mura h-eil thu airson ath-stiùireadh fèin-obrachail."
 
 #: ../login.php:91
 #, php-format
 msgid "Welcome, %s!"
-msgstr "Fàilte, %s!"
+msgstr "Ongi etorri, %s!"
 
 #: ../login.php:103
 msgid "You are already logged in."
-msgstr "Tha thu air logadh a-steach mu thràth."
+msgstr ""
 
 #: ../manage-panel.php:44
 msgid "Deleted message."
-msgstr "Chaidh an teachdaireachd a sguabadh às"
+msgstr "Mezua ezabatuta."
 
 #: ../manage-panel.php:48
 msgid "Failed to delete message."
-msgstr "Dh'fhàillig le sguabadh às an teachdaireachd."
+msgstr "Mezua ezabatzeak huts egin du."
 
 #: ../manage-panel.php:63
 msgid "Invalid page. You may have followed a broken link."
-msgstr "Duilleag mì-dhligheach. 'S dòcha gun do lean thu air ceangal briste."
+msgstr ""
 
 #. I18N: Moderator panel
 #: ../manage-panel.php:67 ../manage.php:38
 msgid "Overview"
-msgstr "Foir-shealladh"
+msgstr ""
 
 #. I18N: Moderator panel
 #: ../manage-panel.php:72 ../manage.php:45
 msgid "General Settings"
-msgstr "Roghainnean coitcheann"
+msgstr "Ezarpen orokorrak"
 
 #. I18N: Moderator panel
 #: ../manage-panel.php:77 ../manage.php:51
 msgid "News Messages"
-msgstr "Teachdaireachdan naidheachd"
+msgstr ""
 
 #: ../manage-panel.php:81 ../manage.php:70
 msgid "Uploaded Files"
-msgstr "Faidhlichean air an luchdadh suas"
+msgstr "Kargatutako fitxategiak"
 
 #: ../manage-panel.php:85 ../manage.php:57
 msgid "Client Versions"
-msgstr "Tionndaidhean a' chliant"
+msgstr ""
 
 #: ../manage-panel.php:89 ../manage.php:63
 msgid "Cache Files"
-msgstr "Faidhlichean tasgadain"
+msgstr ""
 
 #. I18N: Moderator panel
 #: ../manage-panel.php:94 ../manage.php:76
 msgid "Event Logs"
-msgstr "Logaichean nan tachartas"
+msgstr ""
 
 #. I18N: Heading in moderator overview panel
 #: ../manage-panel.php:107
 msgid "Unapproved Add-Ons"
-msgstr "Tuilleadain gun aonta riutha"
+msgstr ""
 
 #. I18N: Notice on unapproved add-on list in moderator overview panel
 #: ../manage-panel.php:109
@@ -1124,190 +1044,183 @@ msgid ""
 "Note that only add-ons where the newest revision is unapproved will appear "
 "here."
 msgstr ""
-"Thoir an aire nach nochd ath-sgrùdaidhean an-seo ach an fheadhainn aig a "
-"bheil ath-sgrùdadh ùr nach deach aontadh ris."
 
 #: ../manage-panel.php:131
 msgid "Revisions:"
-msgstr "Ath-sgrùdaidhean:"
+msgstr "Berrikuspenak:"
 
 #: ../manage-panel.php:136
 msgid "No unapproved add-ons."
-msgstr "Chan eil tuilleadan gun aonta ris ann."
+msgstr ""
 
 #: ../manage-panel.php:139
 msgid "Unapproved Files"
-msgstr "Faidhlichean gun aonta riutha"
+msgstr ""
 
 #: ../manage-panel.php:140 ../manage-panel.php:153
 msgid "Images:"
-msgstr "Dealbhan:"
+msgstr "Irudiak:"
 
 #: ../manage-panel.php:158
 msgid "No unapproved images."
-msgstr "Chan eil dealbh gun aonta ris ann."
+msgstr ""
 
 #: ../manage-panel.php:160
 msgid "Source Archives:"
-msgstr "Tasglannan bun-tùis:"
+msgstr "Iturburu-fitxategiak:"
 
 #: ../manage-panel.php:173
 #, php-format
 msgid "%d File"
 msgid_plural "%d Files"
-msgstr[0] "%d fhaidhle"
-msgstr[1] "%d fhaidhle"
-msgstr[2] "%d faidhlichean"
-msgstr[3] "%d faidhle"
+msgstr[0] "Fitxategi %d"
+msgstr[1] "%d fitxategi"
 
 #: ../manage-panel.php:178
 msgid "No unapproved source archives."
-msgstr "Chan eil tasglann bun-tùis gun aonta ris ann."
+msgstr ""
 
 #: ../manage-panel.php:186
 msgid "XML Download Frequency"
-msgstr "Tricead luchdaidh a-nuas XML"
+msgstr ""
 
 #: ../manage-panel.php:187
 msgid "Permitted Addon Filetypes"
-msgstr "Seòrsaichean faidhle tuilleadain ceadaichte"
+msgstr ""
 
 #: ../manage-panel.php:188
 msgid "Permitted Source Archive Filetypes"
-msgstr "Seòrsaichean faidhle tasglann bun-tùis ceadaichte"
+msgstr ""
 
 #: ../manage-panel.php:189
 msgid "Administrator Email"
-msgstr "Post-d an rianaire"
+msgstr "Administratzailearen e-posta"
 
 #: ../manage-panel.php:190
 msgid "Moderator List Email"
-msgstr "Post-d liosta nam maor"
+msgstr ""
 
 #: ../manage-panel.php:192 ../manage-panel.php:194
 msgid "False"
-msgstr "False"
+msgstr "Gezurra"
 
 #: ../manage-panel.php:192 ../manage-panel.php:194
 msgid "True"
-msgstr "True"
+msgstr "Egia"
 
 #: ../manage-panel.php:195
 msgid "List Invisible Addons in XML"
-msgstr "Seall na tuilleadain falaichte ann an XML"
+msgstr ""
 
 #: ../manage-panel.php:196
 msgid "Blog RSS Feed"
-msgstr "Inbhir RSS bloga"
+msgstr "Blogaren RSS jarioa"
 
 #: ../manage-panel.php:197
 msgid "Maximum Uploaded Image Dimension"
-msgstr "Dimeinseanan as motha aig dealbh air a luchdadh suas"
+msgstr ""
 
 #: ../manage-panel.php:198
 msgid "Apache Rewrites"
-msgstr "Apache Rewrites"
+msgstr ""
 
 #: ../manage-panel.php:199
 msgid "Save Settings"
-msgstr "Sàbhail na roghainnean"
+msgstr "Gorde ezarpenak"
 
 #: ../manage-panel.php:207 ../manage-panel.php:229
 msgid "Message:"
-msgstr "Teachdaireachd:"
+msgstr "Mezua:"
 
 #: ../manage-panel.php:208 ../manage-panel.php:231
 msgid "Condition:"
-msgstr "Cumha:"
+msgstr "Baldintza:"
 
 #: ../manage-panel.php:209
 msgid "Display on Website:"
-msgstr "Taisbean air an làrach-lìn:"
+msgstr "Bistaratu webgunean:"
 
 #: ../manage-panel.php:210
 msgid "Create Message"
-msgstr "Cruthaich teachdaireachd"
+msgstr "Sortu mezua"
 
 #: ../manage-panel.php:223
 msgid "No news messages currently exist."
-msgstr "Chan eil teachdaireachd naidheachd sam bith ann an-dràsta."
+msgstr ""
 
 #: ../manage-panel.php:228
 msgid "Date:"
-msgstr "Ceann-latha:"
+msgstr "Data:"
 
 #: ../manage-panel.php:230
 msgid "Author:"
-msgstr "Ùghdar:"
+msgstr "Egilea:"
 
 #: ../manage-panel.php:232
 msgid "Web:"
-msgstr "Lìn:"
+msgstr "Weba:"
 
 #: ../manage-panel.php:233
 msgid "Actions:"
-msgstr "Gnìomhan:"
+msgstr "Ekintzak:"
 
 #: ../manage-panel.php:253
 msgid "No files have been uploaded."
-msgstr "Cha deach faidhle sam bith a luchdadh suas."
+msgstr ""
 
 #: ../manage-panel.php:257 ../register.php:49
 msgid "Name:"
-msgstr "Ainm:"
+msgstr "Izena:"
 
 #: ../manage-panel.php:259
 msgid "References:"
-msgstr "Iomraidhean:"
+msgstr "Erreferentziak:"
 
 #: ../manage-panel.php:343
 msgid "Clients by User-Agent"
-msgstr "Cliantan a-rèir User-Agent"
+msgstr ""
 
 #: ../manage-panel.php:350
 msgid ""
 "There are currently no SuperTuxKart clients recorded. Your download script "
 "may not be configured properly."
 msgstr ""
-"Chan eil cliant SuperTuxKart clàraichte ann an-dràsta. 'S dòcha nach deach "
-"an sgriobt luchdaidh a-nuas agad a rèiteachadh mar bu chòir."
 
 #: ../manage-panel.php:355
 msgid "Game Version:"
-msgstr "Tionndadh dhen gheama:"
+msgstr "Jokoaren bertsioa:"
 
 #: ../manage-panel.php:355
 msgid "User-Agent String:"
-msgstr "Sreang User-Agent:"
+msgstr ""
 
 #: ../manage-panel.php:375
 msgid "Empty cache"
-msgstr "Tasgadan falamh"
+msgstr "Hustu cache-a"
 
 #: ../manage.php:89
 msgid "One or more fields has been left blank. Settings were not saved."
 msgstr ""
-"Chaidh co-dhiù aon raon fhàgail bàn. Cha deach na roghainnean a shàbhaladh."
 
 #: ../manage.php:94
 msgid "XML Download Frequency value is invalid."
-msgstr "Tha an luach air tricead an luchdaidh a-nuas XML mì-dhligheach."
+msgstr "j"
 
 #: ../manage.php:108
 msgid "Saved settings."
-msgstr "Chaidh na roghainnean a shàbhaladh."
+msgstr "Ezarpenak gordeta."
 
 #: ../manage.php:126
 msgid "Created message."
-msgstr "Chaidh an teachdaireachd a chruthachadh."
+msgstr "Mezua sortuta."
 
 #: ../manage.php:130
 msgid "Failed to create message."
-msgstr "Dh'fhàillig le cruthachadh an teachdaireachd."
+msgstr "Mezua sortzeak huts egin du."
 
 #: ../password-reset.php:27 ../password-reset.php:36
 msgid "Reset Password"
-msgstr "Ath-shuidhich am facal-faire"
+msgstr "Berrezarri pasahitza"
 
 #: ../password-reset.php:44
 msgid ""
@@ -1315,88 +1228,77 @@ msgid ""
 "address. A password reset link will be emailed to you. Your old password "
 "will become inactive until your password is reset."
 msgstr ""
-"Gus am facal-faire agad ath-shuidheachadh, cuir a-steach an t-ainm-"
-"cleachdaiche is an seòladh puist-d agad. Thèid ceangal airson am facal-faire "
-"agad ath-shuidheachadh a chur thugad. Bidh an seann fhacal-faire agad à "
-"comas gus an tèid am facal-faire agad ath-shuidheachadh."
 
 #: ../password-reset.php:50 ../register.php:53
 msgid "Email Address:"
-msgstr "Seòladh puist-d:"
+msgstr "E-posta helbidea:"
 
 #: ../password-reset.php:58
 msgid "Send Reset Link"
-msgstr "Cuir ceangal ath-shuidheachaidh"
+msgstr ""
 
 #: ../password-reset.php:107
 msgid "Username and email address combination not found."
 msgstr ""
-"Chan eil an t-ainm-cleachdaiche is an seòladh puist-d seo co-cheangailte "
-"againn."
 
 #: ../password-reset.php:120 ../password-reset.php:155
 #: ../password-reset.php:209
 msgid "An error occurred while resetting your password."
-msgstr "Thachair mearachd le ath-shuidheachadh an fhacail-fhaire agad."
+msgstr "Errore bat gertatu da zure pasahitza berrezartzean."
 
 #: ../password-reset.php:132
 msgid ""
 "Password reset link sent. Please reset your password using the link emailed "
 "to you."
 msgstr ""
-"Chaidh ceangal gus am facal-faire ath-shuidheachadh a chur thugad. An ath-"
-"shuidhich thu am facal-faire agad leis a' cheangal a chaidh a chur thugad le "
-"post-d?"
 
 #: ../password-reset.php:158
 msgid "Invalid verification code."
-msgstr "Còd-dearbhaidh mì-dhligheach."
+msgstr "Egiaztapen-kode baliogabea."
 
 #: ../password-reset.php:169 ../password-reset.php:241
 msgid "Please enter a new password for your account."
-msgstr "Cuir a-steach facal-faire ùr airson a' chunntais agad."
+msgstr "Mesedez sartu zure kontuarentzako pasahitz berri bat."
 
 #: ../password-reset.php:176 ../password-reset.php:248
 msgid "New Password (confirm):"
-msgstr "Am facal-faire ùr (dearbhaich):"
+msgstr "Pasahitz berria (berretsi):"
 
 #: ../password-reset.php:186
 msgid "Could not reset your password. The link you followed is not valid."
 msgstr ""
-"Cha do ghabh am facal-faire agad ath-shuidheachadh. Chan eil an ceangal 's "
-"tu air leantainn air dligheach."
+"Ezin izan da zure pasahitza berrezarri. Jarraitu duzun esteka ez da "
+"baliozkoa."
 
 #: ../password-reset.php:227
 msgid "Changed password."
-msgstr "Chaidh am facal-faire atharrachadh."
+msgstr "Pasahitza aldatuta."
 
 #: ../register.php:24
 msgid "Register"
-msgstr "Clàraich"
+msgstr "Erregistratu"
 
 #: ../register.php:29
 msgid "Account Registration"
-msgstr "A' clàradh cunntais"
+msgstr ""
 
 #: ../register.php:45
 msgid "Password (confirm):"
-msgstr "Am facal-faire (dearbhaich):"
+msgstr "Pasahitza (berretsi):"
 
 #: ../register.php:57
 msgid "Terms:"
-msgstr "Teirmichean:"
+msgstr "Baldintzak:"
 
 #: ../register.php:59
 msgid "STK Addons Terms and Conditions"
-msgstr "Teirmichean is cumhaichean aig STK Addons"
+msgstr ""
 
 #: ../register.php:60
 msgid ""
 "You must agree to these terms in order to upload content to the STK Addons "
 "site."
 msgstr ""
-"Feumaidh tu aontachadh ris na teirmichean seo mus urrainn dhut susbaint a "
-"luchdadh suas dhan làrach STK Addons."
 
 #: ../register.php:61
 msgid ""
@@ -1405,14 +1307,6 @@ msgid ""
 "purpose. When you upload your content, it will be available publicly on the\n"
 "internet, and will be made available in-game for download."
 msgstr ""
-"Chaidh an t-seirbheis STK Addons a dhealbhadh gus a bhith na ionad-tasgaidh\n"
-"airson susbaint tuilleadain Super Tux Kart a-mhàin. Feumaidh a h-uile "
-"luchdadh\n"
-"suas a bhith air a shon-sa. Nuair a luchdaicheas tu an t-susbaint agad suas, "
-"bidh e\n"
-"ri làimh gu poblach air an eadar-lìn is am broinn a' gheama fhèin airson "
-"luchdadh\n"
-"a-nuas."
 
 #: ../register.php:65
 msgid ""
@@ -1430,49 +1324,28 @@ msgid ""
 "without\n"
 "proper licenses or attribution may be deleted without warning."
 msgstr ""
-"Tha Super Tux Kart a' dèanamh a dhìcheall gus gèilleadh ri Debian Free "
-"Software\n"
-"Guidelines (DFSG). Cuideachd, tha TuxFamily.org ag iarraidh gun gèill a h-"
-"uile susbaint\n"
-"a thèid òstadh leotha ri ceadachasan saora. Chan fhaod thu susbaint sam bith "
-"a luchdadh\n"
-"suas a chaidh a ghlasadh le ceadachas cuingichte. Tha ceadachasan a leithid "
-"CC-BY-SA 3.0\n"
-"no ceadachasan sam bith eile a ghèilleas ri DFSG riatanach. Feumaidh sinn "
-"gach susbaint\n"
-"a chaidh a thogail bho dhaoine eile ainmeachadh mar bu chòir is feumaidh an "
-"t-susbaint ud\n"
-"a bhith ri làimh fo cheadachas saor cuideachd. Bu chòir dha cheadachasan is "
-"ainmeachadh\n"
-"a bhith am broinn faidhle \"license.txt\" anns gach tasglann a thèid a "
-"luchdadh suas.\n"
-"'S mathaid gun tèid luchdaidhean suas aig nach eil ceadachas no ainmeachadh "
-"mar bu chòir\n"
-"a sguabadh às gun rabhadh."
 
 #: ../register.php:73
 msgid ""
 "Even with valid licenses and attribution, content may not contain any\n"
 "of the following:"
 msgstr ""
-"Fiù 's le ceadachasan is ainmeachadh dligheach air, chan fhad na leanas\n"
-"a bhith ann a susbaint sam bith:"
 
 #: ../register.php:75 ../upload.php:272
 msgid "Profanity"
-msgstr "Mì-naomhachd"
+msgstr "Biraoak"
 
 #: ../register.php:76 ../upload.php:273
 msgid "Explicit images"
-msgstr "Dealbhan drabasta"
+msgstr ""
 
 #: ../register.php:77 ../upload.php:274
 msgid "Hateful messages and/or images"
-msgstr "Teachdaireachdan no dealbhan gràine"
+msgstr ""
 
 #: ../register.php:78 ../upload.php:275
 msgid "Any other content that may be unsuitable for children"
-msgstr "Susbaint sam bith eile nach eil freagarrach do chloinn"
+msgstr "Umeentzat egokia ez den beste edozein eduki."
 
 #: ../register.php:79
 msgid ""
@@ -1481,10 +1354,6 @@ msgid ""
 "uploaded\n"
 "may be removed."
 msgstr ""
-"Ma thèid gin dhe na rudan gu h-àrd a lorg ann an gin dhe na luchdaidhean\n"
-"suas agad, thèid an luchdadh suas a thoirt air falbh is 's mathaid gun tèid "
-"an cunntas\n"
-"agad is susbaint sam bith eile a luchdaich thu suas a thoirt air falbh."
 
 #: ../register.php:82
 msgid ""
@@ -1493,110 +1362,92 @@ msgid ""
 "the\n"
 "members of the development team would gladly assist you."
 msgstr ""
-"Ma chuireas tu cromag sa bhogsa gu h-ìosal, nì thu dearbhadh gu bheil thu\n"
-"a' tuigsinn nan teirmichean seo. Ma tha ceist no beachd sam bith agad a "
-"thaobh\n"
-"nan teirmichean seo, bidh ball sam bith dhen sgioba leasachaidh toilichte\n"
-"do chuideachadh."
 
 #: ../register.php:89
 msgid "I agree to the above terms"
-msgstr "Tha mi ag aontachadh ris na teirmichean gu h-àrd"
+msgstr "Onartzen ditut goiko baldintzak"
 
 #: ../register.php:93
 msgid "Register!"
-msgstr "Clàraich!"
+msgstr "Erregistratu!"
 
 #: ../register.php:119
 msgid ""
 "Account creation was successful. Please activate your account using the link "
 "emailed to you."
 msgstr ""
-"Chaidh an cunntas a chruthachadh gu soirbheachail. An gnìomhaich thu an "
-"cunntas agad leis a' cheangal a chaidh a chur thugad le post-d?"
 
 #: ../register.php:133
 msgid "Your account has been activated."
-msgstr "Chaidh an cunntas agad a ghnìomhachadh."
+msgstr "Zure kontua aktibatu da."
 
 #: ../register.php:137
 msgid "Could not validate your account. The link you followed is not valid."
 msgstr ""
-"Cha do ghabh an cunntas agad dearbhadh. Chan eil an ceangal 's tu air "
-"leantainn air dligheach."
 
 #: ../upload.php:125
 msgid ""
 "Your response to the agreement was unacceptable. You may not upload this "
 "content to the STK Addons website."
 msgstr ""
-"Chan urrainn dhuinn gabhail ri do fhreagairt ris an aonta. Chan fhaod thu an "
-"t-susbaint seo a luchdadh suas chan làrach-lìn STK Addons."
 
 #: ../upload.php:175
 msgid "Please upload a new revision of your kart or track."
 msgstr ""
-"Feuch an luchdaich thu suas ath-sgrùdadh ùr dhen chairt no slighe agad."
 
 #: ../upload.php:179
 msgid "What type of file are you uploading?"
-msgstr "Dè an seòrsa faidhle a tha thu a' luchdadh suas?"
+msgstr ""
 
 #: ../upload.php:181
 msgid "Source Archive"
-msgstr "Tasglann bun-tùis"
+msgstr "Iturburu-fitxategia"
 
 #: ../upload.php:182
 msgid "Image File"
-msgstr "Faidhle deilbh"
+msgstr "Irudi-fitxategia"
 
 #: ../upload.php:189
 msgid "Please upload a kart or track."
-msgstr "An luchdaich thu suas cart no slighe?"
+msgstr "Mesedez kargatu kart edo zirkuitu bat."
 
 #: ../upload.php:190
 msgid "Do not use this form if you are updating an existing add-on."
 msgstr ""
-"Na cleachd am foirm seo ma tha thu ag ùrachadh tuilleadan a tha ann mu "
-"thràth."
+"Ez erabili formulario hau existitzen den gehigarri bat eguneratzen ari "
+"bazara."
 
 #: ../upload.php:193
 msgid "File:"
-msgstr "Faidhle:"
+msgstr "Fitxategia:"
 
 #: ../upload.php:194
 msgid "Supported archive types are:"
-msgstr "Seo na seòrsaichean faidhle dhan cuir sinn taic:"
+msgstr "Onartutako fitxategi-motak hauek dira:"
 
 #: ../upload.php:195
 msgid "Agreement:"
-msgstr "Aonta:"
+msgstr ""
 
 #: ../upload.php:200
 msgid ""
 "I am the sole author of every file (model, texture, sound effect, etc.) in "
 "this package"
 msgstr ""
-"Is mise an t-aon ùghdar aig na h-uile faidhle (modail, inneach, èifeachd "
-"fuaime, amsaa.) sa phasgan seo"
 
 #: ../upload.php:207
 msgid ""
 "I have included a License.txt file describing the license under which my "
 "work is released, and my name (or nickname) if I want credit."
 msgstr ""
-"Chuir mi faidhle License.txt na bhroinn a mhìnicheas an ceadachas fon tèid "
-"an obair agam foillseachadh agus m' ainm (no far-ainm) ma tha mi ag iarraidh "
-"cliù."
 
 #: ../upload.php:207 ../upload.php:220 ../upload.php:265 ../upload.php:276
 msgid "Required"
-msgstr "Riatanach"
+msgstr "Beharrezkoa"
 
 #: ../upload.php:213
 msgid "I have included open content made by people other than me"
 msgstr ""
-"Ghabh mi a-steach susbaint fosgailte a chaidh a dhèanamh le daoine eile"
 
 #: ../upload.php:220
 msgid ""
@@ -1604,17 +1455,14 @@ msgid ""
 "material is used in this package, along with the license under which their "
 "work is released."
 msgstr ""
-"Chuir mi faidhle License.txt na bhroinn a mhìnicheas an ainm gach ùghdair "
-"aig an obair a tha ga chleachdadh sa phasgan seo, cho math ris a' cheadachas "
-"fon deach an obair aca fhoillseachadh."
 
 #: ../upload.php:224
 msgid "Must check at least one"
-msgstr "Feumaidh tu cromag a chur ri co-dhiù aon dhiubh"
+msgstr ""
 
 #: ../upload.php:224
 msgid "This package includes files released under:"
-msgstr "Tha faidhlichean sa phasgan seo air am foillseachadh fo:"
+msgstr ""
 
 #: ../upload.php:229
 msgid "GNU GPL"
@@ -1630,23 +1478,21 @@ msgstr "Creative Commons BY SA 3.0"
 
 #: ../upload.php:244
 msgid "CC0 (Public Domain)"
-msgstr "CC0 (Public Domain)"
+msgstr "CC0 (Domeinu publikoa)"
 
 #: ../upload.php:249
 msgid "BSD License"
-msgstr "Ceadachas BSD"
+msgstr "BSD lizentzia"
 
 #: ../upload.php:254
 msgid "Other open license"
-msgstr "Ceadachas fosgailte eile"
+msgstr "Beste lizentzia libre bat"
 
 #: ../upload.php:259
 msgid ""
 "Files released under other licenses will be rejected unless it can be "
 "verified that the license is open."
 msgstr ""
-"Thèid faidhlichean air am foillseachadh fo cheadachas eile a dhiùltadh mur "
-"gabh dearbhadh gu bheil an ceadachas fosgailte."
 
 #: ../upload.php:265
 msgid ""
@@ -1655,20 +1501,15 @@ msgid ""
 "for any copyright violation that may result from not following the above "
 "rules."
 msgstr ""
-"Tha mi a' tuigsinn gur dh'fhaoidte gun tèid am faidhle agam a thoirt air "
-"falbh uair sam bith gun bhrath dhomh mura h-eil e a' freagairt ris na "
-"riaghailtean gu h-àrd; gabhaidh mi cuideachd gach uallach os làimh ma tha "
-"briseadh còirichean-lethbhreac sam bith ann air thoradh dìth leantainn air "
-"na riaghailtean gu h-àrd."
 
 #: ../upload.php:271
 msgid "My package does not include:"
-msgstr "Chan eil na leanas sa phasgan agam:"
+msgstr "Nire paketeak ez dauka:"
 
 #: ../upload.php:283
 msgid "Upload file"
-msgstr "Luchdaich faidhle suas"
+msgstr "Kargatu fitxategia"
 
 #: ../users.php:63
 msgid "Your password has been changed successfully."
-msgstr "Chaidh am facal-faire agad atharrachadh gu soirbheachail."
+msgstr "Zure pasahitza behar bezala aldatu da."

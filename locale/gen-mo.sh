@@ -1,5 +1,6 @@
 msgfmt translations-ca.po -o ca_ES/LC_MESSAGES/translations.mo
 msgfmt translations-es.po -o es_ES/LC_MESSAGES/translations.mo
+msgfmt translations-eu.po -o eu_ES/LC_MESSAGES/translations.mo
 msgfmt translations-fr.po -o fr_FR/LC_MESSAGES/translations.mo
 msgfmt translations-ga.po -o ga_IE/LC_MESSAGES/translations.mo
 msgfmt translations-gd.po -o gd_GB/LC_MESSAGES/translations.mo

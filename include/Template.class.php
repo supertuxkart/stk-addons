@@ -109,6 +109,7 @@ class Template {
 	    'tracks' => File::link('addons.php?type=tracks',htmlspecialchars(_('Tracks'))),
 	    'arenas' => File::link('addons.php?type=arenas',htmlspecialchars(_('Arenas'))),
 	    'about' => File::link('about.php',htmlspecialchars(_('About'))),
+	    'privacy' => File::link('privacy.php', htmlspecialchars(_('Privacy'))),
 	    'stk_home' => File::link('http://supertuxkart.sourceforge.net',htmlspecialchars(_('STK Homepage')))
 	);
 	Template::$smarty->assign('show_welcome',User::$logged_in);
@@ -134,8 +135,10 @@ class Template {
 	    array('ca_ES',-96,-99,'CA'),
 	    array('de_DE',0,-33,'DE'),
 	    array('es_ES',-96,-66,'ES'),
+	    array('eu-ES', -144, -66, 'EU'),
 	    array('fr_FR',0,-66,'FR'),
 	    array('ga_IE',0,-99,'GA'),
+	    array('gd_GB',-144, -33,'GD'),
 	    array('gl_ES',-48,0,'GL'),
 	    array('id_ID',-48,-33,'ID'),
 	    array('it_IT',-96,-33,'IT'),
