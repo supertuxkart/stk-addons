@@ -205,13 +205,16 @@ class ClientSessionUser extends ClientSession
 
         // TODO: Share password checking with User class
         // Currently User class is tightly coupled with session handling, so can't use it here yet
-        $sql = sprintf("SELECT id FROM `%s` WHERE name = '%s' AND pass = '%s'",
+        $sql = sprintf("SELECT id FROM `%s` WHERE user = '%s' AND pass = '%s'",
                 DB_PREFIX.'users',
                 $username,
                 Validate::password($password, null, $username));
         $result = sql_query($sql);
 
-        if ($result && mysql_num_rows($result) == 1) {
+        if (!$result) {
+            throw new ClientSessionConnectException('Could not find user.');
+        }
+        elseif ($result && mysql_num_rows($result) == 1) {
             $session_id = ClientSession::calcSessionId();
             $user_row = mysql_fetch_row($result);
             $user_id = (int) $user_row[0];
