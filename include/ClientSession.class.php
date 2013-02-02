@@ -178,6 +178,7 @@ class ClientSessionUser extends ClientSession
 {
     private $user_id;
     private $user_name;
+    private $rank;
 
     /**
      * New instance
@@ -185,11 +186,12 @@ class ClientSessionUser extends ClientSession
      * @param int $user_id
      * @param string $user_name
      */
-    protected function __construct($session_id, $user_id, $user_name)
+    protected function __construct($session_id, $user_id, $user_name, $rank)
     {
         parent::__construct($session_id);
         $this->user_id = $user_id;
         $this->user_name = $user_name;
+        $this->rank = $rank;
     }
 
     /**
@@ -205,7 +207,7 @@ class ClientSessionUser extends ClientSession
 
         // TODO: Share password checking with User class
         // Currently User class is tightly coupled with session handling, so can't use it here yet
-        $sql = sprintf("SELECT id FROM `%s` WHERE user = '%s' AND pass = '%s'",
+        $sql = sprintf("SELECT `id`, `role` FROM `%s` WHERE `user` = '%s' AND `pass` = '%s'",
                 DB_PREFIX.'users',
                 $username,
                 Validate::password($password, null, $username));
@@ -218,6 +220,7 @@ class ClientSessionUser extends ClientSession
             $session_id = ClientSession::calcSessionId();
             $user_row = mysql_fetch_row($result);
             $user_id = (int) $user_row[0];
+            $rank = $user_row[1];
 
             // if there is already a session, then we update it
             $sql = sprintf("INSERT INTO `%s` (cid, uid, name) VALUES ('%s', %d, '%s')
@@ -228,7 +231,7 @@ class ClientSessionUser extends ClientSession
                     mysql_real_escape_string($username));
 
             if (sql_query($sql)) {
-                return new ClientSessionUser($session_id, $user_id, $username);
+                return new ClientSessionUser($session_id, $user_id, $username, $rank);
             }
             else {
                 throw new ClientSessionConnectException('Could not create new session');
@@ -264,6 +267,10 @@ class ClientSessionUser extends ClientSession
     public function getUserId()
     {
         return $this->user_id;
+    }
+    
+    public function getRank() {
+        return $this->rank;
     }
 }
 

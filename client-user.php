@@ -92,11 +92,11 @@ function sendPlainMessage($status, $msg)
 function printConnectionXml(ClientSession $session)
 {
     if ($session instanceof ClientSessionUser) {
-        printf('<connection id="%s" user="%d" registered="true" />',
-                $session->getSessionId(), $session->getUserId());
+        printf('<connection id="%s" user="%d" rank="%s" registered="true" />',
+                $session->getSessionId(), $session->getUserId(), $session->getRank());
     }
     else {
-        printf('<connection id="%s" registered="false" />',
+        printf('<connection id="%s" rank="anon" registered="false" />',
                 $session->getSessionId());
     }
 }
