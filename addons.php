@@ -188,14 +188,14 @@ foreach($addons_list AS $ad) {
             $class = 'addon-list menu-item unavailable';
         else
             continue;
-	$icon_html = '<img class="icon" src="'.$icon.'" height="25" width="25" />';
-	if (($adc->getStatus() & F_FEATURED) == F_FEATURED)
-	    $icon_html = '<div class="icon"><div class="icon-featured"></div>'.$icon_html.'</div>';
+        $icon_html = '<img class="icon" src="'.$icon.'" height="25" width="25" />';
+        if (($adc->getStatus() & F_FEATURED) == F_FEATURED)
+            $icon_html = '<div class="icon-featured"></div>'.$icon_html;
         $addons[] = array(
             'class' => $class,
             'url'   => "addons.php?type={$_GET['type']}&amp;name={$adc->getId()}",
-            'label' => $icon_html.htmlspecialchars($adc->getName($adc->getId())),
-	    'disp'  => File::rewrite("addons.php?type={$_GET['type']}&amp;name={$adc->getId()}")
+            'label' => '<div class="icon">'.$icon_html.'</div>'.htmlspecialchars($adc->getName($adc->getId())),
+        'disp'  => File::rewrite("addons.php?type={$_GET['type']}&amp;name={$adc->getId()}")
         );
     }
     catch (AddonException $e) {
