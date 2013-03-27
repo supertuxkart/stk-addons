@@ -125,22 +125,25 @@ function generateAssetXML()
         // Loop through each addon record
         while($result = sql_next($reqSql))
         {
-            if (ConfigManager::get_config('list_invisible') == 0)
-            {
-                if($result['status'] & F_INVISIBLE)
+            if (ConfigManager::get_config('list_invisible') == 0) {
+                if($result['status'] & F_INVISIBLE) {
+		    trigger_error('Hiding invisible addon '.$result['name'], E_USER_WARNING);
                     continue;
+		}
             }
             $file_path = File::getPath($result['fileid']);
-            if ($file_path === false)
-            {
+            if ($file_path === false) {
+		trigger_error('Error finding addon file for '.$result['name'], E_USER_WARNING);
                 echo '<span class="warning">An error occurred locating add-on: '.$result['name'].'</span><br />';
                 continue;
             }
-            if (!file_exists(UP_LOCATION.$file_path))
-            {
-                echo '<span class="warming">'.htmlspecialchars(_('The following file could not be found:')).' '.$file_path.'</span><br />';
+	    
+            if (!file_exists(UP_LOCATION.$file_path)) {
+		trigger_error('File not found for '.$result['name'], E_USER_WARNING);
+                echo '<span class="warning">'.htmlspecialchars(_('The following file could not be found:')).' '.$file_path.'</span><br />';
                 continue;
             }
+	    
             $writer->startElement($type);
             $writer->writeAttribute('id',$result['id']);
             $writer->writeAttribute('name',$result['name']);
@@ -179,7 +182,7 @@ function generateAssetXML()
 	    $writer->writeAttribute('image-list', $image_list_path);
 	    // Get add-on rating
 	    $rating = new Ratings($result['id']);
-	    $writer->writeAttribute('rating',sprintf('%.3f',$rating->getAvgRating()));
+	    $writer->writeAttribute('rating',sprintf('%.3F',$rating->getAvgRating()));
             $writer->endElement();
         }
     }
@@ -249,7 +252,7 @@ function generateAssetXML2() {
 	    $writer->writeAttribute('image-list', $image_list_path);
 	    // Get add-on rating
 	    $rating = new Ratings($addon_result['id']);
-	    $writer->writeAttribute('rating',sprintf('%.3f',$rating->getAvgRating()));
+	    $writer->writeAttribute('rating',sprintf('%.3F',$rating->getAvgRating()));
 	    
 	    // Search for revisions
 	    $rev_query = 'SELECT * FROM `'.DB_PREFIX.$type.'s_revs`
@@ -317,6 +320,7 @@ function generateAssetXML2() {
 	    $music = mysql_fetch_assoc($music_handle);
 	    
 	    if (!file_exists(UP_LOCATION.'music/'.$music['file'])) {
+		trigger_error('File '.UP_LOCATION.'music/'.$music['file'].' not found!', E_USER_WARNING);
 		continue;
 	    }
 	    $writer->startElement('addon');
@@ -349,20 +353,20 @@ function writeAssetXML() {
     return writeFile(generateAssetXML(), ASSET_XML_LOCAL);
 }
 
-function writeFile($content,$file)
-{
+function writeFile($content, $file) {
     // If file doesn't exist, create it
-    if (!file_exists($file))
-    {
-	if (!touch($file))
-	{
-	    return false;
-	}
+    if (!file_exists($file)) {
+        if (!touch($file)) {
+            return false;
+        }
     }
-    $fhandle = fopen($file,'w');
-    if (!fwrite($fhandle,$content))
-    {
-	return false;
+    $fhandle = fopen($file, 'w');
+    if (!$fhandle) {
+        trigger_error('Could not open xml file for writing!', E_USER_WARNING);
+        return false;
+    }
+    if (!fwrite($fhandle, $content)) {
+        return false;
     }
     fclose($fhandle);
     return true;
