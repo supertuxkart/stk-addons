@@ -92,7 +92,7 @@ Description: menu
 			array('ca_ES',-96,-99,'CA'),
 			array('de_DE',0,-33,'DE'),
 			array('es_ES',-96,-66,'ES'),
-			array('eu-ES', -144, -66, 'EU'),
+			array('eu_ES', -144, -66, 'EU'),
 			array('fr_FR',0,-66,'FR'),
 			array('ga_IE',0,-99,'GA'),
 			array('gd_GB',-144, -33,'GD'),
