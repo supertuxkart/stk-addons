@@ -367,6 +367,29 @@ class File {
     }
     
     /**
+     * Delete subdirectories of a folder which have not been modified recently
+     * @param string $dir
+     * @param string $max_age
+     */
+    public static function deleteOldSubdirectories($dir, $max_age) {
+        // Make sure we are looking at a directory
+        $dir = rtrim($dir, '/');
+        if (is_dir($dir)) {
+            $files = scandir($dir);
+            foreach ($files AS $file) {
+                // Check if our item is a subfolder
+                if ($file != '.' && $file != '..' && is_dir($dir.'/'.$file)) {
+                    $last_mod = filemtime($dir .'/'. $file .'/.');
+                    // Check if our folder is old enough to delete
+                    if (mktime() - $last_mod > $max_age) {
+                        File::deleteRecursive($dir .'/'.$file);
+                    }
+                }
+            }
+        }
+    }
+    
+    /**
      * Recursively delete files. This does not touch the database.
      * @param string $dir
      * @param string $exclude_regex
