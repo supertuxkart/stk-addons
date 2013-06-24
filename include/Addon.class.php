@@ -400,18 +400,18 @@ class Addon {
     public static function getAddonList($type, $featuredFirst = false) {
         if (!Addon::isAllowedType($type))
             return array();
-	if ($featuredFirst)
-	    $querySql = 'SELECT `a`.`id`, (`r`.`status` & '.F_FEATURED.') AS `featured`
-		FROM `'.DB_PREFIX.'addons` `a`
-		LEFT JOIN `'.DB_PREFIX.$type.'_revs` `r`
+        if ($featuredFirst)
+            $querySql = 'SELECT `a`.`id`, (`r`.`status` & ' . F_FEATURED . ') AS `featured`
+		FROM `' . DB_PREFIX . 'addons` `a`
+		LEFT JOIN `' . DB_PREFIX . $type . '_revs` `r`
 		ON `a`.`id` = `r`.`addon_id`
-		WHERE `a`.`type` = \''.$type.'\'
-		AND `r`.`status` & '.F_LATEST.'
+		WHERE `a`.`type` = \'' . $type . '\'
+		AND `r`.`status` & ' . F_LATEST . '
 		ORDER BY `featured` DESC, `a`.`name` ASC, `a`.`id` ASC';
-	else
-	    $querySql = 'SELECT `id`
-		FROM `'.DB_PREFIX.'addons`
-		WHERE `type` = \''.$type.'\'
+        else
+            $querySql = 'SELECT `id`
+		FROM `' . DB_PREFIX . 'addons`
+		WHERE `type` = \'' . $type . '\'
 		ORDER BY `name` ASC, `id` ASC';
         $handle = sql_query($querySql);
         if (!$handle)
@@ -429,7 +429,7 @@ class Addon {
     }
     
     public function getDescription() {
-        return htmlentities($this->description);
+        return htmlspecialchars($this->description);
     }
     
     public function getDesigner() {
@@ -611,6 +611,32 @@ class Addon {
         return $id;
     }
 
+    /**
+     * Search for an addon by its name or description
+     * @param string $query
+     * @throws AddonException
+     * @return array Matching addon id, name and type
+     */
+    public static function search($search_query) {
+        $search_query = mysql_real_escape_string($search_query);
+        
+        $query = 'SELECT `id`, `name`, `type`
+            FROM `'.DB_PREFIX."addons`
+            WHERE `name` LIKE '%$search_query%'
+            OR `description` LIKE '%$search_query%'";
+
+        $handle = sql_query($query);
+        if (!$handle)
+            throw new AddonException(htmlspecialchars(_('Search failed!')));
+        
+        $result = array();
+        for ($i = 0; $i < mysql_num_rows($handle); $i++) {
+            $result[] = mysql_fetch_assoc($handle);
+        }
+        
+        return $result;
+    }
+    
     /**
      * Set the add-on's description
      * @param string $description

@@ -73,7 +73,7 @@
 {/if}
 
 <h3>{$addon.info.license.label}</h3>
-<textarea name="license" rows="4" cols="60" readonly="readonly">{$addon.info.license.value}</textarea>
+<textarea name="license" rows="4" cols="60" readonly="readonly" accept-charset="utf-8">{$addon.info.license.value}</textarea>
 
 <h3>{$addon.info.link.label}</h3>
 <a href="{$addon.info.link.value}">{$addon.info.link.value}</a>

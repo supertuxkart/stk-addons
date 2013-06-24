@@ -130,7 +130,7 @@ class AddonViewer
 	    ),
 	    'license' => array(
 		'label' => htmlspecialchars(_('License')),
-		'value' => htmlspecialchars($this->addon->getLicense(),NULL,NULL,false)
+		'value' => htmlspecialchars($this->addon->getLicense(),NULL,'UTF-8',false)
 	    ),
 	    'link' => array(
 		'label' => htmlspecialchars(_('Permalink')),
@@ -351,19 +351,20 @@ class AddonViewer
             throw new AddonException(htmlspecialchars(_('You do not have the necessary privileges to perform this action.')));
 
         echo '<br /><hr /><br /><h3>'.htmlspecialchars(_('Configuration')).'</h3>';
-        echo '<form name="changeProps" action="'.File::rewrite($this->addon->getLink().'&amp;save=props').'" method="POST">';
+        echo '<form name="changeProps" action="'.File::rewrite($this->addon->getLink().'&amp;save=props').'" method="POST" accept-charset="utf-8">';
 
         // Edit designer
         $designer = ($this->addon->getDesigner() == htmlspecialchars(_('Unknown'))) ? NULL : $this->addon->getDesigner();
         echo '<label for="designer_field">'.htmlspecialchars(_('Designer:')).'</label><br />';
-        echo '<input type="text" name="designer" id="designer_field" value="'.$designer.'" /><br />';
+        echo '<input type="text" name="designer" id="designer_field" value="'.$designer.'" accept-charset="utf-8" /><br />';
         echo '<br />';
 
         // Edit description
         echo '<label for="desc_field">'.htmlspecialchars(_('Description:')).'</label> ('.sprintf(htmlspecialchars(_('Max %u characters')),'140').')<br />';
         echo '<textarea name="description" id="desc_field" rows="4" cols="60"
             onKeyUp="textLimit(document.getElementById(\'desc_field\'),140);"
-            onKeyDown="textLimit(document.getElementById(\'desc_field\'),140);">'.$this->addon->getDescription().'</textarea><br />';
+            onKeyDown="textLimit(document.getElementById(\'desc_field\'),140);"
+            accept-charset="utf-8">'.$this->addon->getDescription().'</textarea><br />';
 
         // Submit
         echo '<input type="submit" value="'.htmlspecialchars(_('Save Properties')).'" />';
