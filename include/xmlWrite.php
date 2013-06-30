@@ -200,6 +200,7 @@ function generateAssetXML2() {
     // Define addon types
     $addon_types = array('kart','track','arena');
     $image_list_path_format = ConfigManager::get_config('image_json_path');
+    $license_path_format = ConfigManager::get_config('license_json_path');
     
     $writer = new XMLWriter();
     // Output to memory
@@ -250,6 +251,11 @@ function generateAssetXML2() {
 		    array($addon_result['id'], $addon_result['type']),
 		    $image_list_path_format);
 	    $writer->writeAttribute('image-list', $image_list_path);
+        // Write license path
+        $license_path = str_replace(array('$aid', '$atype'),
+		    array($addon_result['id'], $addon_result['type']),
+		    $license_path_format);
+	    $writer->writeAttribute('license', $license_path);
 	    // Get add-on rating
 	    $rating = new Ratings($addon_result['id']);
 	    $writer->writeAttribute('rating',sprintf('%.3F',$rating->getAvgRating()));
