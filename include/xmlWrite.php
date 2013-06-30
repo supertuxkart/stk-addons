@@ -176,6 +176,12 @@ function generateAssetXML()
             $writer->writeAttribute('size',filesize(UP_LOCATION.$file_path));
 	    $writer->writeAttribute('min-include-version',$result['min_include_ver']);
 	    $writer->writeAttribute('max-include-version',$result['max_include_ver']);
+        // Write license path
+        $license_path_format = ConfigManager::get_config('license_json_path');
+        $license_path = str_replace(array('$aid', '$atype'),
+		    array($addon_result['id'], $addon_result['type']),
+		    $license_path_format);
+	    $writer->writeAttribute('license', $license_path);
 	    $image_list_path = ConfigManager::get_config('image_json_path');
 	    $image_list_path = str_replace('$aid', $result['id'], $image_list_path);
 	    $image_list_path = str_replace('$atype', $result['type'], $image_list_path);
