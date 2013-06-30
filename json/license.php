@@ -43,7 +43,7 @@ if (!Addon::exists($addon_id)) {
 $addon = new Addon($addon_id);
 $license = $addon->getLicense();
 
-$json_array = array('license' => $license);
-echo json_encode($json_array);
+// This isn't really JSON, but no reason to wrap one value in braces
+echo $license;
 
 ?>
