@@ -41,16 +41,9 @@ if (!Addon::exists($addon_id)) {
 
 // Addon exists, get images
 $addon = new Addon($addon_id);
-$addon_images = $addon->getImages();
+$license = $addon->getLicense();
 
-$json_array = array();
-foreach ($addon_images as $image_record) {
-    $json_array[] = array(
-	'url' => DOWN_LOCATION.$image_record['file_path'],
-	'date' => strtotime($image_record['date_added']),
-	'approved' => (int)$image_record['approved']
-    );
-}
+$json_array = array('license' => $license);
 echo json_encode($json_array);
 
 ?>
