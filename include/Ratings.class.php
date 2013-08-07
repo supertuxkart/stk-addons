@@ -1,6 +1,6 @@
 <?php
 /**
- * copyright 2011 Stephen Just <stephenjust@users.sf.net>
+ * copyright 2011-2013 Stephen Just <stephenjust@users.sf.net>
  *
  * This file is part of stkaddons
  *
@@ -100,8 +100,7 @@ class Ratings {
      * @return integer percent value
      */
     public function getAvgRatingPercent() {
-        $num_possible_ratings = $this->max_rating - $this->min_rating + 1;
-        return (int) ($this->avg_rating / $num_possible_ratings * 100);
+        return (int) ($this->avg_rating / $this->max_rating * 100);
     }
     
     /**
