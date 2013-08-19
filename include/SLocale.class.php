@@ -82,13 +82,10 @@ class SLocale {
      */
     private static function SetLocale($locale) {
         // Set cookie
-        if(!isset($_COOKIE['lang']) || $locale != $_COOKIE['lang'])
-        {
-            setcookie('lang', $locale, time() + SLocale::$cookie_lifetime);
-            putenv("LC_ALL=$locale.UTF-8");
-            setlocale(LC_ALL, "$locale.UTF-8");
-            $_COOKIE['lang'] = $locale;
-        }
+        setcookie('lang', $locale, time() + SLocale::$cookie_lifetime);
+        putenv("LC_ALL=$locale.UTF-8");
+        setlocale(LC_ALL, "$locale.UTF-8");
+        $_COOKIE['lang'] = $locale;
 
         // Set translation file info
         bindtextdomain('translations', ROOT.'locale');
