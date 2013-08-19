@@ -276,7 +276,7 @@ class Upload {
         }
 
         if (is_array($invalid_files) && count($invalid_files != 0)) {
-            echo '<span class="warning">' . htmlspecialchars(_('Some invalid files were found in the uploaded add-on. These files have been removed from the archive:')) . ' ' . implode(', ', $invalid_files) . '</span><br />';
+            echo '<span class="warning">' . htmlspecialchars(_('Some invalid files were found in the uploaded add-on. These files have been removed from the archive:')) . ' ' . htmlspecialchars(implode(', ', $invalid_files)) . '</span><br />';
         }
     }
 
