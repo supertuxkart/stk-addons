@@ -34,7 +34,7 @@ function display_reg_form($user = NULL, $name = NULL, $email = NULL) {
     <tr>
         <td><label for="reg_user">'.htmlspecialchars(_('Username:')).'<br />
         <span style="font-size: x-small; color: #666666; font-weight: normal;">('.htmlspecialchars(sprintf(_('Must be at least %d characters long.'),'4')).')</span></label></td>
-        <td><input type="text" name="user" id="reg_user" value="'.strip_tags($user).'" /></td>
+        <td><input type="text" name="user" id="reg_user" value="'.htmlspecialchars($user).'" /></td>
     </tr>
     <tr>
         <td><label for="reg_pass">'.htmlspecialchars(_('Password:')).'<br />
@@ -47,11 +47,11 @@ function display_reg_form($user = NULL, $name = NULL, $email = NULL) {
     </tr>
     <tr>
         <td><label for="reg_name">'.htmlspecialchars(_('Name:')).'</label></td>
-        <td><input type="text" name="name" id="reg_name" value="'.strip_tags($name).'" /></td>
+        <td><input type="text" name="name" id="reg_name" value="'.htmlspecialchars($name).'" /></td>
     </tr>
     <tr>
         <td><label for="reg_email">'.htmlspecialchars(_('Email Address:')).'</label></td>
-        <td><input type="text" name="mail" id="reg_email" value="'.strip_tags($email).'" /></td>
+        <td><input type="text" name="mail" id="reg_email" value="'.htmlspecialchars($email).'" /></td>
     </tr>
     <tr>
         <td colspan="2"><label for="reg_terms">'.htmlspecialchars(_('Terms:')).'</label><br />
