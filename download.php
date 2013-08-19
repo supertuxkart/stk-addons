@@ -107,6 +107,10 @@ $counterQuery = 'CALL `'.DB_PREFIX.'increment_download` (\''.$assetpath.'\')';
 $counterHandle = sql_query($counterQuery);
 
 // Redirect to actual resource
-header('Location: http://downloads.tuxfamily.org/stkaddons/assets/'.$assetpath);
+if ($dir == 'xml') {
+    header('Location: http://stkaddons.net/xml/'.$file);
+} else {
+    header('Location: http://downloads.tuxfamily.org/stkaddons/assets/'.$assetpath);
+}
 exit;
 ?>

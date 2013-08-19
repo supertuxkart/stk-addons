@@ -179,7 +179,7 @@ function generateAssetXML()
         // Write license path
         $license_path_format = ConfigManager::get_config('license_json_path');
         $license_path = str_replace(array('$aid', '$atype'),
-		    array($addon_result['id'], $addon_result['type']),
+		    array($result['id'], $result['type']),
 		    $license_path_format);
 	    $writer->writeAttribute('license', $license_path);
 	    $image_list_path = ConfigManager::get_config('image_json_path');
