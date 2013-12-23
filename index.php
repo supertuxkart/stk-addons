@@ -55,7 +55,7 @@ $index_menu = array(
 	'type' => 'help')
 );
 $tpl['index_menu'] = $index_menu;
-/* commented out by Glenn
+
 // Display news messages
 $news_messages = array();
 // Note most downloaded track and kart
@@ -72,7 +72,7 @@ $handle = sql_query($newsSql);
 for ($result = sql_next($handle); $result; $result = sql_next($handle)) {
     $news_messages[] = htmlentities($result['content']);
 }
-$tpl['news_messages'] = $news_messages;*/
+$tpl['news_messages'] = $news_messages;
 
 Template::assignments($tpl);
 
