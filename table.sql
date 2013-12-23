@@ -8,7 +8,7 @@ CREATE TABLE `addons` (
     `creation_date` timestamp NOT NULL default CURRENT_TIMESTAMP,
     `designer` tinytext NOT NULL,
     `props` int UNSIGNED NOT NULL DEFAULT '0',
-    `description` varchar(140) NOT NULL DEFUALT '',
+    `description` varchar(140) NOT NULL DEFAULT '',
     `license` varchar(4096) NULL DEFAULT NULL,
     `min_include_ver` varchar(16) NULL DEFAULT NULL,
     `max_include_ver` varchar(16) NULL DEFAULT NULL,
