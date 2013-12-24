@@ -67,8 +67,8 @@ class AddonViewer
 		'percent' => $this->rating->getAvgRatingPercent(),
 		'decimal' => $this->rating->getAvgRating(),
 		'count' => $this->rating->getNumRatings(),
-		'min_rating' => 1,
-		'max_rating' => 3
+		'min_rating' => 0.5,
+		'max_rating' => 3.0
 	    ),
 	    'badges' => AddonViewer::badges($this->addon->getStatus()),
 	    'image' => array(

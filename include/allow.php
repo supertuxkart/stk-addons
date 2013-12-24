@@ -29,79 +29,85 @@ Description: Config page for several permission
 
 ***************************************************************************/
 
-// This file is included by include/user.php
-switch($result['role'])
-{
-    case "basicUser":
-        $_SESSION['role'] = array(
-            "basicPage" => true,
-            "addAddon" => true,
-            "manageaddons" => false,
-            "managebasicUsers" => false,
-            "managemoderators" => false,
-            "manageadministrators" => false,
-            "managesupAdministrators" => false,
-            "manageroots" => false,
-            "managesettings" => false
-        );
-        break;
-    case "moderator":
-        $_SESSION['role'] = array(
-            "basicPage" => true,
-            "addAddon" => true,
-            "manageaddons" => true,
-            "managebasicUsers" => true,
-            "managemoderators" => false,
-            "manageadministrators" => false,
-            "managesupAdministrators" => false,
-            "manageroots" => false,
-            "managesettings" => false
-        );
-        break;
-    case "administrator":
-        $_SESSION['role'] = array(
-            "basicPage" => true,
-            "addAddon" => true,
-            "manageaddons" => true,
-            "managebasicUsers" => true,
-            "managemoderators" => true,
-            "manageadministrators" => false,
-            "managesupAdministrators" => false,
-            "manageroots" => false,
-            "managesettings" => true
-        );
-        break;
-    case "supAdministrator":
-        $_SESSION['role'] = array(
-            "basicPage" => true,
-            "addAddon" => true,
-            "manageaddons" => true,
-            "managebasicUsers" => true,
-            "managemoderators" => true,
-            "manageadministrators" => true,
-            "managesupAdministrators" => false,
-            "manageroots" => false,
-            "managesettings" => true
-        );
-        break;
-    case "root":
-        $_SESSION['role'] = array(
-            "basicPage" => true,
-            "addAddon" => true,
-            "manageaddons" => true,
-            "managebasicUsers" => true,
-            "managemoderators" => true,
-            "manageadministrators" => true,
-            "managesupAdministrators" => true,
-            "manageroots" => true,
-            "managesettings" => true
-        );
-        break;
+/**
+ * This file is included by include/user.php
+ * @param string $role
+ */
+function setPermissions($role){
+    switch($role)
+    {
+        case "basicUser":
+            $_SESSION['role'] = array(
+                "basicPage" => true,
+                "addAddon" => true,
+                "manageaddons" => false,
+                "managebasicUsers" => false,
+                "managemoderators" => false,
+                "manageadministrators" => false,
+                "managesupAdministrators" => false,
+                "manageroots" => false,
+                "managesettings" => false
+            );
+            break;
+        case "moderator":
+            $_SESSION['role'] = array(
+                "basicPage" => true,
+                "addAddon" => true,
+                "manageaddons" => true,
+                "managebasicUsers" => true,
+                "managemoderators" => false,
+                "manageadministrators" => false,
+                "managesupAdministrators" => false,
+                "manageroots" => false,
+                "managesettings" => false
+            );
+            break;
+        case "administrator":
+            $_SESSION['role'] = array(
+                "basicPage" => true,
+                "addAddon" => true,
+                "manageaddons" => true,
+                "managebasicUsers" => true,
+                "managemoderators" => true,
+                "manageadministrators" => false,
+                "managesupAdministrators" => false,
+                "manageroots" => false,
+                "managesettings" => true
+            );
+            break;
+        case "supAdministrator":
+            $_SESSION['role'] = array(
+                "basicPage" => true,
+                "addAddon" => true,
+                "manageaddons" => true,
+                "managebasicUsers" => true,
+                "managemoderators" => true,
+                "manageadministrators" => true,
+                "managesupAdministrators" => false,
+                "manageroots" => false,
+                "managesettings" => true
+            );
+            break;
+        case "root":
+            $_SESSION['role'] = array(
+                "basicPage" => true,
+                "addAddon" => true,
+                "manageaddons" => true,
+                "managebasicUsers" => true,
+                "managemoderators" => true,
+                "manageadministrators" => true,
+                "managesupAdministrators" => true,
+                "manageroots" => true,
+                "managesettings" => true
+            );
+            break;
+    }
+    //support for translations :
+    htmlspecialchars(_("root"));
+    htmlspecialchars(_("supAdministrator"));
+    htmlspecialchars(_("administrator"));
+    htmlspecialchars(_("moderator"));
+    htmlspecialchars(_("basicUser"));
 }
-//support for translations :
-htmlspecialchars(_("root"));
-htmlspecialchars(_("supAdministrator"));
-htmlspecialchars(_("administrator"));
-htmlspecialchars(_("moderator"));
-htmlspecialchars(_("basicUser"));
+
 ?>

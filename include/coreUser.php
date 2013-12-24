@@ -144,7 +144,7 @@ class coreUser
             <form action="users.php?user='.$this->userCurrent['user'].'&amp;action=password" method="POST">
             '.htmlspecialchars(_('Old Password:')).'<br />
             <input type="password" name="oldPass" /><br />
-            '.htmlspecialchars(_('New Password:')).' ('.htmlspecialchars(sprintf(_('Must be at least %d characters long.'),'6')).')<br />
+            '.htmlspecialchars(_('New Password:')).' ('.htmlspecialchars(sprintf(_('Must be at least %d characters long.'),'8')).')<br />
             <input type="password" name="newPass" /><br />
             '.htmlspecialchars(_('New Password (Confirm):')).'<br />
             <input type="password" name="newPass2" /><br />

@@ -28,7 +28,7 @@ Description: index page
 ***************************************************************************/
 define('ROOT','./');
 require('include.php');
-AccessControl::setLevel(NULL);
+//AccessControl::setLevel(NULL);
 
 Template::setFile('index.tpl');
 // I18N: Website meta description
@@ -39,6 +39,7 @@ $tpl = array();
 $tpl['title'] = htmlspecialchars(_('SuperTuxKart Add-ons'));
 
 // Display index menu
+
 $index_menu = array(
     array('href' => File::rewrite('addons.php?type=karts'),
 	'label' => htmlspecialchars(_('Karts')),
@@ -54,7 +55,7 @@ $index_menu = array(
 	'type' => 'help')
 );
 $tpl['index_menu'] = $index_menu;
-
+/* commented out by Glenn
 // Display news messages
 $news_messages = array();
 // Note most downloaded track and kart
@@ -71,7 +72,7 @@ $handle = sql_query($newsSql);
 for ($result = sql_next($handle); $result; $result = sql_next($handle)) {
     $news_messages[] = htmlentities($result['content']);
 }
-$tpl['news_messages'] = $news_messages;
+$tpl['news_messages'] = $news_messages;*/
 
 Template::assignments($tpl);
 

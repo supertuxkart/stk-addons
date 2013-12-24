@@ -18,23 +18,26 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once(ROOT . 'include/DBConnection.class.php');
+require_once(ROOT . 'include/User.class.php');
+
 class Log {
     /**
      * Add an event to the event log
      * @param string $message Event description
      */
     public static function newEvent($message) {
-        if (!User::$logged_in)
-            $user = 0;
-        else
-            $user = User::$user_id;
-        
-        $message = mysql_real_escape_string(strip_tags($message));
-        
-        $query = 'CALL `'.DB_PREFIX.'log_event` (\''.$user.'\',\''.$message.'\')';
-        $handle = sql_query($query);
-        if (!$handle)
-            throw new Exception('Failed to log event.<br />');
+        $userid = (User::$logged_in) ? User::$user_id : 0;
+        DBConnection::get()->query(
+            "CALL `".DB_PREFIX."log_event`
+            (:userid, :message)",
+            DBConnection::NOTHING,
+            array
+            (
+                    ':userid'   => $userid,
+                    ':message'  => strip_tags( (string) $message)
+            )
+        );
     }
     
     /**

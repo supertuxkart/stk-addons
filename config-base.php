@@ -16,6 +16,13 @@
  You should have received a copy of the GNU General Public License along with 
  stkaddons.  If not, see <http://www.gnu.org/licenses/>.   */
 
+define("DEBUG_MODE", true); //FIXME turn off on server.
+if (DEBUG_MODE){
+    error_reporting(E_ALL);
+    ini_set('display_errors', 'On');
+    ini_set('html_errors', 'On');
+}
+
 $dirUpload = "/media/serveur/stkaddons/upload/";
 $dirUploadCron = $dirUpload;
 $dirBase = "http://127.0.0.1/stkaddons/";
@@ -34,8 +41,8 @@ define('TPL_PATH', 'tpl/default/');
 define("DB_USER", 'root');
 define("DB_PASSWORD", 'pass');
 define("DB_NAME", 'stkbase');
-define("DB_PREFIX", '');
-define("DB_HOST", 'localhost');
+define("DB_PREFIX", 'v2_');
+define("DB_HOST", 'localhost:3306');
 
 define('MAIL_METHOD', 'sendmail'); // 'smtp' or 'sendmail' supported
 define('SENDMAIL_PATH', '/usr/bin/sendmail'); // Path to sendmail

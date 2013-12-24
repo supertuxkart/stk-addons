@@ -1,6 +1,7 @@
 <?php
 /**
- * copyright 2011 Stephen Just <stephenjust@users.sf.net>
+ * copyright 2011-2013 Stephen Just <stephenjust@users.sf.net>
+ *                2013 Glenn De Jonghe
  *
  * This file is part of stkaddons
  *
@@ -18,12 +19,49 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once(ROOT. 'include/Validate.class.php');
+require_once(ROOT. 'include/Verification.class.php');
+require_once(ROOT. 'include/DBConnection.class.php');
+require_once(ROOT. 'include/exceptions.php');
+require_once(ROOT. 'include/SMail.class.php');
+
 class User
 {
     public static $logged_in = false;
     public static $user_id = 0;
-
+    
+    protected $id = 0;
+    protected $user_name = "";
+    
+    public function __construct($id, $user_name)
+    {
+        $this->id = $id;
+        $this->user_name = $user_name;
+    }
+    
+    public function getUserName()
+    {
+    return $this->user_name;
+    }
+    
+    public function getUserID()
+    {
+    return $this->id;
+    }
+    
+    public function asXML($tag = 'user')
+    {
+        $user_xml = new XMLOutput();
+        $user_xml->startElement($tag);
+        $user_xml->writeAttribute('id', $this->id);
+        $user_xml->writeAttribute('user_name', $this->user_name);
+        $user_xml->endElement();
+        return $user_xml->asString();
+    }
+    
+    
     static function init() {
+        if(defined('API')) return;
         // Validate user's session on every page
         if (session_id() == "") {
             session_start();
@@ -32,7 +70,6 @@ class User
         // Check if any session variables are not set
         if (!isset($_SESSION['userid']) ||
                 !isset($_SESSION['user']) ||
-                !isset($_SESSION['pass']) ||
                 !isset($_SESSION['real_name']) ||
                 !isset($_SESSION['last_login']) ||
                 !isset($_SESSION['role']))
@@ -43,77 +80,98 @@ class User
             return;
         }
         // Validate session if complete set of variables is available
-        $querySql = 'SELECT `id`,`user`,`pass`,`name`,`role`
-            FROM `'.DB_PREFIX.'users`
-            WHERE `user` = \''.mysql_real_escape_string($_SESSION['user']).'\'
-            AND `pass` = \''.mysql_real_escape_string($_SESSION['pass']).'\'
-            AND `last_login` = \''.mysql_real_escape_string($_SESSION['last_login']).'\'
-            AND `name` = \''.mysql_real_escape_string($_SESSION['real_name']).'\'
-            AND `active` = 1';
-        $reqSql = sql_query($querySql);
-        if (!$reqSql) {
-            User::logout();
-            return false;
+   
+        try{
+            $count = DBConnection::get()->query(
+                "SELECT `id`,`user`,`name`,`role`
+    	        FROM `" . DB_PREFIX . "users`
+                WHERE `user` = :username
+                AND `last_login` = :lastlogin
+                AND `name` = :realname
+                AND `active` = 1",
+                DBConnection::ROW_COUNT,
+                array(
+                    ':username'     => (string) $_SESSION['user'],
+                    ':lastlogin'    => $_SESSION['last_login'],
+                    ':realname'     => (string) $_SESSION['real_name']
+                )
+            );
+        }catch(DBException $e){
+            throw new UserException(htmlspecialchars(
+                _('An error occurred trying to validate your session.') .' '.
+                _('Please contact a website administrator.')
+            ));
         }
-        $num_rows = mysql_num_rows($reqSql);
-        if($num_rows != 1)
-        {
+        
+        
+        if ($count !== 1) {
             User::logout();
             return false;
         }
         User::$user_id = $_SESSION['userid'];
         User::$logged_in = true;
     }
+    
+    static function updateLoginTime($userid)
+    {       
+        try{
+            $result = DBConnection::get()->query(
+                "UPDATE `".DB_PREFIX."users`
+                SET `last_login` = NOW()
+                WHERE `id` = :userid",
+                DBConnection::NOTHING,
+                array
+                (
+                    ':userid'   => $userid
+                )
+            );
+            $result = DBConnection::get()->query(
+                "SELECT `last_login`
+                FROM `".DB_PREFIX."users`
+                WHERE `id` = :userid",
+                DBConnection::FETCH_ALL,
+                array
+                (
+                    ':userid'   => $userid
+                )
+            );
+            if (count($result) !== 1) {
+                throw new PDOException();
+            }
+            return $result[0]['last_login'];
+        }
+        catch (PDOException $e){
+            User::logout();
+            throw new UserException(htmlspecialchars(
+                _('An error occurred while recording last login time.') .' '.
+                _('Please contact a website administrator.')
+            ));
+        }
+        return $time;
+    }
 
     static function login($username,$password)
     {
-        // Validate parameters
-        $username = Validate::username($username);
-        $orig_pass = $password;
-        $password = Validate::password($password,NULL,$username);
-
-        // Get user record
-        $querySql = 'SELECT `id`, `user`, `pass`, `name`, `role`
-                FROM `'.DB_PREFIX."users`
-                WHERE `user` = '$username'
-                AND `pass` = '$password'
-                AND `active` = 1";
-        $reqSql = sql_query($querySql);
-        if (!$reqSql)
-        {
-            User::logout();
-            throw new UserException(htmlspecialchars(_('Failed to log in.')));
-        }
-        $num_rows = mysql_num_rows($reqSql);
-
+        $result = Validate::credentials($username, $password);
         // Check if the user exists
-        if($num_rows != 1) {
+        if(count($result) != 1) {
             User::logout();
             throw new UserException(htmlspecialchars(_('Your username or password is incorrect.')));
         }
-        $result = mysql_fetch_assoc($reqSql);
-
-        $_SESSION['userid'] = $result['id'];
-        $_SESSION['user'] = $username;
-        $_SESSION['pass'] = $password;
-        $_SESSION['real_name'] = $result['name'];
-        $_SESSION['last_login'] = date('Y-m-d H:i:s');
+    
+        $_SESSION['userid'] = $result[0]["id"];      
+        $_SESSION['user'] = $result[0]["user"];
+        $_SESSION['real_name'] = $result[0]["name"];
+        User::$user_id = $result[0]['id'];
         include(ROOT.'include/allow.php');
-
-        // Set latest login time
-        $set_logintime_query = 'CALL `'.DB_PREFIX.'set_logintime`
-            ('.$_SESSION['userid'].', \''.$_SESSION['last_login'].'\')';
-        $reqSql = sql_query($set_logintime_query);
-        if (!$reqSql) {
-            User::logout();
-            throw new UserException('Failed to record last login time.');
-        }
-        User::$user_id = $result['id'];
+        setPermissions($result[0]['role']);
+        $_SESSION['last_login'] = User::updateLoginTime(User::$user_id);
         User::$logged_in = true;
+        
         
         // Convert unsalted password to a salted one
         if (strlen($password) === 64) {
-            $password = Validate::password($orig_pass);
+            $password = Validate::password($password);
             User::change_password($password);
             Log::newEvent("Converted the password of '$username' to use a password salting algorithm");
         }
@@ -125,7 +183,6 @@ class User
     {
         unset($_SESSION['userid']);
         unset($_SESSION['user']);
-        unset($_SESSION['pass']);
         unset($_SESSION['role']);
         unset($_SESSION['real_name']);
         unset($_SESSION['last_login']);
@@ -136,69 +193,127 @@ class User
     }
     
     /**
-     * Change the password of the currently logged in user
-     * @param string $new_password Already escaped password
+     * Change the password of the supplied user; if none supplied, currently logged in user is used.
+     * @param string $new_password
+     * @param int $userid defaults to currently logged in user.
+     * @throws UserException
      */
-    static function change_password($new_password) {
-        $user_id = User::$user_id;
-        
-        if (!User::$logged_in)
-            throw new UserException(htmlspecialchars(_('You must be logged in to change a password.')));
-
-        $query = 'UPDATE `'.DB_PREFIX."users`
-            SET `pass` = '$new_password'
-            WHERE `id` = $user_id";
-        $handle = sql_query($query);
-        if (!$handle)
-            throw new UserException(htmlspecialchars(_('Failed to change your password.')));
-        
-        $_SESSION['pass'] = $new_password;
+    static function change_password($new_password, $userid = 0) {
+        if ($userid === 0)
+            if (!User::$logged_in)
+                throw new UserException(htmlspecialchars(_('You must be logged in to change a password.')));
+            else
+                $userid = User::$user_id;
+   
+        try{
+            $count = DBConnection::get()->query(
+                "UPDATE `".DB_PREFIX."users`
+                SET `pass`   = :pass
+    	        WHERE `id` = :userid",
+                DBConnection::ROW_COUNT,
+                array(
+                        ':userid'   => (int) $userid,
+                        ':pass'     => (string) $new_password
+                )
+            );
+            if ($count === 0)
+                throw new DBException();
+        }catch(DBException $e){
+            throw new UserException(htmlspecialchars(
+                _('An error occured while trying to change your password.') .' '.
+                _('Please contact a website administrator.')
+            ));
+        }
     }
+    
+    static function verifyAndChangePassword($current, $new1, $new2, $userid)
+    {
+        try{
+            DBConnection::get()->beginTransaction();
+            $count = DBConnection::get()->query(
+                "SELECT `id`
+                FROM `" . DB_PREFIX . "users`
+                WHERE `id` = :userid AND `pass` = :pass",
+                DBConnection::ROW_COUNT,
+                array
+                (
+                    ':userid'   => (int) $userid,
+                    ':pass'   => Validate::password($current, null, null, $userid)
+                )
+            );
 
-    static function exists($username) {
-	try { Validate::username($username); }
-	catch (UserException $e) {
-	    return false;
-	}
-	
-	$query = 'SELECT `id`
-                FROM `'.DB_PREFIX."users`
-                WHERE `user` = '$username'";
-	$handle = sql_query($query);
-	if (!$handle)
-	    return false;
-	if (mysql_num_rows($handle) === 0)
-	    return false;
-	return true;
+            if($count < 1)
+                throw new UserException(htmlspecialchars(_('Current password invalid.')));
+                
+            $new_hashed = Validate::password($new1, $new2);
+            User::change_password($new_hashed, $userid);
+            DBConnection::get()->commit();
+        
+        }catch(DBException $e){
+            throw new UserException(htmlspecialchars(
+                    _('An error occured while trying to change your password.') .' '.
+                    _('Please contact a website administrator.')
+            ));
+        }
+        
     }
     
     /**
      * Activate a new user
-     * @param string $username
+     * @param int $userid
      * @param string $ver_code 
+     * @throws UserException when activation failed
      */
-    static function validate($username, $ver_code) {
-        $username = mysql_real_escape_string($username);
-        $ver_code = mysql_real_escape_string($ver_code);
-        $lookup_query = 'SELECT `id` FROM `'.DB_PREFIX."users`
-            WHERE `user` = '$username'
-            AND `verify` = '$ver_code'
-            AND `active` = 0";
-        $lookup_handle = sql_query($lookup_query);
-        if (!$lookup_handle)
-            throw new UserException('Failed to search for the user record to validate.');
-        if (mysql_num_rows($lookup_handle) === 0)
-            throw new UserException('Could not activate this user. Either they do not exist, the account is already active, or the verification code is incorrect.');
-
-        $query = "UPDATE `".DB_PREFIX."users`
-            SET `active` = '1', `verify` = ''
-            WHERE `verify` = '$ver_code'
-            AND `user` = '$username'";
-        $handle = sql_query($query);
-        if (!$handle)
-            throw new UserException('Failed to activate user.');
-        
-        Log::newEvent("New user activated: '$username'");
+    static function activate($userid, $ver_code) {
+        Verification::verify($userid, $ver_code);
+        try{
+            $count = DBConnection::get()->query(
+                "UPDATE `".DB_PREFIX."users` 
+                SET `active` = '1' 
+    	        WHERE `id` = :userid",
+                DBConnection::ROW_COUNT,
+                array(
+                        ':userid'   => $userid
+                )
+            );
+            if ($count === 0)
+                throw new DBException();
+            Verification::delete($userid);
+        }catch(DBException $e){
+            throw new UserException(htmlspecialchars(
+                    _('An error occurred trying to activate your useraccount.') .' '.
+                    _('Please contact a website administrator.')
+            ));
+        }        
+        Log::newEvent("User with ID '{$userid}' activated.");
+    }
+    
+    public static function recover($username, $email)
+    {
+        // Check all form input
+        $username = Validate::username($username);
+        $email = Validate::email($email);       
+        try{
+            $userid = Validate::account($username, $email);
+            $verification_code = Verification::generate($userid);
+            
+            // Send verification email
+            try {
+                $mail = new SMail;
+                $mail->passwordResetNotification($email, $userid, $username, $verification_code, 'password-reset.php');
+            }
+            catch (Exception $e) {
+                Log::newEvent('Password reset email for "'.$username.'" could not be sent.');
+                throw new UserException($e->getMessage().' '._('Please contact a website administrator.'));
+            }
+            Log::newEvent("Password reset request for user '$username'");
+            
+        }catch(DBException $e){
+            throw new UserException(htmlspecialchars(
+                    _('An error occurred trying to validate your username and email-address for password reset.') .' '.
+                    _('Please contact a website administrator.')
+            ));
+        }
     }
 
     /**
@@ -211,57 +326,192 @@ class User
      * @param string $terms
      * @throws UserException 
      */
-    public static function register($username, $password, $password_conf, $email, $name, $terms) {
-	// Sanitize inputs
-	$username = Validate::username($username);
-	$password = Validate::password($password, $password_conf);
-	$email = Validate::email($email);
-	$name = Validate::realname($name);
-	$terms = Validate::checkbox($terms,htmlspecialchars(_('You must agree to the terms to register.')));
+    public static function register($username, $password, $password_conf, $email, $name, $terms)
+    {
+	    // Sanitize inputs
+	    $username = Validate::username($username);
+	    $password = Validate::password($password, $password_conf);
+	    $email = Validate::email($email);
+	    $name = Validate::realname($name);
+	    $terms = Validate::checkbox($terms,htmlspecialchars(_('You must agree to the terms to register.')));
+	    DBConnection::get()->beginTransaction();
+	    // Make sure requested username is not taken
+        try{
+            $result = DBConnection::get()->query(
+                "SELECT `user` 
+    	        FROM `".DB_PREFIX."users` 
+    	        WHERE `user` LIKE :username",
+                DBConnection::FETCH_ALL,
+                array(
+                    ':username'   => $username
+    	        )	        
+            );
+        }catch(DBException $e){
+            throw new UserException(htmlspecialchars(
+                _('An error occurred trying to validate your username.') .' '.
+                _('Please contact a website administrator.')
+            ));
+        }
+        if(count($result) !== 0){
+	        throw new UserException(htmlspecialchars(
+	            _('This username is already taken.')
+            ));
+        }
+	    // Make sure the email address is unique
+        try{
+            $result = DBConnection::get()->query(
+                "SELECT `email` 
+    	        FROM `".DB_PREFIX."users` 
+    	        WHERE `email` LIKE :email",
+                DBConnection::FETCH_ALL,
+                array(
+                    ':email'   => $email
+    	        )	        
+            );
+        }catch(DBException $e){
+            throw new UserException(htmlspecialchars(
+                _('An error occurred trying to validate your email address.') .' '.
+                _('Please contact a website administrator.')
+            ));
+        }
+        if(count($result) !== 0){
+	        throw new UserException(htmlspecialchars(
+	            _('This email address is already taken.')
+            ));
+        }
 
-	// Make sure requested username is not taken
-	$check_name_query = "SELECT `user` FROM `".DB_PREFIX."users` WHERE `user` = '$username'";
-	$check_name_handle = sql_query($check_name_query);
-	if (!$check_name_handle)
-	    throw new UserException(htmlspecialchars(
-		    _('An error occurred trying to validate your username.')
-		    .' '._('Please contact a website administrator.')));
-	if (mysql_num_rows($check_name_handle) !== 0)
-	    throw new UserException(htmlspecialchars(_('Your username has already been used.')));
+	    // No exception occurred - continue with registration
+        try{
+            $count = DBConnection::get()->query
+            (
+                "INSERT INTO `".DB_PREFIX."users` 
+                (`user`,`pass`,`name`, `role`, `email`, `active`, `reg_date`)
+                VALUES(:username, :password, :name, :role, :email, 0, CURRENT_DATE())",
+                DBConnection::ROW_COUNT,
+                array
+                (
+                    ':username'     => $username,
+                    ':password'     => $password,
+                    ':name'         => $name,
+                    ':role'         => "basicUser",
+                    ':email'        => $email                            
+                )
+            );
+            if($count != 1){
+                throw new DBException();
+            }
+            $userid = DBConnection::get()->lastInsertId();
+            DBConnection::get()->commit();
+            $verification_code = Verification::generate($userid);
+            // Send verification email
+            try {
+                $mail = new SMail;
+                $mail->newAccountNotification($email, $userid, $username, $verification_code, 'register.php');
+            }
+            catch (Exception $e) {
+                Log::newEvent("Registration email for user '$username' with id '$userid' failed.");
+                throw new UserException($e->getMessage().' '._('Please contact a website administrator.'));
+            }
+            Log::newEvent("Registration submitted for user '$username' with id '$userid'.");
+        }catch(DBException $e){
+            throw new UserException(htmlspecialchars(
+		        _('An error occurred while creating your account.') .' '. 
+		        _('Please contact a website administrator.')
+            ));
+        }
+        
 
-	// Make sure the email address is unique
-	$check_email_query = "SELECT `email` FROM `".DB_PREFIX."users` WHERE `email` = '$email'";
-	$check_email_handle = sql_query($check_email_query);
-	if (!$check_email_handle)
-	    throw new UserException(htmlspecialchars(
-		    _('An error occurred trying to validate your email address.')
-		    .' '._('Please contact a website administrator.')));
-	if (mysql_num_rows($check_email_handle) !== 0)
-	    throw new UserException(htmlspecialchars(_('Your email address has already been used.')));
-
-	// No exception occurred - continue with registration
-
-	// Generate verification code
-	$verification_code = cryptUrl(12);
-	$creation_date = date('Y-m-d');
-	$create_query = 'CALL `'.DB_PREFIX."register_user`
-	    ('$username','$password','$name','$email','$verification_code','$creation_date')";
-	$create_handle = sql_query($create_query);
-	if (!$create_handle)
-	    throw new UserException(htmlspecialchars(
-		    _('An error occurred while creating your account.')
-		    .' '._('Please contact a website administrator.')));
-
-	// Send verification email
-	try {
-	    $mail = new SMail;
-	    $mail->newAccountNotification($email, $username, $verification_code, SITE_ROOT.'register.php');
-	}
-	catch (Exception $e) {
-	    Log::newEvent("Registration email for '$username' failed.");
-	    throw new UserException($e->getMessage().' '._('Please contact a website administrator.'));
-	}
-	Log::newEvent("Registration submitted for user '$username'");
+    }
+        
+    
+    public static function fetchFromID($id)
+    {
+        try{
+            $result = DBConnection::get()->query
+            (
+                "SELECT user
+                FROM `" . DB_PREFIX . "users`
+                WHERE id = :id",
+                DBConnection::FETCH_ALL,
+                array
+                (
+                    ':id'     => (int) $id                         
+                )
+            );
+            foreach ($result as $user)
+            {
+                return new User($id, $user['user']);
+            }
+            throw new UserException(htmlspecialchars(
+                _("Tried to fetch an user that doesn't exist.") .' '.
+                _('Please contact a website administrator.')
+            ));
+        }catch(DBException $e){
+            throw new UserException(htmlspecialchars(
+                    _('An error occurred while performing your search query.') .' '.
+                    _('Please contact a website administrator.')
+            ));
+        }    
+    }
+    
+    /**
+     *
+     * @param string $search_string
+     * @throws UserException
+     * @return multitype:User
+     */
+    public static function searchUsers($search_string) {   
+        $terms = preg_split("/[\s,]+/", strip_tags($search_string));
+        $index = 0;
+        $parameters = array();
+        $query_parts = array();
+        foreach($terms as $term){
+            if(strlen($term) > 2){
+                $parameter = ":userid" . $index;
+                $index++;
+                $query_parts[]= "`user` RLIKE " . $parameter;
+                $parameters[$parameter] = $term;
+            }
+        }
+        $matched_users = array();
+        if($index > 0){
+            try{
+                $result = DBConnection::get()->query
+                (
+                    "SELECT id, user
+                    FROM `" . DB_PREFIX . "users`
+                    WHERE " . implode(" OR ",$query_parts),
+                    DBConnection::FETCH_ALL,
+                    $parameters
+                );
+                foreach ($result as $user)
+                {
+                    $matched_users[] = new User($user['id'], $user['user']);
+                }
+            }catch(DBException $e){
+                throw new UserException(htmlspecialchars(
+                    _('An error occurred while performing your search query.') .' '.
+                    _('Please contact a website administrator.')
+                ));
+            }
+        }
+        return $matched_users;
+    }
+    
+    /**
+     *
+     * @param string $search_string
+     * @throws UserException
+     * @return multitype:User
+     */
+    public static function searchUsersAsXML($search_string) {
+        $partial_output = new XMLOutput();
+        $partial_output->startElement('users');
+        foreach (User::searchUsers($search_string) as $user){
+            $partial_output->insert($user->asXML());
+        }
+        $partial_output->endElement();
+        return $partial_output->asString();
     }
     
     /**
@@ -269,20 +519,21 @@ class User
      * @return string Role identifier
      */
     public static function getRole() {
-	if (!User::$logged_in) {
-	    return 'unregistered';
-	} else {
-	    $query = 'SELECT `role`
-		FROM `'.DB_PREFIX.'users`
-		WHERE `user` = \''.mysql_real_escape_string($_SESSION['user']).'\'';
-	    $handle = sql_query($query);
-	    if (!$handle) return 'unregistered';
-	    
-	    $result = mysql_fetch_array($handle);
-	    return $result[0];
-	}
-    }
+	    if (!User::$logged_in) {
+	        return 'unregistered';
+	    } else {
+	        $query = 'SELECT `role`
+		    FROM `'.DB_PREFIX.'users`
+		    WHERE `user` = \''.mysql_real_escape_string($_SESSION['user']).'\'';
+	        $handle = sql_query($query);
+	        if (!$handle) return 'unregistered';
+	        
+	        $result = mysql_fetch_array($handle);
+	        return $result[0];
+        }
+    } // FIXME
 }
+
 User::init();
 
 function loadUsers()

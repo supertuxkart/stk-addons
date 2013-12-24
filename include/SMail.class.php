@@ -19,6 +19,7 @@
 
 // Include PEAR::Mail
 require_once('Mail.php');
+require_once(ROOT . 'include.php');
 
 class SMail {
     private $factory;
@@ -46,10 +47,9 @@ class SMail {
 	);
     }
     
-    public function newAccountNotification($email, $username, $ver_code, $ver_page) {
-	$url_username = urlencode($username);
+    public function newAccountNotification($email, $userid, $username, $ver_code, $ver_page) {
 	$message = "Thank you for registering an account on the SuperTuxKart Add-Ons Manager.\n".
-		"Please go to $ver_page?action=valid&num=$ver_code&user=$url_username to activate your account.\n\n".
+		"Please go to http://{$_SERVER["SERVER_NAME"]}/$ver_page?action=valid&num=$ver_code&user=$userid to activate your account.\n\n".
 		"Username: $username";
         $subject = "New Account at ".$_SERVER["SERVER_NAME"];
 	
@@ -60,10 +60,9 @@ class SMail {
 	    throw new Exception($result->getMessage());
     }
     
-    public function passwordResetNotification($email, $username, $ver_code, $ver_page) {
-	$url_username = urlencode($username);
+    public function passwordResetNotification($email, $userid, $username, $ver_code, $ver_page) {
 	$message = "You have requested to reset your password on the SuperTuxKart Add-Ons Manager.\n".
-		"Please go to http://{$_SERVER["SERVER_NAME"]}$ver_page?action=valid&num=$ver_code&user=$url_username to reset your password.\n\n".
+		"Please go to http://{$_SERVER["SERVER_NAME"]}/$ver_page?action=valid&num=$ver_code&user=$userid to reset your password.\n\n".
 		"Username: $username";
         $subject = "Reset Password on ".$_SERVER["SERVER_NAME"];
 	

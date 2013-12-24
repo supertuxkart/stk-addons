@@ -1,6 +1,7 @@
 <?php
 /**
  * copyright 2011 Stephen Just <stephenjust@users.sf.net>
+ *           2013 Glenn De Jonghe
  *
  * This file is part of stkaddons
  *
@@ -18,11 +19,46 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once(ROOT. 'include/DBConnection.class.php');
+require_once(ROOT. 'include/exceptions.php');
+
 /**
  * Class to contain all string validation functions
  * @author stephenjust
  */
 class Validate {
+    
+    /**
+     * Checks a username/email address combination and returns the user id if valid
+     * @param string $username
+     * @param string $email
+     * @throws DBException when something unexpected with the database happened
+     * @throws UserException when username/email combination is invalid
+     */
+    public static function account($username, $email){
+        $result = DBConnection::get()->query(
+            "SELECT `id`
+	        FROM `".DB_PREFIX."users`
+	        WHERE `user` = :username
+            AND `email` = :email
+            AND `active` = 1",
+            DBConnection::FETCH_ALL,
+            array(
+                    ':username'   => $username,
+                    ':email'    => $email
+            )
+        );
+        if(count($result) > 1){
+            throw new DBException();
+        }
+        if(count($result) === 0){
+            throw new UserException(htmlspecialchars(
+                _('Username and email address combination not found.')
+            ));
+        }
+        return $result[0]['id'];
+    }
+    
     /**
      * Check if the input is a valid email address
      * @param string $email Email address
@@ -35,7 +71,7 @@ class Validate {
         if (!preg_match('/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i',$email)) {
             throw new UserException(htmlspecialchars(sprintf(_('"%s" is not a valid email address.'),$email)));
         }
-        return mysql_real_escape_string(htmlspecialchars($email));
+        return htmlspecialchars($email);
     }
     
     /**
@@ -50,39 +86,63 @@ class Validate {
         if (!preg_match('/^[a-z0-9]+$/i',$username)) {
             throw new UserException(htmlspecialchars(_('Your username can only contain alphanumeric characters.')));
         }
-        return mysql_real_escape_string(htmlspecialchars($username));
+        return htmlspecialchars($username);
     }
     
-    public static function password($password1, $password2 = NULL, $username = NULL) {
+    public static function password($password1, $password2 = NULL, $username = NULL, $userid = NULL) {
         // Check password properties
-        if (strlen($password1) < 6) {
-            throw new UserException(htmlspecialchars(_('Your password must be at least 6 characters long.')));
+        if (strlen($password1) < 8) {
+            throw new UserException(htmlspecialchars(_('Your password must be at least 8 characters long.')));
         }
         if ($password2 != NULL) {
             if ($password1 !== $password2) {
                 throw new UserException(htmlspecialchars(_('Your passwords do not match.')));
             }
         }
-
         // Salt password
         $salt_length = 32;
-        if ($username === NULL)
+        if ($username === NULL && $userid === NULL)
             $salt = md5(uniqid(NULL,true));
         else {
             // Get current user password entry to get salt
-            $query = 'SELECT `pass`
-                FROM `'.DB_PREFIX.'users`
-                WHERE `user` = \''.$username.'\'';
-            $handle = sql_query($query);
-            if (mysql_num_rows($handle) === 0)
+            
+            try{
+                if($userid === NULL)
+                {
+                    $result = DBConnection::get()->query(
+                        "SELECT `pass` 
+            	        FROM `". DB_PREFIX . "users`
+            	        WHERE `user` = :username",
+                        DBConnection::FETCH_ALL,
+                        array(
+                            ':username'   => $username
+                        )
+                    );
+                }else{
+                    $result = DBConnection::get()->query(
+                        "SELECT `pass`
+            	        FROM `". DB_PREFIX . "users`
+            	        WHERE `id` = :userid",
+                        DBConnection::FETCH_ALL,
+                        array(
+                            ':userid'   => (int) $userid
+                        )
+                    );
+                }
+            }catch(DBException $e){
+                throw new UserException(htmlspecialchars(
+                    _('An error occurred trying to validate your password.') .' '.
+                    _('Please contact a website administrator.')
+                ));
+            }
+            if(count($result) === 0){
                 $salt = md5(uniqid(NULL,true));
-            else {
-                $result = mysql_fetch_array($handle);
-                if (strlen($result[0]) == 64) {
+            }else {
+                if (strlen($result[0]['pass']) == 64) {
                     // Not a salted password
                     return hash('sha256',$password1);
                 }
-                $salt = substr($result[0], 0, $salt_length);
+                $salt = substr($result[0]['pass'], 0, $salt_length);
             }
         }
         return $salt.hash('sha256',$salt.$password1);
@@ -92,7 +152,7 @@ class Validate {
         if (strlen(trim($name)) < 2) {
             throw new UserException(htmlspecialchars(_('You must enter a name.')));
         }
-        return mysql_real_escape_string(htmlspecialchars(trim($name)));
+        return htmlspecialchars(trim($name));
     }
     
     public static function checkbox($box, $message) {
@@ -107,6 +167,39 @@ class Validate {
 	    throw new Exception('Invalid version string! Format should be: W.X.Y[-rcZ]');
 	}
 	return true;
+    }
+    
+    /**
+     * Check if the input is a valid alphanumeric username
+     * @param string $username Alphanumeric username
+     * @param string $password unhashed password
+     * @return associative array with user information from the database
+     */
+    public static function credentials($username, $password){
+        try{
+            $result = DBConnection::get()->query(
+                "SELECT `id`,`user`,`pass`,`name`,`role`
+                FROM `" . DB_PREFIX . "users`
+                WHERE `user` = :username AND `pass` = :pass",
+                DBConnection::FETCH_ALL,
+                array
+                (
+                    ':username'   => Validate::username($username),
+                    ':pass'   => Validate::password($password, null, $username)
+                )
+            );
+            return $result;
+        }
+        catch (UserException $e){
+            throw new UserException($e->getMessage());
+        }
+        catch (PDOException $e){
+            throw new UserException(htmlspecialchars(
+                _('An error occurred while signing in.') .' '.
+                _('Please contact a website administrator.')
+            ));
+        }
+    
     }
 }
 ?>

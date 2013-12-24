@@ -21,6 +21,7 @@
 session_start();
 define('ROOT','../');
 include_once('../include.php');
+require_once(ROOT. 'include/Ratings.class.php');
 AccessControl::setLevel('basicPage');
 
 if (!isset($_GET['addonId']))
@@ -30,7 +31,12 @@ if (!User::$logged_in)
 $addonId = mysql_real_escape_string(stripslashes($_GET['addonId']));
 $rating = new Ratings($addonId);
 if (isset($_GET['rating'])) {
-    $rating->setUserVote($_GET['rating']);
+    try{
+        $rating->setUserVote($_GET['rating']);
+    }catch (RatingsException $e)
+    {
+        //FIXME
+    }
     echo $rating->displayUserRating();
     exit;
 }

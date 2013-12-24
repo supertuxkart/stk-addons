@@ -1,7 +1,8 @@
 <?php
 /**
  * copyright 2011 Stephen Just <stephenjust@users.sf.net>
- *
+ *           2013 Glenn De Jonghe
+ *           
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -18,28 +19,30 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require(ROOT.'config.php');
+require_once(ROOT.'config.php');
 require_once(ROOT.'include/AccessControl.class.php');
+require_once(ROOT.'include/sql.php'); //needs to be removed eventually
+require_once(ROOT.'include/DBConnection.class.php');
 require_once(ROOT.'include/Template.class.php');
-require(ROOT.'include/Constants.php');
-require(ROOT.'include/exceptions.php');
-require(ROOT.'include/Log.class.php');
-require(ROOT.'include/Cache.class.php');
-require(ROOT.'include/ConfigManager.php');
-require(ROOT.'include/Validate.class.php');
+require_once(ROOT.'include/Constants.php');
+require_once(ROOT.'include/exceptions.php');
+require_once(ROOT.'include/Log.class.php');
+require_once(ROOT.'include/Cache.class.php');
+require_once(ROOT.'include/ConfigManager.php');
+require_once(ROOT.'include/Validate.class.php');
+require_once(ROOT.'include/Verification.class.php');
 require_once(ROOT.'include/File.class.php');
-require(ROOT.'include/SImage.class.php');
-require(ROOT.'include/SMail.class.php');
-require(ROOT.'include/News.class.php');
-require(ROOT.'include/PanelInterface.class.php');
-require(ROOT.'include/Addon.class.php');
-require(ROOT.'include/AddonViewer.class.php');
-require(ROOT.'include/locale.php');
-require_once(ROOT.'include/sql.php');
+require_once(ROOT.'include/SImage.class.php');
+require_once(ROOT.'include/SMail.class.php');
+require_once(ROOT.'include/News.class.php');
+require_once(ROOT.'include/PanelInterface.class.php');
+require_once(ROOT.'include/Addon.class.php');
+require_once(ROOT.'include/AddonViewer.class.php');
+require_once(ROOT.'include/locale.php');
 require_once(ROOT.'include/User.class.php');
-require(ROOT.'include/Ratings.class.php');
-require(ROOT.'include/coreUser.php');
-require(ROOT.'include/image.php');
-require(ROOT.'include/statistics.php');
-require(ROOT.'include/xmlWrite.php');
+require_once(ROOT.'include/Ratings.class.php');
+require_once(ROOT.'include/coreUser.php');
+require_once(ROOT.'include/image.php');
+require_once(ROOT.'include/statistics.php');
+require_once(ROOT.'include/xmlWrite.php');
 ?>

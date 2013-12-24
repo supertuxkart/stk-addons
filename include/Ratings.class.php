@@ -1,6 +1,7 @@
 <?php
 /**
  * copyright 2011-2013 Stephen Just <stephenjust@users.sf.net>
+ *                Glenn De Jonghe
  *
  * This file is part of stkaddons
  *
@@ -22,10 +23,20 @@
  * Class to handle add-on ratings
  * @author computerfreak97, sj04736
  */
+
+require_once(ROOT. 'include/ClientSession.class.php');
+require_once(ROOT. 'include/DBConnection.class.php');
+require_once(ROOT. 'include/exceptions.php');
+require_once(ROOT. 'include/XMLOutput.class.php');
+require_once(ROOT. 'include/sql.php'); //FIXME
+require_once(ROOT. 'include/xmlWrite.php');
+
+class RatingsException extends Exception {}
+
 class Ratings {
     private $addon_id = NULL;
-    private $min_rating = 1;
-    private $max_rating = 3;
+    private $min_rating = 0.5;
+    private $max_rating = 3.0;
     private $avg_rating = 0;
     private $count = 0;
 
@@ -34,19 +45,27 @@ class Ratings {
      * @var mixed A number, or false
      */
     private $user_vote = false;
-    private $user_vote_id = false;
     
     /**
      * Constructor
      * @param string $addon_id ID of addon to use
      * @param ClientSession $session
      */
-    public function Ratings($addon_id, $session = NULL) {
+    public function Ratings($addon_id, $fetch_everything = true) {
         $this->addon_id = $addon_id;
-        
-        $this->fetchAvgRating();
-        $this->fetchNumRatings();
-        $this->fetchUserVote($session);
+        if ($fetch_everything) {
+            $this->fetchAvgRating();
+            $this->fetchNumRatings();
+            $this->fetchUserVote();
+        }
+    }
+
+    /**
+     * 
+     * @return string
+     */
+    public function getAddonId(){
+        return $this->addon_id;
     }
 
     /**
@@ -76,7 +95,7 @@ class Ratings {
     }
     
     /**
-     * Calculate the average rating (rounded to the nearest integer)
+     * Calculate the average rating
      */
     private function fetchAvgRating() {
         $query = "SELECT avg(vote)
@@ -88,7 +107,7 @@ class Ratings {
     }
     
     /**
-     * Get the average rating, rounded to the nearest integer
+     * Get the average rating
      * @return integer Average rating
      */
     public function getAvgRating() {
@@ -140,104 +159,111 @@ class Ratings {
      * @param ClientSession $session
      */
     private function fetchUserVote($session = NULL) {
-	if ($session !== NULL) {
-	    $userid = $session->getUserId();
-	} else {
-	    if (!User::$logged_in)
-		return;
-	    $userid = $_SESSION['userid'];
-	}
-        
-        $query = "SELECT `id`,`vote`
+        try{
+        if ($session !== NULL) {
+            $userid = $session->getUserId();
+        } else {
+            if (!User::$logged_in)
+                throw new DBException();
+            $userid = $_SESSION['userid'];
+        }
+
+        $result = DBConnection::get()->query
+        (
+            "SELECT `vote` 
             FROM `".DB_PREFIX."votes`
-            WHERE `addon_id` = '$this->addon_id'
-            AND `user_id` = '$userid'";
-        $handle = sql_query($query);
+            WHERE `user_id` = :user_id
+            AND `addon_id` = :addon_id",
+            DBConnection::FETCH_ALL,
+            array
+            (
+                ':addon_id'     => (string) $this->addon_id,
+                ':user_id'      => (int) $userid
+            )
+        );
         
-        if (mysql_num_rows($handle) == 0)
+        }catch (DBException $e){
+            throw new RatingsException(
+                _('An unexpected error occured while fetching your last vote.') . ' ' .
+                _('Please contact a website administrator if this problem persists.'));
+        }
+        
+        if (count($result) == 0)
             return;
-        
-        $result = mysql_fetch_assoc($handle);
-        $this->user_vote = $result['vote'];
-        $this->user_vote_id = $result['id'];
+        $this->user_vote = $result[0]['vote'];
     }
     
     /**
      * Get the user's vote - a number if there is a vote, false if not
      * @return mixed A number or false
      */
-    public function getUserVote() {
+    public function getUserVote($session = NULL) {
+        if ($session !== NULL) {
+            $this->fetchUserVote($session);
+        }
         return $this->user_vote;
     }
     
     /**
-     * Set the user's vote
-     * @param integer $vote
-     * @return boolean Success
-     */
-    public function setUserVote($vote) {
-        // Round to integer
-        $vote = intval($vote);
-        
-        if (!User::$logged_in)
-            return false;
-        
-        if ($vote < $this->min_rating || $vote > $this->max_rating)
-            return false;
-        
-        if ($this->user_vote === false) {
-            $query = "INSERT INTO `".DB_PREFIX."votes`
-                (`user_id`, `addon_id`, `vote`)
-                VALUES
-                ('".$_SESSION['userid']."', '".$this->addon_id."', ".$vote.");";
-        } else {
-            $query = 'UPDATE `'.DB_PREFIX.'votes`
-                SET `vote` = '.$vote.'
-                WHERE `id` = '.$this->user_vote_id;
-        }
-        $handle = sql_query($query);
-        if (!$handle)
-            return false;
-        
-        $this->fetchAvgRating();
-        $this->fetchNumRatings();
-        $this->fetchUserVote();
-        return true;
-    }
-
-    /**
-     * Set the user's vote (when using client)
-     * @param integer $vote
+     * 
+     * @param float $vote
      * @param ClientSession $session
-     * @return boolean Success
+     * @throws RatingsException
+     * @return boolean new vote or not
      */
-    public function setClientVote($vote, $session) {
-        // Round to integer
-        $vote = intval($vote);
+    public function setUserVote($vote, $session) {
+        if ($session !== NULL) {
+            $userid = $session->getUserId();
+        } else {
+        if (!User::$logged_in)
+                throw new DBException();
+            $userid = $_SESSION['userid'];
+        }
         
         if ($vote < $this->min_rating || $vote > $this->max_rating)
-            return false;
+            throw new RatingsException(
+                _('The rating is out of allowed boundaries.') . ' ' .
+                _('Please contact a website administrator if this problem persists.'));
         
-        if ($this->user_vote === false) {
-            $query = "INSERT INTO `".DB_PREFIX."votes`
+        try{
+            $count = DBConnection::get()->query
+            (
+                "INSERT INTO `" . DB_PREFIX ."votes`
                 (`user_id`, `addon_id`, `vote`)
-                VALUES
-                ('".$session->getUserId()."', '".$this->addon_id."', ".$vote.");";
-        } else {
-            $query = 'UPDATE `'.DB_PREFIX.'votes`
-                SET `vote` = '.$vote.'
-                WHERE `id` = '.$this->user_vote_id;
+                VALUES (:user_id, :addon_id, :rating)
+                ON DUPLICATE KEY UPDATE vote = :rating",
+                DBConnection::ROW_COUNT,
+                array
+                (
+                    ':addon_id'     => (string) $this->addon_id,
+                    ':user_id'      => (int) $userid,
+                    ':rating'       => (float) $vote
+                )
+            );
+            if ($count === 1)
+                $new_vote = true;
+            elseif ($count === 2)
+                $new_vote = false;
+            else
+                throw new DBException();
+        }catch (DBException $e){
+            throw new RatingsException(
+                _('An unexpected error occured while performing your vote.') . ' ' .
+                _('Please contact a website administrator if this problem persists.'));
         }
-        $handle = sql_query($query);
-        if (!$handle)
-            return false;
+        
         
         $this->fetchAvgRating();
         $this->fetchNumRatings();
-        $this->fetchUserVote();
-        return true;
-    }
-    
+        $this->fetchUserVote($session); // FIXME
+
+	// Regenerate the XML files after voting
+	writeAssetXML();
+	writeNewsXML();	
+        
+        return $new_vote;
+        }
+        
     /**
      * Gets the percentage of total possible rating value
      * @return integer percent value
