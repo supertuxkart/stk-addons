@@ -23,6 +23,8 @@ if (DEBUG_MODE){
     ini_set('html_errors', 'On');
 }
 
+define('INCLUDE_DIR', ROOT.'include/');
+
 $dirUpload = "/media/serveur/stkaddons/upload/";
 $dirUploadCron = $dirUpload;
 $dirBase = "http://127.0.0.1/stkaddons/";

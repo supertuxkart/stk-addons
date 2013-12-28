@@ -18,9 +18,9 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('ROOT','../');
-include(ROOT.'include.php');
-include(ROOT.'include/Report.class.php');
+define('ROOT', '../');
+require_once(ROOT . 'config.php');
+require_once(INCLUDE_DIR . 'Report.class.php');
 
 $report = new Report("STK Add-Ons File Report");
 $description = '<p>This report contains a list of all addon package files, and '
