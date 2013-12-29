@@ -1,6 +1,6 @@
 <?php
 /**
- * copyright 2011 Stephen Just <stephenjust@users.sf.net>
+ * Copyright 2011-2013 Stephen Just <stephenjust@users.sf.net>
  *
  * This file is part of stkaddons
  *
@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+require_once(ROOT . 'include/DBConnection.class.php');
 
 class Addon {
     public static $allowedTypes = array('karts','tracks','arenas');
@@ -41,47 +43,51 @@ class Addon {
      * @param string $id 
      */
     public function Addon($id) {
-        $id = Addon::cleanId($id);
-        $this->id = $id;
+        $this->id = Addon::cleanId($id);
 
-        $query = 'SELECT `type`,`name`,`uploader`,`creation_date`,
-                `designer`,`description`,`license`,`min_include_ver`,`max_include_ver`
-            FROM `'.DB_PREFIX."addons`
-            WHERE `id` = '$id'";
-
-        $handle = sql_query($query);
-        if (!$handle)
+        try {
+            $result = DBConnection::get()->query(
+                    'SELECT `type`,`name`,`uploader`,`creation_date`,
+                     `designer`,`description`,`license`,`min_include_ver`,`max_include_ver`
+                     FROM `'.DB_PREFIX.'addons`
+                     WHERE `id` = :id',
+                    DBConnection::FETCH_ALL,
+                    array(':id' => (string) $this->id));
+        } catch (DBException $e) {
             throw new AddonException('Failed to read the requested add-on\'s information.');
+        }
         
-        if (mysql_num_rows($handle) === 0)
+        if (count($result) === 0)
             throw new AddonException(htmlspecialchars(_('The requested add-on does not exist.')));
 
-        $result = mysql_fetch_assoc($handle);
-        $this->type = $result['type'];
-        $this->name = $result['name'];
-        $this->uploaderId = $result['uploader'];
-        $this->creationDate = $result['creation_date'];
-        $this->designer = $result['designer'];
-        $this->description = $result['description'];
-        $this->license = $result['license'];
+        $this->type = $result[0]['type'];
+        $this->name = $result[0]['name'];
+        $this->uploaderId = $result[0]['uploader'];
+        $this->creationDate = $result[0]['creation_date'];
+        $this->designer = $result[0]['designer'];
+        $this->description = $result[0]['description'];
+        $this->license = $result[0]['license'];
         $this->permalink = SITE_ROOT.'addons.php?type='.$this->type.'&amp;name='.$this->id;
-	$this->minInclude = $result['min_include_ver'];
-	$this->maxInclude = $result['max_include_ver'];
+        $this->minInclude = $result[0]['min_include_ver'];
+        $this->maxInclude = $result[0]['max_include_ver'];
 
         // Get revisions
-        $revsQuery = 'SELECT *
-            FROM `'.DB_PREFIX.$this->type."_revs`
-            WHERE `addon_id` = '$this->id'
-            ORDER BY `revision` ASC";
-        $revsHandle = sql_query($revsQuery);
-        if (!$revsHandle)
+        try {
+            $revisions = DBConnection::get()->query(
+                    'SELECT *
+                     FROM `'.DB_PREFIX.$this->type.'_revs`
+                     WHERE `addon_id` = :id
+                     ORDER BY `revision` ASC',
+                    DBConnection::FETCH_ALL,
+                    array(':id' => $this->id));
+        } catch (DBException $e) {
             throw new AddonException('Failed to read the requested add-on\'s revision information.');
-
-        if (mysql_num_rows($revsHandle) === 0)
+        }
+            
+        if (count($revisions) === 0)
             throw new AddonException('No revisions of this add-on exist. This should never happen.');
 
-        for ($i = 1; $i <= mysql_num_rows($revsHandle); $i++) {
-            $rev = mysql_fetch_assoc($revsHandle);
+        foreach ($revisions AS $rev) {
             $currentRev = array(
                 'file'          => $rev['fileid'],
                 'format'        => $rev['format'],
@@ -114,10 +120,10 @@ class Addon {
     public static function create($type, $attributes, $fileid)
     {
         global $moderator_message;
-	foreach ($attributes['missing_textures'] AS $tex) {
-	    $moderator_message .= "Texture not found: $tex\n";
-	    echo '<span class="warning">'.htmlspecialchars(sprintf(_('Texture not found: %s'),$tex)).'</span><br />';
-	}
+        foreach ($attributes['missing_textures'] AS $tex) {
+            $moderator_message .= "Texture not found: $tex\n";
+            echo '<span class="warning">'.htmlspecialchars(sprintf(_('Texture not found: %s'),$tex)).'</span><br />';
+        }
 
         // Check if logged in
         if (!User::$logged_in)
@@ -287,8 +293,8 @@ class Addon {
         if($_SESSION['role']['manageaddons'] != true && User::$user_id != $this->uploaderId)
             throw new AddonException(htmlentities(_('You do not have the necessary permissions to perform this action.')));
 
-	// Remove cache files for this add-on
-	Cache::clearAddon($this->id);
+        // Remove cache files for this add-on
+        Cache::clearAddon($this->id);
 	
         // Remove files associated with this addon
         $get_files_query = 'SELECT *
@@ -313,18 +319,6 @@ class Addon {
         if (!$remove_file_handle)
             echo '<span class="error">'.htmlspecialchars(_('Failed to remove file records for this addon.')).'</span><br />';
 
-        // Remove ratings associated with add-on
-        $ratings = new Ratings($this->id);
-        if (!$ratings->delete())
-            echo '<span class="error">'.htmlspecialchars(_('Failed to remove ratings for this add-on.')).'</span><br />';
-        
-        // Delete revisions
-        $revsQuery = 'DELETE FROM `'.DB_PREFIX.$this->type.'_revs`
-            WHERE `addon_id` = \''.$this->id.'\'';
-        $revsHandle = sql_query($revsQuery);
-        if (!$revsHandle)
-            throw new AddonException(htmlspecialchars(_('Failed to remove add-on revisions.')));
-
         // Remove addon entry
         if (!sql_remove_where('addons', 'id', $this->id))
             throw new AddonException(htmlspecialchars(_('Failed to remove addon.')));
@@ -345,29 +339,29 @@ class Addon {
     public function deleteRevision($rev) {
         if (!$_SESSION['role']['manageaddons'] && $this->uploaderID != User::$user_id)
             throw new AddonException(htmlspecialchars(_('You do not have the necessary permissions to perform this action.')));
-	$rev = (int)$rev;
-	if ($rev < 1 || !isset($this->revisions[$rev]))
-	    throw new AddonException(htmlspecialchars(_('The revision you are trying to delete does not exist.')));
-	if (count($this->revisions) == 1)
-	    throw new AddonException(htmlspecialchars(_('You cannot delete the last revision of an add-on.')));
-	if (($this->revisions[$rev]['status'] & F_LATEST))
-	    throw new AddonException(htmlspecialchars(_('You cannot delete the latest revision of an add-on. Please mark a different revision to be the latest revision first.')));
+        $rev = (int)$rev;
+        if ($rev < 1 || !isset($this->revisions[$rev]))
+            throw new AddonException(htmlspecialchars(_('The revision you are trying to delete does not exist.')));
+        if (count($this->revisions) == 1)
+            throw new AddonException(htmlspecialchars(_('You cannot delete the last revision of an add-on.')));
+        if (($this->revisions[$rev]['status'] & F_LATEST))
+            throw new AddonException(htmlspecialchars(_('You cannot delete the latest revision of an add-on. Please mark a different revision to be the latest revision first.')));
 	
-	// Queue addon file for deletion
-	if (!File::queueDelete($this->revisions[$rev]['file']))
-	    throw new AddonException(htmlspecialchars(_('The add-on file could not be queued for deletion.')));
+        // Queue addon file for deletion
+        if (!File::queueDelete($this->revisions[$rev]['file']))
+            throw new AddonException(htmlspecialchars(_('The add-on file could not be queued for deletion.')));
 	
-	// Remove the revision record from the database
-	$query = 'DELETE FROM `'.DB_PREFIX.$this->type.'_revs`
-	    WHERE `addon_id` = \''.$this->id.'\'
-	    AND `revision` = '.$rev;
-	$handle = sql_query($query);
-	if (!$handle)
-	    throw new AddonException(htmlspecialchars(_('The add-on revision could not be deleted.')));
+        // Remove the revision record from the database
+        $query = 'DELETE FROM `'.DB_PREFIX.$this->type.'_revs`
+            WHERE `addon_id` = \''.$this->id.'\'
+            AND `revision` = '.$rev;
+        $handle = sql_query($query);
+        if (!$handle)
+            throw new AddonException(htmlspecialchars(_('The add-on revision could not be deleted.')));
 	
-	Log::newEvent('Deleted revision '.$rev.' of \''.$this->name.'\'');
-	writeAssetXML();
-	writeNewsXML();
+        Log::newEvent('Deleted revision '.$rev.' of \''.$this->name.'\'');
+        writeAssetXML();
+        writeNewsXML();
     }
 
     public static function generateId($type,$name)
