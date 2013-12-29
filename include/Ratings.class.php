@@ -1,7 +1,7 @@
 <?php
 /**
  * copyright 2011-2013 Stephen Just <stephenjust@users.sf.net>
- *                Glenn De Jonghe
+ *           2013      Glenn De Jonghe
  *
  * This file is part of stkaddons
  *
@@ -28,7 +28,6 @@ require_once(ROOT. 'include/ClientSession.class.php');
 require_once(ROOT. 'include/DBConnection.class.php');
 require_once(ROOT. 'include/exceptions.php');
 require_once(ROOT. 'include/XMLOutput.class.php');
-require_once(ROOT. 'include/sql.php'); //FIXME
 require_once(ROOT. 'include/xmlWrite.php');
 
 class RatingsException extends Exception {}
@@ -73,12 +72,19 @@ class Ratings {
      * @return boolean Success
      */
     public function delete() {
-        $query = 'DELETE FROM `'.DB_PREFIX.'votes`
-            WHERE `addon_id` = \''.$this->addon_id.'\'';
-        $handle = sql_query($query);
-        if (!$handle)
+        try {
+        DBConnection::get()->query(
+                'DELETE FROM `'.DB_PREFIX.'votes`
+                WHERE `addon_id` = :addon_id',
+                DBConnection::NOTHING,
+                array(
+                    ':addon_id' => (string) $this->addon_id
+                ));
+            return true;
+        } catch (DBException $e) {
+            if (DEBUG_MODE) echo $e->getMessage();
             return false;
-        return true;
+        }
     }
 
     public function displayUserRating() {
@@ -98,12 +104,20 @@ class Ratings {
      * Calculate the average rating
      */
     private function fetchAvgRating() {
-        $query = "SELECT avg(vote)
-            FROM `".DB_PREFIX."votes`
-            WHERE `addon_id` = '".$this->addon_id."'";
-        $handle = sql_query($query);
-        $result = mysql_fetch_assoc($handle);
-        $this->avg_rating = $result['avg(vote)'];
+        try {
+            $result = DBConnection::get()->query(
+                    'SELECT avg(vote)
+                     FROM `'.DB_PREFIX.'votes`
+                     WHERE `addon_id` = :addon_id',
+                    DBConnection::FETCH_ALL,
+                    array(
+                        ':addon_id' => (string) $this->addon_id
+                    ));
+            $this->avg_rating = $result[0]['avg(vote)'];
+        } catch (DBException $e) {
+            if (DEBUG_MODE) echo $e->getMessage();
+            $this->avg_rating = 0.0;
+        }
     }
     
     /**
@@ -126,12 +140,20 @@ class Ratings {
      * Get the number of ratings in the database
      */
     private function fetchNumRatings() {
-        $query = "SELECT count(vote)
-            FROM `".DB_PREFIX."votes`
-                WHERE `addon_id` = '".$this->addon_id."'";
-        $handle = sql_query($query);
-        $result = mysql_fetch_assoc($handle);
-        $this->count = intval($result['count(vote)']);
+        try {
+            $result = DBConnection::get()->query(
+                    'SELECT count(vote)
+                     FROM `'.DB_PREFIX.'votes`
+                     WHERE `addon_id` = :addon_id',
+                    DBConnection::FETCH_ALL,
+                    array(
+                        ':addon_id' => (string) $this->addon_id
+                    ));
+            $this->count = intval($result[0]['count(vote)']);
+        } catch (DBException $e) {
+            if (DEBUG_MODE) echo $e->getMessage();
+            $this->count = -1;
+        }
     }
     
     /**
@@ -160,29 +182,30 @@ class Ratings {
      */
     private function fetchUserVote($session = NULL) {
         try{
-        if ($session !== NULL) {
-            $userid = $session->getUserId();
-        } else {
-            if (!User::$logged_in)
-                throw new DBException();
-            $userid = $_SESSION['userid'];
-        }
+            if ($session !== NULL) {
+                $userid = $session->getUserId();
+            } else {
+                if (!User::$logged_in)
+                    return;
+                $userid = $_SESSION['userid'];
+            }
 
-        $result = DBConnection::get()->query
-        (
-            "SELECT `vote` 
-            FROM `".DB_PREFIX."votes`
-            WHERE `user_id` = :user_id
-            AND `addon_id` = :addon_id",
-            DBConnection::FETCH_ALL,
-            array
+            $result = DBConnection::get()->query
             (
-                ':addon_id'     => (string) $this->addon_id,
-                ':user_id'      => (int) $userid
-            )
-        );
+                "SELECT `vote` 
+                FROM `".DB_PREFIX."votes`
+                WHERE `user_id` = :user_id
+                AND `addon_id` = :addon_id",
+                DBConnection::FETCH_ALL,
+                array
+                (
+                    ':addon_id'     => (string) $this->addon_id,
+                    ':user_id'      => (int) $userid
+                )
+            );
         
-        }catch (DBException $e){
+        } catch (DBException $e){
+            if (DEBUG_MODE) echo $e->getMessage();
             throw new RatingsException(
                 _('An unexpected error occured while fetching your last vote.') . ' ' .
                 _('Please contact a website administrator if this problem persists.'));
@@ -257,9 +280,9 @@ class Ratings {
         $this->fetchNumRatings();
         $this->fetchUserVote($session); // FIXME
 
-	// Regenerate the XML files after voting
-	writeAssetXML();
-	writeNewsXML();	
+        // Regenerate the XML files after voting
+        writeAssetXML();
+        writeNewsXML();	
         
         return $new_vote;
         }
