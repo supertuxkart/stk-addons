@@ -18,34 +18,38 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('ROOT','./');
-require('include.php');
+define('ROOT', './');
+require(ROOT . 'config.php');
+require_once(INCLUDE_DIR . 'locale.php');
 require_once(INCLUDE_DIR . 'Music.class.php');
+require_once(INCLUDE_DIR . 'User.class.php');
+require_once(INCLUDE_DIR . 'Template.class.php');
 
-AccessControl::setLevel(NULL);
+Template::setFile('music-browser.tpl');
 
-include('include/top.php');
-echo '</head><body>';
-include(ROOT.'include/menu.php');
+$tpl = array('title' => htmlspecialchars(_('STK Add-ons').' | '._('Browse Music')));
 
 $music_tracks = Music::getAllByTitle();
-if (count($music_tracks) === 0) {
-    include('include/footer.php');
-    exit;
-}
-
-echo '<div id="content">';
-echo '<table border="0">';
-
+$music_data = array();
 foreach ($music_tracks AS $track) {
-    echo '<tr>';
+    $music_data[] = $track->getTitle();
+    $music_data[] = $track->getArtist();
+    $music_data[] = $track->getLicense();
     $link = '<a href="'.DOWN_LOCATION.'music/'.$track->getFile().'">'.$track->getFile().'</a>';
-    echo "<td>{$track->getTitle()}</td><td>{$track->getArtist()}</td><td>{$track->getLicense()}</td><td>$link</td>";
-    echo '</tr>';
+    $music_data[] = $link;
 }
 
-echo '</table>';
-echo '</div>';
+$tpl['music_browser'] = array(
+    'heading' => htmlspecialchars(_('Browse Music')),
+    'cols' => array(
+        htmlspecialchars(_('Track Title')),
+        htmlspecialchars(_('Track Artist')),
+        htmlspecialchars(_('License')),
+        htmlspecialchars(_('File'))
+    ),
+    'data' => $music_data
+);
 
-include('include/footer.php');
+Template::assignments($tpl);
+Template::display();
 ?>
