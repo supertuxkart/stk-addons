@@ -54,27 +54,58 @@ class Log {
         if (!$_SESSION['role']['manageaddons'])
             throw new Exception('You do not have the necessary permissions to view the event log.');
         
-        $query = 'SELECT `l`.`date`,`l`.`user`,`l`.`message`,`u`.`name`
-            FROM `'.DB_PREFIX.'logs` `l`
-            LEFT JOIN `'.DB_PREFIX.'users` `u`
-            ON `l`.`user` = `u`.`id`
-            ORDER BY `l`.`date` DESC
-            LIMIT '.$number;
-        $handle = sql_query($query);
-        if (!$handle)
+        try {
+            $events = DBConnection::get()->query(
+                    'SELECT `l`.`date`, `l`.`user`, `l`.`message`, `u`.`name`
+                     FROM `'.DB_PREFIX.'logs` `l`
+                     LEFT JOIN `'.DB_PREFIX.'users` `u`
+                     ON `l`.`user` = `u`.`id`
+                     ORDER BY `l`.`date` DESC
+                     LIMIT :limit',
+                    DBConnection::FETCH_ALL,
+                    array(':limit' => (int) $number));
+        } catch (DBException $e) {
             throw new Exception('Failed to fetch log entries.');
-        
-        // Create the array of entries to return
-        $entries = array();
-        for ($i = 0; $i < mysql_num_rows($handle); $i++) {
-            $entry = mysql_fetch_assoc($handle);
-            $entries[] = $entry;
         }
-        return $entries;
+        
+        return $events;
     }
     
-    public static function emailUpdates() {
-        // FIXME: Stub
+    /**
+     * Gets a list of events that have not been emailed to the moderator list
+     * @return array
+     */
+    public static function getUnemailedEvents() {
+        try {
+            $events = DBConnection::get()->query(
+                    'SELECT `l`.`date`,`l`.`user`,`l`.`message`,`u`.`name`
+                     FROM `'.DB_PREFIX.'logs` `l`
+                     LEFT JOIN `'.DB_PREFIX.'users` `u`
+                     ON `l`.`user` = `u`.`id`
+                     WHERE `l`.`emailed` = 0
+                     ORDER BY `l`.`date` DESC',
+                    DBConnection::FETCH_ALL,
+                    null);
+            return $events;
+        } catch (DBException $e) {
+            print "Failed to load log for email.\n";
+            return array();
+        }
+    }
+    
+    /**
+     * Set the mailed flag on all log messages
+     * @throws Exception
+     */
+    public static function setAllEventsMailed() {
+        try {
+            DBConnection::get()->query(
+                    'UPDATE `'.DB_PREFIX.'logs` SET `emailed` = 1',
+                    DBConnection::NOTHING,
+                    null);
+        } catch (DBException $e) {
+            throw new Exception('Failed to mark log messages as mailed.');
+        }
     }
 }
 ?>

@@ -1,6 +1,6 @@
 <?php
 /**
- * copyright 2012 Stephen Just <stephenjust@users.sf.net>
+ * Copyright 2012-2013 Stephen Just <stephenjust@users.sf.net>
  *
  * This file is part of stkaddons
  *
@@ -18,9 +18,10 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('ROOT','../');
-define('CRON',1);
-require (ROOT.'include.php');
+define('ROOT', '/home/stkaddons/stkaddons-scripts/web/');
+define('CRON', 1);
+require_once(ROOT . 'config.php');
+require_once(INCLUDE_DIR . 'File.class.php');
 
 File::deleteQueuedFiles();
 ?>

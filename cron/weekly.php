@@ -1,6 +1,6 @@
 <?php
 /**
- * copyright 2012 Stephen Just <stephenjust@users.sf.net>
+ * Copyright 2012-2013 Stephen Just <stephenjust@users.sf.net>
  *
  * This file is part of stkaddons
  *
@@ -18,31 +18,23 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('ROOT','./web/');
-require (ROOT.'include.php');
+define('ROOT', '/home/stkaddons/stkaddons-scripts/web/');
+define('CRON', 1);
+require (ROOT . 'config.php');
+require_once(INCLUDE_DIR . 'Log.class.php');
 
 log_email();
 
 function log_email() {
-    $query = 'SELECT `l`.`date`,`l`.`user`,`l`.`message`,`u`.`name`
-            FROM `'.DB_PREFIX.'logs` `l`
-            LEFT JOIN `'.DB_PREFIX.'users` `u`
-            ON `l`.`user` = `u`.`id`
-            WHERE `l`.`emailed` = 0
-            ORDER BY `l`.`date` DESC';
-    $handle = sql_query($query);
-    if (!$handle)
-        throw new Exception('Query error in log_email(): '.mysql_error());
-    
-    if (mysql_num_rows($handle) == 0) {
+    $events = Log::getUnemailedEvents();
+    if (count($events) === 0) {
         print "No new log messages to email.\n";
         return;
     }
     
     $table = '<table><thead><tr><th>Date</th><th>User</th><th>Description</th></tr></thead><tbody>';
-    for ($i = 0; $i < mysql_num_rows($handle); $i++) {
-        $result = mysql_fetch_assoc($handle);
-        $table .= '<tr><td>'.$result['date'].'</td><td>'.$result['name'].'</td><td>'.$result['message'].'</td></tr>';
+    foreach ($events AS $event) {
+        $table .= '<tr><td>'.$event['date'].'</td><td>'.strip_tags($event['name']).'</td><td>'.strip_tags($event['message']).'</td></tr>';
     }
     $table .= '</tbody></table>';
     
@@ -50,11 +42,7 @@ function log_email() {
     
     moderator_email('Weekly log update',$content);
     
-    // Set emailed flag to true
-    $set_mailed_query = 'UPDATE `'.DB_PREFIX.'logs` SET `emailed` = 1';
-    $set_mailed_handle = sql_query($set_mailed_query);
-    if (!$set_mailed_handle)
-        throw new Exception('Failed to mark log messages as mailed.');
+    Log::setAllEventsMailed();
     
     print "Sent log message email.\n";
 }
