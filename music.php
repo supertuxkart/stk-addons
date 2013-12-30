@@ -20,33 +20,32 @@
 
 define('ROOT','./');
 require('include.php');
+require_once(INCLUDE_DIR . 'Music.class.php');
+
 AccessControl::setLevel(NULL);
 
 include('include/top.php');
 echo '</head><body>';
 include(ROOT.'include/menu.php');
 
-$music_list_query = 'SELECT * FROM `'.DB_PREFIX.'music`
-    ORDER BY `title` ASC';
-$music_list_handle = sql_query($music_list_query);
-if (!$music_list_handle || mysql_num_rows($music_list_handle) == 0) {
-    // no items
-} else {
-    echo '<div id="content">';
-    echo '<table border="0">';
-    
-    for ($i = 0; $i < mysql_num_rows($music_list_handle); $i++) {
-	echo '<tr>';
-	$result = mysql_fetch_assoc($music_list_handle);
-	$link = '<a href="'.DOWN_LOCATION.'music/'.$result['file'].'">'.$result['file'].'</a>';
-	echo "<td>{$result['title']}</td><td>{$result['artist']}</td><td>{$result['license']}</td><td>$link</td>";
-	echo '</tr>';
-    }
-    
-    echo '</table>';
-    echo '</div>';
+$music_tracks = Music::getAllByTitle();
+if (count($music_tracks) === 0) {
+    include('include/footer.php');
+    exit;
 }
 
+echo '<div id="content">';
+echo '<table border="0">';
+
+foreach ($music_tracks AS $track) {
+    echo '<tr>';
+    $link = '<a href="'.DOWN_LOCATION.'music/'.$track->getFile().'">'.$track->getFile().'</a>';
+    echo "<td>{$track->getTitle()}</td><td>{$track->getArtist()}</td><td>{$track->getLicense()}</td><td>$link</td>";
+    echo '</tr>';
+}
+
+echo '</table>';
+echo '</div>';
 
 include('include/footer.php');
 ?>
