@@ -19,8 +19,8 @@
  */
 
 define('ROOT','./');
-include_once('config.php');
-include_once('include/sql.php');
+require_once('config.php');
+require_once(INCLUDE_DIR . 'DBConnection.class.php');
 
 $dir = $_GET['type'];
 $file = $_GET['file'];
@@ -43,7 +43,6 @@ if ($dir != 'assets')
     $assetpath = $dir.'/'.$file;
 else
     $assetpath = $file;
-$filepath = UP_LOCATION.$assetpath;
 
 // Don't bother checking if the file exists - if it doesn't exist, you'll get
 // a 404 error anyways after redirecting. Yes, this may make the stats below
@@ -52,59 +51,46 @@ $filepath = UP_LOCATION.$assetpath;
 
 // Check user-agent
 $uagent = $_SERVER['HTTP_USER_AGENT'];
-if (preg_match('#^(SuperTuxKart/[a-z0-9\.\-_]+)( \\(.*\\))?$#',$uagent,$matches)) {
-    // Check if this user-agent is already known
-    $checkSql = 'SELECT `agent_string`, `disabled` FROM `'.DB_PREFIX.'clients`
-        WHERE `agent_string` = \''.mysql_real_escape_string($matches[1]).'\'';
-    $checkHandle = sql_query($checkSql);
-    if (mysql_num_rows($checkHandle) != 1)
-    {
-        // New user-agent. Add it to the database.
-        $newSql = 'INSERT INTO `'.DB_PREFIX.'clients`
-            (`agent_string`) VALUES (\''.mysql_real_escape_string($matches[1]).'\')';
-        $newHandle = sql_query($newSql);
-    }
-    else
-    {
-        $checkResult = sql_next($checkHandle);
-        if ($checkResult['disabled'] == 1)
-        {
-            header("HTTP/1.0 404 Not Found");
-            exit;
-        }
-    }
-    
-    // Increase daily count for this user-agent
-    $checkStatQuery = 'SELECT `id`
-        FROM `'.DB_PREFIX.'stats`
-        WHERE `type` = \'uagent '.mysql_real_escape_string($uagent).'\'
-        AND `date` = CURDATE()';
-    $checkStatHandle = sql_query($checkStatQuery);
-    if (!$checkStatHandle) {
+$matches = array();
+if (preg_match('#^(SuperTuxKart/[a-z0-9\\.\\-_]+)( \\(.*\\))?$#',$uagent,&$matches)) {
+    try {
+        DBConnection::get()->query(
+                'INSERT IGNORE INTO `'.DB_PREFIX.'clients`
+                 (`agent_string`)
+                 VALUES
+                 (:uagent)',
+                DBConnection::NOTHING,
+                array(':uagent' => $matches[1]));
+    } catch (DBException $e) {
         header("HTTP/1.0 404 Not Found");
         exit;
     }
-    if (mysql_num_rows($checkStatHandle) === 0) {
-        // Insert new stat record
-        $insertStatQuery = 'INSERT INTO `'.DB_PREFIX.'stats`
-            (`type`,`date`,`value`) VALUES
-            (\'uagent '.mysql_real_escape_string($uagent).'\',CURDATE(),1)';
-    } else {
-        $insertStatQuery = 'UPDATE `'.DB_PREFIX.'stats`
-            SET `value` = `value` + 1
-            WHERE `type` = \'uagent '.mysql_real_escape_string($uagent).'\'
-            AND `date` = CURDATE()';
-    }
-    $insertStatHandle = sql_query($insertStatQuery);
-    if (!$insertStatHandle) {
+    
+    // Increase daily count for this user-agent
+    try {
+        DBConnection::get()->query(
+            'INSERT INTO `'.DB_PREFIX.'stats`
+             (`type`,`date`,`value`)
+             VALUES
+             (:type, CURDATE(), 1)
+             ON DUPLICATE KEY UPDATE
+             `value` = `value` + 1',
+            DBConnection::NOTHING,
+            array(':type' => 'uagent '.$uagent));
+    } catch (DBException $e) {
         header("HTTP/1.0 404 Not Found");
+        echo 'Failed to update statistics';
         exit;
     }
 }
 
 // Update download count for addons
-$counterQuery = 'CALL `'.DB_PREFIX.'increment_download` (\''.$assetpath.'\')';
-$counterHandle = sql_query($counterQuery);
+try {
+    DBConnection::get()->query('CALL `'.DB_PREFIX.'increment_download` (:path)',
+            DBConnection::NOTHING, array(':path' => $assetpath));
+} catch (DBException $e) {
+    // Do nothing
+}
 
 // Redirect to actual resource
 if ($dir == 'xml') {

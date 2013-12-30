@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: sql
--- Generation Time: Dec 24, 2013 at 02:11 AM
+-- Generation Time: Dec 30, 2013 at 10:13 PM
 -- Server version: 5.1.72
 -- PHP Version: 5.3.3-7+squeeze18
 
@@ -147,12 +147,11 @@ CREATE TABLE IF NOT EXISTS `v2_cache` (
 --
 
 CREATE TABLE IF NOT EXISTS `v2_clients` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
   `agent_string` varchar(255) NOT NULL,
   `stk_version` varchar(64) NOT NULL DEFAULT 'latest',
   `disabled` int(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`agent_string`(32))
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -202,7 +201,8 @@ CREATE TABLE IF NOT EXISTS `v2_files` (
   `downloads` int(10) unsigned NOT NULL DEFAULT '0',
   `delete_date` date NOT NULL DEFAULT '0000-00-00',
   PRIMARY KEY (`id`),
-  KEY `delete_date` (`delete_date`)
+  KEY `delete_date` (`delete_date`),
+  KEY `addon_id` (`addon_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -367,13 +367,12 @@ CREATE TABLE IF NOT EXISTS `v2_server_conn` (
 --
 
 CREATE TABLE IF NOT EXISTS `v2_stats` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `type` text NOT NULL,
   `date` date NOT NULL,
   `value` int(10) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`date`,`type`(40)),
   KEY `date` (`date`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -466,6 +465,12 @@ ALTER TABLE `v2_addons`
 --
 ALTER TABLE `v2_arenas_revs`
   ADD CONSTRAINT `v2_arenas_revs_ibfk_1` FOREIGN KEY (`addon_id`) REFERENCES `v2_addons` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `v2_files`
+--
+ALTER TABLE `v2_files`
+  ADD CONSTRAINT `v2_files_ibfk_1` FOREIGN KEY (`addon_id`) REFERENCES `v2_addons` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `v2_karts_revs`
