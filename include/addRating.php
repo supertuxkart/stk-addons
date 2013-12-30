@@ -20,8 +20,10 @@
 
 session_start();
 define('ROOT','../');
-include_once('../include.php');
-require_once(ROOT. 'include/Ratings.class.php');
+require_once(ROOT . 'config.php');
+require_once(INCLUDE_DIR . 'sql.php'); // FIXME
+require_once(INCLUDE_DIR . 'AccessControl.class.php');
+require_once(INCLUDE_DIR . 'Ratings.class.php');
 AccessControl::setLevel('basicPage');
 
 if (!isset($_GET['addonId']))
@@ -32,7 +34,7 @@ $addonId = mysql_real_escape_string(stripslashes($_GET['addonId']));
 $rating = new Ratings($addonId);
 if (isset($_GET['rating'])) {
     try{
-        $rating->setUserVote($_GET['rating']);
+        $rating->setUserVote($_GET['rating'], NULL);
     }catch (RatingsException $e)
     {
         //FIXME

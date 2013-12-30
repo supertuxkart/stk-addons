@@ -19,13 +19,13 @@
  */
 
 
-require_once(ROOT. 'include/Validate.class.php');
-require_once(ROOT. 'include/Server.class.php');
-require_once(ROOT. 'include/DBConnection.class.php');
-require_once(ROOT. 'include/exceptions.php');
-require_once(ROOT. 'include/User.class.php');
-require_once(ROOT. 'include/Friend.class.php');
-require_once(ROOT. 'include/Achievement.class.php');
+require_once(INCLUDE_DIR . 'Validate.class.php');
+require_once(INCLUDE_DIR . 'Server.class.php');
+require_once(INCLUDE_DIR . 'DBConnection.class.php');
+require_once(INCLUDE_DIR . 'exceptions.php');
+require_once(INCLUDE_DIR . 'User.class.php');
+require_once(INCLUDE_DIR . 'Friend.class.php');
+require_once(INCLUDE_DIR . 'Achievement.class.php');
 
 class ClientSessionException extends Exception {}
 class ClientSessionConnectException extends ClientSessionException {}

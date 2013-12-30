@@ -19,7 +19,6 @@
 
 // Include PEAR::Mail
 require_once('Mail.php');
-require_once(ROOT . 'include.php');
 
 class SMail {
     private $factory;

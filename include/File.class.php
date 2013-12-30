@@ -18,6 +18,8 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once(INCLUDE_DIR . 'ConfigManager.php');
+
 function get_self()
 {
     $list = get_included_files();

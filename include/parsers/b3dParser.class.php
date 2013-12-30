@@ -18,7 +18,7 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(ROOT.'include/parsers/Parser.class.php');
+require_once(INCLUDE_DIR . 'parsers/Parser.class.php');
 
 /**
  * Helper class to parse B3D model files 

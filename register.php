@@ -1,7 +1,7 @@
 <?php
 /**
- * copyright 2009 Lucas Baudin <xapantu@gmail.com>
- *           2012 Stephen Just <stephenjust@users.sf.net>
+ * Copyright 2009      Lucas Baudin <xapantu@gmail.com>
+ *           2012-2013 Stephen Just <stephenjust@users.sf.net>
  *
  * This file is part of stkaddons
  *

@@ -18,6 +18,11 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once(INCLUDE_DIR . 'DBConnection.class.php');
+require_once(INCLUDE_DIR . 'sql.php'); // FIXME
+require_once(INCLUDE_DIR . 'Addon.class.php');
+require_once(INCLUDE_DIR . 'statistics.php');
+
 /**
  * Manage the newsfeed that is fed to the game
  *
@@ -27,24 +32,22 @@ class News {
 
     public static function refreshDynamicEntries() {
         // Get dynamic entries
-        $getQuery = 'SELECT * FROM `'.DB_PREFIX.'news`
-            WHERE `dynamic` = 1
-            ORDER BY `id` ASC';
-        $getHandle = sql_query($getQuery);
-        if (!$getHandle)
+        try {
+            $dynamic_entries = DBConnection::get()->query(
+                    'SELECT *
+                     FROM `'.DB_PREFIX.'news`
+                     WHERE `dynamic` = 1
+                     ORDER BY `id` ASC',
+                    DBConnection::FETCH_ALL,
+                    null);
+        } catch (DBException $e) {
             return false;
-        $numEntries = mysql_num_rows($getHandle);
-        // Build array of existing entries
-        $entries = array();
-        for ($i = 1; $i <= $numEntries; $i++) {
-            $entry = mysql_fetch_assoc($getHandle);
-            $entries[] = $entry;
         }
         
         // Dynamic newest kart display
         $new_kart = Addon::getName(stat_newest('karts'));
         $existing_id = false;
-        foreach ($entries AS $entry) {
+        foreach ($dynamic_entries AS $entry) {
             if (preg_match('/^Newest add-on kart: (.*)$/i',$entry['content'], $matches)) {
                 if ($matches[1] != $new_kart) {
                     // Delete old record
@@ -73,7 +76,7 @@ class News {
         // Dynamic newest track display
         $new_track = Addon::getName(stat_newest('tracks'));
         $existing_id = false;
-        foreach ($entries AS $entry) {
+        foreach ($dynamic_entries AS $entry) {
             if (preg_match('/^Newest add-on track: (.*)$/i',$entry['content'], $matches)) {
                 if ($matches[1] != $new_track) {
                     // Delete old record
@@ -102,7 +105,7 @@ class News {
         // Dynamic newest arena display
         $new_arena = Addon::getName(stat_newest('arenas'));
         $existing_id = false;
-        foreach ($entries AS $entry) {
+        foreach ($dynamic_entries AS $entry) {
             if (preg_match('/^Newest add-on arena: (.*)$/i',$entry['content'], $matches)) {
                 if ($matches[1] != $new_arena) {
                     // Delete old record
@@ -131,7 +134,7 @@ class News {
         // Add message for the latest blog-post
         $latest_blogpost = News::getLatestBlogPost();
         $existing_id = false;
-        foreach ($entries AS $entry) {
+        foreach ($dynamic_entries AS $entry) {
             if (preg_match('/^Latest post on stkblog.net: (.*)$/i',$entry['content'], $matches)) {
                 if ($matches[1] != $latest_blogpost) {
                     // Delete old record

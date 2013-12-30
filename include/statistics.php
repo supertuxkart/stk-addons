@@ -18,6 +18,8 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once(INCLUDE_DIR . 'sql.php');
+
 function stat_most_downloaded($addontype, $filetype = 'addon')
 {
     if ($addontype != 'karts' && $addontype != 'tracks')

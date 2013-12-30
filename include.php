@@ -1,7 +1,7 @@
 <?php
 /**
- * copyright 2011 Stephen Just <stephenjust@users.sf.net>
- *           2013 Glenn De Jonghe
+ * copyright 2011-2013 Stephen Just <stephenjust@users.sf.net>
+ *           2013      Glenn De Jonghe
  *           
  * This file is part of stkaddons
  *
@@ -20,29 +20,25 @@
  */
 
 require_once(ROOT.'config.php');
-require_once(ROOT.'include/AccessControl.class.php');
-require_once(ROOT.'include/sql.php'); //needs to be removed eventually
-require_once(ROOT.'include/DBConnection.class.php');
-require_once(ROOT.'include/Template.class.php');
-require_once(ROOT.'include/Constants.php');
-require_once(ROOT.'include/exceptions.php');
-require_once(ROOT.'include/Log.class.php');
-require_once(ROOT.'include/Cache.class.php');
-require_once(ROOT.'include/ConfigManager.php');
-require_once(ROOT.'include/Validate.class.php');
-require_once(ROOT.'include/Verification.class.php');
-require_once(ROOT.'include/File.class.php');
-require_once(ROOT.'include/SImage.class.php');
-require_once(ROOT.'include/SMail.class.php');
-require_once(ROOT.'include/News.class.php');
-require_once(ROOT.'include/PanelInterface.class.php');
-require_once(ROOT.'include/Addon.class.php');
-require_once(ROOT.'include/AddonViewer.class.php');
-require_once(ROOT.'include/locale.php');
-require_once(ROOT.'include/User.class.php');
-require_once(ROOT.'include/Ratings.class.php');
-require_once(ROOT.'include/coreUser.php');
-require_once(ROOT.'include/image.php');
-require_once(ROOT.'include/statistics.php');
-require_once(ROOT.'include/xmlWrite.php');
+require_once(INCLUDE_DIR.'AccessControl.class.php');
+require_once(INCLUDE_DIR.'DBConnection.class.php');
+require_once(INCLUDE_DIR.'Template.class.php');
+require_once(INCLUDE_DIR.'Constants.php');
+require_once(INCLUDE_DIR.'exceptions.php');
+require_once(INCLUDE_DIR.'Log.class.php');
+require_once(INCLUDE_DIR.'Cache.class.php');
+require_once(INCLUDE_DIR.'ConfigManager.php');
+require_once(INCLUDE_DIR.'Validate.class.php');
+require_once(INCLUDE_DIR.'Verification.class.php');
+require_once(INCLUDE_DIR.'File.class.php');
+require_once(INCLUDE_DIR.'SImage.class.php');
+require_once(INCLUDE_DIR.'SMail.class.php');
+require_once(INCLUDE_DIR.'PanelInterface.class.php');
+require_once(INCLUDE_DIR.'AddonViewer.class.php');
+require_once(INCLUDE_DIR.'locale.php');
+require_once(INCLUDE_DIR.'User.class.php');
+require_once(INCLUDE_DIR.'Ratings.class.php');
+require_once(INCLUDE_DIR.'coreUser.php');
+require_once(INCLUDE_DIR.'image.php');
+require_once(INCLUDE_DIR.'xmlWrite.php');
 ?>

@@ -18,8 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
-require_once(ROOT . 'include/parsers/b3dParser.class.php');
-require_once(ROOT . 'include/parsers/addonXMLParser.class.php');
+require_once(INCLUDE_DIR . 'parsers/b3dParser.class.php');
+require_once(INCLUDE_DIR . 'parsers/addonXMLParser.class.php');
 
 class Upload {    
     private $file_name = NULL;

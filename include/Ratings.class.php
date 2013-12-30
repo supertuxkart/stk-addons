@@ -24,11 +24,11 @@
  * @author computerfreak97, sj04736
  */
 
-require_once(ROOT. 'include/ClientSession.class.php');
-require_once(ROOT. 'include/DBConnection.class.php');
-require_once(ROOT. 'include/exceptions.php');
-require_once(ROOT. 'include/XMLOutput.class.php');
-require_once(ROOT. 'include/xmlWrite.php');
+require_once(INCLUDE_DIR . 'ClientSession.class.php');
+require_once(INCLUDE_DIR . 'DBConnection.class.php');
+require_once(INCLUDE_DIR . 'exceptions.php');
+require_once(INCLUDE_DIR . 'XMLOutput.class.php');
+require_once(INCLUDE_DIR . 'xmlWrite.php');
 
 class RatingsException extends Exception {}
 
@@ -238,7 +238,7 @@ class Ratings {
         if ($session !== NULL) {
             $userid = $session->getUserId();
         } else {
-        if (!User::$logged_in)
+            if (!User::$logged_in)
                 throw new DBException();
             $userid = $_SESSION['userid'];
         }

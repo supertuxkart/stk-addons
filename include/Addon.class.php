@@ -18,7 +18,7 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(ROOT . 'include/DBConnection.class.php');
+require_once(INCLUDE_DIR . 'DBConnection.class.php');
 
 class Addon {
     public static $allowedTypes = array('karts','tracks','arenas');

@@ -18,8 +18,8 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(ROOT . 'include/DBConnection.class.php');
-require_once(ROOT . 'include/User.class.php');
+require_once(INCLUDE_DIR . 'DBConnection.class.php');
+require_once(INCLUDE_DIR . 'User.class.php');
 
 class Log {
     /**

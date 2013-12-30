@@ -21,7 +21,7 @@
 define('ROOT','./');
 include('include.php');
 AccessControl::setLevel('addAddon');
-require_once(ROOT.'include/Upload.class.php');
+require_once(INCLUDE_DIR . 'Upload.class.php');
 include('include/top.php');
 
 // Define possibly undefined variables

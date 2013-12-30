@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
-require_once(ROOT.'include/SLocale.class.php');
+require_once(INCLUDE_DIR . 'SLocale.class.php');
 
 // Get the current page address (without "lang" parameter)
 $page_url = $_SERVER['REQUEST_URI'];

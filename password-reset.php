@@ -21,14 +21,14 @@
  */
 
 define('ROOT','./');
-include(ROOT. 'include.php');
+require_once(ROOT . 'include.php');
+require_once(INCLUDE_DIR . 'recaptchalib.php');
 
 Template::setFile('password-reset.tpl');
 $tpl = array();
 $tpl['title'] = htmlspecialchars(_('Reset Password').' - '._('STK Add-ons'));
 
 // CAPTCHA
-require_once(ROOT.'include/recaptchalib.php');
 $publickey = CAPTCHA_PUB; // you got this from the signup page
 $captcha = recaptcha_get_html($publickey);
 
@@ -78,7 +78,6 @@ switch ($_GET['action']) {
         try
         {
             // Check CAPTCHA
-            require_once(ROOT.'include/recaptchalib.php');
             $privatekey = CAPTCHA_PRIV;
             $resp = recaptcha_check_answer ($privatekey,
                             $_SERVER["REMOTE_ADDR"],

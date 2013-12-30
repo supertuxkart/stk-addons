@@ -16,8 +16,10 @@
  You should have received a copy of the GNU General Public License along with 
  stkaddons.  If not, see <http://www.gnu.org/licenses/>.   */
 
-define('ROOT','./');
-include('include.php');
+define('ROOT', './');
+require_once(ROOT . 'config.php');
+require_once(INCLUDE_DIR . 'locale.php');
+require_once(INCLUDE_DIR . 'Template.class.php');
 
 Template::setFile('info-page.tpl');
 $tpl = array();

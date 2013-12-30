@@ -1,33 +1,30 @@
 <?php
-/* copyright 2009 Lucas Baudin <xapantu@gmail.com>                 
-                                                                              
- This file is part of stkaddons.                                 
-                                                                              
- stkaddons is free software: you can redistribute it and/or      
- modify it under the terms of the GNU General Public License as published by  
- the Free Software Foundation, either version 3 of the License, or (at your   
- option) any later version.                                                   
-                                                                              
- stkaddons is distributed in the hope that it will be useful, but
- WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for    
- more details.                                                                
-                                                                              
- You should have received a copy of the GNU General Public License along with 
- stkaddons.  If not, see <http://www.gnu.org/licenses/>.   */
-?>
-<?php
-/***************************************************************************
-Project: STK Addon Manager
+/**
+ * Copyright 2009      Lucas Baudin <xapantu@gmail.com>
+ *           2011-2013 Stephen Just <stephenjust@users.sourceforge.net>
+ *
+ * This file is part of stkaddons
+ *
+ * stkaddons is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * stkaddons is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
-File: login.php
-Version: 1
-Licence: GPLv3
-Description: login page
-
-***************************************************************************/
 define('ROOT','./');
-include(ROOT.'include.php');
+require_once(ROOT . 'config.php');
+require_once(INCLUDE_DIR . 'locale.php');
+require_once(INCLUDE_DIR . 'File.class.php');
+require_once(INCLUDE_DIR . 'Template.class.php');
+require_once(INCLUDE_DIR . 'User.class.php');
 
 // define possibly undefined variables
 $_POST['user'] = (isset($_POST['user'])) ? $_POST['user'] : NULL;

@@ -1,6 +1,6 @@
 <?php
 /**
- * copyright 2012 Stephen Just <stephenjust@users.sf.net>
+ * Copyright 2012-2013 Stephen Just <stephenjust@users.sf.net>
  *
  * This file is part of stkaddons
  *
@@ -19,6 +19,8 @@
  */
 
 require_once('libs/Smarty.class.php');
+require_once(INCLUDE_DIR . 'File.class.php');
+require_once(INCLUDE_DIR . 'User.class.php');
 
 /**
  * Create a template object 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * copyright 2012 Stephen Just <stephenjust@users.sf.net>
  *
@@ -17,16 +18,15 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once(ROOT.'include/sql.php');
-require_once(ROOT.'include/File.class.php');
-require_once(ROOT.'include/User.class.php');
+require_once(INCLUDE_DIR . 'File.class.php');
+require_once(INCLUDE_DIR . 'User.class.php');
 
 class AccessControl {
+
     // Define permission levels
     private static $permissions = array(
-	'basicUser' => array(
-	    'basicPage' => true,
+        'basicUser' => array(
+            'basicPage' => true,
             'addAddon' => true,
             'manageaddons' => false,
             'managebasicUsers' => false,
@@ -34,9 +34,9 @@ class AccessControl {
             'manageadministrators' => false,
             'manageroots' => false,
             'managesettings' => false
-	),
-	'moderator' => array(
-	    'basicPage' => true,
+        ),
+        'moderator' => array(
+            'basicPage' => true,
             'addAddon' => true,
             'manageaddons' => true,
             'managebasicUsers' => true,
@@ -44,9 +44,9 @@ class AccessControl {
             'manageadministrators' => false,
             'manageroots' => false,
             'managesettings' => false
-	),
-	'administrator' => array(
-	    'basicPage' => true,
+        ),
+        'administrator' => array(
+            'basicPage' => true,
             'addAddon' => true,
             'manageaddons' => true,
             'managebasicUsers' => true,
@@ -54,9 +54,9 @@ class AccessControl {
             'manageadministrators' => false,
             'manageroots' => false,
             'managesettings' => true
-	),
-	'root' => array(
-	    'basicPage' => true,
+        ),
+        'root' => array(
+            'basicPage' => true,
             'addAddon' => true,
             'manageaddons' => true,
             'managebasicUsers' => true,
@@ -64,38 +64,42 @@ class AccessControl {
             'manageadministrators' => true,
             'manageroots' => true,
             'managesettings' => true
-	)
+        )
     );
-    
-    public static function setLevel($accessLevel) {
-	$role = User::getRole();
-	if (is_null($accessLevel)) return true;
-	
-	$allow = false;
-	if ($role == 'unregistered' && $accessLevel == NULL) {
-	    $allow = true;
-	} elseif ($role == 'unregistered') {
-	    $allow = false;
-	} else
-	    $allow = AccessControl::$permissions[$role][$accessLevel];
-	
-	if ($allow === false)
-	    AccessControl::showAccessDeniedPage();
-    }
-    
-    public static function showAccessDeniedPage() {
-	header('HTTP/1.0 401 Unauthorized');
-	Template::setFile('access-denied.tpl');
-	$fields = array(
-	    'ad_reason' => htmlspecialchars(_('You do not have permission to access this page.')),
-	    'ad_action' => htmlspecialchars(_('You will be redirected to the home page.')),
-	    'ad_redirect_url' => File::rewrite('index.php')
-	);
-	
-	Template::assignments($fields);
-	Template::display();
 
-	exit;
+    public static function setLevel($accessLevel) {
+        $role = User::getRole();
+        if (is_null($accessLevel))
+            return true;
+
+        $allow = false;
+        if ($role == 'unregistered' && $accessLevel == NULL) {
+            $allow = true;
+        } elseif ($role == 'unregistered') {
+            $allow = false;
+        }
+        else
+            $allow = AccessControl::$permissions[$role][$accessLevel];
+
+        if ($allow === false)
+            AccessControl::showAccessDeniedPage();
     }
+
+    public static function showAccessDeniedPage() {
+        header('HTTP/1.0 401 Unauthorized');
+        Template::setFile('access-denied.tpl');
+        $fields = array(
+            'ad_reason' => htmlspecialchars(_('You do not have permission to access this page.')),
+            'ad_action' => htmlspecialchars(_('You will be redirected to the home page.')),
+            'ad_redirect_url' => File::rewrite('index.php')
+        );
+
+        Template::assignments($fields);
+        Template::display();
+
+        exit;
+    }
+
 }
+
 ?>
