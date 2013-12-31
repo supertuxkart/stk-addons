@@ -57,21 +57,15 @@ $index_menu = array(
 $tpl['index_menu'] = $index_menu;
 
 // Display news messages
-$news_messages = array();
+$news_messages = News::getWebVisible();
 // Note most downloaded track and kart
 $pop_kart = stat_most_downloaded('karts');
 $pop_track = stat_most_downloaded('tracks');
-$news_messages[] = sprintf(htmlspecialchars(_('The most downloaded kart is %s.')),Addon::getName($pop_kart));
-$news_messages[] = sprintf(htmlspecialchars(_('The most downloaded track is %s.')),Addon::getName($pop_track));
+array_unshift(
+        $news_messages,
+        sprintf(htmlspecialchars(_('The most downloaded kart is %s.')),Addon::getName($pop_kart)),
+        sprintf(htmlspecialchars(_('The most downloaded track is %s.')),Addon::getName($pop_track)));
 
-$newsSql = 'SELECT * FROM `'.DB_PREFIX.'news`
-    WHERE `active` = 1
-    AND `web_display` = 1
-    ORDER BY `date` DESC';
-$handle = sql_query($newsSql);
-for ($result = sql_next($handle); $result; $result = sql_next($handle)) {
-    $news_messages[] = htmlentities($result['content']);
-}
 $tpl['news_messages'] = $news_messages;
 
 Template::assignments($tpl);

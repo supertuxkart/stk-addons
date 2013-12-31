@@ -200,6 +200,29 @@ class News {
 
         return strip_tags($articleTitle);
     }
+    
+    /**
+     * Get active news articles flagged as web-visible
+     * @return array
+     */
+    public static function getWebVisible() {
+        try {
+            $items = DBConnection::get()->query(
+                    'SELECT `content` FROM `'.DB_PREFIX.'news`
+                     WHERE `active` = 1
+                     AND `web_display` = 1
+                     ORDER BY `date` DESC',
+                    DBConnection::FETCH_ALL,
+                    NULL);
+            $ret = array();
+            foreach ($items AS $item) {
+                $ret[] = htmlspecialchars($item['content']);
+            }
+            return $ret;
+        } catch (DBException $e) {
+            return array();
+        }
+    }
 }
 
 ?>
