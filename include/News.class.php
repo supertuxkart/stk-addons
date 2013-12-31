@@ -223,6 +223,28 @@ class News {
             return array();
         }
     }
+    
+    /**
+     * Get news data for xml files
+     * @return array
+     */
+    public static function getXmlData() {
+        try {
+            $news = DBConnection::get()->query(
+                    'SELECT `n`.*, `u`.`user` AS `author`
+                     FROM `'.DB_PREFIX.'news` `n`
+                     LEFT JOIN `'.DB_PREFIX.'users` `u`
+                     ON (`n`.`author_id`=`u`.`id`)
+                     WHERE `n`.`active` = \'1\'
+                     ORDER BY `date` DESC',
+                    DBConnection::FETCH_ALL,
+                    NULL);
+            return $news;
+        } catch (DBException $e) {
+            return array();
+        }
+        
+    }
 }
 
 ?>

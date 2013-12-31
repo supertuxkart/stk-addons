@@ -21,6 +21,7 @@
 
 require_once(INCLUDE_DIR . 'Constants.php');
 require_once(INCLUDE_DIR . 'News.class.php');
+require_once(INCLUDE_DIR . 'Music.class.php');
 
 function generateNewsXML() {
     $writer = new XMLWriter();
@@ -49,20 +50,12 @@ function generateNewsXML() {
 
     // Refresh dynamic news entries
     News::refreshDynamicEntries();
-
-    // Fetch news list
-    $querySql = 'SELECT `n`.*, `u`.`user`
-	FROM ' . DB_PREFIX . 'news n
-	LEFT JOIN ' . DB_PREFIX . 'users u
-	ON (`n`.`author_id`=`u`.`id`)
-	WHERE `n`.`active` = \'1\'
-        ORDER BY `date` DESC';
-    $reqSql = sql_query($querySql);
-    while ($result = sql_next($reqSql)) {
+    $news_entries = News::getXmlData();
+    foreach ($news_entries AS $result) {
         $writer->startElement('message');
         $writer->writeAttribute('id', $result['id']);
         $writer->writeAttribute('date', $result['date']);
-        $writer->writeAttribute('author', $result['user']);
+        $writer->writeAttribute('author', $result['author']);
         $writer->writeAttribute('content', $result['content']);
         if (strlen($result['condition']) > 0)
             $writer->writeAttribute('condition', $result['condition']);
@@ -314,28 +307,23 @@ function generateAssetXML2() {
     // Write music section
     $writer->startElement('music');
 
-    $music_query = 'SELECT * FROM `' . DB_PREFIX . 'music`';
-    $music_handle = sql_query($music_query);
-    if ($music_handle) {
-        for ($i = 0; $i < mysql_num_rows($music_handle); $i++) {
-            $music = mysql_fetch_assoc($music_handle);
-
-            if (!file_exists(UP_LOCATION . 'music/' . $music['file'])) {
-                trigger_error('File ' . UP_LOCATION . 'music/' . $music['file'] . ' not found!', E_USER_WARNING);
-                continue;
-            }
-            $writer->startElement('addon');
-            $writer->writeAttribute('id', $music['id']);
-            $writer->writeAttribute('title', $music['title']);
-            $writer->writeAttribute('artist', $music['artist']);
-            $writer->writeAttribute('license', $music['license']);
-            $writer->writeAttribute('gain', $music['gain']);
-            $writer->writeAttribute('length', $music['length']);
-            $writer->writeAttribute('file', DOWN_LOCATION . 'music/' . $music['file']);
-            $writer->writeAttribute('size', filesize(UP_LOCATION . 'music/' . $music['file']));
-            $writer->writeAttribute('xml-filename', $music['xml_filename']);
-            $writer->endElement();
+    $music_items = Music::getAllByTitle();
+    foreach ($music_items AS $music) {
+        if (!file_exists(UP_LOCATION . 'music/' . $music->getFile())) {
+            trigger_error('File ' . UP_LOCATION . 'music/' . $music->getFile() . ' not found!', E_USER_WARNING);
+            continue;
         }
+        $writer->startElement('addon');
+        $writer->writeAttribute('id', $music->getId());
+        $writer->writeAttribute('title', $music->getTitle());
+        $writer->writeAttribute('artist', $music->getArtist());
+        $writer->writeAttribute('license', $music->getLicense());
+        $writer->writeAttribute('gain', sprintf('%.3F', $music->getGain()));
+        $writer->writeAttribute('length', $music->getLength());
+        $writer->writeAttribute('file', DOWN_LOCATION . 'music/' . $music->getFile());
+        $writer->writeAttribute('size', filesize(UP_LOCATION . 'music/' . $music->getFile()));
+        $writer->writeAttribute('xml-filename', $music->getXmlFile());
+        $writer->endElement();
     }
 
     $writer->fullEndElement();

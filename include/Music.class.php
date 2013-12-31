@@ -88,6 +88,24 @@ class Music {
     public function getFile() {
         return $this->file;
     }
+    /**
+     * @return string
+     */
+    public function getXmlFile() {
+        return $this->xml_file;
+    }
+    /**
+     * @return float
+     */
+    public function getGain() {
+        return $this->gain;
+    }
+    /**
+     * @return integer
+     */
+    public function getLength() {
+        return $this->length;
+    }
     
     /**
      * Get a Music object by ID
