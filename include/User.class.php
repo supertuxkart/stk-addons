@@ -522,16 +522,20 @@ class User
 	    if (!User::$logged_in) {
 	        return 'unregistered';
 	    } else {
-	        $query = 'SELECT `role`
-		    FROM `'.DB_PREFIX.'users`
-		    WHERE `user` = \''.mysql_real_escape_string($_SESSION['user']).'\'';
-	        $handle = sql_query($query);
-	        if (!$handle) return 'unregistered';
-	        
-	        $result = mysql_fetch_array($handle);
-	        return $result[0];
+            try {
+                $role_result = DBConnection::get()->query(
+                        'SELECT `role`
+                         FROM `'.DB_PREFIX.'users`
+                         WHERE `user` = :user',
+                        DBConnection::FETCH_ALL,
+                        array(':user' => $_SESSION['user']));
+                if (count($role_result) === 0) return 'unregistered';
+                return $role_result[0]['role'];
+            } catch (DBException $e) {
+                return 'unregistered';
+            }
         }
-    } // FIXME
+    }
 }
 
 User::init();
