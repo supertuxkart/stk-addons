@@ -1,6 +1,6 @@
 <?php
 /**
- * copyright 2011 Stephen Just <stephenjust@users.sf.net>
+ * Copyright 2011-2013 Stephen Just <stephenjust@users.sf.net>
  *
  * This file is part of stkaddons
  *
@@ -18,58 +18,61 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(INCLUDE_DIR . 'sql.php');
+require_once(INCLUDE_DIR . 'DBConnection.class.php');
 
+/**
+ * Return the most downloaded addon of a given type
+ * @param string $addontype
+ * @param string $filetype
+ * @return string
+ */
 function stat_most_downloaded($addontype, $filetype = 'addon')
 {
-    if ($addontype != 'karts' && $addontype != 'tracks')
-        return false;
+    if (!Addon::isAllowedType($addontype)) return false;
 
-    $query = 'SELECT `addon_id`, `downloads`
-        FROM `'.DB_PREFIX.'files`
-        WHERE `addon_type` = \''.$addontype.'\'
-        AND `file_type` = \''.$filetype.'\'
-        ORDER BY `addon_id` ASC';
-    $handle = sql_query($query);
-    if (!$handle)
-        return false;
-    if (mysql_num_rows($handle) == 0)
-        return false;
-
-    // Tabulate the download counts for each addon
-    $dl_counts = array();
-    for ($i = 0; $i < mysql_num_rows($handle); $i++)
-    {
-        $result = mysql_fetch_assoc($handle);
-        if (!array_key_exists($result['addon_id'],$dl_counts))
-            $dl_counts[$result['addon_id']] = 0;
-        $dl_counts[$result['addon_id']] += $result['downloads'];
+    try {
+        $download_counts = DBConnection::get()->query(
+                'SELECT `addon_id`, SUM(`downloads`) AS `count`
+                 FROM `'.DB_PREFIX.'files`
+                 WHERE `addon_type` = :addon_type
+                 AND `file_type` = :file_type
+                 GROUP BY `addon_id`
+                 ORDER BY SUM(`downloads`) DESC',
+                DBConnection::FETCH_ALL,
+                array(
+                    ':addon_type' => $addontype,
+                    ':file_type' => $filetype
+                ));
+        if (count($download_counts) === 0) return NULL;
+        return $download_counts[0]['addon_id'];
+    } catch (DBException $e) {
+        return NULL;
     }
-    // Sort the results
-    arsort($dl_counts);
-    $sorted_keys = array_keys($dl_counts);
-    return $sorted_keys[0];
 }
 
+/**
+ * Return the newest addon of a given type
+ * @param string $addontype
+ * @return string
+ */
 function stat_newest($addontype) {
-    if ($addontype != 'karts'
-            && $addontype != 'tracks'
-            && $addontype != 'arenas')
-        return false;
+    if (!Addon::isAllowedType($addontype)) return NULL;
 
-    $query = 'SELECT `a`.`id`
-        FROM `'.DB_PREFIX.'addons` `a`
-        LEFT JOIN `'.DB_PREFIX.$addontype.'_revs` `r`
-        ON `a`.`id` = `r`.`addon_id`
-        WHERE `r`.`status` & '.F_APPROVED.'
-        ORDER BY `a`.`creation_date` DESC 
-        LIMIT 1';
-    $handle = sql_query($query);
-    if (!$handle)
-        return false;
-    if (mysql_num_rows($handle) !== 1)
-        return false;
-    $result = mysql_fetch_assoc($handle);
-    return $result['id'];
+    try {
+        $newest_addon = DBConnection::get()->query(
+                'SELECT `a`.`id`
+                 FROM `'.DB_PREFIX.'addons` `a`
+                 LEFT JOIN `'.DB_PREFIX.$addontype.'_revs` `r`
+                 ON `a`.`id` = `r`.`addon_id`
+                 WHERE `r`.`status` & '.F_APPROVED.'
+                 ORDER BY `a`.`creation_date` DESC 
+                 LIMIT 1',
+                DBConnection::FETCH_ALL,
+                NULL);
+        if (count($newest_addon) === 0) return NULL;
+        return $newest_addon[0]['id'];
+    } catch (DBException $e) {
+        return NULL;
+    }
 }
 ?>
