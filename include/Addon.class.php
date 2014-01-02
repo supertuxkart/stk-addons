@@ -277,10 +277,17 @@ class Addon {
      * @return boolean
      */
     public static function exists($addon_id) {
-        if (!sql_exist('addons', 'id', Addon::cleanId($addon_id))) {
+        try {
+            $num = DBConnection::get()->query(
+                    'SELECT `id`
+                     FROM `'.DB_PREFIX.'addons`
+                     WHERE `id` = :addon_id',
+                    DBConnection::ROW_COUND,
+                    array(':addon_id' => Addon::cleanId($addon_id)));
+            return ($num === 1);
+        } catch (DBException $e) {
             return false;
         }
-        return true;
     }
     
     /**
@@ -374,9 +381,10 @@ class Addon {
             return false;
 
         // Check database
-        while(sql_exist('addons', 'id', $addon_id))
+        while(Addon::exists($addon_id))
         {
             // If the addon id already exists, add an incrementing number to it
+            $matches = array();
             if (preg_match('/^.+_([0-9]+)$/i', $addon_id, $matches))
             {
                 $next_num = (int)$matches[1];
@@ -394,28 +402,27 @@ class Addon {
     public static function getAddonList($type, $featuredFirst = false) {
         if (!Addon::isAllowedType($type))
             return array();
-        if ($featuredFirst)
-            $querySql = 'SELECT `a`.`id`, (`r`.`status` & ' . F_FEATURED . ') AS `featured`
-		FROM `' . DB_PREFIX . 'addons` `a`
-		LEFT JOIN `' . DB_PREFIX . $type . '_revs` `r`
-		ON `a`.`id` = `r`.`addon_id`
-		WHERE `a`.`type` = \'' . $type . '\'
-		AND `r`.`status` & ' . F_LATEST . '
-		ORDER BY `featured` DESC, `a`.`name` ASC, `a`.`id` ASC';
-        else
-            $querySql = 'SELECT `id`
-		FROM `' . DB_PREFIX . 'addons`
-		WHERE `type` = \'' . $type . '\'
-		ORDER BY `name` ASC, `id` ASC';
-        $handle = sql_query($querySql);
-        if (!$handle)
+        try {
+            $query = 'SELECT `a`.`id`, (`r`.`status` & '.F_FEATURED.') AS `featured`
+                      FROM `'.DB_PREFIX.'addons` `a`
+                      LEFT JOIN `'.DB_PREFIX.$type.'_revs` `r`
+                      ON `a`.`id` = `r`.`addon_id`
+                      WHERE `a`.`type` = :type
+                      AND `r`.`status` & :latest_bit ';
+            if ($featuredFirst)
+                $query .= 'ORDER BY `featured` DESC, `a`.`name` ASC, `a`.`id` ASC';
+            else
+                $query .= 'ORDER BY `name` ASC, `id` ASC';
+            $list = DBConnection::get()->query($query, DBConnection::FETCH_ALL,
+                    array(':type' => $type, ':latest_bit' => F_LATEST));
+            $return = array();
+            foreach ($list AS $addon) {
+                $return[] = $addon['id'];
+            }
+            return $return;
+        } catch (DBException $e) {
             return array();
-        $return = array();
-        for ($i = 1; $i <= mysql_num_rows($handle); $i++) {
-            $result = mysql_fetch_array($handle);
-            $return[] = $result[0];
         }
-        return $return;
     }
     
     public function getAllRevisions() {
@@ -704,23 +711,28 @@ class Addon {
     }
     
     public function setIncludeVersions($start_ver, $end_ver) {
-	if (!$_SESSION['role']['manageaddons'])
-	    throw new AddonException(htmlspecialchars(_('You do not have the neccessary permissions to perform this action.')));
-	
-	Validate::versionString($start_ver);
-	Validate::versionString($end_ver);
-	$start_ver = mysql_real_escape_string(strtolower($start_ver));
-	$end_ver = mysql_real_escape_string(strtolower($end_ver));
-	$query = 'UPDATE `'.DB_PREFIX."addons`
-	    SET `min_include_ver` = '$start_ver', `max_include_ver` = '$end_ver'
-	    WHERE `id` = '{$this->id}'";
-	$handle = sql_query($query);
-	if (!$handle) throw new AddonException('An error occurred while setting the min/max include versions.');
-	
-	writeAssetXML();
-        writeNewsXML();
-        $this->minInclude = $start_ver;
-	$this->maxInclude = $end_ver;
+        if (!$_SESSION['role']['manageaddons'])
+            throw new AddonException(htmlspecialchars(_('You do not have the neccessary permissions to perform this action.')));
+
+        try {
+            Validate::versionString($start_ver);
+            Validate::versionString($end_ver);
+            DBConnection::get()->query(
+                    'UPDATE `'.DB_PREFIX.'addons`
+                     SET `min_include_ver` = :start_ver, `max_include_ver` = :end_ver
+                     WHERE `id` = :addon_id',
+                    DBConnection::NOTHING,
+                    array(
+                        ':addon_id' =>  (string) $this->id,
+                        ':start_ver' => (string) $start_ver,
+                        ':end_ver' =>   (string) $end_ver));
+            writeAssetXML();
+            writeNewsXML();
+            $this->minInclude = $start_ver;
+            $this->maxInclude = $end_ver;
+        } catch (DBException $e) {
+            throw new AddonException('An error occurred while setting the min/max include versions.');
+        }
     }
     
     private function setLicense($license) {
@@ -770,7 +782,7 @@ class Addon {
 
         // Generate email
         $email_body = NULL;
-	$notes = array_reverse($notes, true);
+        $notes = array_reverse($notes, true);
         foreach ($notes AS $revision => $value)
         {
             $email_body .= "\n== Revision $revision ==\n";
@@ -786,13 +798,13 @@ class Addon {
             throw new AddonException('Failed to find user record.');
 
         $result = mysql_fetch_assoc($userHandle);
-	try {
-	    $mail = new SMail;
-	    $mail->addonNoteNotification($result['email'], $this->id, $email_body);
-	}
-	catch (Exception $e) {
-	    throw new AddonException('Failed to send email to user. '.$e->getMessage());
-	}
+        try {
+            $mail = new SMail;
+            $mail->addonNoteNotification($result['email'], $this->id, $email_body);
+        }
+        catch (Exception $e) {
+            throw new AddonException('Failed to send email to user. '.$e->getMessage());
+        }
         Log::newEvent("Added notes to '{$this->name}'");
     }
     
@@ -805,11 +817,11 @@ class Addon {
      * @return boolean 
      */
     public function hasApprovedRevision() {
-	foreach ($this->revisions AS $rev) {
-	    if ($rev['status'] & F_APPROVED)
-		return true;
-	}
-	return false;
+        foreach ($this->revisions AS $rev) {
+            if ($rev['status'] & F_APPROVED)
+            return true;
+        }
+        return false;
     }
     
     /**
