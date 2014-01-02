@@ -243,7 +243,39 @@ class News {
         } catch (DBException $e) {
             return array();
         }
-        
+    }
+    
+    /**
+     * Create a news entry
+     * @param string $message
+     * @param string $condition
+     * @param boolean $important
+     * @param boolean $web_display
+     * @throws Exception
+     */
+    public static function create($message, $condition, $important, $web_display) {
+        try {
+            if (!User::$logged_in) throw new Exception();
+            DBConnection::get()->query(
+                    'INSERT INTO `'.DB_PREFIX.'news`
+                     (`author_id`,`content`,`condition`,`important`,`web_display`,`active`)
+                     VALUES
+                     (:author_id, :message, :condition, :important, :web_display, :active)',
+                    DBConnection::NOTHING,
+                    array(
+                        ':author_id' => (int)       User::$user_id,
+                        ':message' =>   (string)    $message,
+                        ':condition' => (string)    $condition,
+                        ':important' => (int)       $important,
+                        ':web_display'=>(int)       $web_display,
+                        ':active' =>                1)
+                    );
+            writeNewsXML();
+        } catch (DBException $e) {
+            throw new Exception('Database error while creating message.');
+        } catch (Exception $e) {
+            throw new Exception('Error while creating message.');
+        }
     }
 }
 
