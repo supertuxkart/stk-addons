@@ -523,19 +523,26 @@ class Addon {
         return $return;
     }
     
+    /**
+     * Get the image files associated with this addon
+     * @return array
+     */
     public function getImages() {
-        $query = 'SELECT * FROM `'.DB_PREFIX.'files`
-            WHERE `addon_id` = \''.$this->id.'\'
-            AND `file_type` = \'image\'';
-        $handle = sql_query($query);
-	if (!$handle) return array();
-	
-	$num = mysql_num_rows($handle);
-	$result = array();
-	for ($i = 1; $i <= $num; $i++) {
-	    $result[] = mysql_fetch_assoc($handle);
-	}
-	return $result;
+        try {
+            $result = DBConnection::get()->query(
+                    'SELECT * FROM `'.DB_PREFIX.'files`
+                     WHERE `addon_id` = :addon_id
+                     AND `file_type` = :file_type',
+                    DBConnection::FETCH_ALL,
+                    array(
+                        ':addon_id' =>   (string) $this->id,
+                        ':file_type' =>  (string) 'image'
+                        )
+                    );
+            return $result;
+        } catch (DBConnection $e) {
+            return array();
+        }
     }
     
     public function getIncludeMin() {
@@ -563,19 +570,24 @@ class Addon {
         return $result['name'];
     }
 
+    /**
+     * Get all of the source files associated with an addon
+     * @return array
+     */
     public function getSourceFiles() {
-        $query = 'SELECT * FROM `'.DB_PREFIX.'files`
-            WHERE `addon_id` = \''.$this->id.'\'
-            AND `file_type` = \'source\'';
-        $handle = sql_query($query);
-	if (!$handle) return array();
-	
-	$num = mysql_num_rows($handle);
-	$result = array();
-	for ($i = 1; $i <= $num; $i++) {
-	    $result[] = mysql_fetch_assoc($handle);
-	}
-	return $result;
+        try {
+            $result = DBConnection::get()->query(
+                    'SELECT * FROM `'.DB_PREFIX.'files`
+                     WHERE `addon_id` = :addon_id
+                     AND `file_type` = :file_type',
+                    DBConnection::FETCH_ALL,
+                    array(
+                        ':addon_id' =>  (string) $this->id,
+                        ':file_type' => (string) 'source'));
+            return $result;
+        } catch (DBException $e) {
+            return array();
+        }
     }
     
     public static function isAllowedType($type) {
