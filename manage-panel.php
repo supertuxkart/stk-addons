@@ -30,26 +30,11 @@ switch ($_GET['action'])
     default:
         break;
     case 'del_news':
-        if (!isset($_POST['value']))
-            break;
-        if (!is_numeric($_POST['value']))
-            break;
-        $del_id = (int)$_POST['value'];
-
-        $reqSql = 'DELETE FROM `'.DB_PREFIX.'news`
-            WHERE `id` = '.$del_id;
-        $handle = sql_query($reqSql);
-        if ($handle)
-        {
+        if (empty($_POST['value']) || !is_numeric($_POST['value'])) break;
+        if (News::delete($_POST['value']))
             echo htmlspecialchars(_('Deleted message.')).'<br />';
-        }
         else
-        {
             echo '<span class="error">'.htmlspecialchars(_('Failed to delete message.')).'</span><br />';
-            break;
-        }
-        // Regenerate xml
-        writeNewsXML();
         break;
     case 'cache_clear':
         Cache::clear();
@@ -213,16 +198,9 @@ function news_message_panel()
     echo 'Todo:<ol><li>Allow selecting from a list of conditions rather than typing. Too typo-prone.</li><li>Type semicolon-delimited expressions, e.g. <tt>stkversion > 0.7.0;addonid not installed;</tt>.</li><li>Allow editing in future, in case of goofs or changes.</li></ol>';
     echo '<br />';
 
-    $reqSql = 'SELECT `n`.*, `u`.`user`
-	FROM '.DB_PREFIX.'news n
-	LEFT JOIN '.DB_PREFIX.'users u
-	ON (`n`.`author_id`=`u`.`id`)
-        ORDER BY `n`.`id` DESC';
-    $handle = sql_query($reqSql);
-    if (!$handle)
-    {
+    $news_items = News::getAll();
+    if (count($news_items) === 0)
         echo htmlspecialchars(_('No news messages currently exist.')).'<br />';
-    }
     else
     {
         echo '<table width="100%"><tr>
@@ -231,17 +209,17 @@ function news_message_panel()
             <th>'.htmlspecialchars(_('Author:')).'</th>
             <th>'.htmlspecialchars(_('Condition:')).'</th>
             <th>'.htmlspecialchars(_('Web:')).'</th>
-	    <th>'.htmlspecialchars(_('Important:')).'</th>
+            <th>'.htmlspecialchars(_('Important:')).'</th>
             <th>'.htmlspecialchars(_('Actions:')).'</th></tr>';
-        for ($result = sql_next($handle); $result; $result = sql_next($handle))
+        foreach ($news_items AS $result)
         {
             echo '<tr>';
             echo '<td>'.$result['date'].'</td>';
             echo '<td>'.$result['content'].'</td>';
-            echo '<td>'.$result['user'].'</td>';
+            echo '<td>'.$result['author'].'</td>';
             echo '<td>'.$result['condition'].'</td>';
             echo '<td>'.$result['web_display'].'</td>';
-	    echo '<td>'.$result['important'].'</td>';
+            echo '<td>'.$result['important'].'</td>';
             echo '<td><a href="#" onClick="loadFrame(\'news\', \'manage-panel.php?action=del_news\', '.$result['id'].')">Delete</a></td>';
             echo '</tr>';
         }

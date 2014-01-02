@@ -225,10 +225,10 @@ class News {
     }
     
     /**
-     * Get news data for xml files
+     * Get news data for posts marked active
      * @return array
      */
-    public static function getXmlData() {
+    public static function getActive() {
         try {
             $news = DBConnection::get()->query(
                     'SELECT `n`.*, `u`.`user` AS `author`
@@ -236,6 +236,26 @@ class News {
                      LEFT JOIN `'.DB_PREFIX.'users` `u`
                      ON (`n`.`author_id`=`u`.`id`)
                      WHERE `n`.`active` = \'1\'
+                     ORDER BY `date` DESC',
+                    DBConnection::FETCH_ALL,
+                    NULL);
+            return $news;
+        } catch (DBException $e) {
+            return array();
+        }
+    }
+    
+    /**
+     * Get news data for all posts
+     * @return array
+     */
+    public static function getAll() {
+        try {
+            $news = DBConnection::get()->query(
+                    'SELECT `n`.*, `u`.`user` AS `author`
+                     FROM `'.DB_PREFIX.'news` `n`
+                     LEFT JOIN `'.DB_PREFIX.'users` `u`
+                     ON (`n`.`author_id`=`u`.`id`)
                      ORDER BY `date` DESC',
                     DBConnection::FETCH_ALL,
                     NULL);
@@ -275,6 +295,25 @@ class News {
             throw new Exception('Database error while creating message.');
         } catch (Exception $e) {
             throw new Exception('Error while creating message.');
+        }
+    }
+    
+    /**
+     * Delete news article
+     * @param integer $id
+     * @return boolean
+     */
+    public static function delete($id) {
+        try {
+            DBConnection::get()->query(
+                    'DELETE FROM `'.DB_PREFIX.'news`
+                     WHERE `id` = :id',
+                    DBConnection::NOTHING,
+                    array(':id' => (int) $id));
+            writeNewsXML();
+            return true;
+        } catch (DBException $e) {
+            return false;
         }
     }
 }

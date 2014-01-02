@@ -50,7 +50,7 @@ function generateNewsXML() {
 
     // Refresh dynamic news entries
     News::refreshDynamicEntries();
-    $news_entries = News::getXmlData();
+    $news_entries = News::getActive();
     foreach ($news_entries AS $result) {
         $writer->startElement('message');
         $writer->writeAttribute('id', $result['id']);
