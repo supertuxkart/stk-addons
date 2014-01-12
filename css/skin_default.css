@@ -71,37 +71,6 @@ label {
     color:grey;
 }
 
-/* Home Icons */
-#index-menu {
-    display: table;
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
-    height: 130px;
-    width: auto;
-}
-#index-menu > div {
-    display: table-cell;
-    padding: 0px 50px 0px 50px;
-    width: 106px;
-}
-#index-menu a {
-    background-image: url('../image/home-icons.png');
-    background-repeat: no-repeat;
-    display: block;
-    padding: 108px 0px 0px 0px;
-    width: 106px;
-}
-#index-menu a span {
-    display: inline;
-    background: #efefef !important;
-    padding: 2px 15px 2px 15px;
-    -moz-border-radius: 5px;
-    -webkit-border-radius: 5px;
-    border-radius: 5px; /* This and line below for IE */
-    behavior: url('css/PIE.htc');
-}
-
 /* Language Menu */
 #lang-menu {
     display: inline;
@@ -144,7 +113,7 @@ label {
     padding: 0px;
 }
 #lang-menu li.flag a {
-    background-image: url('../image/flags.png');
+    background-image: url('../tpl/default/images/flags.png');
     border: 1px solid #4e4e4e;
     color: #4e4e4e;
     font-size: xx-small;
@@ -162,28 +131,6 @@ label {
 #lang-menu li.flag a:hover {
     border: 1px solid #999999;
     color: #999999;
-}
-
-/* News Bar */
-#news-panel {
-    display: block;
-    clear: both;
-    background-image: url('../image/news-panel.png');
-    width: 1000px;
-    height: 125px;
-}
-#news-messages {
-    display: table;
-    list-style: none;
-    font-size: 1.8em;
-    width: 100%;
-    height: 100%;
-}
-#news-messages > li {
-    display: table-cell;
-    padding-top: 20px;
-    text-align: center;
-    vertical-align: middle;
 }
 
 /* Error Messages */
@@ -251,33 +198,6 @@ span.f_dfsg {
     background-color: #CCCCCC;
     border: 1px solid #000000;
     color: #000000;
-}
-
-/* Download Button */
-#dl_button {
-    clear: both;
-    overflow: auto;
-}
-#dl_button .left {
-    background: url('../image/dl-button-left.png') no-repeat;
-    float: left;
-    height: 80px;
-    width: 70px;
-}
-#dl_button .center {
-    background: url('../image/dl-button-center.png') repeat-x;
-    float: left;
-    font-size: 1.3em;
-    font-weight: bold;
-    height: 80px;
-    line-height: 80px;
-    padding-right: 1em;
-}
-#dl_button .right {
-    background: url('../image/dl-button-right.png') no-repeat;
-    float: left;
-    height: 80px;
-    width: 8px;
 }
 
 /* Addon Description in Panel */
@@ -352,14 +272,14 @@ a:hover
     background-color:white;
     margin:auto;
     width:1000px;
-    background-image:url("../image/background.jpg");
+    background-image:url("../tpl/default/images/background.jpg");
     background-repeat:no-repeat;
     height:623px;
 }
 #content
 {
     padding: 5px;
-    background-image:url("../image/content.png");
+    background-image:url("../tpl/default/images/content.png");
     clear:both;
     max-height: 575px;
     overflow-y: scroll;
