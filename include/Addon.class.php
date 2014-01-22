@@ -282,7 +282,7 @@ class Addon {
                     'SELECT `id`
                      FROM `'.DB_PREFIX.'addons`
                      WHERE `id` = :addon_id',
-                    DBConnection::ROW_COUND,
+                    DBConnection::ROW_COUNT,
                     array(':addon_id' => Addon::cleanId($addon_id)));
             return ($num === 1);
         } catch (DBException $e) {
