@@ -135,6 +135,9 @@ class StkTemplate extends Template {
     public function setMetaDesc($desc) {
         $this->meta_desc = $desc;
     }
+    public function setMetaRefresh($target, $timeout) {
+        $this->meta_tags['refresh'] = sprintf('%d;URL=%s', $timeout, $target);
+    }
     public function setMetaTag($key, $value) {
         $this->meta_tags[$key] = $value;
     }
