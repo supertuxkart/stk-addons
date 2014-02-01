@@ -249,13 +249,13 @@ class Ratings {
                 _('Please contact a website administrator if this problem persists.'));
         
         try{
-            $count = DBConnection::get()->query
+            DBConnection::get()->query
             (
                 "INSERT INTO `" . DB_PREFIX ."votes`
                 (`user_id`, `addon_id`, `vote`)
                 VALUES (:user_id, :addon_id, :rating)
                 ON DUPLICATE KEY UPDATE vote = :rating",
-                DBConnection::ROW_COUNT,
+                DBConnection::NOTHING,
                 array
                 (
                     ':addon_id'     => (string) $this->addon_id,
@@ -263,12 +263,6 @@ class Ratings {
                     ':rating'       => (float) $vote
                 )
             );
-            if ($count === 1)
-                $new_vote = true;
-            elseif ($count === 2)
-                $new_vote = false;
-            else
-                throw new DBException();
         }catch (DBException $e){
             throw new RatingsException(
                 _('An unexpected error occured while performing your vote.') . ' ' .
@@ -283,9 +277,7 @@ class Ratings {
         // Regenerate the XML files after voting
         writeAssetXML();
         writeNewsXML();	
-        
-        return $new_vote;
-        }
+    }
         
     /**
      * Gets the percentage of total possible rating value

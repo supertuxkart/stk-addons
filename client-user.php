@@ -25,6 +25,7 @@ require_once(INCLUDE_DIR . 'ClientSession.class.php');
 require_once(INCLUDE_DIR . 'Server.class.php');
 require_once(INCLUDE_DIR . 'User.class.php');
 require_once(INCLUDE_DIR . 'XMLOutput.class.php');
+require_once(INCLUDE_DIR . 'Ratings.class.php');
 
 $action = isset($_POST['action']) ? $_POST['action'] : "";
 $output = new XMLOutput();
@@ -222,10 +223,9 @@ try {
                 $addonid = isset($_POST['addonid']) ? $_POST['addonid'] : "";
                 $rating = isset($_POST['rating']) ? $_POST['rating'] : -1.0;
                 $rating_object = new Ratings($addonid, false);
-                $new_vote = $rating_object->setUserVote($rating, ClientSession::get($token, $userid));
+                $rating_object->setUserVote($rating, ClientSession::get($token, $userid));
                 $output->startElement('set-addon-vote');
                 $output->writeAttribute('success','yes');
-                $output->writeAttribute('new-vote', ($new_vote ? 'yes' : 'no'));
                 $output->writeAttribute('new-average', $rating_object->getAvgRating());
                 $output->writeAttribute('new-number', $rating_object->getNumRatings());
                 $output->writeAttribute('addon-id', $rating_object->getAddonId());
