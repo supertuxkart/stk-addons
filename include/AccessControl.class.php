@@ -87,15 +87,11 @@ class AccessControl {
 
     public static function showAccessDeniedPage() {
         header('HTTP/1.0 401 Unauthorized');
-        Template::setFile('access-denied.tpl');
-        $fields = array(
-            'ad_reason' => htmlspecialchars(_('You do not have permission to access this page.')),
-            'ad_action' => htmlspecialchars(_('You will be redirected to the home page.')),
-            'ad_redirect_url' => File::rewrite('index.php')
-        );
-
-        Template::assignments($fields);
-        Template::display();
+        $tpl = new StkTemplate('access-denied.tpl');
+        $tpl->assign('ad_reason', htmlspecialchars(_('You do not have permission to access this page.')));
+        $tpl->assign('ad_action', htmlspecialchars(_('You will be redirected to the home page.')));
+        $tpl->assign('ad_redirect_url', File::rewrite('index.php'));
+        echo $tpl;
 
         exit;
     }

@@ -22,7 +22,6 @@
 require_once(ROOT.'config.php');
 require_once(INCLUDE_DIR.'AccessControl.class.php');
 require_once(INCLUDE_DIR.'DBConnection.class.php');
-require_once(INCLUDE_DIR.'Template.class.php');
 require_once(INCLUDE_DIR.'Constants.php');
 require_once(INCLUDE_DIR.'exceptions.php');
 require_once(INCLUDE_DIR.'Log.class.php');
