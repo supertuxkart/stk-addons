@@ -32,3 +32,8 @@ Register a new user using the web interface. Don't worry about configuring your 
 server. After creating your user from the web interface, use a tool such as PHPMyAdmin
 to change that user's role to 'root', and set their 'active' value to 1. You can delete
 the relevant row in the 'verifications' table.
+
+The source tree contains an 'api' folder. On the production STK Addons server,
+these files exist in a separate sub-domain. For testing on a local machine, you
+may wish to copy these files to the parent folder if you intend to test API
+functionality.
