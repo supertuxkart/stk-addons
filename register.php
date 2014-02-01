@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright 2009      Lucas Baudin <xapantu@gmail.com>
- *           2012-2013 Stephen Just <stephenjust@users.sf.net>
+ *           2012-2014 Stephen Just <stephenjust@users.sf.net>
  *
  * This file is part of stkaddons
  *
@@ -20,43 +20,17 @@
  */
 
 define('ROOT','./');
-require_once(ROOT . 'include.php');
-$title = htmlspecialchars(_('STK Add-ons').' | '._('Register'));
-include(ROOT.'include/top.php');
-echo '</head><body>';
-include(ROOT.'include/menu.php');
-echo '<div id="content">';
-echo '<h1>'.htmlspecialchars(_('Account Registration')).'</h1>';
+require_once(ROOT.'config.php');
+require_once(INCLUDE_DIR.'StkTemplate.class.php');
 
-function display_reg_form($user = NULL, $name = NULL, $email = NULL) {
-    $form = '<form id="register" action="register.php?action=reg" method="POST">
-    <table><tbody>
-    <tr>
-        <td><label for="reg_user">'.htmlspecialchars(_('Username:')).'<br />
-        <span style="font-size: x-small; color: #666666; font-weight: normal;">('.htmlspecialchars(sprintf(_('Must be at least %d characters long.'),'4')).')</span></label></td>
-        <td><input type="text" name="user" id="reg_user" value="'.htmlspecialchars($user).'" /></td>
-    </tr>
-    <tr>
-        <td><label for="reg_pass">'.htmlspecialchars(_('Password:')).'<br />
-        <span style="font-size: x-small; color: #666666; font-weight: normal;">('.htmlspecialchars(sprintf(_('Must be at least %d characters long.'),'8')).')</span></label></td>
-        <td><input type="password" name="pass1" id="reg_pass" /></td>
-    </tr>
-    <tr>
-        <td><label for="reg_pass2">'.htmlspecialchars(_('Password (confirm):')).'</label></td>
-        <td><input type="password" name="pass2" id="reg_pass2" /></td>
-    </tr>
-    <tr>
-        <td><label for="reg_name">'.htmlspecialchars(_('Name:')).'</label></td>
-        <td><input type="text" name="name" id="reg_name" value="'.htmlspecialchars($name).'" /></td>
-    </tr>
-    <tr>
-        <td><label for="reg_email">'.htmlspecialchars(_('Email Address:')).'</label></td>
-        <td><input type="text" name="mail" id="reg_email" value="'.htmlspecialchars($email).'" /></td>
-    </tr>
-    <tr>
-        <td colspan="2"><label for="reg_terms">'.htmlspecialchars(_('Terms:')).'</label><br />
-<textarea rows="10" cols="80" readonly id="reg_terms">
-=== '.htmlspecialchars(_('STK Addons Terms and Conditions'))." ===\n\n".
+$_POST['user'] = (empty($_POST['user'])) ? NULL : $_POST['user'];
+$_POST['name'] = (empty($_POST['name'])) ? NULL : $_POST['name'];
+$_POST['mail'] = (empty($_POST['mail'])) ? NULL : $_POST['mail'];
+
+$tpl = new StkTemplate('register.tpl');
+$tpl->assign('title', htmlspecialchars(_('STK Add-ons').' | '._('Register')));
+
+$terms_text = '=== '.htmlspecialchars(_('STK Addons Terms and Conditions'))." ===\n\n".
 htmlspecialchars(_('You must agree to these terms in order to upload content to the STK Addons site.'))."\n\n".
 _('The STK Addons service is designed to be a repository exclusively for Super
 Tux Kart addon content. All uploaded content must be intended for this
@@ -81,28 +55,56 @@ will be removed, your account may be removed, and any other content you uploaded
 may be removed.'))."\n\n".
 htmlspecialchars(_('By checking the box below, you are confirming that you understand these
 terms. If you have any questions or comments regarding these terms, one of the
-members of the development team would gladly assist you.')).
-'</textarea>
-        </td>
-    </tr>
-    <tr>
-        <td><label for="reg_check">'.htmlspecialchars(_('I agree to the above terms')).'</label></td>
-        <td><input type="checkbox" name="terms" id="reg_check" /></td>
-    </tr>
-    <tr>
-        <td></td><td><input type="submit" value="'.htmlspecialchars(_('Register!')).'" /></td>
-    </tr>
-    </tbody></table>
-    </form>';
-    return $form;
-}
+members of the development team would gladly assist you.'));
+
+$register = array(
+    'heading' => htmlspecialchars(_('Account Registration')),
+    'display_form' => false,
+    'form' => array(
+        'start' => '<form id="register" action="register.php?action=reg" method="POST">',
+        'end' => '</form>',
+        'username' => array(
+            'label' => '<label for="reg_user">'.htmlspecialchars(_('Username:')).'</label>',
+            'requirement' => htmlspecialchars(sprintf(_('Must be at least %d characters long.'),'4')),
+            'field' => '<input type="text" name="user" id="reg_user" value="'.htmlspecialchars($_POST['user']).'" />'
+        ),
+        'password' => array(
+            'label' => '<label for="reg_pass">'.htmlspecialchars(_('Password:')).'</label>',
+            'requirement' => htmlspecialchars(sprintf(_('Must be at least %d characters long.'),'8')),
+            'field' => '<input type="password" name="pass1" id="reg_pass" />'
+        ),
+        'password_conf' => array(
+            'label' => '<label for="reg_pass2">'.htmlspecialchars(_('Password (confirm):')).'</label>',
+            'field' => '<input type="password" name="pass2" id="reg_pass2" />'
+        ),
+        'name' => array(
+            'label' => '<label for="reg_name">'.htmlspecialchars(_('Name:')).'</label>',
+            'field' => '<input type="text" name="name" id="reg_name" value="'.htmlspecialchars($_POST['name']).'" />'
+        ),
+        'email' => array(
+            'label' => '<label for="reg_email">'.htmlspecialchars(_('Email Address:')).'</label>',
+            'requirement' => htmlspecialchars(_('Email address used to activate your account.')),
+            'field' => '<input type="text" name="mail" id="reg_email" value="'.htmlspecialchars($_POST['mail']).'" />'
+        ),
+        'terms' => array(
+            'label' => '<label for="reg_terms">'.htmlspecialchars(_('Terms:')).'</label>',
+            'field' => '<textarea rows="10" cols="80" readonly id="reg_terms">'.$terms_text.'</textarea>'
+        ),
+        'terms_agree' => array(
+            'label' => '<label for="reg_check">'.htmlspecialchars(_('I agree to the above terms')).'</label>',
+            'field' => '<input type="checkbox" name="terms" id="reg_check" />'
+        ),
+        'submit' => '<input type="submit" value="'.htmlspecialchars(_('Register!')).'" />'
+    )
+);
+
 
 // define possibly undefined variables
 $_GET['action'] = (isset($_GET['action'])) ? $_GET['action'] : NULL;
 
 switch ($_GET['action']) {
     default:
-        echo display_reg_form();
+        $register['display_form'] = true;
         break;
 
     case 'reg':
@@ -110,18 +112,18 @@ switch ($_GET['action']) {
         try
         {
             if (!isset($_POST['terms'])) $_POST['terms'] = NULL;
-	    User::register($_POST['user'],
-		    $_POST['pass1'],
-		    $_POST['pass2'],
-		    $_POST['mail'],
-		    $_POST['name'],
-		    $_POST['terms']);
-            echo htmlspecialchars(_("Account creation was successful. Please activate your account using the link emailed to you."));
+            User::register($_POST['user'],
+                            $_POST['pass1'],
+                            $_POST['pass2'],
+                            $_POST['mail'],
+                            $_POST['name'],
+                            $_POST['terms']);
+            $tpl->assign('confirmation', htmlspecialchars(_("Account creation was successful. Please activate your account using the link emailed to you.")));
         }
         catch (UserException $e)
         {
-            echo '<span class="error">'.$e->getMessage().'</span><br /><br />';
-            echo display_reg_form($_POST['user'],$_POST['name'],$_POST['mail']);
+            $tpl->assign('errors', $e->getMessage());
+            $register['display_form'] = true;
         }
         break;
 
@@ -130,20 +132,15 @@ switch ($_GET['action']) {
             $username = strip_tags($_GET['user']);
             $verification_code = strip_tags($_GET['num']);
             User::activate($username,$verification_code);
-            echo htmlspecialchars(_('Your account has been activated.')).'<br />';
+            $tpl->assign('confirmation', htmlspecialchars(_('Your account has been activated.')));
         }
         catch (UserException $e) {
-            echo '<span class="error">'.$e->getMessage().'</span><br /><br />';
-            echo htmlspecialchars(_('Could not validate your account. The link you followed is not valid.'));
+            $tpl->assign('errors', $e->getMessage());
+            $tpl->assign('confirmation', htmlspecialchars(_('Could not validate your account. The link you followed is not valid.')));
         }
         break;
 }
-    echo '
-</div>';
-     include("include/footer.php"); ?>
-</body>
-</html>
-<?php
-$str = cryptUrl(12);
+$tpl->assign('register', $register);
 
+echo $tpl;
 ?>
