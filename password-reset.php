@@ -1,8 +1,8 @@
 <?php
 /**
- * copyright 2009 Lucas Baudin <xapantu@gmail.com>
- *           2012 Stephen Just <stephenjust@users.sf.net>
- *           2013 Glenn De Jonghe
+ * copyright 2009      Lucas Baudin <xapantu@gmail.com>
+ *           2012-2014 Stephen Just <stephenjust@gmail.com>
+ *           2013      Glenn De Jonghe
  *
  * This file is part of stkaddons
  *
@@ -21,12 +21,12 @@
  */
 
 define('ROOT','./');
-require_once(ROOT . 'include.php');
-require_once(INCLUDE_DIR . 'recaptchalib.php');
+require_once(ROOT.'include.php');
+require_once(INCLUDE_DIR.'StkTemplate.class.php');
+require_once(INCLUDE_DIR.'recaptchalib.php');
 
-Template::setFile('password-reset.tpl');
-$tpl = array();
-$tpl['title'] = htmlspecialchars(_('Reset Password').' - '._('STK Add-ons'));
+$tpl = new StkTemplate('password-reset.tpl');
+$tpl->assign('title', htmlspecialchars(_('Reset Password').' - '._('STK Add-ons')));
 
 // CAPTCHA
 $publickey = CAPTCHA_PUB; // you got this from the signup page
@@ -179,8 +179,7 @@ switch ($_GET['action']) {
         break;
 }
 
-$tpl['pass_reset'] = $pw_res;
-Template::assignments($tpl);
-Template::display();
+$tpl->assign('pass_reset', $pw_res);
+echo $tpl;
 
 ?>

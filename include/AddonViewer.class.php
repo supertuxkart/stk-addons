@@ -1,21 +1,23 @@
 <?php
-
-/* copyright 2010 Lucas Baudin <xapantu@gmail.com>                 
-
-  This file is part of stkaddons.
-
-  stkaddons is free software: you can redistribute it and/or
-  modify it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or (at your
-  option) any later version.
-
-  stkaddons is distributed in the hope that it will be useful, but
-  WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-  more details.
-
-  You should have received a copy of the GNU General Public License along with
-  stkaddons.  If not, see <http://www.gnu.org/licenses/>. */
+/**
+ * Copyright        2010 Lucas Baudin <xapantu@gmail.com>
+ *           2011 - 2014 Stephen Just <stephenjust@gmail.com>
+ *
+ * This file is part of stkaddons
+ *
+ * stkaddons is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * stkaddons is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 require_once(INCLUDE_DIR . 'Addon.class.php');
 
@@ -57,7 +59,11 @@ class AddonViewer {
         return $return;
     }
 
-    public function fillTemplate() {
+    /**
+     * Fill template with addon info
+     * @param Template $template
+     */
+    public function fillTemplate($template) {
         $tpl = array();
         $tpl['addon'] = array(
             'name' => $this->addon->getName($this->addon->getId()),
@@ -301,8 +307,7 @@ class AddonViewer {
         }
         $s_list['files'] = $source_files;
         $tpl['addon']['source_list'] = $s_list;
-
-        Template::assignments($tpl);
+        $template->assign('addon', $tpl['addon']);
     }
 
     /**

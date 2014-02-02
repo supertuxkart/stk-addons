@@ -1,33 +1,33 @@
 <?php
-/* copyright 2013 Stephen Just <stephenjust@users.sourceforge.net>               
-                                                                              
- This file is part of stkaddons.                                 
-                                                                              
- stkaddons is free software: you can redistribute it and/or      
- modify it under the terms of the GNU General Public License as published by  
- the Free Software Foundation, either version 3 of the License, or (at your   
- option) any later version.                                                   
-                                                                              
- stkaddons is distributed in the hope that it will be useful, but
- WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for    
- more details.                                                                
-                                                                              
- You should have received a copy of the GNU General Public License along with 
- stkaddons.  If not, see <http://www.gnu.org/licenses/>.   */
+/**
+ * copyright 2013-2014 Stephen Just <stephenjust@gmail.com>
+ *
+ * This file is part of stkaddons
+ *
+ * stkaddons is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * stkaddons is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 define('ROOT', './');
-require_once(ROOT . 'config.php');
-require_once(INCLUDE_DIR . 'locale.php');
-require_once(INCLUDE_DIR . 'Template.class.php');
+require_once(ROOT.'config.php');
+require_once(INCLUDE_DIR.'StkTemplate.class.php');
 
-Template::setFile('info-page.tpl');
-$tpl = array();
-$tpl['title'] = htmlspecialchars(_('STK Add-ons').' | '._('Privacy'));
+$tpl = StkTemplate('info-page.tpl');
+$tpl->assign('title', htmlspecialchars(_('STK Add-ons').' | '._('Privacy')));
 
 $page_content = <<< EOF
 <h1>Privacy Policy</h1>
-<address>Last updated: March 26, 2013</address>
+<address>Last updated: February 1, 2014</address>
 <p>Note that this document is still in a draft state.</p>
 
 <h2>Introduction</h2>
@@ -44,13 +44,13 @@ to use an alias or a nickname.) You may also choose to provide other kinds of
 information as noted below.</p>
 
 <p>As you interact with the STKAddons service, a variety of data is collected.
-For example, when you are logged in, you may submit content to be hosted by the
+For example, while you are logged in you may submit content to be hosted by the
 STKAddons service. We require that all submissions clearly state the names of
 any individuals involved in creating the content to provide credit for their
 work. You would be expected to provide a personally identifiable name to claim
 credit for your work. Again, this is not required to be your real name.</p>
 
-<p>In addition to this, while logged in, you are able to rate the content of
+<p>In addition to this, while logged in you are able to rate the content of
 other users. When you do so, your vote towards the content's rating is
 associated with your user account. Votes are only displayed in an aggregated
 format.</p>
@@ -59,12 +59,22 @@ format.</p>
 personally-idenifying information about what operating system you are using.
 As well, all connections to the STKAddons website are logged by our web server.
 This information contains your IP address or public hostname and browser user-
-agent. We do not avtively monitor this information, and it is collected as a
+agent. We do not actively monitor this information, and it is collected as a
 consequence of the web-server software that we (and most site operators) use.</p>
 
-<p>In the future, STK will have deeper integration with STKAddons, and at that
-time, we will also be storing information required to maintain a user
-session within the STK game, similar to a session cookie in a web browser.</p>
+<p>When signing in to the STKAddons service from STK, we store information
+required to maintain a user session within the STK game, similar to a session
+cookie in a web browser. We also store the player's gained achievements and
+they may create a friends list.</p>
+        
+<p>If you grant permission in-game, we will also collect anonymous statistics 
+related to your system configuration (screen resolution, gl_ext list, video card
+model), performance (average fps, both overall and per track), and asset usage
+(how many times you use each track and kart). You will be asked to enable this
+data collection when you launch the game for the first time. This will allow us
+to determine which assets to focus on improving, and how much we can increase
+the graphical demands of the game. (This is NOT implemented as of STK 0.8.1 but
+may exist in a future release.)</p>
 
 <h3>COPPA Compliance (United States)</h3>
 <p>In order to comply with United States law despite not operating in that
@@ -130,10 +140,7 @@ feel free to contact the website administrators by email at
 </ul>
 
 EOF;
-$tpl['info_page'] = $page_content;
-
-Template::assignments($tpl);
-
-Template::display();
+$tpl->assign('info_page', $page_content);
+echo $tpl;
 ?>
 

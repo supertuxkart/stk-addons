@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright 2009      Lucas Baudin <xapantu@gmail.com>
- *           2011-2013 Stephen Just <stephenjust@users.sourceforge.net>
+ *           2011-2014 Stephen Just <stephenjust@users.sourceforge.net>
  *
  * This file is part of stkaddons
  *
@@ -21,9 +21,8 @@
 
 define('ROOT','./');
 require_once(ROOT . 'config.php');
-require_once(INCLUDE_DIR . 'locale.php');
 require_once(INCLUDE_DIR . 'File.class.php');
-require_once(INCLUDE_DIR . 'Template.class.php');
+require_once(INCLUDE_DIR . 'StkTemplate.class.php');
 require_once(INCLUDE_DIR . 'User.class.php');
 
 // define possibly undefined variables
@@ -31,7 +30,7 @@ $_POST['user'] = (isset($_POST['user'])) ? $_POST['user'] : NULL;
 $_POST['pass'] = (isset($_POST['pass'])) ? $_POST['pass'] : NULL;
 $_GET['action'] = (isset($_GET['action'])) ? $_GET['action'] : NULL;
 
-$tpl = array();
+$tpl = new StkTemplate('login.tpl');
 // Prepare forms
 $login_form = array(
     'display' => true,
@@ -61,12 +60,12 @@ switch ($_GET['action']) {
 
 	User::logout();
 	if (User::$logged_in === true)
-	    $tpl['confirmation'] = htmlspecialchars(_('Failed to logout.'));
+	    $tpl->assign('confirmation', htmlspecialchars(_('Failed to logout.')));
 	else {
-	    Template::$meta_tags['refresh'] = '3;URL=index.php';
+        $tpl->setMetaTag('refresh', '3;URL=index.php');
 	    $conf = htmlspecialchars(_('You have been logged out.')).'<br />';
 	    $conf .= sprintf(htmlspecialchars(_('Click %shere%s if you do not automatically redirect.')),'<a href="index.php">','</a>').'<br />';
-	    $tpl['confirmation'] = $conf;
+	    $tpl->assign('confirmation', $conf);
 	}
 	
 	break;
@@ -84,31 +83,27 @@ switch ($_GET['action']) {
 	    $errors .= $e->getMessage();
 	}
 	if (User::$logged_in === true) {
-	    Template::$meta_tags['refresh'] = '3;URL=index.php';
+        $tpl->setMetaTag('refresh', '3;URL=index.php');
 	    $conf = sprintf(htmlspecialchars(_('Welcome, %s!')).'<br />',$_SESSION['real_name']);
 	    $conf .= sprintf(htmlspecialchars(_('Click %shere%s if you do not automatically redirect.')),'<a href="index.php">','</a>').'<br />';
-	    $tpl['confirmation'] = $conf;
+	    $tpl->assign('confirmation', $conf);
 	} else {
-	    $tpl['confirmation'] = $errors;
+	    $tpl->assign('confirmation', $errors);
 	}
 	break;
     
     default:
 	if (User::$logged_in) {
 	    $login_form['display'] = false;
-	    Template::$meta_tags['refresh'] = '3;URL=index.php';
+        $tpl->setMetaTag('refresh', '3;URL=index.php');
 	    $conf = htmlspecialchars(_('You are already logged in.')).' ';
 	    $conf .= sprintf(htmlspecialchars(_('Click %shere%s if you do not automatically redirect.')),'<a href="index.php">','</a>').'<br />';
-	    $tpl['confirmation'] = $conf;
+	    $tpl->assign('confirmation', $conf);
 	}
 	break;
 }
 
-Template::setFile('login.tpl');
+$tpl->assign('title', htmlspecialchars(_('STK Add-ons').' | '._('Login')));
+$tpl->assign('login', $login_form);
 
-$tpl['title'] = htmlspecialchars(_('STK Add-ons').' | '._('Login'));
-$tpl['login'] = $login_form;
-
-Template::assignments($tpl);
-
-Template::display();
+echo $tpl;

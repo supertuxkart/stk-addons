@@ -20,14 +20,12 @@
 
 define('ROOT', './');
 require(ROOT . 'config.php');
-require_once(INCLUDE_DIR . 'locale.php');
 require_once(INCLUDE_DIR . 'Music.class.php');
 require_once(INCLUDE_DIR . 'User.class.php');
-require_once(INCLUDE_DIR . 'Template.class.php');
+require_once(INCLUDE_DIR . 'StkTemplate.class.php');
 
-Template::setFile('music-browser.tpl');
-
-$tpl = array('title' => htmlspecialchars(_('STK Add-ons').' | '._('Browse Music')));
+$tpl = new StkTemplate('music-browser.tpl');
+$tpl->assign('title', htmlspecialchars(_('STK Add-ons').' | '._('Browse Music')));
 
 $music_tracks = Music::getAllByTitle();
 $music_data = array();
@@ -39,7 +37,7 @@ foreach ($music_tracks AS $track) {
     $music_data[] = $link;
 }
 
-$tpl['music_browser'] = array(
+$tpl->assign('music_browser', array(
     'heading' => htmlspecialchars(_('Browse Music')),
     'cols' => array(
         htmlspecialchars(_('Track Title')),
@@ -48,8 +46,7 @@ $tpl['music_browser'] = array(
         htmlspecialchars(_('File'))
     ),
     'data' => $music_data
-);
+));
 
-Template::assignments($tpl);
-Template::display();
+echo $tpl;
 ?>
