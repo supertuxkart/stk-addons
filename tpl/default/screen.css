@@ -326,31 +326,144 @@ span.f_dfsg {
     color: #000000;
 }
 
-/* Download Button */
-#dl_button {
+/* Panel interface */
+#left-menu
+{
+    float: left;
+    width: 250px;
+    padding: 30px;
+}
+#left-menu_top
+{
+    background-image: url('images/left-menu_top.png');
+    height: 10px;
+    width: 100%;
+}
+#left-menu_body
+{
+    background-image: url('images/left-menu.png');
+    overflow-x: hidden;
+    overflow-y: scroll;
+    width: 230px;
+    height: 456px;
+    padding: 0px 10px;
+}
+#left-menu_bottom
+{
+    background-image: url('images/left-menu_bottom.png');
+    height: 10px;
+    width: 100%;
+}
+#left-menu_body ul
+{
+    list-style: none;
+    margin: 0px;
+    padding: 0px;
+}
+#left-menu_body .menu-item
+{
+    display: block;
+    font-size: 1.2em;
+    line-height: 1.5em;
+    padding: 2px;
+    margin: 5px 0px;
+    min-height: 25px;
+    width: 300px;
+}
+#left-menu_body .menu-item:hover
+{
+    background-color: #000000;
+    color: #FFFFFF;
+}
+#left-menu_body li div.icon
+{
+    position: relative;
+    float: left;
+    width: 25px;
+    height: 25px;
+}
+#left-menu_body .icon
+{
+    height:25px;
+    margin-left:2px;
+    margin-right:10px;
+}
+#left-menu_body .icon-featured
+{
+    background: url('images/emblem-favorite.png') no-repeat right;
+    float: left;
+    height: 25px;
+    width: 25px;
+    position: absolute;
+    left: 5px;
+    top: 5px;
+}
+.unavailable
+{
+    color: #999999;
+}
+.unavailable a
+{
+    color: #999999;
+}
+
+#right-content {
+    float: left;
+    width: 620px;
+    padding: 30px;
+}
+#right-content_top
+{
+    background-image:url("images/content-addon_top.png");
+    height: 10px;
+    width: 100%;
+}
+#right-content_status
+{
+    background-image:url("images/content-addon.png");
+    overflow-x: hidden;
+    width: 580px;
+    padding: 0px 20px 0px 20px;
+}
+#right-content_body
+{
+    background-image:url("images/content-addon.png");
+    width:580px;
+    height:456px;
+    padding: 0px 20px 0px 20px;
+    overflow-y:scroll;
+    overflow-x: hidden;
+}
+#right-content_bottom
+{
+    background-image:url("images/content-addon_bottom.png");
+    height: 10px;
+    width: 100%;
+}
+#right-content h1
+{
+    display: block;
+    border-bottom: 1px solid #CCCCCC;
+}
+#right-content h2
+{
+    border-bottom: 1px solid #CCCCCC;
+    font-size: 1.4em;
+    font-weight: normal;
+}
+#right-content h3
+{
     clear: both;
-    overflow: auto;
+    display: block;
+    border-bottom: 1px dashed #CCCCCC;
 }
-#dl_button .left {
-    background: url('../image/dl-button-left.png') no-repeat;
-    float: left;
-    height: 80px;
-    width: 70px;
-}
-#dl_button .center {
-    background: url('../image/dl-button-center.png') repeat-x;
-    float: left;
-    font-size: 1.3em;
-    font-weight: bold;
-    height: 80px;
-    line-height: 80px;
-    padding-right: 1em;
-}
-#dl_button .right {
-    background: url('../image/dl-button-right.png') no-repeat;
-    float: left;
-    height: 80px;
-    width: 8px;
+
+h1
+{
+    clear:both;
+    font-size:23px;
+    font-family: Tahoma, Verdana,Geneva,sans-serif;
+    font-weight:normal;
 }
 
 a

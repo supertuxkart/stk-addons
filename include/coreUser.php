@@ -27,6 +27,8 @@ Description: file where all fonctions are
 
 ***************************************************************************/
 
+require_once(INCLUDE_DIR.'sql.php');
+
 class coreUser
 {
     var $reqSql;

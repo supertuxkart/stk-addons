@@ -1,6 +1,7 @@
 <?php
 /**
- * copyright 2009 Lucas Baudin <xapantu@gmail.com>
+ * Copyright 2009      Lucas Baudin <xapantu@gmail.com>
+ *           2012-2014 Stephen Just <stephenjust@users.sf.net>
  *
  * This file is part of stkaddons
  *
@@ -17,29 +18,25 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
-?>
-<?php
-/***************************************************************************
-Project: STK Addon Manager
 
-File: users.php
-Version: 1
-Licence: GPLv3
-Description: people
-
-***************************************************************************/
 define('ROOT','./');
-include('include.php');
+require_once(ROOT.'config.php');
+require_once(INCLUDE_DIR.'AccessControl.class.php');
+require_once(INCLUDE_DIR.'PanelInterface.class.php');
+require_once(INCLUDE_DIR.'coreUser.php');
+require_once(INCLUDE_DIR.'StkTemplate.class.php');
 AccessControl::setLevel('basicPage');
 
-$_GET['user'] = (isset($_GET['user'])) ? mysql_real_escape_string($_GET['user']) : mysql_real_escape_string($_SESSION['user']);
+$_GET['user'] = (isset($_GET['user'])) ? $_GET['user'] : $_SESSION['user'];
 $action = (isset($_GET['action'])) ? $_GET['action'] : NULL;
 
-$title = htmlspecialchars(_('SuperTuxKart Add-ons')).' | '.htmlspecialchars(_('Users'));
-
-include('include/top.php');
-echo '</head><body>';
-include(ROOT.'include/menu.php');
+$tpl = new StkTemplate('two-pane.tpl');
+$tpl->assign('title', htmlspecialchars(_('SuperTuxKart Add-ons')).' | '.htmlspecialchars(_('Users')));
+$panel = array(
+    'left' => '',
+    'status' => '',
+    'right' => ''
+);
 
 $panels = new PanelInterface();
 $js = NULL;
@@ -80,7 +77,7 @@ switch ($action)
         break;
 }
 $status = ob_get_clean();
-$panels->setStatusContent($status);
+$panel['status'] = $status;
 
 $users = array();
 $userLoader = new coreUser();
@@ -111,17 +108,16 @@ if (isset($_GET['user'])) {
     ob_start();
     include(ROOT.'users-panel.php');
     $content = ob_get_clean();
-    $panels->setContent($content);
+    $panel['right'] = $content;
 }
-$panels->setMenuItems($users);
+$left_tpl = new StkTemplate('url-list-panel.tpl');
+$left_tpl->assign('items', $users);
+$panel['left'] = (string) $left_tpl;
 
 ob_start();
 include(ROOT.'users-panel.php');
 $content = ob_get_clean();
-$panels->setContent($content);
+$panel['right'] = $content;
 
-echo $panels;
-
-include("include/footer.php"); ?>
-</body>
-</html>
+$tpl->assign('panel', $panel);
+echo $tpl;
