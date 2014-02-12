@@ -1,6 +1,7 @@
 <?php
 /**
- * copyright 2009 Lucas Baudin <xapantu@gmail.com>
+ * Copyright 2009      Lucas Baudin <xapantu@gmail.com>
+ *           2012-2014 Stephen Just <stephenjust@users.sf.net>
  *
  * This file is part of stkaddons
  *
@@ -17,17 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
-?>
-<?php
-/***************************************************************************
-Project: STK Addon Manager
 
-File: users-panel.php
-Version: 1
-Licence: GPLv3
-Description: page who is called in ajax and who give user informations
-
-***************************************************************************/
 if (!defined('ROOT'))
     define('ROOT','./');
 include_once('include.php');
