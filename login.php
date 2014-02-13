@@ -62,7 +62,7 @@ switch ($_GET['action']) {
 	if (User::$logged_in === true)
 	    $tpl->assign('confirmation', htmlspecialchars(_('Failed to logout.')));
 	else {
-        $tpl->setMetaTag('refresh', '3;URL=index.php');
+        $tpl->setMetaRefresh('index.php', 3);
 	    $conf = htmlspecialchars(_('You have been logged out.')).'<br />';
 	    $conf .= sprintf(htmlspecialchars(_('Click %shere%s if you do not automatically redirect.')),'<a href="index.php">','</a>').'<br />';
 	    $tpl->assign('confirmation', $conf);
@@ -83,7 +83,7 @@ switch ($_GET['action']) {
 	    $errors .= $e->getMessage();
 	}
 	if (User::$logged_in === true) {
-        $tpl->setMetaTag('refresh', '3;URL=index.php');
+        $tpl->setMetaRefresh('index.php', 3);
 	    $conf = sprintf(htmlspecialchars(_('Welcome, %s!')).'<br />',$_SESSION['real_name']);
 	    $conf .= sprintf(htmlspecialchars(_('Click %shere%s if you do not automatically redirect.')),'<a href="index.php">','</a>').'<br />';
 	    $tpl->assign('confirmation', $conf);
@@ -95,7 +95,7 @@ switch ($_GET['action']) {
     default:
 	if (User::$logged_in) {
 	    $login_form['display'] = false;
-        $tpl->setMetaTag('refresh', '3;URL=index.php');
+        $tpl->setMetaRefresh('index.php', 3);
 	    $conf = htmlspecialchars(_('You are already logged in.')).' ';
 	    $conf .= sprintf(htmlspecialchars(_('Click %shere%s if you do not automatically redirect.')),'<a href="index.php">','</a>').'<br />';
 	    $tpl->assign('confirmation', $conf);

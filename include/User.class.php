@@ -24,6 +24,7 @@ require_once(INCLUDE_DIR . 'Verification.class.php');
 require_once(INCLUDE_DIR . 'DBConnection.class.php');
 require_once(INCLUDE_DIR . 'exceptions.php');
 require_once(INCLUDE_DIR . 'SMail.class.php');
+require_once(INCLUDE_DIR . 'Log.class.php');
 
 class User
 {
