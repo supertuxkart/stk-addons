@@ -3,8 +3,8 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: sql
--- Generation Time: Dec 30, 2013 at 10:13 PM
--- Server version: 5.1.72
+-- Generation Time: Feb 25, 2014 at 12:29 AM
+-- Server version: 5.1.73
 -- PHP Version: 5.3.3-7+squeeze18
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
@@ -344,7 +344,7 @@ CREATE TABLE IF NOT EXISTS `v2_servers` (
   `current_players` tinyint(4) unsigned NOT NULL DEFAULT '0' COMMENT 'Isn''t exact. Just to show in the server-list, where it doens''t need to be exact.',
   PRIMARY KEY (`id`),
   KEY `hostid` (`hostid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -451,8 +451,8 @@ CREATE TABLE IF NOT EXISTS `v2_votes` (
 -- Constraints for table `v2_achieved`
 --
 ALTER TABLE `v2_achieved`
-  ADD CONSTRAINT `v2_achieved_ibfk_2` FOREIGN KEY (`achievementid`) REFERENCES `v2_achievements` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  ADD CONSTRAINT `v2_achieved_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `v2_users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+  ADD CONSTRAINT `v2_achieved_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `v2_users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  ADD CONSTRAINT `v2_achieved_ibfk_2` FOREIGN KEY (`achievementid`) REFERENCES `v2_achievements` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `v2_addons`
@@ -465,12 +465,6 @@ ALTER TABLE `v2_addons`
 --
 ALTER TABLE `v2_arenas_revs`
   ADD CONSTRAINT `v2_arenas_revs_ibfk_1` FOREIGN KEY (`addon_id`) REFERENCES `v2_addons` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
-
---
--- Constraints for table `v2_files`
---
-ALTER TABLE `v2_files`
-  ADD CONSTRAINT `v2_files_ibfk_1` FOREIGN KEY (`addon_id`) REFERENCES `v2_addons` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `v2_karts_revs`
@@ -494,8 +488,8 @@ ALTER TABLE `v2_servers`
 -- Constraints for table `v2_server_conn`
 --
 ALTER TABLE `v2_server_conn`
-  ADD CONSTRAINT `v2_server_conn_ibfk_2` FOREIGN KEY (`userid`) REFERENCES `v2_users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  ADD CONSTRAINT `v2_server_conn_ibfk_1` FOREIGN KEY (`serverid`) REFERENCES `v2_servers` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+  ADD CONSTRAINT `v2_server_conn_ibfk_1` FOREIGN KEY (`serverid`) REFERENCES `v2_servers` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  ADD CONSTRAINT `v2_server_conn_ibfk_2` FOREIGN KEY (`userid`) REFERENCES `v2_users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `v2_tracks_revs`
@@ -513,8 +507,8 @@ ALTER TABLE `v2_verification`
 -- Constraints for table `v2_votes`
 --
 ALTER TABLE `v2_votes`
-  ADD CONSTRAINT `v2_votes_ibfk_2` FOREIGN KEY (`addon_id`) REFERENCES `v2_addons` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  ADD CONSTRAINT `v2_votes_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `v2_users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+  ADD CONSTRAINT `v2_votes_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `v2_users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  ADD CONSTRAINT `v2_votes_ibfk_2` FOREIGN KEY (`addon_id`) REFERENCES `v2_addons` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

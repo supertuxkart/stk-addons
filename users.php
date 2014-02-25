@@ -22,7 +22,6 @@
 define('ROOT','./');
 require_once(ROOT.'config.php');
 require_once(INCLUDE_DIR.'AccessControl.class.php');
-require_once(INCLUDE_DIR.'PanelInterface.class.php');
 require_once(INCLUDE_DIR.'coreUser.php');
 require_once(INCLUDE_DIR.'StkTemplate.class.php');
 AccessControl::setLevel('basicPage');
@@ -37,9 +36,6 @@ $panel = array(
     'status' => '',
     'right' => ''
 );
-
-$panels = new PanelInterface();
-$js = NULL;
 
 ob_start();
 switch ($action)

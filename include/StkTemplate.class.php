@@ -56,6 +56,7 @@ class StkTemplate extends Template {
             array('src' => SITE_ROOT . 'js/script.js')
         );
         $this->smarty->assign('script_includes', $script_includes);
+        $this->smarty->assign('site_root', SITE_ROOT);
     }
     
     private function setupTopMenu() {

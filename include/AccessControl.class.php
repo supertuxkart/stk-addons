@@ -20,6 +20,7 @@
  */
 require_once(INCLUDE_DIR . 'File.class.php');
 require_once(INCLUDE_DIR . 'User.class.php');
+require_once(INCLUDE_DIR . 'StkTemplate.class.php');
 
 class AccessControl {
 
