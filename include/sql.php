@@ -36,20 +36,6 @@ function sql_query($query)
     }
 }
 
-function sql_get_all($table)
-{
-    $error = true;
-    $sql = mysql_query("SELECT * FROM ".DB_PREFIX.$table) or $error = false;
-    if(!$error)
-    {
-        return false;
-    }
-    else
-    {
-        return $sql;
-    }
-}
-
 function sql_get_all_where($table, $property, $value)
 {
     // Ensure parameters are arrays for consistency
@@ -86,13 +72,6 @@ function sql_update($table, $property_select, $value_select, $property_change, $
     $request = "UPDATE `".DB_NAME."`.`".DB_PREFIX.$table."`
                         SET `$property_change` =  '$new_value'
                         WHERE `".DB_PREFIX.$table."`.`$property_select` = '$value_select';";
-    //echo $request;
-    return mysql_query($request) or die(mysql_error());
-}
-
-function sql_remove_where($table, $property, $value)
-{
-    $request = "DELETE FROM ".DB_PREFIX.$table." WHERE `$property` = '$value'";
     //echo $request;
     return mysql_query($request) or die(mysql_error());
 }
