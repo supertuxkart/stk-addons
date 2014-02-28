@@ -93,7 +93,7 @@ class Template {
             $this->smarty->display($this->file, $this->directory);
             return ob_get_clean();
         } catch (Exception $e) {
-            if (DEBUG) return sprintf("Template Error: %s", $e->getMessage());
+            if (DEBUG_MODE) return sprintf("Template Error: %s", $e->getMessage());
             return "Template Error";
         }
     }

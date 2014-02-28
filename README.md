@@ -20,7 +20,7 @@ Dependencies include:
 * PEAR::Mail
 * PHP's gd module
 * PHP's PDO module
-* PHP's MySQLi module (in the process of removing)
+* PHP's MySQL module (in the process of removing)
 * PHP's gettext module
 * Smarty Template Engine
 
