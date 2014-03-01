@@ -67,35 +67,6 @@ function sql_get_all_where($table, $property, $value)
     return mysql_query($query_form.$expression_string);
 }
 
-function sql_insert($table, $properties, $values)
-{
-    $field = "";
-    $first= true;
-    foreach($properties as $propertie)
-    {
-        if(!$first)
-        {
-            $field .= ", ";
-        }
-        $field .= "`$propertie`";
-        $first = false;
-    }
-    $first= true;
-    $field_ = "";
-    foreach($values as $value)
-    {
-        if(!$first)
-        {
-            $field_ .= ", ";
-        }
-        $field_ .= "'$value'";
-        $first = false;
-    }
-    $req = "INSERT INTO `".DB_PREFIX.$table."` (
-                        $field) VALUES($field_)";
-    return mysql_query($req) or die(mysql_error());
-}
-
 function sql_next($sql_query)
 {
     $exist = true;
