@@ -811,7 +811,7 @@ class Addon {
         try {
             DBConnection::get()->query(
                     'UPDATE `' . DB_PREFIX . 'addons`
-                     SET `license` = :name,
+                     SET `name` = :name,
                      WHERE `id` = :addon_id',
                     DBConnection::NOTHING,
                     array(
