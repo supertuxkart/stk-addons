@@ -141,8 +141,19 @@ class Addon {
         // Make sure no revisions with this id exists
         // FIXME: Check if this id is redundant or not. Could just
         //        auto-increment this column if it is unused elsewhere.
-        if(sql_exist($type.'_revs', 'id', $fileid))
-            throw new AddonException(htmlspecialchars(_('The add-on you are trying to create already exists.')));
+        try {
+            $rows = DBConnection::get()->query(
+                    'SELECT * FROM ' . DB_PREFIX . $type .'_revs WHERE `id` = :id',
+                    DBConnection::ROW_COUNT,
+                    array(':id' => (string)$fileid)
+            );
+            if ($rows) {
+                throw new AddonException(htmlspecialchars(_('The add-on you are trying to create already exists.')));
+            }
+        } catch(DBException $e) {
+            throw new AddonException(sprintf('Failed to acces the %s_revs table.', $type));
+        }
+
 
         echo htmlspecialchars(_('Creating a new add-on...')).'<br />';
         $fields = array('id','type','name','uploader','designer','license');
@@ -209,9 +220,19 @@ class Addon {
             throw new AddonException('You must be logged in to create an add-on revision.');
 
         // Make sure an add-on file with this id does not exist
-        if (sql_exist($this->type.'_revs', 'id', $fileid))
-            throw new AddonException(htmlspecialchars(_('The file you are trying to create already exists.')));
-        
+        try {
+            $rows = DBConnection::get()->query(
+                    'SELECT * FROM ' . DB_PREFIX . $this->type . '_revs WHERE `id` = :id',
+                    DBConnection::ROW_COUNT,
+                    array(':id' => (string)$fileid)
+            );
+            if ($rows) {
+                throw new AddonException(htmlspecialchars(_('The file you are trying to create already exists.')));
+            }
+        } catch(DBException $e) {
+            throw new AddonException(sprintf('Failed to acces the %s_revs table.', $this->type));
+        }
+
         // Make sure user has permission to upload a new revision for this add-on
         if (User::$user_id !== $this->uploaderId && !$_SESSION['role']['manageaddons']) {
             throw new AddonException(htmlspecialchars(_('You do not have the necessary permissions to perform this action.')));

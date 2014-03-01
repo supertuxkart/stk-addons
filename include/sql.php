@@ -118,11 +118,3 @@ function sql_next($sql_query)
         return false;
     }
 }
-function sql_exist($table, $property, $value)
-{
-    $error = true;
-    $sql = mysql_query("SELECT * FROM ".DB_PREFIX.$table." WHERE `$property` = '$value'");
-    $request = mysql_fetch_array($sql) or $error = false;
-    return $error;
-}
-?>

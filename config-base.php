@@ -33,12 +33,12 @@ $dirUploadCron = $dirUpload;
 $dirBase = "http://127.0.0.1/stkaddons/";
 $dirDownload = $dirBase."upload/";
 
-$style="default";
+$style = "default";
 $admin = "yourname@example.com";
 
 // CAPTCHA properties
-define('CAPTCHA_PUB',''); // reCAPTCHA public key
-define('CAPTCHA_PRIV',''); // reCAPTCHA private key
+define('CAPTCHA_PUB', ''); // reCAPTCHA public key
+define('CAPTCHA_PRIV', ''); // reCAPTCHA private key
 
 // Template properties (Fixme: define this in user prefs)
 define('TPL_PATH', 'tpl/default/');
@@ -61,10 +61,11 @@ define('SMTP_AUTH', NULL); // Whether or not to use SMTP authentication, true/fa
 define('SMTP_USER', NULL); // SMTP username
 define('SMTP_PASS', NULL); // SMTP password
 
-if (!defined('CRON'))
+if (!defined('CRON')) {
     define("UP_LOCATION", $dirUpload);
-else
+} else {
     define("UP_LOCATION", $dirUploadCron);
+}
 define("DOWN_LOCATION", $dirDownload);
 define("SITE_ROOT", "http://stkaddons.tuxfamily.org/");
 define("CACHE_DIR", ROOT.'assets/temp/');
@@ -74,5 +75,3 @@ define("ASSET_XML", DOWN_LOCATION."xml/assets.xml");
 define("NEWS_XML_LOCAL", UP_LOCATION."xml/news.xml");
 define("ASSET_XML_LOCAL", UP_LOCATION."xml/news.xml");
 define("JPG_ROOT", ROOT);
-
-
