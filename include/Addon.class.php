@@ -327,8 +327,18 @@ class Addon {
             echo '<span class="error">'.htmlspecialchars(_('Failed to remove file records for this addon.')).'</span><br />';
 
         // Remove addon entry
-        if (!sql_remove_where('addons', 'id', $this->id))
+        // FIXME: The two queries above should be included with this one
+        // in a transaction, or database constraints added so that the two
+        // queries above are no longer needed.
+        try {
+            DBConnection::get()->query(
+                    'DELETE FROM `'.DB_PREFIX.'addons`
+                     WHERE `id` = :id',
+                    DBConnection::NOTHING,
+                    array(':id' => $this->id));
+        } catch (DBException $e) {
             throw new AddonException(htmlspecialchars(_('Failed to remove addon.')));
+        }
 
         writeAssetXML();
         writeNewsXML();

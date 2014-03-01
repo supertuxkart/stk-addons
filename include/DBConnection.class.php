@@ -33,6 +33,10 @@ class DBConnection
         
     }
 
+    /**
+     * Get the DBConnection singleton
+     * @return \DBConnection
+     */
     public static function get() {
         if( !self::$instance ) {
 	        self::$instance = new DBConnection();

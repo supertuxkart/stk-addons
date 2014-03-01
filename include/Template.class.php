@@ -35,12 +35,16 @@ class Template {
         $this->setTemplateDir($template);
         $this->setTemplateFile($template_file);
     }
-    
+
+    public function __toString() {
+        return $this->getFilledTemplate();
+    }
+
     /**
      * Setup function for children to override
      */
     protected function setup() {}
-    
+
     /**
      * Set the template directory to use
      * @param string $template_name
@@ -52,7 +56,7 @@ class Template {
         $dir = Template::getTemplateDir($template_name);
         $this->directory = $dir;
     }
-    
+
     /**
      * Set the template file to use
      * @param string $file_name
@@ -77,14 +81,28 @@ class Template {
         $this->smarty = new Smarty;
         $this->smarty->compile_dir = TMP.'tpl_c/';
     }
-    
-    public function __toString() {
-        $this->setup();
-        ob_start();
-        $this->smarty->display($this->file, $this->directory);
-        return ob_get_clean();
+
+    /**
+     * Populate a template and return it
+     * @return string
+     */
+    private function getFilledTemplate() {
+        try {
+            $this->setup();
+            ob_start();
+            $this->smarty->display($this->file, $this->directory);
+            return ob_get_clean();
+        } catch (Exception $e) {
+            if (DEBUG_MODE) return sprintf("Template Error: %s", $e->getMessage());
+            return "Template Error";
+        }
     }
 
+    /**
+     * Assign multiple values using an associative array
+     * @param array $assigns
+     * @throws TemplateException
+     */
     public function assignments($assigns) {
         if (!is_array($assigns))
             throw new TemplateException('Invalid template assignments.');
@@ -93,11 +111,16 @@ class Template {
             $this->smarty->assign($key, $value);
         }
     }
-    
+
+    /**
+     * Assign a value to a template variable
+     * @param string $key
+     * @param mixed $value May be a string or an array
+     */
     public function assign($key, $value) {
         $this->smarty->assign($key, $value);
     }
-    
+
     /**
      * Get the path to the template file directory, based on the template name
      * @param string $template
