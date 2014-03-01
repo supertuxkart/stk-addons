@@ -67,15 +67,6 @@ function sql_get_all_where($table, $property, $value)
     return mysql_query($query_form.$expression_string);
 }
 
-function sql_update($table, $property_select, $value_select, $property_change, $new_value)
-{
-    $request = "UPDATE `".DB_NAME."`.`".DB_PREFIX.$table."`
-                        SET `$property_change` =  '$new_value'
-                        WHERE `".DB_PREFIX.$table."`.`$property_select` = '$value_select';";
-    //echo $request;
-    return mysql_query($request) or die(mysql_error());
-}
-
 function sql_insert($table, $properties, $values)
 {
     $field = "";

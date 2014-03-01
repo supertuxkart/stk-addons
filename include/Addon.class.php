@@ -767,19 +767,40 @@ class Addon {
     }
     
     private function setLicense($license) {
-        if (!sql_update('addons',
-                'id',mysql_real_escape_string($this->id),
-                'license',mysql_real_escape_string($license)))
+        try {
+            DBConnection::get()->query(
+                    'UPDATE `' . DB_PREFIX . 'addons`
+                     SET `license` = :license,
+                     WHERE `id` = :addon_id',
+                    DBConnection::NOTHING,
+                    array(
+                            ':license'  => $license,
+                            ':addon_id' => (string)$this->id
+                    )
+            );
+        } catch(DBException $e) {
             throw new AddonException(htmlspecialchars(_('Failed to update the license record for this add-on.')));
+        }
+
         $this->license = $license;
     }
     
     private function setName($name) {
-        if (!sql_update('addons',
-                'id',mysql_real_escape_string($this->id),
-                'name',mysql_real_escape_string($name)))
+        try {
+            DBConnection::get()->query(
+                    'UPDATE `' . DB_PREFIX . 'addons`
+                     SET `license` = :name,
+                     WHERE `id` = :addon_id',
+                    DBConnection::NOTHING,
+                    array(
+                            ':name'  => $name,
+                            ':addon_id' => (string)$this->id
+                    )
+            );
+        } catch(DBException $e) {
             throw new AddonException(htmlspecialchars(_('Failed to update the name record for this add-on.')));
-        
+        }
+
         $this->name = $name;
     }
     
