@@ -19,7 +19,7 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define("DEBUG_MODE", true); //FIXME turn off on server.
+define("DEBUG_MODE", true); // FIXME turn off on server.
 if (DEBUG_MODE){
     error_reporting(E_ALL);
     ini_set('display_errors', 'On');
@@ -42,6 +42,9 @@ define('CAPTCHA_PRIV',''); // reCAPTCHA private key
 
 // Template properties (Fixme: define this in user prefs)
 define('TPL_PATH', 'tpl/default/');
+
+// define temporary directory path
+define("TMP", "/tmp/");
 
 define("DB_USER", 'root');
 define("DB_PASSWORD", 'pass');
@@ -70,5 +73,6 @@ define("NEWS_XML",  DOWN_LOCATION."xml/news.xml");
 define("ASSET_XML", DOWN_LOCATION."xml/assets.xml");
 define("NEWS_XML_LOCAL", UP_LOCATION."xml/news.xml");
 define("ASSET_XML_LOCAL", UP_LOCATION."xml/news.xml");
-define("JPG_ROOT",ROOT);
-?>
+define("JPG_ROOT", ROOT);
+
+
