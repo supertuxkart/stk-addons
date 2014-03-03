@@ -31,6 +31,13 @@ class coreUser
 {
     public $userCurrent;
 
+    /**
+     * Get a user by it's id
+     *
+     * @param $id
+     *
+     * @throws UserException
+     */
     public function selectById($id)
     {
         try {
@@ -54,6 +61,13 @@ class coreUser
         }
     }
 
+    /**
+     * Get a user by it's username
+     *
+     * @param $user
+     *
+     * @throws UserException
+     */
     public function selectByUser($user)
     {
         try {
@@ -77,6 +91,12 @@ class coreUser
         }
     }
 
+    /**
+     * Get all the users from the database
+     *
+     * @return array|int
+     * @throws UserException
+     */
     public function getAll()
     {
         try {
@@ -96,6 +116,11 @@ class coreUser
         return $users;
     }
 
+    /**
+     * Get the overall view about the user
+     *
+     * @return bool|string
+     */
     public function getViewInformation()
     {
         if (!User::$logged_in) {
@@ -115,6 +140,11 @@ class coreUser
         return $output;
     }
 
+    /**
+     * Get the html representing the information about the user
+     *
+     * @return string
+     */
     public function getInformation()
     {
         $output = '<h1>' . $this->userCurrent['user'] . '</h1>';
@@ -144,6 +174,11 @@ class coreUser
         return $output;
     }
 
+    /**
+     * Get the html of the config
+     *
+     * @return string
+     */
     public function getConfig()
     {
         $output = '
@@ -203,6 +238,14 @@ class coreUser
         return $output;
     }
 
+    /**
+     * Get the html representing the type
+     *
+     * @param string $type the type of addon
+     *
+     * @return string
+     * @throws UserException
+     */
     public function getAddonList($type)
     {
         switch ($type) {
@@ -274,6 +317,16 @@ class coreUser
         return $output;
     }
 
+    /**
+     * Set the user password
+     *
+     * @param string $old_password
+     * @param string $new_password_1
+     * @param string $new_password_2
+     *
+     * @return bool true on success
+     * @throws UserException
+     */
     public function setPass($old_password, $new_password_1, $new_password_2)
     {
         // TODO: FIX error message on old password
@@ -289,6 +342,14 @@ class coreUser
         return true;
     }
 
+    /**
+     * Set the user config
+     *
+     * @param null $available the user active option
+     * @param null $role      the role of the user
+     *
+     * @return bool true on success false otherwise
+     */
     public function setConfig($available = null, $role = null)
     {
         if ($_SESSION['role']['manage' . $this->userCurrent['role'] . 's']) {
@@ -342,6 +403,11 @@ class coreUser
         return false;
     }
 
+    /**
+     * Generate a url that point to the current user
+     *
+     * @return string
+     */
     public function permalink()
     {
         return 'users.php?user=' . $this->userCurrent['user'];
