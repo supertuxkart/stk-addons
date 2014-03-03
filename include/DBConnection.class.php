@@ -110,14 +110,18 @@ class DBConnection
      * @return array|int
      * @throws DBException
      */
-    public function query($query, $return_type = DBConnection::NOTHING, $params = null)
+    public function query($query, $return_type = DBConnection::NOTHING, $params = array(), $binds = array())
     {
         if (!$query) {
             throw new DBException("Empty Query");
         }
         try {
             $sth = $this->conn->prepare($query);
-            $sth->execute($params);
+            foreach($binds as $key => $bind)                                   
+                $sth->bindValue($key, (int)$bind, PDO::PARAM_INT);             
+            foreach($params as $key=> $param)                                  
+                $sth->bindValue($key, $param); 
+            $sth->execute();
             if ($return_type == self::NOTHING) {
                 return;
             }
