@@ -64,7 +64,7 @@ class Log {
                      LIMIT :limit',
                     DBConnection::FETCH_ALL,
                     array(),
-                    array(':limit' => $number));
+                    array(':limit' => (int)$number));
         } catch (DBException $e) {
             throw new Exception('Failed to fetch log entries.');
         }

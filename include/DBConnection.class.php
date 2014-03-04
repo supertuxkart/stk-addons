@@ -112,13 +112,22 @@ class DBConnection
      */
     public function query($query, $return_type = DBConnection::NOTHING, $params = array(), $binds = array())
     {
+        $data_types = array(                                                   
+            'boolean'   => PDO::PARAM_BOOL,                                    
+            'NULL'      => PDO::PARAM_NULL,                                    
+            'integer'   => PDO::PARAM_INT,                                     
+            'string'    => PDO::PARAM_STR,                                     
+        ); 
         if (!$query) {
             throw new DBException("Empty Query");
         }
         try {
             $sth = $this->conn->prepare($query);
-            foreach($binds as $key => $bind)                                   
-                $sth->bindValue($key, (int)$bind, PDO::PARAM_INT);             
+            foreach($binds as $key => $bind){
+                $varType = gettype($bind);
+                settype($bind, $varType);                                    
+                $sth->bindValue($key, $bind, $data_types[$varType]);                                                
+            }
             foreach($params as $key=> $param)                                  
                 $sth->bindValue($key, $param); 
             $sth->execute();
