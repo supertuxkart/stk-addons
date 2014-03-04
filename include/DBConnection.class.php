@@ -35,6 +35,13 @@ class DBConnection
 
     const NOTHING = 4;
 
+    //Alias for PDO Constants
+    const PARAM_BOOL = PDO::PARAM_BOOL;                                        
+    const PARAM_INT = PDO::PARAM_INT;                                          
+    const PARAM_NULL = PDO::PARAM_NULL;                                        
+    const PARAM_STR = PDO::PARAM_STR;                                          
+    const PARAM_NULLSTR = Null;
+
 
     private function __construct()
     {
@@ -105,19 +112,25 @@ class DBConnection
      *
      * @param string $query
      * @param int    $return_type
-     * @param null   $params
-     *
+     * @param array   $params An associative array having mapping between variables for prepared statements and values 
+     * @param array   $data_types variables in prepared statement for which datatype should be explictly mentioned
      * @return array|int
      * @throws DBException
      */
-    public function query($query, $return_type = DBConnection::NOTHING, $params = null)
+    public function query($query, $return_type = DBConnection::NOTHING, $params = array(), $data_types = array())
     {
         if (!$query) {
             throw new DBException("Empty Query");
         }
         try {
             $sth = $this->conn->prepare($query);
-            $sth->execute($params);
+            foreach($params as $key=> $param){                                 
+                if(array_key_exists($key,$data_types))                                                                         
+                    $sth->bindValue($key, $param, $data_types[$key]);          
+                else                                                          
+                    $sth->bindValue($key, $param);                             
+            }   
+            $sth->execute();
             if ($return_type == self::NOTHING) {
                 return;
             }
