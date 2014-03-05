@@ -19,29 +19,29 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-if (!defined('ROOT'))
-    define('ROOT','./');
+if (!defined('ROOT')) {
+    define('ROOT', './');
+}
 include_once('include.php');
 AccessControl::setLevel('basicPage');
 
-if (!isset($_GET['id']))
-    $_GET['id'] = NULL;
+if (!isset($_GET['id'])) {
+    $_GET['id'] = null;
+}
 $_GET['id'] = (int)$_GET['id'];
-if (!isset($_POST['id']))
-    $_POST['id'] = NULL;
+if (!isset($_POST['id'])) {
+    $_POST['id'] = null;
+}
 if (!is_numeric($_POST['id']) && !isset($_GET['user'])) {
     $_GET['user'] = $_POST['id'];
     $_POST['id'] = 0;
 }
 $_POST['id'] = (int)$_POST['id'];
 
-$id = mysql_real_escape_string($_POST['id']);
-
-$addon = new coreUser;
-if ($_POST['id'] !== 0)
-    $addon->selectById($id);
-else
-    $addon->selectByUser(mysql_real_escape_string($_GET['user']));
-
-$addon->viewInformation();
-?>
+$user = new coreUser();
+if ($_POST['id'] != 0) {
+    $user->selectById($_POST['id']);
+} else {
+    $user->selectByUser($_GET['user']);
+}
+echo $user->getViewInformation();

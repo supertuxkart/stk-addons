@@ -36,37 +36,6 @@ function sql_query($query)
     }
 }
 
-function sql_get_all_where($table, $property, $value)
-{
-    // Ensure parameters are arrays for consistency
-    if (is_string($property))
-    {
-	$property = array($property);
-    }
-    if (is_string($value))
-    {
-	$value = array($value);
-    }
-    // Make sure there are as many values as properties
-    if (count($value) !== count($property))
-    {
-	return false;
-    }
-
-    // Set base query structure
-    $query_form = 'SELECT * FROM '.DB_PREFIX.$table.' WHERE ';
-    $expression = array();
-
-    // Loop through all properties and generate equalities
-    for ($i = 0; $i < count($property); $i++)
-    {
-	$expression[] = "`$property[$i]` = '$value[$i]'";
-    }
-    $expression_string = implode(' AND ',$expression);
-    
-    return mysql_query($query_form.$expression_string);
-}
-
 function sql_next($sql_query)
 {
     $exist = true;
