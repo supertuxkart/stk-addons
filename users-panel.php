@@ -23,24 +23,15 @@ if (!defined('ROOT'))
     define('ROOT','./');
 include_once('include.php');
 AccessControl::setLevel('basicPage');
-if (!isset($_GET['id']))
-    $_GET['id'] = NULL;
-$_GET['id'] = (int)$_GET['id'];
-if (!isset($_POST['id']))
-    $_POST['id'] = NULL;
-if (!is_numeric($_POST['id']) && !isset($_GET['user'])) {
-    $_GET['user'] = $_POST['id'];
-    $_POST['id'] = 0;
-}
-$_POST['id'] = (int)$_POST['id'];
-
-$id = mysql_real_escape_string($_POST['id']);
+if(isset($_GET['id']))
+	$id = mysql_real_escape_string($_GET['id']);
+else
+	$_GET['id'] = 0;
+	
 
 $addon = new coreUser;
-if ($_POST['id'] !== 0)
-    	$addon->selectByUser(mysql_real_escape_string($id));
-else
-    	$addon->selectByUser(mysql_real_escape_string($_GET['user']));
+if ($_GET['id'] !== 0)
+    $addon->selectByUser(mysql_real_escape_string($id));
 
 $addon->viewInformation();
 ?>
