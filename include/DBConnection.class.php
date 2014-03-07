@@ -118,13 +118,13 @@ class DBConnection
         try {
             $sth = $this->conn->prepare($query);
             $sth->execute($params);
-            if ($return_type == self::NOTHING) {
+            if ($return_type === self::NOTHING) {
                 return;
             }
-            if ($return_type == self::ROW_COUNT) {
+            if ($return_type === self::ROW_COUNT) {
                 return $sth->rowCount();
             }
-            if ($return_type == self::FETCH_ALL) {
+            if ($return_type === self::FETCH_ALL) {
                 return $sth->fetchAll(PDO::FETCH_ASSOC);
             }
         } catch(PDOException $e) {
@@ -137,10 +137,11 @@ class DBConnection
             if (DEBUG_MODE) {
                 var_dump($e->errorInfo);
                 printf(
-                        "SQLSTATE ERR: %s<br />\nmySQL ERR: %s<br />\nMessage: %s<br />\n",
+                        "SQLSTATE ERR: %s<br />\nmySQL ERR: %s<br />\nMessage: %s<br />\nQuery: %s<br />\n",
                         $e->errorInfo[0],
                         $e->errorInfo[1],
-                        $e->errorInfo[2]
+                        $e->errorInfo[2],
+                        $query
                 );
             }
             throw new DBException($e->errorInfo[0]);

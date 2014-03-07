@@ -19,10 +19,12 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-if (!defined('ROOT'))
-    define('ROOT','./');
+if (!defined('ROOT')) {
+    define('ROOT', './');
+}
 include_once('include.php');
 AccessControl::setLevel('basicPage');
+<<<<<<< HEAD
 if(isset($_GET['id']))
 	$id = mysql_real_escape_string($_GET['id']);
 else
@@ -35,3 +37,26 @@ if ($_GET['id'] !== 0)
 
 $addon->viewInformation();
 ?>
+=======
+
+if (!isset($_GET['id'])) {
+    $_GET['id'] = null;
+}
+$_GET['id'] = (int)$_GET['id'];
+if (!isset($_POST['id'])) {
+    $_POST['id'] = null;
+}
+if (!is_numeric($_POST['id']) && !isset($_GET['user'])) {
+    $_GET['user'] = $_POST['id'];
+    $_POST['id'] = 0;
+}
+$_POST['id'] = (int)$_POST['id'];
+
+$user = new coreUser();
+if ($_POST['id'] != 0) {
+    $user->selectById($_POST['id']);
+} else {
+    $user->selectByUser($_GET['user']);
+}
+echo $user->getViewInformation();
+>>>>>>> upstream/master
