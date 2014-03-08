@@ -115,7 +115,8 @@ class DBConnection
      * @return array|int
      * @throws DBException
      */
-    public function query($query, $return_type = DBConnection::NOTHING, $params = array(), $data_types = array())
+    public function query($query, $return_type = DBConnection::NOTHING,
+                          array $params = array(), array $data_types = array())
     {
         if (!$query) {
             throw new DBException("Empty Query");

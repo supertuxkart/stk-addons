@@ -38,8 +38,7 @@ class News {
                      FROM `'.DB_PREFIX.'news`
                      WHERE `dynamic` = 1
                      ORDER BY `id` ASC',
-                    DBConnection::FETCH_ALL,
-                    null);
+                    DBConnection::FETCH_ALL);
         } catch (DBException $e) {
             return false;
         }
@@ -212,8 +211,7 @@ class News {
                      WHERE `active` = 1
                      AND `web_display` = 1
                      ORDER BY `date` DESC',
-                    DBConnection::FETCH_ALL,
-                    NULL);
+                    DBConnection::FETCH_ALL);
             $ret = array();
             foreach ($items AS $item) {
                 $ret[] = htmlspecialchars($item['content']);
@@ -237,8 +235,7 @@ class News {
                      ON (`n`.`author_id`=`u`.`id`)
                      WHERE `n`.`active` = \'1\'
                      ORDER BY `date` DESC',
-                    DBConnection::FETCH_ALL,
-                    NULL);
+                    DBConnection::FETCH_ALL);
             return $news;
         } catch (DBException $e) {
             return array();
@@ -257,8 +254,7 @@ class News {
                      LEFT JOIN `'.DB_PREFIX.'users` `u`
                      ON (`n`.`author_id`=`u`.`id`)
                      ORDER BY `date` DESC',
-                    DBConnection::FETCH_ALL,
-                    NULL);
+                    DBConnection::FETCH_ALL);
             return $news;
         } catch (DBException $e) {
             return array();

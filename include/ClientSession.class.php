@@ -361,10 +361,7 @@ abstract class ClientSession
             (
                 "SELECT `id`, `hostid`, `ip`, `port`, `private_port` FROM `" . DB_PREFIX . "servers`
                 LIMIT 1",
-                DBConnection::FETCH_ALL,
-                array
-                (
-                )
+                DBConnection::FETCH_ALL
             );
             if (count($result) == 0)
                 throw new UserException(_('No server found'));

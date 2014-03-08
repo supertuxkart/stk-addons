@@ -39,8 +39,7 @@ class Cache {
             $cache_list = DBConnection::get()->query(
                     'SELECT `file`
                      FROM `'.DB_PREFIX.'cache`',
-                    DBConnection::FETCH_ALL,
-                    NULL);
+                    DBConnection::FETCH_ALL);
             foreach ($cache_list AS $cache_item) {
                 if (preg_match($exclude_regex, $cache_item['file'])) continue;
                 DBConnection::get()->query(

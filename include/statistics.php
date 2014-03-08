@@ -67,8 +67,7 @@ function stat_newest($addontype) {
                  WHERE `r`.`status` & '.F_APPROVED.'
                  ORDER BY `a`.`creation_date` DESC 
                  LIMIT 1',
-                DBConnection::FETCH_ALL,
-                NULL);
+                DBConnection::FETCH_ALL);
         if (count($newest_addon) === 0) return NULL;
         return $newest_addon[0]['id'];
     } catch (DBException $e) {

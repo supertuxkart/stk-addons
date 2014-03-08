@@ -103,8 +103,7 @@ class coreUser
             $users = DBConnection::get()->query(
                     'SELECT * FROM ' . DB_PREFIX . 'users
                     ORDER BY `user` ASC, `id` ASC',
-                    DBConnection::FETCH_ALL,
-                    null
+                    DBConnection::FETCH_ALL
             );
         } catch(DBException $e) {
             if (DEBUG_MODE) {

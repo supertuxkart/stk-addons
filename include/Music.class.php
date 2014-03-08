@@ -128,8 +128,7 @@ class Music {
             $result = DBConnection::get()->query(
                     'SELECT `id` FROM `'.DB_PREFIX.'music`
                      ORDER BY `title` ASC',
-                    DBConnection::FETCH_ALL,
-                    null);
+                    DBConnection::FETCH_ALL);
             foreach ($result AS $music_track) {
                 $track = Music::get($music_track['id']);
                 if ($track->getId() !== NULL)

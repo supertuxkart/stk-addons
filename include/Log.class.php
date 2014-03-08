@@ -86,8 +86,7 @@ class Log {
                      ON `l`.`user` = `u`.`id`
                      WHERE `l`.`emailed` = 0
                      ORDER BY `l`.`date` DESC',
-                    DBConnection::FETCH_ALL,
-                    null);
+                    DBConnection::FETCH_ALL);
             return $events;
         } catch (DBException $e) {
             print "Failed to load log for email.\n";
@@ -103,8 +102,7 @@ class Log {
         try {
             DBConnection::get()->query(
                     'UPDATE `'.DB_PREFIX.'logs` SET `emailed` = 1',
-                    DBConnection::NOTHING,
-                    null);
+                    DBConnection::NOTHING);
         } catch (DBException $e) {
             throw new Exception('Failed to mark log messages as mailed.');
         }
