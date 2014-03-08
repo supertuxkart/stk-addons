@@ -32,5 +32,5 @@ $addon = new coreUser;
 if($_GET['id']!==0)
     $addon->selectByUser(mysql_real_escape_string($id));
 
-$addon->viewInformation();
+echo $addon->getViewInformation();
 ?>
