@@ -47,7 +47,7 @@ class StkTemplate extends Template {
 
         // Fill script tags
         $script_inline = array(
-            array('content' => "var siteRoot='http://localhost/stk-web/';")
+            array('content' => "var siteRoot='" . SITE_ROOT . "';")
         );
         $this->smarty->assign('script_inline', $script_inline);
         $script_includes = array(
@@ -56,7 +56,7 @@ class StkTemplate extends Template {
             array('src' => SITE_ROOT . 'js/script.js')
         );
         $this->smarty->assign('script_includes', $script_includes);
-        $this->smarty->assign('site_root', SITE_ROOT);
+
     }
     
     private function setupTopMenu() {
