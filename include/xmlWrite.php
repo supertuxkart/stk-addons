@@ -103,19 +103,27 @@ function generateAssetXML() {
     foreach ($addon_types AS $type) {
         // Fetch addon list
         $iconQuery = ($type == "kart") ? '`r`.`icon`,' : NULL;
-        $querySql = 'SELECT `k`.*, `r`.`fileid`,
-                `r`.`creation_date` AS `date`,`r`.`revision`,`r`.`format`,
-                `r`.`image`,' . $iconQuery . '`r`.`status`, `u`.`user`
-            FROM ' . DB_PREFIX . 'addons k
-            LEFT JOIN ' . DB_PREFIX . $type . 's_revs r
-            ON (`k`.`id`=`r`.`addon_id`)
-            LEFT JOIN ' . DB_PREFIX . 'users u
-            ON (`k`.`uploader` = `u`.`id`)
-            WHERE `k`.`type` = \'' . $type . 's\'';
-        $reqSql = sql_query($querySql);
+
+        
+        $reqSql = DBConnection::get()->query(
+                "SELECT `k`.*, `r`.`fileid`,
+                        `r`.`creation_date` AS `date`,`r`.`revision`,`r`.`format`,
+                        `r`.`image`," . $iconQuery . "`r`.`status`, `u`.`user`
+                    FROM ' . DB_PREFIX . 'addons k
+                    LEFT JOIN " . DB_PREFIX . $type . "s_revs r
+                    ON (`k`.`id`=`r`.`addon_id`)
+                    LEFT JOIN " . DB_PREFIX . "users u
+                    ON (`k`.`uploader` = `u`.`id`)
+                    WHERE `k`.`type` = ':type'",
+                    DBConnection::FETCH_ALL,
+                    array(
+                        ':type' => $type . 's'
+                    )
+        );
 
         // Loop through each addon record
-        while ($result = sql_next($reqSql)) {
+        foreach($reqSql as $result){
+        //while ($result = sql_next($reqSql)) {
             if (ConfigManager::get_config('list_invisible') == 0) {
                 if ($result['status'] & F_INVISIBLE) {
                     trigger_error('Hiding invisible addon ' . $result['name'], E_USER_WARNING);
@@ -214,92 +222,114 @@ function generateAssetXML2() {
 
     foreach ($addon_types AS $type) {
         $writer->startElement($type);
-
-        // Get list of addons
-        $addon_query = 'SELECT `a`.*, `u`.`user`
-	    FROM `' . DB_PREFIX . 'addons` `a`
-            LEFT JOIN `' . DB_PREFIX . 'users` `u`
-            ON (`a`.`uploader` = `u`.`id`)
-	    WHERE `a`.`type` = \'' . $type . 's\'';
-        $addon_q_handle = sql_query($addon_query);
-        if (!$addon_q_handle) {
-            throw new AddonException('Failed to load addon records for writing XML!');
+        try{
+            // Get list of addons
+            $addon_q_handle = DBConnection::get()->query(
+                        "SELECT `a`.*, `u`.`user`
+                FROM `" . DB_PREFIX . "addons` `a`
+                    LEFT JOIN `" . DB_PREFIX . "users` `u`
+                    ON (`a`.`uploader` = `u`.`id`)
+                WHERE `a`.`type` = ':type'",
+                DBConnection::FETCH_ALL,
+                array(
+                    ':type' =>  $type . 's'
+                )        
+            );
         }
-        $num_addons = mysql_num_rows($addon_q_handle);
+        catch(Exception $ex)
+        {
+            throw new AddonException('Failed to load addon records for writing XML!');  
+        }
+
+        $num_addons = count($addon_q_handle);
 
         // Loop through each addon
-        for ($i = 0; $i < $num_addons; $i++) {
-            $addon_result = mysql_fetch_assoc($addon_q_handle);
-            $writer->startElement('addon');
-            $writer->writeAttribute('id', $addon_result['id']);
-            $writer->writeAttribute('name', $addon_result['name']);
-            $writer->writeAttribute('designer', $addon_result['designer']);
-            $writer->writeAttribute('description', $addon_result['description']);
-            $writer->writeAttribute('uploader', $addon_result['user']);
-            $writer->writeAttribute('min-include-version', $addon_result['min_include_ver']);
-            $writer->writeAttribute('max-include-version', $addon_result['max_include_ver']);
-            // Write image list path
-            $image_list_path = str_replace(array('$aid', '$atype'), array($addon_result['id'], $addon_result['type']), $image_list_path_format);
-            $writer->writeAttribute('image-list', $image_list_path);
-            // Write license path
-            $license_path = str_replace(array('$aid', '$atype'), array($addon_result['id'], $addon_result['type']), $license_path_format);
-            $writer->writeAttribute('license', $license_path);
-            // Get add-on rating
-            $rating = new Ratings($addon_result['id']);
-            $writer->writeAttribute('rating', sprintf('%.3F', $rating->getAvgRating()));
+        if($num_addons > 0)
+        {
+            //for ($i = 0; $i < $num_addons; $i++) {
+            foreach($addon_q_handle as $addon_result)
+            {
+                //$addon_result = mysql_fetch_assoc($addon_q_handle);
+                $writer->startElement('addon');
+                $writer->writeAttribute('id', $addon_result['id']);
+                $writer->writeAttribute('name', $addon_result['name']);
+                $writer->writeAttribute('designer', $addon_result['designer']);
+                $writer->writeAttribute('description', $addon_result['description']);
+                $writer->writeAttribute('uploader', $addon_result['user']);
+                $writer->writeAttribute('min-include-version', $addon_result['min_include_ver']);
+                $writer->writeAttribute('max-include-version', $addon_result['max_include_ver']);
+                // Write image list path
+                $image_list_path = str_replace(array('$aid', '$atype'), array($addon_result['id'], $addon_result['type']), $image_list_path_format);
+                $writer->writeAttribute('image-list', $image_list_path);
+                // Write license path
+                $license_path = str_replace(array('$aid', '$atype'), array($addon_result['id'], $addon_result['type']), $license_path_format);
+                $writer->writeAttribute('license', $license_path);
+                // Get add-on rating
+                $rating = new Ratings($addon_result['id']);
+                $writer->writeAttribute('rating', sprintf('%.3F', $rating->getAvgRating()));
 
-            // Search for revisions
-            $rev_query = 'SELECT * FROM `' . DB_PREFIX . $type . 's_revs`
-		WHERE `addon_id` = \'' . $addon_result['id'] . '\'';
-            $rev_handle = sql_query($rev_query);
-            if (!$rev_handle) {
-                $writer->fullEndElement();
-                continue;
-            }
-            $num_revs = mysql_num_rows($rev_handle);
-
-            // Loop through revisions
-            for ($j = 0; $j < $num_revs; $j++) {
-                $revision = mysql_fetch_assoc($rev_handle);
-                // Skip invisible entries
-                if (ConfigManager::get_config('list_invisible') == 0 &&
-                        $revision['status'] & F_INVISIBLE) {
+                // Search for revisions
+                try{
+                    $rev_handle = DBConnection::get()->query(
+                                "SELECT * FROM `" . DB_PREFIX . $type . "s_revs`
+                                WHERE `addon_id` = ':addon_result'",
+                                DBConnection::FETCH_ALL,
+                                array(
+                                    ':addon_result' =>  $addon_result['id']
+                                )
+                    );
+                }catch(Exception $ex)
+                {
+                    $writer->fullEndElement();
                     continue;
                 }
-                $file_path = File::getPath($revision['fileid']);
-                if ($file_path === false || !file_exists(UP_LOCATION . $file_path)) {
-                    continue;
-                }
-                $writer->startElement('revision');
+                $num_revs = count($rev_handle);
 
-                $writer->writeAttribute('file', DOWN_LOCATION . $file_path);
-                $writer->writeAttribute('date', strtotime($revision['creation_date']));
-                $writer->writeAttribute('format', $revision['format']);
-                $writer->writeAttribute('revision', $revision['revision']);
-                $writer->writeAttribute('status', $revision['status']);
-                $writer->writeAttribute('size', filesize(UP_LOCATION . $file_path));
-
-                // Add image and icon to record
-                $image_path = File::getPath($revision['image']);
-                if ($image_path !== false) {
-                    if (file_exists(UP_LOCATION . $image_path)) {
-                        $writer->writeAttribute('image', DOWN_LOCATION . $image_path);
-                    }
-                }
-                if ($type == "kart") {
-                    $icon_path = File::getPath($revision['icon']);
-                    if ($icon_path !== false) {
-                        if (file_exists(UP_LOCATION . $icon_path)) {
-                            $writer->writeAttribute('icon', DOWN_LOCATION . $icon_path);
+                // Loop through revisions
+                if($num_revs > 0)
+                {
+                    for ($j = 0; $j < $num_revs; $j++) {
+                        $revision = mysql_fetch_assoc($rev_handle);
+                        // Skip invisible entries
+                        if (ConfigManager::get_config('list_invisible') == 0 &&
+                                $revision['status'] & F_INVISIBLE) {
+                            continue;
                         }
+                        $file_path = File::getPath($revision['fileid']);
+                        if ($file_path === false || !file_exists(UP_LOCATION . $file_path)) {
+                            continue;
+                        }
+                        $writer->startElement('revision');
+
+                        $writer->writeAttribute('file', DOWN_LOCATION . $file_path);
+                        $writer->writeAttribute('date', strtotime($revision['creation_date']));
+                        $writer->writeAttribute('format', $revision['format']);
+                        $writer->writeAttribute('revision', $revision['revision']);
+                        $writer->writeAttribute('status', $revision['status']);
+                        $writer->writeAttribute('size', filesize(UP_LOCATION . $file_path));
+
+                        // Add image and icon to record
+                        $image_path = File::getPath($revision['image']);
+                        if ($image_path !== false) {
+                            if (file_exists(UP_LOCATION . $image_path)) {
+                                $writer->writeAttribute('image', DOWN_LOCATION . $image_path);
+                            }
+                        }
+                        if ($type == "kart") {
+                            $icon_path = File::getPath($revision['icon']);
+                            if ($icon_path !== false) {
+                                if (file_exists(UP_LOCATION . $icon_path)) {
+                                    $writer->writeAttribute('icon', DOWN_LOCATION . $icon_path);
+                                }
+                            }
+                        }
+
+
+                        $writer->fullEndElement();
                     }
-                }
-
-
+                 }
                 $writer->fullEndElement();
             }
-
-            $writer->fullEndElement();
         }
         $writer->fullEndElement();
     }
