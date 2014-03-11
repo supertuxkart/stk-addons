@@ -48,7 +48,7 @@ class SMail {
     
     public function newAccountNotification($email, $userid, $username, $ver_code, $ver_page) {
 	$message = "Thank you for registering an account on the SuperTuxKart Add-Ons Manager.\n".
-		"Please go to http://{$_SERVER["SERVER_NAME"]}/$ver_page?action=valid&num=$ver_code&user=$userid to activate your account.\n\n".
+		"Please go to " . SITE_ROOT . "$ver_page?action=valid&num=$ver_code&user=$userid to activate your account.\n\n".
 		"Username: $username";
         $subject = "New Account at ".$_SERVER["SERVER_NAME"];
 	
