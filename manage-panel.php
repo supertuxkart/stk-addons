@@ -272,34 +272,23 @@ EOF;
                 break;
             case 'addon':
                 $references = array();
-                // Look for tracks with this file
-                $refQuery = 'SELECT * FROM `'.DB_PREFIX.'tracks_revs`
-                    WHERE `fileid` = '.$files[$i]['id'];
-                $refHandle = sql_query($refQuery);
-                for ($j = 0; mysql_num_rows($refHandle) > $j; $j++)
+                // Look for each of the different addontypes with this file
+                $types = array('track','kart','arena');
+                for($i=0; $i<count($types); $i++)
                 {
-                    $refResult = mysql_fetch_assoc($refHandle);
-                    $references[] = $refResult['addon_id'].' (track)';
-                }
-
-                // Look for karts with this file
-                $refQuery = 'SELECT * FROM `'.DB_PREFIX.'karts_revs`
-                    WHERE `fileid` = '.$files[$i]['id'];
-                $refHandle = sql_query($refQuery);
-                for ($j = 0; mysql_num_rows($refHandle) > $j; $j++)
-                {
-                    $refResult = mysql_fetch_assoc($refHandle);
-                    $references[] = $refResult['addon_id'].' (kart)';
-                }
-                
-                // Look for arenas with this file
-                $refQuery = 'SELECT * FROM `'.DB_PREFIX.'arenas_revs`
-                    WHERE `fileid` = '.$files[$i]['id'];
-                $refHandle = sql_query($refQuery);
-                for ($j = 0; mysql_num_rows($refHandle) > $j; $j++)
-                {
-                    $refResult = mysql_fetch_assoc($refHandle);
-                    $references[] = $refResult['addon_id'].' (arena)';
+                    $refQuery = DBConnection::get()->query(
+                               "SELECT * FROM `" . DB_PREFIX . $types[i] . "s_revs`
+                               WHERE `fileid` = :fileid",
+                               DBConnection::FETCH_ALL,
+                               array(
+                                   ':fileid' =>  $files[$i]['id']
+                               )
+                    );
+                    
+                    foreach($refQuery as $ref)
+                    {
+                        $references[] = $ref['addon_id'] . ' (' . $types[i] . ')';
+                    }                     
                 }
                 
                 if (count($references) == 0)
@@ -323,10 +312,13 @@ function clients_panel()
     if (!$_SESSION['role']['managesettings']) return;
     echo '<h3>'.htmlspecialchars(_('Clients by User-Agent')).'</h3>';
     // Read recorded user-agents from database
-    $clientsSql = 'SELECT * FROM `'.DB_PREFIX.'clients`
-        ORDER BY `agent_string` ASC';
-    $clientsHandle = sql_query($clientsSql);
-    if (mysql_num_rows($clientsHandle) == 0)
+
+    $clientSql = DBConnection::get()->query(
+                "SELECT * FROM `" . DB_PREFIX . "clients`
+                ORDER BY `agent_string` ASC",
+                DBConnection::FETCH_ALL
+    );
+    if (count($clientSql) == 0)
     {
         echo htmlspecialchars(_('There are currently no SuperTuxKart clients recorded. Your download script may not be configured properly.')).'<br />';
     }
@@ -334,9 +326,9 @@ function clients_panel()
     {
         echo '<table width="100%">';
         echo '<tr><th>'.htmlspecialchars(_('User-Agent String:')).'</th><th>'.htmlspecialchars(_('Game Version:')).'</th></tr>';
-        for ($clientsResult = sql_next($clientsHandle); $clientsResult; $clientsResult = sql_next($clientsHandle))
+        foreach($clientSql as $clientsHandle)
         {
-            echo '<tr><td>'.$clientsResult['agent_string'].'</td><td>'.$clientsResult['stk_version'].'</td></tr>';
+            echo '<tr><td>' . $clientsHandle['agent_string'] . '</td><td>' . $clientsHandle['stk_version'] . '</td></tr>';
         }
         echo '</table>';
     }
