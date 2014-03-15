@@ -732,8 +732,8 @@ class RegisteredClientSession extends ClientSession
     
     public function removeFriend($friendid)
     {
-        cancelFriendRequest($friendid);
-        declineFriendRequest($friendid);
+        $this->cancelFriendRequest($friendid);
+        $this->declineFriendRequest($friendid);
     }
     
     public function getOnlineFriends(){

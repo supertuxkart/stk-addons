@@ -411,7 +411,7 @@ try {
                 $userid = isset($_POST['userid']) ? $_POST['userid'] : 0;
                 $token = isset($_POST['token']) ? $_POST['token'] : "";
                 $session = ClientSession::get($token, $userid);
-                $session->RemoveFriend($friendid);
+                $session->removeFriend($friendid);
                 $output->startElement('remove-friend');
                 $output->writeAttribute('success','yes');
                 $output->writeAttribute('info','');
