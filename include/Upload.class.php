@@ -148,23 +148,42 @@ class Upload {
                 copy($image_file, $this->properties['image_path']);
 
                 // Record image file in database
-                $newImageQuery = 'CALL `' . DB_PREFIX . 'create_file_record` ' .
-                        "('$addon_id','$this->upload_type','image','images/$fileid.{$imageext[1]}',@a)";
-                $newImageHandle = sql_query($newImageQuery);
-                if (!$newImageHandle) {
+                try
+                {
+                    $newImageHandle = DBConnection::get()->query(
+                                    'CALL `' . DB_PREFIX . 'create_file_record` ' .
+                                    "('$addon_id','$this->upload_type','image','images/$fileid.{$imageext[1]}',@a)",
+                                    DBConnection::NOTHING,
+                                    array(
+                                        ':addonid'  =>  $addon_id,
+                                        ':type'     =>  $this->upload_type,
+                                        ':file'     =>  $fileid.$imageext[1]
+                                    )                                                
+                    );
+                }
+                catch(DBException $e)
+                {
                     echo '<span class="error">' . htmlspecialchars(_('Failed to associate image file with addon.')) . mysql_error() . '</span><br />';
+                }
+                if (!$newImageHandle) {
+                    
                     unlink($this->properties['image_path']);
                     $image_file = NULL;
                 } else {
-                    $getInsertIdQuery = 'SELECT @a';
-                    $getInsertIdHandle = sql_query($getInsertIdQuery);
-                    if (!$getInsertIdHandle)
-                        $image_file = NULL;
-                    else {
-                        $iid_result = mysql_fetch_array($getInsertIdHandle);
-                        // Get ID of previously inserted image
-                        $image_file = $iid_result[0];
+
+                    try
+                    {
+                        $getInsertIdHandle = DBConnection::get()->query(
+                                        'SELECT @a',
+                                        DBConnection::FETCH_ALL
+                        );
+                        $image_file = $getInsertIdHandle[0];
                     }
+                    catch(DBException $e)
+                    {
+                        $image_file = NULL;
+                    }
+
                 }
             } else {
                 $image_file = NULL;
@@ -193,24 +212,44 @@ class Upload {
             throw new UploadException(htmlspecialchars(_('Failed to re-pack archive file.')));
 
         // Record addon's file in database
-        $newAddonFileQuery = 'CALL `' . DB_PREFIX . 'create_file_record` ' .
-                "('$this->addon_id','$this->upload_type','$filetype','" . basename($this->upload_name) . "',@a)";
-        $newAddonFileHandle = sql_query($newAddonFileQuery);
-        if (!$newAddonFileHandle) {
+        try
+        {
+            $newAddonFileHandle = DBConnection::get()->query(
+                                "CALL `" . DB_PREFIX . "create_file_record` 
+                                ('$this->addon_id','$this->upload_type','$filetype','" . basename($this->upload_name) . "',@a)",
+                                DBConnection::NOTHING,
+                                array(
+                                    ':addonid'  =>  $this->addon_id,
+                                    ':upload_type'  =>  $this->upload_type,
+                                    ':filetype' =>  $filetype,
+                                    ':filename' =>  basename($this->upload_name)
+                                )
+            );
+            
+            try
+            {
+                $getInsertIdHandle = DBConnection::get()->query(
+                                'SELECT @a',
+                                DBConnection::FETCH_ALL
+                );
+                $this->properties['xml_attributes']['file_id'] = $getInsertIdHandle[0];
+            }
+            catch(DBException $e)
+            {
+                $this->properties['xml_attributes']['fileid'] = 0;
+            }
+ 
+        }
+        catch(DBException $e)
+        {
             unlink($this->upload_name);
-            throw new UploadException(htmlspecialchars(_('Failed to associate archive file with addon.')));
-            if ($_POST['upload-type'] != 'source')
-                $this->properties['xml_attributes']['fileid'] = 0;
-        } else {
-            $getInsertIdQuery = 'SELECT @a';
-            $getInsertIdHandle = sql_query($getInsertIdQuery);
-            if (!$getInsertIdHandle)
-                $this->properties['xml_attributes']['fileid'] = 0;
-            else {
-                $iid_result = mysql_fetch_array($getInsertIdHandle);
-                $this->properties['xml_attributes']['fileid'] = $iid_result[0];
+            throw new UploadException(htmlspecialchars(_('Failed to associate archive file with addon.')));            
+            if($_POST['upload_type'] != 'source')
+            {
+               $this->properties['xml_attributes']['fileid'] = 0; 
             }
         }
+
 
         if ($_POST['upload-type'] == 'source') {
             echo htmlspecialchars(_('Successfully uploaded source archive.')) . '<br />';
