@@ -67,7 +67,8 @@ if (!defined('CRON')) {
     define("UP_LOCATION", $dirUploadCron);
 }
 define("DOWN_LOCATION", $dirDownload);
-define("SITE_ROOT", "http://stkaddons.tuxfamily.org/");
+define("SITE_ROOT", "http://stkaddons.tuxfamily.org/"); // make sure that this ends with a trailing slash, otherwise it would break a few things (like the activation email)
+define("SITE_NAME", "STK Addons");
 define("CACHE_DIR", ROOT.'assets/temp/');
 define("CACHE_DL", $dirBase.'assets/temp/');
 define("NEWS_XML",  DOWN_LOCATION."xml/news.xml");

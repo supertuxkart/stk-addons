@@ -347,27 +347,43 @@ class Addon {
         Cache::clearAddon($this->id);
 	
         // Remove files associated with this addon
-        $get_files_query = 'SELECT *
-            FROM `'.DB_PREFIX."files`
-            WHERE `addon_id` = '$this->id'";
-        $get_files_handle = sql_query($get_files_query);
-        if (!$get_files_handle)
-            throw new AddonException(htmlspecialchars(_('Failed to find files associated with this addon.')));
-
-        $num_files = mysql_num_rows($get_files_handle);
-        for ($i = 1; $i <= $num_files; $i++)
+        $get_files_result = DBConnection::get()->query(
+                        "SELECT * FROM `" . DB_PREFIX . "files`
+                        WHERE `addon_id` = :addonid",
+                        DBConnection::FETCH_ALL,
+                        array(
+                            ':addonid'  =>  $this->id
+                        )
+        );
+        
+        if (count($get_files_result) <= 0)
         {
-            $get_file = mysql_fetch_assoc($get_files_handle);
-            if (file_exists(UP_LOCATION.$get_file['file_path']) && !unlink(UP_LOCATION.$get_file['file_path']))
-                echo '<span class="error">'.htmlspecialchars(_('Failed to delete file:')).' '.$get_file['file_path'].'</span><br />';
+            throw new AddonException(htmlspecialchars(_('Failed to find files associated with this addon.')));
+        }
+        else
+        {
+            foreach($get_files_result as $get_file)
+            {
+                if (file_exists(UP_LOCATION.$get_file['file_path']) && !unlink(UP_LOCATION.$get_file['file_path']))
+                {
+                    echo '<span class="error">'.htmlspecialchars(_('Failed to delete file:')).' '.$get_file['file_path'].'</span><br />';  
+                }
+            }
         }
         
         // Remove file records associated with addon
-        $remove_file_query = 'DELETE FROM `'.DB_PREFIX.'files`
-            WHERE `addon_id` = \''.$this->id.'\'';
-        $remove_file_handle = sql_query($remove_file_query);
-        if (!$remove_file_handle)
-            echo '<span class="error">'.htmlspecialchars(_('Failed to remove file records for this addon.')).'</span><br />';
+        try {
+            DBConnection::get()->query(
+                    'DELETE FROM `' . DB_PREFIX . 'files`
+                    WHERE `id` = :addonid',
+                    DBConnection::NOTHING,
+                    array(':addonid' =>  $this->id)
+            );
+        }
+        catch(DBException $e)
+        {
+            throw new AddonException(htmlspecialchars(_('Failed to remove file records for this addon.')));            
+        }
 
         // Remove addon entry
         // FIXME: The two queries above should be included with this one
@@ -376,9 +392,9 @@ class Addon {
         try {
             DBConnection::get()->query(
                     'DELETE FROM `'.DB_PREFIX.'addons`
-                     WHERE `id` = :id',
+                     WHERE `id` = :addonid',
                     DBConnection::NOTHING,
-                    array(':id' => $this->id));
+                    array(':addonid' => $this->id));
         } catch (DBException $e) {
             throw new AddonException(htmlspecialchars(_('Failed to remove addon.')));
         }
@@ -412,12 +428,23 @@ class Addon {
             throw new AddonException(htmlspecialchars(_('The add-on file could not be queued for deletion.')));
 	
         // Remove the revision record from the database
-        $query = 'DELETE FROM `'.DB_PREFIX.$this->type.'_revs`
-            WHERE `addon_id` = \''.$this->id.'\'
-            AND `revision` = '.$rev;
-        $handle = sql_query($query);
-        if (!$handle)
+        try
+        {
+            $query = DBConnection::get()->query(
+                    'DELETE FROM `' . DB_PREFIX . $this->type .'_revs`
+                    WHERE `addon_id` = :addonid AND `revision` = :rev',
+                    DBConnection::NOTHING,
+                    array(
+                        ':addonid'  =>  $this->id,
+                        ':rev'  =>  $rev
+                    )
+            );
+        }
+        catch(DBException $e)
+        {
             throw new AddonException(htmlspecialchars(_('The add-on revision could not be deleted.')));
+        }
+
 	
         Log::newEvent('Deleted revision '.$rev.' of \''.$this->name.'\'');
         writeAssetXML();
@@ -523,30 +550,55 @@ class Addon {
             throw new AddonException('An invalid revision was provided.');
 
         // Look up file ID
-        $look_up_query = 'SELECT `fileid`
-            FROM `'.DB_PREFIX.$this->type.'_revs`
-            WHERE `addon_id` = \''.$this->id.'\'
-            AND `revision` = '.$revision;
-        $look_up_handle = sql_query($look_up_query);
-        if (!$look_up_handle)
-            throw new AddonException('Failed to look up file ID');
-        if (mysql_num_rows($look_up_handle) === 0)
-            throw new AddonException('There is no add-on found with the specified revision number.');
-        $look_up = mysql_fetch_assoc($look_up_handle);
+        try
+        {
+            $look_up = DBConnection::get()->query(
+                            "SELECT `fileid` FROM `" . DB_PREFIX . $this->type . "_revs`
+                            WHERE `addon_id` = :addonid
+                            AND `revision` = :rev",
+                            DBConnection::FETCH_ALL,
+                            array(
+                                ':addonid'  =>  $this->id,
+                                ':rev'      =>  $rev
+                            )
+            );
+            
+            if(count($look_up) <= 0)
+            {
+                throw new AddonException('There is no add-on found with the specified revision number.');
+            }
+        }
+        catch(DBException $e)
+        {
+            throw new AddonException('Failed to look up file ID');            
+        }
+            
         
         $file_id = $look_up['fileid'];
 
         // Look up file path from database
-        $query = 'SELECT `file_path` FROM `'.DB_PREFIX.'files`
-            WHERE `id` = '.(int)$file_id.'
-            LIMIT 1';
-        $handle = sql_query($query);
-        if (!$handle)
-            throw new AddonException('Failed to search for the file in the database.');
-        if (mysql_num_rows($handle) == 0)
-            throw new AddonException('The requested file does not have an associated file record.');
-        $file = mysql_fetch_assoc($handle);
-        return $file['file_path'];
+        try
+        {
+            $files_result = DBConnection::get()->query(
+                    "SELECT `file_path` FROM `" . DB_PREFIX . "files`
+                    WHERE `id` = :fileid LIMIT 1",
+                    DBConnection::FETCH_ALL,
+                    array(
+                        ':fileid'   =>  $file_id
+                    )
+            );
+            
+            if(count($files_result) <= 0)
+            {
+               throw new AddonException('The requested file does not have an associated file record.'); 
+            }
+        }                  
+        catch(DBException $e)
+        {
+           throw new AddonException('Failed to search for the file in the database.'); 
+        }
+
+        return $files_result['file_path'];
     }
     
     public function getId() {
@@ -560,27 +612,46 @@ class Addon {
     }
     
     public function getImageHashes() {
-        $paths_query = 'SELECT `id`, `file_path`
-            FROM `'.DB_PREFIX.'files`
-            WHERE `addon_id` = \''.$this->id.'\'
-            AND `file_type` = \'image\'
-            LIMIT 50';
-        $paths_handle = sql_query($paths_query);
-        if (!$paths_handle)
-            throw new AddonException('DB error when fetching images associated with this add-on.');
-        if (mysql_num_rows($paths_handle) === 0)
-            return array();
-        
-        $return = array();
-        for ($i = 0; $i < mysql_num_rows($paths_handle); $i++) {
-            $result = mysql_fetch_assoc($paths_handle);
-            $row = array('id' => $result['id'],
-                'path' => $result['file_path'],
-                'hash' => md5_file(UP_LOCATION.$result['file_path']));
-            $return[] = $row;
+        try
+        {
+            $path_result = DBConnection::get()->query(
+                        "SELECT `id`, `file_path`
+                        FROM `" . DB_PREFIX . "files`
+                        WHERE `addon_id` = :addonid
+                        AND `file_type` = 'image'
+                        LIMIT 50",
+                        DBConnection::FETCH_ALL,
+                        array(
+                            ':addonid'  =>  $this->id
+                        )
+            );
+            
+            if(count($path_result) <= 0)
+            {
+                return array();
+            }
+            else
+            {
+                $return = array();
+                foreach($path_result as $path)
+                {
+                    $row = array(
+                        'id'    =>  $path['id'],
+                        'path'  =>  $path['file_path'],
+                        'hash'  =>  md5_file(UP_LOCATION.$path['file_path'])
+                    );
+                    $return[] = $row;
+                }
+                
+                return $return;
+            }
+            
+        }
+        catch(DBException $e)
+        {
+            throw new AddonException('DB error when fetching images associated with this add-on.');  
         }
         
-        return $return;
     }
     
     /**
@@ -614,20 +685,28 @@ class Addon {
 
     public static function getName($id)
     {
-        if ($id == false)
+        if($id == false)
+        {
             return false;
-        $id = Addon::cleanId($id);
-        $query = 'SELECT `name`
-            FROM `'.DB_PREFIX.'addons`
-            WHERE `id` = \''.$id.'\'
-            LIMIT 1';
-        $handle = sql_query($query);
-        if (!$handle)
-            return false;
-        if (mysql_num_rows($handle) == 0)
-            return false;
-        $result = mysql_fetch_assoc($handle);
-        return $result['name'];
+        }
+        else
+        {
+            $result = DBConnection::get()->query(
+                    "SELECT `name`
+                    FROM `" . DB_PREFIX . "addons`
+                    WHERE `id` = :addonid
+                    LIMIT 1",
+                    DBConnection::FETCH_ALL,
+                    array(
+                        ':addonid'  =>  Addon::cleanId($id)
+                    )
+            );
+            
+            if(count($result) <= 0)
+            {
+                return $result['name']; 
+            }
+        }
     }
 
     /**
@@ -684,23 +763,33 @@ class Addon {
      * @return array Matching addon id, name and type
      */
     public static function search($search_query) {
-        $search_query = mysql_real_escape_string($search_query);
-        
-        $query = 'SELECT `id`, `name`, `type`
-            FROM `'.DB_PREFIX."addons`
-            WHERE `name` LIKE '%$search_query%'
-            OR `description` LIKE '%$search_query%'";
-
-        $handle = sql_query($query);
-        if (!$handle)
-            throw new AddonException(htmlspecialchars(_('Search failed!')));
-        
-        $result = array();
-        for ($i = 0; $i < mysql_num_rows($handle); $i++) {
-            $result[] = mysql_fetch_assoc($handle);
+   
+        try
+        {
+            $search_result = DBConnection::get()->query(
+                    "SELECT `id`, `name`, `type`
+                    FROM `" . DB_PREFIX . "addons`
+                    WHERE `name` LIKE ':searchquery'
+                    OR `description` LIKE ':searchquery'",
+                    DBConnection::FETCH_ALL,
+                    array(
+                        ':searchquery'  =>  '%' . $search_query . '%'
+                    )
+            );
+            
+            $result = array();
+            foreach($search_result as $search_row)
+            {
+                $result[] = $search_row;
+            }
+            
+            return $result;
         }
-        
-        return $result;
+        catch(DBException $e)
+        {
+            throw new AddonException(htmlspecialchars(_('Search failed!')));            
+        }
+
     }
     
     /**
@@ -711,17 +800,29 @@ class Addon {
         if (!User::$logged_in || (!$_SESSION['role']['manageaddons'] && $this->uploaderId != User::$user_id))
             throw new AddonException(htmlspecialchars(_('You do not have the neccessary permissions to perform this action.')));
         
-        $updateQuery = 'UPDATE `'.DB_PREFIX.'addons`
-            SET `description` = \''.mysql_real_escape_string(strip_tags($description)).'\'
-            WHERE `id` = \''.$this->id.'\'';
-        $updateSql = sql_query($updateQuery);
+        try
+        {
+            $updateSql = DBConnection::get()->query(
+                        "UPDATE `" . DB_PREFIX . "addons`
+                        SET `description` = :description
+                        WHERE `id` = :addonid",
+                        DBConnection::NOTHING,
+                        array(
+                            ':description'  =>  $description,
+                            ':addonid'      =>  $this->id
+                        )
+            );
+            
+            writeAssetXML();
+            writeNewsXML();
+            $this->description = $description;
+        }
+        catch(DBException $e)
+        {
+            throw new AddonException(htmlspecialchars(_('Failed to update the description record for this add-on.')));            
+        }
         
-        if (!$updateSql)
-            throw new AddonException(htmlspecialchars(_('Failed to update the description record for this add-on.')));
 
-        writeAssetXML();
-        writeNewsXML();
-        $this->description = $description;
     }
     
     /**
@@ -731,18 +832,27 @@ class Addon {
     public function setDesigner($designer) {
         if (!User::$logged_in || (!$_SESSION['role']['manageaddons'] && $this->uploaderId != User::$user_id))
             throw new AddonException(htmlspecialchars(_('You do not have the neccessary permissions to perform this action.')));
-        
-        $updateQuery = 'UPDATE `'.DB_PREFIX.'addons`
-            SET `designer` = \''.mysql_real_escape_string(strip_tags($designer)).'\'
-            WHERE `id` = \''.$this->id.'\'';
-        $updateSql = sql_query($updateQuery);
-        
-        if (!$updateSql)
-            throw new AddonException(htmlspecialchars(_('Failed to update the designer record for this add-on.')));
+        try
+        {
+            $updateSql = DBConnection::get()->query(
+                        'UPDATE `'.DB_PREFIX.'addons`
+                        SET `designer` = :designer
+                        WHERE `id` = :addonid',
+                        DBConnection::NOTHING,
+                        array(
+                            ':designer' =>  $designer,
+                            ':addonid'  =>  $this->id
+                        )
+            );
+            writeAssetXML();
+            writeNewsXML();
+            $this->designer = $designer;            
+        }
+        catch(DBException $e)
+        {
+            throw new AddonException(htmlspecialchars(_('Failed to update the designer record for this add-on.')));            
+        }   
 
-        writeAssetXML();
-        writeNewsXML();
-        $this->designer = $designer;
     }
     
     /**
@@ -754,13 +864,25 @@ class Addon {
         if (!$_SESSION['role']['manageaddons'] && $this->uploaderId != User::$user_id)
             throw new AddonException(htmlspecialchars(_('You do not have the neccessary permissions to perform this action.')));
 
-        $set_image_query = 'UPDATE `'.DB_PREFIX.$this->type.'_revs`
-            SET `'.$field.'` = '.(int)$image_id.'
-            WHERE `addon_id` = \''.$this->id.'\'
-            AND `status` & '.F_LATEST;
-        $set_image_handle = sql_query($set_image_query);
-        if (!$set_image_handle)
-            throw new AddonException(htmlspecialchars(_('Failed to update the image record for this add-on.')));
+        try
+        {
+            $set_image_result = DBConnection::get()->query(
+                            'UPDATE `' . DB_PREFIX . $this->type . '_revs`
+                            SET `' . $field . '` = :image_id
+                            WHERE `addon_id` = :addonid
+                            AND `status` & '.F_LATEST,
+                            DBConnection::NOTHING,
+                            array(
+                                ':image_id' =>  $image_id,
+                                ':addonid'  =>  $this->id
+                            )
+            );
+        }
+        catch(DBException $e)
+        {
+            throw new AddonException(htmlspecialchars(_('Failed to update the image record for this add-on.')));            
+        }
+            
     }
     
     public function setIncludeVersions($start_ver, $end_ver) {
@@ -845,13 +967,25 @@ class Addon {
         // Save record in database
         foreach ($notes AS $revision => $value)
         {
-            $query = 'UPDATE `'.DB_PREFIX.$this->type.'_revs`
-                SET `moderator_note` = \''.$value.'\'
-                WHERE `addon_id` = \''.$this->id.'\'
-                AND `revision` = '.$revision;
-            $reqSql = sql_query($query);
-            if (!$reqSql)
-                throw new AddonException('Failed to set moderator note.');
+            try{
+                $reqSql = DBConnection::get()->query(
+                        'UPDATE `'.DB_PREFIX.$this->type.'_revs`
+                        SET `moderator_note` = :value
+                        WHERE `addon_id` = :addonid
+                        AND `revision` = :rev',
+                        DBConnection::NOTHING,
+                        array(
+                            ':value'    =>  $value,
+                            ':addonid'  =>  $this->id,
+                            ':rev'      =>  $revision
+                        )
+                );
+            }
+            catch(DBException $e)
+            {
+                throw new AddonException('Failed to set moderator note.');                
+            }
+                
         }
 
         // Generate email
@@ -865,16 +999,26 @@ class Addon {
         }
         // Get uploader email address
         $user = $this->uploaderId;
-        $userQuery = 'SELECT `name`,`email` FROM `'.DB_PREFIX.'users`
-            WHERE `id` = '.(int)$user.' LIMIT 1';
-        $userHandle = sql_query($userQuery);
-        if (!$userHandle)
+        try
+        {
+            $user_result = DBConnection::get()->query(
+                        'SELECT `name`,`email` FROM `' . DB_PREFIX . 'users`
+                        WHERE `id` = :userid LIMIT 1',
+                        DBConnection::FETCH_ALL,
+                        array(
+                            ':userid'   =>  $id
+                        )
+            );
+        }
+        catch(DBException $e)
+        {
             throw new AddonException('Failed to find user record.');
+        }
 
-        $result = mysql_fetch_assoc($userHandle);
+        
         try {
             $mail = new SMail;
-            $mail->addonNoteNotification($result['email'], $this->id, $email_body);
+            $mail->addonNoteNotification($user_result[0]['email'], $this->id, $email_body);
         }
         catch (Exception $e) {
             throw new AddonException('Failed to send email to user. '.$e->getMessage());
@@ -977,13 +1121,26 @@ class Addon {
 	// Loop through each addon revision
         foreach ($status AS $revision => $value) {
             // Write new addon status
-            $query = 'UPDATE `'.DB_PREFIX.$this->type.'_revs`
-                SET `status` = '.$value.'
-                WHERE `addon_id` = \''.$this->id.'\'
-                AND `revision` = \''.$revision.'\'';
-            $reqSql = sql_query($query);
-            if (!$reqSql)
-                throw new AddonException('Failed to write add-on status.');
+            try
+            {
+                $reqSql = DBConnection::get()->query(
+                        'UPDATE `' . DB_PREFIX . $this->type . '_revs`
+                        SET `status` = :value
+                        WHERE `addon_id` = :addonid
+                        AND `revision` = :rev',
+                        DBConnection::NOTHING,
+                        array(
+                            ':value'    =>  $value,
+                            ':addonid'  =>  $this->id,
+                            ':rev'      =>  $revision
+                        )       
+                );
+            }
+            catch(DBException $e)
+            {
+                throw new AddonException('Failed to write add-on status.');                
+            }
+                
         }
         writeAssetXML();
         writeNewsXML();

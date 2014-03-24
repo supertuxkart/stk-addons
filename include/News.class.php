@@ -50,11 +50,21 @@ class News {
             if (preg_match('/^Newest add-on kart: (.*)$/i',$entry['content'], $matches)) {
                 if ($matches[1] != $new_kart) {
                     // Delete old record
-                    $delQuery = 'DELETE FROM `'.DB_PREFIX.'news`
-                        WHERE `id` = '.$entry['id'];
-                    $delHandle = sql_query($delQuery);
-                    if (!$delHandle)
-                        echo 'Warning: failed to delete old news record.<br />';
+                    try
+                    {
+                        $del_result = DBConnection::get()->query(
+                                    'DELETE FROM `'.DB_PREFIX.'news`
+                                    WHERE `id` = :entryid',
+                                    DBConnection::NOTHING,
+                                    array(
+                                        ':entryid'  =>  $entry['id']
+                                    )                                
+                        );
+                    }
+                    catch(DBException $e)
+                    {
+                       echo 'Warning: failed to delete old news record.<br />'; 
+                    }
                 } else {
                     $existing_id = true;
                     break;
@@ -63,13 +73,23 @@ class News {
         }
         // Add new entry
         if ($existing_id === false && $new_kart !== false) {
-            $insQuery = 'INSERT INTO `'.DB_PREFIX.'news`
-                (`content`,`web_display`,`dynamic`)
-                VALUES
-                (\'Newest add-on kart: '.mysql_real_escape_string($new_kart).'\',1,1)';
-            $insHandle = sql_query($insQuery);
-            if (!$insHandle)
-                echo 'Failed to insert newest kart news entry.<br />';
+            try
+            {
+                $ins_result = DBConnection::get()->query(
+                            'INSERT INTO `'.DB_PREFIX.'news`
+                            (`content`,`web_display`,`dynamic`)
+                            VALUES
+                            (\'Newest add-on kart: :new_kart\',1,1)',
+                            DBConnection::NOTHING,
+                            array(
+                                ':new_kart' =>  $new_kart
+                            )
+                );
+            }
+            catch(DBException $e)
+            {
+                echo 'Failed to insert newest kart news entry.<br />';                
+            }
         }
         
         // Dynamic newest track display
@@ -79,11 +99,21 @@ class News {
             if (preg_match('/^Newest add-on track: (.*)$/i',$entry['content'], $matches)) {
                 if ($matches[1] != $new_track) {
                     // Delete old record
-                    $delQuery = 'DELETE FROM `'.DB_PREFIX.'news`
-                        WHERE `id` = '.$entry['id'];
-                    $delHandle = sql_query($delQuery);
-                    if (!$delHandle)
-                        echo 'Warning: failed to delete old news record.<br />';
+                    try
+                    {
+                        $del_result = DBConnection::get()->query(
+                                    'DELETE FROM `'.DB_PREFIX.'news`
+                                    WHERE `id` = :entryid',
+                                    DBConnection::NOTHING,
+                                    array(
+                                        ':entryid'  =>  $entry['id']
+                                    )                                
+                        );
+                    }
+                    catch(DBException $e)
+                    {
+                       echo 'Warning: failed to delete old news record.<br />'; 
+                    }
                 } else {
                     $existing_id = true;
                     break;
@@ -92,13 +122,23 @@ class News {
         }
         // Add new entry
         if ($existing_id === false && $new_track !== false) {
-            $insQuery = 'INSERT INTO `'.DB_PREFIX.'news`
-                (`content`,`web_display`,`dynamic`)
-                VALUES
-                (\'Newest add-on track: '.mysql_real_escape_string($new_track).'\',1,1)';
-            $insHandle = sql_query($insQuery);
-            if (!$insHandle)
-                echo 'Failed to insert newest track news entry.<br />';
+            try
+            {
+                $ins_result = DBConnection::get()->query(
+                            'INSERT INTO `'.DB_PREFIX.'news`
+                            (`content`,`web_display`,`dynamic`)
+                            VALUES
+                            (\'Newest add-on track: :new_track\',1,1)',
+                            DBConnection::NOTHING,
+                            array(
+                                ':new_kart' =>  $new_track
+                            )
+                );
+            }
+            catch(DBException $e)
+            {
+                echo 'Failed to insert newest track news entry.<br />';                
+            }                
         }
         
         // Dynamic newest arena display
@@ -108,11 +148,21 @@ class News {
             if (preg_match('/^Newest add-on arena: (.*)$/i',$entry['content'], $matches)) {
                 if ($matches[1] != $new_arena) {
                     // Delete old record
-                    $delQuery = 'DELETE FROM `'.DB_PREFIX.'news`
-                        WHERE `id` = '.$entry['id'];
-                    $delHandle = sql_query($delQuery);
-                    if (!$delHandle)
-                        echo 'Warning: failed to delete old news record.<br />';
+                    try
+                    {
+                        $del_result = DBConnection::get()->query(
+                                    'DELETE FROM `'.DB_PREFIX.'news`
+                                    WHERE `id` = :entryid',
+                                    DBConnection::NOTHING,
+                                    array(
+                                        ':entryid'  =>  $entry['id']
+                                    )                                
+                        );
+                    }
+                    catch(DBException $e)
+                    {
+                       echo 'Warning: failed to delete old news record.<br />'; 
+                    }
                 } else {
                     $existing_id = true;
                     break;
@@ -121,13 +171,25 @@ class News {
         }
         // Add new entry
         if ($existing_id === false && $new_arena !== false) {
-            $insQuery = 'INSERT INTO `'.DB_PREFIX.'news`
-                (`content`,`web_display`,`dynamic`)
-                VALUES
-                (\'Newest add-on arena: '.mysql_real_escape_string($new_arena).'\',1,1)';
-            $insHandle = sql_query($insQuery);
-            if (!$insHandle)
-                echo 'Failed to insert newest kart news entry.<br />';
+            if (!$ins_result)
+                echo 'Failed to insert newest arena news entry.<br />';
+            try
+            {
+                $ins_result = DBConnection::get()->query(
+                            'INSERT INTO `'.DB_PREFIX.'news`
+                            (`content`,`web_display`,`dynamic`)
+                            VALUES
+                            (\'Newest add-on arena: :new_arena\',1,1)',
+                            DBConnection::NOTHING,
+                            array(
+                                ':new_arena' =>  $new_arena
+                            )
+                );
+            }
+            catch(DBException $e)
+            {
+                echo 'Failed to insert newest arena news entry.<br />';                
+            }
         }
 
         // Add message for the latest blog-post
@@ -137,11 +199,21 @@ class News {
             if (preg_match('/^Latest post on stkblog.net: (.*)$/i',$entry['content'], $matches)) {
                 if ($matches[1] != $latest_blogpost) {
                     // Delete old record
-                    $delQuery = 'DELETE FROM `'.DB_PREFIX.'news`
-                        WHERE `id` = '.$entry['id'];
-                    $delHandle = sql_query($delQuery);
-                    if (!$delHandle)
-                        echo 'Warning: failed to delete old news record.<br />';
+                    try
+                    {
+                        $del_result = DBConnection::get()->query(
+                                    'DELETE FROM `'.DB_PREFIX.'news`
+                                    WHERE `id` = :entryid',
+                                    DBConnection::NOTHING,
+                                    array(
+                                        ':entryid'  =>  $entry['id']
+                                    )                                
+                        );
+                    }
+                    catch(DBException $e)
+                    {
+                       echo 'Warning: failed to delete old news record.<br />'; 
+                    }
                 } else {
                     $existing_id = true;
                     break;
@@ -150,13 +222,23 @@ class News {
         }
         // Add new entry
         if ($existing_id === false && $latest_blogpost !== false) {
-            $insQuery = 'INSERT INTO `'.DB_PREFIX.'news`
-                (`content`,`web_display`,`dynamic`)
-                VALUES
-                (\'Latest post on stkblog.net: '.mysql_real_escape_string($latest_blogpost).'\',1,1)';
-            $insHandle = sql_query($insQuery);
-            if (!$insHandle)
-                echo 'Failed to insert newest kart news entry.<br />';
+            try
+            {
+                $ins_handle = DBConnection::get()->query(
+                            'INSERT INTO `'.DB_PREFIX.'news`
+                            (`content`,`web_display`,`dynamic`)
+                            VALUES
+                            (\'Latest post on stkblog.net: :latest_blogpost\',1,1)',
+                            DBConnection::NOTHING,
+                            array(
+                                ':latest_blogpost' =>  $latest_blogpost
+                            )
+                );
+            }
+            catch(DBException $e)
+            {
+                echo 'Failed to insert newest blog news entry.<br />';                
+            }
         }
     }
     
