@@ -223,7 +223,7 @@ function generateAssetXML2() {
         $writer->startElement($type);
         try{
             // Get list of addons
-            $addon_q_handle = DBConnection::get()->query(
+            $addon_q_result = DBConnection::get()->query(
                 "SELECT `a`.*, `u`.`user`
                 FROM `" . DB_PREFIX . "addons` `a`
                     LEFT JOIN `" . DB_PREFIX . "users` `u`
@@ -243,7 +243,7 @@ function generateAssetXML2() {
 
         // Loop through each addon
 
-        foreach($addon_q_handle as $addon_result)
+        foreach($addon_q_result as $addon_result)
         {
             $writer->startElement('addon');
             $writer->writeAttribute('id', $addon_result['id']);
@@ -265,7 +265,7 @@ function generateAssetXML2() {
 
             // Search for revisions
             try{
-                $rev_handle = DBConnection::get()->query(
+                $rev_result = DBConnection::get()->query(
                             "SELECT * FROM `" . DB_PREFIX . $type . "s_revs`
                             WHERE `addon_id` = ':addon_result'",
                             DBConnection::FETCH_ALL,
@@ -278,10 +278,10 @@ function generateAssetXML2() {
                 $writer->fullEndElement();
                 continue;
             }
-            $num_revs = count($rev_handle);
+            $num_revs = count($rev_result);
 
             // Loop through revisions
-            foreach($rev_handle as $revision)
+            foreach($rev_result as $revision)
             {
                 // Skip invisible entries
                 if (ConfigManager::get_config('list_invisible') == 0 &&

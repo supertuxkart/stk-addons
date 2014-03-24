@@ -42,7 +42,7 @@ class File {
 
         try
         {
-            $approve_handle = DBConnection::get()->query(
+            $result = DBConnection::get()->query(
                               'UPDATE `'.DB_PREFIX.'files`
                               SET `approved` = :approve
                               WHERE `id` = :file_id',
@@ -71,7 +71,7 @@ class File {
 
         try
         {
-	        $handle = DBConnection::get()->query(
+	        $result = DBConnection::get()->query(
                     'SELECT `id`
                     FROM `' . DB_PREFIX . 'files`
                     WHERE `file_path` = :path',
@@ -80,13 +80,13 @@ class File {
                         ':path' =>  $path
                     )
             );
-            if(count($handle) <= 0)
+            if(count($result) <= 0)
             {
                 return -1;
             }
             else
             {
-                return $handle[0];
+                return $result[0];
             }
         }
         catch(DBException $e)
@@ -355,7 +355,7 @@ class File {
         // Get file path
         try
         {
-            $get_file = DBConnection::get()->query(
+            $get_file_result = DBConnection::get()->query(
                         'SELECT `file_path` FROM `' . DB_PREFIX . 'files`
                         WHERE `id` = :file_id
                         LIMIT 1',
@@ -365,15 +365,15 @@ class File {
                         )  
             );
             
-            if(count($get_file) <= 0)
+            if(count($get_file_result) <= 0)
             {
                 return false;
             }
             else
             {
-                if(file_exists(UP_LOCATION.$get_file[0]['file_path']))
+                if(file_exists(UP_LOCATION.$get_file_result[0]['file_path']))
                 {
-                    unlink(UP_LOCATION.$get_file['file_path']);
+                    unlink(UP_LOCATION.$get_file_result['file_path']);
                 }
             }
         
@@ -386,7 +386,7 @@ class File {
         // Delete file record
         try
         {
-            $del_file_handle = DBConnection::get()->query(
+            $del_file_result = DBConnection::get()->query(
                             'DELETE FROM `'.DB_PREFIX.'files`
                             WHERE `id` = :file_id',
                             DBConnection::NOTHING,
@@ -549,7 +549,7 @@ class File {
         // Look-up all file records in the database
         try
         {
-            $filesHandle = DBConnection::get()->query(
+            $files_result = DBConnection::get()->query(
                         'SELECT `id`,`addon_id`,`addon_type`,`file_type`,`file_path`
                         FROM `'.DB_PREFIX.'files`
                         ORDER BY `addon_id` ASC',
@@ -582,20 +582,20 @@ class File {
         // Loop through database records and remove those entries from the list
         // of files existing on the disk
         $return_files = array();
-        foreach($filesHandle as $files_result)
+        foreach($files_result as $file_result)
         {
-            $search = array_search($files_result['file_path'], $files);
+            $search = array_search($file_result['file_path'], $files);
             if($search !== false)
             {
                 unset($files[$search]);
-                $files_result['exists'] = true;
+                $file_result['exists'] = true;
             }
             else
             {
-                $files_result['exists'] = false;
+                $file_result['exists'] = false;
             }
             
-            $return_files[] = $files_result;
+            $return_files[] = $file_result;
         }
 
         // Reset indices
@@ -618,7 +618,7 @@ class File {
         } else {
             // Delete the existing image by this name
             if (file_exists(UP_LOCATION.'images/'.basename($file_name))) {
-                $handle = DBConnection::get()->query(
+                $del_img_result = DBConnection::get()->query(
                         'DELETE FROM `'.DB_PREFIX.'files`
                         WHERE `file_path` = \'images/:file_name\'',
                         DBConnection::NOTHING,
@@ -657,7 +657,7 @@ class File {
         // Add database record for image
         try
         {
-            $newImageHandle = DBConnection::get()->query(
+            $newImage = DBConnection::get()->query(
                             "CALL `" . DB_PREFIX . "create_file_record` ".
                             "(':addonid',':addontype','image','images/:file_name',@a)",
                             DBConnection::NOTHING,
@@ -803,7 +803,7 @@ class File {
 	$del_date = date('Y-m-d',time() + ConfigManager::get_config('xml_frequency') + (60*60*24));
     try
     {
-        $handle = DBConnection::get()->query(
+        $del_result = DBConnection::get()->query(
                 'UPDATE `'.DB_PREFIX.'files`
                 SET  `delete_date` = :del_date
                 WHERE  `id` = :file_id',

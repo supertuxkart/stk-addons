@@ -150,7 +150,7 @@ class Upload {
                 // Record image file in database
                 try
                 {
-                    $newImageHandle = DBConnection::get()->query(
+                    $newImage_result = DBConnection::get()->query(
                                     'CALL `' . DB_PREFIX . 'create_file_record` ' .
                                     "('$addon_id','$this->upload_type','image','images/$fileid.{$imageext[1]}',@a)",
                                     DBConnection::NOTHING,
@@ -165,7 +165,7 @@ class Upload {
                 {
                     echo '<span class="error">' . htmlspecialchars(_('Failed to associate image file with addon.')) . mysql_error() . '</span><br />';
                 }
-                if (!$newImageHandle) {
+                if (!$newImage_result) {
                     
                     unlink($this->properties['image_path']);
                     $image_file = NULL;
@@ -173,11 +173,11 @@ class Upload {
 
                     try
                     {
-                        $getInsertIdHandle = DBConnection::get()->query(
+                        $getInsertId = DBConnection::get()->query(
                                         'SELECT @a',
                                         DBConnection::FETCH_ALL
                         );
-                        $image_file = $getInsertIdHandle[0];
+                        $image_file = $getInsertId[0];
                     }
                     catch(DBException $e)
                     {
@@ -214,7 +214,7 @@ class Upload {
         // Record addon's file in database
         try
         {
-            $newAddonFileHandle = DBConnection::get()->query(
+            $newAddonFile_result = DBConnection::get()->query(
                                 "CALL `" . DB_PREFIX . "create_file_record` 
                                 ('$this->addon_id','$this->upload_type','$filetype','" . basename($this->upload_name) . "',@a)",
                                 DBConnection::NOTHING,
@@ -228,11 +228,11 @@ class Upload {
             
             try
             {
-                $getInsertIdHandle = DBConnection::get()->query(
+                $getInsertId = DBConnection::get()->query(
                                 'SELECT @a',
                                 DBConnection::FETCH_ALL
                 );
-                $this->properties['xml_attributes']['file_id'] = $getInsertIdHandle[0];
+                $this->properties['xml_attributes']['file_id'] = $getInsertId[0];
             }
             catch(DBException $e)
             {

@@ -52,7 +52,7 @@ class News {
                     // Delete old record
                     try
                     {
-                        $delHandle = DBConnection::get()->query(
+                        $del_result = DBConnection::get()->query(
                                     'DELETE FROM `'.DB_PREFIX.'news`
                                     WHERE `id` = :entryid',
                                     DBConnection::NOTHING,
@@ -75,7 +75,7 @@ class News {
         if ($existing_id === false && $new_kart !== false) {
             try
             {
-                $insHandle = DBConnection::get()->query(
+                $ins_result = DBConnection::get()->query(
                             'INSERT INTO `'.DB_PREFIX.'news`
                             (`content`,`web_display`,`dynamic`)
                             VALUES
@@ -101,7 +101,7 @@ class News {
                     // Delete old record
                     try
                     {
-                        $delHandle = DBConnection::get()->query(
+                        $del_result = DBConnection::get()->query(
                                     'DELETE FROM `'.DB_PREFIX.'news`
                                     WHERE `id` = :entryid',
                                     DBConnection::NOTHING,
@@ -124,7 +124,7 @@ class News {
         if ($existing_id === false && $new_track !== false) {
             try
             {
-                $insHandle = DBConnection::get()->query(
+                $ins_result = DBConnection::get()->query(
                             'INSERT INTO `'.DB_PREFIX.'news`
                             (`content`,`web_display`,`dynamic`)
                             VALUES
@@ -150,7 +150,7 @@ class News {
                     // Delete old record
                     try
                     {
-                        $delHandle = DBConnection::get()->query(
+                        $del_result = DBConnection::get()->query(
                                     'DELETE FROM `'.DB_PREFIX.'news`
                                     WHERE `id` = :entryid',
                                     DBConnection::NOTHING,
@@ -171,11 +171,11 @@ class News {
         }
         // Add new entry
         if ($existing_id === false && $new_arena !== false) {
-            if (!$insHandle)
+            if (!$ins_result)
                 echo 'Failed to insert newest arena news entry.<br />';
             try
             {
-                $insHandle = DBConnection::get()->query(
+                $ins_result = DBConnection::get()->query(
                             'INSERT INTO `'.DB_PREFIX.'news`
                             (`content`,`web_display`,`dynamic`)
                             VALUES
@@ -201,7 +201,7 @@ class News {
                     // Delete old record
                     try
                     {
-                        $delHandle = DBConnection::get()->query(
+                        $del_result = DBConnection::get()->query(
                                     'DELETE FROM `'.DB_PREFIX.'news`
                                     WHERE `id` = :entryid',
                                     DBConnection::NOTHING,
@@ -224,7 +224,7 @@ class News {
         if ($existing_id === false && $latest_blogpost !== false) {
             try
             {
-                $insHandle = DBConnection::get()->query(
+                $ins_handle = DBConnection::get()->query(
                             'INSERT INTO `'.DB_PREFIX.'news`
                             (`content`,`web_display`,`dynamic`)
                             VALUES

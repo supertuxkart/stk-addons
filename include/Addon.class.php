@@ -347,7 +347,7 @@ class Addon {
         Cache::clearAddon($this->id);
 	
         // Remove files associated with this addon
-        $get_files_handle = DBConnection::get()->query(
+        $get_files_result = DBConnection::get()->query(
                         "SELECT * FROM `" . DB_PREFIX . "files`
                         WHERE `addon_id` = :addonid",
                         DBConnection::FETCH_ALL,
@@ -356,13 +356,13 @@ class Addon {
                         )
         );
         
-        if (count($get_files_handle) <= 0)
+        if (count($get_files_result) <= 0)
         {
             throw new AddonException(htmlspecialchars(_('Failed to find files associated with this addon.')));
         }
         else
         {
-            foreach($get_files_handle as $get_file)
+            foreach($get_files_result as $get_file)
             {
                 if (file_exists(UP_LOCATION.$get_file['file_path']) && !unlink(UP_LOCATION.$get_file['file_path']))
                 {
@@ -579,7 +579,7 @@ class Addon {
         // Look up file path from database
         try
         {
-            $handle = DBConnection::get()->query(
+            $files_result = DBConnection::get()->query(
                     "SELECT `file_path` FROM `" . DB_PREFIX . "files`
                     WHERE `id` = :fileid LIMIT 1",
                     DBConnection::FETCH_ALL,
@@ -588,7 +588,7 @@ class Addon {
                     )
             );
             
-            if(count($handle) <= 0)
+            if(count($files_result) <= 0)
             {
                throw new AddonException('The requested file does not have an associated file record.'); 
             }
@@ -598,7 +598,7 @@ class Addon {
            throw new AddonException('Failed to search for the file in the database.'); 
         }
 
-        return $handle['file_path'];
+        return $files_result['file_path'];
     }
     
     public function getId() {
@@ -614,7 +614,7 @@ class Addon {
     public function getImageHashes() {
         try
         {
-            $path_handle = DBConnection::get()->query(
+            $path_result = DBConnection::get()->query(
                         "SELECT `id`, `file_path`
                         FROM `" . DB_PREFIX . "files`
                         WHERE `addon_id` = :addonid
@@ -626,19 +626,19 @@ class Addon {
                         )
             );
             
-            if(count($path_handle) <= 0)
+            if(count($path_result) <= 0)
             {
                 return array();
             }
             else
             {
                 $return = array();
-                foreach($path_handle as $result)
+                foreach($path_result as $path)
                 {
                     $row = array(
-                        'id'    =>  $result['id'],
-                        'path'  =>  $result['file_path'],
-                        'hash'  =>  md5_file(UP_LOCATION.$result['file_path'])
+                        'id'    =>  $path['id'],
+                        'path'  =>  $path['file_path'],
+                        'hash'  =>  md5_file(UP_LOCATION.$path['file_path'])
                     );
                     $return[] = $row;
                 }
@@ -766,21 +766,21 @@ class Addon {
    
         try
         {
-            $handle = DBConnection::get()->query(
+            $search_result = DBConnection::get()->query(
                     "SELECT `id`, `name`, `type`
                     FROM `" . DB_PREFIX . "addons`
-                    WHERE `name` LIKE '%:searchquery%'
-                    OR `description` LIKE '%:searchquery%'",
+                    WHERE `name` LIKE ':searchquery'
+                    OR `description` LIKE ':searchquery'",
                     DBConnection::FETCH_ALL,
                     array(
-                        ':searchquery'  =>  $search_query
+                        ':searchquery'  =>  '%' . $search_query . '%'
                     )
             );
             
-            $$result = array();
-            foreach($handle as $search_result)
+            $result = array();
+            foreach($search_result as $search_row)
             {
-                $result[] = $search_result;
+                $result[] = $search_row;
             }
             
             return $result;
@@ -866,7 +866,7 @@ class Addon {
 
         try
         {
-            $set_image_handle = DBConnection::get()->query(
+            $set_image_result = DBConnection::get()->query(
                             'UPDATE `' . DB_PREFIX . $this->type . '_revs`
                             SET `' . $field . '` = :image_id
                             WHERE `addon_id` = :addonid
@@ -1001,7 +1001,7 @@ class Addon {
         $user = $this->uploaderId;
         try
         {
-            $userHandle = DBConnection::get()->query(
+            $user_result = DBConnection::get()->query(
                         'SELECT `name`,`email` FROM `' . DB_PREFIX . 'users`
                         WHERE `id` = :userid LIMIT 1',
                         DBConnection::FETCH_ALL,
@@ -1018,7 +1018,7 @@ class Addon {
         
         try {
             $mail = new SMail;
-            $mail->addonNoteNotification($userHandle['email'], $this->id, $email_body);
+            $mail->addonNoteNotification($user_result[0]['email'], $this->id, $email_body);
         }
         catch (Exception $e) {
             throw new AddonException('Failed to send email to user. '.$e->getMessage());
