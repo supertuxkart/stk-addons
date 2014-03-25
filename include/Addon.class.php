@@ -347,14 +347,22 @@ class Addon {
         Cache::clearAddon($this->id);
 	
         // Remove files associated with this addon
-        $get_files_result = DBConnection::get()->query(
-                        "SELECT * FROM `" . DB_PREFIX . "files`
-                        WHERE `addon_id` = :addonid",
-                        DBConnection::FETCH_ALL,
-                        array(
-                            ':addonid'  =>  $this->id
-                        )
-        );
+        try
+        {
+            $get_files_result = DBConnection::get()->query(
+                            "SELECT * FROM `" . DB_PREFIX . "files`
+                            WHERE `addon_id` = :addonid",
+                            DBConnection::FETCH_ALL,
+                            array(
+                                ':addonid'  =>  $this->id
+                            )
+            );
+                       
+        }
+        catch(DBException $e)
+        {
+            throw new AddonException(htmlspecialchars(_('')));
+        }
         
         if (count($get_files_result) <= 0)
         {
@@ -362,13 +370,13 @@ class Addon {
         }
         else
         {
-            foreach($get_files_result as $get_file)
+          foreach($get_files_result as $get_file)
             {
                 if (file_exists(UP_LOCATION.$get_file['file_path']) && !unlink(UP_LOCATION.$get_file['file_path']))
                 {
                     echo '<span class="error">'.htmlspecialchars(_('Failed to delete file:')).' '.$get_file['file_path'].'</span><br />';  
                 }
-            }
+            } 
         }
         
         // Remove file records associated with addon
@@ -559,7 +567,7 @@ class Addon {
                             DBConnection::FETCH_ALL,
                             array(
                                 ':addonid'  =>  $this->id,
-                                ':rev'      =>  $rev
+                                ':rev'      =>  $revision
                             )
             );
             
@@ -691,20 +699,27 @@ class Addon {
         }
         else
         {
-            $result = DBConnection::get()->query(
-                    "SELECT `name`
-                    FROM `" . DB_PREFIX . "addons`
-                    WHERE `id` = :addonid
-                    LIMIT 1",
-                    DBConnection::FETCH_ALL,
-                    array(
-                        ':addonid'  =>  Addon::cleanId($id)
-                    )
-            );
-            
-            if(count($result) <= 0)
+            try
             {
-                return $result['name']; 
+                $result = DBConnection::get()->query(
+                        "SELECT `name`
+                        FROM `" . DB_PREFIX . "addons`
+                        WHERE `id` = :addonid
+                        LIMIT 1",
+                        DBConnection::FETCH_ALL,
+                        array(
+                            ':addonid'  =>  Addon::cleanId($id)
+                        )
+                );
+            
+                if(count($result) <= 0)
+                {
+                    return $result['name']; 
+                }
+            } 
+            catch(DBException $e)
+            {
+                throw new AddonException(htmlspecialchars(_('Failed to get the name of the addon!')));    
             }
         }
     }
@@ -770,7 +785,7 @@ class Addon {
                     "SELECT `id`, `name`, `type`
                     FROM `" . DB_PREFIX . "addons`
                     WHERE `name` LIKE ':searchquery'
-                    OR `description` LIKE ':searchquery'",
+                    OR `description` LIKE :searchquery",
                     DBConnection::FETCH_ALL,
                     array(
                         ':searchquery'  =>  '%' . $search_query . '%'

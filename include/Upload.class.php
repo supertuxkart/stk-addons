@@ -152,12 +152,12 @@ class Upload {
                 {
                     $newImage_result = DBConnection::get()->query(
                                     'CALL `' . DB_PREFIX . 'create_file_record` ' .
-                                    "('$addon_id','$this->upload_type','image','images/$fileid.{$imageext[1]}',@a)",
+                                    "(':addonid',':type','image',':file',@a)",
                                     DBConnection::NOTHING,
                                     array(
                                         ':addonid'  =>  $addon_id,
                                         ':type'     =>  $this->upload_type,
-                                        ':file'     =>  $fileid.$imageext[1]
+                                        ':file'     =>  'images/' . $fileid . $imageext[1]
                                     )                                                
                     );
                 }
@@ -216,7 +216,7 @@ class Upload {
         {
             $newAddonFile_result = DBConnection::get()->query(
                                 "CALL `" . DB_PREFIX . "create_file_record` 
-                                ('$this->addon_id','$this->upload_type','$filetype','" . basename($this->upload_name) . "',@a)",
+                                (':addonid',':upload_type',':filetype',':filename',@a)",
                                 DBConnection::NOTHING,
                                 array(
                                     ':addonid'  =>  $this->addon_id,

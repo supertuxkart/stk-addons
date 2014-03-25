@@ -52,7 +52,7 @@ class News {
                     // Delete old record
                     try
                     {
-                        $del_result = DBConnection::get()->query(
+                        DBConnection::get()->query(
                                     'DELETE FROM `'.DB_PREFIX.'news`
                                     WHERE `id` = :entryid',
                                     DBConnection::NOTHING,
@@ -75,14 +75,14 @@ class News {
         if ($existing_id === false && $new_kart !== false) {
             try
             {
-                $ins_result = DBConnection::get()->query(
+                DBConnection::get()->query(
                             'INSERT INTO `'.DB_PREFIX.'news`
                             (`content`,`web_display`,`dynamic`)
                             VALUES
-                            (\'Newest add-on kart: :new_kart\',1,1)',
+                            (:new_kart,1,1)',
                             DBConnection::NOTHING,
                             array(
-                                ':new_kart' =>  $new_kart
+                                ':new_kart' =>  'Newest add-on kart: ' . $new_kart
                             )
                 );
             }
@@ -124,7 +124,7 @@ class News {
         if ($existing_id === false && $new_track !== false) {
             try
             {
-                $ins_result = DBConnection::get()->query(
+                DBConnection::get()->query(
                             'INSERT INTO `'.DB_PREFIX.'news`
                             (`content`,`web_display`,`dynamic`)
                             VALUES
@@ -175,7 +175,7 @@ class News {
                 echo 'Failed to insert newest arena news entry.<br />';
             try
             {
-                $ins_result = DBConnection::get()->query(
+                DBConnection::get()->query(
                             'INSERT INTO `'.DB_PREFIX.'news`
                             (`content`,`web_display`,`dynamic`)
                             VALUES
