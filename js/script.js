@@ -26,7 +26,7 @@ function loadFrame(id, page, value)
 {
     var panelDiv = document.getElementById('right-content_body');
     panelDiv.innerHTML = '<div id="loading"></div>';
-    $.post(page, {id: id, value: value},
+    $.get(page, {id: id, value: value},
     function(data) {
         $("#right-content_body").html(data);
         $("#right-content_body").scrollTop(0);
