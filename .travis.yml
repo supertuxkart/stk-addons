@@ -1,0 +1,33 @@
+# Travis-CI configuration file for STK Addons
+#
+# Configuration manual:
+# http://docs.travis-ci.com/user/build-configuration/
+#
+language: php
+php:
+  - 5.3
+  - 5.4
+#branches:
+#  only:
+#    - master
+env:
+  - DB=mysql
+#before_install:
+#script:
+#  #  Build commands
+#  - mkdir build
+#  - cd build
+#  - cmake .. -DCMAKE_BUILD_TYPE=Debug
+#  - make VERBOSE=1 -j 4 
+#notifications:
+#  irc:
+#    channels:
+#      - "irc.freenode.org#stk"
+#    skip_join: false
+#    use_notice: true
+#    template:
+#      #- "[%{commit}: %{author}] %{message}"
+#      #- "%{build_url}"
+#      - "[%{repository}#%{branch} @%{commit}] %{author}): %{message}"
+#      - "Diff: %{compare_url}"
+#      - "Build: %{build_url}"
