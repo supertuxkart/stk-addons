@@ -33,9 +33,7 @@ On your web server, you must edit the provided `config-base.php` to match your d
 and system configuration. Save this file as `config.php`. Enable the debugging mode in
 the configuration file to assist with resolving any errors.
 
-Download Smarty (http://www.smarty.net/) and make sure it is located in your PHP
-include path, as directed by the PHP errors that will appear if Smarty cannot be found.
-Any 3.1.x version should work.
+Run `composer install` to download smarty and other dependencies.
 
 Register a new user using the web interface. Don't worry about configuring your SMTP
 server. After creating your user from the web interface, use a tool such as PHPMyAdmin
