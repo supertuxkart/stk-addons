@@ -2,6 +2,7 @@
 /**
  * Copyright        2009 Lucas Baudin <xapantu@gmail.com>
  *           2011 - 2014 Stephen Just <stephenjust@gmail.com>
+ *                  2014 Daniel Butum <danibutum at gmail dot com>
  *
  * This file is part of stkaddons
  *
@@ -20,18 +21,19 @@
  */
 
 define("DEBUG_MODE", true); // FIXME turn off on server.
-if (DEBUG_MODE){
+if (DEBUG_MODE)
+{
     error_reporting(E_ALL);
     ini_set('display_errors', 'On');
     ini_set('html_errors', 'On');
 }
 
-define('INCLUDE_DIR', ROOT.'include/');
+define('INCLUDE_DIR', ROOT . 'include/');
 
 $dirUpload = "/media/serveur/stkaddons/upload/";
 $dirUploadCron = $dirUpload;
 $dirBase = "http://127.0.0.1/stkaddons/";
-$dirDownload = $dirBase."upload/";
+$dirDownload = $dirBase . "upload/";
 
 $style = "default";
 $admin = "yourname@example.com";
@@ -55,23 +57,29 @@ define("DB_HOST", 'localhost:3306');
 define('MAIL_METHOD', 'sendmail'); // 'smtp' or 'sendmail' supported
 define('SENDMAIL_PATH', '/usr/bin/sendmail'); // Path to sendmail
 define('SENDMAIL_ARGS', '-i'); // Sendmail arguments
-define('SMTP_HOST', NULL); // SMTP server host
-define('SMTP_PORT', NULL); // SMTP server port (usually 25)
-define('SMTP_AUTH', NULL); // Whether or not to use SMTP authentication, true/false
-define('SMTP_USER', NULL); // SMTP username
-define('SMTP_PASS', NULL); // SMTP password
+define('SMTP_HOST', null); // SMTP server host
+define('SMTP_PORT', null); // SMTP server port (usually 25)
+define('SMTP_AUTH', null); // Whether or not to use SMTP authentication, true/false
+define('SMTP_USER', null); // SMTP username
+define('SMTP_PASS', null); // SMTP password
 
-if (!defined('CRON')) {
+if (!defined('CRON'))
+{
     define("UP_LOCATION", $dirUpload);
-} else {
+}
+else
+{
     define("UP_LOCATION", $dirUploadCron);
 }
 define("DOWN_LOCATION", $dirDownload);
 define("SITE_ROOT", "http://stkaddons.tuxfamily.org/"); // make sure that this ends with a trailing slash, otherwise it would break a few things (like the activation email)
-define("CACHE_DIR", ROOT.'assets/temp/');
-define("CACHE_DL", $dirBase.'assets/temp/');
-define("NEWS_XML",  DOWN_LOCATION."xml/news.xml");
-define("ASSET_XML", DOWN_LOCATION."xml/assets.xml");
-define("NEWS_XML_LOCAL", UP_LOCATION."xml/news.xml");
-define("ASSET_XML_LOCAL", UP_LOCATION."xml/news.xml");
+define("CACHE_DIR", ROOT . 'assets/temp/');
+define("CACHE_DL", $dirBase . 'assets/temp/');
+define("NEWS_XML", DOWN_LOCATION . "xml/news.xml");
+define("ASSET_XML", DOWN_LOCATION . "xml/assets.xml");
+define("NEWS_XML_LOCAL", UP_LOCATION . "xml/news.xml");
+define("ASSET_XML_LOCAL", UP_LOCATION . "xml/news.xml");
 define("JPG_ROOT", ROOT);
+
+// add composer autoload
+require 'vendor/autoload.php';

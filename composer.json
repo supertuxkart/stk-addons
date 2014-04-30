@@ -1,0 +1,5 @@
+{
+    "require": {
+        "smarty/smarty": "v3.1.17"
+    }
+}
