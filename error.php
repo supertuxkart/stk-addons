@@ -63,4 +63,3 @@ $tpl->assign('error', array(
 ));
 
 echo $tpl;
-?>

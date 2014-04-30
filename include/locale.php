@@ -30,4 +30,3 @@ $page_url = preg_replace('/\?&/i','?',$page_url);
 
 // Set the locale
 new SLocale();
-?>

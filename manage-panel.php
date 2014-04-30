@@ -230,11 +230,13 @@ function news_message_panel()
 function files_panel()
 {
     $files = File::getAllFiles();
-    if (count($files) == 0) {
+    if (count($files) == 0)
+    {
         echo htmlspecialchars(_('No files have been uploaded.'));
+
         return;
     }
-    
+
     $name_label = htmlspecialchars(_('Name:'));
     $type_label = htmlspecialchars(_('Type:'));
     $references_label = htmlspecialchars(_('References:'));
@@ -250,14 +252,18 @@ function files_panel()
 </thead>
 <tbody>
 EOF;
-    $last_id = NULL;
+    $last_id = null;
     for ($i = 0; $i < count($files); $i++)
     {
-        if ($last_id !== $files[$i]['addon_id']) {
-            if ($files[$i]['addon_id'] === false) {
+        if ($last_id !== $files[$i]['addon_id'])
+        {
+            if ($files[$i]['addon_id'] === false)
+            {
                 echo '<tr><th colspan="3" align="left">unassociated</th></tr>';
-            } else {
-                echo '<tr><th colspan="3" align="left">'.$files[$i]['addon_id'].' ('.$files[$i]['addon_type'].')</th></tr>';
+            }
+            else
+            {
+                echo '<tr><th colspan="3" align="left">' . $files[$i]['addon_id'] . ' (' . $files[$i]['addon_type'] . ')</th></tr>';
             }
             $last_id = $files[$i]['addon_id'];
         }
@@ -272,45 +278,48 @@ EOF;
                 break;
             case 'addon':
                 $references = array();
-                // Look for tracks with this file
-                $refQuery = 'SELECT * FROM `'.DB_PREFIX.'tracks_revs`
-                    WHERE `fileid` = '.$files[$i]['id'];
-                $refHandle = sql_query($refQuery);
-                for ($j = 0; mysql_num_rows($refHandle) > $j; $j++)
+
+                $types = array("track", "kart", "arena");
+                $file_id = $files[$i]['id'];
+                foreach ($types as $type)
                 {
-                    $refResult = mysql_fetch_assoc($refHandle);
-                    $references[] = $refResult['addon_id'].' (track)';
+                    $type_plural = $type . 's_revs';
+                    try
+                    {
+                        $files = DBConnection::get()->query(
+                                'SELECT * FROM `' . DB_PREFIX . $type_plural .
+                                'WHERE `fileid` = :id',
+                                DBConnection::FETCH_ALL,
+                                array(
+                                        ':id' => $file_id
+                                )
+                        );
+
+                        // add to
+                        foreach ($files as $file)
+                        {
+                            $references[] = $file['addon_id'] . sprintf(' (%s)', $type);
+                        }
+                    }
+                    catch(DBException $e)
+                    {
+                        throw new Exception(sprintf("Error on selecting all %s", $type_plural));
+                    }
                 }
 
-                // Look for karts with this file
-                $refQuery = 'SELECT * FROM `'.DB_PREFIX.'karts_revs`
-                    WHERE `fileid` = '.$files[$i]['id'];
-                $refHandle = sql_query($refQuery);
-                for ($j = 0; mysql_num_rows($refHandle) > $j; $j++)
+                if (empty($references))
                 {
-                    $refResult = mysql_fetch_assoc($refHandle);
-                    $references[] = $refResult['addon_id'].' (kart)';
-                }
-                
-                // Look for arenas with this file
-                $refQuery = 'SELECT * FROM `'.DB_PREFIX.'arenas_revs`
-                    WHERE `fileid` = '.$files[$i]['id'];
-                $refHandle = sql_query($refQuery);
-                for ($j = 0; mysql_num_rows($refHandle) > $j; $j++)
-                {
-                    $refResult = mysql_fetch_assoc($refHandle);
-                    $references[] = $refResult['addon_id'].' (arena)';
-                }
-                
-                if (count($references) == 0)
                     $references[] = '<span class="error">None</span>';
-                
-                $references = implode(', ',$references);
-                
+                }
+
+                $references = implode(', ', $references);
+
                 break;
         }
         if ($files[$i]['exists'] == false)
+        {
             $references .= ' <span class="error">File not found.</span>';
+        }
 
         echo "<tr><td>{$files[$i]['file_path']}</td>
             <td>{$files[$i]['file_type']}</td><td>$references</td></tr>";
@@ -320,25 +329,45 @@ EOF;
 
 function clients_panel()
 {
-    if (!$_SESSION['role']['managesettings']) return;
-    echo '<h3>'.htmlspecialchars(_('Clients by User-Agent')).'</h3>';
-    // Read recorded user-agents from database
-    $clientsSql = 'SELECT * FROM `'.DB_PREFIX.'clients`
-        ORDER BY `agent_string` ASC';
-    $clientsHandle = sql_query($clientsSql);
-    if (mysql_num_rows($clientsHandle) == 0)
+    if (!$_SESSION['role']['managesettings'])
     {
-        echo htmlspecialchars(_('There are currently no SuperTuxKart clients recorded. Your download script may not be configured properly.')).'<br />';
+        return;
     }
-    else
+    echo '<h3>' . htmlspecialchars(_('Clients by User-Agent')) . '</h3>';
+
+    // Read recorded user-agents from database
+    try
     {
-        echo '<table width="100%">';
-        echo '<tr><th>'.htmlspecialchars(_('User-Agent String:')).'</th><th>'.htmlspecialchars(_('Game Version:')).'</th></tr>';
-        for ($clientsResult = sql_next($clientsHandle); $clientsResult; $clientsResult = sql_next($clientsHandle))
+        $clients = DBConnection::get()->query(
+                'SELECT * FROM ' . DB_PREFIX . 'clients
+                 ORDER BY `agent_string` ASC',
+                DBConnection::FETCH_ALL
+        );
+        if (empty($clients))
         {
-            echo '<tr><td>'.$clientsResult['agent_string'].'</td><td>'.$clientsResult['stk_version'].'</td></tr>';
+            echo htmlspecialchars(
+                            _(
+                                    'There are currently no SuperTuxKart clients recorded.
+                                    Your download script may not be configured properly.'
+                            )
+                    ) . '<br />';
         }
-        echo '</table>';
+        else
+        {
+            echo '<table width="100%">';
+            echo '<tr><th>' . htmlspecialchars(_('User-Agent String:')) . '</th><th>' . htmlspecialchars(
+                            _('Game Version:')
+                    ) . '</th></tr>';
+            foreach ($clients as $client)
+            {
+                echo '<tr><td>' . $client['agent_string'] . '</td><td>' . $client['stk_version'] . '</td></tr>';
+            }
+            echo '</table>';
+        }
+    }
+    catch(DBException $e)
+    {
+        throw new Exception("Error on selecting all clients");
     }
     echo <<< EOL
 TODO:<br />
@@ -379,5 +408,3 @@ function logs_panel() {
     }
     echo '</tbody></table>';
 }
-
-?>

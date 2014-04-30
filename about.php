@@ -53,5 +53,3 @@ $tpl->assign('about', array(
 ));
 
 echo $tpl;
-?>
-

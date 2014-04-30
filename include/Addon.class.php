@@ -990,4 +990,3 @@ class Addon {
         Log::newEvent("Set status for add-on '{$this->name}'");
     }
 }
-?>

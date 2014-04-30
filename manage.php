@@ -145,4 +145,3 @@ $panels->setContent($content);
 echo $panels;
 
 require('include/footer.php');
-?>

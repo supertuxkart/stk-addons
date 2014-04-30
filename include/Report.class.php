@@ -232,4 +232,3 @@ class Report
         return $return;
     }
 }
-?>

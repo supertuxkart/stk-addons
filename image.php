@@ -19,5 +19,3 @@
 define('ROOT','./');
 include('include.php');
 resizeImage($_GET['pic']);
-
-?>

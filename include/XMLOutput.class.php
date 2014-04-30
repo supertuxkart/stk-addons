@@ -58,5 +58,3 @@ class XMLOutput extends XMLWriter
         return $this->outputMemory();
     }
 }
-
-?>

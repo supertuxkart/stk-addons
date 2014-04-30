@@ -170,5 +170,3 @@ else
 {
     echo '<strong>GD Not Available.</strong><br />';
 }
-
-?>

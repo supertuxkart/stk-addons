@@ -96,5 +96,3 @@ class SLocale {
             define('LANG', $locale);
     }
 }
-
-?>

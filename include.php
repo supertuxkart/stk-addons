@@ -40,4 +40,3 @@ require_once(INCLUDE_DIR.'Ratings.class.php');
 require_once(INCLUDE_DIR.'coreUser.php');
 require_once(INCLUDE_DIR.'image.php');
 require_once(INCLUDE_DIR.'xmlWrite.php');
-?>

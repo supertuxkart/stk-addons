@@ -16,18 +16,6 @@
  You should have received a copy of the GNU General Public License along with 
  stkaddons.  If not, see <http://www.gnu.org/licenses/>.   */
 ?>
-<?php
-/***************************************************************************
-Project: STK Addon Manager
-
-File: footer.php
-Version: 1
-Licence: GPLv3
-Description: footer
-
-***************************************************************************/
-
-?>
 </div>
 <p style="font-size: small; color: #000000; text-align: center;">Site hosted by <a href="http://www.tuxfamily.org/">tuxfamily.org</a></p>
 </body></html>

@@ -88,4 +88,3 @@ class ConfigManager
             return true;
     }
 }
-?>

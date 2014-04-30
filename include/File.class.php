@@ -737,4 +737,3 @@ function cryptUrl($nbr)
     }
     return $str;
 }
-?>

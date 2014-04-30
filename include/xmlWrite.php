@@ -361,5 +361,3 @@ function writeFile($content, $file) {
     fclose($fhandle);
     return true;
 }
-
-?>

@@ -26,7 +26,3 @@ echo 'News xml written: '.$xml.'<br />';
 
 $xml = writeAssetXML();
 echo 'Asset xml written: '.$xml.'<br />';
-
-
-
-?>

@@ -51,4 +51,3 @@ if ($rating->getNumRatings() != 1) {
 }
 echo '<div class="rating"><div class="emptystars">
     </div><div class="fullstars" style="width: '.$rating->getAvgRatingPercent().'%;"></div></div><p>'.$numRatingsString.'</p>';
-?>

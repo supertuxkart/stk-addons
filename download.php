@@ -99,4 +99,3 @@ if ($dir == 'xml') {
     header('Location: http://downloads.tuxfamily.org/stkaddons/assets/'.$assetpath);
 }
 exit;
-?>

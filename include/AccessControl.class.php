@@ -96,7 +96,4 @@ class AccessControl {
 
         exit;
     }
-
 }
-
-?>

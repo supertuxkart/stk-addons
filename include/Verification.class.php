@@ -100,4 +100,3 @@ class Verification
         return $verification_code;
     }
 }
-?>

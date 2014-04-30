@@ -142,5 +142,3 @@ feel free to contact the website administrators by email at
 EOF;
 $tpl->assign('info_page', $page_content);
 echo $tpl;
-?>
-

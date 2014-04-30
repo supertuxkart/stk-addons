@@ -175,6 +175,3 @@ function graph_data_to_json($values, $labels, $format, $graph_id) {
     fclose($handle);
     return $remote_cache_file;
 }
-
-
-?>

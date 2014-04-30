@@ -150,4 +150,3 @@ function img_label($text)
     }
     return '<img src="'.$read_dir.'im_'.$text_noaccent.'.png'.'" alt="'.htmlentities($text).'" />';
 }
-?>

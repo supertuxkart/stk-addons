@@ -51,4 +51,3 @@ try {
 catch (Exception $e) {
     echo '<span class="error">'.$e->getMessage().'</span><br />';
 }
-?>

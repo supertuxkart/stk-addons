@@ -108,4 +108,3 @@ function moderator_email($subject, $message_html)
         ."\n--".$boundary."--\n";
     mail($mail_address,$subject,$message,$header);
 }
-?>

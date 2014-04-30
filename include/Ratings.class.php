@@ -291,4 +291,3 @@ class Ratings {
         return intval(($this->user_vote / $num_possible_ratings) * 100);
     }
 }
-?>

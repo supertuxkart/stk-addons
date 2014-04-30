@@ -191,7 +191,4 @@ class Cache {
             return '25--';
         return NULL;
     }
-    
 }
-
-?>

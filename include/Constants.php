@@ -34,4 +34,3 @@ define('F_DFSG',64);
 define('F_FEATURED',128);
 define('F_LATEST',256);
 define('F_TEX_NOT_POWER_OF_2',512);
-?>

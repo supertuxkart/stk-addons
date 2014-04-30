@@ -179,5 +179,3 @@ class Server
         return $partial_output->asString();
     }
 }
-
-?>

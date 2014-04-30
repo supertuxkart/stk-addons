@@ -543,5 +543,3 @@ function format_compat($format, $filetype) {
     }
     return htmlspecialchars(_('Unknown'));
 }
-
-?>

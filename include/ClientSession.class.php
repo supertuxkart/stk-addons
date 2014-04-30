@@ -839,4 +839,3 @@ class RegisteredClientSession extends ClientSession
             return Achievement::getAchievementsOf($id);
     }   
 }
-?>

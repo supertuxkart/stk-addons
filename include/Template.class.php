@@ -141,5 +141,3 @@ class Template {
 class TemplateException extends Exception {
     
 }
-
-?>

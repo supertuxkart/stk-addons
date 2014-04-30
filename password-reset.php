@@ -181,5 +181,3 @@ switch ($_GET['action']) {
 
 $tpl->assign('pass_reset', $pw_res);
 echo $tpl;
-
-?>

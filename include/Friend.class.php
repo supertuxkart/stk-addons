@@ -241,5 +241,3 @@ class Friend
         return $partial_output->asString();
     }
 }
-
-?>

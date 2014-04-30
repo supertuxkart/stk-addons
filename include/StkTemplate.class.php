@@ -143,5 +143,3 @@ class StkTemplate extends Template {
         $this->meta_tags[$key] = $value;
     }
 }
-
-?>

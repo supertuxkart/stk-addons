@@ -143,4 +143,3 @@ switch ($_GET['action']) {
 $tpl->assign('register', $register);
 
 echo $tpl;
-?>

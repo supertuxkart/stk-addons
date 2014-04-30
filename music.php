@@ -49,4 +49,3 @@ $tpl->assign('music_browser', array(
 ));
 
 echo $tpl;
-?>

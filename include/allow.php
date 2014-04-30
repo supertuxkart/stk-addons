@@ -109,5 +109,3 @@ function setPermissions($role){
     htmlspecialchars(_("moderator"));
     htmlspecialchars(_("basicUser"));
 }
-
-?>

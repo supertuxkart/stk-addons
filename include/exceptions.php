@@ -22,4 +22,3 @@ class AddonException extends Exception {}
 class FileException extends Exception {}
 class UploadException extends Exception {}
 class UserException extends Exception {}
-?>

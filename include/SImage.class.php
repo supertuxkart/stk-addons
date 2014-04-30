@@ -144,4 +144,3 @@ class SImage {
 }
 
 class ImageException extends Exception {}
-?>

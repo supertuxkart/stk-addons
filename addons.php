@@ -207,4 +207,3 @@ if (isset($_GET['name'])) {
 
 echo $panels;
 include("include/footer.php");
-?>

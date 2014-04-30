@@ -74,4 +74,3 @@ function stat_newest($addontype) {
         return NULL;
     }
 }
-?>
