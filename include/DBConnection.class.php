@@ -35,10 +35,13 @@ class DBConnection
 
     const NOTHING = 4;
 
-    //Alias for PDO Constants
+    // Alias for PDO Constants
     const PARAM_BOOL = PDO::PARAM_BOOL;
+
     const PARAM_INT = PDO::PARAM_INT;
+
     const PARAM_NULL = PDO::PARAM_NULL;
+
     const PARAM_STR = PDO::PARAM_STR;
 
     private function __construct()
@@ -52,56 +55,74 @@ class DBConnection
 
     /**
      * Get the DBConnection singleton
+     *
      * @return \DBConnection
      */
     public static function get()
     {
-        if (!self::$instance) {
-            self::$instance = new DBConnection();
+        if (!static::$instance)
+        {
+            static::$instance = new DBConnection();
         }
-        return self::$instance;
+
+        return static::$instance;
     }
 
     /**
      * Start a database transaction
+     *
      * @return bool
      */
     public function beginTransaction()
     {
-        if (!$this->in_transaction) {
+        if (!$this->in_transaction)
+        {
             $this->in_transaction = $this->conn->beginTransaction();
         }
+
         return $this->in_transaction;
 
     }
 
     /**
+     * Commit the current transaction if we are in one
+     *
      * @return bool
      */
     public function commit()
     {
-        if ($this->in_transaction) {
+        if ($this->in_transaction)
+        {
             $this->in_transaction = !$this->conn->commit();
+
             return !$this->in_transaction;
         }
-        if (DEBUG_MODE) {
+        if (DEBUG_MODE)
+        {
             printf("Did a commit while not having a transaction running!");
         }
+
         return false;
     }
 
     /**
+     * Perform a rollback (undo) on the current transaction
+     *
      * @return bool
      */
     public function rollback()
     {
-        if ($this->in_transaction) {
+        if ($this->in_transaction)
+        {
             $this->in_transaction = !$this->conn->rollback();
+
             return !$this->in_transaction;
         }
-        if (DEBUG_MODE) {
-            printf("Did a rollback while not having a transaction running!");
+        if (DEBUG_MODE)
+        {
+            echo "Did a rollback while not having a transaction running!";
         }
+
         return false;
     }
 
@@ -110,45 +131,64 @@ class DBConnection
      *
      * @param string $query
      * @param int    $return_type
-     * @param array  $params An associative array having mapping between variables for prepared statements and values 
+     * @param array  $params     An associative array having mapping between variables for prepared statements and values
      * @param array  $data_types variables in prepared statement for which datatype should be explictly mentioned
+     *
      * @return array|int
      * @throws DBException
      */
-    public function query($query, $return_type = DBConnection::NOTHING,
-                          array $params = array(), array $data_types = array())
-    {
-        if (!$query) {
+    public function query(
+            $query,
+            $return_type = DBConnection::NOTHING,
+            array $params = array(),
+            array $data_types = array()
+    ) {
+        if (!$query)
+        {
             throw new DBException("Empty Query");
         }
-        try {
+        try
+        {
             $sth = $this->conn->prepare($query);
 
-            foreach ($params as $key=> $param) {
+            foreach ($params as $key => $param)
+            {
                 if (array_key_exists($key, $data_types))
+                {
                     $sth->bindValue($key, $param, $data_types[$key]);
+                }
                 else
+                {
                     $sth->bindValue($key, $param);
+                }
             }
             $sth->execute();
 
-            if ($return_type == self::NOTHING) {
+            if ($return_type === self::NOTHING)
+            {
                 return;
             }
-            if ($return_type === self::ROW_COUNT) {
+            if ($return_type === self::ROW_COUNT)
+            {
                 return $sth->rowCount();
             }
-            if ($return_type === self::FETCH_ALL) {
+            if ($return_type === self::FETCH_ALL)
+            {
                 return $sth->fetchAll(PDO::FETCH_ASSOC);
             }
-        } catch(PDOException $e) {
-            if ($this->in_transaction) {
+        }
+        catch(PDOException $e)
+        {
+            if ($this->in_transaction)
+            {
                 $success = $this->conn->rollback();
-                if (DEBUG_MODE && !$success) {
-                    printf("A PDO exception occured during during a transaction, but the rollback failed");
+                if (DEBUG_MODE && !$success)
+                {
+                    echo "A PDO exception occurred during during a transaction, but the rollback failed";
                 }
             }
-            if (DEBUG_MODE) {
+            if (DEBUG_MODE)
+            {
                 var_dump($e->errorInfo);
                 printf(
                         "SQLSTATE ERR: %s<br />\nmySQL ERR: %s<br />\nMessage: %s<br />\nQuery: %s<br />\n",
@@ -160,10 +200,13 @@ class DBConnection
             }
             throw new DBException($e->errorInfo[0]);
         }
+
+        throw new DBException("Unexpected reach of end of query()");
     }
 
     /**
      * Get the last id inserted into the database
+     *
      * @return string
      */
     public function lastInsertId()
@@ -173,6 +216,7 @@ class DBConnection
 
     /**
      * Insert data into the database. helper method
+     *
      * @param string $table
      * @param array  $fields_data an associative array in which the key is the column and the value is the actual value
      *
@@ -180,14 +224,16 @@ class DBConnection
      */
     public function insert($table, array $fields_data)
     {
-        if (!$table or empty($fields_data)) {
+        if (!$table or empty($fields_data))
+        {
             throw new DBException("Empty table or data");
         }
 
         // associative array for preparing the data
         $prepared_pairs = array();
 
-        foreach ($fields_data as $field => $value) {
+        foreach ($fields_data as $field => $value)
+        {
             // :field => value
             $prepared_pairs[":" . $field] = $value;
         }
