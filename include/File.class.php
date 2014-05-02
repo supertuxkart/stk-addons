@@ -252,7 +252,7 @@ class File
         }
 
         $dir_contents = scandir($current_dir);
-        foreach ($dir_contents AS $file)
+        foreach ($dir_contents as $file)
         {
             if (($file === '.') || ($file === '..'))
             {
@@ -308,7 +308,7 @@ class File
         }
 
 
-        foreach (scandir($path) AS $file)
+        foreach (scandir($path) as $file)
         {
             // Don't check current and parent directory
             if ($file === '.' || $file === '..' || is_dir($path . $file))
@@ -362,7 +362,7 @@ class File
         $approved_types = explode(',', $approved_types);
         $removed_files = array();
 
-        foreach (scandir($path) AS $file)
+        foreach (scandir($path) as $file)
         {
             // Don't check current and parent directory
             if ($file === '.' || $file === '..' || is_dir($path . $file))
@@ -573,7 +573,7 @@ class File
         if (is_dir($dir))
         {
             $files = scandir($dir);
-            foreach ($files AS $file)
+            foreach ($files as $file)
             {
                 // Check if our item is a subfolder
                 if ($file !== '.' && $file !== '..' && is_dir($dir . '/' . $file))
