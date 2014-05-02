@@ -33,6 +33,8 @@ class DBConnection
 
     const FETCH_ALL = 2;
 
+    const FETCH_FIRST = 3;
+
     const NOTHING = 4;
 
     // Alias for PDO Constants
@@ -164,17 +166,21 @@ class DBConnection
             }
             $sth->execute();
 
-            if ($return_type === self::NOTHING)
+            if ($return_type === static::NOTHING)
             {
                 return;
             }
-            if ($return_type === self::ROW_COUNT)
+            if ($return_type === static::ROW_COUNT)
             {
                 return $sth->rowCount();
             }
-            if ($return_type === self::FETCH_ALL)
+            if ($return_type === static::FETCH_ALL)
             {
                 return $sth->fetchAll(PDO::FETCH_ASSOC);
+            }
+            if ($return_type === static::FETCH_FIRST)
+            {
+                return $sth->fetch(PDO::FETCH_ASSOC);
             }
         }
         catch(PDOException $e)

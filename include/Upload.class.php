@@ -164,7 +164,7 @@ class Upload
         // --------------------------------------------------------------------
         // FIXME: This is only a temporary measure!
         // --------------------------------------------------------------------
-        if ($this->properties['xml_attributes']['version'] > 5 && $this->upload_type == "tracks")
+        if ($this->properties['xml_attributes']['version'] > 5 && $this->upload_type === "tracks")
         {
             throw new UploadException('You uploaded a track with version ' . $this->properties['xml_attributes']['version'] . ' of the track format.<br />'
                     . 'This new format is not yet supported by stkaddons. The stkaddons developer is working on distributing add-ons in a sort of "main package/dependency" manner to save internet bandwidth for users by sharing resources. The developer is using the format change to ensure STK 0.7.x can still access their own addons without disruption.<br />'
@@ -256,31 +256,46 @@ class Upload
                 copy($image_file, $this->properties['image_path']);
 
                 // Record image file in database
-                $newImageQuery = 'CALL `' . DB_PREFIX . 'create_file_record` ' .
-                        "('$addon_id','$this->upload_type','image','images/$fileid.{$imageext[1]}',@a)";
-                $newImageHandle = sql_query($newImageQuery);
-                if (!$newImageHandle)
+                try
+                {
+                    DBConnection::get()->query(
+                            "CALL `" . DB_PREFIX . "create_file_record`
+                            (:addon_id, :upload_type, 'image', :file, @result_id)",
+                            DBConnection::NOTHING,
+                            array(
+                                ":addon_id" => $addon_id,
+                                ":upload_type"     => $this->upload_type,
+                                ":file"     => 'images/' . $fileid . $imageext[1]
+                            )
+                    );
+
+                    try
+                    {
+                        $id = DBConnection::get()->query(
+                                'SELECT @result_id',
+                                DBConnection::FETCH_FIRST
+                        );
+                        // example taken from
+                        // http://stackoverflow.com/questions/118506/stored-procedures-mysql-and-php/4502524#4502524
+                        // TODO test it
+                        $image_file = $id["@result_id"];
+                    }
+                    catch(DBException $e)
+                    {
+                        $image_file = null;
+                        if (DEBUG_MODE)
+                        {
+                            trigger_error("Could not select the return from the procedure", E_ERROR);
+                        }
+                    }
+                }
+                catch(DBException $e)
                 {
                     echo '<span class="error">' . htmlspecialchars(
                                     _('Failed to associate image file with addon.')
                             ) . mysql_error() . '</span><br />';
                     unlink($this->properties['image_path']);
                     $image_file = null;
-                }
-                else
-                {
-                    $getInsertIdQuery = 'SELECT @a';
-                    $getInsertIdHandle = sql_query($getInsertIdQuery);
-                    if (!$getInsertIdHandle)
-                    {
-                        $image_file = null;
-                    }
-                    else
-                    {
-                        $iid_result = mysql_fetch_array($getInsertIdHandle);
-                        // Get ID of previously inserted image
-                        $image_file = $iid_result[0];
-                    }
                 }
             }
             else
@@ -320,34 +335,50 @@ class Upload
         }
 
         // Record addon's file in database
-        $newAddonFileQuery = 'CALL `' . DB_PREFIX . 'create_file_record` ' .
-                "('$this->addon_id','$this->upload_type','$filetype','" . basename($this->upload_name) . "',@a)";
-        $newAddonFileHandle = sql_query($newAddonFileQuery);
-        if (!$newAddonFileHandle)
+        try
+        {
+            DBConnection::get()->query(
+                    'CALL `' . DB_PREFIX . 'create_file_record` ' .
+                    "(:addon_it, :upload_type, :file_type, :file, @result_id)",
+                    DBConnection::NOTHING,
+                    array(
+                            ":addon_id"     => $addon_id,
+                            ":upload_type"  => $this->upload_type,
+                            ":file_type"    => $filetype,
+                            ":file"         => basename($this->upload_name)
+                    )
+            );
+
+            try
+            {
+                $id = DBConnection::get()->query(
+                        'SELECT @result_id',
+                        DBConnection::FETCH_FIRST
+                );
+                $this->properties['xml_attributes']['fileid'] = $id["@result_id"];
+            }
+            catch(DBException $e)
+            {
+                $this->properties['xml_attributes']['fileid'] = 0;
+                if (DEBUG_MODE)
+                {
+                    trigger_error("Could not select the return from the procedure", E_ERROR);
+                }
+            }
+        }
+        catch(DBException $e)
         {
             unlink($this->upload_name);
+
+            if ($_POST['upload-type'] !== 'source')
+            {
+                $this->properties['xml_attributes']['fileid'] = 0;
+            }
+
             throw new UploadException(htmlspecialchars(_('Failed to associate archive file with addon.')));
-            if ($_POST['upload-type'] != 'source')
-            {
-                $this->properties['xml_attributes']['fileid'] = 0;
-            }
-        }
-        else
-        {
-            $getInsertIdQuery = 'SELECT @a';
-            $getInsertIdHandle = sql_query($getInsertIdQuery);
-            if (!$getInsertIdHandle)
-            {
-                $this->properties['xml_attributes']['fileid'] = 0;
-            }
-            else
-            {
-                $iid_result = mysql_fetch_array($getInsertIdHandle);
-                $this->properties['xml_attributes']['fileid'] = $iid_result[0];
-            }
         }
 
-        if ($_POST['upload-type'] == 'source')
+        if ($_POST['upload-type'] === 'source')
         {
             echo htmlspecialchars(_('Successfully uploaded source archive.')) . '<br />';
             echo '<span style="font-size: large"><a href="' . File::rewrite(
