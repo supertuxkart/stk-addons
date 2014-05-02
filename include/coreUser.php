@@ -242,7 +242,7 @@ class coreUser
      *
      * @param string $type the type of addon
      *
-     * @return string
+     * @return string|null
      * @throws UserException
      */
     public function getAddonList($type)
@@ -264,7 +264,7 @@ class coreUser
                 if (DEBUG_MODE) {
                     throw new UserException(sprintf("Addon type=%s does not exist", $type));
                 }
-                return;
+                return null;
         }
         $output = "<h3>$heading</h3>\n";
         try {

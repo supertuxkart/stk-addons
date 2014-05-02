@@ -519,8 +519,7 @@ class AddonViewer {
 function format_compat($format, $filetype) {
     // FIXME: This should not be hardcoded
     switch ($filetype) {
-        default:
-            return htmlspecialchars(_('Unknown'));
+
         case 'karts':
             if ($format == 1) {
                 return 'Pre-0.7';
@@ -540,6 +539,7 @@ function format_compat($format, $filetype) {
             }
             return htmlspecialchars(_('Unknown'));
             break;
+        default:
+            return htmlspecialchars(_('Unknown'));
     }
-    return htmlspecialchars(_('Unknown'));
 }

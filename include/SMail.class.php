@@ -92,7 +92,7 @@ function moderator_email($subject, $message_html)
     if (strlen($mail_address) == 0)
     {
         echo '<span class="warning">'.htmlspecialchars(_('No moderator mailing-list email is set.')).'</span><br />';
-        return;
+        return null;
     }
 
     $boundary = "-----=".md5(rand());

@@ -138,7 +138,7 @@ class DBConnection
      *
      * @throws DBException
      *
-     * @return array|int depending of the return type
+     * @return array|int|null depending of the return type
      */
     public function query(
             $query,
@@ -169,7 +169,7 @@ class DBConnection
 
             if ($return_type === static::NOTHING)
             {
-                return;
+                return null;
             }
             if ($return_type === static::ROW_COUNT)
             {

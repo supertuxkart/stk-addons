@@ -32,6 +32,8 @@ class News
 
     /**
      * Refresh all the dynamic entries in the database
+     *
+     * @return null|bool
      */
     public static function refreshDynamicEntries()
     {
@@ -266,6 +268,8 @@ class News
                 echo 'Failed to insert newest kart news entry.<br />';
             }
         }
+
+        return null;
     }
 
     /**

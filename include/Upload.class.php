@@ -144,7 +144,7 @@ class Upload
         {
             $this->doImageUpload();
 
-            return;
+            return null;
         }
 
         try
@@ -265,9 +265,9 @@ class Upload
                             (:addon_id, :upload_type, 'image', :file, @result_id)",
                             DBConnection::NOTHING,
                             array(
-                                ":addon_id"     => $addon_id,
-                                ":upload_type"  => $this->upload_type,
-                                ":file"         => 'images/' . $fileid . $imageext[1]
+                                    ":addon_id"    => $addon_id,
+                                    ":upload_type" => $this->upload_type,
+                                    ":file"        => 'images/' . $fileid . $imageext[1]
                             )
                     );
 
@@ -344,10 +344,10 @@ class Upload
                     "(:addon_it, :upload_type, :file_type, :file, @result_id)",
                     DBConnection::NOTHING,
                     array(
-                            ":addon_id"     => $addon_id,
-                            ":upload_type"  => $this->upload_type,
-                            ":file_type"    => $filetype,
-                            ":file"         => basename($this->upload_name)
+                            ":addon_id"    => $addon_id,
+                            ":upload_type" => $this->upload_type,
+                            ":file_type"   => $filetype,
+                            ":file"        => basename($this->upload_name)
                     )
             );
 
@@ -448,6 +448,8 @@ class Upload
         echo '<a href="' . File::rewrite(
                         'addons.php?type=' . $this->upload_type . '&amp;name=' . $this->addon_id
                 ) . '">' . htmlspecialchars(_('Click here to view your add-on.')) . '</a><br />';
+
+        return null;
     }
 
     /**

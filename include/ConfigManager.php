@@ -35,7 +35,7 @@ class ConfigManager
         $db = DBConnection::get();
 
         // Populate the config cache
-        if (count(ConfigManager::$cache == 0)) {
+        if (empty(ConfigManager::$cache)) {
             try {
                 $result = $db->query('SELECT `name`, `value`' .
                                      'FROM `'.DB_PREFIX.'config`',
