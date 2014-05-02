@@ -23,27 +23,30 @@ require_once(INCLUDE_DIR . 'parsers/addonXMLParser.class.php');
 
 class Upload
 {
-    private $file_name = null;
+    private $file_name;
 
-    private $file_type = null;
+    private $file_type;
 
-    private $file_size = null;
+    private $file_size;
 
-    private $file_tmp = null;
+    private $file_tmp;
 
-    private $file_ext = null;
+    private $file_ext;
 
-    private $expected_type = null;
+    private $expected_type;
 
-    private $dest = null;
+    private $dest;
 
-    private $temp = null;
+    private $temp;
 
     private $properties = array();
 
-    private $upload_type = null;
+    private $upload_type;
 
-    private $addon_id = null;
+    private $upload_name;
+
+    private $addon_id;
+
 
     public function __construct($file_record, $expected_type)
     {
@@ -64,11 +67,56 @@ class Upload
         $this->doUpload();
     }
 
-    function __destruct()
+    public function __destruct()
     {
         File::deleteRecursive($this->temp);
     }
 
+    /**
+     * Remove all the files from the temporary directory
+     */
+    public function removeTempFiles()
+    {
+        File::deleterecursive($this->temp);
+    }
+
+    /**
+     * Check the filename for an uploaded file to make sure the extension is
+     * one that can be handled
+     *
+     * @throws UploadException if the file extension if not appropriate
+     *
+     * @return string File extension
+     */
+    public function checkType()
+    {
+        // Check file-extension for uploaded file
+        if ($this->expected_type === 'image')
+        {
+            if (!preg_match('/\.(png|jpg|jpeg)$/i', $this->file_name, $ext))
+            {
+                throw new UploadException(htmlspecialchars(
+                        _('Uploaded image files must be either PNG or Jpeg files.')
+                ));
+            }
+        }
+        else
+        {
+            // File extension must be .zip, .tgz, .tar, .tar.gz, tar.bz2, .tbz
+            if (!preg_match('/\.(zip|t[bg]z|tar|tar\.gz|tar\.bz2)$/i', $this->file_name, $ext))
+            {
+                throw new UploadException(htmlspecialchars(_('The file you uploaded was not the correct type.')));
+            }
+        }
+
+        return $ext[1];
+    }
+
+    /**
+     * Perform the actual upload to our server
+     *
+     * @throws UploadException
+     */
     private function doUpload()
     {
         if (@!mkdir(
@@ -78,20 +126,19 @@ class Upload
         )
         )
         {
-            throw new UploadException('Failed to create temporary directory for upload: ' . htmlspecialchars(
-                    $this->temp
-            ));
+            throw new UploadException('Failed to create temporary directory for upload: ' .
+                    htmlspecialchars($this->temp)
+            );
         }
         // Copy file to temp folder
-        if ((move_uploaded_file($this->file_tmp, $this->temp . $this->file_name) === false) && !file_exists(
-                        $this->temp . $this->file_name
-                )
+        if ((move_uploaded_file($this->file_tmp, $this->temp . $this->file_name) === false) &&
+                !file_exists($this->temp . $this->file_name)
         )
         {
             throw new UploadException(htmlspecialchars(_('Failed to move uploaded file.')));
         }
 
-        if ($this->expected_type == 'image')
+        if ($this->expected_type === 'image')
         {
             $this->doImageUpload();
 
@@ -157,9 +204,9 @@ class Upload
         }
 
         // For source packages
-        if ($this->expected_type == 'source')
+        if ($this->expected_type === 'source')
         {
-            if ($addon_id == null)
+            if ($addon_id === null)
             {
                 throw new UploadException('No add-on id was provided with your source archive.');
             }
@@ -182,7 +229,7 @@ class Upload
             }
 
             // Get addon id from XML if we still don't have it
-            if (!preg_match('/^[a-z0-9\-]+_?[0-9]*$/i', $addon_id) || $addon_id == null)
+            if (!preg_match('/^[a-z0-9\-]+_?[0-9]*$/i', $addon_id) || $addon_id === null)
             {
                 $addon_id = Addon::generateId($this->upload_type, $this->properties['xml_attributes']['name']);
                 $this->properties['addon_revision'] = 1;
@@ -198,6 +245,7 @@ class Upload
             {
                 // Get image file extension
                 preg_match('/\.([a-z]+)$/i', $image_file, $imageext);
+
                 // Save file
                 $fileid = uniqid();
                 while (file_exists(UP_LOCATION . 'images/' . $fileid . '.' . $imageext[1]))
@@ -369,6 +417,11 @@ class Upload
                 ) . '">' . htmlspecialchars(_('Click here to view your add-on.')) . '</a><br />';
     }
 
+    /**
+     * Perform the actual upload to our server
+     *
+     * @throws UploadException
+     */
     private function doImageUpload()
     {
         try
@@ -376,7 +429,7 @@ class Upload
             $this->dest = UP_LOCATION . 'images/';
             $this->generateFilename();
             $addon_id = Addon::cleanId($_GET['name']);
-            $addon_type = mysql_real_escape_string($_GET['type']);
+            $addon_type = $_GET['type'];
             rename($this->temp . $this->file_name, $this->upload_name);
             File::newImage(null, $this->upload_name, $addon_id, $addon_type);
             echo htmlspecialchars(_('Successfully uploaded image.')) . '<br />';
@@ -392,10 +445,13 @@ class Upload
         }
     }
 
+    /**
+     * Remove all the files that are considered invalid
+     */
     private function removeInvalidFiles()
     {
         // Check for invalid files
-        if ($this->expected_type != 'source')
+        if ($this->expected_type !== 'source')
         {
             $invalid_files = File::typeCheck($this->temp);
         }
@@ -404,7 +460,7 @@ class Upload
             $invalid_files = File::typeCheck($this->temp, true);
         }
 
-        if (is_array($invalid_files) && count($invalid_files != 0))
+        if (is_array($invalid_files) && count($invalid_files) !== 0)
         {
             echo '<span class="warning">' . htmlspecialchars(
                             _(
@@ -414,18 +470,20 @@ class Upload
         }
     }
 
-    public function removeTempFiles()
-    {
-        File::deleterecursive($this->temp);
-    }
-
+    /**
+     * Generate a random file name for our upload_name attribute
+     *
+     * @$file_ext string $file_ext
+     *
+     * @throws UploadException if the destination is not set
+     */
     private function generateFilename($file_ext = null)
     {
         if ($file_ext === null)
         {
             $file_ext = $this->file_ext;
         }
-        if ($this->dest == null)
+        if ($this->dest === null)
         {
             throw new UploadException('A destination has not been set yet');
         }
@@ -439,6 +497,9 @@ class Upload
         $this->upload_name = $this->dest . $fileid . '.' . $file_ext;
     }
 
+    /**
+     * Parse the b3d files
+     */
     private function parseFiles()
     {
         $files = scandir($this->temp);
@@ -449,7 +510,7 @@ class Upload
         // Loop through all files
         foreach ($files as $file)
         {
-            if ($file == '.' || $file == '..')
+            if ($file === '.' || $file === '..')
             {
                 continue;
             }
@@ -469,12 +530,12 @@ class Upload
                 $xml_parse->loadFile($this->temp . $file);
                 $xml_type = $xml_parse->getType();
 
-                if ($xml_type == 'TRACK' || $xml_type == 'KART')
+                if ($xml_type === 'TRACK' || $xml_type === 'KART')
                 {
                     $this->properties['xml_attributes'] = $xml_parse->addonFileAttributes();
                     if ($xml_type == 'TRACK')
                     {
-                        if ($file != 'track.xml')
+                        if ($file !== 'track.xml')
                         {
                             continue;
                         }
@@ -527,7 +588,7 @@ class Upload
         // List missing textures
         $this->properties['b3d_textures'] = $b3d_textures;
         $missing_textures = array();
-        foreach ($this->properties['b3d_textures'] AS $tex)
+        foreach ($this->properties['b3d_textures'] as $tex)
         {
             if (!file_exists($this->temp . $tex))
             {
@@ -548,10 +609,9 @@ class Upload
     }
 
     /**
-     * Read the error code passed, and throw an
-     * exception if an error occurred
+     * Read the error code passed and throw an appropriate exception
      *
-     * @param integer $error_code
+     * @param int $error_code
      *
      * @throws UploadException
      */
@@ -559,8 +619,6 @@ class Upload
     {
         switch ($error_code)
         {
-            default:
-                throw new UploadException(htmlspecialchars(_('Unknown file upload error.')));
             case UPLOAD_ERR_OK:
                 break;
             case UPLOAD_ERR_INI_SIZE:
@@ -577,36 +635,8 @@ class Upload
                 ));
             case UPLOAD_ERR_CANT_WRITE:
                 throw new UploadException(htmlspecialchars(_('Unable to write uploaded file to disk.')));
+            default:
+                throw new UploadException(htmlspecialchars(_('Unknown file upload error.')));
         }
     }
-
-    /**
-     * Check the filename for an uploaded file to make sure the extension is
-     * one that can be handled
-     * @return string File extension
-     */
-    public function checkType()
-    {
-        // Check file-extension for uploaded file
-        if ($this->expected_type == 'image')
-        {
-            if (!preg_match('/\.(png|jpg|jpeg)$/i', $this->file_name, $ext))
-            {
-                throw new UploadException(htmlspecialchars(
-                        _('Uploaded image files must be either PNG or Jpeg files.')
-                ));
-            }
-        }
-        else
-        {
-            // File extension must be .zip, .tgz, .tar, .tar.gz, tar.bz2, .tbz
-            if (!preg_match('/\.(zip|t[bg]z|tar|tar\.gz|tar\.bz2)$/i', $this->file_name, $ext))
-            {
-                throw new UploadException(htmlspecialchars(_('The file you uploaded was not the correct type.')));
-            }
-        }
-
-        return $ext[1];
-    }
-
 }
