@@ -119,24 +119,24 @@ class File
      *
      * @param string $file
      * @param string $destination
-     * @param string $fileext
+     * @param string $file_ext
      *
      * @throws FileException
      */
-    public static function extractArchive($file, $destination, $fileext = null)
+    public static function extractArchive($file, $destination, $file_ext = null)
     {
         if (!file_exists($file))
         {
             throw new FileException(htmlspecialchars(_('The file to extract does not exist.')));
         }
 
-        if ($fileext === null)
+        if ($file_ext === null)
         {
-            $fileext = pathinfo($file, PATHINFO_EXTENSION);
+            $file_ext = pathinfo($file, PATHINFO_EXTENSION);
         }
 
         // Extract archive
-        switch ($fileext)
+        switch ($file_ext)
         {
             // Handle archives using ZipArchive class
             case 'zip':
@@ -165,11 +165,11 @@ class File
             case 'bz2':
                 require_once('Archive/Tar.php');
                 $compression = null;
-                if ($fileext === 'tar.gz' || $fileext === 'tgz' || $fileext === 'gz')
+                if ($file_ext === 'tar.gz' || $file_ext === 'tgz' || $file_ext === 'gz')
                 {
                     $compression = 'gz';
                 }
-                elseif ($fileext === 'tbz' || $fileext === 'tar.bz2' || $fileext === 'bz2')
+                elseif ($file_ext === 'tbz' || $file_ext === 'tar.bz2' || $file_ext === 'bz2')
                 {
                     $compression = 'bz2';
                 }
