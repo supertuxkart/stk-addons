@@ -38,9 +38,9 @@ if (!Addon::isAllowedType($type))
     die(htmlspecialchars(_('This page cannot be loaded because an invalid add-on type was provided.')));
 
 if(isset($_GET['id']))
-    $id = mysql_real_escape_string($_GET['id']);
+    $id = $_GET['id'];
 else
-    $id = mysql_real_escape_string($_POST['id']);
+    $id = $_POST['id'];
 
 try {
     $viewer = new AddonViewer($id);

@@ -1375,7 +1375,7 @@ class Addon
             $fieldinfo = explode('-', $field);
             $revision = (int)$fieldinfo[1];
             // Update notes
-            $notes[$revision] = mysql_real_escape_string($_POST[$field]);
+            $notes[$revision] = $_POST[$field];
         }
 
         // Save record in database

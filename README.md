@@ -52,9 +52,6 @@ The STKAddons source code tree has grown somewhat organically over the years. Th
 are many places where the source could be cleaned up.
 
 There are a number of ongoing refactoring projects within the code-base:
-* Converting all database calls to use PDO rather than mysqli, through the DBConnection
-  class. It is intended to eventually remove `sql.php` completely. Transactions should
-  be used where applicable.
 * Making use of a template engine for all UI code. The first version of STKAddons had
   html baked right into the PHP code, and this is generally considered bad practice.
   I (Stephen) have been trying to slowly weed that out and move to template files for

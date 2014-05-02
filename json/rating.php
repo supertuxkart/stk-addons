@@ -21,7 +21,6 @@
 session_start();
 define('ROOT','../');
 require_once(ROOT . 'config.php');
-require_once(INCLUDE_DIR . 'sql.php'); // FIXME
 require_once(INCLUDE_DIR . 'AccessControl.class.php');
 require_once(INCLUDE_DIR . 'Ratings.class.php');
 AccessControl::setLevel('basicPage');
@@ -30,7 +29,7 @@ if (!isset($_GET['addonId']))
     die('No addon.');
 if (!User::$logged_in)
     die('Not logged in.');
-$addonId = mysql_real_escape_string(stripslashes($_GET['addonId']));
+$addonId = stripslashes($_GET['addonId']);
 $rating = new Ratings($addonId);
 if (isset($_GET['rating'])) {
     try{

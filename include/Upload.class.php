@@ -218,7 +218,7 @@ class Upload
             }
             if ($this->upload_type === null)
             {
-                $this->upload_type = mysql_real_escape_string($_GET['type']);
+                $this->upload_type = $_GET['type'];
             }
             $filetype = 'source';
         }
@@ -295,7 +295,7 @@ class Upload
                 {
                     echo '<span class="error">' . htmlspecialchars(
                                     _('Failed to associate image file with addon.')
-                            ) . mysql_error() . '</span><br />';
+                            ) . '</span><br />';
                     unlink($this->properties['image_path']);
                     $image_file = null;
                 }
