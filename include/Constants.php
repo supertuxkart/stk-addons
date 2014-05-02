@@ -24,13 +24,13 @@
 // add-ons, and possible game incompatibility. To add new flags, create a new
 // constant, and set it to the next power of 2. The current database schema
 // allows 24 flags.
-define('F_APPROVED',1);
-define('F_ALPHA',2);
-define('F_BETA',4);
-define('F_RC',8);
-define('F_INVISIBLE',16);
-define('F_RESERVED2',32); // Reserved for future use
-define('F_DFSG',64);
-define('F_FEATURED',128);
-define('F_LATEST',256);
-define('F_TEX_NOT_POWER_OF_2',512);
+define('F_APPROVED', 1);
+define('F_ALPHA', 2);
+define('F_BETA', 4);
+define('F_RC', 8);
+define('F_INVISIBLE', 16);
+define('F_RESERVED2', 32); // Reserved for future use
+define('F_DFSG', 64);
+define('F_FEATURED', 128);
+define('F_LATEST', 256);
+define('F_TEX_NOT_POWER_OF_2', 512);

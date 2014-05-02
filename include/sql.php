@@ -35,17 +35,3 @@ function sql_query($query)
 	return $sql;
     }
 }
-
-function sql_next($sql_query)
-{
-    $exist = true;
-    $array = mysql_fetch_array($sql_query) or $exist = false;
-    if($exist)
-    {
-        return $array;
-    }
-    else
-    {
-        return false;
-    }
-}
