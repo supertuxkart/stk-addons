@@ -45,6 +45,8 @@ class Upload
 
     private $upload_name;
 
+    private $addon_name;
+
     private $addon_id;
 
 
