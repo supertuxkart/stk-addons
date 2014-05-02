@@ -34,6 +34,16 @@ function get_self()
  */
 class File
 {
+    /**
+     * Approve a file
+     *
+     * @param int  $file_id
+     * @param bool $approve
+     *
+     * @throws FileException
+     *
+     * @return int File id, or -1 if file record does not exist
+     */
     public static function approve($file_id, $approve = true)
     {
         if ($approve !== true)
@@ -46,14 +56,25 @@ class File
             throw new FileException(htmlspecialchars(_('Insufficient permissions.')));
         }
 
-        $approve_query = 'UPDATE `' . DB_PREFIX . 'files`
-            SET `approved` = ' . (int)$approve . '
-            WHERE `id` = ' . (int)$file_id;
-        $approve_handle = sql_query($approve_query);
-        if (!$approve_handle)
+        try
+        {
+            DBConnection::get()->query(
+                    'UPDATE `' . DB_PREFIX . 'files`
+                    SET `approved` = :approve
+                    WHERE `id` = :file_id',
+                    DBConnection::NOTHING,
+                    array(
+                            ':approve' => (int)$approve,
+                            ':file_id' => $file_id
+
+                    )
+            );
+        }
+        catch(DBException $e)
         {
             throw new FileException('Failed to change file approval status.');
         }
+
         writeAssetXML();
         writeNewsXML();
     }
@@ -63,26 +84,34 @@ class File
      *
      * @param string $path Relative to upload directory
      *
-     * @return integer File id, or -1 if file record does not exist
+     * @return int File id, or -1 if file record does not exist
      */
     public static function exists($path)
     {
-        $path = mysql_real_escape_string($path);
-        $query = 'SELECT `id`
-		FROM `' . DB_PREFIX . 'files`
-		WHERE `file_path` = \'' . $path . '\'';
-        $handle = sql_query($query);
-        if (!$handle)
+        try
         {
-            return -1;
-        }
-        if (mysql_num_rows($handle) === 0)
-        {
-            return -1;
-        }
-        $result = mysql_fetch_array($handle);
+            $files = DBConnection::get()->query(
+                    'SELECT `id`
+                    FROM `' . DB_PREFIX . 'files`
+                    WHERE `file_path` = :path',
+                    DBConnection::FETCH_ALL,
+                    array(
+                            ':path' => $path,
+                    )
+            );
 
-        return $result[0];
+        }
+        catch(DBException $e)
+        {
+            return -1;
+        }
+
+        if (empty($files))
+        {
+            return -1;
+        }
+
+        return $files[0];
     }
 
     /**
@@ -154,8 +183,8 @@ class File
                 {
                     unlink($file);
                     throw new FileException(htmlspecialchars(
-                            _('Failed to extract archive file.')
-                    ) . ' (' . $compression . ')');
+                                    _('Failed to extract archive file.')
+                            ) . ' (' . $compression . ')');
                 }
                 unlink($file);
                 break;
@@ -434,32 +463,57 @@ class File
      */
     public static function delete($file_id)
     {
-        // Get file path
-        $get_file_query = 'SELECT `file_path` FROM `' . DB_PREFIX . 'files`
-            WHERE `id` = ' . (int)$file_id . '
-            LIMIT 1';
-        $get_file_handle = sql_query($get_file_query);
-        if (!$get_file_handle)
+        try
+        {
+            $files = DBConnection::get()->query(
+                    'SELECT `file_path`
+                    FROM `' . DB_PREFIX . 'files`
+                    WHERE `id` = :file_id
+                    LIMIT 1',
+                    DBConnection::FETCH_ALL,
+                    array(
+                            ':file_id' => $file_id,
+                    ),
+                    array(
+                            ':file_id' => DBConnection::PARAM_INT
+                    )
+            );
+
+            if (count($files) === 1)
+            {
+                $file = $files[0];
+                if (file_exists(UP_LOCATION . $file['file_path']))
+                {
+                    unlink(UP_LOCATION . $file['file_path']);
+                }
+            }
+
+        }
+        catch(DBException $e)
         {
             return false;
-        }
-        if (mysql_num_rows($get_file_handle) === 1)
-        {
-            $get_file = mysql_fetch_assoc($get_file_handle);
-            if (file_exists(UP_LOCATION . $get_file['file_path']))
-            {
-                unlink(UP_LOCATION . $get_file['file_path']);
-            }
         }
 
         // Delete file record
-        $del_file_query = 'DELETE FROM `' . DB_PREFIX . 'files`
-            WHERE `id` = ' . (int)$file_id;
-        $del_file_handle = sql_query($del_file_query);
-        if (!$del_file_handle)
+        try
+        {
+            DBConnection::get()->query(
+                    'DELETE FROM `' . DB_PREFIX . 'files`
+                    WHERE `id` = :file_id',
+                    DBConnection::NOTHING,
+                    array(
+                            ':file_id' => $file_id,
+                    ),
+                    array(
+                            ':file_id' => DBConnection::PARAM_INT
+                    )
+            );
+        }
+        catch(DBException $e)
         {
             return false;
         }
+
         writeAssetXML();
         writeNewsXML();
 
@@ -475,25 +529,31 @@ class File
      */
     public static function deleteQueuedFiles()
     {
-        $date = date('Y-m-d');
-        $q = 'SELECT `id`
-	    FROM `' . DB_PREFIX . 'files`
-	    WHERE `delete_date` <= \'' . $date . '\'
-	    AND `delete_date` <> \'0000-00-00\'';
-        $h = sql_query($q);
-        if (!$h)
+        try
+        {
+            $queued_files = DBConnection::get()->query(
+                    'SELECT `id`
+                    FROM `' . DB_PREFIX . 'files`
+                    WHERE `delete_date` <= :date
+                    AND `delete_date` <> \'0000-00-00\'',
+                    DBConnection::FETCH_ALL,
+                    array(
+                            ':date' => date('Y-m-d'),
+                    )
+            );
+        }
+        catch(DBException $e)
         {
             throw new FileException('Failed to read deletion queue.');
         }
 
-        $num_files = mysql_num_rows($h);
-        for ($i = 0; $i < $num_files; $i++)
+        // delete from the filesystem
+        foreach ($queued_files as $file)
         {
-            $r = mysql_fetch_array($h);
-            if (File::delete($r[0]))
+            if (File::delete($file["id"]))
             {
-                print 'Deleted file ' . $r[0] . "<br />\n";
-                Log::newEvent('Processed queued deletion of file ' . $r[0]);
+                print 'Deleted file ' . $file["id"] . "<br />\n";
+                Log::newEvent('Processed queued deletion of file ' . $file["id"]);
             }
         }
 
@@ -569,6 +629,8 @@ class File
      *
      * @param int $file_id
      *
+     * @throws FileException
+     *
      * @return int|bool the addon id or false otherwise
      */
     public static function getAddon($file_id)
@@ -584,23 +646,42 @@ class File
         }
 
         // Look up file path from database
-        $query = 'SELECT `addon_id` FROM `' . DB_PREFIX . 'files`
-            WHERE `id` = ' . (int)$file_id . '
-            LIMIT 1';
-        $handle = sql_query($query);
-        if (mysql_num_rows($handle) === 0)
+        try
+        {
+            $addons = DBConnection::get()->query(
+                    'SELECT `addon_id`
+                    FROM `' . DB_PREFIX . 'files`
+                    WHERE `id` = :file_id
+                    LIMIT 1',
+                    DBConnection::FETCH_ALL,
+                    array(
+                            ':file_id' => $file_id
+                    ),
+                    array(
+                            ':file_id' => DBConnection::PARAM_INT
+                    )
+            );
+        }
+        catch(DBException $e)
+        {
+            throw new FileException("Can not retrieve addon a DB error occurred");
+        }
+
+        if (empty($addons))
         {
             return false;
         }
-        $file = mysql_fetch_assoc($handle);
 
-        return $file['addon_id'];
+        // get the first record
+        return $addons[0]['addon_id'];
     }
 
     /**
      * Get the file path
      *
      * @param int $file_id the id of the file
+     *
+     * @throws FileException
      *
      * @return string|bool the file path or false otherwise
      */
@@ -617,17 +698,33 @@ class File
         }
 
         // Look up file path from database
-        $query = 'SELECT `file_path` FROM `' . DB_PREFIX . 'files`
-            WHERE `id` = ' . (int)$file_id . '
-            LIMIT 1';
-        $handle = sql_query($query);
-        if (mysql_num_rows($handle) === 0)
+        try
+        {
+            $files = DBConnection::get()->query(
+                    'SELECT `file_path` FROM `' . DB_PREFIX . 'files`
+                    WHERE `id` = :file_id
+                    LIMIT 1',
+                    DBConnection::FETCH_ALL,
+                    array(
+                            ':file_id' => $file_id
+                    ),
+                    array(
+                            ':file_id' => DBConnection::PARAM_INT
+                    )
+            );
+        }
+        catch(DBException $e)
+        {
+            throw new FileException("Can not retrieve path a DB error occurred");
+        }
+
+        if (empty($files))
         {
             return false;
         }
-        $file = mysql_fetch_assoc($handle);
 
-        return $file['file_path'];
+        // get the first record
+        return $files[0]['file_path'];
     }
 
     /**
@@ -638,11 +735,16 @@ class File
     public static function getAllFiles()
     {
         // Look-up all file records in the database
-        $files_query = 'SELECT `id`,`addon_id`,`addon_type`,`file_type`,`file_path`
-            FROM `' . DB_PREFIX . 'files`
-            ORDER BY `addon_id` ASC';
-        $filesHandle = sql_query($files_query);
-        if (!$filesHandle)
+        try
+        {
+            $db_files = DBConnection::get()->query(
+                    'SELECT `id`,`addon_id`, `addon_type`, `file_type`, `file_path`
+                    FROM `' . DB_PREFIX . 'files`
+                    ORDER BY `addon_id` ASC',
+                    DBConnection::FETCH_ALL
+            );
+        }
+        catch(DBException $e)
         {
             return false;
         }
@@ -673,10 +775,9 @@ class File
         // Loop through database records and remove those entries from the list
         // of files existing on the disk
         $return_files = array();
-        for ($i = 0; $i < mysql_num_rows($filesHandle); $i++)
+        foreach ($db_files as $db_file)
         {
-            $files_result = mysql_fetch_assoc($filesHandle);
-            $search = array_search($files_result['file_path'], $files);
+            $search = array_search($db_file['file_path'], $files);
             if ($search !== false)
             {
                 unset($files[$search]);
@@ -710,9 +811,9 @@ class File
      * Create a new image
      *
      * @param resource $upload_handle
-     * @param string    $file_name
-     * @param int $addon_id
-     * @param string $addon_type
+     * @param string   $file_name
+     * @param int      $addon_id
+     * @param string   $addon_type
      *
      * @throws FileException
      */
@@ -730,9 +831,22 @@ class File
             // Delete the existing image by this name
             if (file_exists(UP_LOCATION . 'images/' . basename($file_name)))
             {
-                $query = 'DELETE FROM `' . DB_PREFIX . 'files`
-                    WHERE `file_path` = \'images/' . basename($file_name) . '\'';
-                $handle = sql_query($query);
+                try
+                {
+                    DBConnection::get()->query(
+                            'DELETE FROM `' . DB_PREFIX . 'files`
+                            WHERE `file_path` = :file_name',
+                            DBConnection::NOTHING,
+                            array(
+                                    ":file_name" => 'images/' . basename($file_name)
+                            )
+                    );
+                }
+                catch(DBException $e)
+                {
+                    throw new FileException("Failed to delete an existing image");
+                }
+
                 // Clean image cache
                 Cache::clearAddon($addon_id);
             }
@@ -769,10 +883,20 @@ class File
         }
 
         // Add database record for image
-        $newImageQuery = 'CALL `' . DB_PREFIX . 'create_file_record` ' .
-                "('$addon_id','$addon_type','image','images/" . basename($file_name) . "',@a)";
-        $newImageHandle = sql_query($newImageQuery);
-        if (!$newImageHandle)
+        try
+        {
+            DBConnection::get()->query(
+                    "CALL `" . DB_PREFIX . "create_file_record`
+                    (:addon_id, :upload_type, 'image', :file, @result_id)",
+                    DBConnection::NOTHING,
+                    array(
+                            ":addon_id"    => $addon_id,
+                            ":upload_type" => $addon_type,
+                            ":file"        => 'images/' . basename($file_name)
+                    )
+            );
+        }
+        catch(DBException $e)
         {
             unlink($image_path);
             throw new FileException(htmlspecialchars(_('Failed to associate image file with addon.')));
@@ -802,7 +926,7 @@ class File
 
         // Cycle through all of the xml file's elements
         $quads = array();
-        foreach ($vals AS $val)
+        foreach ($vals as $val)
         {
             if ($val['type'] === 'close' || $val['type'] === 'comment')
             {
@@ -956,11 +1080,23 @@ class File
     public static function queueDelete($file_id)
     {
         $del_date = date('Y-m-d', time() + ConfigManager::get_config('xml_frequency') + (60 * 60 * 24));
-        $query = 'UPDATE `' . DB_PREFIX . 'files`
-	    SET  `delete_date` = \'' . $del_date . '\'
-	    WHERE  `id` = ' . (int)$file_id;
-        $handle = sql_query($query);
-        if (!$handle)
+        try
+        {
+            DBConnection::get()->query(
+                    'UPDATE `' . DB_PREFIX . 'files`
+                    SET  `delete_date` = :date
+                    WHERE  `id` = :file_id',
+                    DBConnection::NOTHING,
+                    array(
+                            ":file_id" => $file_id,
+                            ":date"    => $del_date
+                    ),
+                    array(
+                            ":file_id" => DBConnection::PARAM_INT
+                    )
+            );
+        }
+        catch(DBException $e)
         {
             return false;
         }

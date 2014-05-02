@@ -136,8 +136,9 @@ class DBConnection
      * @param array  $params     An associative array having mapping between variables for prepared statements and values
      * @param array  $data_types variables in prepared statement for which datatype should be explictly mentioned
      *
-     * @return array|int
      * @throws DBException
+     *
+     * @return array|int depending of the return type
      */
     public function query(
             $query,

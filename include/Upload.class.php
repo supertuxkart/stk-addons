@@ -263,9 +263,9 @@ class Upload
                             (:addon_id, :upload_type, 'image', :file, @result_id)",
                             DBConnection::NOTHING,
                             array(
-                                ":addon_id" => $addon_id,
-                                ":upload_type"     => $this->upload_type,
-                                ":file"     => 'images/' . $fileid . $imageext[1]
+                                ":addon_id"     => $addon_id,
+                                ":upload_type"  => $this->upload_type,
+                                ":file"         => 'images/' . $fileid . $imageext[1]
                             )
                     );
 
