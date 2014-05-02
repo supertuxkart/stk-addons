@@ -238,7 +238,7 @@ class Upload
             Upload::editInfoFile();
 
             // Get image file
-            $image_file = ($this->upload_type == 'karts') ? $this->properties['xml_attributes']['icon-file'] :
+            $image_file = ($this->upload_type === 'karts') ? $this->properties['xml_attributes']['icon-file'] :
                     $this->properties['xml_attributes']['screenshot'];
             $image_file = $this->temp . $image_file;
             if (file_exists($image_file))
@@ -491,7 +491,7 @@ class Upload
             $invalid_files = File::typeCheck($this->temp, true);
         }
 
-        if (is_array($invalid_files) && count($invalid_files) !== 0)
+        if (is_array($invalid_files) && !empty($invalid_files))
         {
             echo '<span class="warning">' . htmlspecialchars(
                             _(
@@ -564,7 +564,7 @@ class Upload
                 if ($xml_type === 'TRACK' || $xml_type === 'KART')
                 {
                     $this->properties['xml_attributes'] = $xml_parse->addonFileAttributes();
-                    if ($xml_type == 'TRACK')
+                    if ($xml_type === 'TRACK')
                     {
                         if ($file !== 'track.xml')
                         {
@@ -590,7 +590,7 @@ class Upload
                     $this->properties['addon_file'] = $this->temp . $file;
                     $this->addon_name = $this->properties['xml_attributes']['name'];
                 }
-                if ($xml_type == 'QUADS')
+                if ($xml_type === 'QUADS')
                 {
                     $this->properties['quad_file'] = $this->temp . $file;
                 }
