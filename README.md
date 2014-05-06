@@ -17,12 +17,11 @@ There may be other dependencies not tested by that script, but that should be en
 get started.
 
 Dependencies include:
-* PEAR::Mail
+* PEAR::Mail (run `pear install Mail`)
 * PHP's gd module
 * PHP's PDO module
-* PHP's MySQL module (in the process of removing)
 * PHP's gettext module
-* Smarty Template Engine
+* Smarty Template Engine (managed by composer)
 
 You can generate the database tables, procedures, and relations by using a tool such as
 PHPMyAdmin to import the table.sql file found in the repository. You may need to edit
