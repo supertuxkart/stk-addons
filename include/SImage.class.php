@@ -142,5 +142,3 @@ class SImage {
         $this->imagedata = $destination;
     }
 }
-
-class ImageException extends Exception {}

@@ -23,3 +23,6 @@ class FileException extends Exception {}
 class UploadException extends Exception {}
 class UserException extends Exception {}
 class NewsException extends  Exception {}
+class RatingsException extends Exception {}
+class ImageException extends Exception {}
+class TemplateException extends Exception {}

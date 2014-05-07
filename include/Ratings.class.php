@@ -30,8 +30,6 @@ require_once(INCLUDE_DIR . 'exceptions.php');
 require_once(INCLUDE_DIR . 'XMLOutput.class.php');
 require_once(INCLUDE_DIR . 'xmlWrite.php');
 
-class RatingsException extends Exception {}
-
 class Ratings {
     private $addon_id = NULL;
     private $min_rating = 0.5;
@@ -50,7 +48,7 @@ class Ratings {
      * @param string $addon_id ID of addon to use
      * @param ClientSession $session
      */
-    public function Ratings($addon_id, $fetch_everything = true) {
+    public function __construct($addon_id, $fetch_everything = true) {
         $this->addon_id = $addon_id;
         if ($fetch_everything) {
             $this->fetchAvgRating();

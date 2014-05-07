@@ -226,6 +226,7 @@ class DBConnection
      *
      * @param string $table
      * @param array  $fields_data an associative array in which the key is the column and the value is the actual value
+     *                            example: "name" => "daniel", "id" => 23
      *
      * @throws DBException
      */
