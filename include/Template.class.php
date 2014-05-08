@@ -19,125 +19,185 @@
  */
 require_once(INCLUDE_DIR . 'File.class.php');
 require_once(INCLUDE_DIR . 'User.class.php');
+require_once(INCLUDE_DIR . 'exceptions.php');
 
 /**
- * Create a template object 
+ * Create a template object
  */
-class Template {
-    protected $smarty = NULL;
-    
-    private $file = NULL;
-    private $directory = NULL;
+class Template
+{
+    /**
+     * @var Smarty
+     */
+    protected $smarty;
 
-    public function __construct($template_file, $template = NULL) {
+    /**
+     * @var string
+     */
+    private $file;
+
+    /**
+     * @var string
+     */
+    private $directory;
+
+    /**
+     * @param string      $template_file
+     * @param string|null $template
+     */
+    public function __construct($template_file, $template = null)
+    {
         $this->createSmartyInstance();
         $this->setTemplateDir($template);
         $this->setTemplateFile($template_file);
     }
 
-    public function __toString() {
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
         return $this->getFilledTemplate();
     }
 
     /**
      * Setup function for children to override
      */
-    protected function setup() {}
+    protected function setup() { throw new TemplateException("Not Implemented"); }
 
     /**
      * Set the template directory to use
+     *
      * @param string $template_name
+     *
      * @throws TemplateException
      */
-    private function setTemplateDir($template_name) {
-        if ($this->file !== NULL)
+    private function setTemplateDir($template_name)
+    {
+        if ($this->file !== null)
+        {
             throw new TemplateException('You cannot change the template after a template file is selected.');
+        }
         $dir = Template::getTemplateDir($template_name);
         $this->directory = $dir;
     }
 
     /**
      * Set the template file to use
+     *
      * @param string $file_name
+     *
      * @throws TemplateException
      */
-    private function setTemplateFile($file_name) {
-        if ($this->directory === NULL)
+    private function setTemplateFile($file_name)
+    {
+        if ($this->directory === null)
+        {
             throw new TemplateException('You cannot select a template file until you select a template.');
+        }
         if (!file_exists($this->directory . $file_name))
+        {
             throw new TemplateException(sprintf('Could not find template file "%s".', htmlspecialchars($file_name)));
-        
+        }
+
         $this->file = $this->directory . $file_name;
     }
 
     /**
      * Create an instance of Smarty to use
+     *
      * @throws TemplateException
      */
-    private function createSmartyInstance() {
-        if ($this->smarty !== NULL)
+    private function createSmartyInstance()
+    {
+        if ($this->smarty !== null)
+        {
             throw new TemplateException('Smarty was already configured.');
+        }
         $this->smarty = new Smarty;
-        $this->smarty->compile_dir = TMP.'tpl_c/';
+        $this->smarty->compile_dir = TMP . 'tpl_c/';
     }
 
     /**
      * Populate a template and return it
+     *
      * @return string
      */
-    private function getFilledTemplate() {
-        try {
+    private function getFilledTemplate()
+    {
+        try
+        {
             $this->setup();
             ob_start();
             $this->smarty->display($this->file, $this->directory);
+
             return ob_get_clean();
-        } catch (Exception $e) {
-            if (DEBUG_MODE) return sprintf("Template Error: %s", $e->getMessage());
+        }
+        catch(Exception $e)
+        {
+            if (DEBUG_MODE)
+            {
+                return sprintf("Template Error: %s", $e->getMessage());
+            }
+
             return "Template Error";
         }
     }
 
     /**
      * Assign multiple values using an associative array
+     *
      * @param array $assigns
+     *
      * @throws TemplateException
      */
-    public function assignments($assigns) {
+    public function assignments($assigns)
+    {
         if (!is_array($assigns))
+        {
             throw new TemplateException('Invalid template assignments.');
+        }
 
-        foreach ($assigns as $key => $value) {
+        foreach ($assigns as $key => $value)
+        {
             $this->smarty->assign($key, $value);
         }
     }
 
     /**
      * Assign a value to a template variable
+     *
      * @param string $key
-     * @param mixed $value May be a string or an array
+     * @param mixed  $value May be a string or an array
      */
-    public function assign($key, $value) {
+    public function assign($key, $value)
+    {
         $this->smarty->assign($key, $value);
     }
 
     /**
      * Get the path to the template file directory, based on the template name
+     *
      * @param string $template
+     *
      * @return string
      * @throws TemplateException
      */
-    public static function getTemplateDir($template) {
-        if ($template === NULL)
-            return ROOT.'tpl/default/';
+    public static function getTemplateDir($template)
+    {
+        if ($template === null)
+        {
+            return ROOT . 'tpl/default/';
+        }
         if (preg_match('/[a-z0-9\\-_]/i', $template))
+        {
             throw new TemplateException('Invalid character in template name.');
-        $dir = ROOT.'tpl/'.$template.'/';
+        }
+        $dir = ROOT . 'tpl/' . $template . '/';
         if (file_exists($dir) && is_dir($dir))
+        {
             return $dir;
+        }
         throw new TemplateException(sprintf('The selected template "%s" does not exist.', htmlspecialchars($template)));
     }
-}
-
-class TemplateException extends Exception {
-    
 }
