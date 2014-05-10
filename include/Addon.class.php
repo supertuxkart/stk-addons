@@ -70,12 +70,12 @@ class Addon
         try
         {
             $result = DBConnection::get()->query(
-                    'SELECT `type`,`name`,`uploader`,`creation_date`,
-                     `designer`,`description`,`license`,`min_include_ver`,`max_include_ver`
-                     FROM `' . DB_PREFIX . 'addons`
-                     WHERE `id` = :id',
-                    DBConnection::FETCH_ALL,
-                    array(':id' => (string)$this->id)
+                'SELECT `type`,`name`,`uploader`,`creation_date`,
+                 `designer`,`description`,`license`,`min_include_ver`,`max_include_ver`
+                 FROM `' . DB_PREFIX . 'addons`
+                 WHERE `id` = :id',
+                DBConnection::FETCH_ALL,
+                array(':id' => (string)$this->id)
             );
         }
         catch(DBException $e)
@@ -103,12 +103,12 @@ class Addon
         try
         {
             $revisions = DBConnection::get()->query(
-                    'SELECT *
-                     FROM `' . DB_PREFIX . $this->type . '_revs`
-                     WHERE `addon_id` = :id
-                     ORDER BY `revision` ASC',
-                    DBConnection::FETCH_ALL,
-                    array(':id' => $this->id)
+                'SELECT *
+                FROM `' . DB_PREFIX . $this->type . '_revs`
+                WHERE `addon_id` = :id
+                ORDER BY `revision` ASC',
+                DBConnection::FETCH_ALL,
+                array(':id' => $this->id)
             );
         }
         catch(DBException $e)
@@ -124,14 +124,14 @@ class Addon
         foreach ($revisions as $rev)
         {
             $currentRev = array(
-                    'file'           => $rev['fileid'],
-                    'format'         => $rev['format'],
-                    'image'          => $rev['image'],
-                    'icon'           => (isset($rev['icon'])) ? $rev['icon'] : 0,
-                    'moderator_note' => $rev['moderator_note'],
-                    'revision'       => $rev['revision'],
-                    'status'         => $rev['status'],
-                    'timestamp'      => $rev['creation_date']
+                'file'           => $rev['fileid'],
+                'format'         => $rev['format'],
+                'image'          => $rev['image'],
+                'icon'           => (isset($rev['icon'])) ? $rev['icon'] : 0,
+                'moderator_note' => $rev['moderator_note'],
+                'revision'       => $rev['revision'],
+                'status'         => $rev['status'],
+                'timestamp'      => $rev['creation_date']
             );
             if ($currentRev['status'] & F_LATEST)
             {
@@ -164,8 +164,8 @@ class Addon
         {
             $moderator_message .= "Texture not found: $tex\n";
             echo '<span class="warning">' . htmlspecialchars(
-                            sprintf(_('Texture not found: %s'), $tex)
-                    ) . '</span><br />';
+                    sprintf(_('Texture not found: %s'), $tex)
+                ) . '</span><br />';
         }
 
         // Check if logged in
@@ -185,7 +185,7 @@ class Addon
         if (Addon::exists($id))
         {
             throw new AddonException(htmlspecialchars(
-                    _('An add-on with this ID already exists. Please try to upload your add-on again later.')
+                _('An add-on with this ID already exists. Please try to upload your add-on again later.')
             ));
         }
 
@@ -195,9 +195,9 @@ class Addon
         try
         {
             $rows = DBConnection::get()->query(
-                    'SELECT * FROM ' . DB_PREFIX . $type . '_revs WHERE `id` = :id',
-                    DBConnection::ROW_COUNT,
-                    array(':id' => (string)$fileid)
+                'SELECT * FROM ' . DB_PREFIX . $type . '_revs WHERE `id` = :id',
+                DBConnection::ROW_COUNT,
+                array(':id' => (string)$fileid)
             );
             if ($rows)
             {
@@ -213,12 +213,12 @@ class Addon
         echo htmlspecialchars(_('Creating a new add-on...')) . '<br />';
         $fields = array('id', 'type', 'name', 'uploader', 'designer', 'license');
         $values = array(
-                $id,
-                $type,
-                $attributes['name'],
-                User::$user_id,
-                $attributes['designer'],
-                $attributes['license']
+            $id,
+            $type,
+            $attributes['name'],
+            User::$user_id,
+            $attributes['designer'],
+            $attributes['license']
         );
         if ($type === 'tracks')
         {
@@ -248,13 +248,13 @@ class Addon
         // Generate revision entry
         $fields = array('id', 'addon_id', 'fileid', 'revision', 'format', 'image', 'status');
         $values = array(
-                $fileid,
-                $id,
-                $attributes['fileid'],
-                $rev,
-                $attributes['version'],
-                $attributes['image'],
-                $attributes['status']
+            $fileid,
+            $id,
+            $attributes['fileid'],
+            $rev,
+            $attributes['version'],
+            $attributes['image'],
+            $attributes['status']
         );
         if ($type === 'karts')
         {
@@ -279,8 +279,8 @@ class Addon
 
         // Send mail to moderators
         moderator_email(
-                'New Addon Upload',
-                "{$_SESSION['user']} has uploaded a new {$type} '{$attributes['name']}' ($id)"
+            'New Addon Upload',
+            "{$_SESSION['user']} has uploaded a new {$type} '{$attributes['name']}' ($id)"
         );
         writeAssetXML();
         writeNewsXML();
@@ -304,8 +304,8 @@ class Addon
         {
             $moderator_message .= "Texture not found: $tex\n";
             echo '<span class="warning">' . htmlspecialchars(
-                            sprintf(_('Texture not found: %s'), $tex)
-                    ) . '</span><br />';
+                    sprintf(_('Texture not found: %s'), $tex)
+                ) . '</span><br />';
         }
 
         // Check if logged in
@@ -318,9 +318,9 @@ class Addon
         try
         {
             $rows = DBConnection::get()->query(
-                    'SELECT * FROM ' . DB_PREFIX . $this->type . '_revs WHERE `id` = :id',
-                    DBConnection::ROW_COUNT,
-                    array(':id' => (string)$fileid)
+                'SELECT * FROM ' . DB_PREFIX . $this->type . '_revs WHERE `id` = :id',
+                DBConnection::ROW_COUNT,
+                array(':id' => (string)$fileid)
             );
             if ($rows)
             {
@@ -336,7 +336,7 @@ class Addon
         if (User::$user_id !== $this->uploaderId && !$_SESSION['role']['manageaddons'])
         {
             throw new AddonException(htmlspecialchars(
-                    _('You do not have the necessary permissions to perform this action.')
+                _('You do not have the necessary permissions to perform this action.')
             ));
         }
 
@@ -375,13 +375,13 @@ class Addon
         // Add revision entry
         $fields = array('id', 'addon_id', 'fileid', 'revision', 'format', 'image', 'status');
         $values = array(
-                $fileid,
-                $this->id,
-                $attributes['fileid'],
-                $rev,
-                $attributes['version'],
-                $attributes['image'],
-                $attributes['status']
+            $fileid,
+            $this->id,
+            $attributes['fileid'],
+            $rev,
+            $attributes['version'],
+            $attributes['image'],
+            $attributes['status']
         );
         if ($this->type === 'karts')
         {
@@ -406,8 +406,8 @@ class Addon
 
         // Send mail to moderators
         moderator_email(
-                'New Addon Upload',
-                "{$_SESSION['user']} has uploaded a new revision for {$this->type} '{$attributes['name']}' ($this->id)"
+            'New Addon Upload',
+            "{$_SESSION['user']} has uploaded a new revision for {$this->type} '{$attributes['name']}' ($this->id)"
         );
         writeAssetXML();
         writeNewsXML();
@@ -426,11 +426,11 @@ class Addon
         try
         {
             $num = DBConnection::get()->query(
-                    'SELECT `id`
-                     FROM `' . DB_PREFIX . 'addons`
-                     WHERE `id` = :addon_id',
-                    DBConnection::ROW_COUNT,
-                    array(':addon_id' => Addon::cleanId($addon_id))
+                'SELECT `id`
+                FROM `' . DB_PREFIX . 'addons`
+                WHERE `id` = :addon_id',
+                DBConnection::ROW_COUNT,
+                array(':addon_id' => Addon::cleanId($addon_id))
             );
 
             return ($num === 1);
@@ -456,7 +456,7 @@ class Addon
         if ($_SESSION['role']['manageaddons'] !== true && User::$user_id !== $this->uploaderId)
         {
             throw new AddonException(htmlentities(
-                    _('You do not have the necessary permissions to perform this action.')
+                _('You do not have the necessary permissions to perform this action.')
             ));
         }
 
@@ -467,13 +467,13 @@ class Addon
         try
         {
             $files = DBConnection::get()->query(
-                    'SELECT *
-                    FROM `' . DB_PREFIX . "files`
-                    WHERE `addon_id` = :id",
-                    DBConnection::FETCH_ALL,
-                    array(
-                            ":id" => $this->id
-                    )
+                'SELECT *
+                FROM `' . DB_PREFIX . "files`
+                WHERE `addon_id` = :id",
+                DBConnection::FETCH_ALL,
+                array(
+                    ":id" => $this->id
+                )
             );
         }
         catch(DBException $e)
@@ -486,8 +486,8 @@ class Addon
             if (file_exists(UP_LOCATION . $file['file_path']) && !unlink(UP_LOCATION . $file['file_path']))
             {
                 echo '<span class="error">' . htmlspecialchars(
-                                _('Failed to delete file:')
-                        ) . ' ' . $file['file_path'] . '</span><br />';
+                        _('Failed to delete file:')
+                    ) . ' ' . $file['file_path'] . '</span><br />';
             }
         }
 
@@ -495,19 +495,19 @@ class Addon
         try
         {
             DBConnection::get()->query(
-                    'DELETE FROM `' . DB_PREFIX . 'files`
-                    WHERE `addon_id` = :id',
-                    DBConnection::NOTHING,
-                    array(
-                            ":id" => $this->id
-                    )
+                'DELETE FROM `' . DB_PREFIX . 'files`
+                WHERE `addon_id` = :id',
+                DBConnection::NOTHING,
+                array(
+                    ":id" => $this->id
+                )
             );
         }
         catch(DBException $e)
         {
             echo '<span class="error">' . htmlspecialchars(
-                            _('Failed to remove file records for this addon.')
-                    ) . '</span><br />';
+                    _('Failed to remove file records for this addon.')
+                ) . '</span><br />';
         }
 
         // Remove addon entry
@@ -517,10 +517,10 @@ class Addon
         try
         {
             DBConnection::get()->query(
-                    'DELETE FROM `' . DB_PREFIX . 'addons`
-                     WHERE `id` = :id',
-                    DBConnection::NOTHING,
-                    array(':id' => $this->id)
+                'DELETE FROM `' . DB_PREFIX . 'addons`
+                WHERE `id` = :id',
+                DBConnection::NOTHING,
+                array(':id' => $this->id)
             );
         }
         catch(DBException $e)
@@ -545,7 +545,7 @@ class Addon
         if (!$_SESSION['role']['manageaddons'] && $this->uploaderID !== User::$user_id)
         {
             throw new AddonException(htmlspecialchars(
-                    _('You do not have the necessary permissions to perform this action.')
+                _('You do not have the necessary permissions to perform this action.')
             ));
         }
 
@@ -567,7 +567,7 @@ class Addon
         if (!$_SESSION['role']['manageaddons'] && $this->uploaderID !== User::$user_id)
         {
             throw new AddonException(htmlspecialchars(
-                    _('You do not have the necessary permissions to perform this action.')
+                _('You do not have the necessary permissions to perform this action.')
             ));
         }
         $rev = (int)$rev;
@@ -582,9 +582,9 @@ class Addon
         if (($this->revisions[$rev]['status'] & F_LATEST))
         {
             throw new AddonException(htmlspecialchars(
-                    _(
-                            'You cannot delete the latest revision of an add-on. Please mark a different revision to be the latest revision first.'
-                    )
+                _(
+                    'You cannot delete the latest revision of an add-on. Please mark a different revision to be the latest revision first.'
+                )
             ));
         }
 
@@ -598,13 +598,13 @@ class Addon
         try
         {
             DBConnection::get()->query(
-                    'DELETE FROM `' . DB_PREFIX . $this->type . '_revs`
-                     WHERE `addon_id` = :id AND `revision` = :revision',
-                    DBConnection::NOTHING,
-                    array(
-                            ':addon_id' => $this->id,
-                            ':revision' => $rev
-                    )
+                'DELETE FROM `' . DB_PREFIX . $this->type . '_revs`
+                WHERE `addon_id` = :id AND `revision` = :revision',
+                DBConnection::NOTHING,
+                array(
+                    ':addon_id' => $this->id,
+                    ':revision' => $rev
+                )
             );
         }
         catch(DBException $e)
@@ -690,9 +690,9 @@ class Addon
                 $query .= 'ORDER BY `name` ASC, `id` ASC';
             }
             $list = DBConnection::get()->query(
-                    $query,
-                    DBConnection::FETCH_ALL,
-                    array(':type' => $type, ':latest_bit' => F_LATEST)
+                $query,
+                DBConnection::FETCH_ALL,
+                array(':type' => $type, ':latest_bit' => F_LATEST)
             );
             $return = array();
             foreach ($list as $addon)
@@ -814,15 +814,15 @@ class Addon
         try
         {
             $file_id_lookup = DBConnection::get()->query(
-                    'SELECT `fileid`
-                    FROM `' . DB_PREFIX . $this->type . '_revs`
-                    WHERE `addon_id` = :addon_id
-                    AND `revision` = :revision',
-                    DBConnection::FETCH_FIRST,
-                    array(
-                            ':addon_id' => $this->id,
-                            ':revision' => $revision
-                    )
+                'SELECT `fileid`
+                FROM `' . DB_PREFIX . $this->type . '_revs`
+                WHERE `addon_id` = :addon_id
+                AND `revision` = :revision',
+                DBConnection::FETCH_FIRST,
+                array(
+                    ':addon_id' => $this->id,
+                    ':revision' => $revision
+                )
             );
 
             if (empty($file_id_lookup))
@@ -841,13 +841,13 @@ class Addon
         try
         {
             $file = DBConnection::get()->query(
-                    'SELECT `file_path` FROM `' . DB_PREFIX . 'files`
-                    WHERE `id` = :id
-                    LIMIT 1',
-                    DBConnection::FETCH_FIRST,
-                    array(
-                            ':id' => $file_id,
-                    )
+                'SELECT `file_path` FROM `' . DB_PREFIX . 'files`
+                WHERE `id` = :id
+                LIMIT 1',
+                DBConnection::FETCH_FIRST,
+                array(
+                    ':id' => $file_id,
+                )
             );
 
             if (empty($file))
@@ -902,15 +902,15 @@ class Addon
         try
         {
             $paths = DBConnection::get()->query(
-                    "SELECT `id`, `file_path`
-                    FROM `" . DB_PREFIX . "files`
-                    WHERE `addon_id` = :addon_id
-                    AND `file_type` = 'image'
-                    LIMIT 50",
-                    DBConnection::FETCH_ALL,
-                    array(
-                            ':addon_id' => $this->id,
-                    )
+                "SELECT `id`, `file_path`
+                FROM `" . DB_PREFIX . "files`
+                WHERE `addon_id` = :addon_id
+                AND `file_type` = 'image'
+                LIMIT 50",
+                DBConnection::FETCH_ALL,
+                array(
+                    ':addon_id' => $this->id,
+                )
             );
 
             if (empty($paths))
@@ -927,9 +927,9 @@ class Addon
         foreach ($paths as $path)
         {
             $return[] = array(
-                    'id'   => $path['id'],
-                    'path' => $path['file_path'],
-                    'hash' => md5_file(UP_LOCATION . $path['file_path'])
+                'id'   => $path['id'],
+                'path' => $path['file_path'],
+                'hash' => md5_file(UP_LOCATION . $path['file_path'])
             );
         }
 
@@ -946,14 +946,14 @@ class Addon
         try
         {
             $result = DBConnection::get()->query(
-                    'SELECT * FROM `' . DB_PREFIX . 'files`
-                     WHERE `addon_id` = :addon_id
-                     AND `file_type` = :file_type',
-                    DBConnection::FETCH_ALL,
-                    array(
-                            ':addon_id'  => (string)$this->id,
-                            ':file_type' => (string)'image'
-                    )
+                'SELECT * FROM `' . DB_PREFIX . 'files`
+                WHERE `addon_id` = :addon_id
+                AND `file_type` = :file_type',
+                DBConnection::FETCH_ALL,
+                array(
+                    ':addon_id'  => (string)$this->id,
+                    ':file_type' => (string)'image'
+                )
             );
 
             return $result;
@@ -1002,14 +1002,14 @@ class Addon
         try
         {
             $addon = DBConnection::get()->query(
-                    'SELECT `name`
-                    FROM `' . DB_PREFIX . 'addons`
-                    WHERE `id` = :id
-                    LIMIT 1',
-                    DBConnection::FETCH_FIRST,
-                    array(
-                            ':id' => $id
-                    )
+                'SELECT `name`
+                FROM `' . DB_PREFIX . 'addons`
+                WHERE `id` = :id
+                LIMIT 1',
+                DBConnection::FETCH_FIRST,
+                array(
+                    ':id' => $id
+                )
             );
 
             if (empty($addon))
@@ -1035,14 +1035,14 @@ class Addon
         try
         {
             $result = DBConnection::get()->query(
-                    'SELECT * FROM `' . DB_PREFIX . 'files`
-                     WHERE `addon_id` = :addon_id
-                     AND `file_type` = :file_type',
-                    DBConnection::FETCH_ALL,
-                    array(
-                            ':addon_id'  => (string)$this->id,
-                            ':file_type' => (string)'source'
-                    )
+                'SELECT * FROM `' . DB_PREFIX . 'files`
+                WHERE `addon_id` = :addon_id
+                AND `file_type` = :file_type',
+                DBConnection::FETCH_ALL,
+                array(
+                    ':addon_id'  => (string)$this->id,
+                    ':file_type' => (string)'source'
+                )
             );
 
             return $result;
@@ -1120,14 +1120,14 @@ class Addon
         try
         {
             $addons = DBConnection::get()->query(
-                    "SELECT `id`, `name`, `type`
-                    FROM `" . DB_PREFIX . "addons`
-                    WHERE `name` LIKE :search_query
-                    OR `description` LIKE :search_query",
-                    DBConnection::FETCH_ALL,
-                    array(
-                            ':search_query' => '%' . $search_query . '%'
-                    )
+                "SELECT `id`, `name`, `type`
+                FROM `" . DB_PREFIX . "addons`
+                WHERE `name` LIKE :search_query
+                OR `description` LIKE :search_query",
+                DBConnection::FETCH_ALL,
+                array(
+                    ':search_query' => '%' . $search_query . '%'
+                )
             );
         }
         catch(DBException $e)
@@ -1150,21 +1150,21 @@ class Addon
         if (!User::$logged_in || (!$_SESSION['role']['manageaddons'] && $this->uploaderId !== User::$user_id))
         {
             throw new AddonException(htmlspecialchars(
-                    _('You do not have the neccessary permissions to perform this action.')
+                _('You do not have the neccessary permissions to perform this action.')
             ));
         }
 
         try
         {
             DBConnection::get()->query(
-                    'UPDATE `' . DB_PREFIX . 'addons`
-                    SET `description` = :description
-                    WHERE `id` = :id',
-                    DBConnection::NOTHING,
-                    array(
-                            ':description' => strip_tags($description),
-                            ':id'          => $this->id
-                    )
+                'UPDATE `' . DB_PREFIX . 'addons`
+                 SET `description` = :description
+                 WHERE `id` = :id',
+                DBConnection::NOTHING,
+                array(
+                    ':description' => strip_tags($description),
+                    ':id'          => $this->id
+                )
             );
         }
         catch(DBException $e)
@@ -1189,21 +1189,21 @@ class Addon
         if (!User::$logged_in || (!$_SESSION['role']['manageaddons'] && $this->uploaderId !== User::$user_id))
         {
             throw new AddonException(htmlspecialchars(
-                    _('You do not have the neccessary permissions to perform this action.')
+                _('You do not have the neccessary permissions to perform this action.')
             ));
         }
 
         try
         {
             DBConnection::get()->query(
-                    'UPDATE `' . DB_PREFIX . 'addons`
-                    SET `description` = :description
-                    WHERE `id` = :id',
-                    DBConnection::NOTHING,
-                    array(
-                            ':designer' => strip_tags($designer),
-                            ':id'       => $this->id
-                    )
+                'UPDATE `' . DB_PREFIX . 'addons`
+                SET `description` = :description
+                WHERE `id` = :id',
+                DBConnection::NOTHING,
+                array(
+                    ':designer' => strip_tags($designer),
+                    ':id'       => $this->id
+                )
             );
         }
         catch(DBException $e)
@@ -1229,22 +1229,22 @@ class Addon
         if (!$_SESSION['role']['manageaddons'] && $this->uploaderId !== User::$user_id)
         {
             throw new AddonException(htmlspecialchars(
-                    _('You do not have the neccessary permissions to perform this action.')
+                _('You do not have the neccessary permissions to perform this action.')
             ));
         }
 
         try
         {
             DBConnection::get()->query(
-                    "UPDATE `" . DB_PREFIX . $this->type . "_revs`
-                    SET `" . $field . "` = :image_id
-                    WHERE `addon_id` = :addon_id
-                    AND `status` & " . F_LATEST,
-                    DBConnection::NOTHING,
-                    array(
-                            ':image_id' => $image_id,
-                            ':addon_id' => $this->id
-                    )
+                "UPDATE `" . DB_PREFIX . $this->type . "_revs`
+                SET `" . $field . "` = :image_id
+                WHERE `addon_id` = :addon_id
+                AND `status` & " . F_LATEST,
+                DBConnection::NOTHING,
+                array(
+                    ':image_id' => $image_id,
+                    ':addon_id' => $this->id
+                )
             );
         }
         catch(DBException $e)
@@ -1258,7 +1258,7 @@ class Addon
         if (!$_SESSION['role']['manageaddons'])
         {
             throw new AddonException(htmlspecialchars(
-                    _('You do not have the neccessary permissions to perform this action.')
+                _('You do not have the neccessary permissions to perform this action.')
             ));
         }
 
@@ -1267,15 +1267,15 @@ class Addon
             Validate::versionString($start_ver);
             Validate::versionString($end_ver);
             DBConnection::get()->query(
-                    'UPDATE `' . DB_PREFIX . 'addons`
-                     SET `min_include_ver` = :start_ver, `max_include_ver` = :end_ver
-                     WHERE `id` = :addon_id',
-                    DBConnection::NOTHING,
-                    array(
-                            ':addon_id'  => (string)$this->id,
-                            ':start_ver' => (string)$start_ver,
-                            ':end_ver'   => (string)$end_ver
-                    )
+                'UPDATE `' . DB_PREFIX . 'addons`
+                SET `min_include_ver` = :start_ver, `max_include_ver` = :end_ver
+                WHERE `id` = :addon_id',
+                DBConnection::NOTHING,
+                array(
+                    ':addon_id'  => (string)$this->id,
+                    ':start_ver' => (string)$start_ver,
+                    ':end_ver'   => (string)$end_ver
+                )
             );
             writeAssetXML();
             writeNewsXML();
@@ -1300,14 +1300,14 @@ class Addon
         try
         {
             DBConnection::get()->query(
-                    'UPDATE `' . DB_PREFIX . 'addons`
-                     SET `license` = :license,
-                     WHERE `id` = :addon_id',
-                    DBConnection::NOTHING,
-                    array(
-                            ':license'  => $license,
-                            ':addon_id' => (string)$this->id
-                    )
+                'UPDATE `' . DB_PREFIX . 'addons`
+                SET `license` = :license,
+                WHERE `id` = :addon_id',
+                DBConnection::NOTHING,
+                array(
+                    ':license'  => $license,
+                    ':addon_id' => (string)$this->id
+                )
             );
         }
         catch(DBException $e)
@@ -1330,14 +1330,14 @@ class Addon
         try
         {
             DBConnection::get()->query(
-                    'UPDATE `' . DB_PREFIX . 'addons`
-                     SET `name` = :name,
-                     WHERE `id` = :addon_id',
-                    DBConnection::NOTHING,
-                    array(
-                            ':name'     => $name,
-                            ':addon_id' => (string)$this->id
-                    )
+                'UPDATE `' . DB_PREFIX . 'addons`
+                SET `name` = :name,
+                WHERE `id` = :addon_id',
+                DBConnection::NOTHING,
+                array(
+                    ':name'     => $name,
+                    ':addon_id' => (string)$this->id
+                )
             );
         }
         catch(DBException $e)
@@ -1360,7 +1360,7 @@ class Addon
         if (!$_SESSION['role']['manageaddons'])
         {
             throw new AddonException(htmlspecialchars(
-                    _('You do not have the neccessary permissions to perform this action.')
+                _('You do not have the neccessary permissions to perform this action.')
             ));
         }
 
@@ -1384,16 +1384,16 @@ class Addon
             try
             {
                 DBConnection::get()->query(
-                        'UPDATE `' . DB_PREFIX . $this->type . '_revs`
-                        SET `moderator_note` = :moderator_note
-                        WHERE `addon_id` = :addon_id
-                        AND `revision` = :revision',
-                        DBConnection::NOTHING,
-                        array(
-                                ':moderator_note' => $value,
-                                ':addon_id'       => $this->id,
-                                ':revision'       => $revision
-                        )
+                    'UPDATE `' . DB_PREFIX . $this->type . '_revs`
+                    SET `moderator_note` = :moderator_note
+                    WHERE `addon_id` = :addon_id
+                    AND `revision` = :revision',
+                    DBConnection::NOTHING,
+                    array(
+                        ':moderator_note' => $value,
+                        ':addon_id'       => $this->id,
+                        ':revision'       => $revision
+                    )
                 );
             }
             catch(DBException $e)
@@ -1416,14 +1416,14 @@ class Addon
         try
         {
             $user = DBConnection::get()->query(
-                    'SELECT `name`,`email`
-                    FROM `' . DB_PREFIX . 'users`
-                    WHERE `id` = :user_id
-                    LIMIT 1',
-                    DBConnection::FETCH_FIRST,
-                    array(
-                            ':user_id' => $this->uploaderId,
-                    )
+                'SELECT `name`,`email`
+                FROM `' . DB_PREFIX . 'users`
+                WHERE `id` = :user_id
+                LIMIT 1',
+                DBConnection::FETCH_FIRST,
+                array(
+                    ':user_id' => $this->uploaderId,
+                )
             );
         }
         catch(DBException $e)
@@ -1582,16 +1582,16 @@ class Addon
             try
             {
                 DBConnection::get()->query(
-                        'UPDATE `' . DB_PREFIX . $this->type . '_revs`
-                        SET `status` = :status
-                        WHERE `addon_id` = :addon_id
-                        AND `revision` = :revision',
-                        DBConnection::NOTHING,
-                        array(
-                                ':status'   => $value,
-                                ':addon_id' => $this->id,
-                                ':revision' => $revision
-                        )
+                    'UPDATE `' . DB_PREFIX . $this->type . '_revs`
+                    SET `status` = :status
+                    WHERE `addon_id` = :addon_id
+                    AND `revision` = :revision',
+                    DBConnection::NOTHING,
+                    array(
+                        ':status'   => $value,
+                        ':addon_id' => $this->id,
+                        ':revision' => $revision
+                    )
                 );
             }
             catch(DBException $e)
