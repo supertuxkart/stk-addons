@@ -16,20 +16,20 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 body {
-    font-family: Verdana,Geneva,sans-serif;
+    font-family: Verdana, Geneva, sans-serif;
     font-size: 13.5px;
-    background-repeat:no-repeat;
+    background-repeat: no-repeat;
     background-position: top left;
-    padding:0px;
-    margin:0px;
-    color:black;
+    padding: 0px;
+    margin: 0px;
+    color: black;
 }
 
 #body-frame {
-    margin:auto;
-    width:1000px;
+    margin: auto;
+    width: 1000px;
     background-image: url("images/background.jpg");
     background-repeat: no-repeat;
     overflow-y: auto;
@@ -37,8 +37,9 @@ body {
     min-height: 500px;
     max-height: 623px;
 }
+
 #footer {
-    color: #000;
+    color: #000000;
     font-size: small;
     text-align: center;
 }
@@ -48,41 +49,41 @@ body {
     background: #e1dbda; /* for non-css3 browsers */
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#e1dbda', endColorstr='#d1ccca'); /* for IE */
     background: -webkit-gradient(linear, left top, left bottom, from(#e1dbda), to(#d1ccca)); /* for webkit browsers */
-    background: -moz-linear-gradient(top,  #e1dbda,  #d1ccca); /* for firefox 3.6+ */ 
+    background: -moz-linear-gradient(top, #e1dbda, #d1ccca); /* for firefox 3.6+ */
     border: 0px;
     border-bottom: 1px solid #958f8e;
-    color: #000;
+    color: #000000;
     display: block;
     margin: auto;
     width: 1000px;
     min-height: 35px;
     overflow: auto;
 }
-#top-menu-content
-{
+
+#top-menu-content {
     padding-top: 8px;
     margin: 0px 20px 0px 20px;
     overflow: auto;
 }
-#top-menu .left
-{
+
+#top-menu .left {
     float: left;
 }
-#top-menu .right
-{
+
+#top-menu .right {
     float: right;
 }
-#top-menu a
-{
+
+#top-menu a {
     color: black;
     font-size: 1.0em;
     padding-left: 10px;
     padding-right: 10px;
-    text-decoration:underline;
+    text-decoration: underline;
 }
-#top-menu a:hover
-{
-    color:grey;
+
+#top-menu a:hover {
+    color: grey;
 }
 
 label {
@@ -96,6 +97,7 @@ label {
     width: 424px;
     height: 325px;
 }
+
 #index-menu {
     display: table;
     margin-left: auto;
@@ -104,11 +106,13 @@ label {
     height: 130px;
     width: auto;
 }
+
 #index-menu > div {
     display: table-cell;
     padding: 0px 50px 0px 50px;
     width: 106px;
 }
+
 #index-menu a {
     background-image: url('images/index-icons.png');
     background-repeat: no-repeat;
@@ -116,18 +120,23 @@ label {
     padding: 108px 0px 0px 0px;
     width: 106px;
 }
+
 #index-menu a.karts {
     background-position: -106px 0px;
 }
+
 #index-menu a.tracks {
     background-position: 0px 0px;
 }
+
 #index-menu a.arenas {
     background-position: -212px 0px;
 }
+
 #index-menu a.help {
     background-position: -318px 0px;
 }
+
 #index-menu a span {
     display: inline;
     background: #efefef !important;
@@ -137,6 +146,7 @@ label {
     border-radius: 5px; /* This and line below for IE */
     behavior: url('css/PIE.htc');
 }
+
 /* News Bar */
 #index-news {
     display: block;
@@ -144,6 +154,7 @@ label {
     width: 1000px;
     height: 91px;
 }
+
 #index-news-shadow {
     display: block;
     background-image: url('images/news-panel-shadow.png');
@@ -152,6 +163,7 @@ label {
     height: 10px;
     margin: 15px 0 0 0;
 }
+
 #news-messages {
     position: relative;
     display: block;
@@ -162,6 +174,7 @@ label {
     width: 100%;
     height: 85px;
 }
+
 #news-messages > li {
     position: absolute;
     left: 5px;
@@ -178,12 +191,13 @@ label {
     display: inline;
     font-size: 1.0em;
 }
+
 #lang-menu ul.menu_body {
     border: 1px solid #4e4e4e;
     background: #efefef; /* for non-css3 browsers */
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#efefef', endColorstr='#dddddd'); /* for IE */
     background: -webkit-gradient(linear, left top, left bottom, from(#efefef), to(#dddddd)); /* for webkit browsers */
-    background: -moz-linear-gradient(top,  #efefef,  #dddddd); /* for firefox 3.6+ */ 
+    background: -moz-linear-gradient(top, #efefef, #dddddd); /* for firefox 3.6+ */
     display: none;
     list-style: none;
     position: absolute;
@@ -196,6 +210,7 @@ label {
     border-radius: 4px; /* This and line below for IE */
     behavior: url('css/PIE.htc');
 }
+
 #lang-menu li {
     display: block;
     float: left;
@@ -204,6 +219,7 @@ label {
     width: 54px;
     height: 38px;
 }
+
 #lang-menu li.label {
     clear: left;
     float: none;
@@ -211,11 +227,13 @@ label {
     height: auto;
     padding: 3px;
 }
+
 #lang-menu li a {
     display: block;
     margin: 0px;
     padding: 0px;
 }
+
 #lang-menu li.flag a {
     background-image: url('images/flags.png');
     border: 1px solid #4e4e4e;
@@ -232,6 +250,7 @@ label {
     width: 46px;
     behavior: url('css/PIE.htc');
 }
+
 #lang-menu li.flag a:hover {
     border: 1px solid #999999;
     color: #999999;
@@ -248,6 +267,7 @@ span.error {
     -webkit-border-radius: 3px;
     border-radius: 3px;
 }
+
 span.warning {
     background: #FFFFCC;
     border: 1px solid #FFCC00;
@@ -271,13 +291,15 @@ span.warning {
     -moz-border-radius: 2px;
     -webkit-border-radius: 2px;
 }
+
 #content h1 {
-    border-bottom: 1px solid #CCC;
+    border-bottom: 1px solid #CCCCCC;
     font-family: Tahoma, Verdana, Geneva, sans-serif;
     font-weight: normal;
 }
+
 #content h2 {
-    font-family: Tahoma, Verdana,Geneva,sans-serif;
+    font-family: Tahoma, Verdana, Geneva, sans-serif;
     font-weight: normal;
 }
 
@@ -300,26 +322,31 @@ span.badge {
     -webkit-border-radius: 3px;
     border-radius: 3px;
 }
+
 span.f_featured {
     background-color: #FFFFCC;
     border: 1px solid #996600;
     color: #996600;
 }
+
 span.f_alpha {
     background-color: #CCCCFF;
     border: 1px solid #000099;
     color: #000099;
 }
+
 span.f_beta {
     background-color: #CCFFFF;
     border: 1px solid #009999;
     color: #009999;
 }
+
 span.f_rc {
     background-color: #CCFFCC;
     border: 1px solid #009900;
     color: #009900;
 }
+
 span.f_dfsg {
     background-color: #CCCCCC;
     border: 1px solid #000000;
@@ -327,20 +354,19 @@ span.f_dfsg {
 }
 
 /* Panel interface */
-#left-menu
-{
+#left-menu {
     float: left;
     width: 250px;
     padding: 30px;
 }
-#left-menu_top
-{
+
+#left-menu_top {
     background-image: url('images/left-menu_top.png');
     height: 10px;
     width: 100%;
 }
-#left-menu_body
-{
+
+#left-menu_body {
     background-image: url('images/left-menu.png');
     overflow-x: hidden;
     overflow-y: scroll;
@@ -348,20 +374,20 @@ span.f_dfsg {
     height: 456px;
     padding: 0px 10px;
 }
-#left-menu_bottom
-{
+
+#left-menu_bottom {
     background-image: url('images/left-menu_bottom.png');
     height: 10px;
     width: 100%;
 }
-#left-menu_body ul
-{
+
+#left-menu_body ul {
     list-style: none;
     margin: 0px;
     padding: 0px;
 }
-#left-menu_body .menu-item
-{
+
+#left-menu_body .menu-item {
     display: block;
     font-size: 1.2em;
     line-height: 1.5em;
@@ -370,26 +396,26 @@ span.f_dfsg {
     min-height: 25px;
     width: 300px;
 }
-#left-menu_body .menu-item:hover
-{
+
+#left-menu_body .menu-item:hover {
     background-color: #000000;
     color: #FFFFFF;
 }
-#left-menu_body li div.icon
-{
+
+#left-menu_body li div.icon {
     position: relative;
     float: left;
     width: 25px;
     height: 25px;
 }
-#left-menu_body .icon
-{
-    height:25px;
-    margin-left:2px;
-    margin-right:10px;
+
+#left-menu_body .icon {
+    height: 25px;
+    margin-left: 2px;
+    margin-right: 10px;
 }
-#left-menu_body .icon-featured
-{
+
+#left-menu_body .icon-featured {
     background: url('images/emblem-favorite.png') no-repeat right;
     float: left;
     height: 25px;
@@ -398,12 +424,12 @@ span.f_dfsg {
     left: 5px;
     top: 5px;
 }
-.unavailable
-{
+
+.unavailable {
     color: #999999;
 }
-.unavailable a
-{
+
+.unavailable a {
     color: #999999;
 }
 
@@ -412,84 +438,82 @@ span.f_dfsg {
     width: 620px;
     padding: 30px;
 }
-#right-content_top
-{
-    background-image:url("images/content-addon_top.png");
+
+#right-content_top {
+    background-image: url("images/content-addon_top.png");
     height: 10px;
     width: 100%;
 }
-#right-content_status
-{
-    background-image:url("images/content-addon.png");
+
+#right-content_status {
+    background-image: url("images/content-addon.png");
     overflow-x: hidden;
     width: 580px;
     padding: 0px 20px 0px 20px;
 }
-#right-content_body
-{
-    background-image:url("images/content-addon.png");
-    width:580px;
-    height:456px;
+
+#right-content_body {
+    background-image: url("images/content-addon.png");
+    width: 580px;
+    height: 456px;
     padding: 0px 20px 0px 20px;
-    overflow-y:scroll;
+    overflow-y: scroll;
     overflow-x: hidden;
 }
-#right-content_bottom
-{
-    background-image:url("images/content-addon_bottom.png");
+
+#right-content_bottom {
+    background-image: url("images/content-addon_bottom.png");
     height: 10px;
     width: 100%;
 }
-#right-content h1
-{
+
+#right-content h1 {
     display: block;
     border-bottom: 1px solid #CCCCCC;
 }
-#right-content h2
-{
+
+#right-content h2 {
     border-bottom: 1px solid #CCCCCC;
     font-size: 1.4em;
     font-weight: normal;
 }
-#right-content h3
-{
+
+#right-content h3 {
     clear: both;
     display: block;
     border-bottom: 1px dashed #CCCCCC;
 }
 
-h1
-{
-    clear:both;
-    font-size:23px;
-    font-family: Tahoma, Verdana,Geneva,sans-serif;
-    font-weight:normal;
+h1 {
+    clear: both;
+    font-size: 23px;
+    font-family: Tahoma, Verdana, Geneva, sans-serif;
+    font-weight: normal;
 }
 
-a
-{
+a {
     color: #000000;
-    text-decoration:none;
+    text-decoration: none;
 }
-a:hover
-{
+
+a:hover {
     color: #999999;
 }
 
-a img 
-{
-    border:none;
+a img {
+    border: none;
 }
 
 /* Error Pages */
 #error-container {
-    background: rgba(255,255,255,0.75);
+    background: rgba(255, 255, 255, 0.75);
     margin: 2em 10em 2em 10em;
     border-radius: 10px;
     padding: 1.5em;
     -moz-border-radius: 6px;
     -webkit-border-radius: 6px;
 }
+
 #error-container h1 {
     margin-top: 0px;
     font-size: 3em;
@@ -497,10 +521,12 @@ a img
     text-align: center;
     clear: none;
 }
+
 #error-container p {
     font-size: 1.5em;
     clear: none;
 }
+
 #error-container img {
     float: left;
 }

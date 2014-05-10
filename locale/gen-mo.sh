@@ -1,3 +1,4 @@
+#!/bin/bash
 msgfmt translations-ca.po -o ca_ES/LC_MESSAGES/translations.mo
 msgfmt translations-es.po -o es_ES/LC_MESSAGES/translations.mo
 msgfmt translations-eu.po -o eu_ES/LC_MESSAGES/translations.mo

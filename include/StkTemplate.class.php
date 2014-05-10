@@ -28,7 +28,12 @@ require_once(INCLUDE_DIR . 'Template.class.php');
  */
 class StkTemplate extends Template
 {
+    const ORDER_AFTER = "after";
+
+    const ORDER_BEFORE = "before";
+
     /**
+     * Hold the meta tags
      * @var array
      */
     private $meta_tags = array();
@@ -38,6 +43,21 @@ class StkTemplate extends Template
      * @var string
      */
     private $meta_desc;
+
+    /**
+     * Contains the script inlines
+     * @var array
+     */
+    private $script_inline = array(
+        "after"  => array(), // output them after the script includes
+        "before" => array() // output them before the script includes
+    );
+
+    /**
+     * Contains the script includes
+     * @var array
+     */
+    private $script_includes = array();
 
     /**
      * Setup the header meta tags and js includes, the top menu and the language menu
@@ -56,26 +76,27 @@ class StkTemplate extends Template
     {
         // Fill meta tags
         $meta_tags = array_merge(
-                array(
-                        'content-type'     => 'text/html; charset=UTF-8',
-                        'content-language' => LANG,
-                        'description'      => $this->meta_desc
-                ),
-                $this->meta_tags
+            array(
+                'content-type'     => 'text/html; charset=UTF-8',
+                'content-language' => LANG,
+                'description'      => $this->meta_desc
+            ),
+            $this->meta_tags
         );
         $this->smarty->assign('meta_tags', $meta_tags);
 
         // Fill script tags
-        $script_inline = array(
-                array('content' => "var siteRoot='" . SITE_ROOT . "';")
+        $this->script_inline["before"][] = array('content' => "var siteRoot='" . SITE_ROOT . "';");
+
+        $this->smarty->assign('script_inline', $this->script_inline);
+
+        array_push(
+            $this->script_includes,
+            array('src' => 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js'),
+            array('src' => SITE_ROOT . 'js/jquery.newsticker.js'),
+            array('src' => SITE_ROOT . 'js/script.js')
         );
-        $this->smarty->assign('script_inline', $script_inline);
-        $script_includes = array(
-                array('src' => 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js'),
-                array('src' => SITE_ROOT . 'js/jquery.newsticker.js'),
-                array('src' => SITE_ROOT . 'js/script.js')
-        );
-        $this->smarty->assign('script_includes', $script_includes);
+        $this->smarty->assign('script_includes', $this->script_includes);
 
     }
 
@@ -86,27 +107,27 @@ class StkTemplate extends Template
     {
         $name = isset($_SESSION['real_name']) ? $_SESSION['real_name'] : null;
         $menu = array(
-                'welcome'  => sprintf(htmlspecialchars(_('Welcome, %s')), $name),
-                'home'     => File::link('index.php', htmlspecialchars(_("Home"))),
-                'login'    => File::link('login.php', htmlspecialchars(_('Login'))),
-                'logout'   => File::link('login.php?action=logout', htmlspecialchars(_('Log out'))),
-                'users'    => File::link('users.php', htmlspecialchars(_('Users'))),
-                'upload'   => File::link('upload.php', htmlspecialchars(_('Upload'))),
-                'manage'   => File::link('manage.php', htmlspecialchars(_('Manage'))),
-                'karts'    => File::link('addons.php?type=karts', htmlspecialchars(_('Karts'))),
-                'tracks'   => File::link('addons.php?type=tracks', htmlspecialchars(_('Tracks'))),
-                'arenas'   => File::link('addons.php?type=arenas', htmlspecialchars(_('Arenas'))),
-                'about'    => File::link('about.php', htmlspecialchars(_('About'))),
-                'privacy'  => File::link('privacy.php', htmlspecialchars(_('Privacy'))),
-                'stk_home' => File::link('http://supertuxkart.sourceforge.net', htmlspecialchars(_('STK Homepage')))
+            'welcome'  => sprintf(htmlspecialchars(_('Welcome, %s')), $name),
+            'home'     => File::link('index.php', htmlspecialchars(_("Home"))),
+            'login'    => File::link('login.php', htmlspecialchars(_('Login'))),
+            'logout'   => File::link('login.php?action=logout', htmlspecialchars(_('Log out'))),
+            'users'    => File::link('users.php', htmlspecialchars(_('Users'))),
+            'upload'   => File::link('upload.php', htmlspecialchars(_('Upload'))),
+            'manage'   => File::link('manage.php', htmlspecialchars(_('Manage'))),
+            'karts'    => File::link('addons.php?type=karts', htmlspecialchars(_('Karts'))),
+            'tracks'   => File::link('addons.php?type=tracks', htmlspecialchars(_('Tracks'))),
+            'arenas'   => File::link('addons.php?type=arenas', htmlspecialchars(_('Arenas'))),
+            'about'    => File::link('about.php', htmlspecialchars(_('About'))),
+            'privacy'  => File::link('privacy.php', htmlspecialchars(_('Privacy'))),
+            'stk_home' => File::link('http://supertuxkart.sourceforge.net', htmlspecialchars(_('STK Homepage')))
         );
         $this->smarty->assign('show_welcome', User::$logged_in);
         $this->smarty->assign('show_login', !User::$logged_in);
         $this->smarty->assign('show_users', User::$logged_in);
         $this->smarty->assign('show_upload', User::$logged_in);
         $this->smarty->assign(
-                'show_manage',
-                (isset($_SESSION['role']['manageaddons'])) ? $_SESSION['role']['manageaddons'] : false
+            'show_manage',
+            (isset($_SESSION['role']['manageaddons'])) ? $_SESSION['role']['manageaddons'] : false
         );
         if (basename(get_self()) === 'addons.php')
         {
@@ -172,6 +193,43 @@ class StkTemplate extends Template
     }
 
     /**
+     * Add a inline script to the page
+     *
+     * @param string $content the js source code
+     * @param string $order   'before' to display before the include script or 'after' to display after
+     * @param string $type
+     *
+     * @throws TemplateException on invalid order
+     */
+    public function addScriptInline($content, $order = "before", $type = 'text/javascript')
+    {
+        if (!in_array($order, array(static::ORDER_AFTER, static::ORDER_BEFORE)))
+        {
+            throw new TemplateException("Invalid order");
+        }
+        $this->script_inline[$order][] = array(
+            "type"    => $type,
+            "content" => $content
+        );
+    }
+
+    /**
+     * Add a script file to the page
+     *
+     * @param string $src the js file location
+     * @param string $type
+     */
+    public function addScriptInclude($src, $type = 'text/javascript')
+    {
+        $this->script_includes[] = array(
+            "type" => $type,
+            "src"  => $src
+        );
+    }
+
+    /**
+     * Set the description meta tag
+     *
      * @param string $desc
      */
     public function setMetaDesc($desc)
@@ -182,8 +240,8 @@ class StkTemplate extends Template
     /**
      * Set the meta refresh tag for redirect
      *
-     * @param string $target
-     * @param int    $timeout
+     * @param string $target an destination url
+     * @param int    $timeout in seconds
      */
     public function setMetaRefresh($target, $timeout)
     {
@@ -191,8 +249,10 @@ class StkTemplate extends Template
     }
 
     /**
-     * @param string $key
-     * @param string $value
+     * Set a meta tag to display on the page
+     *
+     * @param string $key   the attribute key
+     * @param string $value the attribute value
      */
     public function setMetaTag($key, $value)
     {

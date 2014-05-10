@@ -141,10 +141,10 @@ class DBConnection
      * @return array|int|null depending of the return type
      */
     public function query(
-            $query,
-            $return_type = DBConnection::NOTHING,
-            array $params = array(),
-            array $data_types = array()
+        $query,
+        $return_type = DBConnection::NOTHING,
+        array $params = array(),
+        array $data_types = array()
     ) {
         if (!$query)
         {
@@ -198,11 +198,11 @@ class DBConnection
             {
                 var_dump($e->errorInfo);
                 printf(
-                        "SQLSTATE ERR: %s<br />\nmySQL ERR: %s<br />\nMessage: %s<br />\nQuery: %s<br />\n",
-                        $e->errorInfo[0],
-                        $e->errorInfo[1],
-                        $e->errorInfo[2],
-                        $query
+                    "SQLSTATE ERR: %s<br />\nmySQL ERR: %s<br />\nMessage: %s<br />\nQuery: %s<br />\n",
+                    $e->errorInfo[0],
+                    $e->errorInfo[1],
+                    $e->errorInfo[2],
+                    $query
                 );
             }
             throw new DBException($e->errorInfo[0]);
@@ -248,10 +248,10 @@ class DBConnection
 
         // build the sql query
         $query = sprintf(
-                "INSERT INTO %s (%s) VALUES (%s)",
-                DB_PREFIX . $table,
-                implode(", ", array_keys($fields_data)),
-                implode(", ", array_keys($prepared_pairs))
+            "INSERT INTO %s (%s) VALUES (%s)",
+            DB_PREFIX . $table,
+            implode(", ", array_keys($fields_data)),
+            implode(", ", array_keys($prepared_pairs))
         );
 
         $this->query($query, static::NOTHING, $prepared_pairs);

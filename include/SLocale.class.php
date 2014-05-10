@@ -96,3 +96,8 @@ class SLocale {
             define('LANG', $locale);
     }
 }
+
+function _h($message)
+{
+    return htmlspecialchars(_($message));
+}

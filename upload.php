@@ -1,7 +1,7 @@
 <?php
 /**
  * copyright 2009 Lucas Baudin <xapantu@gmail.com>
- *
+ *           2014 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -11,25 +11,25 @@
  *
  * stkaddons is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
+ * along with stkaddons. If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('ROOT','./');
-include('include.php');
+define('ROOT', './');
+include(ROOT . 'include.php');
 AccessControl::setLevel('addAddon');
-require_once(INCLUDE_DIR . 'Upload.class.php');
-include('include/top.php');
 
 // Define possibly undefined variables
 $_GET['action'] = (isset($_GET['action'])) ? $_GET['action'] : null;
 $_GET['type'] = (isset($_GET['type'])) ? $_GET['type'] : null;
 $_GET['name'] = (isset($_GET['name'])) ? $_GET['name'] : null;
-?>
-<script type="text/javascript">
+
+$tpl = new StkTemplate('upload.tpl');
+
+$inline_script = <<<JS
 function uploadFormFieldToggle()
 {
     var radio1 = document.getElementById('l_author1');
@@ -38,7 +38,8 @@ function uploadFormFieldToggle()
     var checklabel1 = document.getElementById('l_licensetext1');
     var checklabel2 = document.getElementById('l_licensetext2');
     var filetypeselect = document.getElementById('upload-type');
-    if (radio1.checked)
+
+    if(radio1.checked)
     {
         check1.disabled = false;
         check2.disabled = true;
@@ -52,15 +53,18 @@ function uploadFormFieldToggle()
         checklabel1.style.color = '#999999';
         checklabel2.style.color = '#000000';
     }
-    if (filetypeselect != undefined)
+    if(filetypeselect != undefined)
     {
-        if (filetypeselect.value == 'image') {
+        if(filetypeselect.value == 'image')
+        {
             check1.disabled = true;
             check2.disabled = true;
             checklabel1.style.color = '#999999';
             checklabel2.style.color = '#999999';
-        } else {
-            if (radio1.checked)
+        }
+        else
+        {
+            if(radio1.checked)
             {
                 check1.disabled = false;
                 check2.disabled = true;
@@ -77,212 +81,213 @@ function uploadFormFieldToggle()
         }
     }
 }
-</script>
-</head><body>
-<?php
-include(ROOT.'include/menu.php');
+JS;
 
-if($_GET['action'] == "submit")
+// assign inline javascript
+$tpl->addScriptInline(
+    $inline_script,
+    StkTemplate::ORDER_AFTER
+);
+
+$upload_form = array(
+    "display" => true,
+    "form"    => array(
+        "author_self"    => array(
+            "label"   => _h(
+                'I am the sole author of every file (model, texture, sound effect, etc.) in this package'
+            ),
+            "license" => _h(
+                'I have included a License.txt file describing the license under which my work is released, and my name (or nickname) if I want credit.'
+            )
+        ),
+        "author_other"   => array(
+            "label"   => _h('I have included open content made by people other than me'),
+            "license" => _h(
+                'I have included a License.txt file including the name of every author whose material is used in this package, along with the license under which their work is released.'
+            )
+        ),
+        "license"        => array(
+            "label"        => _h('This package includes files released under:'),
+            "instructions" => _h('Must check at least one'),
+            "gpl"          => _h('GNU GPL'),
+            "cc_by"        => _h('Creative Commons BY 3.0'),
+            "cc_by_sa"     => _h('Creative Commons BY SA 3.0'),
+            "pd"           => _h('CC0 (Public Domain)'),
+            "bsd"          => _h('BSD License'),
+            "other"        => _h('Other open license'),
+            "other_remove" => _h(
+                'Files released under other licenses will be rejected unless it can be verified that the license is open.'
+            )
+        ),
+        "terms_removal"  => _h(
+            'I recognize that if my file does not meet the above rules,
+                    it may be removed at any time without prior notice; I also assume the entire responsibility for any copyright
+                     violation that may result from not following the above rules.'
+        ),
+        "terms"          => array(
+            "header" => _h('My package does not include:'),
+            "items"  => array(
+                _h('Profanity'),
+                _h('Explicit images'),
+                _h('Hateful messages and/or images'),
+                _h('Any other content that may be unsuitable for children')
+            )
+        ),
+        "required_text"  => _h('Required'),
+        "agreement_text" => _h('Agreement:'),
+        "upload_button"  => _h('Upload file'),
+        "file_button"    => _h('File:'),
+        "supported_arh"  => _h('Supported archive types are:'),
+
+        // new addon revision
+        "update"         => false, // update addon or insert addon
+        "addon"          => array(
+            // update
+            "revision"      => _h('Please upload a new revision of your kart or track.'),
+            "type"          => _h('What type of file are you uploading?'),
+            "source_file"   => _h('Source Archive'),
+            "image_file"    => _h('Image File'),
+
+            // add
+            "kart_or_track" => _h('Please upload a kart or track.'),
+            "existing_warn" => _h('Do not use this form if you are updating an existing add-on.')
+        ),
+    )
+);
+
+$errors = '';
+if ($_GET['action'] === "submit") // form submitted
 {
-    echo '<div id="content">';
-    if (count($_POST) == 0) {
-	echo '<span class="error">Maximum POST size exceeded. Your file is too large!</span><br />';
-	echo '</div>';
-	include('include/footer.php');
-	exit;
+    if (empty($_POST))
+    {
+        $upload_form["display"] = false;
+        $tpl->assign("upload", $upload_form);
+        $tpl->assign("errors", _h("Maximum POST size exceeded. Your file is too large!"));
+
+        echo $tpl;
+        exit;
     }
+
     // Check to make sure all form license boxes are good
     $agreement_form = 1;
     while ($agreement_form == 1)
     {
         if (!isset($_POST['license_gpl'])
-                && !isset($_POST['license_cc-by'])
-                && !isset($_POST['license_cc-by-sa'])
-                && !isset($_POST['license_pd'])
-                && !isset($_POST['license_bsd'])
-                && !isset($_POST['license_other']))
+            && !isset($_POST['license_cc-by'])
+            && !isset($_POST['license_cc-by-sa'])
+            && !isset($_POST['license_pd'])
+            && !isset($_POST['license_bsd'])
+            && !isset($_POST['license_other'])
+        )
+        {
             $agreement_form = 0;
+        }
         if (!isset($_POST['l_agreement']) || !isset($_POST['l_clean']))
+        {
             $agreement_form = 0;
+        }
         if (!isset($_POST['l_author']))
+        {
             $agreement_form = 0;
+        }
         if (isset($_POST['upload-type']) && $_POST['upload-type'] == 'image')
         {
             if ($_POST['l_author'] != 1 && $_POST['l_author'] != 2)
+            {
                 $agreement_form = 0;
+            }
         }
         else
         {
             if ($_POST['l_author'] == 1 && !isset($_POST['l_licensefile1']))
+            {
                 $agreement_form = 0;
+            }
             if ($_POST['l_author'] == 2 && !isset($_POST['l_licensefile2']))
+            {
                 $agreement_form = 0;
+            }
         }
         break;
     }
-    if ($agreement_form == 0)
+    if ($agreement_form === 0)
     {
-        echo '<span class="error">'.htmlspecialchars(_('Your response to the agreement was unacceptable. You may not upload this content to the STK Addons website.')).'</span><br />';
+        $upload_form["display"] = false;
+        $tpl->assign(
+            "errors",
+            _h(
+                'Your response to the agreement was unacceptable. You may not upload this content to the STK Addons website.'
+            )
+        );
     }
-    else
+    else // upload process
     {
         // Generate a note to moderators for license verification
-        $moderator_message = NULL;
+        $moderator_message = '';
         if (isset($_POST['license_other']))
-            $moderator_message .= 'Auto-message: Moderator: Please verify that license is "free"'."\n";
+        {
+            $moderator_message .= 'Auto-message: Moderator: Please verify that license is "free"' . "\n";
+        }
+
         if ($_POST['l_author'] == 1)
-            $moderator_message .= 'Auto-message: Content is solely created by uploader.'."\n";
+        {
+            $moderator_message .= 'Auto-message: Content is solely created by uploader.' . "\n";
+        }
         else
-            $moderator_message .= 'Auto-message: Content contains third-party open content.'."\n";
-        try {
-	    if (!isset($_POST['upload-type'])) $_POST['upload-type'] = NULL;
-	    switch ($_POST['upload-type']) {
-		case 'image':
-		    $expected_type = 'image';
-		    break;
-		case 'source':
-		    $expected_type = 'source';
-		    break;
-		default:
-		    $expected_type = 'addon';
-		    break;
-	    }
-	    $upload = new Upload($_FILES['file_addon'],$expected_type);
+        {
+            $moderator_message .= 'Auto-message: Content contains third-party open content.' . "\n";
         }
-        catch (UploadException $e) {
-            echo '<span class="error">'.$e->getMessage().'</span><br />';
+
+        try
+        {
+            if (!isset($_POST['upload-type']))
+            {
+                $_POST['upload-type'] = null;
+            }
+            switch ($_POST['upload-type'])
+            {
+                case 'image':
+                    $expected_type = 'image';
+                    break;
+                case 'source':
+                    $expected_type = 'source';
+                    break;
+                default:
+                    $expected_type = 'addon';
+                    break;
+            }
+            $upload = new Upload($_FILES['file_addon'], $expected_type);
         }
-	catch (Exception $e) {
-	    echo '<span class="error">Unexpected exception: '.$e->getMessage().'<br />
-		<strong>If this is ever visible, that\'s a bug!</strong><span><br />';
-	}
-	if (isset($upload)) $upload->removeTempFiles();
+        catch(UploadException $e)
+        {
+            $upload_form["display"] = false;
+            $tpl->assign("errors", $e->getMessage());
+        }
+        catch(Exception $e)
+        {
+            $upload_form["display"] = false;
+            $tpl->assign(
+                "errors",
+                'Unexpected exception: ' . $e->getMessage() . '<strong>If this is ever visible, that\'s a bug!</strong>'
+            );
+        }
+
+        if (isset($upload))
+        {
+            $upload->removeTempFiles();
+        }
     }
-    echo '</div>';
-    include('include/footer.php');
-    exit;
 }
-?>
-    <div id="content">
-        <?php
-        if (($_GET['type'] == 'karts' || $_GET['type'] == 'tracks' || $_GET['type'] == 'arenas')
-                && strlen($_GET['name']) != 0)
-        {
-            // Working with an already existing addon
-            echo '<form id="formKart" enctype="multipart/form-data" action="upload.php?type='.$_GET['type'].'&amp;name='.$_GET['name'].'&amp;action=submit" method="POST">';
-            if ($_GET['action'] != 'file')
-            {
-                echo htmlspecialchars(_('Please upload a new revision of your kart or track.')).'<br />';
-            }
-            else
-            {
-                echo htmlspecialchars(_('What type of file are you uploading?')).'<br />';
-                echo '<select name="upload-type" id="upload-type" onChange="uploadFormFieldToggle();">
-                    <option value="source">'.htmlspecialchars(_('Source Archive')).'</option>
-                    <option value="image">'.htmlspecialchars(_('Image File')).' (.png, .jpg, .jpeg)</option>
-                    </select><br />';
-            }
-        }
-        else
-        {
-            echo '<form id="formKart" enctype="multipart/form-data" action="upload.php?action=submit" method="POST">';
-            echo htmlspecialchars(_('Please upload a kart or track.')).'<br />';
-            echo htmlspecialchars(_('Do not use this form if you are updating an existing add-on.')).'<br />';
-        }
-        ?>
-        <label><?php echo htmlspecialchars(_("File:")); ?><br /><input type="file" name="file_addon" /><br /></label>
-        <?php echo htmlspecialchars(_('Supported archive types are:')); ?> .zip, .tar, .tgz, .tar.gz<!-- , .tbz, .tar.bz2 --><br /><br />
-        <strong><?php echo htmlspecialchars(_('Agreement:')); ?></strong><br />
-        <table width="800" id="upload_agreement">
-            <tr>
-                <td width="1"><input type="radio" name="l_author" id="l_author1" value="1" onChange="uploadFormFieldToggle();" checked /></td>
-                <td colspan="3">
-                    <?php echo htmlspecialchars(_('I am the sole author of every file (model, texture, sound effect, etc.) in this package')); ?>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2" width="60"></td>
-                <td><input type="checkbox" name="l_licensefile1" id="l_licensefile1"></td>
-                <td>
-                    <span id="l_licensetext1"><?php echo htmlspecialchars(_('I have included a License.txt file describing the license under which my work is released, and my name (or nickname) if I want credit.')).' <strong>'.htmlspecialchars(_('Required')).'</strong>'; ?></span>
-                </td>
-            </tr>
-            <tr>
-                <td width="1"><input type="radio" name="l_author" id="l_author2" value="2" onChange="uploadFormFieldToggle();" /></td>
-                <td colspan="3">
-                    <?php echo htmlspecialchars(_('I have included open content made by people other than me')); ?>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2" width="60"></td>
-                <td><input type="checkbox" name="l_licensefile2" id="l_licensefile2"></td>
-                <td>
-                    <span id="l_licensetext2"><?php echo htmlspecialchars(_('I have included a License.txt file including the name of every author whose material is used in this package, along with the license under which their work is released.')).' <strong>'.htmlspecialchars(_('Required')).'</strong>'; ?></span>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="4"><?php echo htmlspecialchars(_('This package includes files released under:')).' <strong>'.htmlspecialchars(_('Must check at least one')).'</strong>'; ?></td>
-            </tr>
-            <tr>
-                <td colspan="2" width="60"></td>
-                <td><input type="checkbox" name="license_gpl" /></td>
-                <td><?php echo htmlspecialchars(_('GNU GPL')); ?></td>
-            </tr>
-            <tr>
-                <td colspan="2" width="60"></td>
-                <td><input type="checkbox" name="license_cc-by" /></td>
-                <td><?php echo htmlspecialchars(_('Creative Commons BY 3.0')); ?></td>
-            </tr>
-            <tr>
-                <td colspan="2" width="60"></td>
-                <td><input type="checkbox" name="license_cc-by-sa" /></td>
-                <td><?php echo htmlspecialchars(_('Creative Commons BY SA 3.0')); ?></td>
-            </tr>
-            <tr>
-                <td colspan="2" width="60"></td>
-                <td><input type="checkbox" name="license_pd" /></td>
-                <td><?php echo htmlspecialchars(_('CC0 (Public Domain)')); ?></td>
-            </tr>
-            <tr>
-                <td colspan="2" width="60"></td>
-                <td><input type="checkbox" name="license_bsd" /></td>
-                <td><?php echo htmlspecialchars(_('BSD License')); ?></td>
-            </tr>
-            <tr>
-                <td colspan="2" width="60"></td>
-                <td><input type="checkbox" name="license_other" /></td>
-                <td><?php echo htmlspecialchars(_('Other open license')); ?></td>
-            </tr>
-            <tr>
-                <td colspan="2" width="60"></td>
-                <td colspan="2">
-                    <?php echo htmlspecialchars(_('Files released under other licenses will be rejected unless it can be verified that the license is open.')) ?><br /><br />
-                </td>
-            </tr>
-            <tr>
-                <td><input type="checkbox" name="l_agreement" /></td>
-                <td colspan="3">
-                    <?php echo htmlspecialchars(_('I recognize that if my file does not meet the above rules, it may be removed at any time without prior notice; I also assume the entire responsibility for any copyright violation that may result from not following the above rules.')).' <strong>'.htmlspecialchars(_('Required')).'</strong><br /><br />'; ?>
-                </td>
-            </tr>
-            <tr>
-                <td><input type="checkbox" name="l_clean" /></td>
-                <td colspan="3">
-                    <?php echo htmlspecialchars(_('My package does not include:')); ?><br />
-                    1. <?php echo htmlspecialchars(_('Profanity')); ?><br />
-                    2. <?php echo htmlspecialchars(_('Explicit images')); ?><br />
-                    3. <?php echo htmlspecialchars(_('Hateful messages and/or images')); ?><br />
-                    4. <?php echo htmlspecialchars(_('Any other content that may be unsuitable for children')); ?><br />
-                    <strong><?php echo htmlspecialchars(_('Required')); ?></strong>
-                </td>
-            </tr>
-        </table>
-        <script type="text/javascript">
-            uploadFormFieldToggle();
-        </script>
-        <input type="submit" value="<?php echo htmlspecialchars(_('Upload file')); ?>" />
-    </form>
-</div>
-<?php
-include("include/footer.php");
-?>
+
+// Working with an already existing addon
+if (($_GET['type'] === 'karts' || $_GET['type'] === 'tracks' || $_GET['type'] === 'arenas')
+    && strlen($_GET['name']) != 0
+)
+{
+    $upload_form["form"]["update"] = true;
+}
+
+// standard page
+$tpl->assign("upload", $upload_form);
+
+echo $tpl;
