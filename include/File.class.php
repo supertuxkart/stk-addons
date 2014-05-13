@@ -1,7 +1,7 @@
 <?php
 /**
  * copyright 2011 Stephen Just <stephenjust@users.sf.net>
- *
+ *           2014 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -20,12 +20,35 @@
 
 require_once(INCLUDE_DIR . 'ConfigManager.php');
 
+/**
+ * @return mixed
+ */
 function get_self()
 {
     $list = get_included_files();
 
     return $list[0];
 }
+
+
+/**
+ * @param $nbr
+ *
+ * @return string
+ */
+function cryptUrl($nbr)
+{
+    $str = "";
+    $chaine = "abcdefghijklmnpqrstuvwxy";
+    srand((double)microtime() * 1000000);
+    for ($i = 0; $i < $nbr; $i++)
+    {
+        $str .= $chaine[rand() % strlen($chaine)];
+    }
+
+    return $str;
+}
+
 
 /**
  * Class to hold all file-related operations
@@ -59,15 +82,14 @@ class File
         try
         {
             DBConnection::get()->query(
-                    'UPDATE `' . DB_PREFIX . 'files`
-                    SET `approved` = :approve
-                    WHERE `id` = :file_id',
-                    DBConnection::NOTHING,
-                    array(
-                            ':approve' => (int)$approve,
-                            ':file_id' => $file_id
-
-                    )
+                'UPDATE `' . DB_PREFIX . 'files`
+                SET `approved` = :approve
+                WHERE `id` = :file_id',
+                DBConnection::NOTHING,
+                array(
+                    ':approve' => (int)$approve,
+                    ':file_id' => $file_id
+                )
             );
         }
         catch(DBException $e)
@@ -91,13 +113,13 @@ class File
         try
         {
             $files = DBConnection::get()->query(
-                    'SELECT `id`
-                    FROM `' . DB_PREFIX . 'files`
-                    WHERE `file_path` = :path',
-                    DBConnection::FETCH_ALL,
-                    array(
-                            ':path' => $path,
-                    )
+                'SELECT `id`
+                FROM `' . DB_PREFIX . 'files`
+                WHERE `file_path` = :path',
+                DBConnection::FETCH_ALL,
+                array(
+                    ':path' => $path,
+                )
             );
 
         }
@@ -183,8 +205,8 @@ class File
                 {
                     unlink($file);
                     throw new FileException(htmlspecialchars(
-                                    _('Failed to extract archive file.')
-                            ) . ' (' . $compression . ')');
+                            _('Failed to extract archive file.')
+                        ) . ' (' . $compression . ')');
                 }
                 unlink($file);
                 break;
@@ -195,6 +217,14 @@ class File
         }
     }
 
+    /**
+     * Add a directory to a zip archive
+     *
+     * @param string $directory
+     * @param string $out_file
+     *
+     * @return bool
+     */
     public static function compress($directory, $out_file)
     {
         $zip = new ZipArchive();
@@ -244,6 +274,12 @@ class File
         return true;
     }
 
+    /**
+     * @param string $current_dir
+     * @param string $destination_dir
+     *
+     * @throws FileException
+     */
     public static function flattenDirectory($current_dir, $destination_dir)
     {
         if (!is_dir($current_dir) || !is_dir($destination_dir))
@@ -272,6 +308,11 @@ class File
         }
     }
 
+    /**
+     * @param string $path
+     *
+     * @return bool
+     */
     public static function imageCheck($path)
     {
         if (!file_exists($path))
@@ -340,6 +381,12 @@ class File
         return true;
     }
 
+    /**
+     * @param string $path
+     * @param bool   $source
+     *
+     * @return array|bool
+     */
     public static function typeCheck($path, $source = false)
     {
         if (!file_exists($path))
@@ -390,7 +437,7 @@ class File
     /**
      * Check a file upload's error code, and provide a useful exception
      *
-     * @param integer $error_code
+     * @param int $error_code
      *
      * @throws UploadException
      */
@@ -410,7 +457,7 @@ class File
                 throw new UploadException(htmlspecialchars(_('No file was uploaded.')));
             case UPLOAD_ERR_NO_TMP_DIR:
                 throw new UploadException(htmlspecialchars(
-                        _('There is no TEMP directory to store the uploaded file in.')
+                    _('There is no TEMP directory to store the uploaded file in.')
                 ));
             case UPLOAD_ERR_CANT_WRITE:
                 throw new UploadException(htmlspecialchars(_('Unable to write uploaded file to disk.')));
@@ -438,7 +485,7 @@ class File
             if (!preg_match('/\.(png|jpg|jpeg)$/i', $filename, $fileext))
             {
                 throw new UploadException(htmlspecialchars(
-                        _('Uploaded image files must be either PNG or Jpeg files.')
+                    _('Uploaded image files must be either PNG or Jpeg files.')
                 ));
             }
         }
@@ -457,7 +504,7 @@ class File
     /**
      * Delete a file and its corresponding database record
      *
-     * @param integer $file_id
+     * @param int $file_id
      *
      * @return boolean true on success, false otherwise
      */
@@ -466,17 +513,17 @@ class File
         try
         {
             $files = DBConnection::get()->query(
-                    'SELECT `file_path`
-                    FROM `' . DB_PREFIX . 'files`
-                    WHERE `id` = :file_id
-                    LIMIT 1',
-                    DBConnection::FETCH_ALL,
-                    array(
-                            ':file_id' => $file_id,
-                    ),
-                    array(
-                            ':file_id' => DBConnection::PARAM_INT
-                    )
+                'SELECT `file_path`
+                FROM `' . DB_PREFIX . 'files`
+                WHERE `id` = :file_id
+                LIMIT 1',
+                DBConnection::FETCH_ALL,
+                array(
+                    ':file_id' => $file_id,
+                ),
+                array(
+                    ':file_id' => DBConnection::PARAM_INT
+                )
             );
 
             if (count($files) === 1)
@@ -498,15 +545,15 @@ class File
         try
         {
             DBConnection::get()->query(
-                    'DELETE FROM `' . DB_PREFIX . 'files`
-                    WHERE `id` = :file_id',
-                    DBConnection::NOTHING,
-                    array(
-                            ':file_id' => $file_id,
-                    ),
-                    array(
-                            ':file_id' => DBConnection::PARAM_INT
-                    )
+                'DELETE FROM `' . DB_PREFIX . 'files`
+                WHERE `id` = :file_id',
+                DBConnection::NOTHING,
+                array(
+                    ':file_id' => $file_id,
+                ),
+                array(
+                    ':file_id' => DBConnection::PARAM_INT
+                )
             );
         }
         catch(DBException $e)
@@ -532,14 +579,14 @@ class File
         try
         {
             $queued_files = DBConnection::get()->query(
-                    'SELECT `id`
-                    FROM `' . DB_PREFIX . 'files`
-                    WHERE `delete_date` <= :date
-                    AND `delete_date` <> \'0000-00-00\'',
-                    DBConnection::FETCH_ALL,
-                    array(
-                            ':date' => date('Y-m-d'),
-                    )
+                'SELECT `id`
+                FROM `' . DB_PREFIX . 'files`
+                WHERE `delete_date` <= :date
+                AND `delete_date` <> \'0000-00-00\'',
+                DBConnection::FETCH_ALL,
+                array(
+                    ':date' => date('Y-m-d'),
+                )
             );
         }
         catch(DBException $e)
@@ -612,7 +659,7 @@ class File
                         continue;
                     }
                     (!is_link("$dir/$sFile") && is_dir("$dir/$sFile")) ? File::deleteRecursive("$dir/$sFile") :
-                            @unlink("$dir/$sFile");
+                        @unlink("$dir/$sFile");
                 }
             }
             $oDir->close();
@@ -649,17 +696,17 @@ class File
         try
         {
             $addons = DBConnection::get()->query(
-                    'SELECT `addon_id`
-                    FROM `' . DB_PREFIX . 'files`
-                    WHERE `id` = :file_id
-                    LIMIT 1',
-                    DBConnection::FETCH_ALL,
-                    array(
-                            ':file_id' => $file_id
-                    ),
-                    array(
-                            ':file_id' => DBConnection::PARAM_INT
-                    )
+                'SELECT `addon_id`
+                FROM `' . DB_PREFIX . 'files`
+                WHERE `id` = :file_id
+                LIMIT 1',
+                DBConnection::FETCH_ALL,
+                array(
+                    ':file_id' => $file_id
+                ),
+                array(
+                    ':file_id' => DBConnection::PARAM_INT
+                )
             );
         }
         catch(DBException $e)
@@ -701,16 +748,16 @@ class File
         try
         {
             $files = DBConnection::get()->query(
-                    'SELECT `file_path` FROM `' . DB_PREFIX . 'files`
+                'SELECT `file_path` FROM `' . DB_PREFIX . 'files`
                     WHERE `id` = :file_id
                     LIMIT 1',
-                    DBConnection::FETCH_ALL,
-                    array(
-                            ':file_id' => $file_id
-                    ),
-                    array(
-                            ':file_id' => DBConnection::PARAM_INT
-                    )
+                DBConnection::FETCH_ALL,
+                array(
+                    ':file_id' => $file_id
+                ),
+                array(
+                    ':file_id' => DBConnection::PARAM_INT
+                )
             );
         }
         catch(DBException $e)
@@ -738,10 +785,10 @@ class File
         try
         {
             $db_files = DBConnection::get()->query(
-                    'SELECT `id`,`addon_id`, `addon_type`, `file_type`, `file_path`
-                    FROM `' . DB_PREFIX . 'files`
-                    ORDER BY `addon_id` ASC',
-                    DBConnection::FETCH_ALL
+                'SELECT `id`,`addon_id`, `addon_type`, `file_type`, `file_path`
+                FROM `' . DB_PREFIX . 'files`
+                ORDER BY `addon_id` ASC',
+                DBConnection::FETCH_ALL
             );
         }
         catch(DBException $e)
@@ -795,12 +842,12 @@ class File
         for ($i = 0; $i < count($files); $i++)
         {
             $return_files[] = array(
-                    'id'         => false,
-                    'addon_id'   => false,
-                    'addon_type' => false,
-                    'file_type'  => false,
-                    'file_path'  => $files[$i],
-                    'exists'     => true
+                'id'         => false,
+                'addon_id'   => false,
+                'addon_type' => false,
+                'file_type'  => false,
+                'file_path'  => $files[$i],
+                'exists'     => true
             );
         }
 
@@ -834,12 +881,12 @@ class File
                 try
                 {
                     DBConnection::get()->query(
-                            'DELETE FROM `' . DB_PREFIX . 'files`
-                            WHERE `file_path` = :file_name',
-                            DBConnection::NOTHING,
-                            array(
-                                    ":file_name" => 'images/' . basename($file_name)
-                            )
+                        'DELETE FROM `' . DB_PREFIX . 'files`
+                        WHERE `file_path` = :file_name',
+                        DBConnection::NOTHING,
+                        array(
+                            ":file_name" => 'images/' . basename($file_name)
+                        )
                     );
                 }
                 catch(DBException $e)
@@ -863,7 +910,7 @@ class File
         }
         // Validate image size
         if ($gdImageInfo[0] > ConfigManager::get_config('max_image_dimension')
-                || $gdImageInfo[1] > ConfigManager::get_config('max_image_dimension')
+            || $gdImageInfo[1] > ConfigManager::get_config('max_image_dimension')
         )
         {
             // Image is too large. Scale it.
@@ -871,8 +918,8 @@ class File
             {
                 $image = new SImage($image_path);
                 $image->scale(
-                        ConfigManager::get_config('max_image_dimension'),
-                        ConfigManager::get_config('max_image_dimension')
+                    ConfigManager::get_config('max_image_dimension'),
+                    ConfigManager::get_config('max_image_dimension')
                 );
                 $image->save($image_path);
             }
@@ -886,14 +933,14 @@ class File
         try
         {
             DBConnection::get()->query(
-                    "CALL `" . DB_PREFIX . "create_file_record`
-                    (:addon_id, :upload_type, 'image', :file, @result_id)",
-                    DBConnection::NOTHING,
-                    array(
-                            ":addon_id"    => $addon_id,
-                            ":upload_type" => $addon_type,
-                            ":file"        => 'images/' . basename($file_name)
-                    )
+                "CALL `" . DB_PREFIX . "create_file_record`
+                (:addon_id, :upload_type, 'image', :file, @result_id)",
+                DBConnection::NOTHING,
+                array(
+                    ":addon_id"    => $addon_id,
+                    ":upload_type" => $addon_type,
+                    ":file"        => 'images/' . basename($file_name)
+                )
             );
         }
         catch(DBException $e)
@@ -966,6 +1013,7 @@ class File
         $x_max = null;
         $z_min = null;
         $z_max = null;
+        // TODO optimize counts
         for ($i = 0; $i < count($quads); $i++)
         {
             for ($j = 0; $j <= 3; $j++)
@@ -1041,23 +1089,23 @@ class File
         for ($i = 0; $i < count($quads); $i++)
         {
             imagefilledpolygon(
-                    $image,
-                    array(
-                            $quads[$i][0][0],
-                            $quads[$i][0][2],
-                            $quads[$i][1][0],
-                            $quads[$i][1][2],
-                            $quads[$i][2][0],
-                            $quads[$i][2][2],
-                            $quads[$i][3][0],
-                            $quads[$i][3][2]
-                    ),
-                    4,
-                    $color[(int)(($quads[$i][0][1]
-                                    + $quads[$i][1][1]
-                                    + $quads[$i][2][1]
-                                    + $quads[$i][3][1])
-                            / 4)]
+                $image,
+                array(
+                    $quads[$i][0][0],
+                    $quads[$i][0][2],
+                    $quads[$i][1][0],
+                    $quads[$i][1][2],
+                    $quads[$i][2][0],
+                    $quads[$i][2][2],
+                    $quads[$i][3][0],
+                    $quads[$i][3][2]
+                ),
+                4,
+                $color[(int)(($quads[$i][0][1]
+                        + $quads[$i][1][1]
+                        + $quads[$i][2][1]
+                        + $quads[$i][3][1])
+                    / 4)]
             );
         }
 
@@ -1073,7 +1121,7 @@ class File
      * Mark a file to be deleted by a cron script a day after all clients should
      * have updated their XML files
      *
-     * @param integer $file_id
+     * @param int $file_id
      *
      * @return boolean
      */
@@ -1083,17 +1131,17 @@ class File
         try
         {
             DBConnection::get()->query(
-                    'UPDATE `' . DB_PREFIX . 'files`
-                    SET  `delete_date` = :date
-                    WHERE  `id` = :file_id',
-                    DBConnection::NOTHING,
-                    array(
-                            ":file_id" => $file_id,
-                            ":date"    => $del_date
-                    ),
-                    array(
-                            ":file_id" => DBConnection::PARAM_INT
-                    )
+                'UPDATE `' . DB_PREFIX . 'files`
+                SET  `delete_date` = :date
+                WHERE  `id` = :file_id',
+                DBConnection::NOTHING,
+                array(
+                    ":file_id" => $file_id,
+                    ":date"    => $del_date
+                ),
+                array(
+                    ":file_id" => DBConnection::PARAM_INT
+                )
             );
         }
         catch(DBException $e)
@@ -1165,17 +1213,4 @@ class File
     {
         return '<a href="' . File::rewrite($href) . '">' . $label . '</a>';
     }
-}
-
-function cryptUrl($nbr)
-{
-    $str = "";
-    $chaine = "abcdefghijklmnpqrstuvwxy";
-    srand((double)microtime() * 1000000);
-    for ($i = 0; $i < $nbr; $i++)
-    {
-        $str .= $chaine[rand() % strlen($chaine)];
-    }
-
-    return $str;
 }
