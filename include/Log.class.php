@@ -21,90 +21,117 @@
 require_once(INCLUDE_DIR . 'DBConnection.class.php');
 require_once(INCLUDE_DIR . 'User.class.php');
 
-class Log {
+class Log
+{
     /**
      * Add an event to the event log
+     *
      * @param string $message Event description
      */
-    public static function newEvent($message) {
+    public static function newEvent($message)
+    {
         $userid = (User::isLoggedIn()) ? User::getId() : 0;
         DBConnection::get()->query(
-            "CALL `".DB_PREFIX."log_event`
+            "CALL `" . DB_PREFIX . "log_event`
             (:userid, :message)",
             DBConnection::NOTHING,
-            array
-            (
-                    ':userid'   => $userid,
-                    ':message'  => strip_tags( (string) $message)
+            array(
+                ':userid'  => $userid,
+                ':message' => strip_tags((string)$message)
             )
         );
     }
-    
+
     /**
      * Return an array of the $number latest events that were logged
-     * @param integer $number
-     * @return array 
+     *
+     * @param int $number
+     *
+     * @return array
+     * @throws LogException
      */
-    public static function getEvents($number = 25) {
+    public static function getEvents($number = 25)
+    {
         if (!is_int($number))
-            throw new Exception('$number must be an integer.');
+        {
+            throw new LogException('$number must be an integer.');
+        }
 
         if (!User::isLoggedIn())
-            throw new Exception('You must be logged in ot view the event log.');
-        if (!$_SESSION['role']['manageaddons'])
-            throw new Exception('You do not have the necessary permissions to view the event log.');
-        
-        try {
-            $events = DBConnection::get()->query(
-                    'SELECT `l`.`date`, `l`.`user`, `l`.`message`, `u`.`name`
-                     FROM `'.DB_PREFIX.'logs` `l`
-                     LEFT JOIN `'.DB_PREFIX.'users` `u`
-                     ON `l`.`user` = `u`.`id`
-                     ORDER BY `l`.`date` DESC
-                     LIMIT :limit',
-                    DBConnection::FETCH_ALL,
-                    array(':limit' => (int)$number),
-                    array(':limit' => DBConnection::PARAM_INT)
-                    );
-        } catch (DBException $e) {
-            throw new Exception('Failed to fetch log entries.');
+        {
+            throw new LogException('You must be logged in ot view the event log.');
         }
-        
+        if (!$_SESSION['role']['manageaddons'])
+        {
+            throw new LogException('You do not have the necessary permissions to view the event log.');
+        }
+
+        try
+        {
+            $events = DBConnection::get()->query(
+                'SELECT `l`.`date`, `l`.`user`, `l`.`message`, `u`.`name`
+                FROM `' . DB_PREFIX . 'logs` `l`
+                LEFT JOIN `' . DB_PREFIX . 'users` `u`
+                ON `l`.`user` = `u`.`id`
+                ORDER BY `l`.`date` DESC
+                LIMIT :limit',
+                DBConnection::FETCH_ALL,
+                array(':limit' => (int)$number),
+                array(':limit' => DBConnection::PARAM_INT)
+            );
+        }
+        catch(DBException $e)
+        {
+            throw new LogException('Failed to fetch log entries.');
+        }
+
         return $events;
     }
-    
+
     /**
      * Gets a list of events that have not been emailed to the moderator list
+     *
      * @return array
+     * @throws LogException
      */
-    public static function getUnemailedEvents() {
-        try {
+    public static function getUnemailedEvents()
+    {
+        try
+        {
             $events = DBConnection::get()->query(
-                    'SELECT `l`.`date`,`l`.`user`,`l`.`message`,`u`.`name`
-                     FROM `'.DB_PREFIX.'logs` `l`
-                     LEFT JOIN `'.DB_PREFIX.'users` `u`
-                     ON `l`.`user` = `u`.`id`
-                     WHERE `l`.`emailed` = 0
-                     ORDER BY `l`.`date` DESC',
-                    DBConnection::FETCH_ALL);
-            return $events;
-        } catch (DBException $e) {
-            print "Failed to load log for email.\n";
-            return array();
+                'SELECT `l`.`date`,`l`.`user`,`l`.`message`,`u`.`name`
+                FROM `' . DB_PREFIX . 'logs` `l`
+                LEFT JOIN `' . DB_PREFIX . 'users` `u`
+                ON `l`.`user` = `u`.`id`
+                WHERE `l`.`emailed` = 0
+                ORDER BY `l`.`date` DESC',
+                DBConnection::FETCH_ALL
+            );
         }
+        catch(DBException $e)
+        {
+            throw new LogException("Failed to load log for email.");
+        }
+
+        return $events;
     }
-    
+
     /**
      * Set the mailed flag on all log messages
      * @throws Exception
      */
-    public static function setAllEventsMailed() {
-        try {
+    public static function setAllEventsMailed()
+    {
+        try
+        {
             DBConnection::get()->query(
-                    'UPDATE `'.DB_PREFIX.'logs` SET `emailed` = 1',
-                    DBConnection::NOTHING);
-        } catch (DBException $e) {
-            throw new Exception('Failed to mark log messages as mailed.');
+                'UPDATE `' . DB_PREFIX . 'logs` SET `emailed` = 1',
+                DBConnection::NOTHING
+            );
+        }
+        catch(DBException $e)
+        {
+            throw new LogException('Failed to mark log messages as mailed.');
         }
     }
 }
