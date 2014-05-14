@@ -42,7 +42,7 @@ switch ($_GET['action'])
         break;
 }
 
-switch ($_POST['id'])
+switch ($_GET['id'])
 {
     default:
         echo '<span class="error">'.htmlspecialchars(_('Invalid page. You may have followed a broken link.')).'</span><br />';
