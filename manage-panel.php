@@ -168,19 +168,19 @@ function settings_panel()
     if (!$_SESSION['role']['managesettings']) return;
     echo '<form method="POST" action="manage.php?view=general&amp;action=save_config">';
     echo '<table>';
-    echo '<tr><td>'.htmlspecialchars(_('XML Download Frequency')).'</td><td><input type="text" name="xml_frequency" value="'.ConfigManager::get_config('xml_frequency').'" size="6" maxlength="8" /></td></tr>';
-    echo '<tr><td>'.htmlspecialchars(_('Permitted Addon Filetypes')).'</td><td><input type="text" name="allowed_addon_exts" value="'.ConfigManager::get_config('allowed_addon_exts').'" /></td></tr>';
-    echo '<tr><td>'.htmlspecialchars(_('Permitted Source Archive Filetypes')).'</td><td><input type="text" name="allowed_source_exts" value="'.ConfigManager::get_config('allowed_source_exts').'" /></td></tr>';
-    echo '<tr><td>'.htmlspecialchars(_('Administrator Email')).'</td><td><input type="text" name="admin_email" value="'.ConfigManager::get_config('admin_email').'" /></td></tr>';
-    echo '<tr><td>'.htmlspecialchars(_('Moderator List Email')).'</td><td><input type="text" name="list_email" value="'.ConfigManager::get_config('list_email').'" /></td></tr>';
-    if (ConfigManager::get_config('list_invisible') == 1)
+    echo '<tr><td>'.htmlspecialchars(_('XML Download Frequency')).'</td><td><input type="text" name="xml_frequency" value="'.ConfigManager::getConfig('xml_frequency').'" size="6" maxlength="8" /></td></tr>';
+    echo '<tr><td>'.htmlspecialchars(_('Permitted Addon Filetypes')).'</td><td><input type="text" name="allowed_addon_exts" value="'.ConfigManager::getConfig('allowed_addon_exts').'" /></td></tr>';
+    echo '<tr><td>'.htmlspecialchars(_('Permitted Source Archive Filetypes')).'</td><td><input type="text" name="allowed_source_exts" value="'.ConfigManager::getConfig('allowed_source_exts').'" /></td></tr>';
+    echo '<tr><td>'.htmlspecialchars(_('Administrator Email')).'</td><td><input type="text" name="admin_email" value="'.ConfigManager::getConfig('admin_email').'" /></td></tr>';
+    echo '<tr><td>'.htmlspecialchars(_('Moderator List Email')).'</td><td><input type="text" name="list_email" value="'.ConfigManager::getConfig('list_email').'" /></td></tr>';
+    if (ConfigManager::getConfig('list_invisible') == 1)
         $invisible_opts = '<option value="1" selected>'.htmlspecialchars(_('True')).'</option><option value="0">'.htmlspecialchars(_('False')).'</option>';
     else
         $invisible_opts = '<option value="1">'.htmlspecialchars(_('True')).'</option><option value="0" selected>'.htmlspecialchars(_('False')).'</option>';
     echo '<tr><td>'.htmlspecialchars(_('List Invisible Addons in XML')).'</td><td><select name="list_invisible">'.$invisible_opts.'</option></td></tr>';
-    echo '<tr><td>'.htmlspecialchars(_('Blog RSS Feed')).'</td><td><input name="blog_feed" value="'.ConfigManager::get_config('blog_feed').'" /></td></tr>';
-    echo '<tr><td>'.htmlspecialchars(_('Maximum Uploaded Image Dimension')).'</td><td><input name="max_image_dimension" value="'.ConfigManager::get_config('max_image_dimension').'" /></td></tr>';
-    echo '<tr><td>'.htmlspecialchars(_('Apache Rewrites')).'</td><td><textarea name="apache_rewrites">'.htmlspecialchars(ConfigManager::get_config('apache_rewrites')).'</textarea></td></tr>';
+    echo '<tr><td>'.htmlspecialchars(_('Blog RSS Feed')).'</td><td><input name="blog_feed" value="'.ConfigManager::getConfig('blog_feed').'" /></td></tr>';
+    echo '<tr><td>'.htmlspecialchars(_('Maximum Uploaded Image Dimension')).'</td><td><input name="max_image_dimension" value="'.ConfigManager::getConfig('max_image_dimension').'" /></td></tr>';
+    echo '<tr><td>'.htmlspecialchars(_('Apache Rewrites')).'</td><td><textarea name="apache_rewrites">'.htmlspecialchars(ConfigManager::getConfig('apache_rewrites')).'</textarea></td></tr>';
     echo '<tr><td></td><td><input type="submit" value="'.htmlspecialchars(_('Save Settings')).'" /></td></tr>';
     echo '</table>';
 }

@@ -400,11 +400,11 @@ class File
         // Make a list of approved file types
         if ($source === false)
         {
-            $approved_types = ConfigManager::get_config('allowed_addon_exts');
+            $approved_types = ConfigManager::getConfig('allowed_addon_exts');
         }
         else
         {
-            $approved_types = ConfigManager::get_config('allowed_source_exts');
+            $approved_types = ConfigManager::getConfig('allowed_source_exts');
         }
         $approved_types = explode(',', $approved_types);
         $removed_files = array();
@@ -909,8 +909,8 @@ class File
             throw new FileException(htmlspecialchars(_('The uploaded image file is invalid.')));
         }
         // Validate image size
-        if ($gdImageInfo[0] > ConfigManager::get_config('max_image_dimension')
-            || $gdImageInfo[1] > ConfigManager::get_config('max_image_dimension')
+        if ($gdImageInfo[0] > ConfigManager::getConfig('max_image_dimension')
+            || $gdImageInfo[1] > ConfigManager::getConfig('max_image_dimension')
         )
         {
             // Image is too large. Scale it.
@@ -918,8 +918,8 @@ class File
             {
                 $image = new SImage($image_path);
                 $image->scale(
-                    ConfigManager::get_config('max_image_dimension'),
-                    ConfigManager::get_config('max_image_dimension')
+                    ConfigManager::getConfig('max_image_dimension'),
+                    ConfigManager::getConfig('max_image_dimension')
                 );
                 $image->save($image_path);
             }
@@ -1127,7 +1127,7 @@ class File
      */
     public static function queueDelete($file_id)
     {
-        $del_date = date('Y-m-d', time() + ConfigManager::get_config('xml_frequency') + (60 * 60 * 24));
+        $del_date = date('Y-m-d', time() + ConfigManager::getConfig('xml_frequency') + (60 * 60 * 24));
         try
         {
             DBConnection::get()->query(
@@ -1168,7 +1168,7 @@ class File
         }
 
         $link = str_replace(SITE_ROOT, null, $link);
-        $rules = ConfigManager::get_config('apache_rewrites');
+        $rules = ConfigManager::getConfig('apache_rewrites');
         $rules = preg_split('/(\\r)?\\n/', $rules);
 
         foreach ($rules as $rule)

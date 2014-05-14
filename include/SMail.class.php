@@ -40,7 +40,7 @@ class SMail {
 	    ));
 	}
 	$this->headers = array(
-	    'From' => '"STK-Addons Administrator" <'.ConfigManager::get_config('admin_email').'>',
+	    'From' => '"STK-Addons Administrator" <'.ConfigManager::getConfig('admin_email').'>',
 	    'Content-Type' => 'text/plain; charset="UTF-8"',
 	    'Content-Transfer-Encoding' => '8bit'
 	);
@@ -88,7 +88,7 @@ class SMail {
 
 function moderator_email($subject, $message_html)
 {
-    $mail_address = ConfigManager::get_config('list_email');
+    $mail_address = ConfigManager::getConfig('list_email');
     if (strlen($mail_address) == 0)
     {
         echo '<span class="warning">'.htmlspecialchars(_('No moderator mailing-list email is set.')).'</span><br />';
@@ -96,8 +96,8 @@ function moderator_email($subject, $message_html)
     }
 
     $boundary = "-----=".md5(rand());
-    $header = "From: \"STK-Addons Administrator\" <".ConfigManager::get_config('admin_email').">\n"
-        ."Reply-to: \"STK-Addons Administrator\" <".ConfigManager::get_config('admin_email').">\n"
+    $header = "From: \"STK-Addons Administrator\" <".ConfigManager::getConfig('admin_email').">\n"
+        ."Reply-to: \"STK-Addons Administrator\" <".ConfigManager::getConfig('admin_email').">\n"
         ."MIME-Version: 1.0\n"
         ."Content-Type: multipart/alternative;\n boundary=\"$boundary\"\n";
     $message = "\n--".$boundary."\n"

@@ -94,15 +94,15 @@ try {
                 throw new Exception(htmlspecialchars(_('XML Download Frequency value is invalid.')));
             }
 
-            ConfigManager::set_config('xml_frequency', (int) $_POST['xml_frequency']);
-            ConfigManager::set_config('allowed_addon_exts', $_POST['allowed_addon_exts']);
-            ConfigManager::set_config('allowed_source_exts', $_POST['allowed_source_exts']);
-            ConfigManager::set_config('admin_email', $_POST['admin_email']);
-            ConfigManager::set_config('list_email', $_POST['list_email']);
-            ConfigManager::set_config('list_invisible', (int) $_POST['list_invisible']);
-            ConfigManager::set_config('blog_feed', $_POST['blog_feed']);
-            ConfigManager::set_config('max_image_dimension', (int) $_POST['max_image_dimension']);
-            ConfigManager::set_config('apache_rewrites', $_POST['apache_rewrites']);
+            ConfigManager::setConfig('xml_frequency', (int) $_POST['xml_frequency']);
+            ConfigManager::setConfig('allowed_addon_exts', $_POST['allowed_addon_exts']);
+            ConfigManager::setConfig('allowed_source_exts', $_POST['allowed_source_exts']);
+            ConfigManager::setConfig('admin_email', $_POST['admin_email']);
+            ConfigManager::setConfig('list_email', $_POST['list_email']);
+            ConfigManager::setConfig('list_invisible', (int) $_POST['list_invisible']);
+            ConfigManager::setConfig('blog_feed', $_POST['blog_feed']);
+            ConfigManager::setConfig('max_image_dimension', (int) $_POST['max_image_dimension']);
+            ConfigManager::setConfig('apache_rewrites', $_POST['apache_rewrites']);
 
             echo htmlspecialchars(_('Saved settings.')) . '<br />';
             break;

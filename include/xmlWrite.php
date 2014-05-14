@@ -46,7 +46,7 @@ function generateNewsXML()
     $writer->writeAttribute('mtime', time());
 
     // Time between updates
-    $writer->writeAttribute('frequency', ConfigManager::get_config('xml_frequency'));
+    $writer->writeAttribute('frequency', ConfigManager::getConfig('xml_frequency'));
 
     // Reference assets.xml
     $writer->startElement('include');
@@ -115,7 +115,7 @@ function generateAssetXML()
     $writer->writeAttribute('mtime', time());
 
     // Time between updates
-    $writer->writeAttribute('frequency', ConfigManager::get_config('xml_frequency'));
+    $writer->writeAttribute('frequency', ConfigManager::getConfig('xml_frequency'));
 
     foreach ($addon_types as $type)
     {
@@ -142,7 +142,7 @@ function generateAssetXML()
             // Loop through each addon record
             foreach ($addons as $addon)
             {
-                if (ConfigManager::get_config('list_invisible') == 0)
+                if (ConfigManager::getConfig('list_invisible') == 0)
                 {
                     if ($addon['status'] & F_INVISIBLE)
                     {
@@ -202,14 +202,14 @@ function generateAssetXML()
                 $writer->writeAttribute('max-include-version', $addon['max_include_ver']);
 
                 // Write license path
-                $license_path_format = ConfigManager::get_config('license_json_path');
+                $license_path_format = ConfigManager::getConfig('license_json_path');
                 $license_path = str_replace(
                         array('$aid', '$atype'),
                         array($addon['id'], $addon['type']),
                         $license_path_format
                 );
                 $writer->writeAttribute('license', $license_path);
-                $image_list_path = ConfigManager::get_config('image_json_path');
+                $image_list_path = ConfigManager::getConfig('image_json_path');
                 $image_list_path = str_replace('$aid', $addon['id'], $image_list_path);
                 $image_list_path = str_replace('$atype', $addon['type'], $image_list_path);
                 $writer->writeAttribute('image-list', $image_list_path);
@@ -240,8 +240,8 @@ function generateAssetXML2()
 {
     // Define addon types
     $addon_types = array('kart', 'track', 'arena');
-    $image_list_path_format = ConfigManager::get_config('image_json_path');
-    $license_path_format = ConfigManager::get_config('license_json_path');
+    $image_list_path_format = ConfigManager::getConfig('image_json_path');
+    $license_path_format = ConfigManager::getConfig('license_json_path');
 
     $writer = new XMLWriter();
 
@@ -264,7 +264,7 @@ function generateAssetXML2()
     $writer->writeAttribute('mtime', time());
 
     // Time between updates
-    $writer->writeAttribute('frequency', ConfigManager::get_config('xml_frequency'));
+    $writer->writeAttribute('frequency', ConfigManager::getConfig('xml_frequency'));
 
     foreach ($addon_types as $type)
     {
@@ -330,7 +330,7 @@ function generateAssetXML2()
                     foreach ($addon_revs as $addon_rev)
                     {
                         // Skip invisible entries
-                        if (ConfigManager::get_config('list_invisible') === 0 &&
+                        if (ConfigManager::getConfig('list_invisible') === 0 &&
                                 $addon_rev['status'] & F_INVISIBLE
                         )
                         {
