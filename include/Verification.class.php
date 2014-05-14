@@ -23,80 +23,102 @@ require_once(INCLUDE_DIR . 'File.class.php');
 require_once(INCLUDE_DIR . 'DBConnection.class.php');
 require_once(INCLUDE_DIR . 'Exceptions.class.php');
 
+/**
+ * Class Verification
+ */
 class Verification
 {
     /**
      * Verifies a supplied verification code.
-     * @param int $userid
+     *
+     * @param int    $userid
      * @param string $ver_code
+     *
      * @throws UserException when verification failed
      */
-    static function verify($userid, $ver_code){
-        try{
+    public static function verify($userid, $ver_code)
+    {
+        try
+        {
             $count = DBConnection::get()->query(
                 "SELECT `userid`
-    	        FROM `".DB_PREFIX."verification`
+    	        FROM `" . DB_PREFIX . "verification`
     	        WHERE `userid` = :userid
                 AND `code` = :code",
                 DBConnection::ROW_COUNT,
                 array(
-                        ':userid'   => $userid,
-                        ':code'     => $ver_code
+                    ':userid' => $userid,
+                    ':code'   => $ver_code
                 )
             );
-        }catch(DBException $e){
+        }
+        catch(DBException $e)
+        {
             throw new UserException(htmlspecialchars(
-                    _('An error occurred while trying to validate verification information.') .' '.
-                    _('Please contact a website administrator.')
+                _('An error occurred while trying to validate verification information.') . ' ' .
+                _('Please contact a website administrator.')
             ));
         }
         if ($count !== 1)
-            throw new UserException(_("Verification failed. Either the supplied user doesn't exist,"
-                    . "the account doesn't need verification (anymore), or the verification code is incorrect.") );
+        {
+            throw new UserException(_(
+                "Verification failed. Either the supplied user doesn't exist,"
+                . "the account doesn't need verification (anymore), or the verification code is incorrect."
+            ));
+        }
     }
-    
+
     /**
      * Deletes an entry from the verification table
+     *
      * @param int $userid
+     *
      * @throws DBException when nothing got deleted.
      */
-    static function delete($userid){
+    public static function delete($userid)
+    {
         $count = DBConnection::get()->query(
-                "DELETE
-    	        FROM `".DB_PREFIX."verification`
-    	        WHERE `userid` = :userid",
-                DBConnection::ROW_COUNT,
-                array(
-                        ':userid'   => $userid
-                )
+            "DELETE
+            FROM `" . DB_PREFIX . "verification`
+    	    WHERE `userid` = :userid",
+            DBConnection::ROW_COUNT,
+            array(
+                ':userid' => $userid
+            )
         );
-        if ($count === 0)
+        if ($count == 0)
+        {
             throw new DBException();
+        }
     }
-    
+
     /**
      * Generates and insert a verification code for the user with supplied user id
+     *
      * @param int $userid
+     *
      * @throws DBException
      * @return string the generated verification code
      */
-    static function generate($userid){
+    public static function generate($userid)
+    {
         $verification_code = cryptUrl(12);
-        $count = DBConnection::get()->query
-        (
-            "INSERT INTO `".DB_PREFIX."verification` (`userid`,`code`)
+        $count = DBConnection::get()->query(
+            "INSERT INTO `" . DB_PREFIX . "verification` (`userid`,`code`)
             VALUES(:userid, :code)
             ON DUPLICATE KEY UPDATE code = :code",
             DBConnection::ROW_COUNT,
             array
             (
-                    ':userid'   => (int) $userid,
-                    ':code'     => (string) $verification_code
+                ':userid' => (int)$userid,
+                ':code'   => (string)$verification_code
             )
         );
-        if($count == 0){
+        if ($count == 0)
+        {
             throw new DBException();
         }
+
         return $verification_code;
     }
 }
