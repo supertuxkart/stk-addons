@@ -27,21 +27,17 @@ $title = htmlspecialchars(_('STK Add-ons') . ' | ' . _('Manage'));
 require('include/top.php');
 echo '</head><body>';
 require('include/menu.php');
-if (!isset($_GET['action']))
-{
-    $_GET['action'] = null;
-}
 
+$_GET['action'] = (isset($_GET['action'])) ? $_GET['action'] : null;
 $panels = new PanelInterface();
 
-$menu_items =
+$menu_items = array(
     array(
-        array(
-            'url'   => 'manage.php?view=overview',
-            'label' => htmlspecialchars(_('Overview')),
-            'class' => 'manage-list menu-item'
-        )
-    );
+        'url'   => 'manage.php?view=overview',
+        'label' => htmlspecialchars(_('Overview')),
+        'class' => 'manage-list menu-item'
+    )
+);
 if ($_SESSION['role']['managesettings'])
 {
     $menu_items[] = array(
@@ -49,46 +45,39 @@ if ($_SESSION['role']['managesettings'])
         'label' => htmlspecialchars(_('General Settings')),
         'class' => 'manage-list menu-item'
     );
-    $menu_items[] =
-        array(
-            'url'   => 'manage.php?view=news',
-            'label' => htmlspecialchars(_('News Messages')),
-            'class' => 'manage-list menu-item'
-        );
-    $menu_items[] =
-        array(
-            'url'   => 'manage.php?view=clients',
-            'label' => htmlspecialchars(_('Client Versions')),
-            'class' => 'manage-list menu-item'
-        );
-    $menu_items[] =
-        array(
-            'url'   => 'manage.php?view=cache',
-            'label' => htmlspecialchars(_('Cache Files')),
-            'class' => 'manage-list menu-item'
-        );
+    $menu_items[] = array(
+        'url'   => 'manage.php?view=news',
+        'label' => htmlspecialchars(_('News Messages')),
+        'class' => 'manage-list menu-item'
+    );
+    $menu_items[] = array(
+        'url'   => 'manage.php?view=clients',
+        'label' => htmlspecialchars(_('Client Versions')),
+        'class' => 'manage-list menu-item'
+    );
+    $menu_items[] = array(
+        'url'   => 'manage.php?view=cache',
+        'label' => htmlspecialchars(_('Cache Files')),
+        'class' => 'manage-list menu-item'
+    );
 }
-$menu_items[] =
-    array(
-        'url'   => 'manage.php?view=files',
-        'label' => htmlspecialchars(_('Uploaded Files')),
-        'class' => 'manage-list menu-item'
-    );
-$menu_items[] =
-    array(
-        'url'   => 'manage.php?view=logs',
-        'label' => htmlspecialchars(_('Event Logs')),
-        'class' => 'manage-list menu-item'
-    );
+$menu_items[] = array(
+    'url'   => 'manage.php?view=files',
+    'label' => htmlspecialchars(_('Uploaded Files')),
+    'class' => 'manage-list menu-item'
+);
+$menu_items[] = array(
+    'url'   => 'manage.php?view=logs',
+    'label' => htmlspecialchars(_('Event Logs')),
+    'class' => 'manage-list menu-item'
+);
 $panels->setMenuItems($menu_items);
 
-ob_start();
+$status_content = "";
 try
 {
     switch ($_GET['action'])
     {
-        default:
-            break;
         case 'save_config':
             if (!isset($_POST['xml_frequency']) ||
                 !isset($_POST['allowed_addon_exts']) ||
@@ -114,7 +103,7 @@ try
             ConfigManager::setConfig('max_image_dimension', (int)$_POST['max_image_dimension']);
             ConfigManager::setConfig('apache_rewrites', $_POST['apache_rewrites']);
 
-            echo htmlspecialchars(_('Saved settings.')) . '<br />';
+            $status_content = htmlspecialchars(_('Saved settings.')) . '<br />';
             break;
         case 'new_news':
             if (empty($_POST['message']) || !isset($_POST['condition']))
@@ -141,15 +130,16 @@ try
             }
 
             News::create($_POST['message'], $condition, $important, $web_display);
-            echo htmlspecialchars(_('Created message.')) . '<br />';
+            $status_content = htmlspecialchars(_('Created message.')) . '<br />';
+            break;
+        default:
             break;
     }
 }
 catch(Exception $e)
 {
-    echo '<span class="error">' . $e->getMessage() . '</span><br />';
+    $status_content = '<span class="error">' . $e->getMessage() . '</span><br />';
 }
-$status_content = ob_get_clean();
 $panels->setStatusContent($status_content);
 
 if (!isset($_GET['view']))
