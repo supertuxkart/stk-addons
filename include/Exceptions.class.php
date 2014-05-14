@@ -29,3 +29,7 @@ class TemplateException extends Exception {}
 class ServerException extends Exception {}
 class LogException extends Exception {}
 class CacheException extends Exception {}
+
+class ClientSessionException extends Exception {}
+class ClientSessionConnectException extends ClientSessionException {}
+class ClientSessionExpiredException extends ClientSessionException {}
