@@ -39,7 +39,7 @@ elseif (isset($_GET["id"]) && !empty($_GET["id"])) // use "id" as name, fallback
 $user = User::getFromUserName($user_name);
 $userData = $user->getUserData();
 
-$tpl = new StkTemplate("user-panel.tpl");
+$user_panel_tpl = new StkTemplate("user-panel.tpl");
 
 // TODO maybe put his onto a list
 $user_tpl = array(
@@ -180,5 +180,5 @@ if ($_SESSION['role']['manage' . $userData['role'] . 's']
     }
 }
 
-$tpl->assign("user", $user_tpl);
-echo $tpl;
+$user_panel_tpl->assign("user", $user_tpl);
+echo $user_panel_tpl;

@@ -25,6 +25,7 @@ require_once(INCLUDE_DIR . 'AccessControl.class.php');
 require_once(INCLUDE_DIR . 'StkTemplate.class.php');
 AccessControl::setLevel('basicPage');
 
+// set current user if not defined
 $_GET['user'] = (isset($_GET['user'])) ? $_GET['user'] : $_SESSION['user'];
 $action = (isset($_GET['action'])) ? $_GET['action'] : null;
 
@@ -117,20 +118,16 @@ foreach ($users as $user)
         );
     }
 }
+
 // left panel
 $left_tpl = new StkTemplate('url-list-panel.tpl');
 $left_tpl->assign('items', $templateUsers);
 $panel['left'] = (string)$left_tpl;
 
 // right panel
-if (isset($_GET['user']))
-{
-    $_GET['id'] = $_GET['user'];
-}
-// TODO FIX page load, works fine with ajax
-//ob_start();
-//include(ROOT . 'users-panel.php');
-//$panel['right'] = ob_get_clean();
+ob_start();
+include(ROOT . 'users-panel.php');
+$panel['right'] = ob_get_clean();
 
 // output the view
 $tpl->assign('panel', $panel);
