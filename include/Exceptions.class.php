@@ -28,3 +28,4 @@ class ImageException extends Exception {}
 class TemplateException extends Exception {}
 class ServerException extends Exception {}
 class LogException extends Exception {}
+class CacheException extends Exception {}
