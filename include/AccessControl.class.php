@@ -1,8 +1,9 @@
 <?php
 
 /**
- * copyright 2012 Stephen Just <stephenjust@users.sf.net>
- *
+ * copyright 2009 Lucas Baudin <xapantu@gmail.com>
+ *           2012 Stephen Just <stephenjust@users.sf.net>
+ *           2014 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -22,71 +23,166 @@ require_once(INCLUDE_DIR . 'File.class.php');
 require_once(INCLUDE_DIR . 'User.class.php');
 require_once(INCLUDE_DIR . 'StkTemplate.class.php');
 
-class AccessControl {
+/**
+ * This file is included by include/user.php
+ *
+ * @param string $role
+ */
+function setPermissions($role)
+{
+    switch ($role)
+    {
+        case "basicUser":
+            $_SESSION['role'] = array(
+                "basicPage"               => true,
+                "addAddon"                => true,
+                "manageaddons"            => false,
+                "managebasicUsers"        => false,
+                "managemoderators"        => false,
+                "manageadministrators"    => false,
+                "managesupAdministrators" => false,
+                "manageroots"             => false,
+                "managesettings"          => false
+            );
+            break;
+        case "moderator":
+            $_SESSION['role'] = array(
+                "basicPage"               => true,
+                "addAddon"                => true,
+                "manageaddons"            => true,
+                "managebasicUsers"        => true,
+                "managemoderators"        => false,
+                "manageadministrators"    => false,
+                "managesupAdministrators" => false,
+                "manageroots"             => false,
+                "managesettings"          => false
+            );
+            break;
+        case "administrator":
+            $_SESSION['role'] = array(
+                "basicPage"               => true,
+                "addAddon"                => true,
+                "manageaddons"            => true,
+                "managebasicUsers"        => true,
+                "managemoderators"        => true,
+                "manageadministrators"    => false,
+                "managesupAdministrators" => false,
+                "manageroots"             => false,
+                "managesettings"          => true
+            );
+            break;
+        case "supAdministrator":
+            $_SESSION['role'] = array(
+                "basicPage"               => true,
+                "addAddon"                => true,
+                "manageaddons"            => true,
+                "managebasicUsers"        => true,
+                "managemoderators"        => true,
+                "manageadministrators"    => true,
+                "managesupAdministrators" => false,
+                "manageroots"             => false,
+                "managesettings"          => true
+            );
+            break;
+        case "root":
+            $_SESSION['role'] = array(
+                "basicPage"               => true,
+                "addAddon"                => true,
+                "manageaddons"            => true,
+                "managebasicUsers"        => true,
+                "managemoderators"        => true,
+                "manageadministrators"    => true,
+                "managesupAdministrators" => true,
+                "manageroots"             => true,
+                "managesettings"          => true
+            );
+            break;
+    }
+    //support for translations :
+    htmlspecialchars(_("root"));
+    htmlspecialchars(_("supAdministrator"));
+    htmlspecialchars(_("administrator"));
+    htmlspecialchars(_("moderator"));
+    htmlspecialchars(_("basicUser"));
+}
+
+
+class AccessControl
+{
 
     // Define permission levels
     private static $permissions = array(
-        'basicUser' => array(
-            'basicPage' => true,
-            'addAddon' => true,
-            'manageaddons' => false,
-            'managebasicUsers' => false,
-            'managemoderators' => false,
+        'basicUser'     => array(
+            'basicPage'            => true,
+            'addAddon'             => true,
+            'manageaddons'         => false,
+            'managebasicUsers'     => false,
+            'managemoderators'     => false,
             'manageadministrators' => false,
-            'manageroots' => false,
-            'managesettings' => false
+            'manageroots'          => false,
+            'managesettings'       => false
         ),
-        'moderator' => array(
-            'basicPage' => true,
-            'addAddon' => true,
-            'manageaddons' => true,
-            'managebasicUsers' => true,
-            'managemoderators' => false,
+        'moderator'     => array(
+            'basicPage'            => true,
+            'addAddon'             => true,
+            'manageaddons'         => true,
+            'managebasicUsers'     => true,
+            'managemoderators'     => false,
             'manageadministrators' => false,
-            'manageroots' => false,
-            'managesettings' => false
+            'manageroots'          => false,
+            'managesettings'       => false
         ),
         'administrator' => array(
-            'basicPage' => true,
-            'addAddon' => true,
-            'manageaddons' => true,
-            'managebasicUsers' => true,
-            'managemoderators' => true,
+            'basicPage'            => true,
+            'addAddon'             => true,
+            'manageaddons'         => true,
+            'managebasicUsers'     => true,
+            'managemoderators'     => true,
             'manageadministrators' => false,
-            'manageroots' => false,
-            'managesettings' => true
+            'manageroots'          => false,
+            'managesettings'       => true
         ),
-        'root' => array(
-            'basicPage' => true,
-            'addAddon' => true,
-            'manageaddons' => true,
-            'managebasicUsers' => true,
-            'managemoderators' => true,
+        'root'          => array(
+            'basicPage'            => true,
+            'addAddon'             => true,
+            'manageaddons'         => true,
+            'managebasicUsers'     => true,
+            'managemoderators'     => true,
             'manageadministrators' => true,
-            'manageroots' => true,
-            'managesettings' => true
+            'manageroots'          => true,
+            'managesettings'       => true
         )
     );
 
-    public static function setLevel($accessLevel) {
+    public static function setLevel($accessLevel)
+    {
         $role = User::getRole();
         if (is_null($accessLevel))
+        {
             return true;
+        }
 
-        $allow = false;
-        if ($role == 'unregistered' && $accessLevel == NULL) {
+        if ($role == 'unregistered' && $accessLevel == null)
+        {
             $allow = true;
-        } elseif ($role == 'unregistered') {
+        }
+        elseif ($role == 'unregistered')
+        {
             $allow = false;
         }
         else
+        {
             $allow = AccessControl::$permissions[$role][$accessLevel];
+        }
 
         if ($allow === false)
+        {
             AccessControl::showAccessDeniedPage();
+        }
     }
 
-    public static function showAccessDeniedPage() {
+    public static function showAccessDeniedPage()
+    {
         header('HTTP/1.0 401 Unauthorized');
         $tpl = new StkTemplate('access-denied.tpl');
         $tpl->assign('ad_reason', htmlspecialchars(_('You do not have permission to access this page.')));
