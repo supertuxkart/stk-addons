@@ -169,7 +169,7 @@ class Server
             return Server::getServer(DBConnection::get()->lastInsertId());
 
         }
-        catch(PDOExpcetion $e)
+        catch(DBException $e)
         {
             throw new ServerException(
                 _('An error occurred while creating server.') . ' ' .
@@ -210,7 +210,7 @@ class Server
 
             return new Server($result[0]);
         }
-        catch(PDOExpcetion $e)
+        catch(DBException $e)
         {
             throw new ServerException(
                 _('An error occurred while creating server.') . ' ' .

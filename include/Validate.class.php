@@ -262,8 +262,7 @@ class Validate
                 FROM `" . DB_PREFIX . "users`
                 WHERE `user` = :username AND `pass` = :pass",
                 DBConnection::FETCH_ALL,
-                array
-                (
+                array(
                     ':username' => static::username($username),
                     ':pass'     => static::password($password, null, $username)
                 )
