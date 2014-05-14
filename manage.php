@@ -28,97 +28,114 @@ require('include/top.php');
 echo '</head><body>';
 require('include/menu.php');
 if (!isset($_GET['action']))
-    $_GET['action'] = NULL;
+{
+    $_GET['action'] = null;
+}
 
 $panels = new PanelInterface();
 
 $menu_items =
+    array(
         array(
-            array(
-                'url' => 'manage.php?view=overview',
-                'label' => htmlspecialchars(_('Overview')),
-                'class' => 'manage-list menu-item'
-            )
-);
-if ($_SESSION['role']['managesettings']) {
+            'url'   => 'manage.php?view=overview',
+            'label' => htmlspecialchars(_('Overview')),
+            'class' => 'manage-list menu-item'
+        )
+    );
+if ($_SESSION['role']['managesettings'])
+{
     $menu_items[] = array(
-        'url' => 'manage.php?view=general',
+        'url'   => 'manage.php?view=general',
         'label' => htmlspecialchars(_('General Settings')),
         'class' => 'manage-list menu-item'
     );
     $menu_items[] =
-            array(
-                'url' => 'manage.php?view=news',
-                'label' => htmlspecialchars(_('News Messages')),
-                'class' => 'manage-list menu-item'
-    );
+        array(
+            'url'   => 'manage.php?view=news',
+            'label' => htmlspecialchars(_('News Messages')),
+            'class' => 'manage-list menu-item'
+        );
     $menu_items[] =
-            array(
-                'url' => 'manage.php?view=clients',
-                'label' => htmlspecialchars(_('Client Versions')),
-                'class' => 'manage-list menu-item'
-    );
+        array(
+            'url'   => 'manage.php?view=clients',
+            'label' => htmlspecialchars(_('Client Versions')),
+            'class' => 'manage-list menu-item'
+        );
     $menu_items[] =
-            array(
-                'url' => 'manage.php?view=cache',
-                'label' => htmlspecialchars(_('Cache Files')),
-                'class' => 'manage-list menu-item'
-    );
+        array(
+            'url'   => 'manage.php?view=cache',
+            'label' => htmlspecialchars(_('Cache Files')),
+            'class' => 'manage-list menu-item'
+        );
 }
 $menu_items[] =
-        array(
-            'url' => 'manage.php?view=files',
-            'label' => htmlspecialchars(_('Uploaded Files')),
-            'class' => 'manage-list menu-item'
-);
+    array(
+        'url'   => 'manage.php?view=files',
+        'label' => htmlspecialchars(_('Uploaded Files')),
+        'class' => 'manage-list menu-item'
+    );
 $menu_items[] =
-        array(
-            'url' => 'manage.php?view=logs',
-            'label' => htmlspecialchars(_('Event Logs')),
-            'class' => 'manage-list menu-item'
-);
+    array(
+        'url'   => 'manage.php?view=logs',
+        'label' => htmlspecialchars(_('Event Logs')),
+        'class' => 'manage-list menu-item'
+    );
 $panels->setMenuItems($menu_items);
 
 ob_start();
-try {
-    switch ($_GET['action']) {
+try
+{
+    switch ($_GET['action'])
+    {
         default:
             break;
         case 'save_config':
             if (!isset($_POST['xml_frequency']) ||
-                    !isset($_POST['allowed_addon_exts']) ||
-                    !isset($_POST['allowed_source_exts'])) {
-                throw new Exception(htmlspecialchars(_('One or more fields has been left blank. Settings were not saved.')));
+                !isset($_POST['allowed_addon_exts']) ||
+                !isset($_POST['allowed_source_exts'])
+            )
+            {
+                throw new Exception(htmlspecialchars(
+                    _('One or more fields has been left blank. Settings were not saved.')
+                ));
             }
-            if (!is_numeric($_POST['xml_frequency'])) {
+            if (!is_numeric($_POST['xml_frequency']))
+            {
                 throw new Exception(htmlspecialchars(_('XML Download Frequency value is invalid.')));
             }
 
-            ConfigManager::setConfig('xml_frequency', (int) $_POST['xml_frequency']);
+            ConfigManager::setConfig('xml_frequency', (int)$_POST['xml_frequency']);
             ConfigManager::setConfig('allowed_addon_exts', $_POST['allowed_addon_exts']);
             ConfigManager::setConfig('allowed_source_exts', $_POST['allowed_source_exts']);
             ConfigManager::setConfig('admin_email', $_POST['admin_email']);
             ConfigManager::setConfig('list_email', $_POST['list_email']);
-            ConfigManager::setConfig('list_invisible', (int) $_POST['list_invisible']);
+            ConfigManager::setConfig('list_invisible', (int)$_POST['list_invisible']);
             ConfigManager::setConfig('blog_feed', $_POST['blog_feed']);
-            ConfigManager::setConfig('max_image_dimension', (int) $_POST['max_image_dimension']);
+            ConfigManager::setConfig('max_image_dimension', (int)$_POST['max_image_dimension']);
             ConfigManager::setConfig('apache_rewrites', $_POST['apache_rewrites']);
 
             echo htmlspecialchars(_('Saved settings.')) . '<br />';
             break;
         case 'new_news':
             if (empty($_POST['message']) || !isset($_POST['condition']))
+            {
                 throw new Exception('Missing response for message and condition fields.');
+            }
 
             $web_display = (empty($_POST['web_display'])) ? false : (($_POST['web_display'] == 'on') ? true : false);
             $important = (empty($_POST['important'])) ? false : (($_POST['important'] == 'on') ? true : false);
             $condition = $_POST['condition'];
 
             // Make sure no invalid version number sneaks in
-            if (stristr($condition, 'stkversion') !== false) {
+            if (stristr($condition, 'stkversion') !== false)
+            {
                 $cond_check = explode(' ', $condition);
                 if (count($cond_check) !== 3)
-                    throw new Exception('Version comparison should contain three tokens, only found: ' . count($cond_check));
+                {
+                    throw new Exception('Version comparison should contain three tokens, only found: ' . count(
+                            $cond_check
+                        ));
+                }
                 // Validate version string
                 Validate::versionString($cond_check[2]);
             }
@@ -127,15 +144,19 @@ try {
             echo htmlspecialchars(_('Created message.')) . '<br />';
             break;
     }
-} catch (Exception $e) {
+}
+catch(Exception $e)
+{
     echo '<span class="error">' . $e->getMessage() . '</span><br />';
 }
 $status_content = ob_get_clean();
 $panels->setStatusContent($status_content);
 
 if (!isset($_GET['view']))
+{
     $_GET['view'] = 'overview';
-$_POST['id'] = $_GET['view'];
+}
+$_GET['id'] = $_GET['view'];
 
 ob_start();
 include(ROOT . 'manage-panel.php');
