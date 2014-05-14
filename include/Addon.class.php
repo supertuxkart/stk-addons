@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright 2011-2013 Stephen Just <stephenjust@users.sf.net>
- *
+ *                2014 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -20,40 +20,94 @@
 
 require_once(INCLUDE_DIR . 'DBConnection.class.php');
 
+/**
+ * Class Addon
+ */
 class Addon
 {
-    public static $allowedTypes = array('karts', 'tracks', 'arenas');
+    /**
+     * @var array
+     */
+    private static $allowedTypes = array('karts', 'tracks', 'arenas');
 
+    /**
+     * @var string
+     */
     private $type;
 
+    /**
+     * @var bool|string
+     */
     private $id;
 
+    /**
+     * @var int
+     */
     private $uploaderID;
 
+    /**
+     * @var int
+     */
     private $image = 0;
 
+    /**
+     * @var int
+     */
     private $icon = 0;
 
+    /**
+     * @var string
+     */
     private $name;
 
+    /**
+     * @var int
+     */
     private $uploaderId;
 
+    /**
+     * @var
+     */
     private $creationDate;
 
+    /**
+     * @var string
+     */
     private $designer;
 
+    /**
+     * @var string
+     */
     private $description;
 
+    /**
+     * @var string
+     */
     private $license;
 
+    /**
+     * @var string
+     */
     private $permalink;
 
+    /**
+     * @var array
+     */
     private $revisions = array();
 
+    /**
+     * @var
+     */
     private $latestRevision;
 
+    /**
+     * @var int
+     */
     private $minInclude;
 
+    /**
+     * @var int
+     */
     private $maxInclude;
 
     /**
@@ -63,17 +117,18 @@ class Addon
      *
      * @throws AddonException
      */
-    public function Addon($id)
+    public function __construct($id)
     {
         $this->id = Addon::cleanId($id);
 
         try
         {
+            // TODO select only the first result
             $result = DBConnection::get()->query(
-                'SELECT `type`,`name`,`uploader`,`creation_date`,
-                 `designer`,`description`,`license`,`min_include_ver`,`max_include_ver`
-                 FROM `' . DB_PREFIX . 'addons`
-                 WHERE `id` = :id',
+                'SELECT `type`, `name`, `uploader`, `creation_date`,
+                `designer`, `description`, `license`, `min_include_ver`, `max_include_ver`
+                FROM `' . DB_PREFIX . 'addons`
+                WHERE `id` = :id',
                 DBConnection::FETCH_ALL,
                 array(':id' => (string)$this->id)
             );
@@ -169,7 +224,7 @@ class Addon
         }
 
         // Check if logged in
-        if (!User::$logged_in)
+        if (!User::isLoggedIn())
         {
             throw new AddonException('You must be logged in to create an add-on.');
         }
@@ -216,7 +271,7 @@ class Addon
             $id,
             $type,
             $attributes['name'],
-            User::$user_id,
+            User::getId(),
             $attributes['designer'],
             $attributes['license']
         );
@@ -309,7 +364,7 @@ class Addon
         }
 
         // Check if logged in
-        if (!User::$logged_in)
+        if (!User::isLoggedIn())
         {
             throw new AddonException('You must be logged in to create an add-on revision.');
         }
@@ -333,7 +388,7 @@ class Addon
         }
 
         // Make sure user has permission to upload a new revision for this add-on
-        if (User::$user_id !== $this->uploaderId && !$_SESSION['role']['manageaddons'])
+        if (User::getId() !== $this->uploaderId && !$_SESSION['role']['manageaddons'])
         {
             throw new AddonException(htmlspecialchars(
                 _('You do not have the necessary permissions to perform this action.')
@@ -448,12 +503,12 @@ class Addon
      */
     public function delete()
     {
-        if (!User::$logged_in)
+        if (!User::isLoggedIn())
         {
             throw new AddonException(htmlentities(_('You must be logged in to perform this action.')));
         }
 
-        if ($_SESSION['role']['manageaddons'] !== true && User::$user_id !== $this->uploaderId)
+        if ($_SESSION['role']['manageaddons'] !== true && User::getId() !== $this->uploaderId)
         {
             throw new AddonException(htmlentities(
                 _('You do not have the necessary permissions to perform this action.')
@@ -542,7 +597,7 @@ class Addon
      */
     public function deleteFile($file_id)
     {
-        if (!$_SESSION['role']['manageaddons'] && $this->uploaderID !== User::$user_id)
+        if (!$_SESSION['role']['manageaddons'] && $this->uploaderID !== User::getId())
         {
             throw new AddonException(htmlspecialchars(
                 _('You do not have the necessary permissions to perform this action.')
@@ -564,7 +619,7 @@ class Addon
      */
     public function deleteRevision($rev)
     {
-        if (!$_SESSION['role']['manageaddons'] && $this->uploaderID !== User::$user_id)
+        if (!$_SESSION['role']['manageaddons'] && $this->uploaderID !== User::getId())
         {
             throw new AddonException(htmlspecialchars(
                 _('You do not have the necessary permissions to perform this action.')
@@ -824,15 +879,15 @@ class Addon
                     ':revision' => $revision
                 )
             );
-
-            if (empty($file_id_lookup))
-            {
-                throw new AddonException('There is no add-on found with the specified revision number.');
-            }
         }
         catch(DBException $e)
         {
             throw new AddonException('Failed to look up file ID');
+        }
+
+        if (empty($file_id_lookup))
+        {
+            throw new AddonException('There is no add-on found with the specified revision number.');
         }
 
         $file_id = $file_id_lookup['fileid'];
@@ -849,15 +904,15 @@ class Addon
                     ':id' => $file_id,
                 )
             );
-
-            if (empty($file))
-            {
-                throw new AddonException('The requested file does not have an associated file record.');
-            }
         }
         catch(DBException $e)
         {
             throw new AddonException('Failed to search for the file in the database.');
+        }
+
+        if (empty($file))
+        {
+            throw new AddonException('The requested file does not have an associated file record.');
         }
 
         return $file['file_path'];
@@ -912,11 +967,6 @@ class Addon
                     ':addon_id' => $this->id,
                 )
             );
-
-            if (empty($paths))
-            {
-                return array();
-            }
         }
         catch(DBException $e)
         {
@@ -955,13 +1005,13 @@ class Addon
                     ':file_type' => (string)'image'
                 )
             );
-
-            return $result;
         }
         catch(DBException $e)
         {
             return array();
         }
+
+        return $result;
     }
 
     /**
@@ -1011,13 +1061,13 @@ class Addon
                     ':id' => $id
                 )
             );
-
-            if (empty($addon))
-            {
-                return false;
-            }
         }
         catch(DBException $e)
+        {
+            return false;
+        }
+
+        if (empty($addon))
         {
             return false;
         }
@@ -1044,13 +1094,13 @@ class Addon
                     ':file_type' => (string)'source'
                 )
             );
-
-            return $result;
         }
         catch(DBException $e)
         {
             return array();
         }
+
+        return $result;
     }
 
     /**
@@ -1070,6 +1120,17 @@ class Addon
         return false;
     }
 
+
+    /**
+     * Get an array of allowed types
+     *
+     * @return array
+     */
+    public static function getAllowedTypes()
+    {
+        return Addon::$allowedTypes;
+    }
+
     /**
      * Perform a cleaning operation on the id
      *
@@ -1083,6 +1144,7 @@ class Addon
         {
             return false;
         }
+
         $length = strlen($id);
         if ($length === 0)
         {
@@ -1147,7 +1209,7 @@ class Addon
      */
     public function setDescription($description)
     {
-        if (!User::$logged_in || (!$_SESSION['role']['manageaddons'] && $this->uploaderId !== User::$user_id))
+        if (!User::isLoggedIn() || (!$_SESSION['role']['manageaddons'] && $this->uploaderId !== User::getId()))
         {
             throw new AddonException(htmlspecialchars(
                 _('You do not have the neccessary permissions to perform this action.')
@@ -1186,7 +1248,7 @@ class Addon
      */
     public function setDesigner($designer)
     {
-        if (!User::$logged_in || (!$_SESSION['role']['manageaddons'] && $this->uploaderId !== User::$user_id))
+        if (!User::isLoggedIn() || (!$_SESSION['role']['manageaddons'] && $this->uploaderId !== User::getId()))
         {
             throw new AddonException(htmlspecialchars(
                 _('You do not have the neccessary permissions to perform this action.')
@@ -1226,7 +1288,7 @@ class Addon
      */
     public function setImage($image_id, $field = 'image')
     {
-        if (!$_SESSION['role']['manageaddons'] && $this->uploaderId !== User::$user_id)
+        if (!$_SESSION['role']['manageaddons'] && $this->uploaderId !== User::getId())
         {
             throw new AddonException(htmlspecialchars(
                 _('You do not have the neccessary permissions to perform this action.')
@@ -1253,6 +1315,12 @@ class Addon
         }
     }
 
+    /**
+     * @param $start_ver
+     * @param $end_ver
+     *
+     * @throws AddonException
+     */
     public function setIncludeVersions($start_ver, $end_ver)
     {
         if (!$_SESSION['role']['manageaddons'])

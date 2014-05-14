@@ -2,7 +2,7 @@
 /**
  * copyright 2011-2013 Stephen Just <stephenjust@users.sf.net>
  *           2013      Glenn De Jonghe
- *
+ *           2014      Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -183,7 +183,7 @@ class Ratings {
             if ($session !== NULL) {
                 $userid = $session->getUserId();
             } else {
-                if (!User::$logged_in)
+                if (!User::isLoggedIn())
                     return;
                 $userid = $_SESSION['userid'];
             }
@@ -236,7 +236,7 @@ class Ratings {
         if ($session !== NULL) {
             $userid = $session->getUserId();
         } else {
-            if (!User::$logged_in)
+            if (!User::isLoggedIn())
                 throw new DBException();
             $userid = $_SESSION['userid'];
         }

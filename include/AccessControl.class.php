@@ -24,7 +24,7 @@ require_once(INCLUDE_DIR . 'User.class.php');
 require_once(INCLUDE_DIR . 'StkTemplate.class.php');
 
 /**
- * This file is included by include/user.php
+ * Set the permission in the session
  *
  * @param string $role
  */
@@ -107,10 +107,16 @@ function setPermissions($role)
 }
 
 
+/**
+ * Class AccessControl
+ */
 class AccessControl
 {
 
     // Define permission levels
+    /**
+     * @var array
+     */
     private static $permissions = array(
         'basicUser'     => array(
             'basicPage'            => true,
@@ -154,6 +160,19 @@ class AccessControl
         )
     );
 
+    /**
+     * @return array
+     */
+    public static function getPermissionTypes()
+    {
+        return array_keys(AccessControl::$permissions);
+    }
+
+    /**
+     * @param string $accessLevel
+     *
+     * @return bool
+     */
     public static function setLevel($accessLevel)
     {
         $role = User::getRole();
@@ -162,11 +181,11 @@ class AccessControl
             return true;
         }
 
-        if ($role == 'unregistered' && $accessLevel == null)
+        if ($role === 'unregistered' && $accessLevel === null)
         {
             $allow = true;
         }
-        elseif ($role == 'unregistered')
+        elseif ($role === 'unregistered')
         {
             $allow = false;
         }
@@ -181,6 +200,9 @@ class AccessControl
         }
     }
 
+    /**
+     * Show a 404 page
+     */
     public static function showAccessDeniedPage()
     {
         header('HTTP/1.0 401 Unauthorized');

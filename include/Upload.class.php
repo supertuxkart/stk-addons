@@ -2,7 +2,7 @@
 
 /**
  * copyright 2012 Stephen Just <stephenjust@users.sf.net>
- *
+ *           2014 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -21,35 +21,81 @@
 require_once(INCLUDE_DIR . 'parsers/b3dParser.class.php');
 require_once(INCLUDE_DIR . 'parsers/addonXMLParser.class.php');
 
+/**
+ * Class Upload
+ */
 class Upload
 {
+    /**
+     * @var string
+     */
     private $file_name;
 
+    /**
+     * @var string
+     */
     private $file_type;
 
+    /**
+     * @var int
+     */
     private $file_size;
 
+    /**
+     * @var string
+     */
     private $file_tmp;
 
+    /**
+     * @var string
+     */
     private $file_ext;
 
+    /**
+     * @var string
+     */
     private $expected_type;
 
+    /**
+     * @var string
+     */
     private $dest;
 
+    /**
+     * @var string
+     */
     private $temp;
 
+    /**
+     * @var array
+     */
     private $properties = array();
 
+    /**
+     * @var string
+     */
     private $upload_type;
 
+    /**
+     * @var string
+     */
     private $upload_name;
 
+    /**
+     * @var string
+     */
     private $addon_name;
 
+    /**
+     * @var int
+     */
     private $addon_id;
 
 
+    /**
+     * @param $file_record
+     * @param $expected_type
+     */
     public function __construct($file_record, $expected_type)
     {
         $this->file_name = $file_record['name'];
@@ -69,6 +115,9 @@ class Upload
         $this->doUpload();
     }
 
+    /**
+     * Addon deconstructor, delete the temp file
+     */
     public function __destruct()
     {
         File::deleteRecursive($this->temp);
@@ -422,7 +471,7 @@ class Upload
             {
                 $addon = new Addon($this->addon_id);
                 // Check if we are the original uploader, or a moderator
-                if (User::$user_id != $addon->getUploader() && !$_SESSION['role']['manageaddons'])
+                if (User::getId() != $addon->getUploader() && !$_SESSION['role']['manageaddons'])
                 {
                     throw new UploadException(htmlspecialchars(
                         _('You do not have the necessary permissions to perform this action.')
@@ -638,6 +687,9 @@ class Upload
         $this->properties['missing_textures'] = array_unique($missing_textures, SORT_STRING);
     }
 
+    /**
+     *
+     */
     private function editInfoFile()
     {
         $xml_parse = new addonXMLParser();

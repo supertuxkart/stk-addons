@@ -33,7 +33,7 @@ Description: menu
     <div id="top-menu-content">
         <div class="left">
     <?php
-    if(User::$logged_in)
+    if(User::isLoggedIn())
     {
         printf(htmlspecialchars(_('Welcome, %s')),$_SESSION['real_name']);
         echo '&nbsp;&nbsp;&nbsp;';
@@ -61,7 +61,7 @@ Description: menu
         }
     }
 
-    if(User::$logged_in)
+    if(User::isLoggedIn())
     {
         echo'<a href="'.SITE_ROOT.'login.php?action=logout">'.htmlspecialchars(_("Log out")).'</a>';
         echo'<a href="'.SITE_ROOT.'users.php">'.htmlspecialchars(_("Users")).'</a>';

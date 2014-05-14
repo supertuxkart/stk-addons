@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright 2014 Stephen Just <stephenjust@gmail.com>
- *
+ *           2014 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -105,7 +105,7 @@ class StkTemplate extends Template
      */
     private function setupTopMenu()
     {
-        $name = isset($_SESSION['real_name']) ? $_SESSION['real_name'] : null;
+        $name = isset($_SESSION['real_name']) ? $_SESSION['real_name'] : "";
         $menu = array(
             'welcome'  => sprintf(htmlspecialchars(_('Welcome, %s')), $name),
             'home'     => File::link('index.php', htmlspecialchars(_("Home"))),
@@ -121,10 +121,10 @@ class StkTemplate extends Template
             'privacy'  => File::link('privacy.php', htmlspecialchars(_('Privacy'))),
             'stk_home' => File::link('http://supertuxkart.sourceforge.net', htmlspecialchars(_('STK Homepage')))
         );
-        $this->smarty->assign('show_welcome', User::$logged_in);
-        $this->smarty->assign('show_login', !User::$logged_in);
-        $this->smarty->assign('show_users', User::$logged_in);
-        $this->smarty->assign('show_upload', User::$logged_in);
+        $this->smarty->assign('show_welcome', User::isLoggedIn());
+        $this->smarty->assign('show_login', !User::isLoggedIn());
+        $this->smarty->assign('show_users', User::isLoggedIn());
+        $this->smarty->assign('show_upload', User::isLoggedIn());
         $this->smarty->assign(
             'show_manage',
             (isset($_SESSION['role']['manageaddons'])) ? $_SESSION['role']['manageaddons'] : false

@@ -1,7 +1,7 @@
 <?php
 /**
  * copyright 2012 Stephen Just <stephenjust@users.sf.net>
- *
+ *           2014 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -27,7 +27,7 @@ class Log {
      * @param string $message Event description
      */
     public static function newEvent($message) {
-        $userid = (User::$logged_in) ? User::$user_id : 0;
+        $userid = (User::isLoggedIn()) ? User::getId() : 0;
         DBConnection::get()->query(
             "CALL `".DB_PREFIX."log_event`
             (:userid, :message)",
@@ -49,7 +49,7 @@ class Log {
         if (!is_int($number))
             throw new Exception('$number must be an integer.');
 
-        if (!User::$logged_in)
+        if (!User::isLoggedIn())
             throw new Exception('You must be logged in ot view the event log.');
         if (!$_SESSION['role']['manageaddons'])
             throw new Exception('You do not have the necessary permissions to view the event log.');

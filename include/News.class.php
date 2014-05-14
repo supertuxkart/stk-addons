@@ -1,7 +1,7 @@
 <?php
 /**
  * copyright 2011 Stephen Just <stephenjust@users.sourceforge.net>
- *
+ *           2014 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -427,7 +427,7 @@ class News
     {
         try
         {
-            if (!User::$logged_in)
+            if (!User::isLoggedIn())
             {
                 throw new Exception();
             }
@@ -438,7 +438,7 @@ class News
                      (:author_id, :message, :condition, :important, :web_display, :active)',
                     DBConnection::NOTHING,
                     array(
-                            ':author_id'   => (int)User::$user_id,
+                            ':author_id'   => (int)User::getId(),
                             ':message'     => (string)$message,
                             ':condition'   => (string)$condition,
                             ':important'   => (int)$important,

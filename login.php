@@ -2,7 +2,7 @@
 /**
  * Copyright 2009      Lucas Baudin <xapantu@gmail.com>
  *           2011-2014 Stephen Just <stephenjust@users.sourceforge.net>
- *
+ *           2014      Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -60,7 +60,7 @@ switch ($_GET['action'])
         $login_form['display'] = false;
 
         User::logout();
-        if (User::$logged_in === true)
+        if (User::isLoggedIn() == true)
         {
             $tpl->assign('confirmation', htmlspecialchars(_('Failed to logout.')));
         }
@@ -90,7 +90,7 @@ switch ($_GET['action'])
         {
             $errors .= $e->getMessage();
         }
-        if (User::$logged_in === true)
+        if (User::isLoggedIn())
         {
             $tpl->setMetaRefresh('index.php', 3);
             $conf = sprintf(htmlspecialchars(_('Welcome, %s!')) . '<br />', $_SESSION['real_name']);
@@ -108,7 +108,7 @@ switch ($_GET['action'])
         break;
 
     default:
-        if (User::$logged_in)
+        if (User::isLoggedIn())
         {
             $login_form['display'] = false;
             $tpl->setMetaRefresh('index.php', 3);

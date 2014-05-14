@@ -27,7 +27,7 @@ AccessControl::setLevel('basicPage');
 
 if (!isset($_GET['addonId']))
     die('No addon.');
-if (!User::$logged_in)
+if (!User::isLoggedIn())
     die('Not logged in.');
 $addonId = stripslashes($_GET['addonId']);
 $rating = new Ratings($addonId);

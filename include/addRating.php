@@ -1,7 +1,7 @@
 <?php
 /**
  * copyright 2011 computerfreak97
- *
+ *           2014 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -27,7 +27,7 @@ AccessControl::setLevel('basicPage');
 
 if (!isset($_GET['addonId']))
     die('No addon.');
-if (!User::$logged_in)
+if (!User::isLoggedIn())
     die('Not logged in.');
 $addonId = stripslashes($_GET['addonId']);
 $rating = new Ratings($addonId);

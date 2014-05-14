@@ -1,7 +1,7 @@
 <?php
 /**
  * copyright 2013 Glenn De Jonghe
- *
+ *           2014 Daniel Butum <danibutum at gmail dot com>
  * This file is part of SuperTuxKart
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -793,7 +793,7 @@ class RegisteredClientSession extends ClientSession
         }
         if(!empty($notifications['f_request'])){
             foreach($notifications['f_request'] as $requester_id){
-                $partial_output->insert(User::fetchFromID($requester_id)->asXML('new_friend_request'));
+                $partial_output->insert(User::getFromID($requester_id)->asXML('new_friend_request'));
             }
         }
         $partial_output->endElement();
