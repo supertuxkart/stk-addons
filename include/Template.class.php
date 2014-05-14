@@ -19,7 +19,7 @@
  */
 require_once(INCLUDE_DIR . 'File.class.php');
 require_once(INCLUDE_DIR . 'User.class.php');
-require_once(INCLUDE_DIR . 'exceptions.php');
+require_once(INCLUDE_DIR . 'Exceptions.class.php');
 
 /**
  * Create a template object

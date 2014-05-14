@@ -26,7 +26,7 @@
 
 require_once(INCLUDE_DIR . 'ClientSession.class.php');
 require_once(INCLUDE_DIR . 'DBConnection.class.php');
-require_once(INCLUDE_DIR . 'exceptions.php');
+require_once(INCLUDE_DIR . 'Exceptions.class.php');
 require_once(INCLUDE_DIR . 'XMLOutput.class.php');
 require_once(INCLUDE_DIR . 'xmlWrite.php');
 

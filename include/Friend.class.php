@@ -18,7 +18,7 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(INCLUDE_DIR . 'exceptions.php');
+require_once(INCLUDE_DIR . 'Exceptions.class.php');
 require_once(INCLUDE_DIR . 'DBConnection.class.php');
 require_once(INCLUDE_DIR . 'XMLOutput.class.php');
 require_once(INCLUDE_DIR . 'User.class.php');

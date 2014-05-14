@@ -2,7 +2,7 @@
 /**
  * copyright 2011-2013 Stephen Just <stephenjust@users.sf.net>
  *                2013 Glenn De Jonghe
- *
+ *                2014 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -23,7 +23,7 @@ require_once(INCLUDE_DIR . 'Validate.class.php');
 require_once(INCLUDE_DIR . 'Verification.class.php');
 require_once(INCLUDE_DIR . 'AccessControl.class.php');
 require_once(INCLUDE_DIR . 'DBConnection.class.php');
-require_once(INCLUDE_DIR . 'exceptions.php');
+require_once(INCLUDE_DIR . 'Exceptions.class.php');
 require_once(INCLUDE_DIR . 'SMail.class.php');
 require_once(INCLUDE_DIR . 'Log.class.php');
 
@@ -311,8 +311,8 @@ class User
 
             return null;
         }
-        // Validate session if complete set of variables is available
 
+        // Validate session if complete set of variables is available
         try
         {
             $count = DBConnection::get()->query(
@@ -403,9 +403,9 @@ class User
     }
 
     /**
-     * @param     $field
-     * @param     $value
-     * @param int $value_type
+     * @param string $field
+     * @param mixed  $value
+     * @param int    $value_type
      *
      * @return User
      * @throws UserException
@@ -475,7 +475,7 @@ class User
      * @param string $search_string
      *
      * @throws UserException
-     * @return multitype:User
+     * @return array of Users
      */
     public static function searchUsers($search_string)
     {
@@ -625,11 +625,12 @@ class User
     }
 
     /**
-     * @param $username
-     * @param $password
+     * Try to log in a user
      *
-     * @return bool
-     * @throws UserException
+     * @param string $username
+     * @param string $password
+     *
+     * @throws UserException on invalid credentials
      */
     public static function login($username, $password)
     {
@@ -650,7 +651,6 @@ class User
         $_SESSION['last_login'] = User::updateLoginTime(User::getId());
         User::$logged_in = true;
 
-
         // Convert unsalted password to a salted one
         if (strlen($password) === 64)
         {
@@ -658,12 +658,10 @@ class User
             User::changePassword($password);
             Log::newEvent("Converted the password of '$username' to use a password salting algorithm");
         }
-
-        return true;
     }
 
     /**
-     *
+     * Logout the user
      */
     public static function logout()
     {
@@ -810,8 +808,8 @@ class User
     }
 
     /**
-     * @param $username
-     * @param $email
+     * @param string $username
+     * @param string $email
      *
      * @throws UserException
      */
@@ -869,6 +867,7 @@ class User
         $name = Validate::realName($name);
         $terms = Validate::checkbox($terms, htmlspecialchars(_('You must agree to the terms to register.')));
         DBConnection::get()->beginTransaction();
+
         // Make sure requested username is not taken
         try
         {
@@ -876,7 +875,7 @@ class User
                 "SELECT `user` 
     	        FROM `" . DB_PREFIX . "users`
     	        WHERE `user` LIKE :username",
-                DBConnection::FETCH_ALL,
+                DBConnection::FETCH_FIRST,
                 array(
                     ':username' => $username
                 )
@@ -903,7 +902,7 @@ class User
                 "SELECT `email` 
     	        FROM `" . DB_PREFIX . "users`
     	        WHERE `email` LIKE :email",
-                DBConnection::FETCH_ALL,
+                DBConnection::FETCH_FIRST,
                 array(
                     ':email' => $email
                 )
@@ -916,7 +915,7 @@ class User
                 _('Please contact a website administrator.')
             ));
         }
-        if (count($result) !== 0)
+        if (!empty($result))
         {
             throw new UserException(htmlspecialchars(
                 _('This email address is already taken.')
@@ -947,6 +946,7 @@ class User
             $userid = DBConnection::get()->lastInsertId();
             DBConnection::get()->commit();
             $verification_code = Verification::generate($userid);
+
             // Send verification email
             try
             {
