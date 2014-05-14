@@ -91,7 +91,7 @@ abstract class ClientSession
      *
      * @param string $username user name (registered user or temporary nickname)
      * @param string $password password of registered user (optional)
-     * @param        bool
+     * @param bool   $save_session
      *
      * @return ClientSession object
      * @throws InvalidArgumentException when username is not provided
@@ -271,7 +271,7 @@ abstract class ClientSession
             // if count = 0 that may be a re-update of an existing key
             if ($count > 1)
             {
-                throw new UserException(htmlspecialchars(_('Could not set the ip:port')));
+                throw new UserException(_h('Could not set the ip:port'));
             }
         }
         catch(DBException $e)
@@ -308,11 +308,11 @@ abstract class ClientSession
             );
             if ($count == 0)
             {
-                throw new ClientSessionException(_('ID:Token must be wrong.'));
+                throw new ClientSessionException(_h('ID:Token must be wrong.'));
             }
             elseif ($count > 1)
             {
-                throw new ClientSessionException(_('Weird count of updates'));
+                throw new ClientSessionException(_h('Weird count of updates'));
             }
         }
         catch(DBException $e)
@@ -426,7 +426,7 @@ abstract class ClientSession
             );
             if (empty($result))
             {
-                throw new UserException(_('No server found'));
+                throw new UserException(_h('No server found'));
             }
             DBConnection::get()->query(
                 "INSERT INTO `" . DB_PREFIX . "server_conn` (serverid, userid, request)
@@ -956,17 +956,17 @@ class RegisteredClientSession extends ClientSession
     }
 
     /**
-     * @param int $hostid
+     * @param int $host_id
      * @param int $vote
      *
      * @throws ClientSessionException
      */
-    public function hostVote($hostid, $vote)
+    public function hostVote($host_id, $vote)
     {
         $vote = (int)$vote;
         if ($vote != 1 || $vote != -1)
         {
-            throw new ClientSessionException(_("Invalid vote. Your rating has to be either -1 or 1."));
+            throw new ClientSessionException(_h("Invalid vote. Your rating has to be either -1 or 1."));
         }
         try
         {
@@ -976,7 +976,7 @@ class RegisteredClientSession extends ClientSession
                 ON DUPLICATE KEY UPDATE `to` = :to",
                 DBConnection::ROW_COUNT,
                 array(
-                    ':hostid' => (int)$hostid,
+                    ':hostid' => (int)$host_id,
                     ':userid' => (int)$this->user_id,
                     ':vote'   => (int)$vote
                 )
