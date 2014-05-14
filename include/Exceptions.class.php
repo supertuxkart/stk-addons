@@ -26,3 +26,4 @@ class NewsException extends  Exception {}
 class RatingsException extends Exception {}
 class ImageException extends Exception {}
 class TemplateException extends Exception {}
+class ServerException extends Exception {}

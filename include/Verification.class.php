@@ -1,7 +1,7 @@
 <?php
 /**
  * copyright 2013 Glenn De Jonghe
- *
+ *           2014 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -108,8 +108,7 @@ class Verification
             VALUES(:userid, :code)
             ON DUPLICATE KEY UPDATE code = :code",
             DBConnection::ROW_COUNT,
-            array
-            (
+            array(
                 ':userid' => (int)$userid,
                 ':code'   => (string)$verification_code
             )

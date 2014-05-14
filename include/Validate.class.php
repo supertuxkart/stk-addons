@@ -196,7 +196,7 @@ class Validate
     }
 
     /**
-     * @param $name
+     * @param string $name
      *
      * @return string
      * @throws UserException
@@ -212,8 +212,8 @@ class Validate
     }
 
     /**
-     * @param $box
-     * @param $message
+     * @param string $box
+     * @param string $message
      *
      * @return mixed
      * @throws UserException
@@ -229,7 +229,7 @@ class Validate
     }
 
     /**
-     * @param $string
+     * @param string $string
      *
      * @return bool
      * @throws Exception
@@ -251,7 +251,7 @@ class Validate
      * @param string $password unhashed password
      *
      * @throws UserException
-     * @return associative array with user information from the database
+     * @return array associative with user information from the database
      */
     public static function credentials($username, $password)
     {
