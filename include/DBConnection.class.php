@@ -2,6 +2,9 @@
 
 require_once(ROOT . 'config.php');
 
+/**
+ * Class DBException
+ */
 class DBException extends Exception
 {
     /**
@@ -21,11 +24,25 @@ class DBException extends Exception
     }
 }
 
+/**
+ * Class DBConnection
+ */
 class DBConnection
 {
 
+    /**
+     * @var PDO
+     */
     private $conn;
 
+    /**
+     * @var bool
+     */
+    private $in_transaction = false;
+
+    /**
+     * @var DBConnection
+     */
     private static $instance;
 
     // Faking enumeration
@@ -46,13 +63,14 @@ class DBConnection
 
     const PARAM_STR = PDO::PARAM_STR;
 
+    /**
+     * The constructor
+     */
     private function __construct()
     {
         $this->conn = new PDO('mysql:host=' . DB_HOST . ';dbname=' . DB_NAME, DB_USER, DB_PASSWORD);
         $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $this->conn->exec("set names utf8");
-        $this->in_transaction = false;
-
     }
 
     /**
@@ -101,7 +119,7 @@ class DBConnection
         }
         if (DEBUG_MODE)
         {
-            printf("Did a commit while not having a transaction running!");
+            echo "Did a commit while not having a transaction running!";
         }
 
         return false;
@@ -134,7 +152,7 @@ class DBConnection
      * @param string $query
      * @param int    $return_type
      * @param array  $params     An associative array having mapping between variables for prepared statements and values
-     * @param array  $data_types variables in prepared statement for which datatype should be explictly mentioned
+     * @param array  $data_types variables in prepared statement for which data type should be explicitly mentioned
      *
      * @throws DBException
      *
@@ -146,7 +164,7 @@ class DBConnection
         array $params = array(),
         array $data_types = array()
     ) {
-        if (!$query)
+        if (empty($query))
         {
             throw new DBException("Empty Query");
         }
