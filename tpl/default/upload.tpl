@@ -2,7 +2,7 @@
 {include file=#header#}
 
 <div id="content">
-    {include file=#errors#}
+    {include file=#feedback_errors#}
 
     {if $upload.display == true}
         {if $upload.form.update == true}

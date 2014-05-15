@@ -2,7 +2,7 @@
 {include file=#header#}
 
 <div id="content">
-    {include file=#errors#}
+    {include file=#feedback_errors#}
     {if $login.display==true}
         {$login.form.start}
         {$login.form.username.label}
