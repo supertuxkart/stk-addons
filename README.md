@@ -11,7 +11,7 @@ This software has no automated installation mechanism as it is not intended for 
 usage. However, you can manually generate all of the necessary database tables and
 configuration settings manually.
 
-Before you attempt to set up a local installation, you should run `check_server_deps.php`
+Before you attempt to set up a local installation, you should run `install/check_server_deps.php`
 on your web server. This will check to make sure that several dependencies can be found.
 There may be other dependencies not tested by that script, but that should be enough to
 get started.
@@ -22,12 +22,12 @@ Dependencies include:
 * PHP's PDO module
 * PHP's gettext module
 * Smarty Template Engine (managed by composer)
-* Smarty [gettext plugin](https://github.com/smarty-gettext/smarty-gettext)
+* Smarty [gettext plugin](https://github.com/smarty-gettext/smarty-gettext) (managed by composer)
 
 You can generate the database tables, procedures, and relations by using a tool such as
-PHPMyAdmin to import the table.sql file found in the repository. You may need to edit
-the provided SQL file, as it assumes a table prefix of 'v2_' and a database username of
-'stkaddons_stkbase'.
+PHPMyAdmin to import the table.sql file found in the repository(in the `install` directory).
+You may need to edit the provided SQL file, as it assumes a table prefix of 'v2_' and a
+database username of 'stkaddons_stkbase'.
 
 On your web server, you must edit the provided `config-base.php` to match your database
 and system configuration. Save this file as `config.php`. Enable the debugging mode in
