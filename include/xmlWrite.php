@@ -162,8 +162,8 @@ function generateAssetXML()
                 {
                     trigger_error('File not found for ' . $addon['name'], E_USER_WARNING);
                     echo '<span class="warning">' . htmlspecialchars(
-                                    _('The following file could not be found: ')
-                            ) . $file_path . '</span><br />';
+                                    _('The following file could not be found:')
+                            ) . ' ' . $file_path . '</span><br />';
                     continue;
                 }
 

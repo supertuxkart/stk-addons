@@ -7,7 +7,7 @@
     {if $upload.display == true}
         {if $upload.form.update == true}
             <form id="formKart" enctype="multipart/form-data" action="upload.php?type={$smarty.get.type}&
-            name={$smarty.get.name}&amp;action=submit" method="POST">
+            name={$smarty.get.name}&action=submit" method="POST">
             {if $smarty.get.action != 'file'}
                 {$upload.form.addon.new_revision}<br>
             {else}

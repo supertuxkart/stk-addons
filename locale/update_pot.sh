@@ -15,7 +15,7 @@ xgettext \
 --files-from=file-list.txt
 
 echo "Generating from templates"
-./tsmarty2c.php -o template.pot ../tpl/
+./tsmarty2c.php -o template.pot ../tpl
 
 echo "Concatenating"
 msgcat -o translations.pot code.pot template.pot
