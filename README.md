@@ -22,6 +22,7 @@ Dependencies include:
 * PHP's PDO module
 * PHP's gettext module
 * Smarty Template Engine (managed by composer)
+* Smarty [gettext plugin](https://github.com/smarty-gettext/smarty-gettext)
 
 You can generate the database tables, procedures, and relations by using a tool such as
 PHPMyAdmin to import the table.sql file found in the repository. You may need to edit

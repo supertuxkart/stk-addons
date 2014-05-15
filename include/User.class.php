@@ -449,7 +449,7 @@ class User
     }
 
     /**
-     * @param $id
+     * @param int $id
      *
      * @throws UserException
      * @return User
@@ -460,7 +460,7 @@ class User
     }
 
     /**
-     * @param $username
+     * @param string $username
      *
      * @throws UserException
      * @return User
