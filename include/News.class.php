@@ -37,15 +37,16 @@ class News
      */
     public static function refreshDynamicEntries()
     {
+        // TODO throw exceptions instead of echoing to the user
         // Get dynamic entries
         try
         {
             $dynamic_entries = DBConnection::get()->query(
-                    'SELECT *
-                     FROM `' . DB_PREFIX . 'news`
-                     WHERE `dynamic` = 1
-                     ORDER BY `id` ASC',
-                    DBConnection::FETCH_ALL
+                'SELECT *
+                FROM `' . DB_PREFIX . 'news`
+                WHERE `dynamic` = 1
+                ORDER BY `id` ASC',
+                DBConnection::FETCH_ALL
             );
         }
         catch(DBException $e)
@@ -66,12 +67,12 @@ class News
                     try
                     {
                         DBConnection::get()->query(
-                                'DELETE FROM `' . DB_PREFIX . 'news`
-                                 WHERE `id` = :id',
-                                DBConnection::NOTHING,
-                                array(
-                                    ":id" => $entry['id']
-                                )
+                            'DELETE FROM `' . DB_PREFIX . 'news`
+                            WHERE `id` = :id',
+                            DBConnection::NOTHING,
+                            array(
+                                ":id" => $entry['id']
+                            )
                         );
                     }
                     catch(DBException $e)
@@ -93,12 +94,12 @@ class News
             try
             {
                 DBConnection::get()->insert(
-                        DB_PREFIX . 'news',
-                        array(
-                            "content"     => "Newest add-on kart: " . $new_kart,
-                            "web_display" => 1,
-                            "dynamic"     => 1,
-                        )
+                    DB_PREFIX . 'news',
+                    array(
+                        "content"     => "Newest add-on kart: " . $new_kart,
+                        "web_display" => 1,
+                        "dynamic"     => 1,
+                    )
                 );
             }
             catch(DBException $e)
@@ -120,12 +121,12 @@ class News
                     try
                     {
                         DBConnection::get()->query(
-                                'DELETE FROM `' . DB_PREFIX . 'news`
-                                WHERE `id` = :id',
-                                DBConnection::NOTHING,
-                                array(
-                                    ":id" => $entry['id']
-                                )
+                            'DELETE FROM `' . DB_PREFIX . 'news`
+                            WHERE `id` = :id',
+                            DBConnection::NOTHING,
+                            array(
+                                ":id" => $entry['id']
+                            )
                         );
                     }
                     catch(DBException $e)
@@ -147,12 +148,12 @@ class News
             try
             {
                 DBConnection::get()->insert(
-                        DB_PREFIX . 'news',
-                        array(
-                                "content"     => "Newest add-on track: " . $new_track,
-                                "web_display" => 1,
-                                "dynamic"     => 1,
-                        )
+                    DB_PREFIX . 'news',
+                    array(
+                        "content"     => "Newest add-on track: " . $new_track,
+                        "web_display" => 1,
+                        "dynamic"     => 1,
+                    )
                 );
             }
             catch(DBException $e)
@@ -174,12 +175,12 @@ class News
                     try
                     {
                         DBConnection::get()->query(
-                                'DELETE FROM `' . DB_PREFIX . 'news`
-                                WHERE `id` = :id',
-                                DBConnection::NOTHING,
-                                array(
-                                        ":id" => $entry['id']
-                                )
+                            'DELETE FROM `' . DB_PREFIX . 'news`
+                            WHERE `id` = :id',
+                            DBConnection::NOTHING,
+                            array(
+                                ":id" => $entry['id']
+                            )
                         );
                     }
                     catch(DBException $e)
@@ -201,12 +202,12 @@ class News
             try
             {
                 DBConnection::get()->insert(
-                        DB_PREFIX . 'news',
-                        array(
-                                "content"     => "Newest add-on arena: " . $new_arena,
-                                "web_display" => 1,
-                                "dynamic"     => 1,
-                        )
+                    DB_PREFIX . 'news',
+                    array(
+                        "content"     => "Newest add-on arena: " . $new_arena,
+                        "web_display" => 1,
+                        "dynamic"     => 1,
+                    )
                 );
             }
             catch(DBException $e)
@@ -228,12 +229,12 @@ class News
                     try
                     {
                         DBConnection::get()->query(
-                                'DELETE FROM `' . DB_PREFIX . 'news`
-                                WHERE `id` = :id',
-                                DBConnection::NOTHING,
-                                array(
-                                        ":id" => $entry['id']
-                                )
+                            'DELETE FROM `' . DB_PREFIX . 'news`
+                            WHERE `id` = :id',
+                            DBConnection::NOTHING,
+                            array(
+                                ":id" => $entry['id']
+                            )
                         );
                     }
                     catch(DBException $e)
@@ -255,12 +256,12 @@ class News
             try
             {
                 DBConnection::get()->insert(
-                        DB_PREFIX . 'news',
-                        array(
-                                "content"     => "Latest post on stkblog.net: " . $latest_blogpost,
-                                "web_display" => 1,
-                                "dynamic"     => 1,
-                        )
+                    DB_PREFIX . 'news',
+                    array(
+                        "content"     => "Latest post on stkblog.net: " . $latest_blogpost,
+                        "web_display" => 1,
+                        "dynamic"     => 1,
+                    )
                 );
             }
             catch(DBException $e)
@@ -280,7 +281,7 @@ class News
     private static function getLatestBlogPost()
     {
         $feed_url = ConfigManager::getConfig('blog_feed');
-        if (strlen($feed_url) === 0)
+        if (empty($feed_url))
         {
             return false;
         }
@@ -299,8 +300,10 @@ class News
             return false;
         }
 
+        // TODO maybe use a more sane way to parse
         $startSearch = -1;
-        for ($i = 0; $i < count($vals); $i++)
+        $vals_count = count($vals);
+        for ($i = 0; $i < $vals_count; $i++)
         {
             if ($vals[$i]['tag'] === 'ITEM')
             {
@@ -314,7 +317,7 @@ class News
         }
 
         $articleTitle = null;
-        for ($i = $startSearch; $i < count($vals); $i++)
+        for ($i = $startSearch; $i < $vals_count; $i++)
         {
             if ($vals[$i]['tag'] === 'TITLE')
             {
@@ -340,11 +343,11 @@ class News
         try
         {
             $items = DBConnection::get()->query(
-                    'SELECT `content` FROM `' . DB_PREFIX . 'news`
-                     WHERE `active` = 1
-                     AND `web_display` = 1
-                     ORDER BY `date` DESC',
-                    DBConnection::FETCH_ALL
+                'SELECT `content` FROM `' . DB_PREFIX . 'news`
+                WHERE `active` = 1
+                AND `web_display` = 1
+                ORDER BY `date` DESC',
+                DBConnection::FETCH_ALL
             );
             $ret = array();
             foreach ($items as $item)
@@ -370,13 +373,13 @@ class News
         try
         {
             $news = DBConnection::get()->query(
-                    'SELECT `n`.*, `u`.`user` AS `author`
-                     FROM `' . DB_PREFIX . 'news` `n`
-                     LEFT JOIN `' . DB_PREFIX . 'users` `u`
-                     ON (`n`.`author_id`=`u`.`id`)
-                     WHERE `n`.`active` = \'1\'
-                     ORDER BY `date` DESC',
-                    DBConnection::FETCH_ALL
+                'SELECT `n`.*, `u`.`user` AS `author`
+                FROM `' . DB_PREFIX . 'news` `n`
+                LEFT JOIN `' . DB_PREFIX . 'users` `u`
+                ON (`n`.`author_id`=`u`.`id`)
+                WHERE `n`.`active` = \'1\'
+                ORDER BY `date` DESC',
+                DBConnection::FETCH_ALL
             );
 
             return $news;
@@ -397,12 +400,12 @@ class News
         try
         {
             $news = DBConnection::get()->query(
-                    'SELECT `n`.*, `u`.`user` AS `author`
-                     FROM `' . DB_PREFIX . 'news` `n`
-                     LEFT JOIN `' . DB_PREFIX . 'users` `u`
-                     ON (`n`.`author_id`=`u`.`id`)
-                     ORDER BY `date` DESC',
-                    DBConnection::FETCH_ALL
+                'SELECT `n`.*, `u`.`user` AS `author`
+                FROM `' . DB_PREFIX . 'news` `n`
+                LEFT JOIN `' . DB_PREFIX . 'users` `u`
+                ON (`n`.`author_id`=`u`.`id`)
+                ORDER BY `date` DESC',
+                DBConnection::FETCH_ALL
             );
 
             return $news;
@@ -431,20 +434,16 @@ class News
             {
                 throw new Exception();
             }
-            DBConnection::get()->query(
-                    'INSERT INTO `' . DB_PREFIX . 'news`
-                     (`author_id`,`content`,`condition`,`important`,`web_display`,`active`)
-                     VALUES
-                     (:author_id, :message, :condition, :important, :web_display, :active)',
-                    DBConnection::NOTHING,
-                    array(
-                            ':author_id'   => (int)User::getId(),
-                            ':message'     => (string)$message,
-                            ':condition'   => (string)$condition,
-                            ':important'   => (int)$important,
-                            ':web_display' => (int)$web_display,
-                            ':active'      => 1
-                    )
+            DBConnection::get()->insert(
+                DB_PREFIX . 'news',
+                array(
+                    'author_id'   => (int)User::getId(),
+                    'content'     => (string)$message,
+                    'condition'   => (string)$condition,
+                    'important'   => (int)$important,
+                    'web_display' => (int)$web_display,
+                    'active'      => 1
+                )
             );
             writeNewsXML();
         }
@@ -470,10 +469,10 @@ class News
         try
         {
             DBConnection::get()->query(
-                    'DELETE FROM `' . DB_PREFIX . 'news`
-                     WHERE `id` = :id',
-                    DBConnection::NOTHING,
-                    array(':id' => (int)$id)
+                'DELETE FROM `' . DB_PREFIX . 'news`
+                WHERE `id` = :id',
+                DBConnection::NOTHING,
+                array(':id' => (int)$id)
             );
             writeNewsXML();
 
