@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "098125e3c10930a6a1eb51db5e18e0ee",
+    "hash": "9654a0c0b16c29cb16f1a6759d032615",
     "packages": [
         {
             "name": "brandonwamboldt/utilphp",
@@ -149,10 +149,10 @@
     "stability-flags": {
         "smarty-gettext/smarty-gettext": 0
     },
-    "platform": [
-
-    ],
-    "platform-dev": [
-
-    ]
+    "platform": {
+        "php": ">=5.3.3"
+    },
+    "platform-dev": {
+        "php": ">=5.3.3"
+    }
 }
