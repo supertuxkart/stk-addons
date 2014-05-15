@@ -2,7 +2,7 @@
 
 /**
  * copyright 2011 Stephen Just <stephenjust@users.sourceforge.net>
- *
+ *           2014 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -22,15 +22,22 @@ define('ROOT', './');
 require('include.php');
 AccessControl::setLevel('manageaddons');
 
-$title = htmlspecialchars(_('STK Add-ons') . ' | ' . _('Manage'));
-
-require('include/top.php');
-echo '</head><body>';
-require('include/menu.php');
-
 $_GET['action'] = (isset($_GET['action'])) ? $_GET['action'] : null;
-$panels = new PanelInterface();
+if (!isset($_GET['view']))
+{
+    $_GET['view'] = 'overview';
+}
+$_GET['id'] = $_GET['view'];
 
+$tpl = new StkTemplate("two-pane.tpl");
+$tpl->assign("title", htmlspecialchars(_('STK Add-ons') . ' | ' . _('Manage')));
+$panel = array(
+    'left'   => '',
+    'status' => '',
+    'right'  => ''
+);
+
+// create left links
 $menu_items = array(
     array(
         'url'   => 'manage.php?view=overview',
@@ -71,8 +78,13 @@ $menu_items[] = array(
     'label' => htmlspecialchars(_('Event Logs')),
     'class' => 'manage-list menu-item'
 );
-$panels->setMenuItems($menu_items);
 
+// left panel
+$left_tpl = new StkTemplate('url-list-panel.tpl');
+$left_tpl->assign('items', $menu_items);
+$panel['left'] = (string)$left_tpl;
+
+// status message
 $status_content = "";
 try
 {
@@ -121,9 +133,9 @@ try
                 $cond_check = explode(' ', $condition);
                 if (count($cond_check) !== 3)
                 {
-                    throw new Exception('Version comparison should contain three tokens, only found: ' . count(
-                            $cond_check
-                        ));
+                    throw new Exception('Version comparison should contain three tokens, only found: ' .
+                        count($cond_check)
+                    );
                 }
                 // Validate version string
                 Validate::versionString($cond_check[2]);
@@ -140,19 +152,13 @@ catch(Exception $e)
 {
     $status_content = '<span class="error">' . $e->getMessage() . '</span><br />';
 }
-$panels->setStatusContent($status_content);
+$panel["status"] = $status_content;
 
-if (!isset($_GET['view']))
-{
-    $_GET['view'] = 'overview';
-}
-$_GET['id'] = $_GET['view'];
-
+// right panel
 ob_start();
 include(ROOT . 'manage-panel.php');
-$content = ob_get_clean();
-$panels->setContent($content);
+$panel['right'] = ob_get_clean();
 
-echo $panels;
-
-require('include/footer.php');
+// output the view
+$tpl->assign('panel', $panel);
+echo $tpl;
