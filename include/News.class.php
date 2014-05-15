@@ -20,7 +20,7 @@
 
 require_once(INCLUDE_DIR . 'DBConnection.class.php');
 require_once(INCLUDE_DIR . 'Addon.class.php');
-require_once(INCLUDE_DIR . 'statistics.php');
+require_once(INCLUDE_DIR . 'Statistic.class.php');
 
 /**
  * Manage the newsfeed that is fed to the game
@@ -55,7 +55,7 @@ class News
         }
 
         // Dynamic newest kart display
-        $new_kart = Addon::getName(stat_newest('karts'));
+        $new_kart = Addon::getName(Statistic::newestAddon('karts'));
         $existing_id = false;
         foreach ($dynamic_entries as $entry)
         {
@@ -109,7 +109,7 @@ class News
         }
 
         // Dynamic newest track display
-        $new_track = Addon::getName(stat_newest('tracks'));
+        $new_track = Addon::getName(Statistic::newestAddon('tracks'));
         $existing_id = false;
         foreach ($dynamic_entries as $entry)
         {
@@ -163,7 +163,7 @@ class News
         }
 
         // Dynamic newest arena display
-        $new_arena = Addon::getName(stat_newest('arenas'));
+        $new_arena = Addon::getName(Statistic::newestAddon('arenas'));
         $existing_id = false;
         foreach ($dynamic_entries as $entry)
         {
