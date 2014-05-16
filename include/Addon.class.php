@@ -1002,7 +1002,7 @@ class Addon
                 DBConnection::FETCH_ALL,
                 array(
                     ':addon_id'  => (string)$this->id,
-                    ':file_type' => (string)'image'
+                    ':file_type' => 'image'
                 )
             );
         }

@@ -227,6 +227,7 @@ class File
      */
     public static function compress($directory, $out_file)
     {
+        // TODO throw exceptions
         $zip = new ZipArchive();
         $filename = $out_file;
 
@@ -263,8 +264,7 @@ class File
             }
         }
 
-        $succes = $zip->close();
-        if (!$succes)
+        if (!$zip->close())
         {
             echo "Can't close the zip\n";
 
@@ -323,27 +323,28 @@ class File
         {
             return false;
         }
+
         // Check supported image types
-        $imagetypes = imagetypes();
+        $image_types = imagetypes();
         $imageFileExts = array();
-        if ($imagetypes & IMG_GIF)
+        if ($image_types & IMG_GIF)
         {
             $imageFileExts[] = 'gif';
         }
-        if ($imagetypes & IMG_PNG)
+        if ($image_types & IMG_PNG)
         {
             $imageFileExts[] = 'png';
         }
-        if ($imagetypes & IMG_JPG)
+        if ($image_types & IMG_JPG)
         {
             $imageFileExts[] = 'jpg';
             $imageFileExts[] = 'jpeg';
         }
-        if ($imagetypes & IMG_WBMP)
+        if ($image_types & IMG_WBMP)
         {
             $imageFileExts[] = 'wbmp';
         }
-        if ($imagetypes & IMG_XPM)
+        if ($image_types & IMG_XPM)
         {
             $imageFileExts[] = 'xpm';
         }
@@ -356,6 +357,7 @@ class File
             {
                 continue;
             }
+
             // Make sure the whole path is there
             $file = $path . $file;
 
@@ -367,6 +369,7 @@ class File
 
             // If we're still in the loop, there is an image to check
             $image_size = getimagesize($file);
+
             // Make sure dimensions are powers of 2
             if (($image_size[0] & ($image_size[0] - 1)) || ($image_size[0] <= 0))
             {
@@ -397,6 +400,7 @@ class File
         {
             return false;
         }
+
         // Make a list of approved file types
         if ($source === false)
         {
@@ -416,6 +420,7 @@ class File
             {
                 continue;
             }
+
             // Make sure the whole path is there
             $file = $path . $file;
 
@@ -426,7 +431,7 @@ class File
                 unlink($file);
             }
         }
-        if (count($removed_files) === 0)
+        if (empty($removed_files))
         {
             return true;
         }
@@ -482,7 +487,7 @@ class File
         // Check file-extension for uploaded file
         if ($type === 'image')
         {
-            if (!preg_match('/\.(png|jpg|jpeg)$/i', $filename, $fileext))
+            if (!preg_match('/\.(png|jpg|jpeg)$/i', $filename, $file_ext))
             {
                 throw new UploadException(htmlspecialchars(
                     _('Uploaded image files must be either PNG or Jpeg files.')
@@ -492,13 +497,13 @@ class File
         else
         {
             // File extension must be .zip, .tgz, .tar, .tar.gz, tar.bz2, .tbz
-            if (!preg_match('/\.(zip|t[bg]z|tar|tar\.gz|tar\.bz2)$/i', $filename, $fileext))
+            if (!preg_match('/\.(zip|t[bg]z|tar|tar\.gz|tar\.bz2)$/i', $filename, $file_ext))
             {
                 throw new UploadException(htmlspecialchars(_('The file you uploaded was not the correct type.')));
             }
         }
 
-        return $fileext[1];
+        return $file_ext[1];
     }
 
     /**
@@ -512,12 +517,12 @@ class File
     {
         try
         {
-            $files = DBConnection::get()->query(
+            $file = DBConnection::get()->query(
                 'SELECT `file_path`
                 FROM `' . DB_PREFIX . 'files`
                 WHERE `id` = :file_id
                 LIMIT 1',
-                DBConnection::FETCH_ALL,
+                DBConnection::FETCH_FIRST,
                 array(
                     ':file_id' => $file_id,
                 ),
@@ -526,9 +531,8 @@ class File
                 )
             );
 
-            if (count($files) === 1)
+            if (!empty($file))
             {
-                $file = $files[0];
                 if (file_exists(UP_LOCATION . $file['file_path']))
                 {
                     unlink(UP_LOCATION . $file['file_path']);
@@ -626,6 +630,7 @@ class File
                 if ($file !== '.' && $file !== '..' && is_dir($dir . '/' . $file))
                 {
                     $last_mod = filemtime($dir . '/' . $file . '/.');
+
                     // Check if our folder is old enough to delete
                     if (mktime() - $last_mod > $max_age)
                     {
@@ -695,12 +700,12 @@ class File
         // Look up file path from database
         try
         {
-            $addons = DBConnection::get()->query(
+            $addon = DBConnection::get()->query(
                 'SELECT `addon_id`
                 FROM `' . DB_PREFIX . 'files`
                 WHERE `id` = :file_id
                 LIMIT 1',
-                DBConnection::FETCH_ALL,
+                DBConnection::FETCH_FIRST,
                 array(
                     ':file_id' => $file_id
                 ),
@@ -714,13 +719,13 @@ class File
             throw new FileException("Can not retrieve addon a DB error occurred");
         }
 
-        if (empty($addons))
+        if (empty($addon))
         {
             return false;
         }
 
         // get the first record
-        return $addons[0]['addon_id'];
+        return $addon['addon_id'];
     }
 
     /**
@@ -747,11 +752,12 @@ class File
         // Look up file path from database
         try
         {
-            $files = DBConnection::get()->query(
-                'SELECT `file_path` FROM `' . DB_PREFIX . 'files`
-                    WHERE `id` = :file_id
-                    LIMIT 1',
-                DBConnection::FETCH_ALL,
+            $file = DBConnection::get()->query(
+                'SELECT `file_path`
+                FROM `' . DB_PREFIX . 'files`
+                WHERE `id` = :file_id
+                LIMIT 1',
+                DBConnection::FETCH_FIRST,
                 array(
                     ':file_id' => $file_id
                 ),
@@ -765,13 +771,13 @@ class File
             throw new FileException("Can not retrieve path a DB error occurred");
         }
 
-        if (empty($files))
+        if (empty($file))
         {
             return false;
         }
 
         // get the first record
-        return $files[0]['file_path'];
+        return $file['file_path'];
     }
 
     /**
@@ -839,7 +845,8 @@ class File
 
         // Reset indices
         $files = array_values($files);
-        for ($i = 0; $i < count($files); $i++)
+        $files_count = count($files);
+        for ($i = 0; $i < $files_count; $i++)
         {
             $return_files[] = array(
                 'id'         => false,
@@ -993,9 +1000,10 @@ class File
                 $quads[] = array_values($val['attributes']);
             }
         }
+        $quads_count = count($quads);
 
         // Replace references to other quads with proper coordinates
-        for ($i = 0; $i < count($quads); $i++)
+        for ($i = 0; $i < $quads_count; $i++)
         {
             for ($j = 0; $j <= 3; $j++)
             {
@@ -1013,8 +1021,7 @@ class File
         $x_max = null;
         $z_min = null;
         $z_max = null;
-        // TODO optimize counts
-        for ($i = 0; $i < count($quads); $i++)
+        for ($i = 0; $i < $quads_count; $i++)
         {
             for ($j = 0; $j <= 3; $j++)
             {
@@ -1060,7 +1067,7 @@ class File
         $y_range = $y_max - $y_min + 1;
         $x_range = $x_max - $x_min + 1;
         $z_range = $z_max - $z_min + 1;
-        for ($i = 0; $i < count($quads); $i++)
+        for ($i = 0; $i < $quads_count; $i++)
         {
             for ($j = 0; $j <= 3; $j++)
             {
@@ -1077,7 +1084,9 @@ class File
         $image = imagecreatetruecolor(1024, 1024);
         imagealphablending($image, false);
         imagesavealpha($image, true);
+
         // Set up colors
+        $color = array();
         for ($i = 0; $i <= 255; $i++)
         {
             $color[$i] = imagecolorallocate($image, (int)($i / 1.5), (int)($i / 1.5), $i);
@@ -1086,11 +1095,12 @@ class File
         imagefilledrectangle($image, 0, 0, 1023, 1023, $bg);
 
         // Paint quads
-        for ($i = 0; $i < count($quads); $i++)
+        for ($i = 0; $i < $quads_count; $i++)
         {
+            $color_index = (int)(($quads[$i][0][1] + $quads[$i][1][1] + $quads[$i][2][1] + $quads[$i][3][1]) / 4);
             imagefilledpolygon(
-                $image,
-                array(
+                $image, // image
+                array( // points
                     $quads[$i][0][0],
                     $quads[$i][0][2],
                     $quads[$i][1][0],
@@ -1100,12 +1110,8 @@ class File
                     $quads[$i][3][0],
                     $quads[$i][3][2]
                 ),
-                4,
-                $color[(int)(($quads[$i][0][1]
-                        + $quads[$i][1][1]
-                        + $quads[$i][2][1]
-                        + $quads[$i][3][1])
-                    / 4)]
+                4, // num_points
+                $color[$color_index] // color
             );
         }
 
@@ -1186,7 +1192,8 @@ class File
             {
                 continue;
             }
-            for ($i = 1; $i < count($matches); $i++)
+            $matches_count = count($matches);
+            for ($i = 1; $i < $matches_count; $i++)
             {
                 $new_link = str_replace('$' . $i, $matches[$i], $new_link);
             }
