@@ -1,5 +1,4 @@
 <?php
-
 /**
  * copyright 2013 Glenn De Jonghe
  *

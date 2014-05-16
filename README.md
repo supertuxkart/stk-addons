@@ -27,10 +27,10 @@ Dependencies include:
 You can generate the database tables, procedures, and relations by using a tool such as
 PHPMyAdmin to import the table.sql file found in the repository(in the `install` directory).
 You may need to edit the provided SQL file, as it assumes a table prefix of 'v2_' and a
-database username of 'stkaddons_stkbase'.
+database username of 'stkuser'.
 
-On your web server, you must edit the provided `config-base.php` to match your database
-and system configuration. Save this file as `config.php`. Enable the debugging mode in
+On your web server, you must edit the provided `install/config-base.php` to match your database
+and system configuration. Save this file as `config.php` in the website root. Enable the debugging mode in
 the configuration file to assist with resolving any errors.
 
 Run `composer install` to download smarty and other dependencies.
@@ -44,6 +44,9 @@ The source tree contains an 'api' folder. On the production STK Addons server,
 these files exist in a separate sub-domain. For testing on a local machine, you
 may wish to copy these files to the parent folder if you intend to test API
 functionality.
+
+As an optional step you could use the `install/htaccess.example` file to rewrite url's. To do this
+move it the website root and rename it to `.htaccess` (be sure that you have installed `mod_rewrite` in apache)
 
 About the Code
 --------------
