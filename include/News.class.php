@@ -435,7 +435,7 @@ class News
                 throw new Exception();
             }
             DBConnection::get()->insert(
-                DB_PREFIX . 'news',
+                'news',
                 array(
                     'author_id'   => (int)User::getId(),
                     'content'     => (string)$message,
