@@ -23,18 +23,20 @@
  * This file provides a json-formatted list of all available images for an
  * addon passed through the "id" parameter.
  */
-define('ROOT','../');
+define('ROOT', '../');
 require('../include.php');
-AccessControl::setLevel(NULL);
+AccessControl::setLevel(null);
 
 // Quit if no ID was passed
-if (!isset($_GET['id'])) {
+if (!isset($_GET['id']))
+{
     header('HTTP/1.0 404 Not Found');
     exit;
 }
 
 $addon_id = $_GET['id'];
-if (!Addon::exists($addon_id)) {
+if (!Addon::exists($addon_id))
+{
     header('HTTP/1.0 404 Not Found');
     exit;
 }
@@ -44,13 +46,12 @@ $addon = new Addon($addon_id);
 $addon_images = $addon->getImages();
 
 $json_array = array();
-foreach ($addon_images as $image_record) {
+foreach ($addon_images as $image_record)
+{
     $json_array[] = array(
-	'url' => DOWN_LOCATION.$image_record['file_path'],
-	'date' => strtotime($image_record['date_added']),
-	'approved' => (int)$image_record['approved']
+        'url'      => DOWN_LOCATION . $image_record['file_path'],
+        'date'     => strtotime($image_record['date_added']),
+        'approved' => (int)$image_record['approved']
     );
 }
 echo json_encode($json_array);
-
-?>

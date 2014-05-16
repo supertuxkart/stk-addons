@@ -22,41 +22,46 @@
  * json/addon_search.php
  * This file provides a json-formatted list of addons found by search term.
  */
-define('ROOT','../');
+define('ROOT', '../');
 require('../include.php');
-AccessControl::setLevel(NULL);
+AccessControl::setLevel(null);
 
-if (!isset($_GET['type']) || !Addon::isAllowedType($_GET['type'])) {
+if (!isset($_GET['type']) || !Addon::isAllowedType($_GET['type']))
+{
     header('HTTP/1.0 404 Not Found');
     echo 'Invalid addon type!';
     exit;
 }
 
 // Get the list of addons matching our search
-if (!isset($_GET['search'])) {
+if (!isset($_GET['search']))
+{
     $init_results = Addon::getAddonList($_GET['type'], true);
     $results = array();
-    foreach ($init_results AS $init_result) {
+    foreach ($init_results AS $init_result)
+    {
         $results[]['id'] = $init_result;
     }
-} else {
+}
+else
+{
     $results = Addon::search($_GET['search']);
 }
 // Populate our addon list
 $addon_list = array();
-foreach ($results AS $result) {
+foreach ($results AS $result)
+{
     $a = new Addon($result['id']);
-    if ($a->getType() == $_GET['type']) {
-        $icon = ($_GET['type'] == 'karts') ? $a->getImage(true) : NULL;
+    if ($a->getType() == $_GET['type'])
+    {
+        $icon = ($_GET['type'] == 'karts') ? $a->getImage(true) : null;
         $addon_list[] = array(
-            'id' => $result['id'],
-            'name' => Addon::getName($result['id']),
+            'id'       => $result['id'],
+            'name'     => Addon::getName($result['id']),
             'featured' => $a->getStatus() & F_FEATURED,
-            'icon' => File::getPath($icon)
+            'icon'     => File::getPath($icon)
         );
     }
 }
 
 echo json_encode($addon_list);
-
-?>

@@ -20,30 +20,35 @@
 
 define('ROOT', '/home/stkaddons/stkaddons-scripts/web/');
 define('CRON', 1);
-require (ROOT . 'config.php');
+require(ROOT . 'config.php');
 require_once(INCLUDE_DIR . 'Log.class.php');
 
 log_email();
 
-function log_email() {
+function log_email()
+{
     $events = Log::getUnemailedEvents();
-    if (count($events) === 0) {
+    if (count($events) === 0)
+    {
         print "No new log messages to email.\n";
+
         return;
     }
-    
+
     $table = '<table><thead><tr><th>Date</th><th>User</th><th>Description</th></tr></thead><tbody>';
-    foreach ($events AS $event) {
-        $table .= '<tr><td>'.$event['date'].'</td><td>'.strip_tags($event['name']).'</td><td>'.strip_tags($event['message']).'</td></tr>';
+    foreach ($events AS $event)
+    {
+        $table .= '<tr><td>' . $event['date'] . '</td><td>' . strip_tags($event['name']) . '</td><td>' . strip_tags(
+                $event['message']
+            ) . '</td></tr>';
     }
     $table .= '</tbody></table>';
-    
-    $content = 'The following events have occurred in the last 7 days:<br />'.$table;
-    
-    moderator_email('Weekly log update',$content);
-    
+
+    $content = 'The following events have occurred in the last 7 days:<br />' . $table;
+
+    moderator_email('Weekly log update', $content);
+
     Log::setAllEventsMailed();
-    
+
     print "Sent log message email.\n";
 }
-?>

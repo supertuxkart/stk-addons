@@ -1,4 +1,5 @@
 <?php
+
 /**
  * copyright 2013 Glenn De Jonghe
  *
@@ -17,44 +18,50 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-
 class XMLOutput extends XMLWriter
 {
+    /**
+     * The constructor
+     */
     public function __construct()
     {
         $this->openMemory();
         $this->setIndent(true);
         $this->setIndentString('    ');
     }
+
     /**
      * Insert XML as a string. (
-     */        
-    public function insert($xml) {
+     */
+    public function insert($xml)
+    {
         return $this->writeRaw($xml);
     }
-      
+
     /**
      * Will flush all output and output as XML.
      */
-    public function printToScreen() {
+    public function printToScreen()
+    {
         ob_start();
         header('Content-type: text/xml');
         echo $this->outputMemory();
         ob_end_flush();
     }
-    
+
     /**
      * Can be used for debugging purposes. Flushed the memory.
      */
-    public function printAsString() {
+    public function printAsString()
+    {
         echo htmlentities($this->outputMemory());
     }
-    
+
     /**
      * Can be used for debugging purposes or to pass between methods. Flushes the memory.
      */
-    public function asString() {
+    public function asString()
+    {
         return $this->outputMemory();
     }
 }

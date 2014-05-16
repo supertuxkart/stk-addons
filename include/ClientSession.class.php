@@ -93,7 +93,7 @@ abstract class ClientSession
      * @param string $password password of registered user (optional)
      * @param bool   $save_session
      *
-     * @return ClientSession object
+     * @return ClientSession|RegisteredClientSession object
      * @throws InvalidArgumentException when username is not provided
      */
     public static function create($username, $password, $save_session)

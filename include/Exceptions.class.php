@@ -30,6 +30,7 @@ class ServerException extends Exception {}
 class LogException extends Exception {}
 class CacheException extends Exception {}
 class StatisticException extends Exception {}
+class AchievementException extends Exception {}
 
 class ClientSessionException extends Exception {}
 class ClientSessionConnectException extends ClientSessionException {}

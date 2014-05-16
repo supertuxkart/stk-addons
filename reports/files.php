@@ -68,4 +68,3 @@ $source_query = 'SELECT `addon_id`,`addon_type`,`file_path`,`date_added`,`approv
 $report->addQuery($source_section,$source_query);
 
 print($report);
-?>

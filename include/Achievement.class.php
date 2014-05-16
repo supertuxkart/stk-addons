@@ -1,7 +1,7 @@
 <?php
 /**
  * copyright 2013 Glenn De Jonghe
- *
+ *           2014 Daniel Butum <danibutum at gmail dot com>
  * This file is part of SuperTuxKart
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -23,64 +23,83 @@ require_once(INCLUDE_DIR . 'DBConnection.class.php');
 require_once(INCLUDE_DIR . 'User.class.php');
 require_once(INCLUDE_DIR . 'ClientSession.class.php');
 
-
-class AchievementException extends Exception {}
-
 /**
  * Achievement class
  */
 class Achievement
 {
+    /**
+     * @param int $userid
+     *
+     * @return string
+     * @throws AchievementException
+     */
     public static function getAchievementsOf($userid)
     {
-        try{
-            $result = DBConnection::get()->query
-            (
-                "SELECT `achievementid` FROM " . DB_PREFIX ."achieved
+        try
+        {
+            $result = DBConnection::get()->query(
+                "SELECT `achievementid` FROM " . DB_PREFIX . "achieved
                 WHERE `userid` = :userid",
                 DBConnection::FETCH_ALL,
-                array
-                (
-                    ':userid'       => (int) $userid
+                array(
+                    ':userid' => (int)$userid
                 )
             );
-        }catch (DBException $e){
+        }
+        catch(DBException $e)
+        {
             throw new AchievementException(
                 _('An unexpected error occured while fetching the achieved achievements.') . ' ' .
                 _('Please contact a website administrator.'));
         }
         $string_list = "";
-        foreach ($result as $r){
+        foreach ($result as $r)
+        {
             $string_list .= $r['achievementid'];
             $string_list .= ' ';
         }
         $string_list = trim($string_list);
+
         return $string_list;
     }
-    
-    public static function achieve($userid, $achievementid)
+
+    /**
+     * Add to a user a specific achievement
+     *
+     * @param int $userid
+     * @param int $achievement_id
+     *
+     * @throws AchievementException
+     */
+    public static function achieve($userid, $achievement_id)
     {
-        try{
-            $count = DBConnection::get()->query
-            (
-                "INSERT INTO `" . DB_PREFIX ."achieved` (`userid`, `achievementid`)
+        try
+        {
+            DBConnection::get()->query(
+                "INSERT INTO `" . DB_PREFIX . "achieved` (`userid`, `achievementid`)
                 VALUES (:userid, :achievementid)
                 ON DUPLICATE KEY UPDATE `userid` = :userid",
                 DBConnection::ROW_COUNT,
-                array
-                (
-                        ':achievementid'   => (int) $achievementid,
-                        ':userid' => (int) $userid
+                array(
+                    ':achievementid' => (int)$achievement_id,
+                    ':userid'        => (int)$userid
                 )
             );
-        }catch (DBException $e){
-            if($e->getErrorCode() == "23503")
+        }
+        catch(DBException $e)
+        {
+            if ($e->getErrorCode() == "23503")
+            {
                 throw new AchievementException(
                     _("Provided an id of an achievement that doesn't exist in the database."));
+            }
             else
+            {
                 throw new AchievementException(
                     _('An unexpected error occured while confirming your achievement.') . ' ' .
                     _('Please contact a website administrator.'));
+            }
         }
     }
 }

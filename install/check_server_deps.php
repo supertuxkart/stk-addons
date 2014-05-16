@@ -157,13 +157,21 @@ if (function_exists('gd_info'))
     echo 'GD Available, and supports image types: ';
     $image_types = imagetypes();
     if ($image_types & IMG_GIF)
+    {
         echo 'GIF ';
+    }
     if ($image_types & IMG_PNG)
+    {
         echo 'PNG ';
+    }
     if ($image_types & IMG_JPG)
+    {
         echo 'JPG ';
+    }
     if ($image_types & IMG_WBMP)
+    {
         echo 'WBMP ';
+    }
     echo '<br />';
 }
 else

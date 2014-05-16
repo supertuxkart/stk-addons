@@ -23,18 +23,20 @@
  * This file provides a json-formatted list of all available images for an
  * addon passed through the "id" parameter.
  */
-define('ROOT','../');
+define('ROOT', '../');
 require('../include.php');
-AccessControl::setLevel(NULL);
+AccessControl::setLevel(null);
 
 // Quit if no ID was passed
-if (!isset($_GET['id'])) {
+if (!isset($_GET['id']))
+{
     header('HTTP/1.0 404 Not Found');
     exit;
 }
 
 $addon_id = $_GET['id'];
-if (!Addon::exists($addon_id)) {
+if (!Addon::exists($addon_id))
+{
     header('HTTP/1.0 404 Not Found');
     exit;
 }
@@ -45,5 +47,3 @@ $license = $addon->getLicense();
 
 // This isn't really JSON, but no reason to wrap one value in braces
 echo $license;
-
-?>

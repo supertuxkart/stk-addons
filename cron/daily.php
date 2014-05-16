@@ -24,4 +24,3 @@ require_once(ROOT . 'config.php');
 require_once(INCLUDE_DIR . 'File.class.php');
 
 File::deleteQueuedFiles();
-?>

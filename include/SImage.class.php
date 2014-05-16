@@ -197,7 +197,7 @@ function img_label($text)
 class SImage
 {
     /**
-     * @var
+     * @var string
      */
     public $path;
 

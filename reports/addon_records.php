@@ -28,16 +28,15 @@ $report->addDescription($description);
 
 $addon_section = $report->addSection("Add-Ons");
 $chart_query = 'SELECT `type`, COUNT(`id`) AS `count`
-    FROM `'.DB_PREFIX.'addons` GROUP BY `type`';
-$report->addPieChart($addon_section,$chart_query,'Add-On Types','ar_pie');
+    FROM `' . DB_PREFIX . 'addons` GROUP BY `type`';
+$report->addPieChart($addon_section, $chart_query, 'Add-On Types', 'ar_pie');
 
 $addon_query = 'SELECT `a`.`id`,`a`.`type`,`a`.`name`,`u`.`name` AS `uploader`,
     `a`.`creation_date`,`a`.`designer`,`a`.`description`,`a`.`license` 
-    FROM `'.DB_PREFIX.'addons` `a`
-    LEFT JOIN `'.DB_PREFIX.'users` `u`
+    FROM `' . DB_PREFIX . 'addons` `a`
+    LEFT JOIN `' . DB_PREFIX . 'users` `u`
     ON `a`.`uploader` = `u`.`id`
     ORDER BY `a`.`id` ASC';
-$report->addQuery($addon_section,$addon_query);
+$report->addQuery($addon_section, $addon_query);
 
-print($report);
-?>
+echo $report;

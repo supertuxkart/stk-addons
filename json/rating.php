@@ -19,22 +19,29 @@
  */
 
 session_start();
-define('ROOT','../');
+define('ROOT', '../');
 require_once(ROOT . 'config.php');
 require_once(INCLUDE_DIR . 'AccessControl.class.php');
 require_once(INCLUDE_DIR . 'Ratings.class.php');
 AccessControl::setLevel('basicPage');
 
 if (!isset($_GET['addonId']))
+{
     die('No addon.');
+}
 if (!User::isLoggedIn())
+{
     die('Not logged in.');
+}
 $addonId = stripslashes($_GET['addonId']);
 $rating = new Ratings($addonId);
-if (isset($_GET['rating'])) {
-    try{
-        $rating->setUserVote($_GET['rating'], NULL);
-    }catch (RatingsException $e)
+if (isset($_GET['rating']))
+{
+    try
+    {
+        $rating->setUserVote($_GET['rating'], null);
+    }
+    catch(RatingsException $e)
     {
         //FIXME
     }
@@ -43,11 +50,14 @@ if (isset($_GET['rating'])) {
 }
 
 //create the string with the number of ratings (for use in the function below)
-if ($rating->getNumRatings() != 1) {
-    $numRatingsString = $rating->getNumRatings().' Votes';
-} else {
-    $numRatingsString = $rating->getNumRatings().' Vote';
+if ($rating->getNumRatings() != 1)
+{
+    $numRatingsString = $rating->getNumRatings() . ' Votes';
+}
+else
+{
+    $numRatingsString = $rating->getNumRatings() . ' Vote';
 }
 echo '<div class="rating"><div class="emptystars">
-    </div><div class="fullstars" style="width: '.$rating->getAvgRatingPercent().'%;"></div></div><p>'.$numRatingsString.'</p>';
-?>
+    </div><div class="fullstars" style="width: ' . $rating->getAvgRatingPercent(
+    ) . '%;"></div></div><p>' . $numRatingsString . '</p>';

@@ -126,16 +126,12 @@ class Cache
 
         try
         {
-            DBConnection::get()->query(
-                'INSERT INTO `' . DB_PREFIX . 'cache`
-                (`file`,`addon`,`props`)
-                VALUES
-                (:file, :addon, :props)',
-                DBConnection::NOTHING,
+            DBConnection::get()->insert(
+                "cache",
                 array(
-                    ':file'  => (string)$path,
-                    ':addon' => (string)$addon,
-                    ':props' => (string)$props
+                    "file" => $path,
+                    "addon" => $addon,
+                    "props" => $props
                 )
             );
 
@@ -160,8 +156,8 @@ class Cache
         {
             $result = DBConnection::get()->query(
                 'SELECT `addon`, `props`
-                 FROM `' . DB_PREFIX . 'cache`
-                     WHERE `file` = :file',
+                FROM `' . DB_PREFIX . 'cache`
+                WHERE `file` = :file',
                 DBConnection::FETCH_ALL,
                 array(':file' => (string)$path)
             );
@@ -193,9 +189,9 @@ class Cache
         {
             $result = DBConnection::get()->query(
                 'SELECT `file_path`, `approved`
-                 FROM `' . DB_PREFIX . 'files`
-                     WHERE `id` = :id
-                     LIMIT 1',
+                FROM `' . DB_PREFIX . 'files`
+                WHERE `id` = :id
+                LIMIT 1',
                 DBConnection::FETCH_ALL,
                 array(':id' => (int)$id)
             );
