@@ -37,5 +37,4 @@ require_once(INCLUDE_DIR . 'AddonViewer.class.php');
 require_once(INCLUDE_DIR . 'User.class.php');
 require_once(INCLUDE_DIR . 'locale.php');
 require_once(INCLUDE_DIR . 'Ratings.class.php');
-require_once(INCLUDE_DIR . 'image.php');
 require_once(INCLUDE_DIR . 'xmlWrite.php');

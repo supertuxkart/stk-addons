@@ -19,11 +19,11 @@
  */
 
 define('ROOT', './');
-require_once(ROOT.'config.php');
-require_once(INCLUDE_DIR.'StkTemplate.class.php');
+require_once(ROOT . 'config.php');
+require_once(INCLUDE_DIR . 'StkTemplate.class.php');
 
-$tpl = StkTemplate('info-page.tpl');
-$tpl->assign('title', htmlspecialchars(_('STK Add-ons').' | '._('Privacy')));
+$tpl = new StkTemplate('info-page.tpl');
+$tpl->assign('title', htmlspecialchars(_('STK Add-ons') . ' | ' . _('Privacy')));
 
 $page_content = <<< EOF
 <h1>Privacy Policy</h1>

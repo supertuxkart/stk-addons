@@ -1,6 +1,6 @@
 <?php
 /* copyright 2009 Lucas Baudin <xapantu@gmail.com>                 
-                                                                              
+             2014 Daniel Butum <danibutum at gmail dot com>
  This file is part of stkaddons.                                 
                                                                               
  stkaddons is free software: you can redistribute it and/or      
@@ -14,97 +14,166 @@
  more details.                                                                
                                                                               
  You should have received a copy of the GNU General Public License along with 
- stkaddons.  If not, see <http://www.gnu.org/licenses/>.   */
+ stkaddons.  If not, see <http://www.gnu.org/licenses/>.
+*/
 
 
 // Include PEAR::Mail
 require_once('Mail.php');
 
-class SMail {
+/**
+ * Class SMail
+ */
+class SMail
+{
+    /**
+     * @var Mail
+     */
     private $factory;
+
+    /**
+     * @var array
+     */
     private $headers;
 
-    public function __construct() {
-	if (MAIL_METHOD == 'smtp') {
-	    @$this->factory = Mail::factory(MAIL_METHOD,array(
-		'host' => SMTP_HOST,
-		'port' => SMTP_PORT,
-		'auth' => SMTP_AUTH,
-		'username' => SMTP_USER,
-		'password' => SMTP_PASS
-	    ));
-	} else {
-	    @$this->factory = Mail::factory(MAIL_METHOD,array(
-		'sendmail_path' => SENDMAIL_PATH,
-		'sendmail_args' => SENDMAIL_ARGS
-	    ));
-	}
-	$this->headers = array(
-	    'From' => '"STK-Addons Administrator" <'.ConfigManager::getConfig('admin_email').'>',
-	    'Content-Type' => 'text/plain; charset="UTF-8"',
-	    'Content-Transfer-Encoding' => '8bit'
-	);
+    /**
+     * The constructor
+     */
+    public function __construct()
+    {
+        if (MAIL_METHOD == 'smtp')
+        {
+            @$this->factory = Mail::factory(
+                MAIL_METHOD,
+                array(
+                    'host'     => SMTP_HOST,
+                    'port'     => SMTP_PORT,
+                    'auth'     => SMTP_AUTH,
+                    'username' => SMTP_USER,
+                    'password' => SMTP_PASS
+                )
+            );
+        }
+        else
+        {
+            @$this->factory = Mail::factory(
+                MAIL_METHOD,
+                array(
+                    'sendmail_path' => SENDMAIL_PATH,
+                    'sendmail_args' => SENDMAIL_ARGS
+                )
+            );
+        }
+        $this->headers = array(
+            'From'                      => '"STK-Addons Administrator" <' . ConfigManager::getConfig('admin_email') . '>',
+            'Content-Type'              => 'text/plain; charset="UTF-8"',
+            'Content-Transfer-Encoding' => '8bit'
+        );
     }
-    
-    public function newAccountNotification($email, $userid, $username, $ver_code, $ver_page) {
-	$message = "Thank you for registering an account on the SuperTuxKart Add-Ons Manager.\n".
-		"Please go to " . SITE_ROOT . "$ver_page?action=valid&num=$ver_code&user=$userid to activate your account.\n\n".
-		"Username: $username";
-        $subject = "New Account at ".$_SERVER["SERVER_NAME"];
-	
-	$this->headers['To'] = $email;
-	$this->headers['Subject'] = $subject;
-	$result = @$this->factory->send($email, $this->headers, $message);
-	if (@PEAR::isError($result))
-	    throw new Exception($result->getMessage());
+
+    /**
+     * @param string $email
+     * @param int $userid
+     * @param string $username
+     * @param string $ver_code
+     * @param string $ver_page
+     *
+     * @throws Exception
+     */
+    public function newAccountNotification($email, $userid, $username, $ver_code, $ver_page)
+    {
+        $message = "Thank you for registering an account on the SuperTuxKart Add-Ons Manager.\n" .
+            "Please go to " . SITE_ROOT . "$ver_page?action=valid&num=$ver_code&user=$userid to activate your account.\n\n" .
+            "Username: $username";
+        $subject = "New Account at " . $_SERVER["SERVER_NAME"];
+
+        $this->headers['To'] = $email;
+        $this->headers['Subject'] = $subject;
+        $result = @$this->factory->send($email, $this->headers, $message);
+        if (@PEAR::isError($result))
+        {
+            throw new Exception($result->getMessage());
+        }
     }
-    
-    public function passwordResetNotification($email, $userid, $username, $ver_code, $ver_page) {
-	$message = "You have requested to reset your password on the SuperTuxKart Add-Ons Manager.\n".
-		"Please go to http://{$_SERVER["SERVER_NAME"]}/$ver_page?action=valid&num=$ver_code&user=$userid to reset your password.\n\n".
-		"Username: $username";
-        $subject = "Reset Password on ".$_SERVER["SERVER_NAME"];
-	
-	$this->headers['To'] = $email;
-	$this->headers['Subject'] = $subject;
-	$result = @$this->factory->send($email, $this->headers, $message);
-	if (@PEAR::isError($result))
-	    throw new Exception($result->getMessage());
+
+    /**
+     * @param string $email
+     * @param int $userid
+     * @param string $username
+     * @param string $ver_code
+     * @param string $ver_page
+     *
+     * @throws Exception
+     */
+    public function passwordResetNotification($email, $userid, $username, $ver_code, $ver_page)
+    {
+        $message = "You have requested to reset your password on the SuperTuxKart Add-Ons Manager.\n" .
+            "Please go to http://{$_SERVER["SERVER_NAME"]}/$ver_page?action=valid&num=$ver_code&user=$userid to reset your password.\n\n" .
+            "Username: $username";
+        $subject = "Reset Password on " . $_SERVER["SERVER_NAME"];
+
+        $this->headers['To'] = $email;
+        $this->headers['Subject'] = $subject;
+        $result = @$this->factory->send($email, $this->headers, $message);
+        if (@PEAR::isError($result))
+        {
+            throw new Exception($result->getMessage());
+        }
     }
-    
-    public function addonNoteNotification($email, $addon_id, $notes) {
-	$addon_name = Addon::getName($addon_id);
-	$message = "A moderator has left a note concerning your add-on, '$addon_name.' The notes saved for each revision of this add-on are shown below.\n\n";
-	$message .= $notes;
-	$subject = "New message for add-on '$addon_name'";
-	
-	$this->headers['To'] = $email;
-	$this->headers['Subject'] = $subject;
-	$result = @$this->factory->send($email, $this->headers, $message);
-	if (@PEAR::isError($result))
-	    throw new Exception($result->getMessage());
+
+    /**
+     * @param string $email
+     * @param string $addon_id
+     * @param string $notes
+     *
+     * @throws Exception
+     */
+    public function addonNoteNotification($email, $addon_id, $notes)
+    {
+        $addon_name = Addon::getName($addon_id);
+        $message =
+            "A moderator has left a note concerning your add-on, '$addon_name.' The notes saved for each revision of this add-on are shown below.\n\n";
+        $message .= $notes;
+        $subject = "New message for add-on '$addon_name'";
+
+        $this->headers['To'] = $email;
+        $this->headers['Subject'] = $subject;
+        $result = @$this->factory->send($email, $this->headers, $message);
+        if (@PEAR::isError($result))
+        {
+            throw new Exception($result->getMessage());
+        }
     }
 }
 
+/**
+ * @param string $subject
+ * @param string $message_html
+ *
+ * @return null
+ */
 function moderator_email($subject, $message_html)
 {
     $mail_address = ConfigManager::getConfig('list_email');
-    if (strlen($mail_address) == 0)
+    if (empty($mail_address))
     {
-        echo '<span class="warning">'.htmlspecialchars(_('No moderator mailing-list email is set.')).'</span><br />';
+        echo '<span class="warning">' . htmlspecialchars(
+                _('No moderator mailing-list email is set.')
+            ) . '</span><br />';
+
         return null;
     }
 
-    $boundary = "-----=".md5(rand());
-    $header = "From: \"STK-Addons Administrator\" <".ConfigManager::getConfig('admin_email').">\n"
-        ."Reply-to: \"STK-Addons Administrator\" <".ConfigManager::getConfig('admin_email').">\n"
-        ."MIME-Version: 1.0\n"
-        ."Content-Type: multipart/alternative;\n boundary=\"$boundary\"\n";
-    $message = "\n--".$boundary."\n"
-        ."Content-Type: text/html; charset=\"ISO-8859-1\"\n"
-        ."Content-Transfer-Encoding: 8bit\n"
-        ."\n".$message_html."\n"
-        ."\n--".$boundary."--\n"
-        ."\n--".$boundary."--\n";
-    mail($mail_address,$subject,$message,$header);
+    $boundary = "-----=" . md5(rand());
+    $header = "From: \"STK-Addons Administrator\" <" . ConfigManager::getConfig('admin_email') . ">\n"
+        . "Reply-to: \"STK-Addons Administrator\" <" . ConfigManager::getConfig('admin_email') . ">\n"
+        . "MIME-Version: 1.0\n"
+        . "Content-Type: multipart/alternative;\n boundary=\"$boundary\"\n";
+    $message = "\n--" . $boundary . "\n"
+        . "Content-Type: text/html; charset=\"ISO-8859-1\"\n"
+        . "Content-Transfer-Encoding: 8bit\n"
+        . "\n" . $message_html . "\n"
+        . "\n--" . $boundary . "--\n"
+        . "\n--" . $boundary . "--\n";
+    mail($mail_address, $subject, $message, $header);
 }

@@ -18,21 +18,22 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('ROOT','./');
+define('ROOT', './');
 require_once('config.php');
 require_once(INCLUDE_DIR . 'DBConnection.class.php');
 
 $dir = $_GET['type'];
 $file = $_GET['file'];
 // Make sure directory is not unsafe
-if (!preg_match('/^[a-z]+$/i',$dir))
+if (!preg_match('/^[a-z]+$/i', $dir))
 {
     // Directory is unsafe - throw a 404 error
     header("HTTP/1.0 404 Not Found");
     exit;
 }
+
 // Make sure file name is not unsafe
-if (!preg_match('/^[\w\-\ ]+\.[a-z0-9]+$/i',$file))
+if (!preg_match('/^[\w\-\ ]+\.[a-z0-9]+$/i', $file))
 {
     // File is unsafe - throw a 404 error
     header("HTTP/1.0 404 Not Found");
@@ -40,9 +41,13 @@ if (!preg_match('/^[\w\-\ ]+\.[a-z0-9]+$/i',$file))
 }
 
 if ($dir != 'assets')
-    $assetpath = $dir.'/'.$file;
+{
+    $assetpath = $dir . '/' . $file;
+}
 else
+{
     $assetpath = $file;
+}
 
 // Don't bother checking if the file exists - if it doesn't exist, you'll get
 // a 404 error anyways after redirecting. Yes, this may make the stats below
@@ -52,32 +57,41 @@ else
 // Check user-agent
 $uagent = $_SERVER['HTTP_USER_AGENT'];
 $matches = array();
-if (preg_match('#^(SuperTuxKart/[a-z0-9\\.\\-_]+)( \\(.*\\))?$#',$uagent,&$matches)) {
-    try {
+if (preg_match('#^(SuperTuxKart/[a-z0-9\\.\\-_]+)( \\(.*\\))?$#', $uagent, &$matches))
+{
+    try
+    {
         DBConnection::get()->query(
-                'INSERT IGNORE INTO `'.DB_PREFIX.'clients`
-                 (`agent_string`)
-                 VALUES
-                 (:uagent)',
-                DBConnection::NOTHING,
-                array(':uagent' => $matches[1]));
-    } catch (DBException $e) {
+            'INSERT IGNORE INTO `' . DB_PREFIX . 'clients`
+            (`agent_string`)
+            VALUES
+            (:uagent)',
+            DBConnection::NOTHING,
+            array(':uagent' => $matches[1])
+        );
+    }
+    catch(DBException $e)
+    {
         header("HTTP/1.0 404 Not Found");
         exit;
     }
-    
+
     // Increase daily count for this user-agent
-    try {
+    try
+    {
         DBConnection::get()->query(
-            'INSERT INTO `'.DB_PREFIX.'stats`
+            'INSERT INTO `' . DB_PREFIX . 'stats`
              (`type`,`date`,`value`)
              VALUES
              (:type, CURDATE(), 1)
              ON DUPLICATE KEY UPDATE
              `value` = `value` + 1',
             DBConnection::NOTHING,
-            array(':type' => 'uagent '.$uagent));
-    } catch (DBException $e) {
+            array(':type' => 'uagent ' . $uagent)
+        );
+    }
+    catch(DBException $e)
+    {
         header("HTTP/1.0 404 Not Found");
         echo 'Failed to update statistics';
         exit;
@@ -85,17 +99,26 @@ if (preg_match('#^(SuperTuxKart/[a-z0-9\\.\\-_]+)( \\(.*\\))?$#',$uagent,&$match
 }
 
 // Update download count for addons
-try {
-    DBConnection::get()->query('CALL `'.DB_PREFIX.'increment_download` (:path)',
-            DBConnection::NOTHING, array(':path' => $assetpath));
-} catch (DBException $e) {
+try
+{
+    DBConnection::get()->query(
+        'CALL `' . DB_PREFIX . 'increment_download` (:path)',
+        DBConnection::NOTHING,
+        array(':path' => $assetpath)
+    );
+}
+catch(DBException $e)
+{
     // Do nothing
 }
 
 // Redirect to actual resource
-if ($dir == 'xml') {
-    header('Location: http://stkaddons.net/xml/'.$file);
-} else {
-    header('Location: http://downloads.tuxfamily.org/stkaddons/assets/'.$assetpath);
+if ($dir == 'xml')
+{
+    header('Location: http://stkaddons.net/xml/' . $file);
+}
+else
+{
+    header('Location: http://downloads.tuxfamily.org/stkaddons/assets/' . $assetpath);
 }
 exit;

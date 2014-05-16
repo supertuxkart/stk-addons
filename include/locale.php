@@ -21,12 +21,14 @@ require_once(INCLUDE_DIR . 'SLocale.class.php');
 
 // Get the current page address (without "lang" parameter)
 $page_url = $_SERVER['REQUEST_URI'];
-if (strstr($page_url,'?') === false)
-	$page_url .= '?';
+if (strstr($page_url, '?') === false)
+{
+    $page_url .= '?';
+}
 // Clean up the new url
-$page_url = preg_replace('/lang=[a-z_]+/i',NULL,$page_url);
-$page_url = preg_replace('/[&]+/i','&',$page_url);
-$page_url = preg_replace('/\?&/i','?',$page_url);
+$page_url = preg_replace('/lang=[a-z_]+/i', null, $page_url);
+$page_url = preg_replace('/[&]+/i', '&', $page_url);
+$page_url = preg_replace('/\?&/i', '?', $page_url);
 
 // Set the locale
 new SLocale();

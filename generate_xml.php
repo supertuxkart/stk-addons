@@ -18,11 +18,11 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('ROOT','./');
+define('ROOT', './');
 include_once('include.php');
 
 $xml = writeNewsXML();
-echo 'News xml written: '.$xml.'<br />';
+echo 'News xml written: ' . $xml . '<br />';
 
 $xml = writeAssetXML();
-echo 'Asset xml written: '.$xml.'<br />';
+echo 'Asset xml written: ' . $xml . '<br />';

@@ -25,27 +25,30 @@ require_once(INCLUDE_DIR . 'User.class.php');
 require_once(INCLUDE_DIR . 'StkTemplate.class.php');
 
 $tpl = new StkTemplate('music-browser.tpl');
-$tpl->assign('title', htmlspecialchars(_('STK Add-ons').' | '._('Browse Music')));
+$tpl->assign('title', htmlspecialchars(_('STK Add-ons') . ' | ' . _('Browse Music')));
 
 $music_tracks = Music::getAllByTitle();
 $music_data = array();
-foreach ($music_tracks AS $track) {
+foreach ($music_tracks as $track)
+{
     $music_data[] = $track->getTitle();
     $music_data[] = $track->getArtist();
     $music_data[] = $track->getLicense();
-    $link = '<a href="'.DOWN_LOCATION.'music/'.$track->getFile().'">'.$track->getFile().'</a>';
+    $link = '<a href="' . DOWN_LOCATION . 'music/' . $track->getFile() . '">' . $track->getFile() . '</a>';
     $music_data[] = $link;
 }
 
-$tpl->assign('music_browser', array(
-    'heading' => htmlspecialchars(_('Browse Music')),
-    'cols' => array(
-        htmlspecialchars(_('Track Title')),
-        htmlspecialchars(_('Track Artist')),
-        htmlspecialchars(_('License')),
-        htmlspecialchars(_('File'))
-    ),
-    'data' => $music_data
-));
+$tpl->assign(
+    'music_browser',
+    array(
+        'cols'    => array(
+            htmlspecialchars(_('Track Title')),
+            htmlspecialchars(_('Track Artist')),
+            htmlspecialchars(_('License')),
+            htmlspecialchars(_('File'))
+        ),
+        'data'    => $music_data
+    )
+);
 
 echo $tpl;

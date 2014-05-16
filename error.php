@@ -1,5 +1,4 @@
 <?php
-
 /**
  * copyright 2012-2014 Stephen Just <stephenjust@users.sf.net>
  *
@@ -18,10 +17,11 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
-$error_code = (empty($_GET['e'])) ? NULL : $_GET['e'];
+$error_code = (empty($_GET['e'])) ? null : $_GET['e'];
 
 // Send appropriate error header
-switch ($error_code) {
+switch ($error_code)
+{
     default:
         break;
     case '403':
@@ -33,11 +33,12 @@ switch ($error_code) {
 }
 
 define('ROOT', './');
-require_once(ROOT.'config.php');
-require_once(INCLUDE_DIR.'StkTemplate.class.php');
+require_once(ROOT . 'config.php');
+require_once(INCLUDE_DIR . 'StkTemplate.class.php');
 
 $tpl = new StkTemplate('error-page.tpl');
-switch ($error_code) {
+switch ($error_code)
+{
     default:
         // I18N: Heading for general error page
         $error_head = htmlspecialchars(_('An Error Occurred'));
@@ -48,18 +49,24 @@ switch ($error_code) {
         // I18N: Heading for HTTP 403 Forbidden error page
         $error_head = htmlspecialchars(_('403 - Forbidden'));
         // I18N: Error message for HTTP 403 Forbidden error page
-        $error_text = htmlspecialchars(_('You\'re not supposed to be here. Click one of the links in the menu above to find some better content.'));
+        $error_text = htmlspecialchars(
+            _('You\'re not supposed to be here. Click one of the links in the menu above to find some better content.')
+        );
         break;
     case '404':
         // I18N: Heading for HTTP 404 Not Found error page
         $error_head = htmlspecialchars(_('404 - Not Found'));
         // I18N: Error message for HTTP 404 Not Found error page
-        $error_text = htmlspecialchars(_('We can\'t find what you are looking for. The link you followed may be broken.'));
+        $error_text =
+            htmlspecialchars(_('We can\'t find what you are looking for. The link you followed may be broken.'));
         break;
 }
-$tpl->assign('error', array(
-    'title' => $error_head,
-    'message' => $error_text
-));
+$tpl->assign(
+    'error',
+    array(
+        'title' => $error_head,
+        'message' => $error_text
+    )
+);
 
 echo $tpl;
