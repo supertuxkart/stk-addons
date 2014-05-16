@@ -44,7 +44,7 @@
 {if isset($user.config)}
     <hr>
     <h3>{$user.config.header}</h3>
-    <form enctype="multipart/form-data" action="?user={$user.username.value}&action=config" method="POST">
+    <form enctype="multipart/form-data" action="?user={$user.username.value}&amp;action=config" method="POST">
         <table>
             <tr>
                 <td>{$user.homepage.label}</td>
@@ -74,7 +74,7 @@
     {if isset($user.config.password)}
         <h3>{$user.config.password.header}</h3>
         <br>
-        <form action="users.php?user={$user.username.value}&action=password" method="POST">
+        <form action="users.php?user={$user.username.value}&amp;action=password" method="POST">
             {$user.config.password.old_pass_label}<br>
             <input type="password" name="oldPass"><br>
             {$user.config.password.new_pass_label}<br>

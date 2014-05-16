@@ -144,6 +144,26 @@ try
             News::create($_POST['message'], $condition, $important, $web_display);
             $status_content = htmlspecialchars(_('Created message.')) . '<br />';
             break;
+        case 'del_news':
+            if (empty($_POST['news_id']) || !is_numeric($_POST['news_id']))
+            {
+                $status_content = "Form is invalid";
+                break;
+            }
+            if (News::delete($_POST['news_id']))
+            {
+                $status_content = htmlspecialchars(_('Deleted message.')) . '<br />';
+            }
+            else
+            {
+                $status_content =
+                    '<span class="error">' . htmlspecialchars(_('Failed to delete message.')) . '</span><br />';
+            }
+            break;
+        case 'cache_clear':
+            Cache::clear();
+            $status_content = 'Emptied cache.<br />';
+            break;
         default:
             break;
     }

@@ -1,7 +1,7 @@
 <?php
 /**
  * copyright 2011 Stephen Just <stephenjust@users.sourceforge.net>
- *
+ *           2014 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -19,392 +19,247 @@
  */
 
 if (!defined('ROOT'))
-    define('ROOT','./');
+{
+    define('ROOT', './');
+}
 require_once('include.php');
 AccessControl::setLevel('manageaddons');
 
-if (!isset($_GET['action'])) $_GET['action'] = NULL;
-
-switch ($_GET['action'])
-{
-    default:
-        break;
-    case 'del_news':
-        if (empty($_POST['value']) || !is_numeric($_POST['value'])) break;
-        if (News::delete($_POST['value']))
-            echo htmlspecialchars(_('Deleted message.')).'<br />';
-        else
-            echo '<span class="error">'.htmlspecialchars(_('Failed to delete message.')).'</span><br />';
-        break;
-    case 'cache_clear':
-        Cache::clear();
-        echo 'Emptied cache.<br />';
-        break;
-}
+$_GET['action'] = (isset($_GET['action'])) ? $_GET['action'] : null;
 
 switch ($_GET['id'])
 {
-    default:
-        echo '<span class="error">'.htmlspecialchars(_('Invalid page. You may have followed a broken link.')).'</span><br />';
-        exit;
+
     case 'overview':
-	// I18N: Moderator panel
-	echo '<h1>'.htmlspecialchars(_('Overview')).'</h1>';
-	overview_panel();
-	break;
+        $managePanelTpl = new StkTemplate("panels/manage-overview.tpl");
+        $managePanelData = array(
+            "addons"   => array(),
+            "images"   => array(),
+            "archives" => array()
+        );
+
+        // Get all add-ons
+        $addons_ids = array_merge(
+            Addon::getAddonList('karts'),
+            Addon::getAddonList('tracks'),
+            Addon::getAddonList('arenas')
+        );
+
+        foreach ($addons_ids as $addon_id)
+        {
+            $addon = new Addon($addon_id);
+
+            // populate addons
+            $unapproved = array();
+            $addon_revisions = $addon->getAllRevisions();
+            // Don't list if the latest revision is approved
+            $last_revision = \utilphp\util::array_last($addon_revisions);
+            if (!($last_revision["status"] & F_APPROVED))
+            {
+                foreach ($addon_revisions as $rev_n => $revision)
+                {
+                    // see if approved
+                    if (!($revision["status"] & F_APPROVED))
+                    {
+                        $unapproved[] = $revision["revision"];
+                    }
+                }
+            }
+            // add to view
+            if (!empty($unapproved))
+            {
+                $managePanelData["addons"][] = array(
+                    "href"       => $addon->getLink(),
+                    "name"       => Addon::getName($addon_id),
+                    "unapproved" => implode(', ', $unapproved)
+                );
+            }
+
+            // populate images
+            $unapproved = array();
+            foreach ($addon->getImages() as $image)
+            {
+                if ($image["approved"] == 0)
+                {
+                    $unapproved[] = '<img src="' . ROOT . 'image.php?type=medium&pic=' . $image['file_path'] . '" />';
+                }
+            }
+            // add to view
+            if (!empty($unapproved))
+            {
+                $managePanelData["images"][] = array(
+                    "href"       => $addon->getLink(),
+                    "name"       => Addon::getName($addon_id),
+                    "unapproved" => implode("<br>", $unapproved)
+                );
+            }
+
+            // populate archives
+            $unapproved = 0;
+            foreach ($addon->getSourceFiles() as $archive)
+            {
+                if ($archive["approved"] == 0)
+                {
+                    $unapproved++;
+                }
+            }
+            // add to view
+            if ($unapproved)
+            {
+                $managePanelData["archives"][] = array(
+                    "href"       => $addon->getLink(),
+                    "name"       => $addon->getName($addon_id),
+                    "unapproved" => $unapproved
+                );
+            }
+        }
+
+        $managePanelTpl->assign("overview", $managePanelData);
+        break;
     case 'general':
-	// I18N: Moderator panel
-        echo '<h1>'.htmlspecialchars(_('General Settings')).'</h1>';
-        settings_panel();
+        $managePanelTpl = new StkTemplate("panels/manage-general.tpl");
+        $managePanelData = array(
+            "xml_frequency"       => ConfigManager::getConfig("xml_frequency"),
+            "allowed_addon_exts"  => ConfigManager::getConfig("allowed_addon_exts"),
+            "allowed_source_exts" => ConfigManager::getConfig("allowed_source_exts"),
+            "admin_email"         => ConfigManager::getConfig("admin_email"),
+            "list_email"          => ConfigManager::getConfig("list_email"),
+            "list_invisible"      => array(
+                "options"  => array(
+                    0 => _h("False"),
+                    1 => _h("True"),
+                ),
+                "selected" => (ConfigManager::getConfig('list_invisible') == 1) ? 1 : 0
+            ),
+            "blog_feed"           => ConfigManager::getConfig("blog_feed"),
+            "max_image_dimension" => ConfigManager::getConfig("max_image_dimension"),
+            "apache_rewrites"     => ConfigManager::getConfig("apache_rewrites"),
+        );
+
+        $managePanelTpl->assign("general", $managePanelData);
         break;
     case 'news':
-	// I18N: Moderator panel
-        echo '<h1>'.htmlspecialchars(_('News Messages')).'</h1>';
-        news_message_panel();
-        break;
-    case 'files':
-        echo '<h1>'.htmlspecialchars(_('Uploaded Files')).'</h1>';
-        files_panel();
+        /*
+         * TODO Allow selecting from a list of conditions rather than typing. Too typo-prone.
+         * TODO Type semicolon-delimited expressions, e.g. stkversion > 0.7.0;addonid not installed;
+         * TODO Allow editing in future, in case of goofs or changes.
+         */
+
+        $managePanelTpl = new StkTemplate("panels/manage-news.tpl");
+        $managePanelData = array(
+            "items" => News::getAll()
+        );
+
+        $managePanelTpl->assign("news", $managePanelData);
         break;
     case 'clients':
-        echo '<h1>'.htmlspecialchars(_('Client Versions')).'</h1>';
-        clients_panel();
+        /*
+         * TODO Allow changing association of user-agent strings with versions of STK
+         * TODO Allow setting various components of the generated XML for each different user-agent
+         * TODO Make XML generating script generate files for each configuration set
+         * TODO Make download script provide a certain file based on the user-agent
+         */
+        $managePanelTpl = new StkTemplate("panels/manage-clients.tpl");
+        $managePanelData = array(
+            "items" => DBConnection::get()->query(
+                    'SELECT * FROM ' . DB_PREFIX . 'clients
+                    ORDER BY `agent_string` ASC',
+                    DBConnection::FETCH_ALL
+                )
+        );
+
+        $managePanelTpl->assign("clients", $managePanelData);
         break;
     case 'cache':
-        echo '<h1>'.htmlspecialchars(_('Cache Files')).'</h1>';
-        cache_panel();
+        // TODO List cache files
+
+        $managePanelTpl = new StkTemplate("panels/manage-cache.tpl");
+        $managePanelData = array();
+
+        $managePanelTpl->assign("cache", $managePanelData);
         break;
-    case 'logs':
-	// I18N: Moderator panel
-        echo '<h1>'.htmlspecialchars(_('Event Logs')).'</h1>';
-        logs_panel();
-        break;
-}
+    case 'files':
+        // TODO test files overview properly
+        $managePanelTpl = new StkTemplate("panels/manage-files.tpl");
+        $managePanelData = array();
 
-function overview_panel()
-{
-    // Get all add-ons
-    $addons = array_merge(Addon::getAddonList('karts'),
-		    Addon::getAddonList('tracks'),
-		    Addon::getAddonList('arenas'));
-
-    // I18N: Heading in moderator overview panel
-    echo '<h2>'.htmlspecialchars(_('Unapproved Add-Ons')).'</h2>';
-    // I18N: Notice on unapproved add-on list in moderator overview panel
-    echo '<p>'.htmlspecialchars(_('Note that only add-ons where the newest revision is unapproved will appear here.')).'</p>';
-    // Loop through each add-on
-    $empty_section = true;
-    foreach ($addons as $addon) {
-	$a = new Addon($addon);
-	$revisions = $a->getAllRevisions();
-	reset($revisions);
-	$unapproved = array();
-	$revision = current($revisions);
-	for ($i = 0; $i < count($revisions); $i++) {
-	    if (!($revision['status'] & F_APPROVED))
-		$unapproved[] = $revision['revision'];
-	    if ($i+1 < count($revisions))
-		$revision = next($revisions);
-	}
-	// Don't list if the latest revision is approved
-	if ($revision['status'] & F_APPROVED)
-	    $unapproved = array();
-	
-	if ($unapproved !== array()) {
-	    $empty_section = false;
-	    echo '<strong><a href="'.$a->getLink().'">'.Addon::getName($addon).'</a></strong><br />';
-	    echo htmlspecialchars(_('Revisions:')).' '.implode(', ',$unapproved);
-	    echo '<br /><br />';
-	}
-    }
-    if ($empty_section === true)
-	echo htmlspecialchars(_('No unapproved add-ons.')).'<br /><br />';
-    
-    
-    echo '<h2>'.htmlspecialchars(_('Unapproved Files')).'</h1>';
-    echo '<h3>'.htmlspecialchars(_('Images:')).'</h3>';
-    $empty_section = true;
-    foreach ($addons as $addon) {
-	$a = new Addon($addon);
-	$images = $a->getImages();
-	$unapproved = array();
-	for ($i = 0; $i < count($images); $i++) {
-	    if ($images[$i]['approved'] == 0)
-		$unapproved[] = '<img src="'.ROOT.'image.php?type=medium&amp;pic='.$images[$i]['file_path'].'" />';
-	}
-	if ($unapproved !== array()) {
-	    $empty_section = false;
-	    echo '<strong><a href="'.$a->getLink().'">'.Addon::getName($addon).'</a></strong><br />';
-	    echo htmlspecialchars(_('Images:')).'<br />'.implode('<br />',$unapproved);
-	    echo '<br /><br />';
-	}
-    }
-    if ($empty_section === true)
-	echo htmlspecialchars(_('No unapproved images.')).'<br /><br />';
-    
-    echo '<h3>'.htmlspecialchars(_('Source Archives:')).'</h3>';
-    $empty_section = true;
-    foreach ($addons as $addon) {
-	$a = new Addon($addon);
-	$images = $a->getSourceFiles();
-	$unapproved = 0;
-	for ($i = 0; $i < count($images); $i++) {
-	    if ($images[$i]['approved'] == 0)
-		$unapproved++;
-	}
-	if ($unapproved !== 0) {
-	    $empty_section = false;
-	    echo '<strong><a href="'.$a->getLink().'">'.Addon::getName($addon).'</a></strong><br />';
-	    printf(htmlspecialchars(ngettext('%d File','%d Files',$unapproved)),$unapproved);
-	    echo '<br /><br />';
-	}
-    }
-    if ($empty_section === true)
-	echo htmlspecialchars(_('No unapproved source archives.')).'<br /><br />';
-}
-
-function settings_panel()
-{
-    if (!$_SESSION['role']['managesettings']) return;
-    echo '<form method="POST" action="manage.php?view=general&amp;action=save_config">';
-    echo '<table>';
-    echo '<tr><td>'.htmlspecialchars(_('XML Download Frequency')).'</td><td><input type="text" name="xml_frequency" value="'.ConfigManager::getConfig('xml_frequency').'" size="6" maxlength="8" /></td></tr>';
-    echo '<tr><td>'.htmlspecialchars(_('Permitted Addon Filetypes')).'</td><td><input type="text" name="allowed_addon_exts" value="'.ConfigManager::getConfig('allowed_addon_exts').'" /></td></tr>';
-    echo '<tr><td>'.htmlspecialchars(_('Permitted Source Archive Filetypes')).'</td><td><input type="text" name="allowed_source_exts" value="'.ConfigManager::getConfig('allowed_source_exts').'" /></td></tr>';
-    echo '<tr><td>'.htmlspecialchars(_('Administrator Email')).'</td><td><input type="text" name="admin_email" value="'.ConfigManager::getConfig('admin_email').'" /></td></tr>';
-    echo '<tr><td>'.htmlspecialchars(_('Moderator List Email')).'</td><td><input type="text" name="list_email" value="'.ConfigManager::getConfig('list_email').'" /></td></tr>';
-    if (ConfigManager::getConfig('list_invisible') == 1)
-        $invisible_opts = '<option value="1" selected>'.htmlspecialchars(_('True')).'</option><option value="0">'.htmlspecialchars(_('False')).'</option>';
-    else
-        $invisible_opts = '<option value="1">'.htmlspecialchars(_('True')).'</option><option value="0" selected>'.htmlspecialchars(_('False')).'</option>';
-    echo '<tr><td>'.htmlspecialchars(_('List Invisible Addons in XML')).'</td><td><select name="list_invisible">'.$invisible_opts.'</option></td></tr>';
-    echo '<tr><td>'.htmlspecialchars(_('Blog RSS Feed')).'</td><td><input name="blog_feed" value="'.ConfigManager::getConfig('blog_feed').'" /></td></tr>';
-    echo '<tr><td>'.htmlspecialchars(_('Maximum Uploaded Image Dimension')).'</td><td><input name="max_image_dimension" value="'.ConfigManager::getConfig('max_image_dimension').'" /></td></tr>';
-    echo '<tr><td>'.htmlspecialchars(_('Apache Rewrites')).'</td><td><textarea name="apache_rewrites">'.htmlspecialchars(ConfigManager::getConfig('apache_rewrites')).'</textarea></td></tr>';
-    echo '<tr><td></td><td><input type="submit" value="'.htmlspecialchars(_('Save Settings')).'" /></td></tr>';
-    echo '</table>';
-}
-
-function news_message_panel()
-{
-    if (!$_SESSION['role']['managesettings']) return;
-    echo '<form method="POST" action="manage.php?view=news&amp;action=new_news"><table><tr>';
-    echo '<td>'.htmlspecialchars(_('Message:')).'</td><td><input type="text" name="message" id="news_message" size="60" maxlength="140" /></td></tr><tr>';
-    echo '<td>'.htmlspecialchars(_('Condition:')).'</td><td><input type="text" name="condition" id="news_condition" size="60" maxlength="255" /></td></tr><tr>';
-    echo '<td>'.htmlspecialchars(_('Display on Website:')).'</td><td><input type="checkbox" name="web_display" id="web_display" checked /></td></tr>';
-    echo '<td>'.htmlspecialchars(_('Important (creates notification):')).'</td><td><input type="checkbox" name="important" id="important" /></td></tr>';
-    echo '<td></td><td><input type="submit" value="'.htmlspecialchars(_('Create Message')).'" /></td></tr></table>';
-    echo '</form>';
-    echo 'Todo:<ol><li>Allow selecting from a list of conditions rather than typing. Too typo-prone.</li><li>Type semicolon-delimited expressions, e.g. <tt>stkversion > 0.7.0;addonid not installed;</tt>.</li><li>Allow editing in future, in case of goofs or changes.</li></ol>';
-    echo '<br />';
-
-    $news_items = News::getAll();
-    if (count($news_items) === 0)
-        echo htmlspecialchars(_('No news messages currently exist.')).'<br />';
-    else
-    {
-        echo '<table width="100%"><tr>
-            <th width="100">'.htmlspecialchars(_('Date:')).'</th>
-            <th>'.htmlspecialchars(_('Message:')).'</th>
-            <th>'.htmlspecialchars(_('Author:')).'</th>
-            <th>'.htmlspecialchars(_('Condition:')).'</th>
-            <th>'.htmlspecialchars(_('Web:')).'</th>
-            <th>'.htmlspecialchars(_('Important:')).'</th>
-            <th>'.htmlspecialchars(_('Actions:')).'</th></tr>';
-        foreach ($news_items AS $result)
+        $files = File::getAllFiles();
+        $items = array();
+        foreach ($files as $file)
         {
-            echo '<tr>';
-            echo '<td>'.$result['date'].'</td>';
-            echo '<td>'.$result['content'].'</td>';
-            echo '<td>'.$result['author'].'</td>';
-            echo '<td>'.$result['condition'].'</td>';
-            echo '<td>'.$result['web_display'].'</td>';
-            echo '<td>'.$result['important'].'</td>';
-            echo '<td><a href="#" onClick="loadFrame(\'news\', \'manage-panel.php?action=del_news\', '.$result['id'].')">Delete</a></td>';
-            echo '</tr>';
-        }
-        echo '</table>';
-    }
-}
-
-function files_panel()
-{
-    $files = File::getAllFiles();
-    if (count($files) == 0)
-    {
-        echo htmlspecialchars(_('No files have been uploaded.'));
-
-        return;
-    }
-
-    $name_label = htmlspecialchars(_('Name:'));
-    $type_label = htmlspecialchars(_('Type:'));
-    $references_label = htmlspecialchars(_('References:'));
-
-    echo <<< EOF
-<table class="info">
-<thead>
-<tr>
-<th>$name_label</th>
-<th>$type_label</th>
-<th>$references_label</th>
-</tr>
-</thead>
-<tbody>
-EOF;
-    $last_id = null;
-    for ($i = 0; $i < count($files); $i++)
-    {
-        if ($last_id !== $files[$i]['addon_id'])
-        {
-            if ($files[$i]['addon_id'] === false)
+            switch ($file["file_type"])
             {
-                echo '<tr><th colspan="3" align="left">unassociated</th></tr>';
-            }
-            else
-            {
-                echo '<tr><th colspan="3" align="left">' . $files[$i]['addon_id'] . ' (' . $files[$i]['addon_type'] . ')</th></tr>';
-            }
-            $last_id = $files[$i]['addon_id'];
-        }
-        // Get references to files
-        switch ($files[$i]['file_type'])
-        {
-            default:
-                $references = 'TODO';
-                break;
-            case false:
-                $references = '<span class="error">No record found.</span>';
-                break;
-            case 'addon':
-                $references = array();
+                case false:
+                    $references = '<span class="error">No record found.</span>';
+                    break;
+                case "addon":
+                    $references = array();
 
-                $types = array("track", "kart", "arena");
-                $file_id = $files[$i]['id'];
-                foreach ($types as $type)
-                {
-                    $type_plural = $type . 's_revs';
-                    try
+                    $types = array("track", "kart", "arena");
+                    foreach ($types as $type)
                     {
-                        $files = DBConnection::get()->query(
+                        $type_plural = $type . 's_revs';
+                        try
+                        {
+                            $files = DBConnection::get()->query(
                                 'SELECT * FROM `' . DB_PREFIX . $type_plural .
                                 'WHERE `fileid` = :id',
                                 DBConnection::FETCH_ALL,
                                 array(
-                                        ':id' => $file_id
+                                    ':id' => $file["id"]
                                 )
-                        );
+                            );
 
-                        // add to
-                        foreach ($files as $file)
+                            // add to
+                            foreach ($files as $file)
+                            {
+                                $references[] = $file['addon_id'] . sprintf(' (%s)', $type);
+                            }
+                        }
+                        catch(DBException $e)
                         {
-                            $references[] = $file['addon_id'] . sprintf(' (%s)', $type);
+                            throw new Exception(sprintf("Error on selecting all %s", $type_plural));
                         }
                     }
-                    catch(DBException $e)
+
+                    if (empty($references))
                     {
-                        throw new Exception(sprintf("Error on selecting all %s", $type_plural));
+                        $references[] = '<span class="error">None</span>';
                     }
-                }
 
-                if (empty($references))
-                {
-                    $references[] = '<span class="error">None</span>';
-                }
-
-                $references = implode(', ', $references);
-
-                break;
-        }
-        if ($files[$i]['exists'] == false)
-        {
-            $references .= ' <span class="error">File not found.</span>';
-        }
-
-        echo "<tr><td>{$files[$i]['file_path']}</td>
-            <td>{$files[$i]['file_type']}</td><td>$references</td></tr>";
-    }
-    echo '</tbody></table>';
-}
-
-function clients_panel()
-{
-    if (!$_SESSION['role']['managesettings'])
-    {
-        return;
-    }
-    echo '<h3>' . htmlspecialchars(_('Clients by User-Agent')) . '</h3>';
-
-    // Read recorded user-agents from database
-    try
-    {
-        $clients = DBConnection::get()->query(
-                'SELECT * FROM ' . DB_PREFIX . 'clients
-                 ORDER BY `agent_string` ASC',
-                DBConnection::FETCH_ALL
-        );
-        if (empty($clients))
-        {
-            echo htmlspecialchars(
-                            _(
-                                    'There are currently no SuperTuxKart clients recorded.
-                                    Your download script may not be configured properly.'
-                            )
-                    ) . '<br />';
-        }
-        else
-        {
-            echo '<table width="100%">';
-            echo '<tr><th>' . htmlspecialchars(_('User-Agent String:')) . '</th><th>' . htmlspecialchars(
-                            _('Game Version:')
-                    ) . '</th></tr>';
-            foreach ($clients as $client)
-            {
-                echo '<tr><td>' . $client['agent_string'] . '</td><td>' . $client['stk_version'] . '</td></tr>';
+                    $references = implode(', ', $references);
+                    break;
+                default:
+                    $references = "TODO";
+                    break;
             }
-            echo '</table>';
+
+            if ($file["exists"] == false)
+            {
+                $references .= ' <span class="error">File not found.</span>';
+            }
+
+            $file["references"] = $references;
+            $items[] = $file;
         }
-    }
-    catch(DBException $e)
-    {
-        throw new Exception("Error on selecting all clients");
-    }
-    echo <<< EOL
-TODO:<br />
-<ol>
-    <li>Allow changing association of user-agent strings with versions of STK</li>
-    <li>Allow setting various components of the generated XML for each different user-agent</li>
-    <li>Make XML generating script generate files for each configuration set</li>
-    <li>Make download script provide a certain file based on the user-agent</li>
-</ol>
-EOL;
+
+        $managePanelData["items"] = $items;
+        $managePanelTpl->assign("files", $managePanelData);
+        break;
+    case 'logs':
+        $managePanelTpl = new StkTemplate("panels/manage-logs.tpl");
+        $managePanelData = array(
+            "items" => Log::getEvents()
+        );
+
+        $managePanelTpl->assign("logs", $managePanelData);
+        break;
+    default:
+        $managePanelData["errors"] = _h('Invalid page. You may have followed a broken link.');
+        $managePanelTpl->assign("manage", $managePanelData);
+        echo $managePanelTpl;
+        exit;
 }
 
-function cache_panel() {
-    if (!$_SESSION['role']['managesettings']) return;
-    echo '<a href="manage.php?view=cache&amp;action=cache_clear">'.htmlspecialchars(_('Empty cache')).'</a><br />';
-    echo 'TODO: List cache files.<br />';
-}
-
-function logs_panel() {
-    echo 'The table below lists the most recent logged events.<br /><br />';
-    
-    $events = Log::getEvents();
-    if (count($events) === 0) {
-        echo 'No events have been logged yet.<br />';
-        return;
-    }
-
-    echo '<table width="100%">
-        <thead>
-        <tr>
-        <th width="100px">Date</th><th>User</th><th>Description</th>
-        </tr></thead>
-        <tbody>';
-    for ($i = 0; $i < count($events); $i++) {
-        echo '<tr><td>'.$events[$i]['date'].'</td>
-            <td>'.$events[$i]['name'].'</td>
-            <td>'.$events[$i]['message'].'</td></tr>';
-    }
-    echo '</tbody></table>';
-}
+// output the view
+echo $managePanelTpl;

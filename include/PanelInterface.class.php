@@ -23,42 +23,53 @@
  *
  * @author Stephen
  */
-class PanelInterface {
+class PanelInterface
+{
     private $rightContent;
+
     private $statusContent;
-    
+
     private $menu_items = array();
-    
-    public function setMenuItems($menu_items) {
-        foreach ($menu_items AS $item) {
-            $new_item = array('url' => '#', 'label' => NULL, 'class' => 'menu-item');
+
+    public function setMenuItems($menu_items)
+    {
+        foreach ($menu_items AS $item)
+        {
+            $new_item = array('url' => '#', 'label' => null, 'class' => 'menu-item');
             $this->menu_items[] = array_merge($new_item, $item);
         }
     }
-    
-    public function setStatusContent($content) {
+
+    public function setStatusContent($content)
+    {
         $this->statusContent = $content;
     }
-    
-    public function setContent($content) {
+
+    public function setContent($content)
+    {
         $this->rightContent = $content;
     }
-    
-    public function __toString() {
+
+    public function __toString()
+    {
         $content = "<div id=\"panels\">\n";
         $content .= "\t<div id=\"left-menu\">\n";
         $content .= "\t\t<div id=\"left-menu_top\"></div>\n";
         $content .= "\t\t<div id=\"left-menu_body\">\n";
         $content .= "\t\t\t<ul>\n";
-        for ($i = 0; $i < count($this->menu_items); $i++) {
+        for ($i = 0; $i < count($this->menu_items); $i++)
+        {
             $content .= "\t\t\t\t<li>\n";
-	    if (isset($this->menu_items[$i]['disp'])) {
-		$content .= "\t\t\t\t\t<a class=\"{$this->menu_items[$i]['class']}\" href=\"{$this->menu_items[$i]['disp']}\">\n";
-		$content .= "\t\t\t\t\t\t<meta itemprop=\"realUrl\" content=\"{$this->menu_items[$i]['url']}\" />\n";
-	    } else {
-		$content .= "\t\t\t\t\t<a class=\"{$this->menu_items[$i]['class']}\" href=\"{$this->menu_items[$i]['url']}\">\n";
-		
-	    }
+            if (isset($this->menu_items[$i]['disp']))
+            {
+                $content .= "\t\t\t\t\t<a class=\"{$this->menu_items[$i]['class']}\" href=\"{$this->menu_items[$i]['disp']}\">\n";
+                $content .= "\t\t\t\t\t\t<meta itemprop=\"realUrl\" content=\"{$this->menu_items[$i]['url']}\" />\n";
+            }
+            else
+            {
+                $content .= "\t\t\t\t\t<a class=\"{$this->menu_items[$i]['class']}\" href=\"{$this->menu_items[$i]['url']}\">\n";
+
+            }
             $content .= "\t\t\t\t\t\t{$this->menu_items[$i]['label']}\n";
             $content .= "\t\t\t\t\t</a>\n";
             $content .= "\t\t\t\t</li>\n";
@@ -74,6 +85,7 @@ class PanelInterface {
         $content .= "\t\t<div id=\"right-content_bottom\"></div>\n";
         $content .= "\t</div>\n";
         $content .= "</div>\n";
+
         return $content;
     }
 }

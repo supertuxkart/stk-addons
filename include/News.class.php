@@ -94,7 +94,7 @@ class News
             try
             {
                 DBConnection::get()->insert(
-                    DB_PREFIX . 'news',
+                    'news',
                     array(
                         "content"     => "Newest add-on kart: " . $new_kart,
                         "web_display" => 1,
@@ -148,7 +148,7 @@ class News
             try
             {
                 DBConnection::get()->insert(
-                    DB_PREFIX . 'news',
+                    'news',
                     array(
                         "content"     => "Newest add-on track: " . $new_track,
                         "web_display" => 1,
@@ -202,7 +202,7 @@ class News
             try
             {
                 DBConnection::get()->insert(
-                    DB_PREFIX . 'news',
+                    'news',
                     array(
                         "content"     => "Newest add-on arena: " . $new_arena,
                         "web_display" => 1,
@@ -256,7 +256,7 @@ class News
             try
             {
                 DBConnection::get()->insert(
-                    DB_PREFIX . 'news',
+                    'news',
                     array(
                         "content"     => "Latest post on stkblog.net: " . $latest_blogpost,
                         "web_display" => 1,
