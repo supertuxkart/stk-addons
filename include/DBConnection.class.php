@@ -268,7 +268,7 @@ class DBConnection
         $query = sprintf(
             "INSERT INTO %s (%s) VALUES (%s)",
             DB_PREFIX . $table,
-            implode(", ", array_keys($fields_data)),
+            '`' . implode("`, `", array_keys($fields_data)) . '`', // use back ticks for reserved mysql keywords
             implode(", ", array_keys($prepared_pairs))
         );
 
