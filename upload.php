@@ -92,66 +92,8 @@ $tpl->addScriptInline(
 $upload_form = array(
     "display" => true,
     "form"    => array(
-        "author_self"    => array(
-            "label"   => _h(
-                'I am the sole author of every file (model, texture, sound effect, etc.) in this package'
-            ),
-            "license" => _h(
-                'I have included a License.txt file describing the license under which my work is released, and my name (or nickname) if I want credit.'
-            )
-        ),
-        "author_other"   => array(
-            "label"   => _h('I have included open content made by people other than me'),
-            "license" => _h(
-                'I have included a License.txt file including the name of every author whose material is used in this package, along with the license under which their work is released.'
-            )
-        ),
-        "license"        => array(
-            "label"        => _h('This package includes files released under:'),
-            "instructions" => _h('Must check at least one'),
-            "gpl"          => _h('GNU GPL'),
-            "cc_by"        => _h('Creative Commons BY 3.0'),
-            "cc_by_sa"     => _h('Creative Commons BY SA 3.0'),
-            "pd"           => _h('CC0 (Public Domain)'),
-            "bsd"          => _h('BSD License'),
-            "other"        => _h('Other open license'),
-            "other_remove" => _h(
-                'Files released under other licenses will be rejected unless it can be verified that the license is open.'
-            )
-        ),
-        "terms_removal"  => _h(
-            'I recognize that if my file does not meet the above rules,
-                    it may be removed at any time without prior notice; I also assume the entire responsibility for any copyright
-                     violation that may result from not following the above rules.'
-        ),
-        "terms"          => array(
-            "header" => _h('My package does not include:'),
-            "items"  => array(
-                _h('Profanity'),
-                _h('Explicit images'),
-                _h('Hateful messages and/or images'),
-                _h('Any other content that may be unsuitable for children')
-            )
-        ),
-        "required_text"  => _h('Required'),
-        "agreement_text" => _h('Agreement:'),
-        "upload_button"  => _h('Upload file'),
-        "file_button"    => _h('File:'),
-        "supported_arh"  => _h('Supported archive types are:'),
-
         // new addon revision
-        "update"         => false, // update addon or insert addon
-        "addon"          => array(
-            // update
-            "revision"      => _h('Please upload a new revision of your kart or track.'),
-            "type"          => _h('What type of file are you uploading?'),
-            "source_file"   => _h('Source Archive'),
-            "image_file"    => _h('Image File'),
-
-            // add
-            "kart_or_track" => _h('Please upload a kart or track.'),
-            "existing_warn" => _h('Do not use this form if you are updating an existing add-on.')
-        ),
+        "update" => false, // update addon or insert addon
     )
 );
 
