@@ -48,6 +48,7 @@ functionality.
 As an optional step you could use the `install/htaccess.example` file to rewrite url's. To do this
 move it the website root and rename it to `.htaccess` (be sure that you have installed `mod_rewrite` in apache)
 
+Run tests with `./vendor/bin/phpunit`.
 About the Code
 --------------
 
