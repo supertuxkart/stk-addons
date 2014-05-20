@@ -20,7 +20,6 @@
 
 define('ROOT', '../');
 require_once(ROOT . 'config.php');
-require_once(INCLUDE_DIR . 'Report.class.php');
 
 $report = new Report("STK Add-Ons Client Report");
 $description = '<p>This report is designed to give day-to-day usage statistics, ' .

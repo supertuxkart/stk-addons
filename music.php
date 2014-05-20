@@ -19,10 +19,7 @@
  */
 
 define('ROOT', './');
-require(ROOT . 'config.php');
-require_once(INCLUDE_DIR . 'Music.class.php');
-require_once(INCLUDE_DIR . 'User.class.php');
-require_once(INCLUDE_DIR . 'StkTemplate.class.php');
+require_once(ROOT . 'config.php');
 
 $tpl = new StkTemplate('music-browser.tpl');
 $tpl->assign('title', htmlspecialchars(_('STK Add-ons') . ' | ' . _('Browse Music')));

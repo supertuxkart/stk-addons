@@ -125,15 +125,3 @@ class SLocale
         }
     }
 }
-
-/**
- * Macro function for htmlspecialchars(_($message))
- *
- * @param string $message
- *
- * @return string
- */
-function _h($message)
-{
-    return htmlspecialchars(_($message));
-}

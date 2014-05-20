@@ -21,9 +21,7 @@
  */
 
 define('ROOT', './');
-require_once(ROOT . 'include.php');
-require_once(INCLUDE_DIR . 'StkTemplate.class.php');
-require_once(INCLUDE_DIR . 'recaptchalib.php');
+require_once(ROOT . 'config.php');
 
 $tpl = new StkTemplate('password-reset.tpl');
 $tpl->assign('title', htmlspecialchars(_('Reset Password') . ' - ' . _('STK Add-ons')));

@@ -21,9 +21,6 @@
 
 define('ROOT', './');
 require_once(ROOT . 'config.php');
-require_once(INCLUDE_DIR . 'File.class.php');
-require_once(INCLUDE_DIR . 'StkTemplate.class.php');
-require_once(INCLUDE_DIR . 'User.class.php');
 
 // define possibly undefined variables
 $_POST['user'] = (isset($_POST['user'])) ? $_POST['user'] : null;

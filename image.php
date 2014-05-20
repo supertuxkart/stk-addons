@@ -17,5 +17,5 @@
  stkaddons.  If not, see <http://www.gnu.org/licenses/>.   */
 
 define('ROOT', './');
-include('include.php');
+require_once(ROOT . 'config.php');
 resizeImage($_GET['pic']);

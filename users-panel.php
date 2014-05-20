@@ -23,7 +23,7 @@ if (!defined('ROOT'))
 {
     define('ROOT', './');
 }
-include_once('include.php');
+require_once(ROOT . 'config.php');
 AccessControl::setLevel('basicPage');
 
 $user_name = '';

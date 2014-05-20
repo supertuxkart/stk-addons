@@ -21,6 +21,5 @@
 define('ROOT', '/home/stkaddons/stkaddons-scripts/web/');
 define('CRON', 1);
 require_once(ROOT . 'config.php');
-require_once(INCLUDE_DIR . 'File.class.php');
 
 File::deleteQueuedFiles();

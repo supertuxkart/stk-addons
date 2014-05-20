@@ -34,7 +34,6 @@ switch ($error_code)
 
 define('ROOT', './');
 require_once(ROOT . 'config.php');
-require_once(INCLUDE_DIR . 'StkTemplate.class.php');
 
 $tpl = new StkTemplate('error-page.tpl');
 switch ($error_code)

@@ -21,8 +21,6 @@
 
 define('ROOT', './');
 require_once(ROOT . 'config.php');
-require_once(INCLUDE_DIR . 'AccessControl.class.php');
-require_once(INCLUDE_DIR . 'StkTemplate.class.php');
 AccessControl::setLevel('basicPage');
 
 // set current user if not defined

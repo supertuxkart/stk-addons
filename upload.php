@@ -19,7 +19,7 @@
  */
 
 define('ROOT', './');
-include(ROOT . 'include.php');
+require_once(ROOT . 'config.php');
 AccessControl::setLevel('addAddon');
 
 // Define possibly undefined variables

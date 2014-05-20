@@ -19,7 +19,6 @@
  */
 
 require_once(INCLUDE_DIR . 'locale.php');
-require_once(INCLUDE_DIR . 'Template.class.php');
 
 /**
  * Customization of generic template class for main stkaddons pages

@@ -19,7 +19,7 @@
  */
 
 define('ROOT', './');
-include_once('include.php');
+require_once(ROOT . 'config.php');
 
 $xml = writeNewsXML();
 echo 'News xml written: ' . $xml . '<br />';

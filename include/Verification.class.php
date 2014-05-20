@@ -18,11 +18,6 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(INCLUDE_DIR . 'Validate.class.php');
-require_once(INCLUDE_DIR . 'File.class.php');
-require_once(INCLUDE_DIR . 'DBConnection.class.php');
-require_once(INCLUDE_DIR . 'Exceptions.class.php');
-
 /**
  * Class Verification
  */

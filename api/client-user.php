@@ -21,11 +21,6 @@
 define('ROOT', './');
 define('API', 1);
 require_once(ROOT . 'config.php');
-require_once(INCLUDE_DIR . 'ClientSession.class.php');
-require_once(INCLUDE_DIR . 'Server.class.php');
-require_once(INCLUDE_DIR . 'User.class.php');
-require_once(INCLUDE_DIR . 'XMLOutput.class.php');
-require_once(INCLUDE_DIR . 'Ratings.class.php');
 
 $action = isset($_POST['action']) ? $_POST['action'] : "";
 $output = new XMLOutput();

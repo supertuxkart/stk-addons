@@ -18,38 +18,6 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(INCLUDE_DIR . 'ConfigManager.php');
-
-/**
- * @return mixed
- */
-function get_self()
-{
-    $list = get_included_files();
-
-    return $list[0];
-}
-
-
-/**
- * @param $nbr
- *
- * @return string
- */
-function cryptUrl($nbr)
-{
-    $str = "";
-    $chaine = "abcdefghijklmnpqrstuvwxy";
-    srand((double)microtime() * 1000000);
-    for ($i = 0; $i < $nbr; $i++)
-    {
-        $str .= $chaine[rand() % strlen($chaine)];
-    }
-
-    return $str;
-}
-
-
 /**
  * Class to hold all file-related operations
  *
@@ -1101,14 +1069,14 @@ class File
             imagefilledpolygon(
                 $image, // image
                 array( // points
-                    $quads[$i][0][0],
-                    $quads[$i][0][2],
-                    $quads[$i][1][0],
-                    $quads[$i][1][2],
-                    $quads[$i][2][0],
-                    $quads[$i][2][2],
-                    $quads[$i][3][0],
-                    $quads[$i][3][2]
+                       $quads[$i][0][0],
+                       $quads[$i][0][2],
+                       $quads[$i][1][0],
+                       $quads[$i][1][2],
+                       $quads[$i][2][0],
+                       $quads[$i][2][2],
+                       $quads[$i][3][0],
+                       $quads[$i][3][2]
                 ),
                 4, // num_points
                 $color[$color_index] // color

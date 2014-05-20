@@ -21,8 +21,6 @@
 define('ROOT', './');
 define('API', 1);
 require_once('config.php');
-require_once(INCLUDE_DIR . 'ClientSession.class.php');
-require_once(INCLUDE_DIR . 'XMLOutput.class.php');
 
 $action = isset($_POST['action']) ? $_POST['action'] : null;
 $output = new XMLOutput();

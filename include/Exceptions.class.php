@@ -31,6 +31,11 @@ class LogException extends Exception {}
 class CacheException extends Exception {}
 class StatisticException extends Exception {}
 class AchievementException extends Exception {}
+class FriendException extends Exception {}
+
+class ParserException extends Exception {}
+class XMLParserException extends ParserException {}
+class B3DException extends ParserException {}
 
 class ClientSessionException extends Exception {}
 class ClientSessionConnectException extends ClientSessionException {}

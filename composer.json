@@ -8,5 +8,9 @@
     "require-dev": {
         "php": ">=5.3.3",
         "phpunit/phpunit": "4.1.*"
+    },
+    "autoload": {
+        "classmap": ["include/"],
+        "files": ["include/functions.php", "include/Constants.php", "include/xmlWrite.php", "include/recaptchalib.php"]
     }
 }

@@ -17,9 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
-require_once(INCLUDE_DIR . 'File.class.php');
-require_once(INCLUDE_DIR . 'User.class.php');
-require_once(INCLUDE_DIR . 'Exceptions.class.php');
 
 /**
  * Create a template object

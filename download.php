@@ -19,8 +19,7 @@
  */
 
 define('ROOT', './');
-require_once('config.php');
-require_once(INCLUDE_DIR . 'DBConnection.class.php');
+require_once(ROOT . 'config.php');
 
 $dir = $_GET['type'];
 $file = $_GET['file'];

@@ -20,34 +20,48 @@
  */
 
 if (!defined('ROOT'))
-    define('ROOT','./');
-require_once('include.php');
-require_once(INCLUDE_DIR.'StkTemplate.class.php');
+{
+    define('ROOT', './');
+}
+require_once(ROOT . 'config.php');
+require_once(INCLUDE_DIR . 'StkTemplate.class.php');
 
 $a_tpl = new StkTemplate('addons-panel.tpl');
 
 // POST used with javascript navigation
 // GET used with everything else
 if (!isset($_GET['id']))
-    $_GET['id'] = NULL;
+{
+    $_GET['id'] = null;
+}
 if (!isset($_POST['id']))
-    $_POST['id'] = NULL;
+{
+    $_POST['id'] = null;
+}
 
-$type = (isset($_GET['type']))? $_GET['type'] : NULL;
+$type = (isset($_GET['type'])) ? $_GET['type'] : null;
 if (!Addon::isAllowedType($type))
+{
     die(htmlspecialchars(_('This page cannot be loaded because an invalid add-on type was provided.')));
+}
 
-if(isset($_GET['id']))
+if (isset($_GET['id']))
+{
     $id = $_GET['id'];
+}
 else
+{
     $id = $_POST['id'];
+}
 
-try {
+try
+{
     $viewer = new AddonViewer($id);
     $viewer->fillTemplate($a_tpl);
     echo $a_tpl;
     echo $viewer;
 }
-catch (Exception $e) {
-    echo '<span class="error">'.$e->getMessage().'</span><br />';
+catch(Exception $e)
+{
+    echo '<span class="error">' . $e->getMessage() . '</span><br />';
 }

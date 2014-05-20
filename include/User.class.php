@@ -19,14 +19,6 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(INCLUDE_DIR . 'Validate.class.php');
-require_once(INCLUDE_DIR . 'Verification.class.php');
-require_once(INCLUDE_DIR . 'AccessControl.class.php');
-require_once(INCLUDE_DIR . 'DBConnection.class.php');
-require_once(INCLUDE_DIR . 'Exceptions.class.php');
-require_once(INCLUDE_DIR . 'SMail.class.php');
-require_once(INCLUDE_DIR . 'Log.class.php');
-
 /**
  * Class User
  */
@@ -971,50 +963,5 @@ class User
 
     }
 }
-
+// TODO move init
 User::init();
-//var_debug("after User::init");
-
-/**
- *
- */
-function loadUsers()
-{
-    global $js;
-    $users = User::getAllData();
-    echo <<< EOF
-<ul>
-<li>
-<a class="menu-item" href="javascript:loadFrame({$_SESSION['userid']},'users-panel.php')">
-<img class="icon" src="image/user.png" />
-EOF;
-    echo htmlspecialchars(_('Me')) . '</a></li>';
-    foreach ($users as $user)
-    {
-        // Make sure that the user is active, or the viewer has permission to
-        // manage this type of user
-        if ($_SESSION['role']['manage' . $user['role'] . 's']
-            || $user['active'] == 1
-        )
-        {
-            echo '<li><a class="menu-item';
-            if ($user['active'] == 0)
-            {
-                echo ' unavailable';
-            }
-            echo '" href="javascript:loadFrame(' . $user['id'] . ',\'users-panel.php\')">';
-            echo '<img class="icon"  src="image/user.png" />';
-            echo $user['user'] . "</a></li>";
-            // When running for the list of users, check if we want to load this
-            // user's profile. Doing this here is more efficient than searching
-            // for the user name with another query. Also, leaving this here
-            // cause the lookup to fail if permissions were invalid.
-            if ($user['user'] === $_GET['user'])
-            {
-                $js .= 'loadFrame(' . $user['id'] . ',\'users-panel.php\')';
-            }
-        }
-    }
-    echo "</ul>";
-
-}

@@ -22,7 +22,7 @@ if (!defined('ROOT'))
 {
     define('ROOT', './');
 }
-require_once('include.php');
+require_once(ROOT . 'config.php');
 AccessControl::setLevel('manageaddons');
 
 $_GET['action'] = (isset($_GET['action'])) ? $_GET['action'] : null;

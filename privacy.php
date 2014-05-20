@@ -20,7 +20,6 @@
 
 define('ROOT', './');
 require_once(ROOT . 'config.php');
-require_once(INCLUDE_DIR . 'StkTemplate.class.php');
 
 $tpl = new StkTemplate('info-page.tpl');
 $tpl->assign('title', htmlspecialchars(_('STK Add-ons') . ' | ' . _('Privacy')));

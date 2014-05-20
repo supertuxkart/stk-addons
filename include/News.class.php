@@ -18,10 +18,6 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(INCLUDE_DIR . 'DBConnection.class.php');
-require_once(INCLUDE_DIR . 'Addon.class.php');
-require_once(INCLUDE_DIR . 'Statistic.class.php');
-
 /**
  * Manage the newsfeed that is fed to the game
  *

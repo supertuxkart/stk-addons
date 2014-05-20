@@ -17,8 +17,7 @@
  stkaddons.  If not, see <http://www.gnu.org/licenses/>.   */
 
 define('ROOT', './');
-require('include.php');
-require_once(INCLUDE_DIR . 'StkTemplate.class.php');
+require(ROOT . "config.php");
 //AccessControl::setLevel(NULL);
 
 $tpl = new StkTemplate('index.tpl');

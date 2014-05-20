@@ -19,10 +19,6 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(INCLUDE_DIR . 'Constants.php');
-require_once(INCLUDE_DIR . 'News.class.php');
-require_once(INCLUDE_DIR . 'Music.class.php');
-
 function generateNewsXML()
 {
     $writer = new XMLWriter();

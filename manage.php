@@ -19,7 +19,7 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 define('ROOT', './');
-require('include.php');
+require_once(ROOT . 'config.php');
 AccessControl::setLevel('manageaddons');
 
 $_GET['action'] = (isset($_GET['action'])) ? $_GET['action'] : null;

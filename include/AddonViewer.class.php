@@ -19,8 +19,6 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(INCLUDE_DIR . 'Addon.class.php');
-
 /**
  * Class AddonViewer
  */

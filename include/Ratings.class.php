@@ -20,18 +20,7 @@
  */
 
 /**
-
- */
-
-require_once(INCLUDE_DIR . 'ClientSession.class.php');
-require_once(INCLUDE_DIR . 'DBConnection.class.php');
-require_once(INCLUDE_DIR . 'Exceptions.class.php');
-require_once(INCLUDE_DIR . 'XMLOutput.class.php');
-require_once(INCLUDE_DIR . 'xmlWrite.php');
-
-/**
- * Class Ratings
- * Class to handle add-on ratings
+ * Class Ratings to handle add-on ratings
  * @author computerfreak97, sj04736
  */
 class Ratings

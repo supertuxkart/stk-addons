@@ -21,7 +21,6 @@
 define('ROOT', '/home/stkaddons/stkaddons-scripts/web/');
 define('CRON', 1);
 require(ROOT . 'config.php');
-require_once(INCLUDE_DIR . 'Log.class.php');
 
 log_email();
 
