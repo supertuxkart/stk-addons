@@ -24,7 +24,6 @@ if (!defined('ROOT'))
     define('ROOT', './');
 }
 require_once(ROOT . 'config.php');
-require_once(INCLUDE_DIR . 'StkTemplate.class.php');
 
 $a_tpl = new StkTemplate('addons-panel.tpl');
 
@@ -44,6 +43,7 @@ if (!Addon::isAllowedType($type))
 {
     die(htmlspecialchars(_('This page cannot be loaded because an invalid add-on type was provided.')));
 }
+
 
 if (isset($_GET['id']))
 {

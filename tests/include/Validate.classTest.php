@@ -4,24 +4,45 @@
 
 class ValidateTest extends \PHPUnit_Framework_TestCase
 {
-    /*
-     * @dataProvider providerTestEmailThrowsException
-     * @expectedException UserException
-     */
-    public function testEmailThrowsException()
-    {
-        //Validate::email($email);
-        Validate::email("exampleexample.com");
-    }
-
     public function providerTestEmailThrowsException()
     {
         return array(
+            array(1),
+            array(null),
+            array(''),
+            array(true),
+            array(false),
             array(""),
             array("email"),
             array("email@"),
-            array("@example.com")
+            array("@example.com"),
+            array("valid@"),
         );
+    }
+
+    public function providerTestEmailNoThrowsException()
+    {
+        return array(
+            array("email@example.com"),
+            array("email.test@example.com")
+        );
+    }
+
+    /**
+     * @dataProvider providerTestEmailThrowsException
+     * @expectedException UserException
+     */
+    public function testEmailThrowsException($email)
+    {
+        Validate::email($email);
+    }
+
+    /**
+     * @dataProvider providerTestEmailNoThrowsException
+     */
+    public function testEmailNoThrowsException($email)
+    {
+        Validate::email($email);
     }
 
 }
