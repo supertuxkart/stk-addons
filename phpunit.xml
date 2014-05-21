@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit colors="true">
     <testsuites>
-        <testsuite name="Application Test Suite">
+        <testsuite name="Stk Test Suite">
             <directory>./tests/</directory>
         </testsuite>
     </testsuites>
+    <php>
+        <var name="DB_DSN" value="mysql:dbname=stkaddons_tests;host=localhost" />
+        <var name="DB_USER" value="root" />
+        <var name="DB_PASSWD" value="" />
+        <var name="DB_DBNAME" value="stkaddons_tests" />
+    </php>
 </phpunit>
