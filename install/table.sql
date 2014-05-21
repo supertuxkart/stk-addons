@@ -64,7 +64,7 @@ DELIMITER ;
 --
 
 CREATE TABLE IF NOT EXISTS `v2_achieved` (
-  `userid` int(10) unsigned NOT NULL,
+  `userid` int(11) unsigned NOT NULL,
   `achievementid` int(10) unsigned NOT NULL,
   PRIMARY KEY (`userid`,`achievementid`),
   KEY `userid` (`userid`),
@@ -160,7 +160,7 @@ CREATE TABLE IF NOT EXISTS `v2_clients` (
 --
 
 CREATE TABLE IF NOT EXISTS `v2_client_sessions` (
-  `uid` int(10) unsigned NOT NULL,
+  `uid` int(11) unsigned NOT NULL,
   `cid` char(24) NOT NULL,
   `online` tinyint(1) NOT NULL DEFAULT '1',
   `save` tinyint(1) NOT NULL DEFAULT '0',
@@ -226,7 +226,7 @@ CREATE TABLE IF NOT EXISTS `v2_friends` (
 --
 
 CREATE TABLE IF NOT EXISTS `v2_host_votes` (
-  `userid` int(10) unsigned NOT NULL,
+  `userid` int(11) unsigned NOT NULL,
   `hostid` int(10) unsigned NOT NULL,
   `vote` int(11) NOT NULL,
   PRIMARY KEY (`userid`,`hostid`),
@@ -264,7 +264,7 @@ CREATE TABLE IF NOT EXISTS `v2_karts_revs` (
 CREATE TABLE IF NOT EXISTS `v2_logs` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `user` int(10) unsigned NOT NULL,
+  `user` int(11) unsigned NOT NULL,
   `message` text NOT NULL,
   `emailed` int(1) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
@@ -320,8 +320,8 @@ CREATE TABLE IF NOT EXISTS `v2_news` (
 --
 
 CREATE TABLE IF NOT EXISTS `v2_notifications` (
-  `to` int(10) unsigned NOT NULL,
-  `from` int(10) unsigned NOT NULL,
+  `to` int(11) unsigned NOT NULL,
+  `from` int(11) unsigned NOT NULL,
   `type` varchar(10) NOT NULL,
   UNIQUE KEY `to_2` (`to`,`type`),
   KEY `to` (`to`)
@@ -424,7 +424,7 @@ CREATE TABLE IF NOT EXISTS `v2_users` (
 --
 
 CREATE TABLE IF NOT EXISTS `v2_verification` (
-  `userid` int(10) unsigned NOT NULL DEFAULT '0',
+  `userid` int(11) unsigned NOT NULL DEFAULT '0',
   `code` text NOT NULL COMMENT 'The verification code',
   PRIMARY KEY (`userid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Used for account activation and recovery';
@@ -436,12 +436,35 @@ CREATE TABLE IF NOT EXISTS `v2_verification` (
 --
 
 CREATE TABLE IF NOT EXISTS `v2_votes` (
-  `user_id` int(10) unsigned NOT NULL,
+  `user_id` int(11) unsigned NOT NULL,
   `addon_id` varchar(30) NOT NULL,
   `vote` float unsigned NOT NULL,
   PRIMARY KEY (`user_id`,`addon_id`),
   KEY `addon_id` (`addon_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `v2_bugs`
+--
+
+CREATE TABLE IF NOT EXISTS `v2_bugs` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) unsigned NOT NULL COMMENT 'User who filed the bug report',
+  `addon_id` varchar(30) DEFAULT NULL COMMENT 'The bug culprit',
+  `close_id` int(11) unsigned DEFAULT NULL COMMENT 'The user who closed the bug',
+  `close_reason` varchar(512) DEFAULT NULL,
+  `date_report` timestamp NULL DEFAULT NULL COMMENT 'Report date',
+  `date_edit` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT 'Last edit date',
+  `date_close` timestamp NULL DEFAULT NULL COMMENT 'Close date',
+  `title` varchar(256) NOT NULL COMMENT 'Bug title',
+  `description` varchar(2048) NOT NULL COMMENT 'Bug description',
+  `is_report` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Flag to indicate if the bug is a feedback',
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `addon_id` (`addon_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 --
 -- Constraints for dumped tables
@@ -509,6 +532,13 @@ ALTER TABLE `v2_verification`
 ALTER TABLE `v2_votes`
   ADD CONSTRAINT `v2_votes_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `v2_users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
   ADD CONSTRAINT `v2_votes_ibfk_2` FOREIGN KEY (`addon_id`) REFERENCES `v2_addons` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `v2_bugs`
+--
+ALTER TABLE `v2_bugs`
+  ADD CONSTRAINT `v2_bugs_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `v2_users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  ADD CONSTRAINT `v2_bugs_ibfk_2` FOREIGN KEY (`addon_id`) REFERENCES `v2_addons` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
