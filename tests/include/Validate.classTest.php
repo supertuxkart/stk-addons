@@ -17,6 +17,7 @@ class ValidateTest extends \PHPUnit_Framework_TestCase
             array("email@"),
             array("@example.com"),
             array("valid@"),
+            array("me@mytld"),
         );
     }
 
@@ -24,7 +25,8 @@ class ValidateTest extends \PHPUnit_Framework_TestCase
     {
         return array(
             array("email@example.com"),
-            array("email.test@example.com")
+            array("email.test@example.com"),
+            array("xx@xx.xx")
         );
     }
 

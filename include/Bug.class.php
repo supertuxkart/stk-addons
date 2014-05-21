@@ -32,7 +32,7 @@ class Bug
     protected $bugData = array();
 
     /**
-     * @param int      $id
+     * @param int   $id
      * @param array $bugData
      */
     public function __construct($id, array $bugData = array())
@@ -184,7 +184,7 @@ class Bug
             ));
         }
 
-        if(empty($data))
+        if (empty($data))
         {
             throw new BugException(sprintf(_h("There is no bug with id %d"), $id));
         }

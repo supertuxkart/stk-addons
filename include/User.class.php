@@ -296,7 +296,7 @@ class User
         {
             if (DEBUG_MODE)
             {
-                echo "One or more variables was not set";
+                //echo "One or more variables was not set";
             }
             // One or more of the session variables was not set - this may be an issue, so force logout
             User::logout();

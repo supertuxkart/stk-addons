@@ -299,7 +299,6 @@ class DBConnection
             throw new DBException("Empty table or data");
         }
 
-
         if (empty($where_statement))
         {
             $query = sprintf(

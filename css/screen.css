@@ -30,7 +30,7 @@ body {
 #body-frame {
     margin: auto;
     width: 1000px;
-    background-image: url("images/background.jpg");
+    background-image: url("../tpl/default/images/background.jpg");
     background-repeat: no-repeat;
     overflow-y: auto;
     overflow-x: hidden;
@@ -114,7 +114,7 @@ label {
 }
 
 #index-menu a {
-    background-image: url('images/index-icons.png');
+    background-image: url('../tpl/default/images/index-icons.png');
     background-repeat: no-repeat;
     display: block;
     padding: 108px 0px 0px 0px;
@@ -150,14 +150,14 @@ label {
 /* News Bar */
 #index-news {
     display: block;
-    background-image: url('images/news-panel.png');
+    background-image: url('../tpl/default/images/news-panel.png');
     width: 1000px;
     height: 91px;
 }
 
 #index-news-shadow {
     display: block;
-    background-image: url('images/news-panel-shadow.png');
+    background-image: url('../tpl/default/images/news-panel-shadow.png');
     background-repeat: repeat-x;
     width: 1000px;
     height: 10px;
@@ -235,7 +235,7 @@ label {
 }
 
 #lang-menu li.flag a {
-    background-image: url('images/flags.png');
+    background-image: url('../tpl/default/images/flags.png');
     border: 1px solid #4e4e4e;
     color: #4e4e4e;
     font-size: xx-small;
@@ -284,7 +284,7 @@ span.warning {
     border-radius: 2px;
     margin: 5px;
     padding: 5px;
-    background-image: url('images/content.png');
+    background-image: url('../tpl/default/images/content.png');
     clear: both;
     max-height: 575px;
     overflow-y: scroll;
@@ -361,13 +361,13 @@ span.f_dfsg {
 }
 
 #left-menu_top {
-    background-image: url('images/left-menu_top.png');
+    background-image: url('../tpl/default/images/left-menu_top.png');
     height: 10px;
     width: 100%;
 }
 
 #left-menu_body {
-    background-image: url('images/left-menu.png');
+    background-image: url('../tpl/default/images/left-menu.png');
     overflow-x: hidden;
     overflow-y: scroll;
     width: 230px;
@@ -376,7 +376,7 @@ span.f_dfsg {
 }
 
 #left-menu_bottom {
-    background-image: url('images/left-menu_bottom.png');
+    background-image: url('../tpl/default/images/left-menu_bottom.png');
     height: 10px;
     width: 100%;
 }
@@ -440,20 +440,20 @@ span.f_dfsg {
 }
 
 #right-content_top {
-    background-image: url("images/content-addon_top.png");
+    background-image: url("../tpl/default/images/content-addon_top.png");
     height: 10px;
     width: 100%;
 }
 
 #right-content_status {
-    background-image: url("images/content-addon.png");
+    background-image: url("../tpl/default/images/content-addon.png");
     overflow-x: hidden;
     width: 580px;
     padding: 0px 20px 0px 20px;
 }
 
 #right-content_body {
-    background-image: url("images/content-addon.png");
+    background-image: url("../tpl/default/images/content-addon.png");
     width: 580px;
     height: 456px;
     padding: 0px 20px 0px 20px;
@@ -462,7 +462,7 @@ span.f_dfsg {
 }
 
 #right-content_bottom {
-    background-image: url("images/content-addon_bottom.png");
+    background-image: url("../tpl/default/images/content-addon_bottom.png");
     height: 10px;
     width: 100%;
 }

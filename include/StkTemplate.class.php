@@ -59,6 +59,12 @@ class StkTemplate extends Template
     private $script_includes = array();
 
     /**
+     * Contains the css files
+     * @var array
+     */
+    private $css_includes = array();
+
+    /**
      * Setup the header meta tags and js includes, the top menu and the language menu
      */
     protected function setup()
@@ -66,6 +72,7 @@ class StkTemplate extends Template
         $this->setupHead();
         $this->setupTopMenu();
         $this->setupLanguageMenu();
+        $this->setupFooter();
     }
 
     /**
@@ -84,6 +91,20 @@ class StkTemplate extends Template
         );
         $this->smarty->assign('meta_tags', $meta_tags);
 
+        // fill css
+        array_push(
+            $this->css_includes,
+            array("media" => "screen", "href" => SITE_ROOT . 'css/screen.css'),
+            array("media" => "print", "href" => SITE_ROOT . 'css/print.css')
+        );
+        $this->smarty->assign("css_includes", $this->css_includes);
+    }
+
+    /**
+     * Setup the footer info for the template
+     */
+    private function setupFooter()
+    {
         // Fill script tags
         $this->script_inline["before"][] = array('content' => "var siteRoot='" . SITE_ROOT . "';");
 
@@ -91,12 +112,11 @@ class StkTemplate extends Template
 
         array_push(
             $this->script_includes,
-            array('src' => 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js'),
+            array('src' => '//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js'),
             array('src' => SITE_ROOT . 'js/jquery.newsticker.js'),
             array('src' => SITE_ROOT . 'js/script.js')
         );
         $this->smarty->assign('script_includes', $this->script_includes);
-
     }
 
     /**
@@ -196,18 +216,16 @@ class StkTemplate extends Template
      *
      * @param string $content the js source code
      * @param string $order   'before' to display before the include script or 'after' to display after
-     * @param string $type
      *
      * @throws TemplateException on invalid order
      */
-    public function addScriptInline($content, $order = "before", $type = 'text/javascript')
+    public function addScriptInline($content, $order = "before")
     {
         if (!in_array($order, array(static::ORDER_AFTER, static::ORDER_BEFORE)))
         {
             throw new TemplateException("Invalid order");
         }
         $this->script_inline[$order][] = array(
-            "type"    => $type,
             "content" => $content
         );
     }
@@ -216,13 +234,25 @@ class StkTemplate extends Template
      * Add a script file to the page
      *
      * @param string $src the js file location
-     * @param string $type
      */
-    public function addScriptInclude($src, $type = 'text/javascript')
+    public function addScriptInclude($src)
     {
         $this->script_includes[] = array(
-            "type" => $type,
-            "src"  => $src
+            "src" => $src
+        );
+    }
+
+    /**
+     * Add a css file to the page
+     *
+     * @param string $href
+     * @param string $media
+     */
+    public function addCssInclude($href, $media = "all")
+    {
+        $this->css_includes[] = array(
+            "href"  => $href,
+            "media" => $media
         );
     }
 
@@ -239,7 +269,7 @@ class StkTemplate extends Template
     /**
      * Set the meta refresh tag for redirect
      *
-     * @param string $target an destination url
+     * @param string $target  an destination url
      * @param int    $timeout in seconds
      */
     public function setMetaRefresh($target, $timeout)

@@ -3,21 +3,12 @@
 <head>
     <title>{$title|default:"SuperTuxKart Add-ons"}</title>
     {foreach $meta_tags as $meta_field => $meta_content}
-        <meta http-equiv="{$meta_field}" content="{$meta_content}" />
+        <meta http-equiv="{$meta_field}" content="{$meta_content}">
     {/foreach}
     <meta http-equiv="X-UA-Compatible" content="IE=9" />
-    {foreach $script_inline.before as $script}
-        <script type="{$script.type|default:'text/javascript'}">{$script.content}</script>
+    {foreach $css_includes as $css}
+        <link rel="stylesheet" media="{$css.media}" href="{$css.href}">
     {/foreach}
-    {foreach $script_includes as $script}
-        <script type="{$script.type|default:'text/javascript'}" src="{$script.src}"></script>
-    {/foreach}
-    {foreach $script_inline.after as $script}
-        <script type="{$script.type|default:'text/javascript'}">{$script.content}</script>
-    {/foreach}
-
-    <link rel="stylesheet" media="screen" href="{#css_screen#}" />
-    <link rel="stylesheet" media="print" href="{#css_print#}" />
 </head>
 <body>
 {include file=#top_menu#}
