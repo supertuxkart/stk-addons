@@ -94,6 +94,7 @@ class StkTemplate extends Template
         // fill css
         array_push(
             $this->css_includes,
+            array("media" => "all", "href" => "//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/css/bootstrap.min.css"),
             array("media" => "screen", "href" => SITE_ROOT . 'css/screen.css'),
             array("media" => "print", "href" => SITE_ROOT . 'css/print.css')
         );
@@ -113,6 +114,7 @@ class StkTemplate extends Template
         array_push(
             $this->script_includes,
             array('src' => '//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js'),
+            array('src' => "//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/js/bootstrap.min.js"),
             array('src' => SITE_ROOT . 'js/jquery.newsticker.js'),
             array('src' => SITE_ROOT . 'js/script.js')
         );
