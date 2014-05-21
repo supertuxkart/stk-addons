@@ -454,7 +454,7 @@ CREATE TABLE IF NOT EXISTS `v2_bugs` (
   `user_id` int(11) unsigned NOT NULL COMMENT 'User who filed the bug report',
   `addon_id` varchar(30) DEFAULT NULL COMMENT 'The bug culprit',
   `close_id` int(11) unsigned DEFAULT NULL COMMENT 'The user who closed the bug',
-  `close_reason` varchar(512) DEFAULT NULL,
+  `close_reason` varchar(512) DEFAULT NULL COMMENT 'The reason it was closed',
   `date_report` timestamp NULL DEFAULT NULL COMMENT 'Report date',
   `date_edit` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT 'Last edit date',
   `date_close` timestamp NULL DEFAULT NULL COMMENT 'Close date',

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * copyright 2009 Lucas Baudin <xapantu@gmail.com>
  *           2012 Stephen Just <stephenjust@users.sf.net>

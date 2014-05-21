@@ -52,7 +52,9 @@ class DBConnection
 
     const FETCH_FIRST = 3;
 
-    const NOTHING = 4;
+    const FETCH_FIRST_COLUMN = 4;
+
+    const NOTHING = 99;
 
     // Alias for PDO Constants
     const PARAM_BOOL = PDO::PARAM_BOOL;
@@ -201,6 +203,10 @@ class DBConnection
             {
                 return $sth->fetch(PDO::FETCH_ASSOC);
             }
+            if ($return_type === static::FETCH_FIRST_COLUMN)
+            {
+                return $sth->fetchColumn();
+            }
         }
         catch(PDOException $e)
         {
@@ -250,7 +256,7 @@ class DBConnection
      */
     public function insert($table, array $fields_data)
     {
-        if (!$table or empty($fields_data))
+        if (empty($table) or empty($fields_data))
         {
             throw new DBException("Empty table or data");
         }
@@ -273,5 +279,43 @@ class DBConnection
         );
 
         $this->query($query, static::NOTHING, $prepared_pairs);
+    }
+
+    /**
+     * Perform an sql count on the database, much faster than PDO::rowCount()
+     *
+     * @param string $table
+     * @param string $where_statement the sql where part
+     * @param array  $prepared_pairs  pairs to parse to pdo
+     * @param array  $data_types      data types for the prepared statements
+     *
+     * @throws DBException
+     * @return int the count statement
+     */
+    public function count($table, $where_statement = "", array $prepared_pairs = array(), array $data_types = array())
+    {
+        if (!$table or empty($where_statement))
+        {
+            throw new DBException("Empty table or data");
+        }
+
+
+        if (empty($where_statement))
+        {
+            $query = sprintf(
+                "SELECT COUNT(*) FROM %s",
+                DB_PREFIX . $table
+            );
+        }
+        else
+        {
+            $query = sprintf(
+                "SELECT COUNT(*) FROM %s WHERE %s",
+                DB_PREFIX . $table,
+                $where_statement
+            );
+        }
+
+        return (int)$this->query($query, static::FETCH_FIRST_COLUMN, $prepared_pairs, $data_types);
     }
 }
