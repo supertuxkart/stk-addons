@@ -30,14 +30,6 @@ body {
     width: 1000px;
 }
 
-#content-wrapper {
-    background-image: url("../img/background.jpg");
-    background-repeat: no-repeat;
-    overflow-y: auto;
-    overflow-x: hidden;
-    min-height: 500px;
-}
-
 .center {
     position:absolute;
     width:100px;
@@ -310,6 +302,32 @@ span.warning {
 #content h2 {
     font-family: Tahoma, Verdana, Geneva, sans-serif;
     font-weight: normal;
+}
+
+.stk-image {
+    background-image: url("../img/background.jpg");
+    background-repeat: no-repeat;
+}
+
+#content-wrapper {
+    overflow-y: auto;
+    overflow-x: hidden;
+    min-height: 500px;
+}
+
+#content-bugs {
+    background: white;
+    min-height: 500px;
+}
+
+#content-bugs > h1 {
+    text-align: center;
+    margin-top: 0;
+    padding-top: 20px;
+}
+
+#content-bugs h1 > form {
+
 }
 
 /* Loading Message */

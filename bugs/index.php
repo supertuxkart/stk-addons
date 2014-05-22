@@ -20,6 +20,11 @@
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
 $tpl = new StkTemplate('bugs.tpl');
-//$tpl->assign('title', htmlspecialchars(_('STK Add-ons') . ' | ' . _('About')));
+$tpl->assign('title', htmlspecialchars(_('STK Add-ons') . ' | ' . _('Bugs')));
 
+$tplData = array(
+    "items" => Bug::getAllData()
+);
+
+$tpl->assign("bugs", $tplData);
 echo $tpl;

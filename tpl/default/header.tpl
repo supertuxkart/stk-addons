@@ -14,4 +14,4 @@
 <body>
 <div id="body-wrapper">
 {include file=#top_menu#}
-<div id="content-wrapper">
+<div id="content-wrapper" class="stk-image">

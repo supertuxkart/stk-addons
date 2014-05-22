@@ -154,6 +154,29 @@ class Bug
         return $count !== 0;
     }
 
+    public static function getAllData()
+    {
+        try
+        {
+            $bugs = DBConnection::get()->query(
+                'SELECT * FROM ' . DB_PREFIX . 'bugs
+                ORDER BY `date_edit` DESC, `id` ASC',
+                DBConnection::FETCH_ALL
+            );
+        }
+        catch(DBException $e)
+        {
+            if (DEBUG_MODE)
+            {
+                throw new UserException("Error on selecting all bugs");
+            }
+
+            return array();
+        }
+
+        return $bugs;
+    }
+
     /**
      * Factory method to build a Bug by id
      *
