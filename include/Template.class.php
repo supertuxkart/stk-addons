@@ -75,8 +75,8 @@ class Template
         {
             throw new TemplateException('You cannot change the template after a template file is selected.');
         }
-        $dir = Template::getTemplateDir($template_name);
-        $this->directory = $dir;
+        $this->directory = Template::getTemplateDir($template_name);
+        $this->smarty->setTemplateDir($this->directory);
     }
 
     /**
@@ -112,7 +112,7 @@ class Template
             throw new TemplateException('Smarty was already configured.');
         }
         $this->smarty = new Smarty;
-        $this->smarty->compile_dir = TMP_PATH . 'tpl_c' . DS;
+        $this->smarty->setCompileDir(TMP_PATH . 'tpl_c' . DS);
     }
 
     /**
