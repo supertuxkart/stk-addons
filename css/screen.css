@@ -18,22 +18,40 @@
  */
 
 body {
-    font-family: Verdana, Geneva, sans-serif;
+    font-family: 'Open Sans', Verdana, Geneva, sans-serif;
     font-size: 13.5px;
     background-repeat: no-repeat;
     background-position: top left;
     color: black;
 }
 
-#body-frame {
+#body-wrapper {
     margin: auto;
     width: 1000px;
+}
+
+#content-wrapper {
     background-image: url("../tpl/default/images/background.jpg");
     background-repeat: no-repeat;
     overflow-y: auto;
     overflow-x: hidden;
     min-height: 500px;
     max-height: 623px;
+}
+
+.center {
+    position:absolute;
+    width:100px;
+    height:100px;
+    left:50%;
+    top:50%;
+    margin-left:-50px;
+    margin-top:-50px;
+}
+
+#login-form {
+    width: 250px;
+    margin: 0 auto;
 }
 
 #footer {
@@ -52,8 +70,6 @@ body {
     border-bottom: 1px solid #958f8e;
     color: #000000;
     display: block;
-    margin: auto;
-    width: 1000px;
     min-height: 35px;
     overflow: auto;
 }
@@ -82,10 +98,6 @@ body {
 
 #top-menu a:hover {
     color: grey;
-}
-
-label {
-    font-weight: bold;
 }
 
 /* Home Page */
@@ -285,7 +297,7 @@ span.warning {
     background-image: url('../tpl/default/images/content.png');
     clear: both;
     max-height: 575px;
-    overflow-y: scroll;
+    overflow-y: auto;
     -moz-border-radius: 2px;
     -webkit-border-radius: 2px;
 }

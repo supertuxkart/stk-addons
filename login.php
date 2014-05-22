@@ -32,17 +32,7 @@ $tpl = new StkTemplate('login.tpl');
 $login_form = array(
     'display' => true,
     'form'    => array(
-        'start'    => '<form action="' . File::rewrite('login.php?action=submit') . '" method="POST">',
-        'end'      => '</form>',
-        'username' => array(
-            'label' => htmlspecialchars(_('Username:')),
-            'field' => '<input type="text" name="user" />'
-        ),
-        'password' => array(
-            'label' => htmlspecialchars(_('Password:')),
-            'field' => '<input type="password" name="pass" />'
-        ),
-        'submit'   => '<input type="submit" value="' . htmlspecialchars(_('Log In')) . '" />'
+        'action'    => File::rewrite('login.php?action=submit'),
     ),
     'links'   => array(
         'register'       => File::link('register.php', htmlspecialchars(_('Create an account.'))),
