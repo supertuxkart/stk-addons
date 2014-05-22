@@ -18,7 +18,7 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(INCLUDE_DIR . 'locale.php');
+require_once(INCLUDE_PATH . 'locale.php');
 
 /**
  * Customization of generic template class for main stkaddons pages

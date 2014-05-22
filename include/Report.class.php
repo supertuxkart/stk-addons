@@ -18,7 +18,7 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(INCLUDE_DIR . 'graphs.php');
+require_once(INCLUDE_PATH . 'graphs.php');
 
 class Report 
 {

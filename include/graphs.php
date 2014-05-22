@@ -54,7 +54,7 @@ function graph_data_to_json($values, $labels, $format, $graph_id)
     // Handle caching
     if ($graph_id !== null)
     {
-        $local_cache_file = CACHE_DIR . 'cache_graph_' . $graph_id . '.json';
+        $local_cache_file = CACHE_PATH . 'cache_graph_' . $graph_id . '.json';
         $remote_cache_file = CACHE_DL . 'cache_graph_' . $graph_id . '.json';
         if (file_exists($local_cache_file))
         {
@@ -74,7 +74,7 @@ function graph_data_to_json($values, $labels, $format, $graph_id)
     else
     {
         $rand = rand(10000, 99999);
-        $local_cache_file = CACHE_DIR . 'cache_graph_' . $rand . '.json';
+        $local_cache_file = CACHE_PATH . 'cache_graph_' . $rand . '.json';
         $remote_cache_file = CACHE_DL . 'cache_graph_' . $rand . '.json';
     }
 

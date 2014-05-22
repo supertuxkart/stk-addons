@@ -28,32 +28,28 @@ if (DEBUG_MODE)
     ini_set('html_errors', 'On');
 }
 
-define('INCLUDE_DIR', ROOT . 'include/');
-
-$dirUpload = "/media/serveur/stkaddons/upload/";
-$dirUploadCron = $dirUpload;
-$dirBase = "http://127.0.0.1/stkaddons/";
-$dirDownload = $dirBase . "upload/";
-
-$style = "default";
-$admin = "yourname@example.com";
+// paths
+define("DS", DIRECTORY_SEPARATOR);
+define("ROOT_PATH", __DIR__ . DS);
+define("INCLUDE_PATH", ROOT_PATH . 'include' . DS);
+define("TPL_PATH", ROOT_PATH . 'tpl' . DS . 'default' . DS); // Template properties (Fixme: define this in user prefs)
+define("TMP_PATH", sys_get_temp_dir() . DS); // define temporary directory path
+define("CACHE_PATH", ROOT_PATH . 'assets' . DS . 'temp' . DS);
+define("UPLOAD_PATH", ROOT_PATH . 'upload' . DS);
+define("UPLOAD_CRON_PATH", UPLOAD_PATH);
 
 // CAPTCHA properties
 define('CAPTCHA_PUB', ''); // reCAPTCHA public key
 define('CAPTCHA_PRIV', ''); // reCAPTCHA private key
 
-// Template properties (Fixme: define this in user prefs)
-define('TPL_PATH', 'tpl/default/');
-
-// define temporary directory path
-define("TMP", "/tmp/");
-
+// Database proprieties
 define("DB_USER", 'root');
 define("DB_PASSWORD", 'pass');
 define("DB_NAME", 'stkbase');
 define("DB_PREFIX", 'v2_');
 define("DB_HOST", 'localhost:3306');
 
+// Mail proprieties
 define('MAIL_METHOD', 'sendmail'); // 'smtp' or 'sendmail' supported
 define('SENDMAIL_PATH', '/usr/bin/sendmail'); // Path to sendmail
 define('SENDMAIL_ARGS', '-i'); // Sendmail arguments
@@ -65,17 +61,17 @@ define('SMTP_PASS', null); // SMTP password
 
 if (!defined('CRON'))
 {
-    define("UP_LOCATION", $dirUpload);
+    define("UP_LOCATION", UPLOAD_PATH);
 }
 else
 {
-    define("UP_LOCATION", $dirUploadCron);
+    define("UP_LOCATION", UPLOAD_CRON_PATH);
 }
-define("DOWN_LOCATION", $dirDownload);
+
 // make sure that this ends with a trailing slash, otherwise it would break a few things (like the activation email)
 define("SITE_ROOT", "http://stkaddons.tuxfamily.org/");
-define("CACHE_DIR", ROOT . 'assets/temp/');
-define("CACHE_DL", $dirBase . 'assets/temp/');
+define("DOWN_LOCATION", SITE_ROOT . 'upload/');
+define("CACHE_DL", SITE_ROOT . 'assets/temp/');
 define("NEWS_XML", DOWN_LOCATION . "xml/news.xml");
 define("ASSET_XML", DOWN_LOCATION . "xml/assets.xml");
 define("NEWS_XML_LOCAL", UP_LOCATION . "xml/news.xml");
@@ -83,4 +79,4 @@ define("ASSET_XML_LOCAL", UP_LOCATION . "xml/news.xml");
 define("JPG_ROOT", ROOT);
 
 // add composer autoload
-require 'vendor/autoload.php';
+require_once(ROOT_PATH . 'vendor' . DS . 'autoload.php');

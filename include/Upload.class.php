@@ -105,10 +105,10 @@ class Upload
         Upload::readError($file_record['error']);
         $this->file_ext = Upload::checkType();
 
-        $this->temp = TMP . 'uploads/' . time() . '-' . $this->file_name . '/';
+        $this->temp = TMP_PATH . 'uploads' . DS . time() . '-' . $this->file_name . DS;
 
         // Clean up old temp files to make room for new upload
-        File::deleteOldSubdirectories(TMP . 'uploads', 3600);
+        File::deleteOldSubdirectories(TMP_PATH . 'uploads', 3600);
 
         $this->doUpload();
     }

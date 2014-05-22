@@ -1,6 +1,6 @@
 <?php
 /**
- * copyright 2011 Stephen Just <stephenjust@users.sf.net>
+ * Copyright 2014 Daniel Butum <danibutum at gmail dot com>
  *
  * This file is part of stkaddons
  *
@@ -17,18 +17,12 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
-require_once(INCLUDE_PATH . 'SLocale.class.php');
 
-// Get the current page address (without "lang" parameter)
-$page_url = $_SERVER['REQUEST_URI'];
-if (strstr($page_url, '?') === false)
-{
-    $page_url .= '?';
-}
-// Clean up the new url
-$page_url = preg_replace('/lang=[a-z_]+/i', null, $page_url);
-$page_url = preg_replace('/[&]+/i', '&', $page_url);
-$page_url = preg_replace('/\?&/i', '?', $page_url);
+define('ROOT', dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR);
+var_dump(ROOT);
+require_once(ROOT . 'config.php');
 
-// Set the locale
-new SLocale();
+$tpl = new StkTemplate('bugs.tpl', ROOT . "tpl" . DS . "");
+//$tpl->assign('title', htmlspecialchars(_('STK Add-ons') . ' | ' . _('About')));
+
+echo $tpl;

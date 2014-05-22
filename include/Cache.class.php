@@ -35,8 +35,8 @@ class Cache
     public static function clear()
     {
         $exclude_regex = '/^(cache_graph_.*\.png)$/i';
-        File::deleteRecursive(CACHE_DIR, $exclude_regex);
-        @mkdir(CACHE_DIR);
+        File::deleteRecursive(CACHE_PATH, $exclude_regex);
+        @mkdir(CACHE_PATH);
 
         try
         {
@@ -93,7 +93,7 @@ class Cache
             );
             foreach ($cache_list AS $cache_item)
             {
-                unlink(CACHE_DIR . $cache_item['file']);
+                unlink(CACHE_PATH . $cache_item['file']);
                 DBConnection::get()->query(
                     'DELETE FROM `' . DB_PREFIX . 'cache`
                     WHERE `file` = :file',

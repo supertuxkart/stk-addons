@@ -36,7 +36,6 @@ body {
     overflow-y: auto;
     overflow-x: hidden;
     min-height: 500px;
-    max-height: 623px;
 }
 
 .center {
@@ -289,6 +288,7 @@ span.warning {
     border-radius: 3px;
 }
 
+
 /* General content */
 #content {
     border-radius: 2px;
@@ -296,7 +296,6 @@ span.warning {
     padding: 5px;
     background-image: url('../tpl/default/images/content.png');
     clear: both;
-    max-height: 575px;
     overflow-y: auto;
     -moz-border-radius: 2px;
     -webkit-border-radius: 2px;

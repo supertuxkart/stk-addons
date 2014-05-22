@@ -161,13 +161,13 @@ function resizeImage($file)
     if ($format === 'png')
     {
         header('Content-Type: image/png');
-        imagepng($destination, CACHE_DIR . '/' . $cache_name, 9);
+        imagepng($destination, CACHE_PATH . '/' . $cache_name, 9);
         imagepng($destination, null, 9);
     }
     else
     {
         header("Content-Type: image/jpeg");
-        imagejpeg($destination, CACHE_DIR . '/' . $cache_name, 90);
+        imagejpeg($destination, CACHE_PATH . '/' . $cache_name, 90);
         imagejpeg($destination, null, 90);
     }
 
