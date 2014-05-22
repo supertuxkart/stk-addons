@@ -22,8 +22,8 @@
  * json/addon_search.php
  * This file provides a json-formatted list of addons found by search term.
  */
-define('ROOT', '../');
-require('../include.php');
+
+require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 AccessControl::setLevel(null);
 
 if (!isset($_GET['type']) || !Addon::isAllowedType($_GET['type']))

@@ -19,10 +19,7 @@
  */
 
 session_start();
-define('ROOT', '../');
-require_once(ROOT . 'config.php');
-require_once(INCLUDE_PATH . 'AccessControl.class.php');
-require_once(INCLUDE_PATH . 'Ratings.class.php');
+require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 AccessControl::setLevel('basicPage');
 
 if (!isset($_GET['addonId']))

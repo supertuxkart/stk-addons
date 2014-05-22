@@ -23,8 +23,8 @@
  * This file provides a json-formatted list of all available images for an
  * addon passed through the "id" parameter.
  */
-define('ROOT', '../');
-require('../include.php');
+
+require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 AccessControl::setLevel(null);
 
 // Quit if no ID was passed

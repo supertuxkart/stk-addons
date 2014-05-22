@@ -18,8 +18,7 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('ROOT', '../');
-require_once(ROOT . 'config.php');
+require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
 $report = new Report("STK Add-Ons Client Report");
 $description = '<p>This report is designed to give day-to-day usage statistics, ' .

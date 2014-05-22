@@ -18,9 +18,8 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('ROOT', '/home/stkaddons/stkaddons-scripts/web/');
 define('CRON', 1);
-require(ROOT . 'config.php');
+require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
 log_email();
 

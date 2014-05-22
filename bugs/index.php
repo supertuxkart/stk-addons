@@ -17,12 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
+require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
-define('ROOT', dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR);
-var_dump(ROOT);
-require_once(ROOT . 'config.php');
-
-$tpl = new StkTemplate('bugs.tpl', ROOT . "tpl" . DS . "");
+$tpl = new StkTemplate('bugs.tpl');
 //$tpl->assign('title', htmlspecialchars(_('STK Add-ons') . ' | ' . _('About')));
 
 echo $tpl;

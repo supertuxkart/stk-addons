@@ -18,9 +18,8 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('ROOT', './');
 define('API', 1);
-require_once(ROOT . 'config.php');
+require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
 $action = isset($_POST['action']) ? $_POST['action'] : "";
 $output = new XMLOutput();
