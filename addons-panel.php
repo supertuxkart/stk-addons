@@ -19,11 +19,7 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-if (!defined('ROOT'))
-{
-    define('ROOT', './');
-}
-require_once(ROOT . 'config.php');
+require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
 
 $a_tpl = new StkTemplate('addons-panel.tpl');
 

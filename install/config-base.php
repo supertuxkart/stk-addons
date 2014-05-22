@@ -76,7 +76,6 @@ define("NEWS_XML", DOWN_LOCATION . "xml/news.xml");
 define("ASSET_XML", DOWN_LOCATION . "xml/assets.xml");
 define("NEWS_XML_LOCAL", UP_LOCATION . "xml/news.xml");
 define("ASSET_XML_LOCAL", UP_LOCATION . "xml/news.xml");
-define("JPG_ROOT", ROOT);
 
 // add composer autoload
 require_once(ROOT_PATH . 'vendor' . DS . 'autoload.php');

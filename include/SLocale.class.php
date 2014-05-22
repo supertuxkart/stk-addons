@@ -115,7 +115,7 @@ class SLocale
         $_COOKIE['lang'] = $locale;
 
         // Set translation file info
-        bindtextdomain('translations', ROOT . 'locale');
+        bindtextdomain('translations', ROOT_PATH . 'locale');
         textdomain('translations');
         bind_textdomain_codeset('translations', 'UTF-8');
 

@@ -19,8 +19,7 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('ROOT', './');
-require_once(ROOT . 'config.php');
+require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
 
 // define possibly undefined variables
 $_POST['user'] = (isset($_POST['user'])) ? $_POST['user'] : null;

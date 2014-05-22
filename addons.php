@@ -19,8 +19,7 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('ROOT', './');
-require_once(ROOT . 'config.php');
+require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
 $_GET['type'] = (isset($_GET['type'])) ? $_GET['type'] : NULL;
 switch ($_GET['type']) {
     default:

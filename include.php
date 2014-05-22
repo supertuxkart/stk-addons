@@ -19,7 +19,7 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(ROOT . 'config.php');
+require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
 require_once(INCLUDE_PATH . 'AccessControl.class.php');
 require_once(INCLUDE_PATH . 'DBConnection.class.php');
 require_once(INCLUDE_PATH . 'Constants.php');

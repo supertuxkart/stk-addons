@@ -19,8 +19,7 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('ROOT', './');
-require_once(ROOT . 'config.php');
+require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
 AccessControl::setLevel('basicPage');
 
 // set current user if not defined
@@ -124,7 +123,7 @@ $panel['left'] = (string)$left_tpl;
 
 // right panel
 ob_start();
-include(ROOT . 'users-panel.php');
+include(ROOT_PATH . 'users-panel.php');
 $panel['right'] = ob_get_clean();
 
 // output the view

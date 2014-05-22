@@ -32,8 +32,7 @@ switch ($error_code)
         break;
 }
 
-define('ROOT', './');
-require_once(ROOT . 'config.php');
+require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
 
 $tpl = new StkTemplate('error-page.tpl');
 switch ($error_code)

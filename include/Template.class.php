@@ -184,13 +184,13 @@ class Template
     {
         if ($template === null)
         {
-            return ROOT . 'tpl/default/';
+            return TPL_PATH;
         }
         if (preg_match('/[a-z0-9\\-_]/i', $template))
         {
             throw new TemplateException('Invalid character in template name.');
         }
-        $dir = ROOT . 'tpl/' . $template . '/';
+        $dir = ROOT_PATH . 'tpl' . DS . $template . DS;
         if (file_exists($dir) && is_dir($dir))
         {
             return $dir;

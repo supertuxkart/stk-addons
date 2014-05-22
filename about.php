@@ -19,8 +19,7 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('ROOT', './');
-require_once(ROOT . 'config.php');
+require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
 
 $tpl = new StkTemplate('about.tpl');
 $tpl->assign('title', htmlspecialchars(_('STK Add-ons') . ' | ' . _('About')));
