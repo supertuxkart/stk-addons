@@ -175,7 +175,7 @@ $panel["status"] = $status_content;
 
 // right panel
 ob_start();
-include(ROOT . 'manage-panel.php');
+include(ROOT_PATH . 'manage-panel.php');
 $panel['right'] = ob_get_clean();
 
 // output the view

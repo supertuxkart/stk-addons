@@ -31,7 +31,7 @@ body {
 }
 
 #content-wrapper {
-    background-image: url("../tpl/default/images/background.jpg");
+    background-image: url("../img/background.jpg");
     background-repeat: no-repeat;
     overflow-y: auto;
     overflow-x: hidden;
@@ -123,7 +123,7 @@ body {
 }
 
 #index-menu a {
-    background-image: url('../tpl/default/images/index-icons.png');
+    background-image: url('../img/index-icons.png');
     background-repeat: no-repeat;
     display: block;
     padding: 108px 0 0 0;
@@ -153,20 +153,20 @@ body {
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     border-radius: 5px; /* This and line below for IE */
-    behavior: url('css/PIE.htc');
+    behavior: url('PIE.htc');
 }
 
 /* News Bar */
 #index-news {
     display: block;
-    background-image: url('../tpl/default/images/news-panel.png');
+    background-image: url('../img/news-panel.png');
     width: 1000px;
     height: 91px;
 }
 
 #index-news-shadow {
     display: block;
-    background-image: url('../tpl/default/images/news-panel-shadow.png');
+    background-image: url('../img/news-panel-shadow.png');
     background-repeat: repeat-x;
     width: 1000px;
     height: 10px;
@@ -217,7 +217,7 @@ body {
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
     border-radius: 4px; /* This and line below for IE */
-    behavior: url('css/PIE.htc');
+    behavior: url('PIE.htc');
 }
 
 #lang-menu li {
@@ -244,7 +244,7 @@ body {
 }
 
 #lang-menu li.flag a {
-    background-image: url('../tpl/default/images/flags.png');
+    background-image: url('../img/flags.png');
     border: 1px solid #4e4e4e;
     color: #4e4e4e;
     font-size: xx-small;
@@ -294,7 +294,7 @@ span.warning {
     border-radius: 2px;
     margin: 5px;
     padding: 5px;
-    background-image: url('../tpl/default/images/content.png');
+    background-image: url('../img/content.png');
     clear: both;
     overflow-y: auto;
     -moz-border-radius: 2px;
@@ -314,7 +314,7 @@ span.warning {
 
 /* Loading Message */
 #loading {
-    background-image: url('../image/loader.gif');
+    background-image: url('../img/loader.gif');
     display: block;
     height: 32px;
     width: 32px;
@@ -371,7 +371,7 @@ span.f_dfsg {
 
 
 #left-menu_body {
-    background-image: url('../tpl/default/images/left-menu.png');
+    background-image: url('../img/left-menu.png');
     overflow-x: hidden;
     overflow-y: scroll;
     width: 230px;
@@ -414,7 +414,7 @@ span.f_dfsg {
 }
 
 #left-menu_body .icon-featured {
-    background: url('images/emblem-favorite.png') no-repeat right;
+    background: url('../img/emblem-favorite.png') no-repeat right;
     float: left;
     height: 25px;
     width: 25px;
@@ -438,14 +438,14 @@ span.f_dfsg {
 }
 
 #right-content_status {
-    background-image: url("../tpl/default/images/content-addon.png");
+    background-image: url("../img/content-addon.png");
     overflow-x: hidden;
     width: 580px;
     padding: 0 20px 0 20px;
 }
 
 #right-content_body {
-    background-image: url("../tpl/default/images/content-addon.png");
+    background-image: url("../img/content-addon.png");
     width: 580px;
     height: 456px;
     padding: 0 20px 0 20px;

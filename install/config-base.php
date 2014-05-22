@@ -69,13 +69,17 @@ else
 }
 
 // make sure that this ends with a trailing slash, otherwise it would break a few things (like the activation email)
-define("SITE_ROOT", "http://stkaddons.tuxfamily.org/");
+define("SITE_ROOT", "http://stkaddons.net/");
 define("DOWN_LOCATION", SITE_ROOT . 'upload/');
 define("CACHE_DL", SITE_ROOT . 'assets/temp/');
 define("NEWS_XML", DOWN_LOCATION . "xml/news.xml");
 define("ASSET_XML", DOWN_LOCATION . "xml/assets.xml");
 define("NEWS_XML_LOCAL", UP_LOCATION . "xml/news.xml");
 define("ASSET_XML_LOCAL", UP_LOCATION . "xml/news.xml");
+
+define("IMG_LOCATION", SITE_ROOT . 'img/');
+define("JS_LOCATION", SITE_ROOT . 'js/');
+define("CSS_LOCATION", SITE_ROOT . 'css/');
 
 // add composer autoload
 require_once(ROOT_PATH . 'vendor' . DS . 'autoload.php');

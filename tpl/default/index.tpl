@@ -3,7 +3,7 @@
 
 <div id="index-body">
     <img id="index-logo"
-	src="{#tpl_image_dir#}logo.png"
+	src="{$smarty.const.IMG_LOCATION}logo.png"
 	alt="SuperTuxKart Logo"
 	title="SuperTuxKart Logo" />
     

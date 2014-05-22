@@ -92,7 +92,7 @@ $users = User::getAllData();
 $templateUsers = array();
 $templateUsers[] = array(
     'url'   => "users.php?user={$_SESSION['user']}",
-    'label' => '<img class="icon"  src="image/user.png" />' . htmlspecialchars(_('Me')),
+    'label' => sprintf('<img class="icon"  src="%suser.png" />', IMG_LOCATION) . htmlspecialchars(_('Me')),
     'class' => 'user-list menu-item'
 );
 foreach ($users as $user)
@@ -110,7 +110,7 @@ foreach ($users as $user)
         }
         $templateUsers[] = array(
             'url'   => "users.php?user={$user['user']}",
-            'label' => '<img class="icon"  src="image/user.png" />' . htmlspecialchars($user['user']),
+            'label' => sprintf('<img class="icon"  src="%suser.png" />', IMG_LOCATION) . htmlspecialchars($user['user']),
             'class' => $class
         );
     }
