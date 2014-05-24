@@ -66,7 +66,7 @@ Description: menu
         echo'<a href="'.SITE_ROOT.'login.php?action=logout">'.htmlspecialchars(_("Log out")).'</a>';
         echo'<a href="'.SITE_ROOT.'users.php">'.htmlspecialchars(_("Users")).'</a>';
         echo'<a href="'.SITE_ROOT.'upload.php">'.htmlspecialchars(_("Upload")).'</a>';
-        if ($_SESSION['role']['manageaddons'])
+        if (User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
             echo '<a href="'.SITE_ROOT.'manage.php">'.htmlspecialchars(_('Manage')).'</a>';
     }
     else

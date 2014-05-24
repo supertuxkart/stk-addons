@@ -20,7 +20,7 @@
 
 session_start();
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
-AccessControl::setLevel('basicPage');
+AccessControl::setLevel(AccessControl::PERM_VIEW_BASIC_PAGE);
 
 if (!isset($_GET['addonId']))
 {

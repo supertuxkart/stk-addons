@@ -94,9 +94,18 @@ class StkTemplate extends Template
         // fill css
         array_push(
             $this->css_includes,
-            array("media" => "all", "href" => "//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/css/bootstrap.min.css"),
-            array("media" => "screen", "href" => SITE_ROOT . 'css/screen.css'),
-            array("media" => "print", "href" => SITE_ROOT . 'css/print.css')
+            array(
+                "media" => "all",
+                "href"  => "//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/css/bootstrap.min.css"
+            ),
+            array(
+                "media" => "screen",
+                "href"  => SITE_ROOT . 'css/screen.css'
+            ),
+            array(
+                "media" => "print",
+                "href"  => SITE_ROOT . 'css/print.css'
+            )
         );
         $this->smarty->assign("css_includes", $this->css_includes);
     }
@@ -148,7 +157,7 @@ class StkTemplate extends Template
         $this->smarty->assign('show_upload', User::isLoggedIn());
         $this->smarty->assign(
             'show_manage',
-            (isset($_SESSION['role']['manageaddons'])) ? $_SESSION['role']['manageaddons'] : false
+            User::hasPermission(AccessControl::PERM_EDIT_ADDONS)
         );
         if (basename(get_self()) === 'addons.php')
         {

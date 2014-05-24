@@ -37,6 +37,12 @@ class User
     protected static $user_id = 0;
 
     /**
+     * Required session vars to be a valid session
+     * @var array
+     */
+    protected static $sessionRequired = array("userid", "user", "real_name", "last_login", "role");
+
+    /**
      * @var int
      */
     protected $id = 0;
@@ -189,7 +195,7 @@ class User
      */
     public function setConfig($available = null, $role = null)
     {
-        if ($_SESSION['role']['manage' . $this->userData['role'] . 's'])
+        if (User::hasPermissionOnRole($this->userData['role']))
         {
 
             // Set availability status
@@ -222,7 +228,7 @@ class User
             // Set permission level
             if ($role)
             {
-                if ($_SESSION['role']['manage' . $role . 's'])
+                if (User::hasPermissionOnRole($role))
                 {
                     try
                     {
@@ -279,6 +285,7 @@ class User
         {
             return null;
         }
+
         // Validate user's session on every page
         if (session_id() === "")
         {
@@ -287,21 +294,20 @@ class User
         }
 
         // Check if any session variables are not set
-        if (!isset($_SESSION['userid']) ||
-            !isset($_SESSION['user']) ||
-            !isset($_SESSION['real_name']) ||
-            !isset($_SESSION['last_login']) ||
-            !isset($_SESSION['role'])
-        )
+        foreach(static::$sessionRequired as $key)
         {
-            if (DEBUG_MODE)
-            {
-                //echo "One or more variables was not set";
-            }
             // One or more of the session variables was not set - this may be an issue, so force logout
-            User::logout();
+            if(!isset($_SESSION[$key]))
+            {
+                if (DEBUG_MODE)
+                {
+                    echo sprintf("Session key = '%s' was not set", $key);
+                    //var_debug("Init");
+                }
+                User::logout();
 
-            return null;
+                return null;
+            }
         }
 
         // Validate session if complete set of variables is available
@@ -339,6 +345,7 @@ class User
         }
         User::$user_id = $_SESSION['userid'];
         User::$logged_in = true;
+        //var_debug("Init");
     }
 
     /**
@@ -544,7 +551,7 @@ class User
         {
             return 'unregistered';
         }
-        else
+        else // retrieve from database
         {
             try
             {
@@ -552,15 +559,17 @@ class User
                     'SELECT `role`
                      FROM `' . DB_PREFIX . 'users`
                      WHERE `user` = :user',
-                    DBConnection::FETCH_ALL,
+                    DBConnection::FETCH_FIRST,
                     array(':user' => $_SESSION['user'])
                 );
-                if (count($role_result) === 0)
+                if (empty($role_result))
                 {
                     return 'unregistered';
                 }
 
-                return $role_result[0]['role'];
+                // backwards compatibility
+
+                return static::oldRoleToNew($role_result['role']);
             }
             catch(DBException $e)
             {
@@ -570,13 +579,140 @@ class User
     }
 
     /**
+     * Convert old role system to new
+     *
+     * @param string $oldRole
+     *
+     * @return string
+     */
+    public static function oldRoleToNew($oldRole)
+    {
+        if($oldRole === 'basicUser')
+        {
+            return 'user';
+        }
+
+        return $oldRole;
+    }
+
+    /**
+     * Set the permission in the session
+     *
+     * @param string $role
+     */
+    protected static function setPermissions($role)
+    {
+        $_SESSION["role"] = AccessControl::getPermissions(static::oldRoleToNew($role));
+    }
+
+    /**
+     * Get the permission for the session
+     *
+     * @return array
+     */
+    public static function getPermissions()
+    {
+        if(!static::isLoggedIn())
+        {
+            return array();
+        }
+
+        return $_SESSION["role"];
+    }
+
+    /**
+     * Check if current user has the permission
+     *
+     * @param string $permission
+     *
+     * @return bool
+     */
+    public static function hasPermission($permission)
+    {
+        return in_array($permission, static::getPermissions());
+    }
+
+    /**
+     * See if the current user has permission over a user
+     *
+     * @param string $role_singular
+     *
+     * @return bool
+     */
+    public static function hasPermissionOnRole($role_singular)
+    {
+        return static::hasPermission('edit' . ucfirst(static::oldRoleToNew($role_singular)) . 's');
+    }
+
+
+    /**
+     * Try to log in a user
+     *
+     * @param string $username
+     * @param string $password
+     *
+     * @throws UserException on invalid credentials
+     */
+    public static function login($username, $password)
+    {
+        $result = Validate::credentials($username, $password);
+
+        // Check if the user exists
+        if (count($result) !== 1)
+        {
+            User::logout();
+            throw new UserException(htmlspecialchars(_('Your username or password is incorrect.')));
+        }
+
+        User::$user_id = $result[0]['id'];
+        User::$logged_in = true;
+
+        $_SESSION['userid'] = $result[0]["id"];
+        $_SESSION['user'] = $result[0]["user"];
+        $_SESSION['real_name'] = $result[0]["name"];
+        $_SESSION['last_login'] = User::updateLoginTime(User::getId());
+        static::setPermissions($result[0]["role"]);
+
+
+        // backwards compatibility. Convert unsalted password to a salted one
+        if (strlen($password) === 64)
+        {
+            $password = Validate::password($password);
+            User::changePassword($password);
+            Log::newEvent("Converted the password of '$username' to use a password salting algorithm");
+        }
+    }
+
+    /**
+     * Logout the user
+     */
+    public static function logout()
+    {
+        foreach(static::$sessionRequired as $key)
+        {
+            unset($_SESSION[$key]);
+        }
+
+        session_destroy();
+        session_start();
+        User::$user_id = 0;
+        User::$logged_in = false;
+    }
+
+    /**
      * @param $userid
      *
      * @return mixed
      * @throws UserException
+     * @throws InvalidArgumentException
      */
     public static function updateLoginTime($userid)
     {
+        if(!$userid)
+        {
+            throw new InvalidArgumentException("User id is not set");
+        }
+
         try
         {
             DBConnection::get()->query(
@@ -614,58 +750,6 @@ class User
                 _('Please contact a website administrator.')
             ));
         }
-    }
-
-    /**
-     * Try to log in a user
-     *
-     * @param string $username
-     * @param string $password
-     *
-     * @throws UserException on invalid credentials
-     */
-    public static function login($username, $password)
-    {
-        $result = Validate::credentials($username, $password);
-
-        // Check if the user exists
-        if (count($result) !== 1)
-        {
-            User::logout();
-            throw new UserException(htmlspecialchars(_('Your username or password is incorrect.')));
-        }
-
-        $_SESSION['userid'] = $result[0]["id"];
-        $_SESSION['user'] = $result[0]["user"];
-        $_SESSION['real_name'] = $result[0]["name"];
-        User::$user_id = $result[0]['id'];
-        setPermissions($result[0]['role']);
-        $_SESSION['last_login'] = User::updateLoginTime(User::getId());
-        User::$logged_in = true;
-
-        // Convert unsalted password to a salted one
-        if (strlen($password) === 64)
-        {
-            $password = Validate::password($password);
-            User::changePassword($password);
-            Log::newEvent("Converted the password of '$username' to use a password salting algorithm");
-        }
-    }
-
-    /**
-     * Logout the user
-     */
-    public static function logout()
-    {
-        unset($_SESSION['userid']);
-        unset($_SESSION['user']);
-        unset($_SESSION['role']);
-        unset($_SESSION['real_name']);
-        unset($_SESSION['last_login']);
-        session_destroy();
-        session_start();
-        User::$user_id = 0;
-        User::$logged_in = false;
     }
 
     /**

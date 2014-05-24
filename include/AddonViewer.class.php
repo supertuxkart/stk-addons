@@ -63,7 +63,7 @@ class AddonViewer
             if (User::isLoggedIn())
             {
                 //write configuration for the submiter and administrator
-                if ($_SESSION['role']['manageaddons'] || $this->addon->getUploader() == User::getId())
+                if (User::hasPermission(AccessControl::PERM_EDIT_ADDONS) || $this->addon->getUploader() == User::getId())
                 {
                     $return .= $this->displayConfig();
                 }
@@ -120,7 +120,7 @@ class AddonViewer
         }
         // Add upload button below image (or in place of image)
         if (User::isLoggedIn() && ($this->addon->getUploader(
-                ) == $_SESSION['userid'] || $_SESSION['role']['manageaddons'])
+                ) == User::getId() || User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
         )
         {
             $tpl['addon']['image_upload'] = array(
@@ -217,7 +217,7 @@ class AddonViewer
             ),
             'revisions' => array()
         );
-        if (User::isLoggedIn() && ($this->addon->getUploader() == User::getId() || $_SESSION['role']['manageaddons']))
+        if (User::isLoggedIn() && ($this->addon->getUploader() == User::getId() || User::hasPermission(AccessControl::PERM_EDIT_ADDONS)))
         {
             $rev_list['upload']['display'] = true;
         }
@@ -237,8 +237,7 @@ class AddonViewer
                 // User is logged in
                 // If the user is not the uploader, or moderators, then they
                 // cannot see unapproved addons
-                if (($this->addon->getUploader(
-                        ) != $_SESSION['userid'] && !$_SESSION['role']['manageaddons']) && !($revision['status'] & F_APPROVED)
+                if (($this->addon->getUploader() != User::getId() && !User::hasPermission(AccessControl::PERM_EDIT_ADDONS)) && !($revision['status'] & F_APPROVED)
                 )
                 {
                     continue;
@@ -272,7 +271,7 @@ class AddonViewer
             'images'            => array(),
             'no_images_message' => htmlspecialchars(_('No images have been uploaded for this addon yet.'))
         );
-        if (User::isLoggedIn() && ($this->addon->getUploader() == User::getId() || $_SESSION['role']['manageaddons']))
+        if (User::isLoggedIn() && ($this->addon->getUploader() == User::getId() || User::hasPermission(AccessControl::PERM_EDIT_ADDONS)))
         {
             $im_list['upload']['display'] = true;
         }
@@ -288,7 +287,7 @@ class AddonViewer
             $admin_links = null;
             if (User::isLoggedIn())
             {
-                if ($_SESSION['role']['manageaddons'])
+                if (User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
                 {
                     if ($image['approved'] == 1)
                     {
@@ -304,7 +303,7 @@ class AddonViewer
                     }
                     $admin_links .= '<br />';
                 }
-                if ($_SESSION['role']['manageaddons'] || $this->addon->getUploader() == $_SESSION['userid'])
+                if (User::hasPermission(AccessControl::PERM_EDIT_ADDONS) || $this->addon->getUploader() == User::getId())
                 {
                     if ($this->addon->getType() == 'karts')
                     {
@@ -328,7 +327,7 @@ class AddonViewer
             }
             $image['admin_links'] = $admin_links;
             if (User::isLoggedIn() &&
-                ($this->addon->getUploader() == $_SESSION['userid'] || $_SESSION['role']['manageaddons'])
+                ($this->addon->getUploader() == User::getId() || User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
             )
             {
                 $image_files[] = $image;
@@ -354,7 +353,7 @@ class AddonViewer
             'files'            => array(),
             'no_files_message' => htmlspecialchars(_('No source files have been uploaded for this addon yet.'))
         );
-        if (User::isLoggedIn() && ($this->addon->getUploader() == User::getId() || $_SESSION['role']['manageaddons']))
+        if (User::isLoggedIn() && ($this->addon->getUploader() == User::getId() || User::hasPermission(AccessControl::PERM_EDIT_ADDONS)))
         {
             $s_list['upload']['display'] = true;
         }
@@ -375,7 +374,7 @@ class AddonViewer
                 ) . '</a>';
             if (User::isLoggedIn())
             {
-                if ($_SESSION['role']['manageaddons'])
+                if (User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
                 {
                     if ($source['approved'] == 1)
                     {
@@ -390,7 +389,7 @@ class AddonViewer
                             ) . '">' . htmlspecialchars(_('Approve')) . '</a>';
                     }
                 }
-                if ($this->addon->getUploader() == $_SESSION['userid'] || $_SESSION['role']['manageaddons'])
+                if ($this->addon->getUploader() == User::getId() || User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
                 {
                     $source['details'] .= ' | <a href="' . File::rewrite(
                             $this->addon->getLink() . '&amp;save=deletefile&amp;id=' . $source['id']
@@ -398,7 +397,7 @@ class AddonViewer
                 }
             }
             if (User::isLoggedIn() &&
-                ($this->addon->getUploader() == $_SESSION['userid'] || $_SESSION['role']['manageaddons'])
+                ($this->addon->getUploader() == User::getId() || User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
             )
             {
                 $source_files[] = $source;
@@ -460,7 +459,7 @@ class AddonViewer
         {
             throw new AddonException('You must be logged in to see this.');
         }
-        if ($_SESSION['role']['manageaddons'] == false && $this->addon->getUploader() != $_SESSION['userid'])
+        if (User::hasPermission(AccessControl::PERM_EDIT_ADDONS) == false && $this->addon->getUploader() != User::getId())
         {
             throw new AddonException(htmlspecialchars(
                 _('You do not have the necessary privileges to perform this action.')
@@ -494,7 +493,7 @@ class AddonViewer
         echo '</form><br />';
 
         // Delete addon
-        if ($this->addon->getUploader() == $_SESSION['userid'] || $_SESSION['role']['manageaddons'])
+        if ($this->addon->getUploader() == User::getId() || User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
         {
             echo '<input type="button" value="' . htmlspecialchars(_('Delete Addon')) . '"
                 onClick="confirm_delete(\'' . File::rewrite(
@@ -503,7 +502,7 @@ class AddonViewer
         }
 
         // Mark whether or not an add-on has ever been included in STK
-        if ($_SESSION['role']['manageaddons'])
+        if (User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
         {
             echo '<strong>' . htmlspecialchars(_('Included in Game Versions:')) . '</strong><br />';
             echo '<form method="POST" action="' . File::rewrite($this->addon->getLink() . '&amp;save=include') . '">';
@@ -525,7 +524,7 @@ class AddonViewer
         echo '<strong>' . htmlspecialchars(_('Status Flags:')) . '</strong><br />';
         echo '<form method="POST" action="' . File::rewrite($this->addon->getLink() . '&amp;save=status') . '">';
         echo '<table id="addon_flags" class="info"><thead><tr><th></th>';
-        if ($_SESSION['role']['manageaddons'])
+        if (User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
         {
             echo '<th>' . img_label(htmlspecialchars(_('Approved'))) . '</th>
                 <th>' . img_label(htmlspecialchars(_('Invisible'))) . '</th>';
@@ -534,7 +533,7 @@ class AddonViewer
             <th>' . img_label(htmlspecialchars(_('Beta'))) . '</th>
             <th>' . img_label(htmlspecialchars(_('Release-Candidate'))) . '</th>
             <th>' . img_label(htmlspecialchars(_('Latest'))) . '</th>';
-        if ($_SESSION['role']['manageaddons'])
+        if (User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
         {
             echo '<th>' . img_label(htmlspecialchars(_('DFSG Compliant'))) . '</th>
                 <th>' . img_label(htmlspecialchars(_('Featured'))) . '</th>';
@@ -550,7 +549,7 @@ class AddonViewer
             printf(htmlspecialchars(_('Rev %u:')), $rev_n);
             echo '</td>';
 
-            if ($_SESSION['role']['manageaddons'] == true)
+            if (User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
             {
                 // F_APPROVED
                 echo '<td>';
@@ -630,7 +629,7 @@ class AddonViewer
             }
             echo '</td>';
 
-            if ($_SESSION['role']['manageaddons'])
+            if (User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
             {
                 // F_DFSG
                 echo '<td>';
@@ -690,7 +689,7 @@ class AddonViewer
 
         // Moderator notes
         echo '<strong>' . htmlspecialchars(_('Notes from Moderator to Submitter:')) . '</strong><br />';
-        if ($_SESSION['role']['manageaddons'])
+        if (User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
         {
             echo '<form method="POST" action="' . File::rewrite($this->addon->getLink() . '&amp;save=notes') . '">';
         }
@@ -706,7 +705,7 @@ class AddonViewer
             echo '</textarea><br />';
             $fields[] = 'notes-' . $rev_n;
         }
-        if ($_SESSION['role']['manageaddons'])
+        if (User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
         {
             echo '<input type="hidden" name="fields" value="' . implode(',', $fields) . '" />';
             echo '<input type="submit" value="' . htmlspecialchars(_('Save Notes')) . '" />';

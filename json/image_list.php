@@ -25,7 +25,6 @@
  */
 
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
-AccessControl::setLevel(null);
 
 // Quit if no ID was passed
 if (!isset($_GET['id']))

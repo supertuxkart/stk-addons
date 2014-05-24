@@ -1,4 +1,5 @@
 <?php
+
 /**
  * copyright 2014 Daniel Butum <danibutum at gmail dot com>
  *
@@ -17,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 class Bug
 {
 
@@ -154,6 +154,12 @@ class Bug
         return $count !== 0;
     }
 
+    /**
+     * Get all the bug data
+     *
+     * @return array|int|null
+     * @throws BugException
+     */
     public static function getAllData()
     {
         try
@@ -168,7 +174,7 @@ class Bug
         {
             if (DEBUG_MODE)
             {
-                throw new UserException("Error on selecting all bugs");
+                throw new BugException("Error on selecting all bugs");
             }
 
             return array();

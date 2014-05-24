@@ -20,7 +20,7 @@
  */
 
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
-AccessControl::setLevel('basicPage');
+AccessControl::setLevel(AccessControl::PERM_VIEW_BASIC_PAGE);
 
 $user_name = '';
 if (isset($_GET["user"]) && !empty($_GET["user"]))
@@ -108,7 +108,7 @@ foreach (Addon::getAllowedTypes() as $type)
         $addon["css_class"] = "";
         if (!($addon["status"] & F_APPROVED)) // not approved
         {
-            if ($_SESSION['role']['manageaddons'] == false && $addon['uploader'] !== User::getId())
+            if (User::hasPermission(AccessControl::PERM_EDIT_ADDONS) == false && $addon['uploader'] !== User::getId())
             {
                 continue;
             }
@@ -124,9 +124,7 @@ foreach (Addon::getAllowedTypes() as $type)
 
 // config form
 // Allow current user to change own profile, and administrators to change all profiles
-if ($_SESSION['role']['manage' . $userData['role'] . 's']
-    || $userData["id"] === User::getId()
-)
+if (User::hasPermissionOnRole($userData['role']) || $userData["id"] === User::getId())
 {
     $user_tpl["config"] = array(
         "header"          => _h("Configuration"),
@@ -141,15 +139,15 @@ if ($_SESSION['role']['manage' . $userData['role'] . 's']
         $role["disabled"] = 'disabled';
     }
     $role["options"] = array();
-    foreach (AccessControl::getPermissionTypes() as $permission)
+    foreach (AccessControl::getRoles() as $db_role)
     {
         // has permission
-        if ($_SESSION['role']['manage' . $permission . 's'] || $userData["role"] === $permission)
+        if (User::hasPermissionOnRole($db_role) || $userData["role"] === $db_role)
         {
-            $role["options"][$permission] = $permission;
-            if ($userData["role"] === $permission)
+            $role["options"][$db_role] = $db_role;
+            if ($userData["role"] === $db_role)
             {
-                $role["selected"] = $permission;
+                $role["selected"] = $db_role;
             }
         }
     }

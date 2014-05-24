@@ -19,7 +19,7 @@
  */
 
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
-AccessControl::setLevel('addAddon');
+AccessControl::setLevel(AccessControl::PERM_ADD_ADDON);
 
 // Define possibly undefined variables
 $_GET['action'] = (isset($_GET['action'])) ? $_GET['action'] : null;

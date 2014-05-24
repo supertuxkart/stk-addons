@@ -249,7 +249,7 @@ class Ratings
                 {
                     return;
                 }
-                $userid = $_SESSION['userid'];
+                $userid = User::getId();
             }
 
             $result = DBConnection::get()->query(
@@ -322,7 +322,7 @@ class Ratings
             {
                 throw new DBException();
             }
-            $userid = $_SESSION['userid'];
+            $userid = User::getId();
         }
 
         if ($vote < $this->min_rating || $vote > $this->max_rating)

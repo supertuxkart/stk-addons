@@ -19,7 +19,7 @@
  */
 
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
-AccessControl::setLevel('manageaddons');
+AccessControl::setLevel(AccessControl::PERM_EDIT_ADDONS);
 
 $_GET['action'] = (isset($_GET['action'])) ? $_GET['action'] : null;
 if (!isset($_GET['view']))
@@ -44,7 +44,7 @@ $menu_items = array(
         'class' => 'manage-list menu-item'
     )
 );
-if ($_SESSION['role']['managesettings'])
+if (User::hasPermission(AccessControl::PERM_EDIT_SETTINGS))
 {
     $menu_items[] = array(
         'url'   => 'manage.php?view=general',

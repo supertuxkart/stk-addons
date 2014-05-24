@@ -847,17 +847,17 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.4.4",
+            "version": "v2.4.5",
             "target-dir": "Symfony/Component/Yaml",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Yaml.git",
-                "reference": "65539ecde838f9c0d18b006b2101e3deb4b5c9ff"
+                "reference": "fd22bb88c3a6f73c898b39bec185a9e211b06265"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Yaml/zipball/65539ecde838f9c0d18b006b2101e3deb4b5c9ff",
-                "reference": "65539ecde838f9c0d18b006b2101e3deb4b5c9ff",
+                "url": "https://api.github.com/repos/symfony/Yaml/zipball/fd22bb88c3a6f73c898b39bec185a9e211b06265",
+                "reference": "fd22bb88c3a6f73c898b39bec185a9e211b06265",
                 "shasum": ""
             },
             "require": {
@@ -892,7 +892,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "http://symfony.com",
-            "time": "2014-04-18 20:37:09"
+            "time": "2014-05-12 09:27:48"
         }
     ],
     "aliases": [

@@ -466,6 +466,66 @@ CREATE TABLE IF NOT EXISTS `v2_bugs` (
   KEY `addon_id` (`addon_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `v2_roles`
+--
+
+CREATE TABLE IF NOT EXISTS `v2_roles` (
+  `role_id` int(4) NOT NULL AUTO_INCREMENT COMMENT 'The role unique identifier',
+  `name` varchar(255) CHARACTER SET utf8 NOT NULL COMMENT 'The name identifier',
+  PRIMARY KEY (`role_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+
+--
+-- Dumping data for table `v2_roles`
+--
+
+INSERT INTO `v2_roles` (`role_id`, `name`) VALUES
+  (1, 'user'),
+  (2, 'moderator'),
+  (3, 'administrator'),
+  (4, 'root');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `v2_role_permissions`
+--
+
+CREATE TABLE IF NOT EXISTS `v2_role_permissions` (
+  `role_id` int(4) NOT NULL COMMENT 'The id from the roles table',
+  `permission` varchar(255) CHARACTER SET utf8 NOT NULL COMMENT 'The actual permission',
+  KEY `role_id` (`role_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `v2_role_permissions`
+--
+
+INSERT INTO `v2_role_permissions` (`role_id`, `permission`) VALUES
+  (1, 'viewBasicPage'),
+  (1, 'addAddon'),
+  (2, 'viewBasicPage'),
+  (2, 'addAddon'),
+  (2, 'editAddons'),
+  (2, 'editUsers'),
+  (3, 'viewBasicPage'),
+  (3, 'addAddon'),
+  (3, 'editAddons'),
+  (3, 'editUsers'),
+  (3, 'editModerators'),
+  (3, 'editSettings'),
+  (4, 'viewBasicPage'),
+  (4, 'addAddon'),
+  (4, 'editAddons'),
+  (4, 'editUsers'),
+  (4, 'editModerators'),
+  (4, 'editAdministrators'),
+  (4, 'editRoots'),
+  (4, 'editSettings');
+
 --
 -- Constraints for dumped tables
 --
@@ -539,6 +599,13 @@ ALTER TABLE `v2_votes`
 ALTER TABLE `v2_bugs`
   ADD CONSTRAINT `v2_bugs_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `v2_users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
   ADD CONSTRAINT `v2_bugs_ibfk_2` FOREIGN KEY (`addon_id`) REFERENCES `v2_addons` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `v2_role_permissions`
+--
+ALTER TABLE `v2_role_permissions`
+  ADD CONSTRAINT `v2_role_permissions_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `v2_roles` (`role_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

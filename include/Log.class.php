@@ -58,7 +58,7 @@ class Log
         {
             throw new LogException('You must be logged in ot view the event log.');
         }
-        if (!$_SESSION['role']['manageaddons'])
+        if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
         {
             throw new LogException('You do not have the necessary permissions to view the event log.');
         }

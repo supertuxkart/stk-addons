@@ -386,7 +386,7 @@ class Addon
         }
 
         // Make sure user has permission to upload a new revision for this add-on
-        if (User::getId() !== $this->uploaderId && !$_SESSION['role']['manageaddons'])
+        if (User::getId() !== $this->uploaderId && !User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
         {
             throw new AddonException(htmlspecialchars(
                 _('You do not have the necessary permissions to perform this action.')
@@ -506,7 +506,7 @@ class Addon
             throw new AddonException(htmlentities(_('You must be logged in to perform this action.')));
         }
 
-        if ($_SESSION['role']['manageaddons'] !== true && User::getId() !== $this->uploaderId)
+        if (User::hasPermission(AccessControl::PERM_EDIT_ADDONS) !== true && User::getId() !== $this->uploaderId)
         {
             throw new AddonException(htmlentities(
                 _('You do not have the necessary permissions to perform this action.')
@@ -595,7 +595,7 @@ class Addon
      */
     public function deleteFile($file_id)
     {
-        if (!$_SESSION['role']['manageaddons'] && $this->uploaderID !== User::getId())
+        if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS) && $this->uploaderID !== User::getId())
         {
             throw new AddonException(htmlspecialchars(
                 _('You do not have the necessary permissions to perform this action.')
@@ -617,7 +617,7 @@ class Addon
      */
     public function deleteRevision($rev)
     {
-        if (!$_SESSION['role']['manageaddons'] && $this->uploaderID !== User::getId())
+        if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS) && $this->uploaderID !== User::getId())
         {
             throw new AddonException(htmlspecialchars(
                 _('You do not have the necessary permissions to perform this action.')
@@ -1207,7 +1207,9 @@ class Addon
      */
     public function setDescription($description)
     {
-        if (!User::isLoggedIn() || (!$_SESSION['role']['manageaddons'] && $this->uploaderId !== User::getId()))
+        if (!User::isLoggedIn() ||
+            (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS) && $this->uploaderId !== User::getId())
+        )
         {
             throw new AddonException(htmlspecialchars(
                 _('You do not have the neccessary permissions to perform this action.')
@@ -1246,7 +1248,9 @@ class Addon
      */
     public function setDesigner($designer)
     {
-        if (!User::isLoggedIn() || (!$_SESSION['role']['manageaddons'] && $this->uploaderId !== User::getId()))
+        if (!User::isLoggedIn() ||
+            (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS) && $this->uploaderId !== User::getId())
+        )
         {
             throw new AddonException(htmlspecialchars(
                 _('You do not have the neccessary permissions to perform this action.')
@@ -1286,7 +1290,7 @@ class Addon
      */
     public function setImage($image_id, $field = 'image')
     {
-        if (!$_SESSION['role']['manageaddons'] && $this->uploaderId !== User::getId())
+        if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS) && $this->uploaderId !== User::getId())
         {
             throw new AddonException(htmlspecialchars(
                 _('You do not have the neccessary permissions to perform this action.')
@@ -1321,7 +1325,7 @@ class Addon
      */
     public function setIncludeVersions($start_ver, $end_ver)
     {
-        if (!$_SESSION['role']['manageaddons'])
+        if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
         {
             throw new AddonException(htmlspecialchars(
                 _('You do not have the neccessary permissions to perform this action.')
@@ -1423,7 +1427,7 @@ class Addon
      */
     public function setNotes($fields)
     {
-        if (!$_SESSION['role']['manageaddons'])
+        if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
         {
             throw new AddonException(htmlspecialchars(
                 _('You do not have the neccessary permissions to perform this action.')
@@ -1554,7 +1558,7 @@ class Addon
         foreach ($this->revisions as $rev_n => $rev)
         {
             $mask = F_LATEST + F_ALPHA + F_BETA + F_RC;
-            if ($_SESSION['role']['manageaddons'])
+            if (User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
             {
                 $mask = $mask + F_APPROVED + F_INVISIBLE + F_DFSG + F_FEATURED;
             }
@@ -1601,14 +1605,14 @@ class Addon
                     default:
                         break;
                     case 'approved':
-                        if (!$_SESSION['role']['manageaddons'])
+                        if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
                         {
                             break;
                         }
                         $status[$revision] += F_APPROVED;
                         break;
                     case 'invisible':
-                        if (!$_SESSION['role']['manageaddons'])
+                        if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
                         {
                             break;
                         }
@@ -1624,14 +1628,14 @@ class Addon
                         $status[$revision] += F_RC;
                         break;
                     case 'dfsg':
-                        if (!$_SESSION['role']['manageaddons'])
+                        if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
                         {
                             break;
                         }
                         $status[$revision] += F_DFSG;
                         break;
                     case 'featured':
-                        if (!$_SESSION['role']['manageaddons'])
+                        if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
                         {
                             break;
                         }

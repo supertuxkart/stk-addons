@@ -16,24 +16,23 @@
                 <div class="form-group">
                     <label>
                         <select class="form-control input-lg">
-                            <option value="all" selected>All</option>
-                            <option value="open">Open</option>
-                            <option value="closed">Closed</option>
+                            <option value="all" selected>{t}All{/t}</option>
+                            <option value="open">{t}Open{/t}</option>
+                            <option value="closed">{t}Closed{/t}</option>
                         </select>
                     </label>
                 </div>
                 <div class="form-group">
                     <label class="checkbox-inline">
-                        <input type="checkbox" id="search-description" name="search-description" value="description">Search
-                                                                                                                     Description
+                        <input type="checkbox" id="search-description" name="search-description" value="description">{t}Search Description{/t}
                     </label>
                 </div>
-                <button type="submit" class="btn btn-info btn-lg">Search</button>
+                <button type="submit" class="btn btn-info btn-lg">{t}Search{/t}</button>
             </form>
         </div>
         <div class="col-md-2">
             <a class="btn btn-default btn-lg" href="#">
-                File a bug
+                {t}File a bug{/t}
             </a>
         </div>
     </div>
@@ -42,9 +41,9 @@
         <thead>
         <tr>
             <th>#Id</th>
-            <th>Addon</th>
-            <th>Title</th>
-            <th>Changed</th>
+            <th>{t}Addon{/t}</th>
+            <th>{t}Title{/t}</th>
+            <th>{t}Changed{/t}</th>
         </tr>
         </thead>
         <tbody>

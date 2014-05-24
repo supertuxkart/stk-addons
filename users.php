@@ -20,7 +20,7 @@
  */
 
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
-AccessControl::setLevel('basicPage');
+AccessControl::setLevel(AccessControl::PERM_VIEW_BASIC_PAGE);
 
 // set current user if not defined
 $_GET['user'] = (isset($_GET['user'])) ? $_GET['user'] : $_SESSION['user'];
@@ -41,7 +41,7 @@ switch ($action)
     case 'password':
         $user = User::getFromUserName($_GET['user']);
         if ($_SESSION['user'] !== $_GET['user']
-            && !$_SESSION['role']['manage' . $user->getUserRole() . 's']
+            && !User::hasPermissionOnRole($user->getUserRole())
         )
         {
             $status = '<span class="error">' . htmlspecialchars(
@@ -62,7 +62,7 @@ switch ($action)
     case 'config':
         $user = User::getFromUserName($_GET['user']);
         if ($_SESSION['user'] !== $_GET['user']
-            && !$_SESSION['role']['manage' . $user->getUserRole() . 's']
+            && !User::hasPermissionOnRole($user->getUserRole())
         )
         {
             $status = '<span class="error">' . htmlspecialchars(
@@ -99,9 +99,7 @@ foreach ($users as $user)
 {
     // Make sure that the user is active, or the viewer has permission to
     // manage this type of user
-    if ($_SESSION['role']['manage' . $user['role'] . 's']
-        || $user['active'] == 1
-    )
+    if (User::hasPermissionOnRole($user['role']) || $user['active'] == 1)
     {
         $class = 'user-list menu-item';
         if ($user["active"] == 0)
@@ -110,7 +108,9 @@ foreach ($users as $user)
         }
         $templateUsers[] = array(
             'url'   => "users.php?user={$user['user']}",
-            'label' => sprintf('<img class="icon"  src="%suser.png" />', IMG_LOCATION) . htmlspecialchars($user['user']),
+            'label' => sprintf('<img class="icon"  src="%suser.png" />', IMG_LOCATION) . htmlspecialchars(
+                    $user['user']
+                ),
             'class' => $class
         );
     }

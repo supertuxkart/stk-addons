@@ -19,7 +19,7 @@
  */
 
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
-AccessControl::setLevel('manageaddons');
+AccessControl::setLevel(AccessControl::PERM_EDIT_SETTINGS);
 
 $_GET['action'] = (isset($_GET['action'])) ? $_GET['action'] : null;
 

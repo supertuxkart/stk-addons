@@ -24,7 +24,6 @@
  */
 
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
-AccessControl::setLevel(null);
 
 if (!isset($_GET['type']) || !Addon::isAllowedType($_GET['type']))
 {

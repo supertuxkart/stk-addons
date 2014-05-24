@@ -17,7 +17,6 @@
  stkaddons.  If not, see <http://www.gnu.org/licenses/>.   */
 
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
-//AccessControl::setLevel(NULL);
 
 $tpl = new StkTemplate('index.tpl');
 

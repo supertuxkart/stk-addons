@@ -42,7 +42,7 @@ class File
             $approve = false;
         }
 
-        if (!$_SESSION['role']['manageaddons'])
+        if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
         {
             throw new FileException(htmlspecialchars(_('Insufficient permissions.')));
         }

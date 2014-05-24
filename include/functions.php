@@ -276,9 +276,7 @@ EOF;
     {
         // Make sure that the user is active, or the viewer has permission to
         // manage this type of user
-        if ($_SESSION['role']['manage' . $user['role'] . 's']
-            || $user['active'] == 1
-        )
+        if (User::hasPermissionOnRole($user['role']) || $user['active'] == 1)
         {
             echo '<li><a class="menu-item';
             if ($user['active'] == 0)
@@ -299,87 +297,4 @@ EOF;
         }
     }
     echo "</ul>";
-}
-
-/**
- * Set the permission in the session
- *
- * @param string $role
- */
-function setPermissions($role)
-{
-    switch ($role)
-    {
-        case "basicUser":
-            $_SESSION['role'] = array(
-                "basicPage"               => true,
-                "addAddon"                => true,
-                "manageaddons"            => false,
-                "managebasicUsers"        => false,
-                "managemoderators"        => false,
-                "manageadministrators"    => false,
-                "managesupAdministrators" => false,
-                "manageroots"             => false,
-                "managesettings"          => false
-            );
-            break;
-        case "moderator":
-            $_SESSION['role'] = array(
-                "basicPage"               => true,
-                "addAddon"                => true,
-                "manageaddons"            => true,
-                "managebasicUsers"        => true,
-                "managemoderators"        => false,
-                "manageadministrators"    => false,
-                "managesupAdministrators" => false,
-                "manageroots"             => false,
-                "managesettings"          => false
-            );
-            break;
-        case "administrator":
-            $_SESSION['role'] = array(
-                "basicPage"               => true,
-                "addAddon"                => true,
-                "manageaddons"            => true,
-                "managebasicUsers"        => true,
-                "managemoderators"        => true,
-                "manageadministrators"    => false,
-                "managesupAdministrators" => false,
-                "manageroots"             => false,
-                "managesettings"          => true
-            );
-            break;
-        case "supAdministrator":
-            $_SESSION['role'] = array(
-                "basicPage"               => true,
-                "addAddon"                => true,
-                "manageaddons"            => true,
-                "managebasicUsers"        => true,
-                "managemoderators"        => true,
-                "manageadministrators"    => true,
-                "managesupAdministrators" => false,
-                "manageroots"             => false,
-                "managesettings"          => true
-            );
-            break;
-        case "root":
-            $_SESSION['role'] = array(
-                "basicPage"               => true,
-                "addAddon"                => true,
-                "manageaddons"            => true,
-                "managebasicUsers"        => true,
-                "managemoderators"        => true,
-                "manageadministrators"    => true,
-                "managesupAdministrators" => true,
-                "manageroots"             => true,
-                "managesettings"          => true
-            );
-            break;
-    }
-    //support for translations :
-    htmlspecialchars(_("root"));
-    htmlspecialchars(_("supAdministrator"));
-    htmlspecialchars(_("administrator"));
-    htmlspecialchars(_("moderator"));
-    htmlspecialchars(_("basicUser"));
 }

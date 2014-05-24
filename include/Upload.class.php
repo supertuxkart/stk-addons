@@ -469,7 +469,7 @@ class Upload
             {
                 $addon = new Addon($this->addon_id);
                 // Check if we are the original uploader, or a moderator
-                if (User::getId() != $addon->getUploader() && !$_SESSION['role']['manageaddons'])
+                if (User::getId() != $addon->getUploader() && !User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
                 {
                     throw new UploadException(htmlspecialchars(
                         _('You do not have the necessary permissions to perform this action.')
