@@ -30,7 +30,11 @@ class AccessControl
 
     const PERM_ADD_ADDON = "addAddon";
 
+    const PERM_ADD_BUG = "addBug";
+
     const PERM_EDIT_ADDONS = "editAddons";
+
+    const PERM_EDIT_BUGS = "editBugs";
 
     const PERM_EDIT_USERS = "editUsers";
 
@@ -41,6 +45,8 @@ class AccessControl
     const PERM_EDIT_ROOTS = "editRoots";
 
     const PERM_EDIT_SETTINGS = "editSettings";
+
+
 
     /**
      * Cache for the roles
@@ -57,8 +63,10 @@ class AccessControl
         return array(
             static::PERM_VIEW_BASIC_PAGE,
             static::PERM_ADD_ADDON,
+            static::PERM_ADD_BUG,
             static::PERM_EDIT_ADDONS,
             static::PERM_EDIT_USERS,
+            static::PERM_EDIT_BUGS,
             static::PERM_EDIT_MODERATORS,
             static::PERM_EDIT_ADMINISTRATORS,
             static::PERM_EDIT_ROOTS,
