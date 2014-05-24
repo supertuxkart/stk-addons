@@ -25,21 +25,25 @@
 class Upload
 {
     /**
+     * The uploaded file name
      * @var string
      */
     private $file_name;
 
     /**
+     * The uploaded file type. eg: application/zip
      * @var string
      */
     private $file_type;
 
     /**
+     * The uploaded file size
      * @var int
      */
     private $file_size;
 
     /**
+     * The uploaded file temporary name path
      * @var string
      */
     private $file_tmp;
@@ -91,6 +95,8 @@ class Upload
 
 
     /**
+     * Constructor
+     *
      * @param $file_record
      * @param $expected_type
      */
@@ -102,8 +108,8 @@ class Upload
         $this->file_size = $file_record['size'];
         $this->expected_type = $expected_type;
 
-        Upload::readError($file_record['error']);
-        $this->file_ext = Upload::checkType();
+        static::checkUploadError($file_record['error']);
+        $this->file_ext = static::checkUploadExtension($this->file_name, $this->expected_type);
 
         $this->temp = TMP_PATH . 'uploads' . DS . time() . '-' . $this->file_name . DS;
 
@@ -114,7 +120,7 @@ class Upload
     }
 
     /**
-     * Addon deconstructor, delete the temp file
+     * Deconstructor, delete the temp file
      */
     public function __destruct()
     {
@@ -130,63 +136,28 @@ class Upload
     }
 
     /**
-     * Check the filename for an uploaded file to make sure the extension is
-     * one that can be handled
-     *
-     * @throws UploadException if the file extension if not appropriate
-     *
-     * @return string File extension
-     */
-    public function checkType()
-    {
-        // Check file-extension for uploaded file
-        if ($this->expected_type === 'image')
-        {
-            if (!preg_match('/\.(png|jpg|jpeg)$/i', $this->file_name, $ext))
-            {
-                throw new UploadException(htmlspecialchars(
-                    _('Uploaded image files must be either PNG or Jpeg files.')
-                ));
-            }
-        }
-        else
-        {
-            // File extension must be .zip, .tgz, .tar, .tar.gz, tar.bz2, .tbz
-            if (!preg_match('/\.(zip|t[bg]z|tar|tar\.gz|tar\.bz2)$/i', $this->file_name, $ext))
-            {
-                throw new UploadException(htmlspecialchars(_('The file you uploaded was not the correct type.')));
-            }
-        }
-
-        return $ext[1];
-    }
-
-    /**
      * Perform the actual upload to our server
      *
      * @throws UploadException
      */
     private function doUpload()
     {
-        if (@!mkdir(
-            $this->temp, /* Directory */
-            0755, /* Permissions */
-            true /* Recursive create */
-        )
-        )
+        if (!mkdir($this->temp, 0755, true))
         {
             throw new UploadException('Failed to create temporary directory for upload: ' .
                 htmlspecialchars($this->temp)
             );
         }
+
         // Copy file to temp folder
-        if ((move_uploaded_file($this->file_tmp, $this->temp . $this->file_name) === false) &&
-            !file_exists($this->temp . $this->file_name)
+        if (move_uploaded_file($this->file_tmp, $this->temp . $this->file_name) === false &&
+            file_exists($this->temp . $this->file_name) === false
         )
         {
-            throw new UploadException(htmlspecialchars(_('Failed to move uploaded file.')));
+            throw new UploadException(_('Failed to move uploaded file.'));
         }
 
+        // treat images separately
         if ($this->expected_type === 'image')
         {
             $this->doImageUpload();
@@ -227,11 +198,11 @@ class Upload
         // Make sure the parser found a license file
         if (!isset($this->properties['license_file']))
         {
-            throw new UploadException(htmlspecialchars(
-                _(
+            throw new UploadException(
+                _h(
                     'A valid License.txt file was not found. Please add a License.txt file to your archive and re-submit it.'
                 )
-            ));
+            );
         }
         $this->properties['xml_attributes']['license'] =
             htmlentities(file_get_contents($this->properties['license_file'], false));
@@ -288,7 +259,7 @@ class Upload
                 $this->properties['addon_revision'] = 1;
             }
 
-            Upload::editInfoFile();
+            static::editInfoFile();
 
             // Get image file
             $image_file = ($this->upload_type === 'karts') ? $this->properties['xml_attributes']['icon-file'] :
@@ -313,7 +284,7 @@ class Upload
                 {
                     DBConnection::get()->query(
                         "CALL `" . DB_PREFIX . "create_file_record`
-                            (:addon_id, :upload_type, 'image', :file, @result_id)",
+                        (:addon_id, :upload_type, 'image', :file, @result_id)",
                         DBConnection::NOTHING,
                         array(
                             ":addon_id"    => $addon_id,
@@ -328,6 +299,7 @@ class Upload
                             'SELECT @result_id',
                             DBConnection::FETCH_FIRST
                         );
+
                         // example taken from
                         // http://stackoverflow.com/questions/118506/stored-procedures-mysql-and-php/4502524#4502524
                         // TODO test it
@@ -344,9 +316,7 @@ class Upload
                 }
                 catch(DBException $e)
                 {
-                    echo '<span class="error">' . htmlspecialchars(
-                            _('Failed to associate image file with addon.')
-                        ) . '</span><br />';
+                    echo '<span class="error">' . _h('Failed to associate image file with addon.') . '</span><br />';
                     unlink($this->properties['image_path']);
                     $image_file = null;
                 }
@@ -376,7 +346,7 @@ class Upload
         // Validate addon type field
         if (!Addon::isAllowedType($this->upload_type))
         {
-            throw new UploadException(htmlspecialchars(_('Invalid add-on type.')));
+            throw new UploadException(_h('Invalid add-on type.'));
         }
 
         // Pack zip file
@@ -384,7 +354,7 @@ class Upload
         $this->generateFilename('zip');
         if (!File::compress($this->temp, $this->upload_name))
         {
-            throw new UploadException(htmlspecialchars(_('Failed to re-pack archive file.')));
+            throw new UploadException(_h('Failed to re-pack archive file.'));
         }
 
         // Record addon's file in database
@@ -428,15 +398,15 @@ class Upload
                 $this->properties['xml_attributes']['fileid'] = 0;
             }
 
-            throw new UploadException(htmlspecialchars(_('Failed to associate archive file with addon.')));
+            throw new UploadException(_h('Failed to associate archive file with addon.'));
         }
 
         if ($_POST['upload-type'] === 'source')
         {
-            echo htmlspecialchars(_('Successfully uploaded source archive.')) . '<br />';
+            echo _h('Successfully uploaded source archive.') . '<br />';
             echo '<span style="font-size: large"><a href="' . File::rewrite(
                     'addons.php?type=' . $this->upload_type . '&amp;name=' . $this->addon_id
-                ) . '">' . htmlspecialchars(_('Continue.')) . '</a></span><br />';
+                ) . '">' . _h('Continue.') . '</a></span><br />';
 
             return true;
         }
@@ -458,9 +428,9 @@ class Upload
                 // Check if we were trying to add a new revision
                 if ($this->properties['addon_revision'] != 1)
                 {
-                    throw new UploadException(htmlspecialchars(
-                        _('You are trying to add a new revision of an add-on that does not exist.')
-                    ));
+                    throw new UploadException(
+                        _h('You are trying to add a new revision of an add-on that does not exist.')
+                    );
                 }
 
                 $addon = Addon::create($this->upload_type, $this->properties['xml_attributes'], $fileid);
@@ -471,9 +441,7 @@ class Upload
                 // Check if we are the original uploader, or a moderator
                 if (User::getId() != $addon->getUploader() && !User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
                 {
-                    throw new UploadException(htmlspecialchars(
-                        _('You do not have the necessary permissions to perform this action.')
-                    ));
+                    throw new UploadException(_h('You do not have the necessary permissions to perform this action.'));
                 }
                 $addon->createRevision($this->properties['xml_attributes'], $fileid);
             }
@@ -483,22 +451,20 @@ class Upload
             echo '<span class="error">' . $e->getMessage() . '</span><br />';
         }
 
-        echo htmlspecialchars(
-                _(
-                    'Your add-on was uploaded successfully. It will be reviewed by our moderators before becoming publicly available.'
-                )
-            ) . '<br /><br />';
-        echo '<a href="upload.php?type=' . $this->upload_type . '&amp;name=' . $this->addon_id . '&amp;action=file">' . htmlspecialchars(
-                _('Click here to upload the sources to your add-on now.')
-            ) . '</a><br />';
-        echo htmlspecialchars(
-                _(
-                    '(Uploading the sources to your add-on enables others to improve your work and also ensure your add-on will not be lost in the future if new SuperTuxKart versions are not compatible with the current format.)'
-                )
-            ) . '<br /><br />';
+        echo _h(
+                'Your add-on was uploaded successfully. It will be reviewed by our moderators before becoming publicly available.'
+            )
+            . '<br /><br />';
+        echo '<a href="upload.php?type=' . $this->upload_type . '&amp;name=' . $this->addon_id . '&amp;action=file">' .
+            _h('Click here to upload the sources to your add-on now.')
+            . '</a><br />';
+        echo _h(
+                '(Uploading the sources to your add-on enables others to improve your work and also ensure your add-on will not be lost in the future if new SuperTuxKart versions are not compatible with the current format.)'
+            )
+            . '<br /><br />';
         echo '<a href="' . File::rewrite(
                 'addons.php?type=' . $this->upload_type . '&amp;name=' . $this->addon_id
-            ) . '">' . htmlspecialchars(_('Click here to view your add-on.')) . '</a><br />';
+            ) . '">' . _h('Click here to view your add-on.') . '</a><br />';
 
         return null;
     }
@@ -518,10 +484,10 @@ class Upload
             $addon_type = $_GET['type'];
             rename($this->temp . $this->file_name, $this->upload_name);
             File::newImage(null, $this->upload_name, $addon_id, $addon_type);
-            echo htmlspecialchars(_('Successfully uploaded image.')) . '<br />';
-            echo '<span style="font-size: large"><a href="addons.php?type=' . $_GET['type'] . '&amp;name=' . $_GET['name'] . '">' . htmlspecialchars(
-                    _('Continue.')
-                ) . '</a></span><br />';
+            echo _h('Successfully uploaded image.') . '<br />';
+            echo '<span style="font-size: large"><a href="addons.php?type=' . $_GET['type'] . '&amp;name=' . $_GET['name'] . '">' .
+                _h('Continue.')
+                . '</a></span><br />';
 
             return true;
         }
@@ -548,11 +514,11 @@ class Upload
 
         if (is_array($invalid_files) && !empty($invalid_files))
         {
-            echo '<span class="warning">' . htmlspecialchars(
-                    _(
-                        'Some invalid files were found in the uploaded add-on. These files have been removed from the archive:'
-                    )
-                ) . ' ' . htmlspecialchars(implode(', ', $invalid_files)) . '</span><br />';
+            echo '<span class="warning">' .
+                _h(
+                    'Some invalid files were found in the uploaded add-on. These files have been removed from the archive:'
+                )
+                . ' ' . htmlspecialchars(implode(', ', $invalid_files)) . '</span><br />';
         }
     }
 
@@ -571,7 +537,7 @@ class Upload
         }
         if ($this->dest === null)
         {
-            throw new UploadException('A destination has not been set yet');
+            throw new UploadException(_h('A destination has not been set yet'));
         }
 
         $fileid = uniqid();
@@ -664,10 +630,9 @@ class Upload
         // Check to make sure all image dimensions are powers of 2
         if (!File::imageCheck($this->temp))
         {
-            echo '<span class="warning">' . htmlspecialchars(
-                    _('Some images in this add-on do not have dimensions that are a power of two.')
-                )
-                . ' ' . htmlspecialchars(_('This may cause display errors on some video cards.')) . '</span><br />';
+            echo '<span class="warning">' .
+                _h('Some images in this add-on do not have dimensions that are a power of two.')
+                . ' ' . _h('This may cause display errors on some video cards.') . '</span><br />';
             $this->properties['status'] += F_TEX_NOT_POWER_OF_2;
         }
 
@@ -704,28 +669,58 @@ class Upload
      *
      * @throws UploadException
      */
-    private static function readError($error_code)
+    private static function checkUploadError($error_code)
     {
         switch ($error_code)
         {
             case UPLOAD_ERR_OK:
                 break;
             case UPLOAD_ERR_INI_SIZE:
-                throw new UploadException(htmlspecialchars(_('Uploaded file is too large.')));
+                throw new UploadException(_h('Uploaded file is too large.'));
             case UPLOAD_ERR_FORM_SIZE:
-                throw new UploadException(htmlspecialchars(_('Uploaded file is too large.')));
+                throw new UploadException(_h('Uploaded file is too large.'));
             case UPLOAD_ERR_PARTIAL:
-                throw new UploadException(htmlspecialchars(_('Uploaded file is incomplete.')));
+                throw new UploadException(_h('Uploaded file is incomplete.'));
             case UPLOAD_ERR_NO_FILE:
-                throw new UploadException(htmlspecialchars(_('No file was uploaded.')));
+                throw new UploadException(_h('No file was uploaded.'));
             case UPLOAD_ERR_NO_TMP_DIR:
-                throw new UploadException(htmlspecialchars(
-                    _('There is no TEMP directory to store the uploaded file in.')
-                ));
+                throw new UploadException(_h('There is no TEMP directory to store the uploaded file in.'));
             case UPLOAD_ERR_CANT_WRITE:
-                throw new UploadException(htmlspecialchars(_('Unable to write uploaded file to disk.')));
+                throw new UploadException(_h('Unable to write uploaded file to disk.'));
             default:
-                throw new UploadException(htmlspecialchars(_('Unknown file upload error.')));
+                throw new UploadException(_h('Unknown file upload error.'));
         }
+    }
+
+    /**
+     * Check the filename for an uploaded file to make sure the extension is
+     * one that can be handled
+     *
+     * @param string $filename
+     * @param string $type
+     *
+     * @throws UploadException
+     * @return string
+     */
+    public static function checkUploadExtension($filename, $type = null)
+    {
+        // Check file-extension for uploaded file
+        if ($type === 'image')
+        {
+            if (!preg_match('/\.(png|jpg|jpeg)$/i', $filename, $file_ext))
+            {
+                throw new UploadException(_h('Uploaded image files must be either PNG or JPEG files.'));
+            }
+        }
+        else
+        {
+            // File extension must be .zip, .tgz, .tar, .tar.gz, tar.bz2, .tbz
+            if (!preg_match('/\.(zip|t[bg]z|tar|tar\.gz|tar\.bz2)$/i', $filename, $file_ext))
+            {
+                throw new UploadException(_h('The file you uploaded was not the correct type.'));
+            }
+        }
+
+        return $file_ext[1];
     }
 }

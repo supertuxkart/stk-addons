@@ -37,14 +37,14 @@ class File
      */
     public static function approve($file_id, $approve = true)
     {
-        if ($approve !== true)
+        if (!$approve)
         {
             $approve = false;
         }
 
         if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
         {
-            throw new FileException(htmlspecialchars(_('Insufficient permissions.')));
+            throw new FileException(_h('Insufficient permissions.'));
         }
 
         try
@@ -62,7 +62,7 @@ class File
         }
         catch(DBException $e)
         {
-            throw new FileException('Failed to change file approval status.');
+            throw new FileException(_h('Failed to change file approval status.'));
         }
 
         writeAssetXML();
@@ -117,7 +117,7 @@ class File
     {
         if (!file_exists($file))
         {
-            throw new FileException(htmlspecialchars(_('The file to extract does not exist.')));
+            throw new FileException(_h('The file to extract does not exist.'));
         }
 
         if ($file_ext === null)
@@ -134,12 +134,12 @@ class File
                 if (!$archive->open($file))
                 {
                     unlink($file);
-                    throw new FileException(htmlspecialchars(_('Could not open archive file. It may be corrupted.')));
+                    throw new FileException(_h('Could not open archive file. It may be corrupted.'));
                 }
                 if (!$archive->extractTo($destination))
                 {
                     unlink($file);
-                    throw new FileException(htmlspecialchars(_('Failed to extract archive file.')) . ' (zip)');
+                    throw new FileException(_h('Failed to extract archive file.') . ' (zip)');
                 }
                 $archive->close();
                 unlink($file);
@@ -167,21 +167,19 @@ class File
                 if (!$archive)
                 {
                     unlink($file);
-                    throw new FileException(htmlspecialchars(_('Could not open archive file. It may be corrupted.')));
+                    throw new FileException(_h('Could not open archive file. It may be corrupted.'));
                 }
                 if (!$archive->extract($destination))
                 {
                     unlink($file);
-                    throw new FileException(htmlspecialchars(
-                            _('Failed to extract archive file.')
-                        ) . ' (' . $compression . ')');
+                    throw new FileException(_h('Failed to extract archive file.') . ' (' . $compression . ')');
                 }
                 unlink($file);
                 break;
 
             default:
                 unlink($file);
-                throw new FileException(htmlspecialchars(_('Unknown archive type.')));
+                throw new FileException(_h('Unknown archive type.'));
         }
     }
 
@@ -252,7 +250,7 @@ class File
     {
         if (!is_dir($current_dir) || !is_dir($destination_dir))
         {
-            throw new FileException('Invalid source or destination directory.');
+            throw new FileException(_h('Invalid source or destination directory.'));
         }
 
         $dir_contents = scandir($current_dir);
@@ -264,7 +262,7 @@ class File
             }
             if (is_dir($current_dir . $file))
             {
-                File::flattenDirectory($current_dir . $file . '/', $destination_dir);
+                File::flattenDirectory($current_dir . $file . DS, $destination_dir);
                 File::deleteRecursive($current_dir . $file);
                 continue;
             }
@@ -408,73 +406,6 @@ class File
     }
 
     /**
-     * Check a file upload's error code, and provide a useful exception
-     *
-     * @param int $error_code
-     *
-     * @throws UploadException
-     */
-    public static function checkUploadError($error_code)
-    {
-        switch ($error_code)
-        {
-            case UPLOAD_ERR_OK:
-                break;
-            case UPLOAD_ERR_INI_SIZE:
-                throw new UploadException(htmlspecialchars(_('Uploaded file is too large.')));
-            case UPLOAD_ERR_FORM_SIZE:
-                throw new UploadException(htmlspecialchars(_('Uploaded file is too large.')));
-            case UPLOAD_ERR_PARTIAL:
-                throw new UploadException(htmlspecialchars(_('Uploaded file is incomplete.')));
-            case UPLOAD_ERR_NO_FILE:
-                throw new UploadException(htmlspecialchars(_('No file was uploaded.')));
-            case UPLOAD_ERR_NO_TMP_DIR:
-                throw new UploadException(htmlspecialchars(
-                    _('There is no TEMP directory to store the uploaded file in.')
-                ));
-            case UPLOAD_ERR_CANT_WRITE:
-                throw new UploadException(htmlspecialchars(_('Unable to write uploaded file to disk.')));
-            default:
-                throw new UploadException(htmlspecialchars(_('Unknown file upload error.')));
-        }
-    }
-
-    /**
-     * Check the filename for an uploaded file to make sure the extension is
-     * one that can be handled
-     *
-     * @param string $filename
-     * @param string $type
-     *
-     * @throws UploadException
-     *
-     * @return string
-     */
-    public static function checkUploadExtension($filename, $type = null)
-    {
-        // Check file-extension for uploaded file
-        if ($type === 'image')
-        {
-            if (!preg_match('/\.(png|jpg|jpeg)$/i', $filename, $file_ext))
-            {
-                throw new UploadException(htmlspecialchars(
-                    _('Uploaded image files must be either PNG or Jpeg files.')
-                ));
-            }
-        }
-        else
-        {
-            // File extension must be .zip, .tgz, .tar, .tar.gz, tar.bz2, .tbz
-            if (!preg_match('/\.(zip|t[bg]z|tar|tar\.gz|tar\.bz2)$/i', $filename, $file_ext))
-            {
-                throw new UploadException(htmlspecialchars(_('The file you uploaded was not the correct type.')));
-            }
-        }
-
-        return $file_ext[1];
-    }
-
-    /**
      * Delete a file and its corresponding database record
      *
      * @param int $file_id
@@ -583,30 +514,42 @@ class File
      * Delete subdirectories of a folder which have not been modified recently
      *
      * @param string $dir
-     * @param string $max_age
+     * @param int    $max_age in seconds
+     *
+     * @return null
+     * @throws FileException only in debug mode
      */
     public static function deleteOldSubdirectories($dir, $max_age)
     {
         // Make sure we are looking at a directory
-        $dir = rtrim($dir, '/');
-        if (is_dir($dir))
+        $dir = rtrim($dir, DS);
+        if (!is_dir($dir))
         {
-            $files = scandir($dir);
-            foreach ($files as $file)
+            if (DEBUG_MODE)
             {
-                // Check if our item is a subfolder
-                if ($file !== '.' && $file !== '..' && is_dir($dir . '/' . $file))
-                {
-                    $last_mod = filemtime($dir . '/' . $file . '/.');
+                throw new FileException(sprintf("%s is not a directory"), $dir);
+            }
 
-                    // Check if our folder is old enough to delete
-                    if (mktime() - $last_mod > $max_age)
-                    {
-                        File::deleteRecursive($dir . '/' . $file);
-                    }
+            return null;
+        }
+
+
+        $files = scandir($dir);
+        foreach ($files as $file)
+        {
+            // Check if our item is a subfolder
+            if ($file !== '.' && $file !== '..' && is_dir($dir . DS . $file))
+            {
+                $last_mod = filemtime($dir . DS . $file . DS . '.');
+
+                // Check if our folder is old enough to delete
+                if (time() - $last_mod > $max_age)
+                {
+                    File::deleteRecursive($dir . DS . $file);
                 }
             }
         }
+
     }
 
     /**
@@ -615,33 +558,47 @@ class File
      * @param string $dir
      * @param string $exclude_regex
      *
-     * @return boolean
+     * @return bool
+     * @throws FileException only in debug mode
      */
     public static function deleteRecursive($dir, $exclude_regex = null)
     {
-        if (is_dir($dir))
+        // Make sure we are looking at a directory
+        $dir = rtrim($dir, DS);
+        if (!is_dir($dir))
         {
-            $dir = rtrim($dir, '/');
-            $oDir = dir($dir);
-            while (($sFile = $oDir->read()) !== false)
+            if (DEBUG_MODE)
             {
-                if ($sFile !== '.' && $sFile !== '..')
-                {
-                    if ($exclude_regex !== null && preg_match($exclude_regex, $sFile))
-                    {
-                        continue;
-                    }
-                    (!is_link("$dir/$sFile") && is_dir("$dir/$sFile")) ? File::deleteRecursive("$dir/$sFile") :
-                        @unlink("$dir/$sFile");
-                }
+                throw new FileException(sprintf("%s is not a directory"), $dir);
             }
-            $oDir->close();
-            @rmdir($dir);
 
-            return true;
+            return false;
         }
 
-        return false;
+        $oDir = dir($dir);
+        while (($sFile = $oDir->read()) !== false)
+        {
+            if ($sFile !== '.' && $sFile !== '..')
+            {
+                if ($exclude_regex !== null && preg_match($exclude_regex, $sFile))
+                {
+                    continue;
+                }
+
+                if (!is_link($dir . DS . $sFile) && is_dir($dir . DS . $sFile))
+                {
+                    File::deleteRecursive($dir . DS . $sFile);
+                }
+                else
+                {
+                    unlink($dir . DS . $sFile);
+                }
+            }
+        }
+        $oDir->close();
+        rmdir($dir);
+
+        return true;
     }
 
     /**

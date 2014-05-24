@@ -80,6 +80,7 @@ function uploadFormFieldToggle()
         }
     }
 }
+uploadFormFieldToggle();
 JS;
 
 // assign inline javascript
@@ -181,6 +182,7 @@ if ($_GET['action'] === "submit") // form submitted
 
         try
         {
+            // TODO fix upload type field
             if (!isset($_POST['upload-type']))
             {
                 $_POST['upload-type'] = null;
@@ -197,7 +199,10 @@ if ($_GET['action'] === "submit") // form submitted
                     $expected_type = 'addon';
                     break;
             }
+
+            //var_dump($_FILES['file_addon'], $expected_type);
             $upload = new Upload($_FILES['file_addon'], $expected_type);
+            $upload->removeTempFiles();
         }
         catch(UploadException $e)
         {
@@ -211,11 +216,6 @@ if ($_GET['action'] === "submit") // form submitted
                 "errors",
                 'Unexpected exception: ' . $e->getMessage() . '<strong>If this is ever visible, that\'s a bug!</strong>'
             );
-        }
-
-        if (isset($upload))
-        {
-            $upload->removeTempFiles();
         }
     }
 }
