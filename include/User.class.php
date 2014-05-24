@@ -176,9 +176,9 @@ class User
             throw new UserException(htmlspecialchars(_('Your old password is not correct.')));
         }
 
-        if (User::getId() === $this->id)
+        if (static::getId() === $this->id)
         {
-            User::changePassword($new_password);
+            static::changePassword($new_password);
         }
 
         return true;
@@ -195,7 +195,7 @@ class User
      */
     public function setConfig($available = null, $role = null)
     {
-        if (User::hasPermissionOnRole($this->userData['role']))
+        if (static::hasPermissionOnRole($this->userData['role']))
         {
 
             // Set availability status
@@ -228,7 +228,7 @@ class User
             // Set permission level
             if ($role)
             {
-                if (User::hasPermissionOnRole($role))
+                if (static::hasPermissionOnRole($role))
                 {
                     try
                     {
@@ -304,7 +304,7 @@ class User
                     echo sprintf("Session key = '%s' was not set", $key);
                     //var_debug("Init");
                 }
-                User::logout();
+                static::logout();
 
                 return null;
             }
@@ -339,12 +339,12 @@ class User
 
         if ($count !== 1)
         {
-            User::logout();
+            static::logout();
 
             return false;
         }
-        User::$user_id = $_SESSION['userid'];
-        User::$logged_in = true;
+        static::$user_id = $_SESSION['userid'];
+        static::$logged_in = true;
         //var_debug("Init");
     }
 
@@ -532,7 +532,7 @@ class User
     {
         $partial_output = new XMLOutput();
         $partial_output->startElement('users');
-        foreach (User::searchUsers($search_string) as $user)
+        foreach (static::searchUsers($search_string) as $user)
         {
             $partial_output->insert($user->asXML());
         }
@@ -547,7 +547,7 @@ class User
      */
     public static function getRole()
     {
-        if (!User::isLoggedIn())
+        if (!static::isLoggedIn())
         {
             return 'unregistered';
         }
@@ -660,17 +660,17 @@ class User
         // Check if the user exists
         if (count($result) !== 1)
         {
-            User::logout();
+            static::logout();
             throw new UserException(htmlspecialchars(_('Your username or password is incorrect.')));
         }
 
-        User::$user_id = $result[0]['id'];
-        User::$logged_in = true;
+        static::$user_id = $result[0]['id'];
+        static::$logged_in = true;
 
         $_SESSION['userid'] = $result[0]["id"];
         $_SESSION['user'] = $result[0]["user"];
         $_SESSION['real_name'] = $result[0]["name"];
-        $_SESSION['last_login'] = User::updateLoginTime(User::getId());
+        $_SESSION['last_login'] = static::updateLoginTime(static::getId());
         static::setPermissions($result[0]["role"]);
 
 
@@ -678,7 +678,7 @@ class User
         if (strlen($password) === 64)
         {
             $password = Validate::password($password);
-            User::changePassword($password);
+            static::changePassword($password);
             Log::newEvent("Converted the password of '$username' to use a password salting algorithm");
         }
     }
@@ -695,8 +695,8 @@ class User
 
         session_destroy();
         session_start();
-        User::$user_id = 0;
-        User::$logged_in = false;
+        static::$user_id = 0;
+        static::$logged_in = false;
     }
 
     /**
@@ -744,7 +744,7 @@ class User
         }
         catch(DBException $e)
         {
-            User::logout();
+            static::logout();
             throw new UserException(htmlspecialchars(
                 _('An error occurred while recording last login time.') . ' ' .
                 _('Please contact a website administrator.')
@@ -764,13 +764,13 @@ class User
     {
         if ($user_id === 0)
         {
-            if (!User::isLoggedIn())
+            if (!static::isLoggedIn())
             {
                 throw new UserException(htmlspecialchars(_('You must be logged in to change a password.')));
             }
             else
             {
-                $user_id = User::getId();
+                $user_id = static::getId();
             }
         }
 
@@ -831,7 +831,7 @@ class User
             }
 
             $new_hashed = Validate::password($new1, $new2);
-            User::changePassword($new_hashed, $userid);
+            static::changePassword($new_hashed, $userid);
             DBConnection::get()->commit();
 
         }
