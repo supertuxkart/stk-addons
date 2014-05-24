@@ -44,15 +44,15 @@ switch ($action)
             && !User::hasPermissionOnRole($user->getUserRole())
         )
         {
-            $status = '<span class="error">' . htmlspecialchars(
-                    _('You do not have the necessary permissions to perform this action.')
-                ) . '</span><br />';
+            $status = '<span class="error">' .
+                _h('You do not have the necessary permissions to perform this action.')
+                . '</span><br />';
             break;
         }
         try
         {
             $user->setPass($_POST['oldPass'], $_POST['newPass'], $_POST['newPass2']);
-            $status = htmlspecialchars(_('Your password has been changed successfully.'));
+            $status = _h('Your password has been changed successfully.');
         }
         catch(UserException $e)
         {
@@ -65,9 +65,9 @@ switch ($action)
             && !User::hasPermissionOnRole($user->getUserRole())
         )
         {
-            $status = '<span class="error">' . htmlspecialchars(
-                    _('You do not have the necessary permissions to perform this action.')
-                ) . '</span><br />';
+            $status = '<span class="error">' .
+                _h('You do not have the necessary permissions to perform this action.')
+                . '</span><br />';
             break;
         }
         $available = (isset($_POST['available'])) ? $_POST['available'] : null;
@@ -92,7 +92,7 @@ $users = User::getAllData();
 $templateUsers = array();
 $templateUsers[] = array(
     'url'   => "users.php?user={$_SESSION['user']}",
-    'label' => sprintf('<img class="icon"  src="%suser.png" />', IMG_LOCATION) . htmlspecialchars(_('Me')),
+    'label' => sprintf('<img class="icon"  src="%suser.png" />', IMG_LOCATION) . _h('Me'),
     'class' => 'user-list menu-item'
 );
 foreach ($users as $user)

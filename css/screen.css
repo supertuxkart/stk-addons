@@ -501,6 +501,12 @@ a img {
     border: none;
 }
 
+.subtext {
+    font-size: x-small;
+    color: #666666;
+    font-weight: normal;
+}
+
 /* Error Pages */
 #error-container {
     background: rgba(255, 255, 255, 0.75);

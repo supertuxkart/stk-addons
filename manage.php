@@ -40,7 +40,7 @@ $panel = array(
 $menu_items = array(
     array(
         'url'   => 'manage.php?view=overview',
-        'label' => htmlspecialchars(_('Overview')),
+        'label' => _h('Overview'),
         'class' => 'manage-list menu-item'
     )
 );
@@ -48,33 +48,33 @@ if (User::hasPermission(AccessControl::PERM_EDIT_SETTINGS))
 {
     $menu_items[] = array(
         'url'   => 'manage.php?view=general',
-        'label' => htmlspecialchars(_('General Settings')),
+        'label' => _h('General Settings'),
         'class' => 'manage-list menu-item'
     );
     $menu_items[] = array(
         'url'   => 'manage.php?view=news',
-        'label' => htmlspecialchars(_('News Messages')),
+        'label' => _h('News Messages'),
         'class' => 'manage-list menu-item'
     );
     $menu_items[] = array(
         'url'   => 'manage.php?view=clients',
-        'label' => htmlspecialchars(_('Client Versions')),
+        'label' => _h('Client Versions'),
         'class' => 'manage-list menu-item'
     );
     $menu_items[] = array(
         'url'   => 'manage.php?view=cache',
-        'label' => htmlspecialchars(_('Cache Files')),
+        'label' => _h('Cache Files'),
         'class' => 'manage-list menu-item'
     );
 }
 $menu_items[] = array(
     'url'   => 'manage.php?view=files',
-    'label' => htmlspecialchars(_('Uploaded Files')),
+    'label' => _h('Uploaded Files'),
     'class' => 'manage-list menu-item'
 );
 $menu_items[] = array(
     'url'   => 'manage.php?view=logs',
-    'label' => htmlspecialchars(_('Event Logs')),
+    'label' => _h('Event Logs'),
     'class' => 'manage-list menu-item'
 );
 
@@ -95,13 +95,11 @@ try
                 !isset($_POST['allowed_source_exts'])
             )
             {
-                throw new Exception(htmlspecialchars(
-                    _('One or more fields has been left blank. Settings were not saved.')
-                ));
+                throw new Exception(_h('One or more fields has been left blank. Settings were not saved.'));
             }
             if (!is_numeric($_POST['xml_frequency']))
             {
-                throw new Exception(htmlspecialchars(_('XML Download Frequency value is invalid.')));
+                throw new Exception(_h('XML Download Frequency value is invalid.'));
             }
 
             ConfigManager::setConfig('xml_frequency', (int)$_POST['xml_frequency']);
@@ -114,7 +112,7 @@ try
             ConfigManager::setConfig('max_image_dimension', (int)$_POST['max_image_dimension']);
             ConfigManager::setConfig('apache_rewrites', $_POST['apache_rewrites']);
 
-            $status_content = htmlspecialchars(_('Saved settings.')) . '<br />';
+            $status_content = _h('Saved settings.') . '<br>';
             break;
         case 'new_news':
             if (empty($_POST['message']) || !isset($_POST['condition']))
@@ -130,18 +128,17 @@ try
             if (stristr($condition, 'stkversion') !== false)
             {
                 $cond_check = explode(' ', $condition);
-                if (count($cond_check) !== 3)
+                $count_cond_check = count($cond_check);
+                if ($count_cond_check !== 3)
                 {
-                    throw new Exception('Version comparison should contain three tokens, only found: ' .
-                        count($cond_check)
-                    );
+                    throw new Exception('Version comparison should contain three tokens, only found: ' . $count_cond_check);
                 }
                 // Validate version string
                 Validate::versionString($cond_check[2]);
             }
 
             News::create($_POST['message'], $condition, $important, $web_display);
-            $status_content = htmlspecialchars(_('Created message.')) . '<br />';
+            $status_content = _h('Created message.') . '<br>';
             break;
         case 'del_news':
             if (empty($_POST['news_id']) || !is_numeric($_POST['news_id']))
@@ -151,12 +148,12 @@ try
             }
             if (News::delete($_POST['news_id']))
             {
-                $status_content = htmlspecialchars(_('Deleted message.')) . '<br />';
+                $status_content = _h('Deleted message.') . '<br>';
             }
             else
             {
                 $status_content =
-                    '<span class="error">' . htmlspecialchars(_('Failed to delete message.')) . '</span><br />';
+                    '<span class="error">' . _h('Failed to delete message.') . '</span><br>';
             }
             break;
         case 'cache_clear':

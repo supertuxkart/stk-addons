@@ -37,7 +37,7 @@ if (!isset($_POST['id']))
 $type = (isset($_GET['type'])) ? $_GET['type'] : null;
 if (!Addon::isAllowedType($type))
 {
-    die(htmlspecialchars(_('This page cannot be loaded because an invalid add-on type was provided.')));
+    die(_h('This page cannot be loaded because an invalid add-on type was provided.'));
 }
 
 

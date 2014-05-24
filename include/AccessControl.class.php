@@ -46,8 +46,6 @@ class AccessControl
 
     const PERM_EDIT_SETTINGS = "editSettings";
 
-
-
     /**
      * Cache for the roles
      *

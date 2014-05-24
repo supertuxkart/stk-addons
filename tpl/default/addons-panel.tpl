@@ -1,4 +1,4 @@
-{config_load file="tpl/default/tpl.conf"}
+{config_load file="{$smarty.current_dir}/tpl.conf"}
 <div itemscope itemtype="http://www.schema.org/CreativeWork">
     <h1><span itemprop="name">{$addon.name}</span>
 	<div id="rating-container" itemprop="aggregateRating" itemscope itemtype="http://www.schema.org/AggregateRating">

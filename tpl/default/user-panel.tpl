@@ -1,24 +1,24 @@
 <h1>{$user.username.value}</h1>
 <table>
     <tr>
-        <td>{$user.username.label}</td>
+        <td>{t}Username:{/t}</td>
         <td>{$user.username.value}</td>
     </tr>
     <tr>
-        <td>{$user.reg_date.label}</td>
+        <td>{t}Registration Date:{/t}</td>
         <td>{$user.reg_date.value}</td>
     </tr>
     <tr>
-        <td>{$user.real_name.label}</td>
+        <td>{t}Real Name:{/t}</td>
         <td>{$user.real_name.value}</td>
     </tr>
     <tr>
-        <td>{$user.role.label}</td>
+        <td>{t}Role:{/t}</td>
         <td>{$user.role.value}</td>
     </tr>
-    {if isset($user.homepage.value) && !empty($user.homepage.value)}
+    {if !empty($user.homepage.value)}
         <tr>
-            <td>{$user.homepage.label}</td>
+            <td>{t}Homepage:{/t}</td>
             <td>{$user.homepage.value}</td>
         </tr>
     {/if}
@@ -43,15 +43,15 @@
 
 {if isset($user.config)}
     <hr>
-    <h3>{$user.config.header}</h3>
+    <h3>{t}Configuration{/t}</h3>
     <form enctype="multipart/form-data" action="?user={$user.username.value}&amp;action=config" method="POST">
         <table>
             <tr>
-                <td>{$user.homepage.label}</td>
+                <td>{t}Homepage:{/t}</td>
                 <td><input type="text" name="homepage" value="{$user.homepage.value}"></td>
             </tr>
             <tr>
-                <td>{$user.role.label}</td>
+                <td>{t}Role:{/t}</td>
                 <td>
                     <select name="range" {$user.config.role.disabled|default:""}>
                         {html_options options=$user.config.role.options selected=$user.config.role.selected|default:""}
@@ -59,29 +59,41 @@
                 </td>
             </tr>
             <tr>
-                <td>{$user.config.activated_label}</td>
+                <td>{t}User Activated:{/t}</td>
                 <td>
                     <input type="checkbox" name="available" {$user.config.activated|default:""}>
                 </td>
             </tr>
             <tr>
                 <td></td>
-                <td><input type="submit" value="{$user.config.submit_value}"></td>
+                <td><input type="submit" value="{t}Save Configuration{/t}"></td>
             </tr>
         </table>
     </form>
     <br>
     {if isset($user.config.password)}
-        <h3>{$user.config.password.header}</h3>
+        <h3>{t}Change Password{/t}</h3>
         <br>
         <form action="users.php?user={$user.username.value}&amp;action=password" method="POST">
-            {$user.config.password.old_pass_label}<br>
-            <input type="password" name="oldPass"><br>
-            {$user.config.password.new_pass_label}<br>
-            <input type="password" name="newPass"><br>
-            {$user.config.password.new_pass_conf_label}<br>
-            <input type="password" name="newPass2"><br>
-            <input type="submit" value="{$user.config.password.submit_value}">
+            <p>
+                <label>
+                    {t}Old Password:{/t}<br>
+                    <input type="password" name="oldPass">
+                </label>
+            </p>
+            <p>
+                <label>
+                    {t}New Password:{/t} ({t 1=$user.config.password.min}Must be at least %1 characters long{/t})<br>
+                    <input type="password" name="newPass">
+                </label>
+            </p>
+            <p>
+                <label>
+                    {t}New Password (Confirm):{/t}<br>
+                    <input type="password" name="newPass2">
+                </label>
+            </p>
+            <input type="submit" value="{t}Change Password{/t}">
         </form>
     {/if}
 {/if}

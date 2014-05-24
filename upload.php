@@ -222,7 +222,7 @@ if ($_GET['action'] === "submit") // form submitted
 
 // Working with an already existing addon
 if (($_GET['type'] === 'karts' || $_GET['type'] === 'tracks' || $_GET['type'] === 'arenas')
-    && strlen($_GET['name']) != 0
+    && !empty($_GET['name'])
 )
 {
     $upload_form["form"]["update"] = true;

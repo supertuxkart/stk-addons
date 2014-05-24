@@ -106,7 +106,7 @@ function resizeImage($file)
     switch ($image_info[2])
     {
         default:
-            $source = imagecreatefrompng(ROOT . 'image/notfound.png');
+            $source = imagecreatefrompng(IMG_LOCATION . 'notfound.png');
             $format = 'png';
             break;
         case IMAGETYPE_PNG:
@@ -240,9 +240,9 @@ function moderator_email($subject, $message_html)
     $mail_address = ConfigManager::getConfig('list_email');
     if (empty($mail_address))
     {
-        echo '<span class="warning">' . htmlspecialchars(
-                _('No moderator mailing-list email is set.')
-            ) . '</span><br />';
+        echo '<span class="warning">' .
+            _h('No moderator mailing-list email is set.')
+            . '</span><br />';
 
         return null;
     }
@@ -271,7 +271,7 @@ function loadUsers()
 <a class="menu-item" href="javascript:loadFrame({$_SESSION['userid']},'users-panel.php')">
 <img class="icon" src="image/user.png" />
 EOF;
-    echo htmlspecialchars(_('Me')) . '</a></li>';
+    echo _h('Me') . '</a></li>';
     foreach ($users as $user)
     {
         // Make sure that the user is active, or the viewer has permission to

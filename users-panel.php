@@ -40,23 +40,18 @@ $user_panel_tpl = new StkTemplate("user-panel.tpl");
 // TODO maybe put his onto a list
 $user_tpl = array(
     "username"    => array(
-        "label" => _h('Username:'),
         "value" => $userData["user"]
     ),
     "reg_date"    => array(
-        "label" => _h('Registration Date:'),
         "value" => $userData["reg_date"]
     ),
     "real_name"   => array(
-        "label" => _h('Real Name:'),
         "value" => $userData["name"]
     ),
     "role"        => array(
-        "label" => _h('Role:'),
         "value" => $userData["role"]
     ),
     "homepage"    => array(
-        "label" => _h('Homepage:'),
         "value" => $userData["homepage"]
     ),
     "addon_types" => array()
@@ -126,11 +121,7 @@ foreach (Addon::getAllowedTypes() as $type)
 // Allow current user to change own profile, and administrators to change all profiles
 if (User::hasPermissionOnRole($userData['role']) || $userData["id"] === User::getId())
 {
-    $user_tpl["config"] = array(
-        "header"          => _h("Configuration"),
-        "activated_label" => _h('User Activated:'),
-        "submit_value"    => _h('Save Configuration'),
-    );
+    $user_tpl["config"] = array();
 
     // role
     $role = array();
@@ -163,13 +154,7 @@ if (User::hasPermissionOnRole($userData['role']) || $userData["id"] === User::ge
     if ($userData["id"] === User::getId())
     {
         $user_tpl["config"]["password"] = array(
-            "header"              => _h('Change Password'),
-            "old_pass_label"      => _h('Old Password:'),
-            "new_pass_label"      => _h('New Password:') . '(' . htmlspecialchars(
-                    sprintf(_('Must be at least %d characters long.'), 8)
-                ) . ')',
-            "new_pass_conf_label" => _h('New Password (Confirm):'),
-            "submit_value"        => _h('Change Password')
+            "min" => 8
         );
     }
 }

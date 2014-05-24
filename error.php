@@ -1,7 +1,7 @@
 <?php
 /**
  * copyright 2012-2014 Stephen Just <stephenjust@users.sf.net>
- *
+ *           2014      Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -39,24 +39,28 @@ switch ($error_code)
 {
     default:
         // I18N: Heading for general error page
-        $error_head = htmlspecialchars(_('An Error Occurred'));
+        $error_head = _h('An Error Occurred');
+
         // I18N: Error message for general error page
-        $error_text = htmlspecialchars(_('Something broke! We\'ll try to fix it as soon as we can!'));
+        $error_text = _h('Something broke! We\'ll try to fix it as soon as we can!');
         break;
     case '403':
         // I18N: Heading for HTTP 403 Forbidden error page
-        $error_head = htmlspecialchars(_('403 - Forbidden'));
+        $error_head = _h('403 - Forbidden');
+
         // I18N: Error message for HTTP 403 Forbidden error page
-        $error_text = htmlspecialchars(
-            _('You\'re not supposed to be here. Click one of the links in the menu above to find some better content.')
-        );
+        $error_text =
+            _h(
+                'You\'re not supposed to be here. Click one of the links in the menu above to find some better content.'
+            );
         break;
     case '404':
         // I18N: Heading for HTTP 404 Not Found error page
-        $error_head = htmlspecialchars(_('404 - Not Found'));
+        $error_head = _h('404 - Not Found');
+
         // I18N: Error message for HTTP 404 Not Found error page
         $error_text =
-            htmlspecialchars(_('We can\'t find what you are looking for. The link you followed may be broken.'));
+            _h('We can\'t find what you are looking for. The link you followed may be broken.');
         break;
 }
 $tpl->assign(

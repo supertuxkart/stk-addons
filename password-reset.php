@@ -31,34 +31,12 @@ $captcha = recaptcha_get_html($publickey);
 
 // Fill out various templates
 $pw_res = array(
-    'title'      => htmlspecialchars(_('Reset Password')),
     'info'       => null,
     'reset_form' => array(
-        'display'  => true,
-        'form'     => array(
-            'start' => '<form id="reset_pw" action="password-reset.php?action=reset" method="POST">',
-            'end'   => '</form>'
-        ),
-        'info'     => htmlspecialchars(
-            _(
-                'In order to reset your password, please enter your username and your email address. A password reset link will be emailed to you. Your old password will become inactive until your password is reset.'
-            )
-        ),
-        'username' => array(
-            'label' => '<label for="reg_user">' . htmlspecialchars(_('Username:')) . '</label>',
-            'field' => '<input type="text" name="user" id="reg_user" />'
-        ),
-        'email'    => array(
-            'label' => '<label for="reg_email">' . htmlspecialchars(_('Email Address:')) . '</label>',
-            'field' => '<input type="text" name="mail" id="reg_email" />'
-        ),
-        'captcha'  => array(
-            'label' => null,
+        'display' => true,
+        'captcha' => array(
             'field' => $captcha
         ),
-        'submit'   => array(
-            'field' => '<input type="submit" value="' . htmlspecialchars(_('Send Reset Link')) . '" />'
-        )
     ),
     'pass_form'  => array(
         'display' => false
@@ -91,15 +69,14 @@ switch ($_GET['action'])
             if (!$resp->is_valid)
             {
                 // What happens when the CAPTCHA was entered incorrectly
-                throw new UserException("The reCAPTCHA wasn't entered correctly. Go back and try it again." .
-                    "(reCAPTCHA said: " . $resp->error . ")");
+                throw new UserException(
+                    "The reCAPTCHA wasn't entered correctly. Go back and try it again." . "(reCAPTCHA said: " . $resp->error . ")");
             }
 
             User::recover($_POST['user'], $_POST['mail']);
-            $pw_res['info'] .= htmlspecialchars(
-                _("Password reset link sent. Please reset your password using the link emailed to you.")
+            $pw_res['info'] .= _h(
+                "Password reset link sent. Please reset your password using the link emailed to you."
             );
-
         }
         catch(UserException $e)
         {
@@ -122,29 +99,27 @@ switch ($_GET['action'])
                         '<input type="hidden" name="verify" value="' . $verification_code . '" />' .
                         '</form>'
                 ),
-                'info'      => htmlspecialchars(_('Please enter a new password for your account.')),
+                'info'      => _h('Please enter a new password for your account.'),
                 'new_pass'  => array(
-                    'label' => '<label for="reg_pass">' . htmlspecialchars(_('New Password:')) . '<br />' .
+                    'label' => '<label for="reg_pass">' . _h('New Password:') . '<br />' .
                         '<span style="font-size: x-small; color: #666666; font-weight: normal;">(' . htmlspecialchars(
                             sprintf(_('Must be at least %d characters long.'), '8')
                         ) . ')</span></label>',
                     'field' => '<input type="password" name="pass1" id="reg_pass" />'
                 ),
                 'new_pass2' => array(
-                    'label' => '<label for="reg_pass2">' . htmlspecialchars(_('New Password (confirm):')) . '</label>',
+                    'label' => '<label for="reg_pass2">' . _h('New Password (confirm):') . '</label>',
                     'field' => '<input type="password" name="pass2" id="reg_pass2" />'
                 ),
                 'submit'    => array(
-                    'field' => '<input type="submit" value="' . htmlspecialchars(_('Change Password')) . '" />'
+                    'field' => '<input type="submit" value="' . _h('Change Password') . '" />'
                 )
             );
         }
         catch(UserException $e)
         {
             $pw_res['info'] .= '<span class="error">' . $e->getMessage() . '</span><br /><br />';
-            $pw_res['info'] .= htmlspecialchars(
-                _('Could not reset your password. The link you followed is not valid.')
-            );
+            $pw_res['info'] .= _h('Could not reset your password. The link you followed is not valid.');
         }
         break;
 
@@ -161,8 +136,8 @@ switch ($_GET['action'])
             User::changePassword($pass, $userid);
             Verification::delete($userid);
             $pw_res['reset_form']['display'] = false;
-            $pw_res['info'] .= htmlspecialchars(_('Changed password.')) . '<br />';
-            $pw_res['info'] .= '<a href="login.php">' . htmlspecialchars(_('Login')) . '</a>';
+            $pw_res['info'] .= _h('Changed password.') . '<br />';
+            $pw_res['info'] .= '<a href="login.php">' . _h('Login') . '</a>';
         }
         catch(UserException $e)
         {
@@ -176,20 +151,20 @@ switch ($_GET['action'])
                         '<input type="hidden" name="verify" value="' . $verification_code . '" />' .
                         '</form>'
                 ),
-                'info'      => htmlspecialchars(_('Please enter a new password for your account.')),
+                'info'      => _h('Please enter a new password for your account.'),
                 'new_pass'  => array(
-                    'label' => '<label for="reg_pass">' . htmlspecialchars(_('New Password:')) . '<br />' .
+                    'label' => '<label for="reg_pass">' . _h('New Password:') . '<br />' .
                         '<span style="font-size: x-small; color: #666666; font-weight: normal;">(' . htmlspecialchars(
                             sprintf(_('Must be at least %d characters long.'), '8')
                         ) . ')</span></label>',
                     'field' => '<input type="password" name="pass1" id="reg_pass" />'
                 ),
                 'new_pass2' => array(
-                    'label' => '<label for="reg_pass2">' . htmlspecialchars(_('New Password (confirm):')) . '</label>',
+                    'label' => '<label for="reg_pass2">' . _h('New Password (confirm):') . '</label>',
                     'field' => '<input type="password" name="pass2" id="reg_pass2" />'
                 ),
                 'submit'    => array(
-                    'field' => '<input type="submit" value="' . htmlspecialchars(_('Change Password')) . '" />'
+                    'field' => '<input type="submit" value="' . _h('Change Password') . '" />'
                 )
             );
         }

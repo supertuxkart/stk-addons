@@ -22,15 +22,13 @@ $tpl = new StkTemplate('index.tpl');
 
 // I18N: Website meta description
 $tpl->setMetaDesc(
-    htmlspecialchars(
-        _(
-            'This is the official SuperTuxKart add-on repository. It contains extra karts and tracks for the SuperTuxKart game.'
-        )
+    _h(
+        'This is the official SuperTuxKart add-on repository. It contains extra karts and tracks for the SuperTuxKart game.'
     )
 );
 
 // I18N: Index page title
-$tpl->assign('title', htmlspecialchars(_('SuperTuxKart Add-ons')));
+$tpl->assign('title', _h('SuperTuxKart Add-ons'));
 
 // Display index menu
 
@@ -39,17 +37,17 @@ $tpl->assign(
     array(
         array(
             'href'  => File::rewrite('addons.php?type=karts'),
-            'label' => htmlspecialchars(_('Karts')),
+            'label' => _h('Karts'),
             'type'  => 'karts'
         ),
         array(
             'href'  => File::rewrite('addons.php?type=tracks'),
-            'label' => htmlspecialchars(_('Tracks')),
+            'label' => _h('Tracks'),
             'type'  => 'tracks'
         ),
         array(
             'href'  => File::rewrite('addons.php?type=arenas'),
-            'label' => htmlspecialchars(_('Arenas')),
+            'label' => _h('Arenas'),
             'type'  => 'arenas'
         ),
         array(
@@ -68,8 +66,8 @@ $pop_kart = Statistic::mostDownloadedAddon('karts');
 $pop_track = Statistic::mostDownloadedAddon('tracks');
 array_unshift(
     $news_messages,
-    sprintf(htmlspecialchars(_('The most downloaded kart is %s.')), Addon::getName($pop_kart)),
-    sprintf(htmlspecialchars(_('The most downloaded track is %s.')), Addon::getName($pop_track))
+    sprintf(_h('The most downloaded kart is %s.'), Addon::getName($pop_kart)),
+    sprintf(_h('The most downloaded track is %s.'), Addon::getName($pop_track))
 );
 
 $tpl->assign('news_messages', $news_messages);

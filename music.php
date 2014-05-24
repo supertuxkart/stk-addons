@@ -1,7 +1,7 @@
 <?php
 /**
  * copyright 2013 Stephen Just <stephenjust@users.sourceforge.net>
- *
+ *           2014 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -30,20 +30,19 @@ foreach ($music_tracks as $track)
     $music_data[] = $track->getTitle();
     $music_data[] = $track->getArtist();
     $music_data[] = $track->getLicense();
-    $link = '<a href="' . DOWN_LOCATION . 'music/' . $track->getFile() . '">' . $track->getFile() . '</a>';
-    $music_data[] = $link;
+    $music_data[] = '<a href="' . DOWN_LOCATION . 'music/' . $track->getFile() . '">' . $track->getFile() . '</a>';
 }
 
 $tpl->assign(
     'music_browser',
     array(
-        'cols'    => array(
-            htmlspecialchars(_('Track Title')),
-            htmlspecialchars(_('Track Artist')),
-            htmlspecialchars(_('License')),
-            htmlspecialchars(_('File'))
+        'cols' => array(
+            _h('Track Title'),
+            _h('Track Artist'),
+            _h('License'),
+            _h('File')
         ),
-        'data'    => $music_data
+        'data' => $music_data
     )
 );
 

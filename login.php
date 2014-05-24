@@ -31,11 +31,11 @@ $tpl = new StkTemplate('login.tpl');
 $login_form = array(
     'display' => true,
     'form'    => array(
-        'action'    => File::rewrite('login.php?action=submit'),
+        'action' => File::rewrite('login.php?action=submit'),
     ),
     'links'   => array(
-        'register'       => File::link('register.php', htmlspecialchars(_('Create an account.'))),
-        'reset_password' => File::link('password-reset.php', htmlspecialchars(_('Forgot password?')))
+        'register'       => File::link('register.php', _h('Create an account.')),
+        'reset_password' => File::link('password-reset.php', _h('Forgot password?'))
     )
 );
 
@@ -48,14 +48,14 @@ switch ($_GET['action'])
         User::logout();
         if (User::isLoggedIn() == true)
         {
-            $tpl->assign('confirmation', htmlspecialchars(_('Failed to logout.')));
+            $tpl->assign('confirmation', _h('Failed to logout.'));
         }
         else
         {
             $tpl->setMetaRefresh('index.php', 3);
-            $conf = htmlspecialchars(_('You have been logged out.')) . '<br />';
+            $conf = _h('You have been logged out.') . '<br />';
             $conf .= sprintf(
-                    htmlspecialchars(_('Click %shere%s if you do not automatically redirect.')),
+                    _h('Click %shere%s if you do not automatically redirect.'),
                     '<a href="index.php">',
                     '</a>'
                 ) . '<br />';
@@ -79,9 +79,9 @@ switch ($_GET['action'])
         if (User::isLoggedIn())
         {
             $tpl->setMetaRefresh('index.php', 3);
-            $conf = sprintf(htmlspecialchars(_('Welcome, %s!')) . '<br />', $_SESSION['real_name']);
+            $conf = sprintf(_h('Welcome, %s!') . '<br />', $_SESSION['real_name']);
             $conf .= sprintf(
-                    htmlspecialchars(_('Click %shere%s if you do not automatically redirect.')),
+                    _h('Click %shere%s if you do not automatically redirect.'),
                     '<a href="index.php">',
                     '</a>'
                 ) . '<br />';
@@ -98,9 +98,9 @@ switch ($_GET['action'])
         {
             $login_form['display'] = false;
             $tpl->setMetaRefresh('index.php', 3);
-            $conf = htmlspecialchars(_('You are already logged in.')) . ' ';
+            $conf = _h('You are already logged in.') . ' ';
             $conf .= sprintf(
-                    htmlspecialchars(_('Click %shere%s if you do not automatically redirect.')),
+                    _h('Click %shere%s if you do not automatically redirect.'),
                     '<a href="index.php">',
                     '</a>'
                 ) . '<br />';

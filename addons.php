@@ -24,20 +24,20 @@ $_GET['type'] = (isset($_GET['type'])) ? $_GET['type'] : null;
 switch ($_GET['type'])
 {
     default:
-        $type_label = htmlspecialchars(_('Unknown Type'));
+        $type_label = _h('Unknown Type');
         header("HTTP/1.0 404 Not Found");
         break;
     case 'tracks':
-        $type_label = htmlspecialchars(_('Tracks'));
+        $type_label = _h('Tracks');
         break;
     case 'karts':
-        $type_label = htmlspecialchars(_('Karts'));
+        $type_label = _h('Karts');
         break;
     case 'arenas':
-        $type_label = htmlspecialchars(_('Arenas'));
+        $type_label = _h('Arenas');
         break;
 }
-$title = $type_label . ' - ' . htmlspecialchars(_('SuperTuxKart Add-ons'));
+$title = $type_label . ' - ' . _h('SuperTuxKart Add-ons');
 
 // Validate addon-id parameter
 $_GET['name'] = (isset($_GET['name'])) ? Addon::cleanId($_GET['name']) : null;
@@ -69,13 +69,13 @@ $panels = new PanelInterface();
 
 if (!Addon::isAllowedType($_GET['type']))
 {
-    echo '<span class="error">' . htmlspecialchars(_('Invalid addon type.')) . '</span><br />';
+    echo '<span class="error">' . _h('Invalid addon type.') . '</span><br />';
     exit;
 }
 
 $js = "";
 
-ob_start();
+$status = "";
 // Execute actions
 try
 {
@@ -96,7 +96,7 @@ try
             $edit_addon = new Addon(Addon::cleanId($_GET['name']));
             $edit_addon->setDescription($_POST['description']);
             $edit_addon->setDesigner($_POST['designer']);
-            echo htmlspecialchars(_('Saved properties.')) . '<br />';
+            $status = _h('Saved properties.') . '<br>';
             break;
         case 'rev':
             parseUpload($_FILES['file_addon'], true);
@@ -108,7 +108,7 @@ try
             }
             $addon = new Addon($_GET['name']);
             $addon->setStatus($_POST['fields']);
-            echo htmlspecialchars(_('Saved status.')) . '<br />';
+            $status = _h('Saved status.') . '<br>';
             break;
         case 'notes':
             if (!isset($_GET['name']) || !isset($_POST['fields']))
@@ -117,58 +117,56 @@ try
             }
             $mAddon = new Addon($_GET['name']);
             $mAddon->setNotes($_POST['fields']);
-            echo htmlspecialchars(_('Saved notes.')) . '<br />';
+            $status = _h('Saved notes.') . '<br>';
             break;
         case 'delete':
             $delAddon = new Addon($_GET['name']);
             $delAddon->delete();
             unset($delAddon);
-            echo htmlspecialchars(_('Deleted addon.')) . '<br />';
+            $status = _h('Deleted addon.') . '<br>';
             break;
         case 'del_rev':
             $delRev = new Addon($_GET['name']);
             $delRev->deleteRevision($_GET['rev']);
             unset($delRev);
-            echo htmlspecialchars(_('Deleted add-on revision.')) . '<br />';
+            $status = _h('Deleted add-on revision.') . '<br>';
             break;
         case 'approve':
         case 'unapprove':
             $approve = ($_GET['save'] == 'approve') ? true : false;
             File::approve((int)$_GET['id'], $approve);
-            echo htmlspecialchars(_('File updated.')) . '<br />';
+            $status = _h('File updated.') . '<br>';
             break;
         case 'setimage':
             $edit_addon = new Addon(Addon::cleanId($_GET['name']));
             $edit_addon->setImage((int)$_GET['id']);
-            echo htmlspecialchars(_('Set image.')) . '<br />';
+            $status = _h('Set image.') . '<br>';
             break;
         case 'seticon':
-            if ($_GET['type'] != 'karts')
+            if ($_GET['type'] !== 'karts')
             {
                 break;
             }
             $edit_addon = new Addon(Addon::cleanId($_GET['name']));
             $edit_addon->setImage((int)$_GET['id'], 'icon');
-            echo htmlspecialchars(_('Set icon.')) . '<br />';
+            $status = _h('Set icon.') . '<br>';
             break;
         case 'deletefile':
             $mAddon = new Addon($_GET['name']);
             $mAddon->deleteFile((int)$_GET['id']);
-            echo htmlspecialchars(_('Deleted file.')) . '<br />';
+            $status =  _h('Deleted file.') . '<br>';
             break;
         case 'include':
             $mAddon = new Addon($_GET['name']);
             $mAddon->setIncludeVersions($_POST['incl_start'], $_POST['incl_end']);
-            echo htmlspecialchars(_('Marked game versions in which this add-on is included.'));
+            $status = _h('Marked game versions in which this add-on is included.');
             break;
     }
 }
 catch(Exception $e)
 {
-    echo '<span class="error">' . $e->getMessage() . '</span><br />';
+    $status = '<span class="error">' . $e->getMessage() . '</span><br />';
 }
-
-$status = ob_get_clean();
 $panels->setStatusContent($status);
 
 $addons = array();
@@ -180,7 +178,7 @@ foreach ($addons_list AS $ad)
         $adc = new Addon($ad);
 
         // Get link icon
-        if ($adc->getType() == 'karts')
+        if ($adc->getType() === 'karts')
         {
             // Make sure an icon file is set for kart
             if ($adc->getImage(true) != 0)
@@ -211,7 +209,7 @@ foreach ($addons_list AS $ad)
             $class = 'addon-list menu-item';
         }
         elseif (User::isLoggedIn() &&
-            (User::hasPermission(AccessControl::PERM_EDIT_ADDONS) == true || User::getId() == $adc->getUploader())
+            (User::hasPermission(AccessControl::PERM_EDIT_ADDONS) || User::getId() == $adc->getUploader())
         )
         {
             $class = 'addon-list menu-item unavailable';

@@ -1,4 +1,4 @@
-{config_load file="tpl/default/tpl.conf"}
+{config_load file="{$smarty.current_dir}/tpl.conf"}
 <html>
     <head>
 	<title>{$title|default:"Access Denied"}</title>
