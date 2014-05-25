@@ -24,7 +24,7 @@ DELIMITER $$
 --
 -- Procedures
 --
-CREATE DEFINER=`stkaddons_stkbase`@`%` PROCEDURE `v2_create_file_record`(IN id TEXT, IN atype TEXT, IN ftype TEXT, IN fname TEXT, OUT insertid INT)
+CREATE PROCEDURE `v2_create_file_record` (IN id TEXT, IN atype TEXT, IN ftype TEXT, IN fname TEXT, OUT insertid INT)
 BEGIN
     INSERT INTO `v2_files`
     (`addon_id`,`addon_type`,`file_type`,`file_path`)
@@ -33,24 +33,24 @@ BEGIN
     SELECT LAST_INSERT_ID() INTO insertid;
 END$$
 
-CREATE DEFINER=`stkaddons_stkbase`@`%` PROCEDURE `v2_increment_download`(IN filepath TEXT)
+CREATE PROCEDURE `v2_increment_download` (IN filepath TEXT)
 UPDATE `v2_files`
     SET `downloads` = `downloads` + 1
     WHERE `file_path` = filepath$$
 
-CREATE DEFINER=`stkaddons_stkbase`@`%` PROCEDURE `v2_log_event`(IN in_user INT(10) unsigned, IN in_message TEXT)
+CREATE  PROCEDURE `v2_log_event` (IN in_user INT(10) unsigned, IN in_message TEXT)
 INSERT INTO `v2_logs`
     (`user`,`message`)
     VALUES
     (in_user,in_message)$$
 
-CREATE DEFINER=`stkaddons_stkbase`@`%` PROCEDURE `v2_register_user`(IN in_user TEXT, IN in_pass CHAR(96), IN in_name TEXT, IN in_email TEXT, IN in_vercode TEXT, IN in_regdate DATE)
+CREATE PROCEDURE `v2_register_user` (IN in_user TEXT, IN in_pass CHAR(96), IN in_name TEXT, IN in_email TEXT, IN in_vercode TEXT, IN in_regdate DATE)
 INSERT INTO `v2_users`
     (`user`,`pass`,`name`,`role`,`email`,`active`,`verify`,`reg_date`)
     VALUES
     (in_user, in_pass, in_name, 'basicUser', in_email, 0, in_vercode, in_regdate)$$
 
-CREATE DEFINER=`stkaddons_stkbase`@`%` PROCEDURE `v2_set_logintime`(IN userid INT(11), IN logintime TIMESTAMP)
+CREATE PROCEDURE `v2_set_logintime`(IN userid INT(11), IN logintime TIMESTAMP)
 UPDATE `v2_users`
     SET `last_login` = logintime
     WHERE `id` = userid$$
