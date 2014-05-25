@@ -237,14 +237,17 @@ class DBConnection
             }
             if (DEBUG_MODE)
             {
+                echo "Database Error";
                 var_dump($e->errorInfo);
                 printf(
-                    "SQLSTATE ERR: %s<br />\nmySQL ERR: %s<br />\nMessage: %s<br />\nQuery: %s<br />\n",
+                    "SQLSTATE ERR: %s<br>\nmySQL ERR: %s<br>\nMessage: %s<br>\nQuery: %s<br>",
                     $e->errorInfo[0],
                     $e->errorInfo[1],
-                    $e->errorInfo[2],
+                    isset($e->errorInfo[2]) ? $e->errorInfo[2] : "",
                     $query
                 );
+                echo "Params: <br>";
+                var_dump($params);
             }
             throw new DBException($e->errorInfo[0]);
         }

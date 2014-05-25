@@ -200,9 +200,9 @@ if ($_GET['action'] === "submit") // form submitted
                     break;
             }
 
-            //var_dump($_FILES['file_addon'], $expected_type);
+            var_dump($_FILES['file_addon'], $expected_type);
             $upload = new Upload($_FILES['file_addon'], $expected_type);
-            $upload->removeTempFiles();
+            //$upload->removeTempFiles();
         }
         catch(UploadException $e)
         {

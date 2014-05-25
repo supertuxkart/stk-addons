@@ -1,6 +1,7 @@
-/config.php
-/assets/temp/*
-/assets/xml/*
-/.idea/
-/vendor/
-/.htaccess
+config.php
+assets/temp/*
+assets/xml/*
+.idea/
+vendor/
+.htaccess
+uploads/

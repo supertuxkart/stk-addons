@@ -376,7 +376,7 @@ class File
         {
             $approved_types = ConfigManager::getConfig('allowed_source_exts');
         }
-        $approved_types = explode(',', $approved_types);
+        $approved_types = array_map("trim", explode(',', $approved_types));
         $removed_files = array();
 
         foreach (scandir($path) as $file)
@@ -527,7 +527,7 @@ class File
         {
             if (DEBUG_MODE)
             {
-                throw new FileException(sprintf("%s is not a directory", $dir));
+                echo sprintf("%s is not a directory", $dir);
             }
 
             return null;
@@ -569,7 +569,7 @@ class File
         {
             if (DEBUG_MODE)
             {
-                throw new FileException(sprintf("%s is not a directory", $dir));
+                echo sprintf("%s is not a directory", $dir);
             }
 
             return false;

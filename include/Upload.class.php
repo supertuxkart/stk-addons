@@ -64,9 +64,10 @@ class Upload
     private $dest;
 
     /**
+     * The directory we create to extract the archive
      * @var string
      */
-    private $temp;
+    private $temp_dir;
 
     /**
      * @var array
@@ -111,7 +112,7 @@ class Upload
         static::checkUploadError($file_record['error']);
         $this->file_ext = static::checkUploadExtension($this->file_name, $this->expected_type);
 
-        $this->temp = TMP_PATH . 'uploads' . DS . time() . '-' . $this->file_name . DS;
+        $this->temp_dir = TMP_PATH . 'uploads' . DS . time() . '-' . $this->file_name . DS;
 
         // Clean up old temp files to make room for new upload
         File::deleteOldSubdirectories(TMP_PATH . 'uploads', 3600);
@@ -124,7 +125,7 @@ class Upload
      */
     public function __destruct()
     {
-        File::deleteRecursive($this->temp);
+        //$this->removeTempFiles();
     }
 
     /**
@@ -132,7 +133,7 @@ class Upload
      */
     public function removeTempFiles()
     {
-        File::deleterecursive($this->temp);
+        File::deleterecursive($this->temp_dir);
     }
 
     /**
@@ -142,16 +143,16 @@ class Upload
      */
     private function doUpload()
     {
-        if (!mkdir($this->temp, 0755, true))
+        if (!mkdir($this->temp_dir, 0755, true))
         {
             throw new UploadException('Failed to create temporary directory for upload: ' .
-                htmlspecialchars($this->temp)
+                htmlspecialchars($this->temp_dir)
             );
         }
 
         // Copy file to temp folder
-        if (move_uploaded_file($this->file_tmp, $this->temp . $this->file_name) === false &&
-            file_exists($this->temp . $this->file_name) === false
+        if (move_uploaded_file($this->file_tmp, $this->temp_dir . $this->file_name) === false &&
+            file_exists($this->temp_dir . $this->file_name) === false
         )
         {
             throw new UploadException(_('Failed to move uploaded file.'));
@@ -167,8 +168,8 @@ class Upload
 
         try
         {
-            File::extractArchive($this->temp . $this->file_name, $this->temp, $this->file_ext);
-            File::flattenDirectory($this->temp, $this->temp);
+            File::extractArchive($this->temp_dir . $this->file_name, $this->temp_dir, $this->file_ext);
+            File::flattenDirectory($this->temp_dir, $this->temp_dir);
             Upload::removeInvalidFiles();
             Upload::parseFiles();
         }
@@ -216,13 +217,12 @@ class Upload
             {
                 $addon_id = null;
             }
-            elseif ($this->expected_type != 'source')
+            elseif ($this->expected_type !== 'source')
             {
                 $addon = new Addon($addon_id);
                 $revisions = $addon->getAllRevisions();
                 end($revisions);
                 $this->properties['addon_revision'] = key($revisions) + 1;
-                unset($revisions);
                 unset($addon);
             }
         }
@@ -262,9 +262,16 @@ class Upload
             static::editInfoFile();
 
             // Get image file
-            $image_file = ($this->upload_type === 'karts') ? $this->properties['xml_attributes']['icon-file'] :
-                $this->properties['xml_attributes']['screenshot'];
-            $image_file = $this->temp . $image_file;
+            if($this->upload_type === 'karts')
+            {
+                $image_file = $this->properties['xml_attributes']['icon-file'];
+            }
+            else
+            {
+                $image_file =  $this->properties['xml_attributes']['screenshot'];
+            }
+
+            $image_file = $this->temp_dir . $image_file;
             if (file_exists($image_file))
             {
                 // Get image file extension
@@ -272,11 +279,11 @@ class Upload
 
                 // Save file
                 $fileid = uniqid();
-                while (file_exists(UP_LOCATION . 'images/' . $fileid . '.' . $imageext[1]))
+                while (file_exists(UP_LOCATION . 'images' . DS . $fileid . '.' . $imageext[1]))
                 {
                     $fileid = uniqid();
                 }
-                $this->properties['image_path'] = UP_LOCATION . 'images/' . $fileid . '.' . $imageext[1];
+                $this->properties['image_path'] = UP_LOCATION . 'images' . DS . $fileid . '.' . $imageext[1];
                 copy($image_file, $this->properties['image_path']);
 
                 // Record image file in database
@@ -289,36 +296,36 @@ class Upload
                         array(
                             ":addon_id"    => $addon_id,
                             ":upload_type" => $this->upload_type,
-                            ":file"        => 'images/' . $fileid . $imageext[1]
+                            ":file"        => 'images' . DS . $fileid . $imageext[1]
                         )
                     );
-
-                    try
-                    {
-                        $id = DBConnection::get()->query(
-                            'SELECT @result_id',
-                            DBConnection::FETCH_FIRST
-                        );
-
-                        // example taken from
-                        // http://stackoverflow.com/questions/118506/stored-procedures-mysql-and-php/4502524#4502524
-                        // TODO test it
-                        $image_file = $id["@result_id"];
-                    }
-                    catch(DBException $e)
-                    {
-                        $image_file = null;
-                        if (DEBUG_MODE)
-                        {
-                            trigger_error("Could not select the return from the procedure", E_ERROR);
-                        }
-                    }
                 }
                 catch(DBException $e)
                 {
                     echo '<span class="error">' . _h('Failed to associate image file with addon.') . '</span><br />';
                     unlink($this->properties['image_path']);
                     $image_file = null;
+                }
+
+                try
+                {
+                    $id = DBConnection::get()->query(
+                        'SELECT @result_id',
+                        DBConnection::FETCH_FIRST
+                    );
+
+                    // example taken from
+                    // http://stackoverflow.com/questions/118506/stored-procedures-mysql-and-php/4502524#4502524
+                    // TODO test it
+                    $image_file = $id["@result_id"];
+                }
+                catch(DBException $e)
+                {
+                    $image_file = null;
+                    if (DEBUG_MODE)
+                    {
+                        trigger_error("Could not select the return from the procedure", E_ERROR);
+                    }
                 }
             }
             else
@@ -352,7 +359,7 @@ class Upload
         // Pack zip file
         $this->dest = UP_LOCATION;
         $this->generateFilename('zip');
-        if (!File::compress($this->temp, $this->upload_name))
+        if (!File::compress($this->temp_dir, $this->upload_name))
         {
             throw new UploadException(_h('Failed to re-pack archive file.'));
         }
@@ -371,23 +378,6 @@ class Upload
                     ":file"        => basename($this->upload_name)
                 )
             );
-
-            try
-            {
-                $id = DBConnection::get()->query(
-                    'SELECT @result_id',
-                    DBConnection::FETCH_FIRST
-                );
-                $this->properties['xml_attributes']['fileid'] = $id["@result_id"];
-            }
-            catch(DBException $e)
-            {
-                $this->properties['xml_attributes']['fileid'] = 0;
-                if (DEBUG_MODE)
-                {
-                    trigger_error("Could not select the return from the procedure", E_ERROR);
-                }
-            }
         }
         catch(DBException $e)
         {
@@ -400,6 +390,24 @@ class Upload
 
             throw new UploadException(_h('Failed to associate archive file with addon.'));
         }
+
+        try
+        {
+            $id = DBConnection::get()->query(
+                'SELECT @result_id',
+                DBConnection::FETCH_FIRST
+            );
+            $this->properties['xml_attributes']['fileid'] = $id["@result_id"];
+        }
+        catch(DBException $e)
+        {
+            $this->properties['xml_attributes']['fileid'] = 0;
+            if (DEBUG_MODE)
+            {
+                trigger_error("Could not select the return from the procedure", E_ERROR);
+            }
+        }
+
 
         if ($_POST['upload-type'] === 'source')
         {
@@ -478,11 +486,11 @@ class Upload
     {
         try
         {
-            $this->dest = UP_LOCATION . 'images/';
+            $this->dest = UP_LOCATION . 'images' . DS;
             $this->generateFilename();
             $addon_id = Addon::cleanId($_GET['name']);
             $addon_type = $_GET['type'];
-            rename($this->temp . $this->file_name, $this->upload_name);
+            rename($this->temp_dir . $this->file_name, $this->upload_name);
             File::newImage(null, $this->upload_name, $addon_id, $addon_type);
             echo _h('Successfully uploaded image.') . '<br />';
             echo '<span style="font-size: large"><a href="addons.php?type=' . $_GET['type'] . '&amp;name=' . $_GET['name'] . '">' .
@@ -505,11 +513,11 @@ class Upload
         // Check for invalid files
         if ($this->expected_type !== 'source')
         {
-            $invalid_files = File::typeCheck($this->temp);
+            $invalid_files = File::typeCheck($this->temp_dir);
         }
         else
         {
-            $invalid_files = File::typeCheck($this->temp, true);
+            $invalid_files = File::typeCheck($this->temp_dir, true);
         }
 
         if (is_array($invalid_files) && !empty($invalid_files))
@@ -554,7 +562,7 @@ class Upload
      */
     private function parseFiles()
     {
-        $files = scandir($this->temp);
+        $files = scandir($this->temp_dir);
 
         // Initialize counters
         $b3d_textures = array();
@@ -571,7 +579,7 @@ class Upload
             if (preg_match('/\.b3d$/i', $file))
             {
                 $b3d_parse = new b3dParser();
-                $b3d_parse->loadFile($this->temp . $file);
+                $b3d_parse->loadFile($this->temp_dir . $file);
                 $b3d_textures = array_merge($b3d_parse->listTextures(), $b3d_textures);
             }
 
@@ -579,7 +587,7 @@ class Upload
             if (preg_match('/\.xml/i', $file))
             {
                 $xml_parse = new addonXMLParser();
-                $xml_parse->loadFile($this->temp . $file);
+                $xml_parse->loadFile($this->temp_dir . $file);
                 $xml_type = $xml_parse->getType();
 
                 if ($xml_type === 'TRACK' || $xml_type === 'KART')
@@ -608,19 +616,19 @@ class Upload
                         }
                         $this->upload_type = 'karts';
                     }
-                    $this->properties['addon_file'] = $this->temp . $file;
+                    $this->properties['addon_file'] = $this->temp_dir . $file;
                     $this->addon_name = $this->properties['xml_attributes']['name'];
                 }
                 if ($xml_type === 'QUADS')
                 {
-                    $this->properties['quad_file'] = $this->temp . $file;
+                    $this->properties['quad_file'] = $this->temp_dir . $file;
                 }
             }
 
             // Mark an existing license file
             if (preg_match('/^license\.txt$/i', $file))
             {
-                $this->properties['license_file'] = $this->temp . $file;
+                $this->properties['license_file'] = $this->temp_dir . $file;
             }
         }
 
@@ -628,7 +636,7 @@ class Upload
         $this->properties['status'] = 0;
 
         // Check to make sure all image dimensions are powers of 2
-        if (!File::imageCheck($this->temp))
+        if (!File::imageCheck($this->temp_dir))
         {
             echo '<span class="warning">' .
                 _h('Some images in this add-on do not have dimensions that are a power of two.')
@@ -641,7 +649,7 @@ class Upload
         $missing_textures = array();
         foreach ($this->properties['b3d_textures'] as $tex)
         {
-            if (!file_exists($this->temp . $tex))
+            if (!file_exists($this->temp_dir . $tex))
             {
                 $missing_textures[] = $tex;
             }
