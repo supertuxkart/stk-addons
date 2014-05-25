@@ -54,9 +54,7 @@ class Validate
         }
         if (empty($result))
         {
-            throw new UserException(htmlspecialchars(
-                _('Username and email address combination not found.')
-            ));
+            throw new UserException(_h('Username and email address combination not found.'));
         }
 
         return $result[0]['id'];
@@ -72,11 +70,7 @@ class Validate
      */
     public static function email($email)
     {
-        if (strlen($email) == 0)
-        {
-            throw new UserException(htmlspecialchars(_('You must enter an email address.')));
-        }
-        if (!preg_match('/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i', $email))
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL))
         {
             throw new UserException(htmlspecialchars(sprintf(_('"%s" is not a valid email address.'), $email)));
         }
@@ -96,11 +90,11 @@ class Validate
     {
         if (strlen($username) < 4)
         {
-            throw new UserException(htmlspecialchars(_('Your username must be at least 4 characters long.')));
+            throw new UserException(_h('Your username must be at least 4 characters long.'));
         }
         if (!preg_match('/^[a-z0-9]+$/i', $username))
         {
-            throw new UserException(htmlspecialchars(_('Your username can only contain alphanumeric characters.')));
+            throw new UserException(_h('Your username can only contain alphanumeric characters.'));
         }
 
         return htmlspecialchars($username);
@@ -118,16 +112,17 @@ class Validate
      */
     public static function password($password1, $password2 = null, $username = null, $userid = null)
     {
+        // TODO make method more sane
         // Check password properties
         if (strlen($password1) < 8)
         {
-            throw new UserException(htmlspecialchars(_('Your password must be at least 8 characters long.')));
+            throw new UserException(_h('Your password must be at least 8 characters long.'));
         }
         if ($password2 !== null)
         {
             if ($password1 !== $password2)
             {
-                throw new UserException(htmlspecialchars(_('Your passwords do not match.')));
+                throw new UserException(_h('Your passwords do not match.'));
             }
         }
 
@@ -169,10 +164,10 @@ class Validate
             }
             catch(DBException $e)
             {
-                throw new UserException(htmlspecialchars(
-                    _('An error occurred trying to validate your password.') . ' ' .
-                    _('Please contact a website administrator.')
-                ));
+                throw new UserException(
+                    _h('An error occurred trying to validate your password.') . ' ' .
+                    _h('Please contact a website administrator.')
+                );
             }
             if (empty($result))
             {
@@ -202,7 +197,7 @@ class Validate
     {
         if (strlen(trim($name)) < 2)
         {
-            throw new UserException(htmlspecialchars(_('You must enter a name.')));
+            throw new UserException(_h('You must enter a name.'));
         }
 
         return htmlspecialchars(trim($name));
@@ -235,7 +230,7 @@ class Validate
     {
         if (!preg_match('/^(svn|[\d]+\.[\d]+\.[\d](-rc[\d])?)$/i', $string))
         {
-            throw new Exception('Invalid version string! Format should be: W.X.Y[-rcZ]');
+            throw new UserException(_h('Invalid version string! Format should be: W.X.Y[-rcZ]'));
         }
 
         return true;
@@ -273,10 +268,10 @@ class Validate
         }
         catch(PDOException $e)
         {
-            throw new UserException(htmlspecialchars(
-                _('An error occurred while signing in.') . ' ' .
-                _('Please contact a website administrator.')
-            ));
+            throw new UserException(
+                _h('An error occurred while signing in.') . ' ' .
+                _h('Please contact a website administrator.')
+            );
         }
 
     }
