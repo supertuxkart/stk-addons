@@ -569,7 +569,7 @@ class File
         {
             if (DEBUG_MODE)
             {
-                throw new FileException(sprintf("%s is not a directory"), $dir);
+                throw new FileException(sprintf("%s is not a directory", $dir));
             }
 
             return false;
