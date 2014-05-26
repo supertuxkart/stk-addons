@@ -184,6 +184,13 @@ CREATE TABLE IF NOT EXISTS `v2_config` (
   UNIQUE KEY `name` (`name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+--
+-- Dumping data for table `v2_config`
+--
+
+INSERT INTO `v2_config` (`name`, `value`) VALUES
+  ('allowed_addon_exts', 'zip, tar, tar.gz, tgz, gz, tbz, tar.bz2, bz2, b3d, txt, png, xml');
+
 -- --------------------------------------------------------
 
 --

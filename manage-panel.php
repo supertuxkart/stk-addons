@@ -77,7 +77,7 @@ switch ($_GET['id'])
             {
                 if ($image["approved"] == 0)
                 {
-                    $unapproved[] = '<img src="' . ROOT . 'image.php?type=medium&pic=' . $image['file_path'] . '" />';
+                    $unapproved[] = '<img src="' . SITE_ROOT . 'image.php?type=medium&pic=' . $image['file_path'] . '" />';
                 }
             }
             // add to view
@@ -183,6 +183,7 @@ switch ($_GET['id'])
         $items = array();
         foreach ($files as $file)
         {
+            var_dump($file);
             switch ($file["file_type"])
             {
                 case false:
