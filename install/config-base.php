@@ -61,11 +61,11 @@ define('SMTP_PASS', null); // SMTP password
 
 if (!defined('CRON'))
 {
-    define("UP_LOCATION", UPLOAD_PATH);
+    define("UP_PATH", UPLOAD_PATH);
 }
 else
 {
-    define("UP_LOCATION", UPLOAD_CRON_PATH);
+    define("UP_PATH", UPLOAD_CRON_PATH);
 }
 
 // make sure that this ends with a trailing slash, otherwise it would break a few things (like the activation email)
@@ -76,8 +76,8 @@ define("CACHE_LOCATION", SITE_ROOT . 'assets/temp/');
 define("NEWS_XM_LOCATION", DOWNLOAD_LOCATION . "xml/news.xml");
 define("ASSETS_XML_LOCATION", DOWNLOAD_LOCATION . "xml/assets.xml");
 
-define("NEWS_XML_PATH", UP_LOCATION . "xml" . DS . "news.xml");
-define("ASSETS_XML_PATH", UP_LOCATION . "xml" . DS . "assets.xml");
+define("NEWS_XML_PATH", UP_PATH . "xml" . DS . "news.xml");
+define("ASSETS_XML_PATH", UP_PATH . "xml" . DS . "assets.xml");
 
 define("IMG_LOCATION", SITE_ROOT . 'img/');
 define("JS_LOCATION", SITE_ROOT . 'js/');

@@ -432,9 +432,9 @@ class File
 
             if (!empty($file))
             {
-                if (file_exists(UP_LOCATION . $file['file_path']))
+                if (file_exists(UP_PATH . $file['file_path']))
                 {
-                    unlink(UP_LOCATION . $file['file_path']);
+                    unlink(UP_PATH . $file['file_path']);
                 }
             }
 
@@ -729,7 +729,7 @@ class File
 
         // Look-up all existing files on the disk
         $files = array();
-        $folder = UP_LOCATION;
+        $folder = UP_PATH;
         $dir_handle = opendir($folder);
         while (false !== ($entry = readdir($dir_handle)))
         {
@@ -739,7 +739,7 @@ class File
             }
             $files[] = $entry;
         }
-        $folder = UP_LOCATION . 'images/';
+        $folder = UP_PATH . 'images' . DS;
         $dir_handle = opendir($folder);
         while (false !== ($entry = readdir($dir_handle)))
         {
@@ -747,7 +747,7 @@ class File
             {
                 continue;
             }
-            $files[] = 'images/' . $entry;
+            $files[] = 'images' . DS . $entry;
         }
 
         // Loop through database records and remove those entries from the list
@@ -800,7 +800,7 @@ class File
     {
         if ($upload_handle !== null)
         {
-            if (!move_uploaded_file($upload_handle['tmp_name'], UP_LOCATION . 'images/' . $file_name))
+            if (!move_uploaded_file($upload_handle['tmp_name'], UP_PATH . 'images' . DS . $file_name))
             {
                 throw new FileException(htmlspecialchars(_('Failed to move uploaded file.')));
             }
@@ -808,7 +808,7 @@ class File
         else
         {
             // Delete the existing image by this name
-            if (file_exists(UP_LOCATION . 'images/' . basename($file_name)))
+            if (file_exists(UP_PATH . 'images' . DS . basename($file_name)))
             {
                 try
                 {
@@ -832,7 +832,7 @@ class File
         }
 
         // Scan image validity with GD
-        $image_path = UP_LOCATION . 'images/' . basename($file_name);
+        $image_path = UP_PATH . 'images' . DS . basename($file_name);
         $gdImageInfo = getimagesize($image_path);
         if (!$gdImageInfo)
         {
@@ -1041,7 +1041,7 @@ class File
         }
 
         // Save output file
-        $out_file = UP_LOCATION . 'images/' . $addon_id . '_map.png';
+        $out_file = UP_PATH . 'images' . DS . $addon_id . '_map.png';
         imagepng($image, $out_file);
 
         // Add image record to add-on

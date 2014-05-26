@@ -404,7 +404,7 @@ class Addon
 
         // Compare with new image
         $new_image = File::getPath($attributes['image']);
-        $new_hash = md5_file(UP_LOCATION . $new_image);
+        $new_hash = md5_file(UP_PATH . $new_image);
         for ($i = 0; $i < count($images); $i++)
         {
             // Skip image that was just uploaded
@@ -536,7 +536,7 @@ class Addon
 
         foreach ($files as $file)
         {
-            if (file_exists(UP_LOCATION . $file['file_path']) && !unlink(UP_LOCATION . $file['file_path']))
+            if (file_exists(UP_PATH . $file['file_path']) && !unlink(UP_PATH . $file['file_path']))
             {
                 echo '<span class="error">' . htmlspecialchars(
                         _('Failed to delete file:')
@@ -977,7 +977,7 @@ class Addon
             $return[] = array(
                 'id'   => $path['id'],
                 'path' => $path['file_path'],
-                'hash' => md5_file(UP_LOCATION . $path['file_path'])
+                'hash' => md5_file(UP_PATH . $path['file_path'])
             );
         }
 

@@ -279,11 +279,11 @@ class Upload
 
                 // Save file
                 $fileid = uniqid();
-                while (file_exists(UP_LOCATION . 'images' . DS . $fileid . '.' . $imageext[1]))
+                while (file_exists(UP_PATH . 'images' . DS . $fileid . '.' . $imageext[1]))
                 {
                     $fileid = uniqid();
                 }
-                $this->properties['image_path'] = UP_LOCATION . 'images' . DS . $fileid . '.' . $imageext[1];
+                $this->properties['image_path'] = UP_PATH . 'images' . DS . $fileid . '.' . $imageext[1];
                 copy($image_file, $this->properties['image_path']);
 
                 // Record image file in database
@@ -357,7 +357,7 @@ class Upload
         }
 
         // Pack zip file
-        $this->dest = UP_LOCATION;
+        $this->dest = UP_PATH;
         $this->generateFilename('zip');
         if (!File::compress($this->temp_dir, $this->upload_name))
         {
@@ -486,7 +486,7 @@ class Upload
     {
         try
         {
-            $this->dest = UP_LOCATION . 'images' . DS;
+            $this->dest = UP_PATH . 'images' . DS;
             $this->generateFilename();
             $addon_id = Addon::cleanId($_GET['name']);
             $addon_type = $_GET['type'];

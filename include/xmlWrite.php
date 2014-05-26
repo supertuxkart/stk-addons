@@ -154,7 +154,7 @@ function generateAssetXML()
                     continue;
                 }
 
-                if (!file_exists(UP_LOCATION . $file_path))
+                if (!file_exists(UP_PATH . $file_path))
                 {
                     trigger_error('File not found for ' . $addon['name'], E_USER_WARNING);
                     echo '<span class="warning">' . htmlspecialchars(
@@ -174,7 +174,7 @@ function generateAssetXML()
                 $image_path = File::getPath($addon['image']);
                 if ($image_path !== false)
                 {
-                    if (file_exists(UP_LOCATION . $image_path))
+                    if (file_exists(UP_PATH . $image_path))
                     {
                         $writer->writeAttribute('image', DOWNLOAD_LOCATION . $image_path);
                     }
@@ -184,7 +184,7 @@ function generateAssetXML()
                     $icon_path = File::getPath($addon['icon']);
                     if ($icon_path !== false)
                     {
-                        if (file_exists(UP_LOCATION . $icon_path))
+                        if (file_exists(UP_PATH . $icon_path))
                         {
                             $writer->writeAttribute('icon', DOWNLOAD_LOCATION . $icon_path);
                         }
@@ -193,7 +193,7 @@ function generateAssetXML()
                 $writer->writeAttribute('format', $addon['format']);
                 $writer->writeAttribute('revision', $addon['revision']);
                 $writer->writeAttribute('status', $addon['status']);
-                $writer->writeAttribute('size', filesize(UP_LOCATION . $file_path));
+                $writer->writeAttribute('size', filesize(UP_PATH . $file_path));
                 $writer->writeAttribute('min-include-version', $addon['min_include_ver']);
                 $writer->writeAttribute('max-include-version', $addon['max_include_ver']);
 
@@ -334,7 +334,7 @@ function generateAssetXML2()
                         }
 
                         $file_path = File::getPath($addon_rev['fileid']);
-                        if ($file_path === false || !file_exists(UP_LOCATION . $file_path))
+                        if ($file_path === false || !file_exists(UP_PATH . $file_path))
                         {
                             continue;
                         }
@@ -345,13 +345,13 @@ function generateAssetXML2()
                         $writer->writeAttribute('format', $addon_rev['format']);
                         $writer->writeAttribute('revision', $addon_rev['revision']);
                         $writer->writeAttribute('status', $addon_rev['status']);
-                        $writer->writeAttribute('size', filesize(UP_LOCATION . $file_path));
+                        $writer->writeAttribute('size', filesize(UP_PATH . $file_path));
 
                         // Add image and icon to record
                         $image_path = File::getPath($addon_rev['image']);
                         if ($image_path !== false)
                         {
-                            if (file_exists(UP_LOCATION . $image_path))
+                            if (file_exists(UP_PATH . $image_path))
                             {
                                 $writer->writeAttribute('image', DOWNLOAD_LOCATION . $image_path);
                             }
@@ -361,7 +361,7 @@ function generateAssetXML2()
                             $icon_path = File::getPath($addon_rev['icon']);
                             if ($icon_path !== false)
                             {
-                                if (file_exists(UP_LOCATION . $icon_path))
+                                if (file_exists(UP_PATH . $icon_path))
                                 {
                                     $writer->writeAttribute('icon', DOWNLOAD_LOCATION . $icon_path);
                                 }
@@ -394,9 +394,9 @@ function generateAssetXML2()
     $music_items = Music::getAllByTitle();
     foreach ($music_items as $music)
     {
-        if (!file_exists(UP_LOCATION . 'music/' . $music->getFile()))
+        if (!file_exists(UP_PATH . 'music' . DS . $music->getFile()))
         {
-            trigger_error('File ' . UP_LOCATION . 'music/' . $music->getFile() . ' not found!', E_USER_WARNING);
+            trigger_error('File ' . UP_PATH . 'music' . DS . $music->getFile() . ' not found!', E_USER_WARNING);
             continue;
         }
         $writer->startElement('addon');
@@ -407,7 +407,7 @@ function generateAssetXML2()
         $writer->writeAttribute('gain', sprintf('%.3F', $music->getGain()));
         $writer->writeAttribute('length', $music->getLength());
         $writer->writeAttribute('file', DOWNLOAD_LOCATION . 'music/' . $music->getFile());
-        $writer->writeAttribute('size', filesize(UP_LOCATION . 'music/' . $music->getFile()));
+        $writer->writeAttribute('size', filesize(UP_PATH . 'music' . DS . $music->getFile()));
         $writer->writeAttribute('xml-filename', $music->getXmlFile());
         $writer->endElement();
     }

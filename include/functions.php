@@ -74,7 +74,7 @@ function resizeImage($file)
             break;
     }
     $cache_name = $size . '--' . basename($file);
-    $local_path = UP_LOCATION . $file;
+    $local_path = UP_PATH . $file;
 
     // Check if image exists, and if it does, check its format
     $orig_file = File::exists($file);
@@ -183,7 +183,7 @@ function resizeImage($file)
  */
 function img_label($text)
 {
-    $write_dir = UP_LOCATION . 'temp/';
+    $write_dir = UP_PATH . 'temp/';
     $read_dir = DOWNLOAD_LOCATION . 'temp/';
     $text_noaccent = preg_replace('/\W/s', '_', $text);
 
