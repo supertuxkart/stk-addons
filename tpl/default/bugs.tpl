@@ -24,29 +24,32 @@
                 </div>
                 <div class="form-group">
                     <label class="checkbox-inline">
-                        <input type="checkbox" id="search-description" name="search-description" value="description">{t}Search Description{/t}
+                        <input type="checkbox" id="search-description" name="search-description"
+                               value="description">{t}Search Description{/t}
                     </label>
                 </div>
                 <button type="submit" class="btn btn-info btn-lg">{t}Search{/t}</button>
             </form>
         </div>
         <div class="col-md-2">
-            <a class="btn btn-default btn-lg" href="#">
+            <button class="btn btn-default btn-lg" id="btn-file-a-bug">
                 {t}File a bug{/t}
-            </a>
+            </button>
         </div>
     </div>
     <br><br>
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th>#Id</th>
-            <th>{t}Addon{/t}</th>
-            <th>{t}Title{/t}</th>
-            <th>{t}Changed{/t}</th>
-        </tr>
-        </thead>
-        <tbody>
+
+    <div id="bug-content">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>#Id</th>
+                <th>{t}Addon{/t}</th>
+                <th>{t}Title{/t}</th>
+                <th>{t}Changed{/t}</th>
+            </tr>
+            </thead>
+            <tbody>
             {foreach $bugs.items as $item}
                 <tr>
                     <th><a href="#">{$item.id}</a></th>
@@ -55,7 +58,8 @@
                     <th>{$item.date_edit}</th>
                 </tr>
             {/foreach}
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </div>
 </div>
 {include file=#footer#}

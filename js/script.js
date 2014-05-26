@@ -3,13 +3,13 @@ var oldSub = "";
 var oldRoot = "";
 var oldDiv = "";
 
-$(document).ready(function () {
+$(document).ready(function() {
     $("#news-messages").newsTicker();
-    $('#lang-menu > a').click(function () {
+    $('#lang-menu > a').click(function() {
         $('ul.menu_body').slideToggle('medium');
     });
 
-    $('a.addon-list').click(function () {
+    $('a.addon-list').click(function() {
         history.pushState({path: this.path}, '', this.href);
         var url = this.href;
         var addonType = getUrlVars(url)['type'];
@@ -23,7 +23,7 @@ $(document).ready(function () {
         return false;
     });
 
-    $('a.manage-list').click(function () {
+    $('a.manage-list').click(function() {
         history.pushState({path: this.path}, '', this.href);
         var url = this.href;
         var view = getUrlVars(url)['view'];
@@ -32,7 +32,7 @@ $(document).ready(function () {
         return false;
     });
 
-    $('a.user-list').click(function () {
+    $('a.user-list').click(function() {
         history.pushState({path: this.path}, '', this.href);
         var url = this.href;
         var user = getUrlVars(url)['user'];
@@ -40,7 +40,29 @@ $(document).ready(function () {
         clearPanelStatus();
         return false;
     });
+
+    $("#btn-file-a-bug").click(function() {
+        loadContentWithAjax("#bug-content", siteRoot + 'bugs/bug-file.php');
+
+        return false;
+    });
 });
+
+function loadContentWithAjax(selector, url_to_load, url_get_params, callback)
+{
+    var $selector = $(selector);
+    url_get_params = _.isUndefined(url_get_params) ? {} : url_get_params;
+
+    $.get(url_to_load, url_get_params, function (data) {
+        $selector.html(data);
+        if(_.isFunction(callback))
+        {
+            callback(data);
+        }
+    }).fail(function(e) {
+        console.error("loadContentWithAjax failed: ");
+    });
+}
 
 function confirm_delete(url) {
     if (confirm("Really delete this item?")) {
