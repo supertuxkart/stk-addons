@@ -205,7 +205,7 @@ class Cache
             }
 
             $return = array(
-                'url'      => DOWN_LOCATION . $result[0]['file_path'],
+                'url'      => DOWNLOAD_LOCATION . $result[0]['file_path'],
                 'approved' => (boolean)$result[0]['approved'],
                 'exists'   => true
             );
@@ -220,7 +220,7 @@ class Cache
 
             if (Cache::fileExists($cache_prefix . basename($result[0]['file_path'])))
             {
-                $return['url'] = CACHE_DL . $cache_prefix . basename($result[0]['file_path']);
+                $return['url'] = CACHE_LOCATION . $cache_prefix . basename($result[0]['file_path']);
             }
 
             return $return;

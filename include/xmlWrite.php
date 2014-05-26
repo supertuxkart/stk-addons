@@ -46,8 +46,8 @@ function generateNewsXML()
 
     // Reference assets.xml
     $writer->startElement('include');
-    $writer->writeAttribute('file', ASSET_XML);
-    $writer->writeAttribute('mtime', filemtime(ASSET_XML_LOCAL));
+    $writer->writeAttribute('file', ASSETS_XML_LOCATION);
+    $writer->writeAttribute('mtime', filemtime(ASSETS_XML_PATH));
     $writer->endElement();
 
     // Refresh dynamic news entries
@@ -83,7 +83,7 @@ function generateNewsXML()
 
 function writeNewsXML()
 {
-    return writeFile(generateNewsXML(), NEWS_XML_LOCAL);
+    return writeFile(generateNewsXML(), NEWS_XML_PATH);
 }
 
 function generateAssetXML()
@@ -166,7 +166,7 @@ function generateAssetXML()
                 $writer->startElement($type);
                 $writer->writeAttribute('id', $addon['id']);
                 $writer->writeAttribute('name', $addon['name']);
-                $writer->writeAttribute('file', DOWN_LOCATION . $file_path);
+                $writer->writeAttribute('file', DOWNLOAD_LOCATION . $file_path);
                 $writer->writeAttribute('date', strtotime($addon['date']));
                 $writer->writeAttribute('uploader', $addon['user']);
                 $writer->writeAttribute('designer', $addon['designer']);
@@ -176,7 +176,7 @@ function generateAssetXML()
                 {
                     if (file_exists(UP_LOCATION . $image_path))
                     {
-                        $writer->writeAttribute('image', DOWN_LOCATION . $image_path);
+                        $writer->writeAttribute('image', DOWNLOAD_LOCATION . $image_path);
                     }
                 }
                 if ($type == "kart")
@@ -186,7 +186,7 @@ function generateAssetXML()
                     {
                         if (file_exists(UP_LOCATION . $icon_path))
                         {
-                            $writer->writeAttribute('icon', DOWN_LOCATION . $icon_path);
+                            $writer->writeAttribute('icon', DOWNLOAD_LOCATION . $icon_path);
                         }
                     }
                 }
@@ -340,7 +340,7 @@ function generateAssetXML2()
                         }
                         $writer->startElement('revision');
 
-                        $writer->writeAttribute('file', DOWN_LOCATION . $file_path);
+                        $writer->writeAttribute('file', DOWNLOAD_LOCATION . $file_path);
                         $writer->writeAttribute('date', strtotime($addon_rev['creation_date']));
                         $writer->writeAttribute('format', $addon_rev['format']);
                         $writer->writeAttribute('revision', $addon_rev['revision']);
@@ -353,7 +353,7 @@ function generateAssetXML2()
                         {
                             if (file_exists(UP_LOCATION . $image_path))
                             {
-                                $writer->writeAttribute('image', DOWN_LOCATION . $image_path);
+                                $writer->writeAttribute('image', DOWNLOAD_LOCATION . $image_path);
                             }
                         }
                         if ($type === "kart")
@@ -363,7 +363,7 @@ function generateAssetXML2()
                             {
                                 if (file_exists(UP_LOCATION . $icon_path))
                                 {
-                                    $writer->writeAttribute('icon', DOWN_LOCATION . $icon_path);
+                                    $writer->writeAttribute('icon', DOWNLOAD_LOCATION . $icon_path);
                                 }
                             }
                         }
@@ -406,7 +406,7 @@ function generateAssetXML2()
         $writer->writeAttribute('license', $music->getLicense());
         $writer->writeAttribute('gain', sprintf('%.3F', $music->getGain()));
         $writer->writeAttribute('length', $music->getLength());
-        $writer->writeAttribute('file', DOWN_LOCATION . 'music/' . $music->getFile());
+        $writer->writeAttribute('file', DOWNLOAD_LOCATION . 'music/' . $music->getFile());
         $writer->writeAttribute('size', filesize(UP_LOCATION . 'music/' . $music->getFile()));
         $writer->writeAttribute('xml-filename', $music->getXmlFile());
         $writer->endElement();
@@ -426,9 +426,9 @@ function generateAssetXML2()
 
 function writeAssetXML()
 {
-    writeFile(generateAssetXML2(), ASSET_XML2_LOCAL);
+    writeFile(generateAssetXML2(), ASSETS_XML_PATH);
 
-    return writeFile(generateAssetXML(), ASSET_XML_LOCAL);
+    return writeFile(generateAssetXML(), ASSETS_XML_PATH);
 }
 
 function writeFile($content, $file)

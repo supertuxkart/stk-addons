@@ -4,4 +4,4 @@ assets/xml/*
 .idea/
 vendor/
 .htaccess
-uploads/
+upload/

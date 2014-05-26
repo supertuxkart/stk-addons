@@ -196,7 +196,7 @@ class AddonViewer
             $tpl['addon']['dl'] = array(
                 'display'            => true,
                 'label'              => $button_text,
-                'url'                => DOWN_LOCATION . $file_path,
+                'url'                => DOWNLOAD_LOCATION . $file_path,
                 'shrink'             => $shrink,
                 'use_client_message' => htmlspecialchars(_('Download this add-on in game!'))
             );
@@ -247,7 +247,7 @@ class AddonViewer
                 'number'    => $rev_n,
                 'timestamp' => $revision['timestamp'],
                 'file'      => array(
-                    'path' => DOWN_LOCATION . $this->addon->getFile($rev_n)
+                    'path' => DOWNLOAD_LOCATION . $this->addon->getFile($rev_n)
                 ),
                 'dl_label'  => htmlspecialchars(sprintf(_('Download revision %u'), $rev_n))
             );
@@ -281,7 +281,7 @@ class AddonViewer
         $image_files = array();
         foreach ($image_files_db AS $image)
         {
-            $image['url'] = DOWN_LOCATION . $image['file_path'];
+            $image['url'] = DOWNLOAD_LOCATION . $image['file_path'];
             $imageCache = Cache::getImage($image['id'], array('size' => 'medium'));
             $image['thumb']['url'] = $imageCache['url'];
             $admin_links = null;
@@ -369,7 +369,7 @@ class AddonViewer
             {
                 $source['details'] .= '(' . htmlspecialchars(_('Not Approved')) . ') ';
             }
-            $source['details'] .= '<a href="' . DOWN_LOCATION . $source['file_path'] . '" rel="nofollow">' . htmlspecialchars(
+            $source['details'] .= '<a href="' . DOWNLOAD_LOCATION . $source['file_path'] . '" rel="nofollow">' . htmlspecialchars(
                     _('Download')
                 ) . '</a>';
             if (User::isLoggedIn())

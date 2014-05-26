@@ -368,13 +368,13 @@ class Upload
         try
         {
             DBConnection::get()->query(
-                'CALL `' . DB_PREFIX . 'create_file_record` ' .
-                "(:addon_it, :upload_type, :file_type, :file, @result_id)",
+                "CALL `" . DB_PREFIX . "create_file_record`
+                (:addon_id, :upload_type, :file_type, :file, @result_id)",
                 DBConnection::NOTHING,
                 array(
                     ":addon_id"    => $addon_id,
                     ":upload_type" => $this->upload_type,
-                    ":file_type"   => $filetype,
+                    ":file_type"   => (string)$filetype,
                     ":file"        => basename($this->upload_name)
                 )
             );

@@ -70,12 +70,14 @@ else
 
 // make sure that this ends with a trailing slash, otherwise it would break a few things (like the activation email)
 define("SITE_ROOT", "http://stkaddons.net/");
-define("DOWN_LOCATION", SITE_ROOT . 'upload/');
-define("CACHE_DL", SITE_ROOT . 'assets/temp/');
-define("NEWS_XML", DOWN_LOCATION . "xml/news.xml");
-define("ASSET_XML", DOWN_LOCATION . "xml/assets.xml");
-define("NEWS_XML_LOCAL", UP_LOCATION . "xml/news.xml");
-define("ASSET_XML_LOCAL", UP_LOCATION . "xml/news.xml");
+define("DOWNLOAD_LOCATION", SITE_ROOT . 'upload/');
+define("CACHE_LOCATION", SITE_ROOT . 'assets/temp/');
+
+define("NEWS_XM_LOCATION", DOWNLOAD_LOCATION . "xml/news.xml");
+define("ASSETS_XML_LOCATION", DOWNLOAD_LOCATION . "xml/assets.xml");
+
+define("NEWS_XML_PATH", UP_LOCATION . "xml" . DS . "news.xml");
+define("ASSETS_XML_PATH", UP_LOCATION . "xml" . DS . "assets.xml");
 
 define("IMG_LOCATION", SITE_ROOT . 'img/');
 define("JS_LOCATION", SITE_ROOT . 'js/');

@@ -48,7 +48,7 @@ $json_array = array();
 foreach ($addon_images as $image_record)
 {
     $json_array[] = array(
-        'url'      => DOWN_LOCATION . $image_record['file_path'],
+        'url'      => DOWNLOAD_LOCATION . $image_record['file_path'],
         'date'     => strtotime($image_record['date_added']),
         'approved' => (int)$image_record['approved']
     );

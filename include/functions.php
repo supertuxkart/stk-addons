@@ -96,7 +96,7 @@ function resizeImage($file)
     if (Cache::fileExists($cache_name) !== array())
     {
         header('Cached-Image: true');
-        header('Location: ' . CACHE_DL . '/' . $cache_name);
+        header('Location: ' . CACHE_LOCATION . '/' . $cache_name);
 
         return;
     }
@@ -184,14 +184,14 @@ function resizeImage($file)
 function img_label($text)
 {
     $write_dir = UP_LOCATION . 'temp/';
-    $read_dir = DOWN_LOCATION . 'temp/';
+    $read_dir = DOWNLOAD_LOCATION . 'temp/';
     $text_noaccent = preg_replace('/\W/s', '_', $text);
 
     if (!file_exists($write_dir . 'im_' . $text_noaccent . '.png'))
     {
         $text_size = 11;
         $text_angle = 90;
-        $font = ROOT . 'include/DejaVuSans.ttf';
+        $font = INCLUDE_PATH . 'DejaVuSans.ttf';
         $bbox = imagettfbbox($text_size, $text_angle, $font, $text);
 
         $min_x = min(array($bbox[0], $bbox[2], $bbox[4], $bbox[6]));
