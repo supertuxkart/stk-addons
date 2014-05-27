@@ -301,7 +301,7 @@ class User
             {
                 if (DEBUG_MODE)
                 {
-                    echo sprintf("Session key = '%s' was not set", $key);
+                    //echo sprintf("Session key = '%s' was not set", $key);
                     //var_debug("Init");
                 }
                 static::logout();

@@ -37,7 +37,7 @@ if (!isset($_GET['search']))
 {
     $init_results = Addon::getAddonList($_GET['type'], true);
     $results = array();
-    foreach ($init_results AS $init_result)
+    foreach ($init_results as $init_result)
     {
         $results[]['id'] = $init_result;
     }

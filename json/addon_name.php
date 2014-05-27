@@ -17,19 +17,19 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
-$tpl_bug_file = new StkTemplate("bug-file.tpl");
-$bug_file_data = array("stuff" => "fdfs");
-
-// check permission
-if(!User::hasPermission(AccessControl::PERM_ADD_BUG))
+if(!User::isLoggedIn())
 {
-    echo $tpl_bug_file;
+    echo json_encode(array("error" => "Permission denied. Reason: Not logged in"));
     exit;
 }
 
+if(!isset($_GET["name"]) || empty($_GET["name"]))
+{
+    echo json_encode(array("error" => "name param is not present or is empty"));
+    exit;
+}
 
-
-$tpl_bug_file->assign("bug", $bug_file_data);
-echo $tpl_bug_file;
+echo json_encode(array("names" => Addon::searchByName($_GET["name"])));

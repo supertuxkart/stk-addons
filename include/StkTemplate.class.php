@@ -125,6 +125,7 @@ class StkTemplate extends Template
             array('src' => '//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js'),
             array('src' => '//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js'),
             array('src' => "//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/js/bootstrap.min.js"),
+            array('src' => "//cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.10.2/typeahead.bundle.min.js"),
             array('src' => SITE_ROOT . 'js/jquery.newsticker.js'),
             array('src' => SITE_ROOT . 'js/script.js')
         );

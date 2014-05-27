@@ -1199,6 +1199,42 @@ class Addon
     }
 
     /**
+     * Search for an addon by its name
+     *
+     * @param string $name
+     *
+     * @throws AddonException
+     * @return array of matching names
+     */
+    public static function searchByName($name)
+    {
+        try
+        {
+            $addons = DBConnection::get()->query(
+                "SELECT `name`
+                FROM `" . DB_PREFIX . "addons`
+                WHERE `name` LIKE :search_query",
+                DBConnection::FETCH_ALL,
+                array(
+                    ':search_query' => '%' . $name . '%'
+                )
+            );
+        }
+        catch(DBException $e)
+        {
+            throw new AddonException(htmlspecialchars(_('Search failed!')));
+        }
+
+        $return = array();
+        foreach($addons as $addon)
+        {
+            $return[]= $addon["name"];
+        }
+
+        return $return;
+    }
+
+    /**
      * Set the add-on's description
      *
      * @param string $description

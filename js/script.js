@@ -46,6 +46,11 @@ $(document).ready(function() {
 
         return false;
     });
+
+
+
+
+    // TODO separete js scripts depending of page
 });
 
 function loadContentWithAjax(selector, url_to_load, url_get_params, callback)
@@ -77,6 +82,7 @@ function loadAddon(id, page) {
 function loadFrame(id, page, value) {
     var panelDiv = document.getElementById('right-content_body');
     panelDiv.innerHTML = '<div id="loading"></div>';
+
     $.get(page, {id: id, value: value},
         function (data) {
             $("#right-content_body").html(data);

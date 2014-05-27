@@ -72,6 +72,7 @@ else
 define("SITE_ROOT", "http://stkaddons.net/");
 define("DOWNLOAD_LOCATION", SITE_ROOT . 'upload/');
 define("CACHE_LOCATION", SITE_ROOT . 'assets/temp/');
+define("BUGS_LOCATION", SITE_ROOT . 'bugs/');
 
 define("NEWS_XM_LOCATION", DOWNLOAD_LOCATION . "xml/news.xml");
 define("ASSETS_XML_LOCATION", DOWNLOAD_LOCATION . "xml/assets.xml");
