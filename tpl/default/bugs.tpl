@@ -8,14 +8,15 @@
 
     <div class="row">
         <div class="col-md-10">
-            <form class="form-inline center-block" role="form">
+            <form class="form-inline center-block" role="form" id="bug-search">
                 <div class="form-group">
-                    <input type="text" class="form-control input-lg" id="bug-search"
-                           placeholder="Enter bug id or bug title">
+                    <input type="hidden" name="action" value="search">
+                    <input type="text" class="form-control input-lg" id="bug-search" name="search-title"
+                           placeholder="Enter bug title">
                 </div>
                 <div class="form-group">
                     <label>
-                        <select class="form-control input-lg">
+                        <select class="form-control input-lg" name="search-filter">
                             <option value="all" selected>{t}All{/t}</option>
                             <option value="open">{t}Open{/t}</option>
                             <option value="closed">{t}Closed{/t}</option>
@@ -24,8 +25,7 @@
                 </div>
                 <div class="form-group">
                     <label class="checkbox-inline">
-                        <input type="checkbox" id="search-description" name="search-description"
-                               value="description">{t}Search Description{/t}
+                        <input type="checkbox" id="search-description" name="search-description">{t}Search Description{/t}
                     </label>
                 </div>
                 <button type="submit" class="btn btn-info btn-lg">{t}Search{/t}</button>

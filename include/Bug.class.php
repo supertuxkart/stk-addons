@@ -183,6 +183,58 @@ class Bug
         return $bugs;
     }
 
+    public static function search($search_term, $status = "all", $search_description = false)
+    {
+        try
+        {
+            if($search_description)
+            {
+                $query = "SELECT * FROM `" . DB_PREFIX . "bugs` WHERE (`title` LIKE :search_term OR `description` LIKE :search_term)";
+            }
+            else
+            {
+                $query = "SELECT * FROM `" . DB_PREFIX . "bugs` WHERE (`title` LIKE :search_term)";
+            }
+
+            switch($status)
+            {
+                case "all";
+                    break;
+                case "open":
+                    $query .= " AND `close_id` IS NULL";
+                    break;
+                case "closed":
+                    $query .= " AND `close_id` is NOT NULL";
+                    break;
+                default:
+                    if(DEBUG_MODE)
+                    {
+                        throw new InvalidArgumentException(sprintf("status = %s is invalid", $status));
+                    }
+                    break;
+            }
+
+            $bugs = DBConnection::get()->query(
+                $query,
+                DBConnection::FETCH_ALL,
+                array(":search_term" => '%' . $search_term . '%')
+            );
+
+        }
+        catch(DBException $e)
+        {
+            if (DEBUG_MODE)
+            {
+                throw new BugException("Error on selecting all search bugs");
+            }
+
+            return array();
+        }
+
+        return $bugs;
+
+    }
+
     /**
      * Factory method to build a Bug by id
      *

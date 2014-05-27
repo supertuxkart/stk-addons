@@ -273,6 +273,41 @@ class Validate
                 _h('Please contact a website administrator.')
             );
         }
+    }
 
+    /**
+     * Check if an array has multiple keys, return the error messages
+     *
+     * @param array $pool the array to check agains
+     * @param array $params the keys to check
+     * @param bool  $checkEmpty
+     *
+     * @return array the error array
+     */
+    public static function ensureInput(array $pool, array $params, $checkEmpty = true)
+    {
+        $errors = array();
+
+        foreach($params as $param)
+        {
+            echo $param;
+            if(!isset($pool[$param]))
+            {
+                if($checkEmpty)
+                {
+                    if(empty($pool[$param]))
+                    {
+                        $errors[] = sprintf("param = %s is not set or empty", $param);
+                    }
+                }
+                else
+                {
+                    $errors[] = sprintf("param = %s is not set", $param);
+                }
+            }
+        }
+
+
+        return $errors;
     }
 }

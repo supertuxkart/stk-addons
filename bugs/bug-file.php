@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
 $tpl_bug_file = new StkTemplate("bug-file.tpl");
@@ -28,8 +29,6 @@ if(!User::hasPermission(AccessControl::PERM_ADD_BUG))
     echo $tpl_bug_file;
     exit;
 }
-
-
 
 $tpl_bug_file->assign("bug", $bug_file_data);
 echo $tpl_bug_file;
