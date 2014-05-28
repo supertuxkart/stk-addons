@@ -242,6 +242,19 @@ function _h($message)
     return htmlspecialchars(_($message));
 }
 
+
+/**
+ * Macro function for htmlspecialchar()
+ *
+ * @param $message
+ *
+ * @return string
+ */
+function h($message)
+{
+    return htmlspecialchars($message);
+}
+
 /**
  * @param string $subject
  * @param string $message_html

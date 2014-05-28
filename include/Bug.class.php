@@ -78,7 +78,7 @@ class Bug
      */
     public function getCloseReason()
     {
-        return $this->bugData["close_reason"];
+        return h($this->bugData["close_reason"]);
     }
 
     /**
@@ -110,7 +110,7 @@ class Bug
      */
     public function getTitle()
     {
-        return $this->bugData["title"];
+        return h($this->bugData["title"]);
     }
 
     /**
@@ -118,7 +118,7 @@ class Bug
      */
     public function getDescription()
     {
-        return $this->bugData["description"];
+        return h($this->bugData["description"]);
     }
 
     /**
@@ -145,7 +145,7 @@ class Bug
         }
         catch(DBException $e)
         {
-            throw new BugException(htmlspecialchars(
+            throw new BugException(h(
                 _("Tried to see if a bug exists.") . ' ' .
                 _('Please contact a website administrator.')
             ));
@@ -174,7 +174,7 @@ class Bug
         {
             if (DEBUG_MODE)
             {
-                throw new BugException("Error on selecting all bugs");
+                throw new BugException(_h("Error on selecting all bugs"));
             }
 
             return array();
@@ -264,7 +264,7 @@ class Bug
         }
         catch(DBException $e)
         {
-            throw new BugException(htmlspecialchars(
+            throw new BugException(h(
                 _("Tried to see if a bug exists.") . ' ' .
                 _('Please contact a website administrator.')
             ));

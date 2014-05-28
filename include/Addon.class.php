@@ -26,87 +26,87 @@ class Addon
     /**
      * @var array
      */
-    private static $allowedTypes = array('karts', 'tracks', 'arenas');
+    protected static $allowedTypes = array('karts', 'tracks', 'arenas');
 
     /**
      * @var string
      */
-    private $type;
+    protected $type;
 
     /**
      * @var bool|string
      */
-    private $id;
+    protected $id;
 
     /**
      * @var int
      */
-    private $uploaderID;
+    protected $uploaderID;
 
     /**
      * @var int
      */
-    private $image = 0;
+    protected $image = 0;
 
     /**
      * @var int
      */
-    private $icon = 0;
+    protected $icon = 0;
 
     /**
      * @var string
      */
-    private $name;
+    protected $name;
 
     /**
      * @var int
      */
-    private $uploaderId;
+    protected $uploaderId;
 
     /**
      * @var
      */
-    private $creationDate;
+    protected $creationDate;
 
     /**
      * @var string
      */
-    private $designer;
+    protected $designer;
 
     /**
      * @var string
      */
-    private $description;
+    protected $description;
 
     /**
      * @var string
      */
-    private $license;
+    protected $license;
 
     /**
      * @var string
      */
-    private $permalink;
+    protected $permalink;
 
     /**
      * @var array
      */
-    private $revisions = array();
+    protected $revisions = array();
 
     /**
      * @var
      */
-    private $latestRevision;
+    protected $latestRevision;
 
     /**
      * @var int
      */
-    private $minInclude;
+    protected $minInclude;
 
     /**
      * @var int
      */
-    private $maxInclude;
+    protected $maxInclude;
 
     /**
      * Instance constructor
@@ -119,40 +119,39 @@ class Addon
     {
         $this->id = Addon::cleanId($id);
 
+        // get addon data
         try
         {
-            // TODO select only the first result
-            $result = DBConnection::get()->query(
-                'SELECT `type`, `name`, `uploader`, `creation_date`,
-                `designer`, `description`, `license`, `min_include_ver`, `max_include_ver`
+            $addon = DBConnection::get()->query(
+                'SELECT *
                 FROM `' . DB_PREFIX . 'addons`
                 WHERE `id` = :id',
-                DBConnection::FETCH_ALL,
+                DBConnection::FETCH_FIRST,
                 array(':id' => (string)$this->id)
             );
         }
         catch(DBException $e)
         {
-            throw new AddonException('Failed to read the requested add-on\'s information.');
+            throw new AddonException(_h('Failed to read the requested add-on\'s information.'));
         }
 
-        if (empty($result))
+        if (empty($addon))
         {
-            throw new AddonException(htmlspecialchars(_('The requested add-on does not exist.')));
+            throw new AddonException(_h('The requested add-on does not exist.'));
         }
 
-        $this->type = $result[0]['type'];
-        $this->name = $result[0]['name'];
-        $this->uploaderId = $result[0]['uploader'];
-        $this->creationDate = $result[0]['creation_date'];
-        $this->designer = $result[0]['designer'];
-        $this->description = $result[0]['description'];
-        $this->license = $result[0]['license'];
+        $this->type = $addon['type'];
+        $this->name = $addon['name'];
+        $this->uploaderId = $addon['uploader'];
+        $this->creationDate = $addon['creation_date'];
+        $this->designer = $addon['designer'];
+        $this->description = $addon['description'];
+        $this->license = $addon['license'];
         $this->permalink = SITE_ROOT . 'addons.php?type=' . $this->type . '&amp;name=' . $this->id;
-        $this->minInclude = $result[0]['min_include_ver'];
-        $this->maxInclude = $result[0]['max_include_ver'];
+        $this->minInclude = $addon['min_include_ver'];
+        $this->maxInclude = $addon['max_include_ver'];
 
-        // Get revisions
+        // get revisions
         try
         {
             $revisions = DBConnection::get()->query(
@@ -166,12 +165,12 @@ class Addon
         }
         catch(DBException $e)
         {
-            throw new AddonException('Failed to read the requested add-on\'s revision information.');
+            throw new AddonException(_h('Failed to read the requested add-on\'s revision information.'));
         }
 
         if (empty($revisions))
         {
-            throw new AddonException('No revisions of this add-on exist. This should never happen.');
+            throw new AddonException(_h('No revisions of this add-on exist. This should never happen.'));
         }
 
         foreach ($revisions as $rev)
@@ -200,11 +199,11 @@ class Addon
      * Create an add-on revision
      *
      * @param array  $attributes
-     * @param string $fileid
+     * @param string $file_id
      *
      * @throws AddonException
      */
-    public function createRevision($attributes, $fileid)
+    public function createRevision($attributes, $file_id)
     {
         global $moderator_message;
         foreach ($attributes['missing_textures'] as $tex)
@@ -218,7 +217,7 @@ class Addon
         // Check if logged in
         if (!User::isLoggedIn())
         {
-            throw new AddonException('You must be logged in to create an add-on revision.');
+            throw new AddonException(_h('You must be logged in to create an add-on revision.'));
         }
 
         // Make sure an add-on file with this id does not exist
@@ -227,11 +226,11 @@ class Addon
             $rows = DBConnection::get()->query(
                 'SELECT * FROM ' . DB_PREFIX . $this->type . '_revs WHERE `id` = :id',
                 DBConnection::ROW_COUNT,
-                array(':id' => (string)$fileid)
+                array(':id' => (string)$file_id)
             );
             if ($rows)
             {
-                throw new AddonException(htmlspecialchars(_('The file you are trying to create already exists.')));
+                throw new AddonException(_h('The file you are trying to create already exists.'));
             }
         }
         catch(DBException $e)
@@ -242,9 +241,7 @@ class Addon
         // Make sure user has permission to upload a new revision for this add-on
         if (User::getId() !== $this->uploaderId && !User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
         {
-            throw new AddonException(htmlspecialchars(
-                _('You do not have the necessary permissions to perform this action.')
-            ));
+            throw new AddonException(_h('You do not have the necessary permissions to perform this action.'));
         }
 
         // Update the addon name
@@ -259,7 +256,8 @@ class Addon
         // Compare with new image
         $new_image = File::getPath($attributes['image']);
         $new_hash = md5_file(UP_PATH . $new_image);
-        for ($i = 0; $i < count($images); $i++)
+        $images_count = count($images);
+        for ($i = 0; $i < $images_count; $i++)
         {
             // Skip image that was just uploaded
             if ($images[$i]['id'] === $attributes['image'])
@@ -282,7 +280,7 @@ class Addon
         // Add revision entry
         $fields = array('id', 'addon_id', 'fileid', 'revision', 'format', 'image', 'status');
         $values = array(
-            $fileid,
+            $file_id,
             $this->id,
             $attributes['fileid'],
             $rev,
@@ -308,7 +306,7 @@ class Addon
         }
         catch(DBException $e)
         {
-            throw new AddonException('Failed to create add-on revision.');
+            throw new AddonException(_h('Failed to create add-on revision.'));
         }
 
         // Send mail to moderators
@@ -330,14 +328,12 @@ class Addon
     {
         if (!User::isLoggedIn())
         {
-            throw new AddonException(htmlentities(_('You must be logged in to perform this action.')));
+            throw new AddonException(_h('You must be logged in to perform this action.'));
         }
 
-        if (User::hasPermission(AccessControl::PERM_EDIT_ADDONS) !== true && User::getId() !== $this->uploaderId)
+        if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS) && User::getId() !== $this->uploaderId)
         {
-            throw new AddonException(htmlentities(
-                _('You do not have the necessary permissions to perform this action.')
-            ));
+            throw new AddonException(_h('You do not have the necessary permissions to perform this action.'));
         }
 
         // Remove cache files for this add-on
@@ -358,16 +354,14 @@ class Addon
         }
         catch(DBException $e)
         {
-            throw new AddonException(htmlspecialchars(_('Failed to find files associated with this addon.')));
+            throw new AddonException(_h('Failed to find files associated with this addon.'));
         }
 
         foreach ($files as $file)
         {
             if (file_exists(UP_PATH . $file['file_path']) && !unlink(UP_PATH . $file['file_path']))
             {
-                echo '<span class="error">' . htmlspecialchars(
-                        _('Failed to delete file:')
-                    ) . ' ' . $file['file_path'] . '</span><br />';
+                echo '<span class="error">' . _h('Failed to delete file:') . ' ' . $file['file_path'] . '</span><br>';
             }
         }
 
@@ -385,9 +379,7 @@ class Addon
         }
         catch(DBException $e)
         {
-            echo '<span class="error">' . htmlspecialchars(
-                    _('Failed to remove file records for this addon.')
-                ) . '</span><br />';
+            echo '<span class="error">' . _h('Failed to remove file records for this addon.') . '</span><br>';
         }
 
         // Remove addon entry
@@ -405,7 +397,7 @@ class Addon
         }
         catch(DBException $e)
         {
-            throw new AddonException(htmlspecialchars(_('Failed to remove addon.')));
+            throw new AddonException(_h('Failed to remove addon.'));
         }
 
         writeAssetXML();
@@ -424,14 +416,12 @@ class Addon
     {
         if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS) && $this->uploaderID !== User::getId())
         {
-            throw new AddonException(htmlspecialchars(
-                _('You do not have the necessary permissions to perform this action.')
-            ));
+            throw new AddonException(_h('You do not have the necessary permissions to perform this action.'));
         }
 
         if (!File::delete($file_id))
         {
-            throw new AddonException(htmlspecialchars(_('Failed to delete file.')));
+            throw new AddonException(_h('Failed to delete file.'));
         }
     }
 
@@ -446,32 +436,30 @@ class Addon
     {
         if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS) && $this->uploaderID !== User::getId())
         {
-            throw new AddonException(htmlspecialchars(
-                _('You do not have the necessary permissions to perform this action.')
-            ));
+            throw new AddonException(_h('You do not have the necessary permissions to perform this action.'));
         }
         $rev = (int)$rev;
         if ($rev < 1 || !isset($this->revisions[$rev]))
         {
-            throw new AddonException(htmlspecialchars(_('The revision you are trying to delete does not exist.')));
+            throw new AddonException(_h('The revision you are trying to delete does not exist.'));
         }
         if (count($this->revisions) === 1)
         {
-            throw new AddonException(htmlspecialchars(_('You cannot delete the last revision of an add-on.')));
+            throw new AddonException(_h('You cannot delete the last revision of an add-on.'));
         }
         if (($this->revisions[$rev]['status'] & F_LATEST))
         {
-            throw new AddonException(htmlspecialchars(
-                _(
+            throw new AddonException(
+                _h(
                     'You cannot delete the latest revision of an add-on. Please mark a different revision to be the latest revision first.'
                 )
-            ));
+            );
         }
 
         // Queue addon file for deletion
         if (!File::queueDelete($this->revisions[$rev]['file']))
         {
-            throw new AddonException(htmlspecialchars(_('The add-on file could not be queued for deletion.')));
+            throw new AddonException(_h('The add-on file could not be queued for deletion.'));
         }
 
         // Remove the revision record from the database
@@ -489,7 +477,7 @@ class Addon
         }
         catch(DBException $e)
         {
-            throw new AddonException(htmlspecialchars(_('The add-on revision could not be deleted.')));
+            throw new AddonException(_h('The add-on revision could not be deleted.'));
         }
 
         Log::newEvent('Deleted revision ' . $rev . ' of \'' . $this->name . '\'');
@@ -514,7 +502,7 @@ class Addon
      */
     public function getDescription()
     {
-        return htmlspecialchars($this->description);
+        return h($this->description);
     }
 
     /**
@@ -526,7 +514,7 @@ class Addon
     {
         if ($this->designer === null)
         {
-            return htmlspecialchars(_('Unknown'));
+            return _h('Unknown');
         }
 
         return $this->designer;
@@ -569,7 +557,7 @@ class Addon
      */
     public function getLicense()
     {
-        return $this->license;
+        return h($this->license);
     }
 
     /**
@@ -581,6 +569,16 @@ class Addon
     {
         // Don't rewrite here, because we might be editing the URL later
         return $this->permalink;
+    }
+
+    /**
+     * Get the id of the uploader
+     *
+     * @return int the id of the uploader
+     */
+    public function getUploader()
+    {
+        return $this->uploaderId;
     }
 
     /**
@@ -596,7 +594,7 @@ class Addon
     {
         if (!is_int($revision))
         {
-            throw new AddonException('An invalid revision was provided.');
+            throw new AddonException(_h('An invalid revision was provided.'));
         }
 
         // Look up file ID
@@ -616,12 +614,12 @@ class Addon
         }
         catch(DBException $e)
         {
-            throw new AddonException('Failed to look up file ID');
+            throw new AddonException(_h('Failed to look up file ID'));
         }
 
         if (empty($file_id_lookup))
         {
-            throw new AddonException('There is no add-on found with the specified revision number.');
+            throw new AddonException(_h('There is no add-on found with the specified revision number.'));
         }
 
         $file_id = $file_id_lookup['fileid'];
@@ -641,12 +639,12 @@ class Addon
         }
         catch(DBException $e)
         {
-            throw new AddonException('Failed to search for the file in the database.');
+            throw new AddonException(_h('Failed to search for the file in the database.'));
         }
 
         if (empty($file))
         {
-            throw new AddonException('The requested file does not have an associated file record.');
+            throw new AddonException(_h('The requested file does not have an associated file record.'));
         }
 
         return $file['file_path'];
@@ -704,7 +702,7 @@ class Addon
         }
         catch(DBException $e)
         {
-            throw new AddonException('DB error when fetching images associated with this add-on.');
+            throw new AddonException(_h('DB error when fetching images associated with this add-on.'));
         }
 
         $return = array();
@@ -809,9 +807,7 @@ class Addon
             (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS) && $this->uploaderId !== User::getId())
         )
         {
-            throw new AddonException(htmlspecialchars(
-                _('You do not have the neccessary permissions to perform this action.')
-            ));
+            throw new AddonException(_h('You do not have the neccessary permissions to perform this action.'));
         }
 
         try
@@ -829,7 +825,7 @@ class Addon
         }
         catch(DBException $e)
         {
-            throw new AddonException(htmlspecialchars(_('Failed to update the description record for this add-on.')));
+            throw new AddonException(_h('Failed to update the description record for this add-on.'));
         }
 
         writeAssetXML();
@@ -850,9 +846,7 @@ class Addon
             (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS) && $this->uploaderId !== User::getId())
         )
         {
-            throw new AddonException(htmlspecialchars(
-                _('You do not have the neccessary permissions to perform this action.')
-            ));
+            throw new AddonException(_h('You do not have the neccessary permissions to perform this action.'));;
         }
 
         try
@@ -870,7 +864,7 @@ class Addon
         }
         catch(DBException $e)
         {
-            throw new AddonException(htmlspecialchars(_('Failed to update the designer record for this add-on.')));
+            throw new AddonException(_h('Failed to update the designer record for this add-on.'));
         }
 
         writeAssetXML();
@@ -890,9 +884,7 @@ class Addon
     {
         if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS) && $this->uploaderId !== User::getId())
         {
-            throw new AddonException(htmlspecialchars(
-                _('You do not have the neccessary permissions to perform this action.')
-            ));
+            throw new AddonException(_h('You do not have the neccessary permissions to perform this action.'));
         }
 
         try
@@ -911,7 +903,7 @@ class Addon
         }
         catch(DBException $e)
         {
-            throw new AddonException(htmlspecialchars(_('Failed to update the image record for this add-on.')));
+            throw new AddonException(_h('Failed to update the image record for this add-on.'));
         }
     }
 
@@ -925,9 +917,7 @@ class Addon
     {
         if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
         {
-            throw new AddonException(htmlspecialchars(
-                _('You do not have the neccessary permissions to perform this action.')
-            ));
+            throw new AddonException(_h('You do not have the neccessary permissions to perform this action.'));
         }
 
         try
@@ -952,7 +942,7 @@ class Addon
         }
         catch(DBException $e)
         {
-            throw new AddonException('An error occurred while setting the min/max include versions.');
+            throw new AddonException(_h('An error occurred while setting the min/max include versions.'));
         }
     }
 
@@ -980,7 +970,7 @@ class Addon
         }
         catch(DBException $e)
         {
-            throw new AddonException(htmlspecialchars(_('Failed to update the license record for this add-on.')));
+            throw new AddonException(_h('Failed to update the license record for this add-on.'));
         }
 
         $this->license = $license;
@@ -1010,7 +1000,7 @@ class Addon
         }
         catch(DBException $e)
         {
-            throw new AddonException(htmlspecialchars(_('Failed to update the name record for this add-on.')));
+            throw new AddonException(_h('Failed to update the name record for this add-on.'));
         }
 
         $this->name = $name;
@@ -1027,9 +1017,7 @@ class Addon
     {
         if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
         {
-            throw new AddonException(htmlspecialchars(
-                _('You do not have the neccessary permissions to perform this action.')
-            ));
+            throw new AddonException(_h('You do not have the neccessary permissions to perform this action.'));
         }
 
         $fields = explode(',', $fields);
@@ -1066,7 +1054,7 @@ class Addon
             }
             catch(DBException $e)
             {
-                throw new AddonException('Failed to write add-on status.');
+                throw new AddonException(_h('Failed to write add-on status.'));
             }
         }
 
@@ -1096,7 +1084,7 @@ class Addon
         }
         catch(DBException $e)
         {
-            throw new AddonException('Failed to find user record.');
+            throw new AddonException(_h('Failed to find user record.'));
         }
 
         try
@@ -1109,16 +1097,6 @@ class Addon
             throw new AddonException('Failed to send email to user. ' . $e->getMessage());
         }
         Log::newEvent("Added notes to '{$this->name}'");
-    }
-
-    /**
-     * Get the id of the uploader
-     *
-     * @return int the id of the uploader
-     */
-    public function getUploader()
-    {
-        return $this->uploaderId;
     }
 
     /**
@@ -1264,7 +1242,7 @@ class Addon
             }
             catch(DBException $e)
             {
-                throw new AddonException('Failed to write add-on status.');
+                throw new AddonException(_h('Failed to write add-on status.'));
             }
         }
         writeAssetXML();
@@ -1363,7 +1341,7 @@ class Addon
         }
         catch(DBException $e)
         {
-            throw new AddonException(htmlspecialchars(_('Search failed!')));
+            throw new AddonException(_h('Search failed!'));
         }
 
         return $addons;
@@ -1393,13 +1371,13 @@ class Addon
         }
         catch(DBException $e)
         {
-            throw new AddonException(htmlspecialchars(_('Search failed!')));
+            throw new AddonException(_h('Search failed!'));
         }
 
         $return = array();
-        foreach($addons as $addon)
+        foreach ($addons as $addon)
         {
-            $return[]= $addon["name"];
+            $return[] = $addon["name"];
         }
 
         return $return;
@@ -1516,7 +1494,7 @@ class Addon
         foreach ($attributes['missing_textures'] as $tex)
         {
             $moderator_message .= "Texture not found: $tex\n";
-            echo '<span class="warning">' . htmlspecialchars(
+            echo '<span class="warning">' . h(
                     sprintf(_('Texture not found: %s'), $tex)
                 ) . '</span><br />';
         }
@@ -1524,12 +1502,12 @@ class Addon
         // Check if logged in
         if (!User::isLoggedIn())
         {
-            throw new AddonException('You must be logged in to create an add-on.');
+            throw new AddonException(_h('You must be logged in to create an add-on.'));
         }
 
         if (!Addon::isAllowedType($type))
         {
-            throw new AddonException('An invalid add-on type was provided.');
+            throw new AddonException(_h('An invalid add-on type was provided.'));
         }
 
         $id = Addon::generateId($type, $attributes['name']);
@@ -1537,9 +1515,9 @@ class Addon
         // Make sure the add-on doesn't already exist
         if (Addon::exists($id))
         {
-            throw new AddonException(htmlspecialchars(
-                _('An add-on with this ID already exists. Please try to upload your add-on again later.')
-            ));
+            throw new AddonException(
+                _h('An add-on with this ID already exists. Please try to upload your add-on again later.')
+            );
         }
 
         // Make sure no revisions with this id exists
@@ -1554,7 +1532,7 @@ class Addon
             );
             if ($rows)
             {
-                throw new AddonException(htmlspecialchars(_('The add-on you are trying to create already exists.')));
+                throw new AddonException(_h('The add-on you are trying to create already exists.'));
             }
         }
         catch(DBException $e)
@@ -1563,7 +1541,7 @@ class Addon
         }
 
 
-        echo htmlspecialchars(_('Creating a new add-on...')) . '<br />';
+        echo _h('Creating a new add-on...') . '<br>';
         $fields = array('id', 'type', 'name', 'uploader', 'designer', 'license');
         $values = array(
             $id,
@@ -1591,7 +1569,7 @@ class Addon
         }
         catch(DBException $e)
         {
-            throw new AddonException(htmlspecialchars(_('Your add-on could not be uploaded.')));
+            throw new AddonException(_h('Your add-on could not be uploaded.'));
         }
 
 
