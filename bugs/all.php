@@ -20,10 +20,10 @@
 
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
-$tplAll = new StkTemplate('bugs-all.tpl');
-$tplAllData = array(
+$tpl = new StkTemplate('bugs-all.tpl');
+$tplData = array(
     "items" => Bug::getAllData()
 );
 
-$tplAll->assign("bugs", $tplAllData);
-echo $tplAll;
+$tpl->assign("bugs", $tplData);
+echo $tpl;

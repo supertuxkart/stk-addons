@@ -11,7 +11,7 @@
             <form class="form-inline center-block" role="form" id="bug-search">
                 <div class="form-group">
                     <input type="hidden" name="action" value="search">
-                    <input type="text" class="form-control input-lg" id="bug-search" name="search-title"
+                    <input type="text" class="form-control input-lg" id="search-title" name="search-title"
                            placeholder="Enter bug title">
                 </div>
                 <div class="form-group">

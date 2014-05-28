@@ -20,15 +20,26 @@
 
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
-$tpl = new StkTemplate("bugs-add.tpl");
-$tplData = array("");
+$bug_id = isset($_GET["bug_id"]) ? $_GET["bug_id"] : "";
 
-// check permission
-if(!User::hasPermission(AccessControl::PERM_ADD_BUG))
+if(empty($bug_id))
 {
-    echo $tpl;
+    echo "No bug id provided";
     exit;
 }
+
+if(!Bug::bugExists($bug_id))
+{
+    echo "Bug $bug_id does not exist";
+    exit;
+}
+
+$tpl = new StkTemplate("bugs-view.tpl");
+$bug = Bug::get($_GET["bug_id"]);
+$tplData = array(
+    "title" => $bug->getTitle(),
+    "user"  => User::getFromID($bug->getUserId())->getUserName()
+);
 
 $tpl->assign("bug", $tplData);
 echo $tpl;

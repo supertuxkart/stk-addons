@@ -76,7 +76,7 @@ function showAlert(options) {
         dismiss     : options.dismiss || true,
         auto_dismiss: options.auto_dismiss || true,
         interval    : options.interval || 4000
-    }
+    };
 
     // create alert
     var divClass = "alert " + options.type + (options.dismiss ? " alert-dismissable" : "");

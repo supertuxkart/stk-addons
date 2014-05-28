@@ -22,10 +22,18 @@ require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 $tpl = new StkTemplate('bugs-index.tpl');
 $tpl->assign('title', htmlspecialchars(_('STK Add-ons') . ' | ' . _('Bugs')));
 $tpl->addScriptInclude("bugs.js");
+$tplData = array();
 
-$tplData = array(
-    "content" => ob_get_require_once(BUGS_PATH . "all.php")
-);
+
+if(isset($_GET["bug_id"]))
+{
+    $tplData["content"] = ob_get_require_once(BUGS_PATH . "view.php");
+}
+else
+{
+    $tplData["content"] = ob_get_require_once(BUGS_PATH . "all.php");
+}
+
 
 $tpl->assign("bugs", $tplData);
 echo $tpl;

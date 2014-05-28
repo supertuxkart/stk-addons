@@ -15,9 +15,9 @@
         <tbody>
         {foreach $bugs.items as $item}
             <tr>
-                <th><a href="#">{$item.id}</a></th>
+                <th class="bugs" data-id="{$item.id}"><a href="#">{$item.id}</a></th>
                 <th>{$item.addon_id}</th>
-                <th><a href="#">{$item.title|truncate:30}</a></th>
+                <th class="bugs" data-id="{$item.id}"><a href="#">{$item.title|truncate:30}</a></th>
                 <th>{$item.date_edit}</th>
             </tr>
         {/foreach}
