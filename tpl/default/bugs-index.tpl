@@ -32,40 +32,24 @@
             </form>
         </div>
         <div class="col-md-2">
-            <button class="btn btn-default btn-lg" id="btn-file-a-bug">
+            <button class="btn btn-default btn-lg" id="btn-bugs-add">
                 {t}File a bug{/t}
+            </button>
+            <button class="btn btn-default btn-lg hide" id="btn-bugs-back">
+                {t}Back{/t}
             </button>
         </div>
     </div>
     <br><br>
+    <div class="alert alert-danger alert-dismissable hide" id="bugs-alert">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        Oh snap
+    </div>
+    <div id="alert-container">
 
+    </div>
     <div id="bug-content">
-        {if empty($bugs.items)}
-            <div class="alert alert-info">
-                <strong>{t}Empty!{/t}</strong> {t}There are no bugs :){/t}
-            </div>
-        {else}
-            <table class="table table-hover">
-                <thead>
-                <tr>
-                    <th>#Id</th>
-                    <th>{t}Addon{/t}</th>
-                    <th>{t}Title{/t}</th>
-                    <th>{t}Changed{/t}</th>
-                </tr>
-                </thead>
-                <tbody>
-                {foreach $bugs.items as $item}
-                    <tr>
-                        <th><a href="#">{$item.id}</a></th>
-                        <th>{$item.addon_id}</th>
-                        <th><a href="#">{$item.title|truncate:30}</a></th>
-                        <th>{$item.date_edit}</th>
-                    </tr>
-                {/foreach}
-                </tbody>
-            </table>
-        {/if}
+        {$bugs.content}
     </div>
 </div>
 {include file=#footer#}

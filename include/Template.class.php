@@ -75,7 +75,7 @@ class Template
         {
             throw new TemplateException('You cannot change the template after a template file is selected.');
         }
-        $this->directory = Template::getTemplateDir($template_name);
+        $this->directory = static::getTemplateDir($template_name);
         $this->smarty->setTemplateDir($this->directory);
     }
 

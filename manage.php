@@ -171,9 +171,7 @@ catch(Exception $e)
 $panel["status"] = $status_content;
 
 // right panel
-ob_start();
-include(ROOT_PATH . 'manage-panel.php');
-$panel['right'] = ob_get_clean();
+$panel['right'] = ob_get_require_once(ROOT_PATH . 'manage-panel.php');
 
 // output the view
 $tpl->assign('panel', $panel);

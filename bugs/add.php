@@ -20,8 +20,8 @@
 
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
-$tpl_bug_file = new StkTemplate("bug-file.tpl");
-$bug_file_data = array("stuff" => "fdfs");
+$tpl_bug_file = new StkTemplate("bugs-add.tpl");
+$bug_file_data = array("");
 
 // check permission
 if(!User::hasPermission(AccessControl::PERM_ADD_BUG))

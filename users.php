@@ -122,9 +122,7 @@ $left_tpl->assign('items', $templateUsers);
 $panel['left'] = (string)$left_tpl;
 
 // right panel
-ob_start();
-include(ROOT_PATH . 'users-panel.php');
-$panel['right'] = ob_get_clean();
+$panel['right'] = ob_get_require_once(ROOT_PATH . 'users-panel.php');
 
 // output the view
 $tpl->assign('panel', $panel);

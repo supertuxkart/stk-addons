@@ -73,6 +73,8 @@ class AccessControl
     }
 
     /**
+     * Retrieve all the roles available from the database
+     *
      * @return array
      * @throws UserException
      */
@@ -81,8 +83,6 @@ class AccessControl
         // retrieve from cache
         if (!empty(static::$roles))
         {
-            echo "From cache";
-
             return static::$roles;
         }
 

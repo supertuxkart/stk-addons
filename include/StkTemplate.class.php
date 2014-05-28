@@ -20,6 +20,7 @@
 
 require_once(INCLUDE_PATH . 'locale.php');
 
+// TODO compress assets and html
 /**
  * Customization of generic template class for main stkaddons pages
  *
@@ -44,7 +45,7 @@ class StkTemplate extends Template
     private $meta_desc;
 
     /**
-     * Contains the script inlines
+     * Contains the script inline
      * @var array
      */
     private $script_inline = array(
@@ -53,16 +54,28 @@ class StkTemplate extends Template
     );
 
     /**
-     * Contains the script includes
+     * Contains the script includes defined statically
      * @var array
      */
     private $script_includes = array();
 
     /**
-     * Contains the css files
+     * Contains the script includes defined dynamically
+     * @var array
+     */
+    private $user_script_includes = array();
+
+    /**
+     * Contains the css files defined statically
      * @var array
      */
     private $css_includes = array();
+
+    /**
+     * Contains the css files defined dynamically
+     * @var array
+     */
+    private $user_css_includes = array();
 
     /**
      * Setup the header meta tags and js includes, the top menu and the language menu
@@ -100,14 +113,14 @@ class StkTemplate extends Template
             ),
             array(
                 "media" => "screen",
-                "href"  => SITE_ROOT . 'css/screen.css'
+                "href"  => CSS_LOCATION . 'screen.css'
             ),
             array(
                 "media" => "print",
-                "href"  => SITE_ROOT . 'css/print.css'
+                "href"  => CSS_LOCATION . 'print.css'
             )
         );
-        $this->smarty->assign("css_includes", $this->css_includes);
+        $this->smarty->assign("css_includes", array_merge($this->css_includes, $this->user_css_includes));
     }
 
     /**
@@ -126,10 +139,11 @@ class StkTemplate extends Template
             array('src' => '//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js'),
             array('src' => "//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/js/bootstrap.min.js"),
             array('src' => "//cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.10.2/typeahead.bundle.min.js"),
-            array('src' => SITE_ROOT . 'js/jquery.newsticker.js'),
-            array('src' => SITE_ROOT . 'js/script.js')
+            array('src' => JS_LOCATION . 'jquery.newsticker.js'),
+            array('src' => JS_LOCATION . 'script.js')
         );
-        $this->smarty->assign('script_includes', $this->script_includes);
+
+        $this->smarty->assign('script_includes', array_merge($this->script_includes, $this->user_script_includes));
     }
 
     /**
@@ -139,19 +153,19 @@ class StkTemplate extends Template
     {
         $name = isset($_SESSION['real_name']) ? $_SESSION['real_name'] : "";
         $menu = array(
-            'welcome'  => sprintf(htmlspecialchars(_('Welcome, %s')), $name),
-            'home'     => File::link('index.php', htmlspecialchars(_("Home"))),
-            'login'    => File::link('login.php', htmlspecialchars(_('Login'))),
-            'logout'   => File::link('login.php?action=logout', htmlspecialchars(_('Log out'))),
-            'users'    => File::link('users.php', htmlspecialchars(_('Users'))),
-            'upload'   => File::link('upload.php', htmlspecialchars(_('Upload'))),
-            'manage'   => File::link('manage.php', htmlspecialchars(_('Manage'))),
-            'karts'    => File::link('addons.php?type=karts', htmlspecialchars(_('Karts'))),
-            'tracks'   => File::link('addons.php?type=tracks', htmlspecialchars(_('Tracks'))),
-            'arenas'   => File::link('addons.php?type=arenas', htmlspecialchars(_('Arenas'))),
-            'about'    => File::link('about.php', htmlspecialchars(_('About'))),
-            'privacy'  => File::link('privacy.php', htmlspecialchars(_('Privacy'))),
-            'stk_home' => File::link('http://supertuxkart.sourceforge.net', htmlspecialchars(_('STK Homepage')))
+            'welcome'  => sprintf(_h('Welcome, %s'), $name),
+            'home'     => File::link('index.php', _h("Home")),
+            'login'    => File::link('login.php', _h('Login')),
+            'logout'   => File::link('login.php?action=logout', _h('Log out')),
+            'users'    => File::link('users.php', _h('Users')),
+            'upload'   => File::link('upload.php', _h('Upload')),
+            'manage'   => File::link('manage.php', _h('Manage')),
+            'karts'    => File::link('addons.php?type=karts', _h('Karts')),
+            'tracks'   => File::link('addons.php?type=tracks', _h('Tracks')),
+            'arenas'   => File::link('addons.php?type=arenas', _h('Arenas')),
+            'about'    => File::link('about.php', _h('About')),
+            'privacy'  => File::link('privacy.php', _h('Privacy')),
+            'stk_home' => File::link('http://supertuxkart.sourceforge.net', _h('STK Homepage'))
         );
         $this->smarty->assign('show_welcome', User::isLoggedIn());
         $this->smarty->assign('show_login', !User::isLoggedIn());
@@ -161,6 +175,7 @@ class StkTemplate extends Template
             'show_manage',
             User::hasPermission(AccessControl::PERM_EDIT_ADDONS)
         );
+
         if (basename(get_self()) === 'addons.php')
         {
             $this->smarty->assign('show_karts', !($_GET['type'] == 'karts'));
@@ -182,7 +197,7 @@ class StkTemplate extends Template
     private function setupLanguageMenu()
     {
         // Language menu
-        $this->smarty->assign('lang_menu_lbl', htmlspecialchars(_('Languages')));
+        $this->smarty->assign('lang_menu_lbl', _h('Languages'));
         $langs = array(
             // lang href, position left, position top, text
             array('en_US', 0, 0, 'EN'),
@@ -230,13 +245,13 @@ class StkTemplate extends Template
      * @param string $content the js source code
      * @param string $order   'before' to display before the include script or 'after' to display after
      *
-     * @throws TemplateException on invalid order
+     * @throws InvalidArgumentException on invalid order
      */
-    public function addScriptInline($content, $order = "before")
+    public function addScriptInline($content, $order = "after")
     {
         if (!in_array($order, array(static::ORDER_AFTER, static::ORDER_BEFORE)))
         {
-            throw new TemplateException("Invalid order");
+            throw new InvalidArgumentException("Invalid order");
         }
         $this->script_inline[$order][] = array(
             "content" => $content
@@ -246,12 +261,13 @@ class StkTemplate extends Template
     /**
      * Add a script file to the page
      *
-     * @param string $src the js file location
+     * @param string $src      the js file location
+     * @param string $location the path to get the resource from
      */
-    public function addScriptInclude($src)
+    public function addScriptInclude($src, $location = JS_LOCATION)
     {
-        $this->script_includes[] = array(
-            "src" => $src
+        $this->user_script_includes[] = array(
+            "src" => $location . $src
         );
     }
 
@@ -259,12 +275,13 @@ class StkTemplate extends Template
      * Add a css file to the page
      *
      * @param string $href
+     * @param string $location default path to look to
      * @param string $media
      */
-    public function addCssInclude($href, $media = "all")
+    public function addCssInclude($href, $location = CSS_LOCATION, $media = "")
     {
-        $this->css_includes[] = array(
-            "href"  => $href,
+        $this->user_css_includes[] = array(
+            "href"  => $location . $href,
             "media" => $media
         );
     }
@@ -272,7 +289,7 @@ class StkTemplate extends Template
     /**
      * Set the description meta tag
      *
-     * @param string $desc
+     * @param string $desc the page description content
      */
     public function setMetaDesc($desc)
     {
@@ -285,7 +302,7 @@ class StkTemplate extends Template
      * @param string $target  an destination url
      * @param int    $timeout in seconds
      */
-    public function setMetaRefresh($target, $timeout)
+    public function setMetaRefresh($target, $timeout = 5)
     {
         $this->meta_tags['refresh'] = sprintf('%d;URL=%s', $timeout, $target);
     }

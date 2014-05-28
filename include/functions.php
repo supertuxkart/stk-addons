@@ -19,15 +19,28 @@
  */
 
 /**
- * @return mixed
+ * Get the current running script path
+ *
+ * @return string the full path
  */
 function get_self()
 {
-    $list = get_included_files();
-
-    return $list[0];
+    return $_SERVER["SCRIPT_FILENAME"];
 }
 
+/**
+ * Output buffer a file and return it's content
+ *
+ * @param $path
+ *
+ * @return string
+ */
+function ob_get_require_once($path)
+{
+    ob_start();
+    require_once($path);
+    return  ob_get_clean();
+}
 
 /**
  * @param $nbr

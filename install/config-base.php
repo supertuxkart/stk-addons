@@ -37,6 +37,7 @@ define("TMP_PATH", sys_get_temp_dir() . DS); // define temporary directory path
 define("CACHE_PATH", ROOT_PATH . 'assets' . DS . 'temp' . DS);
 define("UPLOAD_PATH", ROOT_PATH . 'upload' . DS);
 define("UPLOAD_CRON_PATH", UPLOAD_PATH);
+define("BUGS_PATH", ROOT_PATH . "bugs" . DS);
 
 // CAPTCHA properties
 define('CAPTCHA_PUB', ''); // reCAPTCHA public key

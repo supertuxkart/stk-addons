@@ -185,6 +185,11 @@ class Bug
 
     public static function search($search_term, $status = "all", $search_description = false)
     {
+        if(empty($search_term))
+        {
+            return array();
+        }
+
         try
         {
             if($search_description)

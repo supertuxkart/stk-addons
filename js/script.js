@@ -3,13 +3,13 @@ var oldSub = "";
 var oldRoot = "";
 var oldDiv = "";
 
-$(document).ready(function() {
+$(document).ready(function () {
     $("#news-messages").newsTicker();
-    $('#lang-menu > a').click(function() {
+    $('#lang-menu > a').click(function () {
         $('ul.menu_body').slideToggle('medium');
     });
 
-    $('a.addon-list').click(function() {
+    $('a.addon-list').click(function () {
         history.pushState({path: this.path}, '', this.href);
         var url = this.href;
         var addonType = getUrlVars(url)['type'];
@@ -23,7 +23,7 @@ $(document).ready(function() {
         return false;
     });
 
-    $('a.manage-list').click(function() {
+    $('a.manage-list').click(function () {
         history.pushState({path: this.path}, '', this.href);
         var url = this.href;
         var view = getUrlVars(url)['view'];
@@ -32,7 +32,7 @@ $(document).ready(function() {
         return false;
     });
 
-    $('a.user-list').click(function() {
+    $('a.user-list').click(function () {
         history.pushState({path: this.path}, '', this.href);
         var url = this.href;
         var user = getUrlVars(url)['user'];
@@ -41,32 +41,67 @@ $(document).ready(function() {
         return false;
     });
 
-    $("#btn-file-a-bug").click(function() {
-        loadContentWithAjax("#bug-content", siteRoot + 'bugs/bug-file.php');
-
-        return false;
-    });
-
-
-
-
     // TODO separete js scripts depending of page
 });
 
-function loadContentWithAjax(selector, url_to_load, url_get_params, callback)
-{
+
+function loadContentWithAjax(selector, url_to_load, url_get_params, callback) {
     var $selector = $(selector);
     url_get_params = _.isUndefined(url_get_params) ? {} : url_get_params;
 
-    $.get(url_to_load, url_get_params, function (data) {
+    $.get(url_to_load, url_get_params,function (data) {
         $selector.html(data);
-        if(_.isFunction(callback))
-        {
+        if (_.isFunction(callback)) {
             callback(data);
         }
-    }).fail(function(e) {
-        console.error("loadContentWithAjax failed: ");
+    }).fail(function (e) {
+        console.error("loadContentWithAjax failed");
     });
+}
+
+/*
+ Show a twitter bootstrap alert, insert into a container
+ */
+function showAlert(options) {
+    if (!_.isObject(options)) {
+        console.error("options is not an array");
+        return;
+    }
+
+    // define options
+    var options = {
+        $container  : $(options.container),
+        type        : options.type || "alert-info",
+        message     : options.message || "Oh snap alert",
+        dismiss     : options.dismiss || true,
+        auto_dismiss: options.auto_dismiss || true,
+        interval    : options.interval || 4000
+    }
+
+    // create alert
+    var divClass = "alert " + options.type + (options.dismiss ? " alert-dismissable" : "");
+    var $div = $("<div></div>").addClass(divClass);
+
+    // add dismiss button
+    if (options.dismiss) {
+        $div.append('<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>');
+    }
+
+    // add message
+    $div.append(options.message);
+
+    // set timer
+    if (options.auto_dismiss) {
+        setTimeout(function () {
+            options.$container.fadeToggle(1000, function () {
+                options.$container.empty();
+            });
+        }, options.interval);
+    }
+
+    // add to container
+    options.$container.html($div);
+    options.$container.fadeIn(500); // show because of the toggle or other css options
 }
 
 function confirm_delete(url) {
@@ -120,7 +155,8 @@ function textLimit(field, num) {
 }
 
 function addRating(rating, addonId, sel_storage, disp_storage) {
-    loadHTML(siteRoot + 'include/addRating.php?rating=' + encodeURI(rating) + '&addonId=' + encodeURI(addonId), sel_storage);
+    loadHTML(siteRoot + 'include/addRating.php?rating=' + encodeURI(rating) + '&addonId=' + encodeURI(addonId),
+        sel_storage);
     loadHTML(siteRoot + 'include/addRating.php?addonId=' + encodeURI(addonId), disp_storage);
 }
 
@@ -132,7 +168,7 @@ function addRating(rating, addonId, sel_storage, disp_storage) {
  */
 function loadHTML(url, storage) {
     var storage_elem = document.getElementById(storage);
-    $.get(url, function(data) {
+    $.get(url, function (data) {
         if (storage_elem.innerHTML === undefined) {
             storage_elem = data;
         } else {

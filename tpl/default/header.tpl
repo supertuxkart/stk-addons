@@ -8,7 +8,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=9" />
     <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
     {foreach $css_includes as $css}
-        <link rel="stylesheet" media="{$css.media}" href="{$css.href}">
+        {if empty($css.media)}
+            <link rel="stylesheet" href="{$css.href}">
+        {else}
+            <link rel="stylesheet" media="{$css.media}" href="{$css.href}">
+        {/if}
     {/foreach}
 </head>
 <body>

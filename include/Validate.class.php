@@ -290,19 +290,16 @@ class Validate
 
         foreach($params as $param)
         {
-            echo $param;
+
             if(!isset($pool[$param]))
             {
-                if($checkEmpty)
+                $errors[] = sprintf("param = %s is not set", $param);
+            }
+            else if($checkEmpty)
+            {
+                if(empty($pool[$param]))
                 {
-                    if(empty($pool[$param]))
-                    {
-                        $errors[] = sprintf("param = %s is not set or empty", $param);
-                    }
-                }
-                else
-                {
-                    $errors[] = sprintf("param = %s is not set", $param);
+                    $errors[] = sprintf("param = %s empty", $param);
                 }
             }
         }

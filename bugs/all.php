@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2014 Daniel Butum <danibutum at gmail dot com>
+ * copyright 2014 Daniel Butum <danibutum at gmail dot com>
  *
  * This file is part of stkaddons
  *
@@ -17,15 +17,13 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
-$tpl = new StkTemplate('bugs-index.tpl');
-$tpl->assign('title', htmlspecialchars(_('STK Add-ons') . ' | ' . _('Bugs')));
-$tpl->addScriptInclude("bugs.js");
-
-$tplData = array(
-    "content" => ob_get_require_once(BUGS_PATH . "all.php")
+$tplAll = new StkTemplate('bugs-all.tpl');
+$tplAllData = array(
+    "items" => Bug::getAllData()
 );
 
-$tpl->assign("bugs", $tplData);
-echo $tpl;
+$tplAll->assign("bugs", $tplAllData);
+echo $tplAll;
