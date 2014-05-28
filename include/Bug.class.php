@@ -137,7 +137,7 @@ class Bug
      * @return bool
      * @throws BugException
      */
-    public static function bugExists($id)
+    public static function exists($id)
     {
         try
         {

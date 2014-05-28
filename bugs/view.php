@@ -28,7 +28,7 @@ if(empty($bug_id))
     exit;
 }
 
-if(!Bug::bugExists($bug_id))
+if(!Bug::exists($bug_id))
 {
     echo "Bug $bug_id does not exist";
     exit;

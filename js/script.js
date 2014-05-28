@@ -3,13 +3,13 @@ var oldSub = "";
 var oldRoot = "";
 var oldDiv = "";
 
-$(document).ready(function () {
+$(document).ready(function() {
     $("#news-messages").newsTicker();
-    $('#lang-menu > a').click(function () {
+    $('#lang-menu > a').click(function() {
         $('ul.menu_body').slideToggle('medium');
     });
 
-    $('a.addon-list').click(function () {
+    $('a.addon-list').click(function() {
         history.pushState({path: this.path}, '', this.href);
         var url = this.href;
         var addonType = getUrlVars(url)['type'];
@@ -23,7 +23,7 @@ $(document).ready(function () {
         return false;
     });
 
-    $('a.manage-list').click(function () {
+    $('a.manage-list').click(function() {
         history.pushState({path: this.path}, '', this.href);
         var url = this.href;
         var view = getUrlVars(url)['view'];
@@ -32,7 +32,7 @@ $(document).ready(function () {
         return false;
     });
 
-    $('a.user-list').click(function () {
+    $('a.user-list').click(function() {
         history.pushState({path: this.path}, '', this.href);
         var url = this.href;
         var user = getUrlVars(url)['user'];
@@ -49,12 +49,12 @@ function loadContentWithAjax(selector, url_to_load, url_get_params, callback) {
     var $selector = $(selector);
     url_get_params = _.isUndefined(url_get_params) ? {} : url_get_params;
 
-    $.get(url_to_load, url_get_params,function (data) {
+    $.get(url_to_load, url_get_params,function(data) {
         $selector.html(data);
         if (_.isFunction(callback)) {
             callback(data);
         }
-    }).fail(function (e) {
+    }).fail(function(e) {
         console.error("loadContentWithAjax failed");
     });
 }
@@ -92,8 +92,8 @@ function showAlert(options) {
 
     // set timer
     if (options.auto_dismiss) {
-        setTimeout(function () {
-            options.$container.fadeToggle(1000, function () {
+        setTimeout(function() {
+            options.$container.fadeToggle(1000, function() {
                 options.$container.empty();
             });
         }, options.interval);
@@ -119,7 +119,7 @@ function loadFrame(id, page, value) {
     panelDiv.innerHTML = '<div id="loading"></div>';
 
     $.get(page, {id: id, value: value},
-        function (data) {
+        function(data) {
             $("#right-content_body").html(data);
             $("#right-content_body").scrollTop(0);
         }
@@ -128,7 +128,7 @@ function loadFrame(id, page, value) {
 
 function addonRequest(page, id, value) {
     $.post(page, {id: id, value: value},
-        function (data) {
+        function(data) {
             $("#content-addon_body").html(data);
             $("#content-addon_body").scrollTop(0);
         }
@@ -168,7 +168,7 @@ function addRating(rating, addonId, sel_storage, disp_storage) {
  */
 function loadHTML(url, storage) {
     var storage_elem = document.getElementById(storage);
-    $.get(url, function (data) {
+    $.get(url, function(data) {
         if (storage_elem.innerHTML === undefined) {
             storage_elem = data;
         } else {

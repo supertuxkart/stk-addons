@@ -197,152 +197,6 @@ class Addon
     }
 
     /**
-     * Create a new add-on record and an intial revision
-     * @global string $moderator_message Initial revision status message
-     *                                   FIXME: put this in $attributes somewhere
-     *
-     * @param string  $type              Add-on type
-     * @param array   $attributes        Contains properties of the add-on. Must have the
-     *                                   following elements: name, designer, license, image, fileid, status, (arena)
-     * @param string  $fileid            ID for revision file (see FIXME below)
-     *
-     * @throws AddonException
-     *
-     * @return Addon Object for newly created add-on
-     */
-    public static function create($type, $attributes, $fileid)
-    {
-        global $moderator_message;
-        foreach ($attributes['missing_textures'] as $tex)
-        {
-            $moderator_message .= "Texture not found: $tex\n";
-            echo '<span class="warning">' . htmlspecialchars(
-                    sprintf(_('Texture not found: %s'), $tex)
-                ) . '</span><br />';
-        }
-
-        // Check if logged in
-        if (!User::isLoggedIn())
-        {
-            throw new AddonException('You must be logged in to create an add-on.');
-        }
-
-        if (!Addon::isAllowedType($type))
-        {
-            throw new AddonException('An invalid add-on type was provided.');
-        }
-
-        $id = Addon::generateId($type, $attributes['name']);
-
-        // Make sure the add-on doesn't already exist
-        if (Addon::exists($id))
-        {
-            throw new AddonException(htmlspecialchars(
-                _('An add-on with this ID already exists. Please try to upload your add-on again later.')
-            ));
-        }
-
-        // Make sure no revisions with this id exists
-        // FIXME: Check if this id is redundant or not. Could just
-        //        auto-increment this column if it is unused elsewhere.
-        try
-        {
-            $rows = DBConnection::get()->query(
-                'SELECT * FROM ' . DB_PREFIX . $type . '_revs WHERE `id` = :id',
-                DBConnection::ROW_COUNT,
-                array(':id' => (string)$fileid)
-            );
-            if ($rows)
-            {
-                throw new AddonException(htmlspecialchars(_('The add-on you are trying to create already exists.')));
-            }
-        }
-        catch(DBException $e)
-        {
-            throw new AddonException(sprintf('Failed to acces the %s_revs table.', $type));
-        }
-
-
-        echo htmlspecialchars(_('Creating a new add-on...')) . '<br />';
-        $fields = array('id', 'type', 'name', 'uploader', 'designer', 'license');
-        $values = array(
-            $id,
-            $type,
-            $attributes['name'],
-            User::getId(),
-            $attributes['designer'],
-            $attributes['license']
-        );
-        if ($type === 'tracks')
-        {
-            $fields[] = 'props';
-            if ($attributes['arena'] === 'Y')
-            {
-                $values[] = '1';
-            }
-            else
-            {
-                $values[] = '0';
-            }
-        }
-        try
-        {
-            DBConnection::get()->insert("addons", array_combine($fields, $values));
-        }
-        catch(DBException $e)
-        {
-            throw new AddonException(htmlspecialchars(_('Your add-on could not be uploaded.')));
-        }
-
-
-        // Add the first revision
-        $rev = 1;
-
-        // Generate revision entry
-        $fields = array('id', 'addon_id', 'fileid', 'revision', 'format', 'image', 'status');
-        $values = array(
-            $fileid,
-            $id,
-            $attributes['fileid'],
-            $rev,
-            $attributes['version'],
-            $attributes['image'],
-            $attributes['status']
-        );
-        if ($type === 'karts')
-        {
-            $fields[] = 'icon';
-            $values[] = $attributes['image'];
-        }
-
-        // Add moderator message if available
-        if (!empty($moderator_message))
-        {
-            $fields[] = 'moderator_note';
-            $values[] = $moderator_message;
-        }
-        try
-        {
-            DBConnection::get()->insert($type . '_revs', array_combine($fields, $values));
-        }
-        catch(DBException $e)
-        {
-            return false;
-        }
-
-        // Send mail to moderators
-        moderator_email(
-            'New Addon Upload',
-            "{$_SESSION['user']} has uploaded a new {$type} '{$attributes['name']}' ($id)"
-        );
-        writeAssetXML();
-        writeNewsXML();
-        Log::newEvent("New add-on '{$attributes['name']}'");
-
-        return new Addon($id);
-    }
-
-    /**
      * Create an add-on revision
      *
      * @param array  $attributes
@@ -465,33 +319,6 @@ class Addon
         writeAssetXML();
         writeNewsXML();
         Log::newEvent("New add-on revision for '{$attributes['name']}'");
-    }
-
-    /**
-     * Check if an add-on of the specified ID exists
-     *
-     * @param string $addon_id Addon ID
-     *
-     * @return boolean
-     */
-    public static function exists($addon_id)
-    {
-        try
-        {
-            $num = DBConnection::get()->query(
-                'SELECT `id`
-                FROM `' . DB_PREFIX . 'addons`
-                WHERE `id` = :addon_id',
-                DBConnection::ROW_COUNT,
-                array(':addon_id' => Addon::cleanId($addon_id))
-            );
-
-            return ($num === 1);
-        }
-        catch(DBException $e)
-        {
-            return false;
-        }
     }
 
     /**
@@ -668,97 +495,6 @@ class Addon
         Log::newEvent('Deleted revision ' . $rev . ' of \'' . $this->name . '\'');
         writeAssetXML();
         writeNewsXML();
-    }
-
-    /**
-     * Generate a random id based on the name
-     *
-     * @param string $type
-     * @param string $name
-     *
-     * @return string the new id
-     */
-    public static function generateId($type, $name)
-    {
-        // TODO find usage for $type
-        if (!is_string($name))
-        {
-            return false;
-        }
-
-        $addon_id = Addon::cleanId($name);
-        if (!$addon_id)
-        {
-            return false;
-        }
-
-        // Check database
-        while (Addon::exists($addon_id))
-        {
-            // If the addon id already exists, add an incrementing number to it
-            $matches = array();
-            if (preg_match('/^.+_([0-9]+)$/i', $addon_id, $matches))
-            {
-                $next_num = (int)$matches[1];
-                $next_num++;
-                $addon_id = str_replace($matches[1], $next_num, $addon_id);
-            }
-            else
-            {
-                $addon_id .= '_1';
-            }
-        }
-
-        return $addon_id;
-    }
-
-    /**
-     * Get all the addon's of a type
-     *
-     * @param string $type
-     * @param bool   $featuredFirst
-     *
-     * @return array
-     */
-    public static function getAddonList($type, $featuredFirst = false)
-    {
-        if (!Addon::isAllowedType($type))
-        {
-            return array();
-        }
-        try
-        {
-            $query = 'SELECT `a`.`id`, (`r`.`status` & ' . F_FEATURED . ') AS `featured`
-                      FROM `' . DB_PREFIX . 'addons` `a`
-                      LEFT JOIN `' . DB_PREFIX . $type . '_revs` `r`
-                      ON `a`.`id` = `r`.`addon_id`
-                      WHERE `a`.`type` = :type
-                      AND `r`.`status` & :latest_bit ';
-            if ($featuredFirst)
-            {
-                $query .= 'ORDER BY `featured` DESC, `a`.`name` ASC, `a`.`id` ASC';
-            }
-            else
-            {
-                $query .= 'ORDER BY `name` ASC, `id` ASC';
-            }
-            $list = DBConnection::get()->query(
-                $query,
-                DBConnection::FETCH_ALL,
-                array(':type' => $type, ':latest_bit' => F_LATEST)
-            );
-            $return = array();
-            foreach ($list as $addon)
-            {
-                $return[] = $addon['id'];
-            }
-
-            return $return;
-        }
-        catch(DBException $e)
-        {
-            return array();
-        }
     }
 
     /**
@@ -1033,47 +769,6 @@ class Addon
     }
 
     /**
-     * Get the addon name
-     *
-     * @param int $id
-     *
-     * @return string
-     */
-    public static function getName($id)
-    {
-        if ($id === false)
-        {
-            return false;
-        }
-        $id = Addon::cleanId($id);
-
-        try
-        {
-            $addon = DBConnection::get()->query(
-                'SELECT `name`
-                FROM `' . DB_PREFIX . 'addons`
-                WHERE `id` = :id
-                LIMIT 1',
-                DBConnection::FETCH_FIRST,
-                array(
-                    ':id' => $id
-                )
-            );
-        }
-        catch(DBException $e)
-        {
-            return false;
-        }
-
-        if (empty($addon))
-        {
-            return false;
-        }
-
-        return $addon['name'];
-    }
-
-    /**
      * Get all of the source files associated with an addon
      *
      * @return array
@@ -1099,139 +794,6 @@ class Addon
         }
 
         return $result;
-    }
-
-    /**
-     * Check if the type is allowed
-     *
-     * @param string $type
-     *
-     * @return bool true if allowed and false otherwise
-     */
-    public static function isAllowedType($type)
-    {
-        if (in_array($type, Addon::$allowedTypes))
-        {
-            return true;
-        }
-
-        return false;
-    }
-
-
-    /**
-     * Get an array of allowed types
-     *
-     * @return array
-     */
-    public static function getAllowedTypes()
-    {
-        return Addon::$allowedTypes;
-    }
-
-    /**
-     * Perform a cleaning operation on the id
-     *
-     * @param string $id what we want to clean
-     *
-     * @return string|bool
-     */
-    public static function cleanId($id)
-    {
-        if (!is_string($id))
-        {
-            return false;
-        }
-
-        $length = strlen($id);
-        if ($length === 0)
-        {
-            return false;
-        }
-        $id = strtolower($id);
-
-        // Validate all characters in addon id
-        // Rather than using str_replace, and removing bad characters,
-        // it makes more sense to only allow certain characters
-        for ($i = 0; $i < $length; $i++)
-        {
-            $substr = substr($id, $i, 1);
-            if (!preg_match('/^[a-z0-9\-_]$/i', $substr))
-            {
-                $substr = '-';
-            }
-            $id = substr_replace($id, $substr, $i, 1);
-        }
-
-        return $id;
-    }
-
-    /**
-     * Search for an addon by its name or description
-     *
-     * @param string $search_query
-     *
-     * @throws AddonException
-     *
-     * @return array Matching addon id, name and type
-     */
-    public static function search($search_query)
-    {
-        try
-        {
-            $addons = DBConnection::get()->query(
-                "SELECT `id`, `name`, `type`
-                FROM `" . DB_PREFIX . "addons`
-                WHERE `name` LIKE :search_query
-                OR `description` LIKE :search_query",
-                DBConnection::FETCH_ALL,
-                array(
-                    ':search_query' => '%' . $search_query . '%'
-                )
-            );
-        }
-        catch(DBException $e)
-        {
-            throw new AddonException(htmlspecialchars(_('Search failed!')));
-        }
-
-        return $addons;
-    }
-
-    /**
-     * Search for an addon by its name
-     *
-     * @param string $name
-     *
-     * @throws AddonException
-     * @return array of matching names
-     */
-    public static function searchByName($name)
-    {
-        try
-        {
-            $addons = DBConnection::get()->query(
-                "SELECT `name`
-                FROM `" . DB_PREFIX . "addons`
-                WHERE `name` LIKE :search_query",
-                DBConnection::FETCH_ALL,
-                array(
-                    ':search_query' => '%' . $name . '%'
-                )
-            );
-        }
-        catch(DBException $e)
-        {
-            throw new AddonException(htmlspecialchars(_('Search failed!')));
-        }
-
-        $return = array();
-        foreach($addons as $addon)
-        {
-            $return[]= $addon["name"];
-        }
-
-        return $return;
     }
 
     /**
@@ -1401,7 +963,7 @@ class Addon
      *
      * @throws AddonException
      */
-    private function setLicense($license)
+    public function setLicense($license)
     {
         try
         {
@@ -1431,7 +993,7 @@ class Addon
      *
      * @throws AddonException
      */
-    private function setName($name)
+    public function setName($name)
     {
         try
         {
@@ -1708,5 +1270,443 @@ class Addon
         writeAssetXML();
         writeNewsXML();
         Log::newEvent("Set status for add-on '{$this->name}'");
+    }
+
+    /**
+     * Check if the type is allowed
+     *
+     * @param string $type
+     *
+     * @return bool true if allowed and false otherwise
+     */
+    public static function isAllowedType($type)
+    {
+        if (in_array($type, Addon::$allowedTypes))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+
+    /**
+     * Get an array of allowed types
+     *
+     * @return array
+     */
+    public static function getAllowedTypes()
+    {
+        return Addon::$allowedTypes;
+    }
+
+    /**
+     * Perform a cleaning operation on the id
+     *
+     * @param string $id what we want to clean
+     *
+     * @return string|bool
+     */
+    public static function cleanId($id)
+    {
+        if (!is_string($id))
+        {
+            return false;
+        }
+
+        $length = strlen($id);
+        if ($length === 0)
+        {
+            return false;
+        }
+        $id = strtolower($id);
+
+        // Validate all characters in addon id
+        // Rather than using str_replace, and removing bad characters,
+        // it makes more sense to only allow certain characters
+        for ($i = 0; $i < $length; $i++)
+        {
+            $substr = substr($id, $i, 1);
+            if (!preg_match('/^[a-z0-9\-_]$/i', $substr))
+            {
+                $substr = '-';
+            }
+            $id = substr_replace($id, $substr, $i, 1);
+        }
+
+        return $id;
+    }
+
+    /**
+     * Search for an addon by its name or description
+     *
+     * @param string $search_query
+     *
+     * @throws AddonException
+     *
+     * @return array Matching addon id, name and type
+     */
+    public static function search($search_query)
+    {
+        try
+        {
+            $addons = DBConnection::get()->query(
+                "SELECT `id`, `name`, `type`
+                FROM `" . DB_PREFIX . "addons`
+                WHERE `name` LIKE :search_query
+                OR `description` LIKE :search_query",
+                DBConnection::FETCH_ALL,
+                array(
+                    ':search_query' => '%' . $search_query . '%'
+                )
+            );
+        }
+        catch(DBException $e)
+        {
+            throw new AddonException(htmlspecialchars(_('Search failed!')));
+        }
+
+        return $addons;
+    }
+
+    /**
+     * Search for an addon by its name
+     *
+     * @param string $name
+     *
+     * @throws AddonException
+     * @return array of matching names
+     */
+    public static function searchByName($name)
+    {
+        try
+        {
+            $addons = DBConnection::get()->query(
+                "SELECT `name`
+                FROM `" . DB_PREFIX . "addons`
+                WHERE `name` LIKE :search_query",
+                DBConnection::FETCH_ALL,
+                array(
+                    ':search_query' => '%' . $name . '%'
+                )
+            );
+        }
+        catch(DBException $e)
+        {
+            throw new AddonException(htmlspecialchars(_('Search failed!')));
+        }
+
+        $return = array();
+        foreach($addons as $addon)
+        {
+            $return[]= $addon["name"];
+        }
+
+        return $return;
+    }
+
+    /**
+     * Get all the addon's of a type
+     *
+     * @param string $type
+     * @param bool   $featuredFirst
+     *
+     * @return array
+     */
+    public static function getAddonList($type, $featuredFirst = false)
+    {
+        if (!Addon::isAllowedType($type))
+        {
+            return array();
+        }
+        try
+        {
+            $query = 'SELECT `a`.`id`, (`r`.`status` & ' . F_FEATURED . ') AS `featured`
+                      FROM `' . DB_PREFIX . 'addons` `a`
+                      LEFT JOIN `' . DB_PREFIX . $type . '_revs` `r`
+                      ON `a`.`id` = `r`.`addon_id`
+                      WHERE `a`.`type` = :type
+                      AND `r`.`status` & :latest_bit ';
+            if ($featuredFirst)
+            {
+                $query .= 'ORDER BY `featured` DESC, `a`.`name` ASC, `a`.`id` ASC';
+            }
+            else
+            {
+                $query .= 'ORDER BY `name` ASC, `id` ASC';
+            }
+            $list = DBConnection::get()->query(
+                $query,
+                DBConnection::FETCH_ALL,
+                array(':type' => $type, ':latest_bit' => F_LATEST)
+            );
+            $return = array();
+            foreach ($list as $addon)
+            {
+                $return[] = $addon['id'];
+            }
+
+            return $return;
+        }
+        catch(DBException $e)
+        {
+            return array();
+        }
+    }
+
+    /**
+     * Generate a random id based on the name
+     *
+     * @param string $type
+     * @param string $name
+     *
+     * @return string the new id
+     */
+    public static function generateId($type, $name)
+    {
+        // TODO find usage for $type
+        if (!is_string($name))
+        {
+            return false;
+        }
+
+        $addon_id = Addon::cleanId($name);
+        if (!$addon_id)
+        {
+            return false;
+        }
+
+        // Check database
+        while (Addon::exists($addon_id))
+        {
+            // If the addon id already exists, add an incrementing number to it
+            $matches = array();
+            if (preg_match('/^.+_([0-9]+)$/i', $addon_id, $matches))
+            {
+                $next_num = (int)$matches[1];
+                $next_num++;
+                $addon_id = str_replace($matches[1], $next_num, $addon_id);
+            }
+            else
+            {
+                $addon_id .= '_1';
+            }
+        }
+
+        return $addon_id;
+    }
+
+    /**
+     * Create a new add-on record and an intial revision
+     * @global string $moderator_message Initial revision status message
+     *                                   FIXME: put this in $attributes somewhere
+     *
+     * @param string  $type              Add-on type
+     * @param array   $attributes        Contains properties of the add-on. Must have the
+     *                                   following elements: name, designer, license, image, fileid, status, (arena)
+     * @param string  $fileid            ID for revision file (see FIXME below)
+     *
+     * @throws AddonException
+     *
+     * @return Addon Object for newly created add-on
+     */
+    public static function create($type, $attributes, $fileid)
+    {
+        global $moderator_message;
+        foreach ($attributes['missing_textures'] as $tex)
+        {
+            $moderator_message .= "Texture not found: $tex\n";
+            echo '<span class="warning">' . htmlspecialchars(
+                    sprintf(_('Texture not found: %s'), $tex)
+                ) . '</span><br />';
+        }
+
+        // Check if logged in
+        if (!User::isLoggedIn())
+        {
+            throw new AddonException('You must be logged in to create an add-on.');
+        }
+
+        if (!Addon::isAllowedType($type))
+        {
+            throw new AddonException('An invalid add-on type was provided.');
+        }
+
+        $id = Addon::generateId($type, $attributes['name']);
+
+        // Make sure the add-on doesn't already exist
+        if (Addon::exists($id))
+        {
+            throw new AddonException(htmlspecialchars(
+                _('An add-on with this ID already exists. Please try to upload your add-on again later.')
+            ));
+        }
+
+        // Make sure no revisions with this id exists
+        // FIXME: Check if this id is redundant or not. Could just
+        //        auto-increment this column if it is unused elsewhere.
+        try
+        {
+            $rows = DBConnection::get()->query(
+                'SELECT * FROM ' . DB_PREFIX . $type . '_revs WHERE `id` = :id',
+                DBConnection::ROW_COUNT,
+                array(':id' => (string)$fileid)
+            );
+            if ($rows)
+            {
+                throw new AddonException(htmlspecialchars(_('The add-on you are trying to create already exists.')));
+            }
+        }
+        catch(DBException $e)
+        {
+            throw new AddonException(sprintf('Failed to acces the %s_revs table.', $type));
+        }
+
+
+        echo htmlspecialchars(_('Creating a new add-on...')) . '<br />';
+        $fields = array('id', 'type', 'name', 'uploader', 'designer', 'license');
+        $values = array(
+            $id,
+            $type,
+            $attributes['name'],
+            User::getId(),
+            $attributes['designer'],
+            $attributes['license']
+        );
+        if ($type === 'tracks')
+        {
+            $fields[] = 'props';
+            if ($attributes['arena'] === 'Y')
+            {
+                $values[] = '1';
+            }
+            else
+            {
+                $values[] = '0';
+            }
+        }
+        try
+        {
+            DBConnection::get()->insert("addons", array_combine($fields, $values));
+        }
+        catch(DBException $e)
+        {
+            throw new AddonException(htmlspecialchars(_('Your add-on could not be uploaded.')));
+        }
+
+
+        // Add the first revision
+        $rev = 1;
+
+        // Generate revision entry
+        $fields = array('id', 'addon_id', 'fileid', 'revision', 'format', 'image', 'status');
+        $values = array(
+            $fileid,
+            $id,
+            $attributes['fileid'],
+            $rev,
+            $attributes['version'],
+            $attributes['image'],
+            $attributes['status']
+        );
+        if ($type === 'karts')
+        {
+            $fields[] = 'icon';
+            $values[] = $attributes['image'];
+        }
+
+        // Add moderator message if available
+        if (!empty($moderator_message))
+        {
+            $fields[] = 'moderator_note';
+            $values[] = $moderator_message;
+        }
+        try
+        {
+            DBConnection::get()->insert($type . '_revs', array_combine($fields, $values));
+        }
+        catch(DBException $e)
+        {
+            return false;
+        }
+
+        // Send mail to moderators
+        moderator_email(
+            'New Addon Upload',
+            "{$_SESSION['user']} has uploaded a new {$type} '{$attributes['name']}' ($id)"
+        );
+        writeAssetXML();
+        writeNewsXML();
+        Log::newEvent("New add-on '{$attributes['name']}'");
+
+        return new Addon($id);
+    }
+
+    /**
+     * Check if an add-on of the specified ID exists
+     *
+     * @param string $addon_id Addon ID
+     *
+     * @return boolean
+     */
+    public static function exists($addon_id)
+    {
+        try
+        {
+            $num = DBConnection::get()->query(
+                'SELECT `id`
+                FROM `' . DB_PREFIX . 'addons`
+                WHERE `id` = :addon_id',
+                DBConnection::ROW_COUNT,
+                array(':addon_id' => Addon::cleanId($addon_id))
+            );
+
+            return ($num === 1);
+        }
+        catch(DBException $e)
+        {
+            return false;
+        }
+    }
+
+    /**
+     * Get the addon name
+     *
+     * @param int $id
+     *
+     * @return string
+     */
+    public static function getName($id)
+    {
+        if ($id === false)
+        {
+            return false;
+        }
+        $id = Addon::cleanId($id);
+
+        try
+        {
+            $addon = DBConnection::get()->query(
+                'SELECT `name`
+                FROM `' . DB_PREFIX . 'addons`
+                WHERE `id` = :id
+                LIMIT 1',
+                DBConnection::FETCH_FIRST,
+                array(
+                    ':id' => $id
+                )
+            );
+        }
+        catch(DBException $e)
+        {
+            return false;
+        }
+
+        if (empty($addon))
+        {
+            return false;
+        }
+
+        return $addon['name'];
     }
 }
