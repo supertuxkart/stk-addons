@@ -23,15 +23,10 @@ require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
 
 $a_tpl = new StkTemplate('addons-panel.tpl');
 
-// POST used with javascript navigation
-// GET used with everything else
-if (!isset($_GET['id']))
+$id = $_GET['name'];
+if (!isset($_GET['name']))
 {
-    $_GET['id'] = null;
-}
-if (!isset($_POST['id']))
-{
-    $_POST['id'] = null;
+    $id = "";
 }
 
 $type = (isset($_GET['type'])) ? $_GET['type'] : null;
@@ -39,15 +34,9 @@ if (!Addon::isAllowedType($type))
 {
     die(_h('This page cannot be loaded because an invalid add-on type was provided.'));
 }
-
-
-if (isset($_GET['id']))
+if(!Addon::exists($id))
 {
-    $id = $_GET['id'];
-}
-else
-{
-    $id = $_POST['id'];
+    die(_h("The addon name does not exist"));
 }
 
 try

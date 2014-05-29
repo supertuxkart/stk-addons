@@ -23,12 +23,12 @@ AccessControl::setLevel(AccessControl::PERM_EDIT_SETTINGS);
 
 $_GET['action'] = (isset($_GET['action'])) ? $_GET['action'] : null;
 
-switch ($_GET['id'])
+switch ($_GET['view'])
 {
 
     case 'overview':
-        $managePanelTpl = new StkTemplate("panels/manage-overview.tpl");
-        $managePanelData = array(
+        $tpl = new StkTemplate("panels/manage-overview.tpl");
+        $tplData = array(
             "addons"   => array(),
             "images"   => array(),
             "archives" => array()
@@ -64,7 +64,7 @@ switch ($_GET['id'])
             // add to view
             if (!empty($unapproved))
             {
-                $managePanelData["addons"][] = array(
+                $tplData["addons"][] = array(
                     "href"       => $addon->getLink(),
                     "name"       => Addon::getName($addon_id),
                     "unapproved" => implode(', ', $unapproved)
@@ -110,11 +110,11 @@ switch ($_GET['id'])
             }
         }
 
-        $managePanelTpl->assign("overview", $managePanelData);
+        $tpl->assign("overview", $tplData);
         break;
     case 'general':
-        $managePanelTpl = new StkTemplate("panels/manage-general.tpl");
-        $managePanelData = array(
+        $tpl = new StkTemplate("panels/manage-general.tpl");
+        $tplData = array(
             "xml_frequency"       => ConfigManager::getConfig("xml_frequency"),
             "allowed_addon_exts"  => ConfigManager::getConfig("allowed_addon_exts"),
             "allowed_source_exts" => ConfigManager::getConfig("allowed_source_exts"),
@@ -132,7 +132,7 @@ switch ($_GET['id'])
             "apache_rewrites"     => ConfigManager::getConfig("apache_rewrites"),
         );
 
-        $managePanelTpl->assign("general", $managePanelData);
+        $tpl->assign("general", $tplData);
         break;
     case 'news':
         /*
@@ -141,12 +141,12 @@ switch ($_GET['id'])
          * TODO Allow editing in future, in case of goofs or changes.
          */
 
-        $managePanelTpl = new StkTemplate("panels/manage-news.tpl");
-        $managePanelData = array(
+        $tpl = new StkTemplate("panels/manage-news.tpl");
+        $tplData = array(
             "items" => News::getAll()
         );
 
-        $managePanelTpl->assign("news", $managePanelData);
+        $tpl->assign("news", $tplData);
         break;
     case 'clients':
         /*
@@ -155,8 +155,8 @@ switch ($_GET['id'])
          * TODO Make XML generating script generate files for each configuration set
          * TODO Make download script provide a certain file based on the user-agent
          */
-        $managePanelTpl = new StkTemplate("panels/manage-clients.tpl");
-        $managePanelData = array(
+        $tpl = new StkTemplate("panels/manage-clients.tpl");
+        $tplData = array(
             "items" => DBConnection::get()->query(
                     'SELECT * FROM ' . DB_PREFIX . 'clients
                     ORDER BY `agent_string` ASC',
@@ -164,26 +164,26 @@ switch ($_GET['id'])
                 )
         );
 
-        $managePanelTpl->assign("clients", $managePanelData);
+        $tpl->assign("clients", $tplData);
         break;
     case 'cache':
         // TODO List cache files
 
-        $managePanelTpl = new StkTemplate("panels/manage-cache.tpl");
-        $managePanelData = array();
+        $tpl = new StkTemplate("panels/manage-cache.tpl");
+        $tplData = array();
 
-        $managePanelTpl->assign("cache", $managePanelData);
+        $tpl->assign("cache", $tplData);
         break;
     case 'files':
         // TODO test files overview properly
-        $managePanelTpl = new StkTemplate("panels/manage-files.tpl");
-        $managePanelData = array();
+        $tpl = new StkTemplate("panels/manage-files.tpl");
+        $tplData = array();
 
         $files = File::getAllFiles();
         $items = array();
         foreach ($files as $file)
         {
-            var_dump($file);
+            //var_dump($file);
             switch ($file["file_type"])
             {
                 case false:
@@ -240,23 +240,22 @@ switch ($_GET['id'])
             $items[] = $file;
         }
 
-        $managePanelData["items"] = $items;
-        $managePanelTpl->assign("files", $managePanelData);
+        $tplData["items"] = $items;
+        $tpl->assign("files", $tplData);
         break;
     case 'logs':
-        $managePanelTpl = new StkTemplate("panels/manage-logs.tpl");
-        $managePanelData = array(
+        $tpl = new StkTemplate("panels/manage-logs.tpl");
+        $tplData = array(
             "items" => Log::getEvents()
         );
 
-        $managePanelTpl->assign("logs", $managePanelData);
+        $tpl->assign("logs", $tplData);
         break;
     default:
-        $managePanelData["errors"] = _h('Invalid page. You may have followed a broken link.');
-        $managePanelTpl->assign("manage", $managePanelData);
-        echo $managePanelTpl;
+        // TODO maybe redirect
+        echo _h('Invalid page. You may have followed a broken link.');
         exit;
 }
 
 // output the view
-echo $managePanelTpl;
+echo $tpl;

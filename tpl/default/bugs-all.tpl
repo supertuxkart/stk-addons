@@ -14,10 +14,10 @@
         </thead>
         <tbody>
         {foreach $bugs.items as $item}
-            <tr>
-                <th class="bugs" data-id="{$item.id}"><a href="#">{$item.id}</a></th>
+            <tr data-id="{$item.id}">
+                <th class="bugs"><a href="{$smarty.const.BUGS_LOCATION}?bug_id={$item.id}">{$item.id}</a></th>
                 <th>{$item.addon_id}</th>
-                <th class="bugs" data-id="{$item.id}"><a href="#">{$item.title|truncate:30}</a></th>
+                <th class="bugs"><a href="{$smarty.const.BUGS_LOCATION}?bug_id={$item.id}">{$item.title|truncate:30|escape}</a></th>
                 <th>{$item.date_edit}</th>
             </tr>
         {/foreach}

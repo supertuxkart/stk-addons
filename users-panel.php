@@ -27,12 +27,17 @@ if (isset($_GET["user"]) && !empty($_GET["user"]))
 {
     $user_name = $_GET['user'];
 }
-elseif (isset($_GET["id"]) && !empty($_GET["id"])) // use "id" as name, fallback for javascript
+
+try
 {
-    $user_name = $_GET['id'];
+    $user = User::getFromUserName($user_name);
+}
+catch (UserException $e)
+{
+    echo "Error " . $e->getMessage();
+    exit;
 }
 
-$user = User::getFromUserName($user_name);
 $userData = $user->getUserData();
 
 $user_panel_tpl = new StkTemplate("user-panel.tpl");

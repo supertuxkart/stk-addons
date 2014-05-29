@@ -139,8 +139,9 @@ class StkTemplate extends Template
             array('src' => '//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js'),
             array('src' => "//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/js/bootstrap.min.js"),
             array('src' => "//cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.10.2/typeahead.bundle.min.js"),
+            array('src' => "//cdnjs.cloudflare.com/ajax/libs/history.js/1.8/bundled-uncompressed/html4+html5/jquery.history.js"),
             array('src' => JS_LOCATION . 'jquery.newsticker.js'),
-            array('src' => JS_LOCATION . 'script.js')
+            array('src' => JS_LOCATION . 'main.js')
         );
 
         $this->smarty->assign('script_includes', array_merge($this->script_includes, $this->user_script_includes));

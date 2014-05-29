@@ -32,10 +32,18 @@
             </form>
         </div>
         <div class="col-md-2">
-            <button class="btn btn-default btn-lg" id="btn-bugs-add">
+            {if !empty($bugs.show_btn_file) && $bugs.show_btn_file == true}
+                {$btn_file_hide=""}
+                {$btn_back_hide=" hide"}
+            {else}
+                {$btn_file_hide=" hide"}
+                {$btn_back_hide=""}
+            {/if}
+
+            <button class="btn btn-default btn-lg{$btn_file_hide}" id="btn-bugs-add">
                 {t}File a bug{/t}
             </button>
-            <button class="btn btn-default btn-lg hide" id="btn-bugs-back">
+            <button class="btn btn-default btn-lg {$btn_back_hide}" id="btn-bugs-back">
                 {t}Back{/t}
             </button>
         </div>

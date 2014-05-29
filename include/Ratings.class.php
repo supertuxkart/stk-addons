@@ -121,9 +121,9 @@ class Ratings
         $sel_2 = ($current_rating == 2) ? 'checked' : null;
         $sel_3 = ($current_rating == 3) ? 'checked' : null;
         $string = '<span id="user-rating">';
-        $string .= '<input type="radio" name="rating" id="rating-1" onclick="addRating(1,\'' . $this->addon_id . '\',\'user-rating\',\'rating-container\');" ' . $sel_1 . '/><label for="rating-1"><div class="rating"><div class="emptystars"></div><div class="fullstars" style="width: 33%"></div></div></label><br />'; // 1 star
-        $string .= '<input type="radio" name="rating" id="rating-2" onclick="addRating(2,\'' . $this->addon_id . '\',\'user-rating\',\'rating-container\');" ' . $sel_2 . '/><label for="rating-2"><div class="rating"><div class="emptystars"></div><div class="fullstars" style="width: 66%"></div></div></label><br />'; // 2 stars
-        $string .= '<input type="radio" name="rating" id="rating-3" onclick="addRating(3,\'' . $this->addon_id . '\',\'user-rating\',\'rating-container\');" ' . $sel_3 . '/><label for="rating-3"><div class="rating"><div class="emptystars"></div><div class="fullstars" style="width: 100%"></div></div></label>'; // 3 stars
+        $string .= '<input type="radio" name="rating" id="rating-1" class="add-rating" value="1" onclick="addRating(1,\'' . $this->addon_id . '\',\'user-rating\',\'rating-container\');" ' . $sel_1 . '/><label for="rating-1"><div class="rating"><div class="emptystars"></div><div class="fullstars" style="width: 33%"></div></div></label><br />'; // 1 star
+        $string .= '<input type="radio" name="rating" id="rating-2" class="add-rating" value="2" onclick="addRating(2,\'' . $this->addon_id . '\',\'user-rating\',\'rating-container\');" ' . $sel_2 . '/><label for="rating-2"><div class="rating"><div class="emptystars"></div><div class="fullstars" style="width: 66%"></div></div></label><br />'; // 2 stars
+        $string .= '<input type="radio" name="rating" id="rating-3" class="add-rating" value="3" onclick="addRating(3,\'' . $this->addon_id . '\',\'user-rating\',\'rating-container\');" ' . $sel_3 . '/><label for="rating-3"><div class="rating"><div class="emptystars"></div><div class="fullstars" style="width: 100%"></div></div></label>'; // 3 stars
         $string .= '</span>';
 
         return $string;

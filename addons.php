@@ -59,7 +59,6 @@ if ($addonName !== false)
 include("include/top.php");
 
 ?>
-    <script type="text/javascript" src="<?php echo SITE_ROOT; ?>js/rating.js"></script>
     </head>
     <body>
 <?php
@@ -239,10 +238,7 @@ $panels->setMenuItems($addons);
 
 if (isset($_GET['name']))
 {
-    $_GET['id'] = $_GET['name'];
-    ob_start();
-    include(ROOT_PATH . 'addons-panel.php');
-    $content = ob_get_clean();
+    $content = ob_get_require_once(ROOT_PATH . 'addons-panel.php');
     $panels->setContent($content);
 }
 

@@ -130,6 +130,16 @@ class Bug
     }
 
     /**
+     * Get the instance addon data
+     *
+     * @return array
+     */
+    public function getData()
+    {
+        return $this->bugData;
+    }
+
+    /**
      * See if a bug exists
      *
      * @param int $id

@@ -38,7 +38,11 @@ $tpl = new StkTemplate("bugs-view.tpl");
 $bug = Bug::get($_GET["bug_id"]);
 $tplData = array(
     "title" => $bug->getTitle(),
-    "user"  => User::getFromID($bug->getUserId())->getUserName()
+    "user"  => User::getFromID($bug->getUserId())->getUserName(),
+    "addon" => $bug->getAddonId(),
+    "date_report" => $bug->getDateReport(),
+    "date_edit" => $bug->getDateEdit(),
+    "description" => $bug->getDescription()
 );
 
 $tpl->assign("bug", $tplData);

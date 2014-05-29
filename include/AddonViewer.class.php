@@ -45,7 +45,7 @@ class AddonViewer
      *
      * @param string $id Add-On ID
      */
-    function AddonViewer($id)
+    public function __construct($id)
     {
         $this->addon = new Addon($id);
         $this->latestRev = $this->addon->getLatestRevision();
@@ -55,7 +55,7 @@ class AddonViewer
     /**
      * @return string
      */
-    function __toString()
+    public function __toString()
     {
         $return = '';
         try

@@ -26,7 +26,6 @@ if (!isset($_GET['view']))
 {
     $_GET['view'] = 'overview';
 }
-$_GET['id'] = $_GET['view'];
 
 $tpl = new StkTemplate("two-pane.tpl");
 $tpl->assign("title", htmlspecialchars(_('STK Add-ons') . ' | ' . _('Manage')));

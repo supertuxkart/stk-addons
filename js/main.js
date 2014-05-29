@@ -1,55 +1,16 @@
-var oldElSub = "";
-var oldSub = "";
-var oldRoot = "";
+"use strict";
 var oldDiv = "";
 
-$(document).ready(function() {
-    $("#news-messages").newsTicker();
-    $('#lang-menu > a').click(function() {
-        $('ul.menu_body').slideToggle('medium');
-    });
-
-    $('a.addon-list').click(function() {
-        history.pushState({path: this.path}, '', this.href);
-        var url = this.href;
-        var addonType = getUrlVars(url)['type'];
-        if (addonType === undefined) {
-            url = siteRoot + $(this).children('meta').attr("content").replace('&amp;', '&');
-            addonType = getUrlVars(url)['type'];
-        }
-        var addonId = getUrlVars(url)['name'];
-        loadFrame(addonId, siteRoot + 'addons-panel.php?type=' + addonType);
-        clearPanelStatus();
-        return false;
-    });
-
-    $('a.manage-list').click(function() {
-        history.pushState({path: this.path}, '', this.href);
-        var url = this.href;
-        var view = getUrlVars(url)['view'];
-        loadFrame(view, siteRoot + 'manage-panel.php');
-        clearPanelStatus();
-        return false;
-    });
-
-    $('a.user-list').click(function() {
-        history.pushState({path: this.path}, '', this.href);
-        var url = this.href;
-        var user = getUrlVars(url)['user'];
-        loadFrame(user, siteRoot + 'users-panel.php');
-        clearPanelStatus();
-        return false;
-    });
-
-    // TODO separete js scripts depending of page
-});
-
-
-function loadContentWithAjax(selector, url_to_load, url_get_params, callback) {
+// Load the content of selector with some url
+function loadContentWithAjax(selector, url_to_load, url_get_params, callback, callback_before) {
     var $selector = $(selector);
-    url_get_params = _.isUndefined(url_get_params) ? {} : url_get_params;
+    url_get_params = url_get_params || {};
 
-    $.get(url_to_load, url_get_params,function(data) {
+    if (_.isFunction(callback_before)) {
+        callback_before();
+    }
+
+    $.get(url_to_load, url_get_params, function(data) {
         $selector.html(data);
         if (_.isFunction(callback)) {
             callback(data);
@@ -59,9 +20,8 @@ function loadContentWithAjax(selector, url_to_load, url_get_params, callback) {
     });
 }
 
-/*
- Show a twitter bootstrap alert, insert into a container
- */
+
+// Show a twitter bootstrap alert, insert into a container
 function showAlert(options) {
     if (!_.isObject(options)) {
         console.error("options is not an array");
@@ -114,18 +74,6 @@ function loadAddon(id, page) {
     addonRequest(page, id);
 }
 
-function loadFrame(id, page, value) {
-    var panelDiv = document.getElementById('right-content_body');
-    panelDiv.innerHTML = '<div id="loading"></div>';
-
-    $.get(page, {id: id, value: value},
-        function(data) {
-            $("#right-content_body").html(data);
-            $("#right-content_body").scrollTop(0);
-        }
-    );
-}
-
 function addonRequest(page, id, value) {
     $.post(page, {id: id, value: value},
         function(data) {
@@ -154,12 +102,6 @@ function textLimit(field, num) {
     }
 }
 
-function addRating(rating, addonId, sel_storage, disp_storage) {
-    loadHTML(siteRoot + 'include/addRating.php?rating=' + encodeURI(rating) + '&addonId=' + encodeURI(addonId),
-        sel_storage);
-    loadHTML(siteRoot + 'include/addRating.php?addonId=' + encodeURI(addonId), disp_storage);
-}
-
 /**
  * Loads an HTML page
  * Put the content of the body tag into the current page.
@@ -177,6 +119,13 @@ function loadHTML(url, storage) {
     });
 }
 
+function addRating(rating, addonId, sel_storage, disp_storage) {
+    // TODO fix ratings
+    loadHTML(siteRoot + 'include/addRating.php?rating=' + encodeURI(rating) + '&addonId=' + encodeURI(addonId),
+        sel_storage);
+    loadHTML(siteRoot + 'include/addRating.php?addonId=' + encodeURI(addonId), disp_storage);
+}
+
 // Read a page's GET URL variables and return them as an associative array.
 function getUrlVars(url) {
     if (url === undefined) {
@@ -192,3 +141,47 @@ function getUrlVars(url) {
     }
     return vars;
 }
+
+
+$(document).ready(function() {
+    $("#news-messages").newsTicker();
+    $('#lang-menu > a').click(function() {
+        $('ul.menu_body').slideToggle('medium');
+    });
+
+    $('a.addon-list').click(function() {
+        History.pushState(null, '', this.href);
+        var url = this.href;
+        var addonType = getUrlVars(url)['type'];
+        if (addonType === undefined) {
+            url = siteRoot + $(this).children('meta').attr("content").replace('&amp;', '&');
+            addonType = getUrlVars(url)['type'];
+        }
+        var addonId = getUrlVars(url)['name']; // we use the id as a varchar in the database
+        loadContentWithAjax("#right-content_body", siteRoot + 'addons-panel.php', {name: addonId, type: addonType}, clearPanelStatus)
+
+        return false;
+    });
+
+    $('.add-rating').click(function() {
+
+    });
+
+    $('a.manage-list').click(function() {
+        History.pushState(null, '', this.href);
+        var view = getUrlVars(this.href)['view'];
+        loadContentWithAjax("#right-content_body", siteRoot + 'manage-panel.php', {view: view}, clearPanelStatus);
+
+        return false;
+    });
+
+    $('a.user-list').click(function() {
+        History.pushState(null, '', this.href);
+        var user = getUrlVars(this.href)['user'];
+        loadContentWithAjax("#right-content_body", siteRoot + 'users-panel.php', {user: user}, clearPanelStatus)
+
+        return false;
+    });
+
+});
+

@@ -1,5 +1,5 @@
 (function(window, document) {
-
+    "use strict";
 
     function btnToggle() {
         $("#btn-bugs-add").toggleClass("hide");
@@ -7,14 +7,16 @@
     }
 
     $("#btn-bugs-add").click(function() {
-        loadContentWithAjax("#bug-content", siteRoot + 'bugs/add.php');
-        btnToggle();
+        History.pushState(null, '', "?add");
+        loadContentWithAjax("#bug-content", siteRoot + 'bugs/add.php', {}, btnToggle);
+
         return false;
     });
 
     $("#btn-bugs-back").click(function() {
-        loadContentWithAjax("#bug-content", siteRoot + 'bugs/all.php');
-        btnToggle();
+        History.back();
+        loadContentWithAjax("#bug-content", siteRoot + 'bugs/all.php', {}, btnToggle);
+
         return false;
     });
 
@@ -43,8 +45,10 @@
     });
 
     $("#content-bugs").on("click", "table .bugs", function() {
-        loadContentWithAjax("#bug-content", encodeURI(siteRoot + 'bugs/view.php?bug_id=' + $(this).attr("data-id")))
-        btnToggle();
+        var bug_id = $(this).parent().attr("data-id");
+        History.pushState(null, '', "?bug_id=" + bug_id);
+        loadContentWithAjax("#bug-content", siteRoot + 'bugs/view.php', {bug_id: bug_id}, btnToggle)
+
         return false;
     });
 
