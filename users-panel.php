@@ -41,8 +41,6 @@ catch (UserException $e)
 $userData = $user->getUserData();
 
 $user_panel_tpl = new StkTemplate("user-panel.tpl");
-
-// TODO maybe put his onto a list
 $user_tpl = array(
     "username"    => array(
         "value" => $userData["user"]

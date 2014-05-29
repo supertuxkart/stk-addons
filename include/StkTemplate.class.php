@@ -129,7 +129,12 @@ class StkTemplate extends Template
     private function setupFooter()
     {
         // Fill script tags
-        $this->script_inline["before"][] = array('content' => "var siteRoot='" . SITE_ROOT . "';");
+        $this->script_inline["before"][] = array(
+            'content' => sprintf(
+                "var SITE_ROOT = '%s', BUGS_LOCATION = '%s';",
+                SITE_ROOT, BUGS_LOCATION
+            )
+        );
 
         $this->smarty->assign('script_inline', $this->script_inline);
 

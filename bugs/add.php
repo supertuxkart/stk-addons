@@ -26,8 +26,7 @@ $tplData = array("");
 // check permission
 if(!User::hasPermission(AccessControl::PERM_ADD_BUG))
 {
-    echo $tpl;
-    exit;
+    exit($tpl);
 }
 
 $tpl->assign("bug", $tplData);

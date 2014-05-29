@@ -24,14 +24,12 @@ $bug_id = isset($_GET["bug_id"]) ? $_GET["bug_id"] : "";
 
 if(empty($bug_id))
 {
-    echo "No bug id provided";
-    exit;
+    exit("No bug id provided");
 }
 
 if(!Bug::exists($bug_id))
 {
-    echo "Bug $bug_id does not exist";
-    exit;
+    exit("Bug $bug_id does not exist");
 }
 
 $tpl = new StkTemplate("bugs-view.tpl");

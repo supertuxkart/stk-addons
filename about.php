@@ -22,7 +22,7 @@
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
 
 $tpl = new StkTemplate('about.tpl');
-$tpl->assign('title', htmlspecialchars(_('STK Add-ons') . ' | ' . _('About')));
+$tpl->assign('title', h(_('STK Add-ons') . ' | ' . _('About')));
 $tpl->assign('about', array('credits' => array('content' => file_get_contents("CREDITS"))));
 
 echo $tpl;

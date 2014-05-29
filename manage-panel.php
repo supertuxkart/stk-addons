@@ -253,8 +253,7 @@ switch ($_GET['view'])
         break;
     default:
         // TODO maybe redirect
-        echo _h('Invalid page. You may have followed a broken link.');
-        exit;
+        exit(_h('Invalid page. You may have followed a broken link.'));
 }
 
 // output the view

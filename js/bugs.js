@@ -7,15 +7,15 @@
     }
 
     $("#btn-bugs-add").click(function() {
-        History.pushState(null, '', "?add");
-        loadContentWithAjax("#bug-content", siteRoot + 'bugs/add.php', {}, btnToggle);
+        History.pushState({state: "add"}, '', "?add");
+        loadContentWithAjax("#bug-content", BUGS_LOCATION + 'add.php', {}, btnToggle);
 
         return false;
     });
 
     $("#btn-bugs-back").click(function() {
         History.back();
-        loadContentWithAjax("#bug-content", siteRoot + 'bugs/all.php', {}, btnToggle);
+        loadContentWithAjax("#bug-content", BUGS_LOCATION + 'all.php', {}, btnToggle);
 
         return false;
     });
@@ -25,7 +25,7 @@
     $bug_search.submit(function() {
         $.ajax({
             type   : "POST",
-            url    : siteRoot + "json/bugs.php",
+            url    : SITE_ROOT + "json/bugs.php",
             data   : $bug_search.serialize(),
             success: function(data) {
                 var jData = JSON.parse(data);
@@ -46,10 +46,17 @@
 
     $("#content-bugs").on("click", "table .bugs", function() {
         var bug_id = $(this).parent().attr("data-id");
-        History.pushState(null, '', "?bug_id=" + bug_id);
-        loadContentWithAjax("#bug-content", siteRoot + 'bugs/view.php', {bug_id: bug_id}, btnToggle)
+        History.pushState({state: "view"}, '', "?bug_id=" + bug_id);
+        loadContentWithAjax("#bug-content", BUGS_LOCATION + 'view.php', {bug_id: bug_id}, btnToggle)
 
         return false;
+    });
+
+    // Bind to StateChange Event
+    // TODO fix browser back button
+    History.Adapter.bind(window,'statechange',function() {
+        var state = History.getState();
+        console.log(state);
     });
 
 })(window, document);

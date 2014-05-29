@@ -92,8 +92,7 @@ function loadDiv(newDiv) {
 }
 
 function clearPanelStatus() {
-    var div = document.getElementById('right-content_status');
-    div.innerHTML = '';
+    document.getElementById('right-content_status').innerHTML = '';
 }
 
 function textLimit(field, num) {
@@ -121,9 +120,8 @@ function loadHTML(url, storage) {
 
 function addRating(rating, addonId, sel_storage, disp_storage) {
     // TODO fix ratings
-    loadHTML(siteRoot + 'include/addRating.php?rating=' + encodeURI(rating) + '&addonId=' + encodeURI(addonId),
-        sel_storage);
-    loadHTML(siteRoot + 'include/addRating.php?addonId=' + encodeURI(addonId), disp_storage);
+    loadHTML(SITE_ROOT + 'include/addRating.php?rating=' + encodeURI(rating) + '&addonId=' + encodeURI(addonId), sel_storage);
+    loadHTML(SITE_ROOT + 'include/addRating.php?addonId=' + encodeURI(addonId), disp_storage);
 }
 
 // Read a page's GET URL variables and return them as an associative array.
@@ -154,11 +152,11 @@ $(document).ready(function() {
         var url = this.href;
         var addonType = getUrlVars(url)['type'];
         if (addonType === undefined) {
-            url = siteRoot + $(this).children('meta').attr("content").replace('&amp;', '&');
+            url = SITE_ROOT + $(this).children('meta').attr("content").replace('&amp;', '&');
             addonType = getUrlVars(url)['type'];
         }
         var addonId = getUrlVars(url)['name']; // we use the id as a varchar in the database
-        loadContentWithAjax("#right-content_body", siteRoot + 'addons-panel.php', {name: addonId, type: addonType}, clearPanelStatus)
+        loadContentWithAjax("#right-content_body", SITE_ROOT + 'addons-panel.php', {name: addonId, type: addonType}, clearPanelStatus)
 
         return false;
     });
@@ -170,7 +168,7 @@ $(document).ready(function() {
     $('a.manage-list').click(function() {
         History.pushState(null, '', this.href);
         var view = getUrlVars(this.href)['view'];
-        loadContentWithAjax("#right-content_body", siteRoot + 'manage-panel.php', {view: view}, clearPanelStatus);
+        loadContentWithAjax("#right-content_body", SITE_ROOT + 'manage-panel.php', {view: view}, clearPanelStatus);
 
         return false;
     });
@@ -178,10 +176,9 @@ $(document).ready(function() {
     $('a.user-list').click(function() {
         History.pushState(null, '', this.href);
         var user = getUrlVars(this.href)['user'];
-        loadContentWithAjax("#right-content_body", siteRoot + 'users-panel.php', {user: user}, clearPanelStatus)
+        loadContentWithAjax("#right-content_body", SITE_ROOT + 'users-panel.php', {user: user}, clearPanelStatus)
 
         return false;
     });
-
 });
 
