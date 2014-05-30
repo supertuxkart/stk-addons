@@ -81,9 +81,9 @@ define("ASSETS_XML_LOCATION", DOWNLOAD_LOCATION . "xml/assets.xml");
 define("NEWS_XML_PATH", UP_PATH . "xml" . DS . "news.xml");
 define("ASSETS_XML_PATH", UP_PATH . "xml" . DS . "assets.xml");
 
-define("IMG_LOCATION", SITE_ROOT . 'img/');
-define("JS_LOCATION", SITE_ROOT . 'js/');
-define("CSS_LOCATION", SITE_ROOT . 'css/');
+define("IMG_LOCATION", SITE_ROOT . 'assets/img/');
+define("JS_LOCATION", SITE_ROOT . 'assets/js/');
+define("CSS_LOCATION", SITE_ROOT . 'assets/css/');
 
 // add composer autoload
 require_once(ROOT_PATH . 'vendor' . DS . 'autoload.php');
