@@ -1,21 +1,35 @@
 (function(window, document) {
     "use strict";
 
+    var $content_bugs = $("#content-bugs");
+
     function btnToggle() {
         $("#btn-bugs-add").toggleClass("hide");
         $("#btn-bugs-back").toggleClass("hide");
     }
 
-    $("#btn-bugs-add").click(function() {
+    $("#bug-description").wysihtml5();
+    $content_bugs.on("click", "#btn-bugs-add", function() { // handle higher up the level for ajax
         History.pushState({state: "add"}, '', "?add");
-        loadContentWithAjax("#bug-content", BUGS_LOCATION + 'add.php', {}, btnToggle);
+        loadContentWithAjax("#bug-content", BUGS_LOCATION + 'add.php', {}, function() {
+            btnToggle();
+            $("#bug-description").wysihtml5();
+        });
 
         return false;
     });
 
-    $("#btn-bugs-back").click(function() {
+    $content_bugs.on("click", "#btn-bugs-back", function() {
         History.back();
         loadContentWithAjax("#bug-content", BUGS_LOCATION + 'all.php', {}, btnToggle);
+
+        return false;
+    });
+
+    $content_bugs.on("click", "table .bugs", function() {
+        var bug_id = $(this).parent().attr("data-id");
+        History.pushState({state: "view"}, '', "?bug_id=" + bug_id);
+        loadContentWithAjax("#bug-content", BUGS_LOCATION + 'view.php', {bug_id: bug_id}, btnToggle)
 
         return false;
     });
@@ -44,19 +58,9 @@
         return false;
     });
 
-    $("#content-bugs").on("click", "table .bugs", function() {
-        var bug_id = $(this).parent().attr("data-id");
-        History.pushState({state: "view"}, '', "?bug_id=" + bug_id);
-        loadContentWithAjax("#bug-content", BUGS_LOCATION + 'view.php', {bug_id: bug_id}, btnToggle)
-
-        return false;
-    });
-
-    $("#bug-description").wysihtml5();
-
     // Bind to StateChange Event
     // TODO fix browser back button
-    History.Adapter.bind(window, 'statechange',function() {
+    History.Adapter.bind(window, 'statechange', function() {
         var state = History.getState();
         console.log(state);
     });
