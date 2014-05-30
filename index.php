@@ -57,6 +57,7 @@ $tpl->assign(
         )
     )
 );
+$tpl->assign("show_stk_image", true);
 
 // Display news messages
 $news_messages = News::getWebVisible();

@@ -18,4 +18,8 @@
 <body>
 <div id="body-wrapper">
 {include file=#top_menu#}
-<div id="content-wrapper" class="stk-image">
+{if isset($show_stk_image) && $show_stk_image == true}
+    <div id="content-wrapper" class="stk-image">
+{else}
+    <div id="content-wrapper">
+{/if}

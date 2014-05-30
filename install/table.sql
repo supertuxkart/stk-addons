@@ -476,6 +476,23 @@ CREATE TABLE IF NOT EXISTS `v2_bugs` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `v2_bugs_comments`
+--
+
+CREATE TABLE IF NOT EXISTS `v2_bugs_comments` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `bug_id` int(11) unsigned NOT NULL COMMENT 'The bug we commented on',
+  `user_id` int(11) unsigned NOT NULL COMMENT 'The user who commented',
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'The date it was reported',
+  `description` varchar(2048) CHARACTER SET utf8 DEFAULT NULL COMMENT 'The comment description',
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `bug_id` (`bug_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `v2_roles`
 --
 
@@ -613,6 +630,14 @@ ALTER TABLE `v2_votes`
 ALTER TABLE `v2_bugs`
   ADD CONSTRAINT `v2_bugs_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `v2_users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
   ADD CONSTRAINT `v2_bugs_ibfk_2` FOREIGN KEY (`addon_id`) REFERENCES `v2_addons` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `v2_bugs_comments`
+--
+ALTER TABLE `v2_bugs_comments`
+  ADD CONSTRAINT `v2_bugs_comments_ibfk_1` FOREIGN KEY (`bug_id`) REFERENCES `v2_bugs` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  ADD CONSTRAINT `v2_bugs_comments_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `v2_users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
 
 --
 -- Constraints for table `v2_role_permissions`
