@@ -1,7 +1,8 @@
 config.php
+.htaccess
 assets/temp/*
 assets/xml/*
+assets/libs/*
 .idea/
 vendor/
-.htaccess
 upload/

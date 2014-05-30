@@ -25,6 +25,7 @@
         <td class="col-md-10">{$bug.description|escape}</td>
     </tr>
 </table>
+<hr>
 <div id="bug-comments">
     <h3>Comments</h3>
     {foreach $bug.comments as $comment}

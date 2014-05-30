@@ -52,6 +52,8 @@
         return false;
     });
 
+    $("#bug-description").wysihtml5();
+
     // Bind to StateChange Event
     // TODO fix browser back button
     History.Adapter.bind(window, 'statechange',function() {

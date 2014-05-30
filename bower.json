@@ -1,0 +1,15 @@
+{
+  "name": "stkaddons",
+  "dependencies": {
+    "jquery": "1.11.*",
+    "underscore": "1.6.0",
+    "bootstrap": "3.1.1",
+    "typeahead.js": "0.10.*",
+    "history.js": "1.8.*",
+    "bootstrap3-wysihtml5-bower": "0.3.*"
+  },
+  "resolutions": {
+    "jquery": "1.11.*",
+    "bootstrap": "3.1.1"
+  }
+}

@@ -22,7 +22,7 @@
                 {t}Description:{/t}
             </label><br>
             <div class="col-md-10">
-                <textarea id="bug-description" name="bug-description" class="form-control" rows="3" placeholder="Description"></textarea>
+                <textarea id="bug-description" name="bug-description" class="form-control" rows="10" placeholder="Description"></textarea>
             </div>
         </div>
         <div class="form-group">
