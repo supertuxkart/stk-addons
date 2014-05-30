@@ -31,14 +31,44 @@ class Bug
      */
     protected $bugData = array();
 
+
+    /**
+     * Hold all the comments for this bug
+     * @var array
+     */
+    protected $commentsData = array();
+
     /**
      * @param int   $id
      * @param array $bugData
+     *
+     * @throws BugException on database error
      */
     public function __construct($id, array $bugData = array())
     {
         $this->id = $id;
         $this->bugData = $bugData;
+
+        // load comments
+        try
+        {
+            $comments = DBConnection::get()->query(
+                "SELECt * FROM " . DB_PREFIX . "bugs_comments
+                WHERE `bug_id` = :bug_id
+                ORDER BY date DESC",
+                DBConnection::FETCH_ALL,
+                array(":bug_id" => $this->id)
+            );
+        }
+        catch(DBException $e)
+        {
+            throw new BugException(h(
+                _("Tried to fetch comments.") . ' ' .
+                _('Please contact a website administrator.')
+            ));
+        }
+
+        $this->commentsData = $comments;
     }
 
     /**
@@ -139,6 +169,16 @@ class Bug
         return $this->bugData;
     }
 
+
+    /**
+     * The comments data of the bug
+     * @return array
+     */
+    public function getCommentsData()
+    {
+        return $this->commentsData;
+    }
+
     /**
      * See if a bug exists
      *
@@ -193,25 +233,37 @@ class Bug
         return $bugs;
     }
 
+    /**
+     * Search a bug by different criteria
+     *
+     * @param string $search_term        the search item
+     * @param string $status             the status of the bug. possible: all, open, closed
+     * @param bool   $search_description search also in description
+     *
+     * @return array|int|null
+     * @throws InvalidArgumentException
+     * @throws BugException
+     */
     public static function search($search_term, $status = "all", $search_description = false)
     {
-        if(empty($search_term))
+        if (empty($search_term))
         {
             return array();
         }
 
         try
         {
-            if($search_description)
+            if ($search_description)
             {
-                $query = "SELECT * FROM `" . DB_PREFIX . "bugs` WHERE (`title` LIKE :search_term OR `description` LIKE :search_term)";
+                $query =
+                    "SELECT * FROM `" . DB_PREFIX . "bugs` WHERE (`title` LIKE :search_term OR `description` LIKE :search_term)";
             }
             else
             {
                 $query = "SELECT * FROM `" . DB_PREFIX . "bugs` WHERE (`title` LIKE :search_term)";
             }
 
-            switch($status)
+            switch ($status)
             {
                 case "all";
                     break;
@@ -222,7 +274,7 @@ class Bug
                     $query .= " AND `close_id` is NOT NULL";
                     break;
                 default:
-                    if(DEBUG_MODE)
+                    if (DEBUG_MODE)
                     {
                         throw new InvalidArgumentException(sprintf("status = %s is invalid", $status));
                     }

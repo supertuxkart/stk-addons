@@ -25,3 +25,22 @@
         <td class="col-md-10">{$bug.description|escape}</td>
     </tr>
 </table>
+<div id="bug-comments">
+    <h3>Comments</h3>
+    {foreach $bug.comments as $comment}
+        {$c={counter}}
+        <div class="panel panel-default" id="c{$c}">
+            <div class="panel-heading clearfix">
+                <h4 class="panel-title">{$comment.user_name|escape}
+                    <span class="pull-right text-right">
+                    <a href="#c{$c}">{$comment.date}</a>
+                </span>
+                </h4>
+            </div>
+
+            <div class="panel-body">
+                {$comment.description|escape}
+            </div>
+        </div>
+    {/foreach}
+</div>

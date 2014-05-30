@@ -22,25 +22,37 @@ require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
 $bug_id = isset($_GET["bug_id"]) ? $_GET["bug_id"] : "";
 
-if(empty($bug_id))
+if (empty($bug_id))
 {
     exit("No bug id provided");
 }
 
-if(!Bug::exists($bug_id))
+if (!Bug::exists($bug_id))
 {
     exit("Bug $bug_id does not exist");
 }
 
 $tpl = new StkTemplate("bugs-view.tpl");
 $bug = Bug::get($_GET["bug_id"]);
+$comments = array();
+foreach ($bug->getCommentsData() as $comment)
+{
+    $comments[] = array(
+        "user_name"   => User::getFromID($comment["user_id"])->getUserName(),
+        "date"        => $comment["date"],
+        "description" => $comment["description"]
+
+    );
+}
+
 $tplData = array(
-    "title" => $bug->getTitle(),
-    "user"  => User::getFromID($bug->getUserId())->getUserName(),
-    "addon" => $bug->getAddonId(),
+    "title"       => $bug->getTitle(),
+    "user"        => User::getFromID($bug->getUserId())->getUserName(),
+    "addon"       => $bug->getAddonId(),
     "date_report" => $bug->getDateReport(),
-    "date_edit" => $bug->getDateEdit(),
-    "description" => $bug->getDescription()
+    "date_edit"   => $bug->getDateEdit(),
+    "description" => $bug->getDescription(),
+    "comments"    => $comments
 );
 
 $tpl->assign("bug", $tplData);
