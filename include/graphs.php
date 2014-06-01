@@ -1,10 +1,5 @@
 <?php
-error_reporting(E_ALL ^ E_STRICT);
-if (!defined('ROOT'))
-{
-    define('ROOT', '../');
-}
-require_once(ROOT . 'config.php');
+require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
 function graph_data_to_json($values, $labels, $format, $graph_id)
 {

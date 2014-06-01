@@ -275,11 +275,11 @@ class Report
     public function __toString()
     {
         $return = "<html>\n<head>\n\t<title>{$this->report_title}</title>\n";
-        $return .= "\t<script src=\"" . ROOT . "js/sorttable.js\" type=\"text/javascript\"></script>\n";
+        $return .= "\t<script src=\"" . JS_LOCATION . "sorttable.js\" type=\"text/javascript\"></script>\n";
         $return .= "\t<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js\" type=\"text/javascript\"></script>\n";
         $return .= "\t<script src=\"https://www.google.com/jsapi\" type=\"text/javascript\"></script>\n";
-        $return .= "\t<script src=\"" . ROOT . "js/reports.js\" type=\"text/javascript\"></script>\n";
-        $return .= "\t<link href=\"" . ROOT . "css/report.css\" rel=\"StyleSheet\" type=\"text/css\" />\n</head>\n";
+        $return .= "\t<script src=\"" . JS_LOCATION . "reports.js\" type=\"text/javascript\"></script>\n";
+        $return .= "\t<link href=\"" . CSS_LOCATION . "report.css\" rel=\"StyleSheet\" type=\"text/css\" />\n</head>\n";
         $return .= "<body>\n\t<h1>{$this->report_title}</h1>\n";
         $return .= "\t<blockquote>{$this->report_description}</blockquote>\n";
 
