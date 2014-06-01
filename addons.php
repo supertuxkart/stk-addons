@@ -20,13 +20,10 @@
  */
 
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
+
 $_GET['type'] = (isset($_GET['type'])) ? $_GET['type'] : null;
 switch ($_GET['type'])
 {
-    default:
-        $type_label = _h('Unknown Type');
-        header("HTTP/1.0 404 Not Found");
-        break;
     case 'tracks':
         $type_label = _h('Tracks');
         break;
@@ -35,6 +32,10 @@ switch ($_GET['type'])
         break;
     case 'arenas':
         $type_label = _h('Arenas');
+        break;
+    default:
+        $type_label = _h('Unknown Type');
+        header("HTTP/1.0 404 Not Found");
         break;
 }
 $title = $type_label . ' - ' . _h('SuperTuxKart Add-ons');
@@ -45,7 +46,7 @@ $_GET['save'] = (isset($_GET['save'])) ? $_GET['save'] : null;
 $_GET['rev'] = (isset($_GET['rev'])) ? (int)$_GET['rev'] : null;
 
 // Throw a 404 if the requested addon wasn't found
-if ($_GET['name'] != null && !Addon::exists($_GET['name']))
+if (!is_null($_GET["name"]) && !Addon::exists($_GET['name']))
 {
     header("HTTP/1.0 404 Not Found");
 }
@@ -56,26 +57,25 @@ if ($addonName !== false)
     $title = $addonName . ' - ' . $title;
 }
 
-include("include/top.php");
 
-?>
-    </head>
-    <body>
-<?php
-include("include/menu.php");
-
-$panels = new PanelInterface();
+$tpl = new StkTemplate("two-pane.tpl");
+$tpl->assign("title", $title);
+$panel = array(
+    'left'   => '',
+    'status' => '',
+    'right'  => ''
+);
 
 if (!Addon::isAllowedType($_GET['type']))
 {
-    echo '<span class="error">' . _h('Invalid addon type.') . '</span><br />';
+    $panel["status"] = '<span class="error">' . _h('Invalid addon type.') . '</span><br />';
+    $tpl->assign("panel", $panel);
+    echo $tpl;
     exit;
 }
 
-$js = "";
-
-$status = "";
 // Execute actions
+$status = "";
 try
 {
     switch ($_GET['save'])
@@ -153,7 +153,7 @@ try
         case 'deletefile':
             $mAddon = new Addon($_GET['name']);
             $mAddon->deleteFile((int)$_GET['id']);
-            $status =  _h('Deleted file.') . '<br>';
+            $status = _h('Deleted file.') . '<br>';
             break;
         case 'include':
             $mAddon = new Addon($_GET['name']);
@@ -166,11 +166,11 @@ catch(Exception $e)
 {
     $status = '<span class="error">' . $e->getMessage() . '</span><br />';
 }
-$panels->setStatusContent($status);
+$panel["status"] = $status;
 
 $addons = array();
 $addons_list = Addon::getAddonList($_GET['type'], true);
-foreach ($addons_list AS $ad)
+foreach ($addons_list as $ad)
 {
     try
     {
@@ -203,20 +203,21 @@ foreach ($addons_list AS $ad)
         }
 
         // Approved?
-        if ($adc->hasApprovedRevision())
+        if (!$adc->hasApprovedRevision())
         {
             $class = 'addon-list menu-item';
         }
-        elseif (User::isLoggedIn() &&
-            (User::hasPermission(AccessControl::PERM_EDIT_ADDONS) || User::getId() == $adc->getUploader())
-        )
+        elseif (User::hasPermission(AccessControl::PERM_EDIT_ADDONS) || User::getId() == $adc->getUploader())
         {
+            // not approved, see of we are logged in and we have permission
             $class = 'addon-list menu-item unavailable';
         }
         else
         {
+            // do not show
             continue;
         }
+
         $icon_html = '<img class="icon" src="' . $icon . '" height="25" width="25" />';
         if (($adc->getStatus() & F_FEATURED) == F_FEATURED)
         {
@@ -231,16 +232,21 @@ foreach ($addons_list AS $ad)
     }
     catch(AddonException $e)
     {
-        echo '<span class="error">' . $e->getMessage() . '</span><br />';
+        $panel["status"] = '<span class="error">' . $e->getMessage() . '</span><br />';
     }
 }
-$panels->setMenuItems($addons);
+// left panel
+$left_tpl = new StkTemplate('url-list-panel.tpl');
+$left_tpl->assign('items', $addons);
+$panel['left'] = (string)$left_tpl;
 
-if (isset($_GET['name']))
+// right panel
+if (!is_null($_GET["name"]))
 {
-    $content = ob_get_require_once(ROOT_PATH . 'addons-panel.php');
-    $panels->setContent($content);
+    $panel['right'] = ob_get_require_once(ROOT_PATH . 'addons-panel.php');
 }
 
-echo $panels;
-include("include/footer.php");
+// output the view
+$tpl->assign('panel', $panel);
+echo $tpl;
+

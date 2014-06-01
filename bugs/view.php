@@ -41,7 +41,6 @@ foreach ($bug->getCommentsData() as $comment)
         "user_name"   => User::getFromID($comment["user_id"])->getUserName(),
         "date"        => $comment["date"],
         "description" => $comment["description"]
-
     );
 }
 

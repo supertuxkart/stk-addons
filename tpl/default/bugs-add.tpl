@@ -1,5 +1,6 @@
 {if !empty($bug)}
     <h2>{t}File a bug{/t}</h2>
+    <hr>
     <form class="form-horizontal">
         <div class="form-group">
             <label for="addon-name" class="col-md-2">

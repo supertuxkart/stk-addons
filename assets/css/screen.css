@@ -1,6 +1,6 @@
 /**
  * copyright 2012 Stephen Just <stephenjust@users.sourceforge.net>
- *
+ *           2014 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -28,16 +28,6 @@ body {
 #body-wrapper {
     margin: auto;
     width: 1000px;
-}
-
-.center {
-    position:absolute;
-    width:100px;
-    height:100px;
-    left:50%;
-    top:50%;
-    margin-left:-50px;
-    margin-top:-50px;
 }
 
 #login-form {
@@ -257,30 +247,6 @@ body {
     color: #999999;
 }
 
-/* Error Messages */
-span.error {
-    background: #FFCCCC;
-    border: 1px solid #CC0000;
-    color: #CC0000;
-    display: inline-block;
-    padding: 0 2px 0 2px;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    border-radius: 3px;
-}
-
-span.warning {
-    background: #FFFFCC;
-    border: 1px solid #FFCC00;
-    color: #996600;
-    display: inline-block;
-    padding: 0 2px 0 2px;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    border-radius: 3px;
-}
-
-
 /* General content */
 #content {
     border-radius: 2px;
@@ -338,55 +304,12 @@ span.warning {
     width: 32px;
 }
 
-/* Flag Badges */
-span.badge {
-    display: block;
-    float: left;
-    margin: 1px;
-    padding: 3px;
-    white-space: nowrap;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    border-radius: 3px;
-}
-
-span.f_featured {
-    background-color: #FFFFCC;
-    border: 1px solid #996600;
-    color: #996600;
-}
-
-span.f_alpha {
-    background-color: #CCCCFF;
-    border: 1px solid #000099;
-    color: #000099;
-}
-
-span.f_beta {
-    background-color: #CCFFFF;
-    border: 1px solid #009999;
-    color: #009999;
-}
-
-span.f_rc {
-    background-color: #CCFFCC;
-    border: 1px solid #009900;
-    color: #009900;
-}
-
-span.f_dfsg {
-    background-color: #CCCCCC;
-    border: 1px solid #000000;
-    color: #000000;
-}
-
 /* Panel interface */
 #left-menu {
     float: left;
     width: 250px;
     padding: 30px;
 }
-
 
 #left-menu_body {
     background-image: url('../img/left-menu.png');
@@ -441,14 +364,6 @@ span.f_dfsg {
     top: 5px;
 }
 
-.unavailable {
-    color: #999999;
-}
-
-.unavailable a {
-    color: #999999;
-}
-
 #right-content {
     float: left;
     width: 620px;
@@ -488,23 +403,160 @@ span.f_dfsg {
     border-bottom: 1px dashed #CCCCCC;
 }
 
-a {
-    color: #000000;
-    text-decoration: none;
+#logo_center {
+    padding-top: 15px;
+    display: inline;
 }
 
-a:hover {
-    color: #999999;
+#upload_agreement td {
+    vertical-align: top;
 }
 
-a img {
-    border: none;
+/* Addons */
+div.image_thumbs {
+    overflow: auto;
 }
 
-.subtext {
-    font-size: x-small;
-    color: #666666;
+div.image_thumb_container {
+    display: block;
+    background: #CCCCDD;
+    border: 1px solid #666677;
+    border-radius: 3px;
+    float: left;
+    padding: 3px;
+    margin: 1px;
+    min-width: 78px;
+    min-height: 78px;
+    text-align: center;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+}
+
+#addon-image {
+    display: block;
+    float: right;
+    text-align: center;
+}
+
+#addon_flags th {
+    vertical-align: bottom;
+}
+
+/* Addon Description in Panel */
+#addon-description {
+    clear: left;
+    display: block;
+}
+
+/* Addon Rating */
+#rating-container {
+    background: #efefef;
+    border: 1px solid #cccccc;
+    clear: none;
+    float: right;
+    font-size: small;
     font-weight: normal;
+    padding: 2px;
+    display: block;
+}
+
+#rating-container p {
+    margin: 0px;
+    text-align: center;
+}
+
+.rating {
+    position: relative;
+    width: 55px;
+    height: 17px;
+}
+
+.rating .emptystars {
+    position: absolute;
+    background: transparent url('../img/stars.png') top left no-repeat;
+    top: 0px;
+    left: 0px;
+    width: 55px;
+    height: 17px;
+    z-index: 101;
+}
+
+.rating .fullstars {
+    position: absolute;
+    background: transparent url('../img/stars.png') bottom left no-repeat;
+    top: 0px;
+    left: 0px;
+    height: 17px;
+    z-index: 102;
+}
+
+#user-rating .rating {
+    display: inline-block;
+}
+
+/* Flag Badges */
+span.badge {
+    display: block;
+    float: left;
+    margin: 1px;
+    padding: 3px;
+    white-space: nowrap;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+
+span.f_featured {
+    background-color: #FFFFCC;
+    border: 1px solid #996600;
+    color: #996600;
+}
+
+span.f_alpha {
+    background-color: #CCCCFF;
+    border: 1px solid #000099;
+    color: #000099;
+}
+
+span.f_beta {
+    background-color: #CCFFFF;
+    border: 1px solid #009999;
+    color: #009999;
+}
+
+span.f_rc {
+    background-color: #CCFFCC;
+    border: 1px solid #009900;
+    color: #009900;
+}
+
+span.f_dfsg {
+    background-color: #CCCCCC;
+    border: 1px solid #000000;
+    color: #000000;
+}
+
+/* Error Messages */
+span.error {
+    background: #FFCCCC;
+    border: 1px solid #CC0000;
+    color: #CC0000;
+    display: inline-block;
+    padding: 0 2px 0 2px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+
+span.warning {
+    background: #FFFFCC;
+    border: 1px solid #FFCC00;
+    color: #996600;
+    display: inline-block;
+    padding: 0 2px 0 2px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
 }
 
 /* Error Pages */
@@ -532,4 +584,74 @@ a img {
 
 #error-container img {
     float: left;
+}
+
+a {
+    color: #000000;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #999999;
+}
+
+a img {
+    border: none;
+}
+
+.subtext {
+    font-size: x-small;
+    color: #666666;
+    font-weight: normal;
+}
+
+.center {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    left: 50%;
+    top: 50%;
+    margin-left: -50px;
+    margin-top: -50px;
+}
+
+.icon {
+    height: 25px;
+    margin-left: 2px;
+    margin-right: 10px;
+}
+
+.unavailable {
+    color: #999999;
+}
+
+.unavailable a {
+    color: #999999;
+}
+
+.help-hidden div {
+    display: none;
+}
+
+div.unapproved {
+    border: 1px solid #CC0000;
+    background: #DDCCCC
+}
+
+span.help-hidden {
+    color: white;
+    background-color: black;
+    width: 250px;
+    display: block;
+    font-weight: bold;
+    text-align: center;
+}
+
+div.help-hidden {
+    border: 1px solid grey;
+    width: 250px;
+}
+
+.preview {
+    width: 300px;
 }
