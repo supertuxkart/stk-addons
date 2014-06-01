@@ -203,7 +203,7 @@ foreach ($addons_list as $ad)
         }
 
         // Approved?
-        if (!$adc->hasApprovedRevision())
+        if ($adc->hasApprovedRevision())
         {
             $class = 'addon-list menu-item';
         }
