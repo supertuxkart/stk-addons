@@ -276,7 +276,6 @@ body {
 }
 
 #content-wrapper {
-    overflow-y: auto;
     overflow-x: hidden;
     min-height: 500px;
 }
@@ -314,7 +313,6 @@ body {
 #left-menu_body {
     background-image: url('../img/left-menu.png');
     overflow-x: hidden;
-    overflow-y: scroll;
     width: 230px;
     height: 456px;
     padding: 0 10px;
@@ -322,6 +320,7 @@ body {
 
 #left-menu_body ul {
     list-style: none;
+    height: auto;
     margin: 0;
     padding: 0;
 }
@@ -380,9 +379,8 @@ body {
 #right-content_body {
     background-image: url("../img/content-addon.png");
     width: 580px;
-    height: 456px;
+    height: auto;
     padding: 0 20px 0 20px;
-    overflow-y: scroll;
     overflow-x: hidden;
 }
 
