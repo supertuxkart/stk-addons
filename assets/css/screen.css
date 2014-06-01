@@ -314,13 +314,12 @@ body {
     background-image: url('../img/left-menu.png');
     overflow-x: hidden;
     width: 230px;
-    height: 456px;
+    height: 800px;
     padding: 0 10px;
 }
 
 #left-menu_body ul {
     list-style: none;
-    height: auto;
     margin: 0;
     padding: 0;
 }
