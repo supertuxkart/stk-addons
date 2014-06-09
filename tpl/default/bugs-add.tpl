@@ -1,7 +1,7 @@
 {if !empty($bug)}
     <h2>{t}File a bug{/t}</h2>
     <hr>
-    <form class="form-horizontal">
+    <form class="form-horizontal" id="bug-add-form">
         <div class="form-group">
             <label for="addon-name" class="col-md-2">
                 {t}Addon name:{/t}
@@ -28,6 +28,7 @@
         </div>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-2">
+                <input type="hidden" name="action" value="add">
                 <button type="submit" class="btn btn-info">Submit</button>
             </div>
         </div>

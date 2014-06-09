@@ -22,29 +22,55 @@ require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
 if (!isset($_POST["action"]) || empty($_POST["action"]))
 {
-    echo json_encode(array("error" => "action param is not defined or is empty"));
-    exit;
+    exit(json_encode(array("error" => "action param is not defined or is empty")));
 }
 
 switch (strtolower($_POST["action"]))
 {
-    case "search":
+    case "search": // search bug
         $errors = Validate::ensureInput($_POST, array("search-filter"));
-        if(!empty($errors))
+        if (!empty($errors))
         {
-            echo json_encode(array("error" => "one or more fields are empty"));
-            exit;
+            exit(json_encode(array("error" => _h("One or more fields are empty. This should never happen"))));
         }
 
         // search also the description
         $search_description = false;
-        if(isset($_POST["search-description"]) && $_POST["search-description"] === "on")
+        if (isset($_POST["search-description"]) && $_POST["search-description"] === "on")
         {
             $search_description = true;
         }
 
-        echo json_encode(Bug::search($_POST["search-title"], $_POST["search-filter"], $search_description));
+        $bugs = Bug::search($_POST["search-title"], $_POST["search-filter"], $search_description);
+        if (empty($bugs))
+        {
+            echo json_encode(array("error" => _h("Nothing to search for")));
+        }
+        else
+        {
+            echo json_encode(array("bugs" => $bugs));
+        }
         break;
+
+    case "add": // add bug
+        $errors = Validate::ensureInput($_POST, array("addon-name", "bug-title", "bug-description"));
+        if (!empty($errors))
+        {
+            exit(json_encode(array("error" => _h("One or more fields are empty"))));
+        }
+
+        try
+        {
+            Bug::insert(User::getId(), $_POST["addon-name"], $_POST["bug-title"], $_POST["bug-description"]);
+        }
+        catch(BugException $e)
+        {
+            exit(json_encode(array("error" => $e->getMessage())));
+        }
+
+        echo json_encode(array("success" => _h("Bug report added successfully")));
+        break;
+
     default:
         echo json_encode(array("error" => sprintf("action = %s is not recognized", $_POST["action"])));
         break;

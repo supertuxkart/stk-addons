@@ -340,4 +340,54 @@ class Bug
         return new Bug($data['id'], $data);
     }
 
+    /**
+     * Insert a bug into the database
+     *
+     * @param int    $userId
+     * @param string $addonId
+     * @param string $bugTitle
+     * @param string $bugDescription
+     *
+     * @throws BugException the error
+     */
+    public static function insert($userId, $addonId, $bugTitle, $bugDescription)
+    {
+        // validate
+        if (!Addon::exists($addonId))
+        {
+            throw new BugException(_h("The addon name does not exist"));
+        }
+
+        // clean
+        $bugTitle = h($bugTitle);
+        $bugDescription = strip_tags(
+            $bugDescription,
+            "<h2><h3><h4><h5><h6><p><img><a><ol><li><ul><b><i><u><small><blockquote>"
+        );
+
+        // insert
+        try
+        {
+            DBConnection::get()->insert(
+                "bugs",
+                array(
+                    "user_id"     => $userId,
+                    "addon_id"    => $addonId,
+                    "title"       => $bugTitle,
+                    "description" => $bugDescription,
+                ),
+                array(
+                    "date_report" => "NOW()"
+                )
+            );
+        }
+        catch(DBException $e)
+        {
+            throw new BugException(h(
+                _("Tried to insert a bug") . ' ' .
+                _('Please contact a website administrator.')
+            ));
+        }
+    }
+
 }

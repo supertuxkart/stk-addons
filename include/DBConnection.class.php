@@ -271,10 +271,11 @@ class DBConnection
      * @param string $table
      * @param array  $fields_data an associative array in which the key is the column and the value is the actual value
      *                            example: "name" => "daniel", "id" => 23
+     * @param array $other_data data that is not prepared (can be a constant value, a mysql function, etc)
      *
      * @throws DBException
      */
-    public function insert($table, array $fields_data)
+    public function insert($table, array $fields_data, array $other_data = array())
     {
         if (empty($table) or empty($fields_data))
         {
@@ -290,12 +291,15 @@ class DBConnection
             $prepared_pairs[":" . $field] = $value;
         }
 
+        $columns = array_merge(array_keys($fields_data), array_keys($other_data));
+        $values = array_merge(array_keys($prepared_pairs), array_values($other_data));
+
         // build the sql query
         $query = sprintf(
             "INSERT INTO %s (%s) VALUES (%s)",
             DB_PREFIX . $table,
-            '`' . implode("`, `", array_keys($fields_data)) . '`', // use back ticks for reserved mysql keywords
-            implode(", ", array_keys($prepared_pairs))
+            '`' . implode("`, `", $columns) . '`', // use back ticks for reserved mysql keywords
+            implode(", ", $values)
         );
 
         $this->query($query, static::NOTHING, $prepared_pairs);

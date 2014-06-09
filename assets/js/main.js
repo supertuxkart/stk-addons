@@ -32,7 +32,7 @@ function showAlert(options) {
     var options = {
         $container  : $(options.container),
         type        : options.type || "alert-info",
-        message     : options.message || "Oh snap alert",
+        message     : options.message || "The alert message is empty",
         dismiss     : options.dismiss || true,
         auto_dismiss: options.auto_dismiss || true,
         interval    : options.interval || 4000

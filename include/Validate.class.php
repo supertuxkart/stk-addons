@@ -280,30 +280,20 @@ class Validate
      *
      * @param array $pool the array to check agains
      * @param array $params the keys to check
-     * @param bool  $checkEmpty
      *
      * @return array the error array
      */
-    public static function ensureInput(array $pool, array $params, $checkEmpty = true)
+    public static function ensureInput(array $pool, array $params)
     {
         $errors = array();
 
         foreach($params as $param)
         {
-
-            if(!isset($pool[$param]))
+            if(empty($pool[$param]))
             {
-                $errors[] = sprintf("param = %s is not set", $param);
-            }
-            else if($checkEmpty)
-            {
-                if(empty($pool[$param]))
-                {
-                    $errors[] = sprintf("param = %s empty", $param);
-                }
+                $errors[] = sprintf("param = %s empty", $param);
             }
         }
-
 
         return $errors;
     }

@@ -1,6 +1,6 @@
 {config_load file="{$smarty.current_dir}/tpl.conf"}
 {include file=#header#}
-<div id="content-bugs">
+<div id="bugs-content">
     <h1>{t}Bug Tracker{/t}
         <small> {t}for addons{/t}</small>
     </h1>
@@ -8,9 +8,8 @@
 
     <div class="row">
         <div class="col-md-10">
-            <form class="form-inline center-block" role="form" id="bug-search">
+            <form class="form-inline center-block" role="form" id="bug-search-form">
                 <div class="form-group">
-                    <input type="hidden" name="action" value="search">
                     <input type="text" class="form-control input-lg" id="search-title" name="search-title"
                            placeholder="Enter bug title">
                 </div>
@@ -28,6 +27,7 @@
                         <input type="checkbox" id="search-description" name="search-description">{t}Search Description{/t}
                     </label>
                 </div>
+                <input type="hidden" name="action" value="search">
                 <button type="submit" class="btn btn-info btn-lg">{t}Search{/t}</button>
             </form>
         </div>

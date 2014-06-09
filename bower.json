@@ -6,7 +6,8 @@
     "bootstrap": "3.1.1",
     "typeahead.js": "0.10.*",
     "history.js": "1.8.*",
-    "bootstrap3-wysihtml5-bower": "0.3.*"
+    "bootstrap3-wysihtml5-bower": "0.3.*",
+    "parsleyjs": "~2.0.0"
   },
   "resolutions": {
     "jquery": "1.11.*",

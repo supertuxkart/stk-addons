@@ -280,18 +280,18 @@ body {
     min-height: 500px;
 }
 
-#content-bugs {
+#bugs-content {
     background: white;
     min-height: 500px;
 }
 
-#content-bugs > h1 {
+#bugs-content > h1 {
     text-align: center;
     margin-top: 0;
     padding-top: 20px;
 }
 
-#content-bugs h1 > form {
+#bugs-content h1 > form {
 
 }
 
