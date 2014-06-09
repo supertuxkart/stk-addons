@@ -148,7 +148,7 @@ class Bug
      */
     public function getDescription()
     {
-        return h($this->bugData["description"]);
+        return $this->bugData["description"];
     }
 
     /**

@@ -22,7 +22,7 @@
     </tr>
     <tr>
         <td class="col-md-2">{t}Description:{/t}</td>
-        <td class="col-md-10">{$bug.description|escape}</td>
+        <td class="col-md-10">{$bug.description}</td>
     </tr>
 </table>
 <hr>
