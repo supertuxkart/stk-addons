@@ -54,9 +54,10 @@ function getHTMLPurifierConfig()
     $config->set("Cache.SerializerPath", CACHE_PATH);
     $config->set(
         "HTML.AllowedElements",
-        array("h2", "h3", "h4", "h5", "h6", "p", "img", "a", "ol", "li", "ul", "b", "i", "u", "small", "blockquote")
+        array("h3", "h4", "h5", "h6", "p", "img", "a", "ol", "li", "ul", "b", "i", "u", "small", "blockquote")
     );
-    //$config->set("HTML.AllowedAttributes", array("a.href"));
+    $config->set("HTML.MaxImgLength", 480);
+    $config->set("CSS.MaxImgLength", "480px");
     $config->set("Attr.AllowedFrameTargets", array("_blank", "_self", "_top", "_parent"));
 
     return $config;

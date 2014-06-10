@@ -25,6 +25,10 @@ body {
     color: black;
 }
 
+textarea {
+    resize: horizontal;
+}
+
 #body-wrapper {
     margin: auto;
     width: 1000px;
@@ -489,6 +493,10 @@ div.image_thumb_container {
 
 #user-rating .rating {
     display: inline-block;
+}
+
+#bug-comments-container img {
+    max-height: 480px;
 }
 
 /* Flag Badges */

@@ -33,7 +33,7 @@
         <form class="form-horizontal" id="bug-add-comment-form">
             <div class="form-group">
                 <div class="col-md-12">
-                    <textarea id="bug-comment-description" name="bug-comment-description" class="form-control" rows="6" placeholder="Description"></textarea>
+                    <textarea id="bug-comment-description" name="bug-comment-description" class="form-control" rows="8" placeholder="Description"></textarea>
                 </div>
             </div>
             <div class="form-group">
