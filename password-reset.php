@@ -21,13 +21,14 @@
  */
 
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
+use Captcha\Captcha;
 
 $tpl = new StkTemplate('password-reset.tpl');
 $tpl->assign('title', htmlspecialchars(_('Reset Password') . ' - ' . _('STK Add-ons')));
 
 // CAPTCHA
-$publickey = CAPTCHA_PUB; // you got this from the signup page
-$captcha = recaptcha_get_html($publickey);
+$captcha = new Captcha();
+$captcha->setPublicKey(CAPTCHA_PUB)->setPrivateKey(CAPTCHA_PRIV);
 
 // Fill out various templates
 $pw_res = array(
@@ -35,7 +36,7 @@ $pw_res = array(
     'reset_form' => array(
         'display' => true,
         'captcha' => array(
-            'field' => $captcha
+            'field' => $captcha->html()
         ),
     ),
     'pass_form'  => array(
@@ -58,19 +59,12 @@ switch ($_GET['action'])
         try
         {
             // Check CAPTCHA
-            $privatekey = CAPTCHA_PRIV;
-            $resp = recaptcha_check_answer(
-                $privatekey,
-                $_SERVER["REMOTE_ADDR"],
-                $_POST["recaptcha_challenge_field"],
-                $_POST["recaptcha_response_field"]
-            );
-
-            if (!$resp->is_valid)
+            $response = $captcha->check();
+            if (!$response->isValid())
             {
                 // What happens when the CAPTCHA was entered incorrectly
                 throw new UserException(
-                    "The reCAPTCHA wasn't entered correctly. Go back and try it again." . "(reCAPTCHA said: " . $resp->error . ")");
+                    "The reCAPTCHA wasn't entered correctly. Go back and try it again." . "(reCAPTCHA said: " . $response->getError() . ")");
             }
 
             User::recover($_POST['user'], $_POST['mail']);

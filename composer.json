@@ -4,6 +4,7 @@
         "smarty-gettext/smarty-gettext": "@stable",
         "brandonwamboldt/utilphp": "1.0.*",
         "ezyang/htmlpurifier": "v4.6.0",
+        "recaptcha/php5": "v1.0.0",
         "php": ">=5.3.3",
         "ext-gd": "*",
         "ext-pdo": "*",
@@ -16,6 +17,6 @@
     },
     "autoload": {
         "classmap": ["include/"],
-        "files": ["include/functions.php", "include/Constants.php", "include/xmlWrite.php", "include/recaptchalib.php"]
+        "files": ["include/functions.php", "include/Constants.php", "include/xmlWrite.php"]
     }
 }

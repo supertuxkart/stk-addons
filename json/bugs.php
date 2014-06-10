@@ -25,6 +25,7 @@ if (!isset($_POST["action"]) || empty($_POST["action"]))
     exit(json_encode(array("error" => "action param is not defined or is empty")));
 }
 
+// TODO make user answer captcha question when he spams the add/submit button
 switch (strtolower($_POST["action"]))
 {
     case "search": // search bug
