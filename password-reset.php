@@ -24,7 +24,7 @@ require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
 use Captcha\Captcha;
 
 $tpl = new StkTemplate('password-reset.tpl');
-$tpl->assign('title', htmlspecialchars(_('Reset Password') . ' - ' . _('STK Add-ons')));
+$tpl->assign('title', h(_('Reset Password') . ' - ' . _('STK Add-ons')));
 
 // CAPTCHA
 $captcha = new Captcha();

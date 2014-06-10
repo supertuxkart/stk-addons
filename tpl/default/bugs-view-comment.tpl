@@ -7,6 +7,6 @@
         </h4>
     </div>
     <div class="panel-body">
-        {$comment.description|escape}
+        {$comment.description}
     </div>
 </div>

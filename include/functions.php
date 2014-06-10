@@ -56,6 +56,8 @@ function getHTMLPurifierConfig()
         "HTML.AllowedElements",
         array("h2", "h3", "h4", "h5", "h6", "p", "img", "a", "ol", "li", "ul", "b", "i", "u", "small", "blockquote")
     );
+    //$config->set("HTML.AllowedAttributes", array("a.href"));
+    $config->set("Attr.AllowedFrameTargets", array("_blank", "_self", "_top", "_parent"));
 
     return $config;
 }
