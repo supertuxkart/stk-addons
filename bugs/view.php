@@ -56,7 +56,6 @@ $tplData = array(
     "comments"    => $comments
 );
 
-var_debug();
 $tpl->assign("bug", $tplData);
 $tpl->assign("add_comment", User::isLoggedIn());
 echo $tpl;

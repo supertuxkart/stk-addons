@@ -89,24 +89,17 @@ switch (strtolower($_POST["action"]))
 
         // send back to comment to the user
         $comment_data = Bug::getCommentData($comment_id);
-        $comment_html = sprintf(
-            '<div class="panel panel-default" id="c%s">
-                <div class="panel-heading clearfix">
-                    <h4 class="panel-title">%s
-                        <span class="pull-right text-right">
-                        <a href="#c%s">%s</a>
-                    </span>
-                    </h4>
-                </div>
-                <div class="panel-body">%s</div>
-             </div>',
-            $comment_data["id"],
-            $_SESSION["user"],
-            $comment_data["id"],
-            $comment_data["date"],
-            $comment_data["description"]
+        $tpl_comment = StkTemplate::get("bugs-view-comment.tpl")->assign(
+            "comment",
+            array(
+                "id"          => $comment_data["id"],
+                "user_name"   => $_SESSION["user"],
+                "date"        => $comment_data["date"],
+                "description" => $comment_data["description"]
+            )
         );
-        echo json_encode(array("success" => _h("Comment added"), "comment" => $comment_html));
+
+        echo json_encode(array("success" => _h("Comment added"), "comment" => (string)$tpl_comment));
         break;
 
     default:

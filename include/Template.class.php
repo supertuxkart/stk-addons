@@ -40,12 +40,12 @@ class Template
 
     /**
      * @param string      $template_file
-     * @param string|null $template
+     * @param string|null $template_dir
      */
-    public function __construct($template_file, $template = null)
+    public function __construct($template_file, $template_dir = null)
     {
         $this->createSmartyInstance();
-        $this->setTemplateDir($template);
+        $this->setTemplateDir($template_dir);
         $this->setTemplateFile($template_file);
     }
 
@@ -55,6 +55,83 @@ class Template
     public function __toString()
     {
         return $this->getFilledTemplate();
+    }
+
+    /**
+     * Assign multiple values using an associative array
+     *
+     * @param array $assigns
+     *
+     * @return Template
+     * @throws TemplateException
+     */
+    public function assignments($assigns)
+    {
+        if (!is_array($assigns))
+        {
+            throw new TemplateException('Invalid template assignments.');
+        }
+
+        foreach ($assigns as $key => $value)
+        {
+            $this->smarty->assign($key, $value);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Assign a value to a template variable
+     *
+     * @param string $key
+     * @param mixed  $value May be a string or an array
+     *
+     * @return Template
+     */
+    public function assign($key, $value)
+    {
+        $this->smarty->assign($key, $value);
+
+        return $this;
+    }
+
+    /**
+     * Get the path to the template file directory, based on the template name
+     *
+     * @param string $template_dir
+     *
+     * @return string
+     * @throws TemplateException
+     */
+    public static function getTemplateDir($template_dir)
+    {
+        if (is_null($template_dir))
+        {
+            return TPL_PATH;
+        }
+        if (preg_match('/[a-z0-9\\-_]/i', $template_dir))
+        {
+            throw new TemplateException('Invalid character in template name.');
+        }
+        $dir = ROOT_PATH . 'tpl' . DS . $template_dir . DS;
+        if (file_exists($dir) && is_dir($dir))
+        {
+            return $dir;
+        }
+        throw new TemplateException(sprintf('The selected template "%s" does not exist.', h($template_dir)));
+    }
+
+    /**
+     * Return a instance of the class, factory method
+     *
+     * @param string      $template_file
+     * @param string|null $template_dir
+     *
+     * @return static
+     */
+    public static function get($template_file, $template_dir = null)
+    {
+        return new static($template_file, $template_dir);
     }
 
     /**
@@ -94,7 +171,7 @@ class Template
         }
         if (!file_exists($this->directory . $file_name))
         {
-            throw new TemplateException(sprintf('Could not find template file "%s".', htmlspecialchars($file_name)));
+            throw new TemplateException(sprintf('Could not find template file "%s".', h($file_name)));
         }
 
         $this->file = $this->directory . $file_name;
@@ -130,71 +207,9 @@ class Template
 
             return ob_get_clean();
         }
-        catch(Exception $e)
+        catch(SmartyException $e)
         {
-            if (DEBUG_MODE)
-            {
-                return sprintf("Template Error: %s", $e->getMessage());
-            }
-
-            return "Template Error";
+            return sprintf("Template Error: %s", $e->getMessage());
         }
-    }
-
-    /**
-     * Assign multiple values using an associative array
-     *
-     * @param array $assigns
-     *
-     * @throws TemplateException
-     */
-    public function assignments($assigns)
-    {
-        if (!is_array($assigns))
-        {
-            throw new TemplateException('Invalid template assignments.');
-        }
-
-        foreach ($assigns as $key => $value)
-        {
-            $this->smarty->assign($key, $value);
-        }
-    }
-
-    /**
-     * Assign a value to a template variable
-     *
-     * @param string $key
-     * @param mixed  $value May be a string or an array
-     */
-    public function assign($key, $value)
-    {
-        $this->smarty->assign($key, $value);
-    }
-
-    /**
-     * Get the path to the template file directory, based on the template name
-     *
-     * @param string $template
-     *
-     * @return string
-     * @throws TemplateException
-     */
-    public static function getTemplateDir($template)
-    {
-        if ($template === null)
-        {
-            return TPL_PATH;
-        }
-        if (preg_match('/[a-z0-9\\-_]/i', $template))
-        {
-            throw new TemplateException('Invalid character in template name.');
-        }
-        $dir = ROOT_PATH . 'tpl' . DS . $template . DS;
-        if (file_exists($dir) && is_dir($dir))
-        {
-            return $dir;
-        }
-        throw new TemplateException(sprintf('The selected template "%s" does not exist.', htmlspecialchars($template)));
     }
 }

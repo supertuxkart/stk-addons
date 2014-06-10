@@ -135,7 +135,8 @@ class StkTemplate extends Template
         $this->script_inline["before"][] = array(
             'content' => sprintf(
                 "var SITE_ROOT = '%s', BUGS_LOCATION = '%s';",
-                SITE_ROOT, BUGS_LOCATION
+                SITE_ROOT,
+                BUGS_LOCATION
             )
         );
 
@@ -255,6 +256,7 @@ class StkTemplate extends Template
      * @param string $content the js source code
      * @param string $order   'before' to display before the include script or 'after' to display after
      *
+     * @return StkTemplate
      * @throws InvalidArgumentException on invalid order
      */
     public function addScriptInline($content, $order = "after")
@@ -266,6 +268,8 @@ class StkTemplate extends Template
         $this->script_inline[$order][] = array(
             "content" => $content
         );
+
+        return $this;
     }
 
     /**
@@ -273,12 +277,16 @@ class StkTemplate extends Template
      *
      * @param string $src      the js file location
      * @param string $location the path to get the resource from
+     *
+     * @return StkTemplate
      */
     public function addScriptInclude($src, $location = JS_LOCATION)
     {
         $this->user_script_includes[] = array(
             "src" => $location . $src
         );
+
+        return $this;
     }
 
     /**
@@ -287,6 +295,8 @@ class StkTemplate extends Template
      * @param string $href
      * @param string $location default path to look to
      * @param string $media
+     *
+     * @return StkTemplate
      */
     public function addCssInclude($href, $location = CSS_LOCATION, $media = "")
     {
@@ -294,16 +304,22 @@ class StkTemplate extends Template
             "href"  => $location . $href,
             "media" => $media
         );
+
+        return $this;
     }
 
     /**
      * Set the description meta tag
      *
      * @param string $desc the page description content
+     *
+     * @return StkTemplate
      */
     public function setMetaDesc($desc)
     {
         $this->meta_desc = $desc;
+
+        return $this;
     }
 
     /**
@@ -311,10 +327,14 @@ class StkTemplate extends Template
      *
      * @param string $target  an destination url
      * @param int    $timeout in seconds
+     *
+     * @return StkTemplate
      */
     public function setMetaRefresh($target, $timeout = 5)
     {
         $this->meta_tags['refresh'] = sprintf('%d;URL=%s', $timeout, $target);
+
+        return $this;
     }
 
     /**
@@ -322,9 +342,13 @@ class StkTemplate extends Template
      *
      * @param string $key   the attribute key
      * @param string $value the attribute value
+     *
+     * @return StkTemplate
      */
     public function setMetaTag($key, $value)
     {
         $this->meta_tags[$key] = $value;
+
+        return $this;
     }
 }
