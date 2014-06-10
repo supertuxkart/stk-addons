@@ -108,7 +108,7 @@ class Bug
      */
     public function getCloseReason()
     {
-        return h($this->bugData["close_reason"]);
+        return $this->bugData["close_reason"];
     }
 
     /**
@@ -140,7 +140,7 @@ class Bug
      */
     public function getTitle()
     {
-        return h($this->bugData["title"]);
+        return $this->bugData["title"];
     }
 
     /**
@@ -360,10 +360,7 @@ class Bug
 
         // clean
         $bugTitle = h($bugTitle);
-        $bugDescription = strip_tags(
-            $bugDescription,
-            "<h2><h3><h4><h5><h6><p><img><a><ol><li><ul><b><i><u><small><blockquote>"
-        );
+        $bugDescription = HTMLPurifier::getInstance(getHTMLPurifierConfig())->purify($bugDescription);
 
         // insert
         try

@@ -112,7 +112,7 @@ class Template
             throw new TemplateException('Smarty was already configured.');
         }
         $this->smarty = new Smarty;
-        $this->smarty->setCompileDir(TMP_PATH . 'tpl_c' . DS);
+        $this->smarty->setCompileDir(CACHE_PATH . 'tpl_c' . DS);
     }
 
     /**

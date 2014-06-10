@@ -43,6 +43,24 @@ function ob_get_require_once($path)
 }
 
 /**
+ * Get the html purifier config with all settings set
+ *
+ * @return HTMLPurifier_Config
+ */
+function getHTMLPurifierConfig()
+{
+    $config = HTMLPurifier_Config::createDefault();
+    $config->set("Core.Encoding", "UTF-8");
+    $config->set("Cache.SerializerPath", CACHE_PATH);
+    $config->set(
+        "HTML.AllowedElements",
+        array("h2", "h3", "h4", "h5", "h6", "p", "img", "a", "ol", "li", "ul", "b", "i", "u", "small", "blockquote")
+    );
+
+    return $config;
+}
+
+/**
  * @param $nbr
  *
  * @return string
