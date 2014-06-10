@@ -2,9 +2,14 @@
     "use strict";
 
     var $content_bugs = $("#bugs-content");
-    var editorOptions = {
-        "html": true,
-    };
+
+    function registerEditors() {
+        var editorOptions = {
+            "html": true
+        };
+        $("#bug-description").wysihtml5(editorOptions);
+        $("#bug-comment-description").wysihtml5(editorOptions);
+    }
 
     function btnToggle() {
         $("#btn-bugs-add").toggleClass("hide");
@@ -36,12 +41,15 @@
             History.pushState({state: "add"}, '', "?add");
             loadContentWithAjax("#bug-content", BUGS_LOCATION + 'add.php', {}, function() {
                 btnToggle();
-                $("#bug-description").wysihtml5(editorOptions);
+                registerEditors();
             });
         },
         view : function(bug_id) {
             History.pushState({state: "view"}, '', "?bug_id=" + bug_id);
-            loadContentWithAjax("#bug-content", BUGS_LOCATION + 'view.php', {bug_id: bug_id}, btnToggle)
+            loadContentWithAjax("#bug-content", BUGS_LOCATION + 'view.php', {bug_id: bug_id}, function() {
+                btnToggle();
+                registerEditors();
+            });
         }
     };
 
@@ -63,10 +71,9 @@
         return false;
     });
 
-    // add
+    // add bug
     bugFormSubmit("#bug-add-form", function(data) {
-        var jData = JSON.parse(data);
-        console.log(jData);
+        var jData = parseJSON(data);
         if (jData.hasOwnProperty("error")) {
             showAlert({
                 container: "#alert-container",
@@ -86,9 +93,30 @@
         }
     });
 
+    // add bug comment
+    bugFormSubmit("#bug-add-comment-form", function(data) {
+        var jData = parseJSON(data);
+        if (jData.hasOwnProperty("error")) {
+            showAlert({
+                container: "#alert-container-comments",
+                type     : "alert-danger",
+                message  : jData["error"]
+            });
+            return;
+        }
+        if (jData.hasOwnProperty("success")) {
+            showAlert({
+                container: "#alert-container-comments",
+                type     : "alert-success",
+                message  : jData["success"]
+            });
+            return;
+        }
+    });
+
     // search
     bugFormSubmit("#bug-search-form", function(data) {
-        var jData = JSON.parse(data);
+        var jData = parseJSON(data);
         if (jData.hasOwnProperty("error")) {
             showAlert({
                 container: "#alert-container",
@@ -108,6 +136,6 @@
         console.log(state);
     });
 
-   $("#bug-description").wysihtml5(editorOptions);
+    registerEditors();
 
 })(window, document);

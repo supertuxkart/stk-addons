@@ -196,7 +196,7 @@ class Bug
         catch(DBException $e)
         {
             throw new BugException(h(
-                _("Tried to see if a bug exists.") . ' ' .
+                _("Tried to see if a bug exists.") . '. ' .
                 _('Please contact a website administrator.')
             ));
         }
@@ -327,7 +327,7 @@ class Bug
         catch(DBException $e)
         {
             throw new BugException(h(
-                _("Tried to see if a bug exists.") . ' ' .
+                _("Tried to see if a bug exists.") . '. ' .
                 _('Please contact a website administrator.')
             ));
         }
@@ -357,6 +357,10 @@ class Bug
         {
             throw new BugException(_h("The addon name does not exist"));
         }
+        if (!User::hasPermission(AccessControl::PERM_ADD_BUG))
+        {
+            throw new BugException(_h("You do not have the necessary permission to add a bug"));
+        }
 
         // clean
         $bugTitle = h($bugTitle);
@@ -373,18 +377,52 @@ class Bug
                     "title"       => $bugTitle,
                     "description" => $bugDescription,
                 ),
-                array(
-                    "date_report" => "NOW()"
-                )
+                array("date_report" => "NOW()")
             );
         }
         catch(DBException $e)
         {
             throw new BugException(h(
-                _("Tried to insert a bug") . ' ' .
+                _("Tried to insert a bug") . '. ' .
                 _('Please contact a website administrator.')
             ));
         }
     }
 
+    public static function insertComment($userId, $bugId, $commentDescription)
+    {
+        // validate
+        if (!static::exists($bugId))
+        {
+            throw new BugException(_h("The bug does not exist"));
+        }
+        if (!User::isLoggedIn())
+        {
+            throw new BugException(_h("You do not have the necessary permission to add a comment"));
+        }
+
+        // clean
+        $commentDescription = HTMLPurifier::getInstance(getHTMLPurifierConfig())->purify($commentDescription);
+
+        // insert
+        try
+        {
+            DBConnection::get()->insert(
+                "bugs_comments",
+                array(
+                    "user_id"     => $userId,
+                    "bug_id"      => $bugId,
+                    "description" => $commentDescription,
+                ),
+                array("date" => "NOW()")
+            );
+        }
+        catch(DBException $e)
+        {
+            throw new BugException(h(
+                _("Tried to insert a bug comment") . '. ' .
+                _('Please contact a website administrator.')
+            ));
+        }
+    }
 }

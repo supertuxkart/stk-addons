@@ -49,13 +49,7 @@
         </div>
     </div>
     <br><br>
-    <div class="alert alert-danger alert-dismissable hide" id="bugs-alert">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        Oh snap
-    </div>
-    <div id="alert-container">
-
-    </div>
+    <div id="alert-container"></div>
     <div id="bug-content">
         {$bugs.content}
     </div>

@@ -71,6 +71,25 @@ switch (strtolower($_POST["action"]))
         echo json_encode(array("success" => _h("Bug report added successfully")));
         break;
 
+    case "add-comment": // add bug comment
+        $errors = Validate::ensureInput($_POST, array("bug-comment-description", "bug-id"));
+        if (!empty($errors))
+        {
+            exit(json_encode(array("error" => _h("One or more fields are empty"))));
+        }
+
+        try
+        {
+            Bug::insertComment(User::getId(), $_POST["bug-id"], $_POST["bug-comment-description"]);
+        }
+        catch(BugException $e)
+        {
+            exit(json_encode(array("error" => $e->getMessage())));
+        }
+
+        echo json_encode(array("success" => _h("Comment added")));
+        break;
+
     default:
         echo json_encode(array("error" => sprintf("action = %s is not recognized", $_POST["action"])));
         break;

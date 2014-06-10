@@ -38,6 +38,7 @@ $comments = array();
 foreach ($bug->getCommentsData() as $comment)
 {
     $comments[] = array(
+        "id"          => $comment["id"],
         "user_name"   => User::getFromID($comment["user_id"])->getUserName(),
         "date"        => $comment["date"],
         "description" => $comment["description"]
@@ -45,6 +46,7 @@ foreach ($bug->getCommentsData() as $comment)
 }
 
 $tplData = array(
+    "id"          => $bug->getId(),
     "title"       => $bug->getTitle(),
     "user"        => User::getFromID($bug->getUserId())->getUserName(),
     "addon"       => $bug->getAddonId(),
@@ -55,4 +57,5 @@ $tplData = array(
 );
 
 $tpl->assign("bug", $tplData);
+$tpl->assign("add_comment", User::isLoggedIn());
 echo $tpl;

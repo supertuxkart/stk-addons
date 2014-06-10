@@ -10,7 +10,7 @@ function loadContentWithAjax(selector, url_to_load, url_get_params, callback, ca
         callback_before();
     }
 
-    $.get(url_to_load, url_get_params, function(data) {
+    $.get(url_to_load, url_get_params,function(data) {
         $selector.html(data);
         if (_.isFunction(callback)) {
             callback(data);
@@ -62,6 +62,18 @@ function showAlert(options) {
     // add to container
     options.$container.html($div);
     options.$container.fadeIn(500); // show because of the toggle or other css options
+}
+
+function parseJSON(raw_string) {
+    var jData;
+    try {
+        jData = JSON.parse(raw_string);
+    } catch (e) {
+        console.error("Parson JSON error: ", e);
+        console.error("Raw string: ", raw_string);
+    }
+
+    return jData;
 }
 
 function confirm_delete(url) {
@@ -120,7 +132,8 @@ function loadHTML(url, storage) {
 
 function addRating(rating, addonId, sel_storage, disp_storage) {
     // TODO fix ratings
-    loadHTML(SITE_ROOT + 'include/addRating.php?rating=' + encodeURI(rating) + '&addonId=' + encodeURI(addonId), sel_storage);
+    loadHTML(SITE_ROOT + 'include/addRating.php?rating=' + encodeURI(rating) + '&addonId=' + encodeURI(addonId),
+        sel_storage);
     loadHTML(SITE_ROOT + 'include/addRating.php?addonId=' + encodeURI(addonId), disp_storage);
 }
 
@@ -156,7 +169,8 @@ $(document).ready(function() {
             addonType = getUrlVars(url)['type'];
         }
         var addonId = getUrlVars(url)['name']; // we use the id as a varchar in the database
-        loadContentWithAjax("#right-content_body", SITE_ROOT + 'addons-panel.php', {name: addonId, type: addonType}, clearPanelStatus)
+        loadContentWithAjax("#right-content_body", SITE_ROOT + 'addons-panel.php', {name: addonId, type: addonType},
+            clearPanelStatus)
 
         return false;
     });
