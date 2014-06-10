@@ -2,6 +2,9 @@
     "use strict";
 
     var $content_bugs = $("#bugs-content");
+    var editorOptions = {
+        "html": true,
+    };
 
     function btnToggle() {
         $("#btn-bugs-add").toggleClass("hide");
@@ -33,7 +36,7 @@
             History.pushState({state: "add"}, '', "?add");
             loadContentWithAjax("#bug-content", BUGS_LOCATION + 'add.php', {}, function() {
                 btnToggle();
-                $("#bug-description").wysihtml5();
+                $("#bug-description").wysihtml5(editorOptions);
             });
         },
         view : function(bug_id) {
@@ -105,6 +108,6 @@
         console.log(state);
     });
 
-    $("#bug-description").wysihtml5();
+   $("#bug-description").wysihtml5(editorOptions);
 
 })(window, document);

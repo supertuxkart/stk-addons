@@ -277,7 +277,7 @@ class DBConnection
      */
     public function insert($table, array $fields_data, array $other_data = array())
     {
-        if (empty($table) or empty($fields_data))
+        if (empty($table) || empty($fields_data))
         {
             throw new DBException("Empty table or data");
         }
