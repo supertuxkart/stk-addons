@@ -33,8 +33,11 @@ On your web server, you must edit the provided `install/config-base.php` to matc
 and system configuration. Save this file as `config.php` in the website root. Enable the debugging mode in
 the configuration file to assist with resolving any errors.
 
-Run `composer install` to download the php dependencies.
-Run `bower install` to download the javascript and css dependencies.
+Install dependencies:
+* `composer install` to download the php dependencies
+* `bower install` to download the javascript and css dependencies
+
+The cache folder is local, if you get permission errors on `assets/cache` just run `chmod 777 assets/cache`
 
 Register a new user using the web interface. Don't worry about configuring your SMTP
 server. After creating your user from the web interface, use a tool such as PHPMyAdmin
