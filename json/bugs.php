@@ -80,14 +80,33 @@ switch (strtolower($_POST["action"]))
 
         try
         {
-            Bug::insertComment(User::getId(), $_POST["bug-id"], $_POST["bug-comment-description"]);
+            $comment_id = Bug::insertComment(User::getId(), $_POST["bug-id"], $_POST["bug-comment-description"]);
         }
         catch(BugException $e)
         {
             exit(json_encode(array("error" => $e->getMessage())));
         }
 
-        echo json_encode(array("success" => _h("Comment added")));
+        // send back to comment to the user
+        $comment_data = Bug::getCommentData($comment_id);
+        $comment_html = sprintf(
+            '<div class="panel panel-default" id="c%s">
+                <div class="panel-heading clearfix">
+                    <h4 class="panel-title">%s
+                        <span class="pull-right text-right">
+                        <a href="#c%s">%s</a>
+                    </span>
+                    </h4>
+                </div>
+                <div class="panel-body">%s</div>
+             </div>',
+            $comment_data["id"],
+            $_SESSION["user"],
+            $comment_data["id"],
+            $comment_data["date"],
+            $comment_data["description"]
+        );
+        echo json_encode(array("success" => _h("Comment added"), "comment" => $comment_html));
         break;
 
     default:

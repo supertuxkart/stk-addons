@@ -110,6 +110,8 @@
                 type     : "alert-success",
                 message  : jData["success"]
             });
+
+            $("#bug-comments").prepend(jData["comment"]);
             return;
         }
     });

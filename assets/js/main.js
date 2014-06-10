@@ -132,8 +132,7 @@ function loadHTML(url, storage) {
 
 function addRating(rating, addonId, sel_storage, disp_storage) {
     // TODO fix ratings
-    loadHTML(SITE_ROOT + 'include/addRating.php?rating=' + encodeURI(rating) + '&addonId=' + encodeURI(addonId),
-        sel_storage);
+    loadHTML(SITE_ROOT + 'include/addRating.php?rating=' + encodeURI(rating) + '&addonId=' + encodeURI(addonId), sel_storage);
     loadHTML(SITE_ROOT + 'include/addRating.php?addonId=' + encodeURI(addonId), disp_storage);
 }
 
@@ -169,8 +168,7 @@ $(document).ready(function() {
             addonType = getUrlVars(url)['type'];
         }
         var addonId = getUrlVars(url)['name']; // we use the id as a varchar in the database
-        loadContentWithAjax("#right-content_body", SITE_ROOT + 'addons-panel.php', {name: addonId, type: addonType},
-            clearPanelStatus)
+        loadContentWithAjax("#right-content_body", SITE_ROOT + 'addons-panel.php', {name: addonId, type: addonType}, clearPanelStatus)
 
         return false;
     });

@@ -26,7 +26,7 @@
     </tr>
 </table>
 <hr>
-<div id="bug-comments">
+<div id="bug-comments-container">
     <h3>Comments</h3>
     {if $add_comment}
         <div id="alert-container-comments"></div>
@@ -48,19 +48,21 @@
         <p><a href="{$smarty.const.SITE_ROOT}login.php">{t}Login{/t}</a>{t} to add a comment{/t}</p>
     {/if}
 
-    {foreach $bug.comments as $comment}
-        <div class="panel panel-default" id="c{$comment.id}">
-            <div class="panel-heading clearfix">
-                <h4 class="panel-title">{$comment.user_name|escape}
-                    <span class="pull-right text-right">
-                    <a href="#c{$comment.id}">{$comment.date}</a>
-                </span>
-                </h4>
-            </div>
+    <div id="bug-comments">
+        {foreach $bug.comments as $comment}
+            <div class="panel panel-default" id="c{$comment.id}">
+                <div class="panel-heading clearfix">
+                    <h4 class="panel-title">{$comment.user_name|escape}
+                        <span class="pull-right text-right">
+                        <a href="#c{$comment.id}">{$comment.date}</a>
+                    </span>
+                    </h4>
+                </div>
 
-            <div class="panel-body">
-                {$comment.description|escape}
+                <div class="panel-body">
+                    {$comment.description|escape}
+                </div>
             </div>
-        </div>
-    {/foreach}
+        {/foreach}
+    </div>
 </div>

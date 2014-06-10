@@ -22,11 +22,13 @@ class Bug
 {
 
     /**
+     * Hold the bug id
      * @var int
      */
     protected $id;
 
     /**
+     * Hold all the bug fields
      * @var array
      */
     protected $bugData = array();
@@ -191,7 +193,7 @@ class Bug
     {
         try
         {
-            $count = DBConnection::get()->count("bugs", "id = :id", array(":id" => $id));
+            $count = DBConnection::get()->count("bugs", "`id` = :id", array(":id" => $id));
         }
         catch(DBException $e)
         {
@@ -205,9 +207,9 @@ class Bug
     }
 
     /**
-     * Get all the bug data
+     * Get all the bugs data without the comments
      *
-     * @return array|int|null
+     * @return array
      * @throws BugException
      */
     public static function getAllData()
@@ -222,15 +224,80 @@ class Bug
         }
         catch(DBException $e)
         {
-            if (DEBUG_MODE)
-            {
-                throw new BugException(_h("Error on selecting all bugs"));
-            }
-
-            return array();
+            throw new BugException(h(
+                _("Tried to fetch all bugs") . '. ' .
+                _('Please contact a website administrator.')
+            ));
         }
 
         return $bugs;
+    }
+
+    /**
+     * Factory method to build a Bug by id
+     *
+     * @param int $bug_id
+     *
+     * @return Bug
+     * @throws BugException
+     */
+    public static function get($bug_id)
+    {
+        try
+        {
+            $data = DBConnection::get()->query(
+                "SELECT * FROM " . DB_PREFIX . "bugs
+                WHERE `id` = :id LIMIT 1",
+                DBConnection::FETCH_FIRST,
+                array(":id" => $bug_id),
+                array(":id" => DBConnection::PARAM_INT)
+            );
+        }
+        catch(DBException $e)
+        {
+            throw new BugException(h(
+                _("Tried to see if a bug exists.") . '. ' .
+                _('Please contact a website administrator.')
+            ));
+        }
+
+        if (empty($data))
+        {
+            throw new BugException(sprintf(_h("There is no bug with id %d"), $bug_id));
+        }
+
+        return new Bug($data['id'], $data);
+    }
+
+    /**
+     * Get the data of a comment by id
+     *
+     * @param $comment_id
+     *
+     * @return array
+     * @throws BugException
+     */
+    public static function getCommentData($comment_id)
+    {
+        try
+        {
+            $comment = DBConnection::get()->query(
+                "SELECt * FROM " . DB_PREFIX . "bugs_comments
+                WHERE `id` = :id LIMIT 1",
+                DBConnection::FETCH_FIRST,
+                array(":id" => $comment_id),
+                array(":id" => DBConnection::PARAM_INT)
+            );
+        }
+        catch(DBException $e)
+        {
+            throw new BugException(h(
+                _("Tried to fetch a comments data") . '. ' .
+                _('Please contact a website administrator.')
+            ));
+        }
+
+        return $comment;
     }
 
     /**
@@ -290,64 +357,24 @@ class Bug
         }
         catch(DBException $e)
         {
-            if (DEBUG_MODE)
-            {
-                throw new BugException("Error on selecting all search bugs");
-            }
-
-            return array();
-        }
-
-        return $bugs;
-
-    }
-
-    /**
-     * Factory method to build a Bug by id
-     *
-     * @param int $id
-     *
-     * @return Bug
-     * @throws BugException
-     */
-    public static function get($id)
-    {
-        try
-        {
-            $data = DBConnection::get()->query(
-                "SELECT *
-                FROM " . DB_PREFIX . "bugs
-                WHERE `id` = :id
-                LIMIT 1",
-                DBConnection::FETCH_FIRST,
-                array(":id" => $id),
-                array(":id" => DBConnection::PARAM_INT)
-            );
-        }
-        catch(DBException $e)
-        {
             throw new BugException(h(
-                _("Tried to see if a bug exists.") . '. ' .
+                _("Error on selecting all search bugs") . '. ' .
                 _('Please contact a website administrator.')
             ));
         }
 
-        if (empty($data))
-        {
-            throw new BugException(sprintf(_h("There is no bug with id %d"), $id));
-        }
-
-        return new Bug($data['id'], $data);
+        return $bugs;
     }
 
     /**
-     * Insert a bug into the database
+     * Add a bug into the database
      *
      * @param int    $userId
      * @param string $addonId
      * @param string $bugTitle
      * @param string $bugDescription
      *
+     * @return int bug id
      * @throws BugException the error
      */
     public static function insert($userId, $addonId, $bugTitle, $bugDescription)
@@ -387,8 +414,20 @@ class Bug
                 _('Please contact a website administrator.')
             ));
         }
+
+        return DBConnection::get()->lastInsertId();
     }
 
+    /**
+     * Add a bug comment to the database
+     *
+     * @param int    $userId
+     * @param int    $bugId
+     * @param string $commentDescription
+     *
+     * @return int comment id
+     * @throws BugException
+     */
     public static function insertComment($userId, $bugId, $commentDescription)
     {
         // validate
@@ -424,5 +463,7 @@ class Bug
                 _('Please contact a website administrator.')
             ));
         }
+
+        return DBConnection::get()->lastInsertId();
     }
 }
