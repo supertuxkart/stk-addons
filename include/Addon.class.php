@@ -209,7 +209,7 @@ class Addon
         foreach ($attributes['missing_textures'] as $tex)
         {
             $moderator_message .= "Texture not found: $tex\n";
-            echo '<span class="warning">' . htmlspecialchars(
+            echo '<span class="warning">' . h(
                     sprintf(_('Texture not found: %s'), $tex)
                 ) . '</span><br />';
         }
@@ -1397,6 +1397,7 @@ class Addon
         {
             return array();
         }
+
         try
         {
             $query = 'SELECT `a`.`id`, (`r`.`status` & ' . F_FEATURED . ') AS `featured`

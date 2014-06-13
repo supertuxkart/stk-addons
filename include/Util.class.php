@@ -413,7 +413,7 @@ class Util
         if (Cache::fileExists($cache_name) !== array())
         {
             header('Cached-Image: true');
-            header('Location: ' . CACHE_LOCATION . '/' . $cache_name);
+            header('Location: ' . CACHE_LOCATION . $cache_name);
 
             return;
         }
@@ -478,13 +478,13 @@ class Util
         if ($format === 'png')
         {
             header('Content-Type: image/png');
-            imagepng($destination, CACHE_PATH . '/' . $cache_name, 9);
+            imagepng($destination, CACHE_PATH . $cache_name, 9);
             imagepng($destination, null, 9);
         }
         else
         {
             header("Content-Type: image/jpeg");
-            imagejpeg($destination, CACHE_PATH . '/' . $cache_name, 90);
+            imagejpeg($destination, CACHE_PATH . $cache_name, 90);
             imagejpeg($destination, null, 90);
         }
 
@@ -502,7 +502,7 @@ class Util
      */
     public static function getImageLabel($text)
     {
-        $write_dir = UP_PATH . 'temp/';
+        $write_dir = UP_PATH . 'temp' . DS;
         $read_dir = DOWNLOAD_LOCATION . 'temp/';
 
         $text_noaccent = preg_replace('/\W/s', '_', $text); // remove some accents

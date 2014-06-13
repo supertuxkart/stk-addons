@@ -62,7 +62,7 @@ class AddonViewer
         {
             if (User::isLoggedIn())
             {
-                //write configuration for the submiter and administrator
+                // write configuration for the submiter and administrator
                 if (User::hasPermission(AccessControl::PERM_EDIT_ADDONS) || $this->addon->getUploader() == User::getId())
                 {
                     $return .= $this->displayConfig();
@@ -119,15 +119,13 @@ class AddonViewer
             );
         }
         // Add upload button below image (or in place of image)
-        if (User::isLoggedIn() && ($this->addon->getUploader(
-                ) == User::getId() || User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
-        )
+        if (User::isLoggedIn() && ($this->addon->getUploader() == User::getId() || User::hasPermission(AccessControl::PERM_EDIT_ADDONS)))
         {
             $tpl['addon']['image_upload'] = array(
                 'display'      => true,
-                'target'       => SITE_ROOT . 'upload.php?type=' . $this->addon->getType(
-                    ) . '&amp;name=' . $this->addon->getId() . '&amp;action=file',
-                'button_label' => htmlspecialchars(_('Upload Image'))
+                'target'       => SITE_ROOT . 'upload.php?type=' . $this->addon->getType() . '&amp;name=' . $this->addon->getId(
+                    ) . '&amp;action=file',
+                'button_label' => _h('Upload Image')
             );
         }
 
@@ -135,38 +133,37 @@ class AddonViewer
         $latestRev = $this->addon->getLatestRevision();
         $info = array(
             'type'          => array(
-                'label' => htmlspecialchars(_('Type:')),
-                'value' => htmlspecialchars(_('Arena')) // Not shown except for arenas
+                'label' => _h('Type:'),
+                'value' => _h('Arena') // Not shown except for arenas
             ),
             'designer'      => array(
-                'label' => htmlspecialchars(_('Designer:')),
-                'value' => htmlspecialchars($this->addon->getDesigner())
+                'label' => _h('Designer:'),
+                'value' => h($this->addon->getDesigner())
             ),
             'upload_date'   => array(
-                'label' => htmlspecialchars(_('Upload date:')),
+                'label' => _h('Upload date:'),
                 'value' => $latestRev['timestamp']
             ),
             'submitter'     => array(
-                'label' => htmlspecialchars(_('Submitted by:')),
-                'value' => '<a href="' . SITE_ROOT . 'users.php?user=' . $addonUser->getUserName(
-                    ) . '">' . htmlspecialchars(
+                'label' => _h('Submitted by:'),
+                'value' => '<a href="' . SITE_ROOT . 'users.php?user=' . $addonUser->getUserName() . '">' . h(
                         $addonUser->getUserFullName()
                     ) . '</a>'
             ),
             'revision'      => array(
-                'label' => htmlspecialchars(_('Revision:')),
+                'label' => _h('Revision:'),
                 'value' => $latestRev['revision']
             ),
             'compatibility' => array(
-                'label' => htmlspecialchars(_('Compatible with:')),
+                'label' => _h('Compatible with:'),
                 'value' => Util::getVersionFormat($latestRev['format'], $this->addon->getType())
             ),
             'license'       => array(
-                'label' => htmlspecialchars(_('License')),
-                'value' => htmlspecialchars($this->addon->getLicense(), null, 'UTF-8', false)
+                'label' => _h('License'),
+                'value' => h($this->addon->getLicense())
             ),
             'link'          => array(
-                'label' => htmlspecialchars(_('Permalink')),
+                'label' => _h('Permalink'),
                 'value' => File::rewrite($this->addon->getLink())
             )
         );
@@ -174,16 +171,14 @@ class AddonViewer
         $tpl['addon']['warnings'] = null;
         if ($latestRev['status'] & F_TEX_NOT_POWER_OF_2)
         {
-            $tpl['addon']['warnings'] = htmlspecialchars(
-                _(
-                    'Warning: This addon may not display correctly on some systems. It uses textures that may not be compatible with all video cards.'
-                )
+            $tpl['addon']['warnings'] = _h(
+                'Warning: This addon may not display correctly on some systems. It uses textures that may not be compatible with all video cards.'
             );
         }
 
         $tpl['addon']['vote'] = array(
             'display'  => User::isLoggedIn(),
-            'label'    => htmlspecialchars(_('Your Rating:')),
+            'label'    => _h('Your Rating:'),
             'controls' => $this->rating->displayUserRating()
         );
 
@@ -191,14 +186,14 @@ class AddonViewer
         $file_path = $this->addon->getFile((int)$this->latestRev['revision']);
         if ($file_path !== false && File::exists($file_path))
         {
-            $button_text = htmlspecialchars(sprintf(_('Download %s'), $this->addon->getName($this->addon->getId())));
+            $button_text = h(sprintf(_('Download %s'), $this->addon->getName($this->addon->getId())));
             $shrink = (strlen($button_text) > 20) ? 'style="font-size: 1.1em !important;"' : null;
             $tpl['addon']['dl'] = array(
                 'display'            => true,
                 'label'              => $button_text,
                 'url'                => DOWNLOAD_LOCATION . $file_path,
                 'shrink'             => $shrink,
-                'use_client_message' => htmlspecialchars(_('Download this add-on in game!'))
+                'use_client_message' => _h('Download this add-on in game!')
             );
         }
         else
@@ -208,19 +203,20 @@ class AddonViewer
 
         // Revision list
         $rev_list = array(
-            'label'     => htmlspecialchars(_('Revisions')),
+            'label'     => _h('Revisions'),
             'upload'    => array(
                 'display'      => false,
-                'target'       => SITE_ROOT . 'upload.php?type=' . $this->addon->getType(
-                    ) . '&amp;name=' . $this->addon->getId(),
-                'button_label' => htmlspecialchars(_('Upload Revision'))
+                'target'       => SITE_ROOT . 'upload.php?type=' . $this->addon->getType() . '&amp;name=' . $this->addon->getId(),
+                'button_label' => _h('Upload Revision')
             ),
             'revisions' => array()
         );
+
         if (User::isLoggedIn() && ($this->addon->getUploader() == User::getId() || User::hasPermission(AccessControl::PERM_EDIT_ADDONS)))
         {
             $rev_list['upload']['display'] = true;
         }
+
         $revisions = $this->addon->getAllRevisions();
         foreach ($revisions AS $rev_n => $revision)
         {
@@ -237,8 +233,7 @@ class AddonViewer
                 // User is logged in
                 // If the user is not the uploader, or moderators, then they
                 // cannot see unapproved addons
-                if (($this->addon->getUploader() != User::getId() && !User::hasPermission(AccessControl::PERM_EDIT_ADDONS)) && !($revision['status'] & F_APPROVED)
-                )
+                if ($this->addon->getUploader() != User::getId() && !User::hasPermission(AccessControl::PERM_EDIT_ADDONS) && !($revision['status'] & F_APPROVED))
                 {
                     continue;
                 }
@@ -249,7 +244,7 @@ class AddonViewer
                 'file'      => array(
                     'path' => DOWNLOAD_LOCATION . $this->addon->getFile($rev_n)
                 ),
-                'dl_label'  => htmlspecialchars(sprintf(_('Download revision %u'), $rev_n))
+                'dl_label'  => h(sprintf(_('Download revision %u'), $rev_n))
             );
             if (!File::exists($rev['file']['path']))
             {
@@ -261,15 +256,15 @@ class AddonViewer
 
         // Image list
         $im_list = array(
-            'label'             => htmlspecialchars(_('Images')),
+            'label'             => _h('Images'),
             'upload'            => array(
                 'display'      => false,
-                'target'       => SITE_ROOT . 'upload.php?type=' . $this->addon->getType(
-                    ) . '&amp;name=' . $this->addon->getId() . '&amp;action=file',
-                'button_label' => htmlspecialchars(_('Upload Image'))
+                'target'       => SITE_ROOT . 'upload.php?type=' . $this->addon->getType() . '&amp;name=' . $this->addon->getId(
+                    ) . '&amp;action=file',
+                'button_label' => _h('Upload Image')
             ),
             'images'            => array(),
-            'no_images_message' => htmlspecialchars(_('No images have been uploaded for this addon yet.'))
+            'no_images_message' => _h('No images have been uploaded for this addon yet.')
         );
         if (User::isLoggedIn() && ($this->addon->getUploader() == User::getId() || User::hasPermission(AccessControl::PERM_EDIT_ADDONS)))
         {
@@ -293,17 +288,18 @@ class AddonViewer
                     {
                         $admin_links .= '<a href="' . File::rewrite(
                                 $this->addon->getLink() . '&amp;save=unapprove&amp;id=' . $image['id']
-                            ) . '">' . htmlspecialchars(_('Unapprove')) . '</a>';
+                            ) . '">' . _h('Unapprove') . '</a>';
                     }
                     else
                     {
                         $admin_links .= '<a href="' . File::rewrite(
                                 $this->addon->getLink() . '&amp;save=approve&amp;id=' . $image['id']
-                            ) . '">' . htmlspecialchars(_('Approve')) . '</a>';
+                            ) . '">' . _h('Approve') . '</a>';
                     }
                     $admin_links .= '<br />';
                 }
-                if (User::hasPermission(AccessControl::PERM_EDIT_ADDONS) || $this->addon->getUploader() == User::getId())
+                if (User::hasPermission(AccessControl::PERM_EDIT_ADDONS) || $this->addon->getUploader() == User::getId()
+                )
                 {
                     if ($this->addon->getType() == 'karts')
                     {
@@ -311,18 +307,18 @@ class AddonViewer
                         {
                             $admin_links .= '<a href="' . File::rewrite(
                                     $this->addon->getLink() . '&amp;save=seticon&amp;id=' . $image['id']
-                                ) . '">' . htmlspecialchars(_('Set Icon')) . '</a><br />';
+                                ) . '">' . _h('Set Icon') . '</a><br />';
                         }
                     }
                     if ($this->addon->getImage() != $image['id'])
                     {
                         $admin_links .= '<a href="' . File::rewrite(
                                 $this->addon->getLink() . '&amp;save=setimage&amp;id=' . $image['id']
-                            ) . '">' . htmlspecialchars(_('Set Image')) . '</a><br />';
+                            ) . '">' . _h('Set Image') . '</a><br />';
                     }
                     $admin_links .= '<a href="' . File::rewrite(
                             $this->addon->getLink() . '&amp;save=deletefile&amp;id=' . $image['id']
-                        ) . '">' . htmlspecialchars(_('Delete File')) . '</a><br />';
+                        ) . '">' . _h('Delete File') . '</a><br />';
                 }
             }
             $image['admin_links'] = $admin_links;
@@ -343,15 +339,15 @@ class AddonViewer
 
         // Source files
         $s_list = array(
-            'label'            => htmlspecialchars(_('Source Files')),
+            'label'            => _h('Source Files'),
             'upload'           => array(
                 'display'      => false,
-                'target'       => SITE_ROOT . 'upload.php?type=' . $this->addon->getType(
-                    ) . '&amp;name=' . $this->addon->getId() . '&amp;action=file',
-                'button_label' => htmlspecialchars(_('Upload Source File'))
+                'target'       => SITE_ROOT . 'upload.php?type=' . $this->addon->getType() . '&amp;name=' . $this->addon->getId(
+                    ) . '&amp;action=file',
+                'button_label' => _h('Upload Source File')
             ),
             'files'            => array(),
-            'no_files_message' => htmlspecialchars(_('No source files have been uploaded for this addon yet.'))
+            'no_files_message' => _h('No source files have been uploaded for this addon yet.')
         );
         if (User::isLoggedIn() && ($this->addon->getUploader() == User::getId() || User::hasPermission(AccessControl::PERM_EDIT_ADDONS)))
         {
@@ -363,14 +359,14 @@ class AddonViewer
         $source_files = array();
         foreach ($source_files_db AS $source)
         {
-            $source['label'] = sprintf(htmlspecialchars(_('Source File %u')), count($source_files) + 1);
+            $source['label'] = sprintf(_h('Source File %u'), count($source_files) + 1);
             $source['details'] = null;
             if ($source['approved'] == 0)
             {
-                $source['details'] .= '(' . htmlspecialchars(_('Not Approved')) . ') ';
+                $source['details'] .= '(' . _h('Not Approved') . ') ';
             }
-            $source['details'] .= '<a href="' . DOWNLOAD_LOCATION . $source['file_path'] . '" rel="nofollow">' . htmlspecialchars(
-                    _('Download')
+            $source['details'] .= '<a href="' . DOWNLOAD_LOCATION . $source['file_path'] . '" rel="nofollow">' . _(
+                    'Download'
                 ) . '</a>';
             if (User::isLoggedIn())
             {
@@ -380,20 +376,23 @@ class AddonViewer
                     {
                         $source['details'] .= ' | <a href="' . File::rewrite(
                                 $this->addon->getLink() . '&amp;save=unapprove&amp;id=' . $source['id']
-                            ) . '">' . htmlspecialchars(_('Unapprove')) . '</a>';
+                            ) . '">' . _h('Unapprove') . '</a>';
                     }
                     else
                     {
                         $source['details'] .= ' | <a href="' . File::rewrite(
                                 $this->addon->getLink() . '&amp;save=approve&amp;id=' . $source['id']
-                            ) . '">' . htmlspecialchars(_('Approve')) . '</a>';
+                            ) . '">' . _h('Approve') . '</a>';
                     }
                 }
-                if ($this->addon->getUploader() == User::getId() || User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
+                if ($this->addon->getUploader() == User::getId() || User::hasPermission(
+                        AccessControl::PERM_EDIT_ADDONS
+                    )
+                )
                 {
                     $source['details'] .= ' | <a href="' . File::rewrite(
                             $this->addon->getLink() . '&amp;save=deletefile&amp;id=' . $source['id']
-                        ) . '">' . htmlspecialchars(_('Delete File')) . '</a><br />';
+                        ) . '">' . _h('Delete File') . '</a><br />';
                 }
             }
             if (User::isLoggedIn() &&
@@ -425,23 +424,23 @@ class AddonViewer
         $string = '';
         if ($status & F_FEATURED)
         {
-            $string .= '<span class="badge f_featured">' . htmlspecialchars(_('Featured')) . '</span>';
+            $string .= '<span class="badge f_featured">' . _h('Featured') . '</span>';
         }
         if ($status & F_ALPHA)
         {
-            $string .= '<span class="badge f_alpha">' . htmlspecialchars(_('Alpha')) . '</span>';
+            $string .= '<span class="badge f_alpha">' . _h('Alpha') . '</span>';
         }
         if ($status & F_BETA)
         {
-            $string .= '<span class="badge f_beta">' . htmlspecialchars(_('Beta')) . '</span>';
+            $string .= '<span class="badge f_beta">' . _h('Beta') . '</span>';
         }
         if ($status & F_RC)
         {
-            $string .= '<span class="badge f_rc">' . htmlspecialchars(_('Release-Candidate')) . '</span>';
+            $string .= '<span class="badge f_rc">' . _h('Release-Candidate') . '</span>';
         }
         if ($status & F_DFSG)
         {
-            $string .= '<span class="badge f_dfsg">' . htmlspecialchars(_('DFSG Compliant')) . '</span>';
+            $string .= '<span class="badge f_dfsg">' . _h('DFSG Compliant') . '</span>';
         }
 
         return $string;
@@ -459,44 +458,37 @@ class AddonViewer
         {
             throw new AddonException('You must be logged in to see this.');
         }
-        if (User::hasPermission(AccessControl::PERM_EDIT_ADDONS) == false && $this->addon->getUploader() != User::getId())
+        if (User::hasPermission(AccessControl::PERM_EDIT_ADDONS) == false && $this->addon->getUploader() != User::getId()
+        )
         {
-            throw new AddonException(htmlspecialchars(
-                _('You do not have the necessary privileges to perform this action.')
-            ));
+            throw new AddonException(_h('You do not have the necessary privileges to perform this action.'));
         }
 
-        echo '<br /><hr /><br /><h3>' . htmlspecialchars(_('Configuration')) . '</h3>';
+        echo '<br /><hr /><br /><h3>' . _h('Configuration') . '</h3>';
         echo '<form name="changeProps" action="' . File::rewrite(
                 $this->addon->getLink() . '&amp;save=props'
             ) . '" method="POST" accept-charset="utf-8">';
 
         // Edit designer
-        $designer =
-            ($this->addon->getDesigner() == htmlspecialchars(_('Unknown'))) ? null : $this->addon->getDesigner();
-        echo '<label for="designer_field">' . htmlspecialchars(_('Designer:')) . '</label><br />';
+        $designer = ($this->addon->getDesigner() == _h('Unknown')) ? null : $this->addon->getDesigner();
+        echo '<label for="designer_field">' . _h('Designer:') . '</label><br />';
         echo '<input type="text" name="designer" id="designer_field" value="' . $designer . '" accept-charset="utf-8" /><br />';
         echo '<br />';
 
         // Edit description
-        echo '<label for="desc_field">' . htmlspecialchars(_('Description:')) . '</label> (' . sprintf(
-                htmlspecialchars(_('Max %u characters')),
-                '140'
-            ) . ')<br />';
-        echo '<textarea name="description" id="desc_field" rows="4" cols="60"
-            onKeyUp="textLimit(document.getElementById(\'desc_field\'),140);"
-            onKeyDown="textLimit(document.getElementById(\'desc_field\'),140);"
-            accept-charset="utf-8">' . $this->addon->getDescription() . '</textarea><br />';
+        echo '<label for="desc_field">' . _h('Description:') . '</label> (' . sprintf(_h('Max %u characters'), '140') . ')<br />';
+        echo '<textarea name="description" id="desc_field" rows="4" cols="60" onKeyUp="textLimit(document.getElementById(\'desc_field\'),140);"
+            onKeyDown="textLimit(document.getElementById(\'desc_field\'),140);" accept-charset="utf-8">' . $this->addon->getDescription(
+            ) . '</textarea><br />';
 
         // Submit
-        echo '<input type="submit" value="' . htmlspecialchars(_('Save Properties')) . '" />';
+        echo '<input type="submit" value="' . _h('Save Properties') . '" />';
         echo '</form><br />';
 
         // Delete addon
         if ($this->addon->getUploader() == User::getId() || User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
         {
-            echo '<input type="button" value="' . htmlspecialchars(_('Delete Addon')) . '"
-                onClick="confirm_delete(\'' . File::rewrite(
+            echo '<input type="button" value="' . _h('Delete Addon') . '"onClick="confirm_delete(\'' . File::rewrite(
                     $this->addon->getLink() . '&amp;save=delete'
                 ) . '\')" /><br /><br />';
         }
@@ -504,35 +496,32 @@ class AddonViewer
         // Mark whether or not an add-on has ever been included in STK
         if (User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
         {
-            echo '<strong>' . htmlspecialchars(_('Included in Game Versions:')) . '</strong><br />';
+            echo '<strong>' . _h('Included in Game Versions:') . '</strong><br />';
             echo '<form method="POST" action="' . File::rewrite($this->addon->getLink() . '&amp;save=include') . '">';
-            echo htmlspecialchars(
-                    _('Start:')
-                ) . ' <input type="text" name="incl_start" size="6" value="' . htmlspecialchars(
+            echo _h('Start:') . ' <input type="text" name="incl_start" size="6" value="' . h(
                     $this->addon->getIncludeMin()
                 ) . '" /><br />';
-            echo htmlspecialchars(
-                    _('End:')
-                ) . ' <input type="text" name="incl_end" size="6" value="' . htmlspecialchars(
+            echo _h('End:') . ' <input type="text" name="incl_end" size="6" value="' . h(
                     $this->addon->getIncludeMax()
                 ) . '" /><br />';
-            echo '<input type="submit" value="' . htmlspecialchars(_('Save')) . '" /><br />';
+            echo '<input type="submit" value="' . _h('Save') . '" /><br />';
             echo '</form><br />';
         }
 
         // Set status flags
-        echo '<strong>' . htmlspecialchars(_('Status Flags:')) . '</strong><br />';
+        echo '<strong>' . _h('Status Flags:') . '</strong><br />';
         echo '<form method="POST" action="' . File::rewrite($this->addon->getLink() . '&amp;save=status') . '">';
         echo '<table id="addon_flags" class="info"><thead><tr><th></th>';
         if (User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
         {
-            echo '<th>' . Util::getImageLabel(_h('Approved')) . '</th>
-                <th>' . Util::getImageLabel(_h('Invisible')) . '</th>';
+            echo '<th>' . Util::getImageLabel(_h('Approved')) . '</th><th>' . Util::getImageLabel(
+                    _h('Invisible')
+                ) . '</th>';
         }
-        echo '<th>' . Util::getImageLabel(_h('Alpha')) . '</th>
-            <th>' . Util::getImageLabel(_h('Beta')) . '</th>
-            <th>' . Util::getImageLabel(_h('Release-Candidate')) . '</th>
-            <th>' . Util::getImageLabel(_h('Latest')) . '</th>';
+        echo '<th>' . Util::getImageLabel(_h('Alpha')) . '</th><th>' . Util::getImageLabel(_h('Beta')) . '</th>
+            <th>' . Util::getImageLabel(_h('Release-Candidate')) . '</th><th>' . Util::getImageLabel(
+                _h('Latest')
+            ) . '</th>';
         if (User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
         {
             echo '<th>' . Util::getImageLabel(_h('DFSG Compliant')) . '</th>
@@ -540,13 +529,14 @@ class AddonViewer
         }
         echo '<th>' . Util::getImageLabel(_h('Invalid Textures')) . '</th><th></th>';
         echo '</tr></thead>';
+
         $fields = array();
         $fields[] = 'latest';
         foreach ($this->addon->getAllRevisions() AS $rev_n => $revision)
         {
             // Row Header
             echo '<tr><td style="text-align: center;">';
-            printf(htmlspecialchars(_('Rev %u:')), $rev_n);
+            printf(_h('Rev %u:'), $rev_n);
             echo '</td>';
 
             if (User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
@@ -673,9 +663,10 @@ class AddonViewer
             // Delete revision button
             echo '<td>';
             echo '<input type="button" value="' . sprintf(
-                    htmlspecialchars(_('Delete revision %d')),
-                    $rev_n
-                ) . '" onClick="confirm_delete(\'' . File::rewrite(
+                    _h('Delete revision %d')
+                ),
+                $rev_n
+                . '" onClick="confirm_delete(\'' . File::rewrite(
                     $this->addon->getLink() . '&amp;save=del_rev&amp;rev=' . $rev_n
                 ) . '\');" />';
             echo '</td>';
@@ -684,19 +675,20 @@ class AddonViewer
         }
         echo '</table>';
         echo '<input type="hidden" name="fields" value="' . implode(',', $fields) . '" />';
-        echo '<input type="submit" value="' . htmlspecialchars(_('Save Changes')) . '" />';
+        echo '<input type="submit" value="' . _h('Save Changes') . '" />';
         echo '</form><br />';
 
         // Moderator notes
-        echo '<strong>' . htmlspecialchars(_('Notes from Moderator to Submitter:')) . '</strong><br />';
+        echo '<strong>' . _h('Notes from Moderator to Submitter:') . '</strong><br />';
         if (User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
         {
             echo '<form method="POST" action="' . File::rewrite($this->addon->getLink() . '&amp;save=notes') . '">';
         }
+
         $fields = array();
         foreach ($this->addon->getAllRevisions() AS $rev_n => $revision)
         {
-            printf(htmlspecialchars(_('Rev %u:')) . '<br />', $rev_n);
+            printf(_h('Rev %u:') . '<br />', $rev_n);
             echo '<textarea name="notes-' . $rev_n . '"
                 id="notes-' . $rev_n . '" rows="4" cols="60"
                 onKeyUp="textLimit(document.getElementById(\'notes-' . $rev_n . '\'),4000);"
@@ -705,10 +697,11 @@ class AddonViewer
             echo '</textarea><br />';
             $fields[] = 'notes-' . $rev_n;
         }
+
         if (User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
         {
             echo '<input type="hidden" name="fields" value="' . implode(',', $fields) . '" />';
-            echo '<input type="submit" value="' . htmlspecialchars(_('Save Notes')) . '" />';
+            echo '<input type="submit" value="' . _h('Save Notes') . '" />';
             echo '</form>';
         }
 
