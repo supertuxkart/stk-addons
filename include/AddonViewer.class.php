@@ -159,7 +159,7 @@ class AddonViewer
             ),
             'compatibility' => array(
                 'label' => htmlspecialchars(_('Compatible with:')),
-                'value' => format_compat($latestRev['format'], $this->addon->getType())
+                'value' => Util::getVersionFormat($latestRev['format'], $this->addon->getType())
             ),
             'license'       => array(
                 'label' => htmlspecialchars(_('License')),
@@ -526,19 +526,19 @@ class AddonViewer
         echo '<table id="addon_flags" class="info"><thead><tr><th></th>';
         if (User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
         {
-            echo '<th>' . img_label(htmlspecialchars(_('Approved'))) . '</th>
-                <th>' . img_label(htmlspecialchars(_('Invisible'))) . '</th>';
+            echo '<th>' . Util::getImageLabel(_h('Approved')) . '</th>
+                <th>' . Util::getImageLabel(_h('Invisible')) . '</th>';
         }
-        echo '<th>' . img_label(htmlspecialchars(_('Alpha'))) . '</th>
-            <th>' . img_label(htmlspecialchars(_('Beta'))) . '</th>
-            <th>' . img_label(htmlspecialchars(_('Release-Candidate'))) . '</th>
-            <th>' . img_label(htmlspecialchars(_('Latest'))) . '</th>';
+        echo '<th>' . Util::getImageLabel(_h('Alpha')) . '</th>
+            <th>' . Util::getImageLabel(_h('Beta')) . '</th>
+            <th>' . Util::getImageLabel(_h('Release-Candidate')) . '</th>
+            <th>' . Util::getImageLabel(_h('Latest')) . '</th>';
         if (User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
         {
-            echo '<th>' . img_label(htmlspecialchars(_('DFSG Compliant'))) . '</th>
-                <th>' . img_label(htmlspecialchars(_('Featured'))) . '</th>';
+            echo '<th>' . Util::getImageLabel(_h('DFSG Compliant')) . '</th>
+                <th>' . Util::getImageLabel(_h('Featured')) . '</th>';
         }
-        echo '<th>' . img_label(htmlspecialchars(_('Invalid Textures'))) . '</th><th></th>';
+        echo '<th>' . Util::getImageLabel(_h('Invalid Textures')) . '</th><th></th>';
         echo '</tr></thead>';
         $fields = array();
         $fields[] = 'latest';
@@ -715,46 +715,4 @@ class AddonViewer
         return ob_get_clean();
     }
 
-}
-
-/**
- * @param $format
- * @param $filetype
- *
- * @return string
- */
-function format_compat($format, $filetype)
-{
-    // FIXME: This should not be hardcoded
-    switch ($filetype)
-    {
-
-        case 'karts':
-            if ($format == 1)
-            {
-                return 'Pre-0.7';
-            }
-            if ($format == 2)
-            {
-                return '0.7.0 - 0.8.1';
-            }
-
-            return htmlspecialchars(_('Unknown'));
-            break;
-        case 'tracks':
-        case 'arenas':
-            if ($format == 1 || $format == 2)
-            {
-                return 'Pre-0.7';
-            }
-            if ($format >= 3 && $format <= 5)
-            {
-                return '0.7.0 - 0.8.1';
-            }
-
-            return htmlspecialchars(_('Unknown'));
-            break;
-        default:
-            return htmlspecialchars(_('Unknown'));
-    }
 }

@@ -391,7 +391,7 @@ class Bug
 
         // clean
         $bugTitle = h($bugTitle);
-        $bugDescription = HTMLPurifier::getInstance(getHTMLPurifierConfig())->purify($bugDescription);
+        $bugDescription = HTMLPurifier::getInstance(Util::getHTMLPurifierConfig())->purify($bugDescription);
 
         // insert
         try
@@ -441,7 +441,7 @@ class Bug
         }
 
         // clean
-        $commentDescription = HTMLPurifier::getInstance(getHTMLPurifierConfig())->purify($commentDescription);
+        $commentDescription = HTMLPurifier::getInstance(Util::getHTMLPurifierConfig())->purify($commentDescription);
 
         // insert
         try

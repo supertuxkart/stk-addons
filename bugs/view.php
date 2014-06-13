@@ -56,6 +56,8 @@ $tplData = array(
     "comments"    => $comments
 );
 
-$tpl->assign("bug", $tplData);
-$tpl->assign("add_comment", User::isLoggedIn());
+$tpl->assign("bug", $tplData)
+    ->assign("current_url", urlencode(Util::getCurrentUrl(false, false)))
+    ->assign("add_comment", User::isLoggedIn());
+
 echo $tpl;

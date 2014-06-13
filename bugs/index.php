@@ -30,16 +30,16 @@ $tplData = array(
 if(isset($_GET["bug_id"]))
 {
     $tplData["show_btn_file"] = false;
-    $tplData["content"] = ob_get_require_once(BUGS_PATH . "view.php");
+    $tplData["content"] = Util::ob_get_require_once(BUGS_PATH . "view.php");
 }
 elseif(isset($_GET["add"]))
 {
     $tplData["show_btn_file"] = false;
-    $tplData["content"] = ob_get_require_once(BUGS_PATH . "add.php");
+    $tplData["content"] = Util::ob_get_require_once(BUGS_PATH . "add.php");
 }
 else
 {
-    $tplData["content"] = ob_get_require_once(BUGS_PATH . "all.php");
+    $tplData["content"] = Util::ob_get_require_once(BUGS_PATH . "all.php");
 }
 
 $tpl->assign("bugs", $tplData);

@@ -26,14 +26,27 @@ $_POST['user'] = (isset($_POST['user'])) ? $_POST['user'] : null;
 $_POST['pass'] = (isset($_POST['pass'])) ? $_POST['pass'] : null;
 $_GET['action'] = (isset($_GET['action'])) ? $_GET['action'] : null;
 
+// set default
+$return_to_url = "index.php";
+if (isset($_POST["return_to"]))
+{
+    $return_to_url = $_POST["return_to"];
+}
+elseif (isset($_GET["return_to"]))
+{
+    // decode the get
+    $return_to_url = urldecode($_GET["return_to"]);
+}
+
 $tpl = new StkTemplate('login.tpl');
 // Prepare forms
 $login_form = array(
-    'display' => true,
-    'form'    => array(
+    'display'   => true,
+    'return_to' => $return_to_url,
+    'form'      => array(
         'action' => File::rewrite('login.php?action=submit'),
     ),
-    'links'   => array(
+    'links'     => array(
         'register'       => File::link('register.php', _h('Create an account.')),
         'reset_password' => File::link('password-reset.php', _h('Forgot password?'))
     )
@@ -52,7 +65,7 @@ switch ($_GET['action'])
         }
         else
         {
-            $tpl->setMetaRefresh('index.php', 3);
+            $tpl->setMetaRefresh("index.php", 3);
             $conf = _h('You have been logged out.') . '<br />';
             $conf .= sprintf(
                     _h('Click %shere%s if you do not automatically redirect.'),
@@ -78,11 +91,11 @@ switch ($_GET['action'])
         }
         if (User::isLoggedIn())
         {
-            $tpl->setMetaRefresh('index.php', 3);
+            $tpl->setMetaRefresh($return_to_url, 3);
             $conf = sprintf(_h('Welcome, %s!') . '<br />', $_SESSION['real_name']);
             $conf .= sprintf(
                     _h('Click %shere%s if you do not automatically redirect.'),
-                    '<a href="index.php">',
+                    "<a href=\"{$return_to_url}\">",
                     '</a>'
                 ) . '<br />';
             $tpl->assign('confirmation', $conf);

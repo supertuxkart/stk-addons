@@ -187,7 +187,7 @@ class StkTemplate extends Template
             User::hasPermission(AccessControl::PERM_EDIT_ADDONS)
         );
 
-        if (basename(get_self()) === 'addons.php')
+        if (Util::getScriptFilename() === 'addons.php')
         {
             $this->smarty->assign('show_karts', !($_GET['type'] == 'karts'));
             $this->smarty->assign('show_tracks', !($_GET['type'] == 'tracks'));

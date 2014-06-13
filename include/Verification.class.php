@@ -97,7 +97,7 @@ class Verification
      */
     public static function generate($userid)
     {
-        $verification_code = cryptUrl(12);
+        $verification_code = Util::getRandomString(12);
         $count = DBConnection::get()->query(
             "INSERT INTO `" . DB_PREFIX . "verification` (`userid`,`code`)
             VALUES(:userid, :code)

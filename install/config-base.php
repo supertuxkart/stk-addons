@@ -36,6 +36,7 @@ define("TPL_PATH", ROOT_PATH . "tpl" . DS . "default" . DS); // Template propert
 define("TMP_PATH", sys_get_temp_dir() . DS); // define temporary directory path
 define("ASSETS_PATH", ROOT_PATH . "assets" . DS);
 define("CACHE_PATH", ASSETS_PATH . "cache" . DS); // cache for images/html/template
+define("FONTS_PATH", ASSETS_PATH . "fonts" . DS);
 define("UPLOAD_PATH", ROOT_PATH . "upload" . DS);
 define("UPLOAD_CRON_PATH", UPLOAD_PATH);
 define("BUGS_PATH", ROOT_PATH . "bugs" . DS);

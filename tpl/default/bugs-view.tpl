@@ -45,7 +45,7 @@
             </div>
         </form>
     {else}
-        <p><a href="{$smarty.const.SITE_ROOT}login.php">{t}Login{/t}</a>{t} to add a comment{/t}</p>
+        <p><a href="{$smarty.const.SITE_ROOT}login.php?return_to={$current_url}">{t}Login{/t}</a>{t} to add a comment{/t}</p>
     {/if}
 
     <div id="bug-comments">

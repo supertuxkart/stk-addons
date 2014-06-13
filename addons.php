@@ -243,7 +243,7 @@ $panel['left'] = (string)$left_tpl;
 // right panel
 if (!is_null($_GET["name"]))
 {
-    $panel['right'] = ob_get_require_once(ROOT_PATH . 'addons-panel.php');
+    $panel['right'] = Util::ob_get_require_once(ROOT_PATH . 'addons-panel.php');
 }
 
 // output the view

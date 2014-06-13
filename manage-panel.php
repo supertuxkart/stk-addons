@@ -49,7 +49,7 @@ switch ($_GET['view'])
             $unapproved = array();
             $addon_revisions = $addon->getAllRevisions();
             // Don't list if the latest revision is approved
-            $last_revision = \utilphp\util::array_last($addon_revisions);
+            $last_revision = Util::array_last($addon_revisions);
             if (!($last_revision["status"] & F_APPROVED))
             {
                 foreach ($addon_revisions as $rev_n => $revision)

@@ -19,6 +19,7 @@
             </label>
         </p>
         <p>
+            <input type="hidden" name="return_to" value="{$login.return_to}">
             <button type="submit" class="btn btn-primary">{t}Log In{/t}</button>
         </p>
         </form>

@@ -2,7 +2,6 @@
     "require": {
         "smarty/smarty": "3.1.*",
         "smarty-gettext/smarty-gettext": "@stable",
-        "brandonwamboldt/utilphp": "1.0.*",
         "ezyang/htmlpurifier": "v4.6.0",
         "recaptcha/php5": "v1.0.0",
         "php": ">=5.3.3",
