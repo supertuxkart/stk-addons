@@ -293,8 +293,10 @@ try {
             try {
                 $userid = isset($_POST['userid']) ? $_POST['userid'] : 0;
                 $token = isset($_POST['token']) ? $_POST['token'] : "";
-                $achievementid = isset($_POST['achievementid']) ? $_POST['achievementid'] : 0;
-                ClientSession::get($token, $userid)->onAchieving($achievementid);
+                $achievementids = isset($_POST['achievementid']) ? $_POST['achievementid'] : 0;
+                foreach (explode(',', $achievementids) AS $achievementid) {
+                    ClientSession::get($token, $userid)->onAchieving($achievementid);
+                }
             }
             catch(Exception $e){
                 echo "achieving error";
