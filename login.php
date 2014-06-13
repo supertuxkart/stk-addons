@@ -27,7 +27,7 @@ $_POST['pass'] = (isset($_POST['pass'])) ? $_POST['pass'] : null;
 $_GET['action'] = (isset($_GET['action'])) ? $_GET['action'] : null;
 
 // set default
-$return_to_url = "index.php";
+$return_to_url = $safe_url = SITE_ROOT . "index.php";
 if (isset($_POST["return_to"]))
 {
     $return_to_url = $_POST["return_to"];
@@ -38,7 +38,15 @@ elseif (isset($_GET["return_to"]))
     $return_to_url = urldecode($_GET["return_to"]);
 }
 
+// prevent foreign domain
+if(!Util::str_starts_with($return_to_url, SITE_ROOT))
+{
+    // silently fall back to safe url
+    $return_to_url = $safe_url;
+}
+
 $tpl = new StkTemplate('login.tpl');
+
 // Prepare forms
 $login_form = array(
     'display'   => true,
@@ -65,11 +73,11 @@ switch ($_GET['action'])
         }
         else
         {
-            $tpl->setMetaRefresh("index.php", 3);
+            $tpl->setMetaRefresh($safe_url, 3);
             $conf = _h('You have been logged out.') . '<br />';
             $conf .= sprintf(
                     _h('Click %shere%s if you do not automatically redirect.'),
-                    '<a href="index.php">',
+                    "<a href=\"{$safe_url}\">",
                     '</a>'
                 ) . '<br />';
             $tpl->assign('confirmation', $conf);
