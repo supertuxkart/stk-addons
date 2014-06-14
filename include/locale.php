@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
-require_once(INCLUDE_PATH . 'SLocale.class.php');
 
 // Get the current page address (without "lang" parameter)
 $page_url = $_SERVER['REQUEST_URI'];
@@ -25,6 +24,7 @@ if (strstr($page_url, '?') === false)
 {
     $page_url .= '?';
 }
+
 // Clean up the new url
 $page_url = preg_replace('/lang=[a-z_]+/i', null, $page_url);
 $page_url = preg_replace('/[&]+/i', '&', $page_url);

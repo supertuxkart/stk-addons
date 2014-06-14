@@ -395,9 +395,7 @@ class AddonViewer
                         ) . '">' . _h('Delete File') . '</a><br />';
                 }
             }
-            if (User::isLoggedIn() &&
-                ($this->addon->getUploader() == User::getId() || User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
-            )
+            if (User::isLoggedIn() && ($this->addon->getUploader() == User::getId() || User::hasPermission(AccessControl::PERM_EDIT_ADDONS)))
             {
                 $source_files[] = $source;
                 continue;

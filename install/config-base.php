@@ -47,7 +47,7 @@ define("CAPTCHA_PRIV", ""); // reCAPTCHA private key
 
 // Database proprieties
 define("DB_USER", "root");
-define("DB_PASSWORD", "pass");
+define("DB_PASSWORD", "");
 define("DB_NAME", "stkbase");
 define("DB_PREFIX", "v2_");
 define("DB_HOST", "localhost:3306");
@@ -88,6 +88,9 @@ define("LIBS_LOCATION", ASSETS_LOCATION . "libs/");
 define("IMG_LOCATION", ASSETS_LOCATION . "img/");
 define("JS_LOCATION", ASSETS_LOCATION . "js/");
 define("CSS_LOCATION", ASSETS_LOCATION . "css/");
+
+// set string encoding
+mb_internal_encoding('UTF-8');
 
 // add composer autoload
 require_once(ROOT_PATH . "vendor" . DS . "autoload.php");

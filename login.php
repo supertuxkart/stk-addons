@@ -130,7 +130,7 @@ switch ($_GET['action'])
         break;
 }
 
-$tpl->assign('title', htmlspecialchars(_('STK Add-ons') . ' | ' . _('Login')));
+$tpl->assign('title', h(_('STK Add-ons') . ' | ' . _('Login')));
 $tpl->assign('login', $login_form);
 
 echo $tpl;

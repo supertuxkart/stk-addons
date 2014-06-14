@@ -96,7 +96,6 @@ class StkTemplate extends Template
         // Fill meta tags
         $meta_tags = array_merge(
             array(
-                'content-type'     => 'text/html; charset=UTF-8',
                 'content-language' => LANG,
                 'description'      => $this->meta_desc
             ),

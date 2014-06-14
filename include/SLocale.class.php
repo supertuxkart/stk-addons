@@ -60,22 +60,22 @@ class SLocale
      */
     public function __construct($locale = null)
     {
-        if ($locale == null && isset($_GET['lang']) && strlen($_GET['lang']) != 0)
+        if (is_null($locale) && isset($_GET['lang']) && !empty($_GET['lang']))
         {
             $locale = $_GET['lang'];
         }
-        elseif ($locale == null && isset($_COOKIE['lang']))
+        elseif (isset($_COOKIE['lang']))
         {
             $locale = $_COOKIE['lang'];
         }
-        elseif ($locale == null)
+        else
         {
             $locale = "en_US";
         }
 
         if (!SLocale::isValid($locale))
         {
-            die("Invalid locale");
+            exit("Invalid locale");
         }
 
         SLocale::setLocale($locale);
@@ -86,13 +86,13 @@ class SLocale
      *
      * @param string $locale
      *
-     * @return boolean
+     * @return bool
      */
     public static function isValid($locale)
     {
-        foreach (SLocale::$languages AS $lang)
+        foreach (SLocale::$languages as $lang)
         {
-            if ($locale == $lang[0])
+            if ($locale === $lang[0])
             {
                 return true;
             }
