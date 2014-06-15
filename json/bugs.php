@@ -28,31 +28,6 @@ if (!isset($_POST["action"]) || empty($_POST["action"]))
 // TODO make user answer captcha question when he spams the add/submit button
 switch (strtolower($_POST["action"]))
 {
-    case "search": // search bug
-        $errors = Validate::ensureInput($_POST, array("search-filter"));
-        if (!empty($errors))
-        {
-            exit(json_encode(array("error" => _h("One or more fields are empty. This should never happen"))));
-        }
-
-        // search also the description
-        $search_description = false;
-        if (isset($_POST["search-description"]) && $_POST["search-description"] === "on")
-        {
-            $search_description = true;
-        }
-
-        $bugs = Bug::search($_POST["search-title"], $_POST["search-filter"], $search_description);
-        if (empty($bugs))
-        {
-            echo json_encode(array("error" => _h("Nothing to search for")));
-        }
-        else
-        {
-            echo json_encode(array("bugs" => $bugs));
-        }
-        break;
-
     case "add": // add bug
         $errors = Validate::ensureInput($_POST, array("addon-name", "bug-title", "bug-description"));
         if (!empty($errors))

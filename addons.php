@@ -207,7 +207,7 @@ foreach ($addons_list as $ad)
         {
             $class = 'addon-list menu-item';
         }
-        elseif (User::hasPermission(AccessControl::PERM_EDIT_ADDONS) || User::getId() == $adc->getUploader())
+        elseif (User::hasPermission(AccessControl::PERM_EDIT_ADDONS) || User::getId() == $adc->getUploaderId())
         {
             // not approved, see of we are logged in and we have permission
             $class = 'addon-list menu-item unavailable';

@@ -3,12 +3,42 @@
 
     var $content_bugs = $("#bugs-content");
 
+    var loaded = {
+        "addon-name": false
+    };
+
     function registerEditors() {
         var editorOptions = {
             "html": true
         };
         $("#bug-description").wysihtml5(editorOptions);
         $("#bug-comment-description").wysihtml5(editorOptions);
+
+        $("#addon-name").typeahead({
+                hint     : true,
+                highlight: true,
+                minLength: 2
+            },
+            {
+                name      : 'addon-search',
+                displayKey: "id",
+                source    : function(query, cb) {
+                    var matches = [];
+                    $.get(SITE_ROOT + 'json/search.php', {"data-type": "addon", "search-filter": "name", "query": query}, function(data) {
+                        var jData = parseJSON(data);
+                        if (jData.hasOwnProperty("error")) {
+                            console.error(jData["error"]);
+                            return;
+                        }
+
+                        for (var i = 0; i < jData["addons"].length; i++) {
+                            matches.push({"id": jData["addons"][i]})
+                        }
+
+                        cb(matches);
+                    });
+                }
+        });
     }
 
     function btnToggle() {

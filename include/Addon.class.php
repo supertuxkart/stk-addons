@@ -31,27 +31,12 @@ class Addon
     /**
      * @var string
      */
-    protected $type;
-
-    /**
-     * @var bool|string
-     */
     protected $id;
 
     /**
-     * @var int
+     * @var string
      */
-    protected $uploaderID;
-
-    /**
-     * @var int
-     */
-    protected $image = 0;
-
-    /**
-     * @var int
-     */
-    protected $icon = 0;
+    protected $type;
 
     /**
      * @var string
@@ -63,8 +48,8 @@ class Addon
      */
     protected $uploaderId;
 
-    /**
-     * @var
+    /** The addon creation date
+     * @var string
      */
     protected $creationDate;
 
@@ -84,6 +69,26 @@ class Addon
     protected $license;
 
     /**
+     * @var int
+     */
+    protected $minInclude;
+
+    /**
+     * @var int
+     */
+    protected $maxInclude;
+
+    /**
+     * @var int
+     */
+    protected $image = 0;
+
+    /**
+     * @var int
+     */
+    protected $icon = 0;
+
+    /**
      * @var string
      */
     protected $permalink;
@@ -98,15 +103,6 @@ class Addon
      */
     protected $latestRevision;
 
-    /**
-     * @var int
-     */
-    protected $minInclude;
-
-    /**
-     * @var int
-     */
-    protected $maxInclude;
 
     /**
      * Instance constructor
@@ -117,7 +113,7 @@ class Addon
      */
     public function __construct($id)
     {
-        $this->id = Addon::cleanId($id);
+        $this->id = static::cleanId($id);
 
         // get addon data
         try
@@ -414,7 +410,7 @@ class Addon
      */
     public function deleteFile($file_id)
     {
-        if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS) && $this->uploaderID !== User::getId())
+        if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS) && $this->uploaderId !== User::getId())
         {
             throw new AddonException(_h('You do not have the necessary permissions to perform this action.'));
         }
@@ -434,7 +430,7 @@ class Addon
      */
     public function deleteRevision($rev)
     {
-        if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS) && $this->uploaderID !== User::getId())
+        if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS) && $this->uploaderId !== User::getId())
         {
             throw new AddonException(_h('You do not have the necessary permissions to perform this action.'));
         }
@@ -486,11 +482,76 @@ class Addon
     }
 
     /**
-     * Get all the revisions
+     * Get the id of the addon
      *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Get the id of image if $icon is set or the id of the icon
+     *
+     * @param bool $icon
+     *
+     * @return int
+     */
+    public function getImage($icon = false)
+    {
+        if ($icon === false)
+        {
+            return $this->image;
+        }
+
+        return $this->icon;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCreationDate()
+    {
+        return $this->creationDate;
+    }
+
+    /**
+     * @return int
+     */
+    public function getIcon()
+    {
+        return $this->icon;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMaxInclude()
+    {
+        return $this->maxInclude;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMinInclude()
+    {
+        return $this->minInclude;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPermalink()
+    {
+        return $this->permalink;
+    }
+
+    /**
      * @return array
      */
-    public function getAllRevisions()
+    public function getRevisions()
     {
         return $this->revisions;
     }
@@ -502,7 +563,7 @@ class Addon
      */
     public function getDescription()
     {
-        return h($this->description);
+        return $this->description;
     }
 
     /**
@@ -518,6 +579,16 @@ class Addon
         }
 
         return $this->designer;
+    }
+
+    /**
+     * Get all the revisions
+     *
+     * @return array
+     */
+    public function getAllRevisions()
+    {
+        return $this->revisions;
     }
 
     /**
@@ -557,7 +628,7 @@ class Addon
      */
     public function getLicense()
     {
-        return h($this->license);
+        return $this->license;
     }
 
     /**
@@ -576,9 +647,29 @@ class Addon
      *
      * @return int the id of the uploader
      */
-    public function getUploader()
+    public function getUploaderId()
     {
         return $this->uploaderId;
+    }
+
+    /**
+     * Get the minimum stk version that this addon supports
+     *
+     * @return string
+     */
+    public function getIncludeMin()
+    {
+        return $this->minInclude;
+    }
+
+    /**
+     * Get the maximum stk version that this addon supports
+     *
+     * @return string
+     */
+    public function getIncludeMax()
+    {
+        return $this->maxInclude;
     }
 
     /**
@@ -651,33 +742,6 @@ class Addon
     }
 
     /**
-     * Get the id of the addon
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Get the id of image if $icon is set or the id of the icon
-     *
-     * @param bool $icon
-     *
-     * @return int
-     */
-    public function getImage($icon = false)
-    {
-        if ($icon === false)
-        {
-            return $this->image;
-        }
-
-        return $this->icon;
-    }
-
-    /**
      * Get the md5sums of all the image files of this addon
      *
      * @throws AddonException
@@ -744,26 +808,6 @@ class Addon
         }
 
         return $result;
-    }
-
-    /**
-     * Get the minimum supertuxkart version that this addon supports
-     *
-     * @return string
-     */
-    public function getIncludeMin()
-    {
-        return $this->minInclude;
-    }
-
-    /**
-     * Get the maximum supertuxkart version that this addon supports
-     *
-     * @return string
-     */
-    public function getIncludeMax()
-    {
-        return $this->maxInclude;
     }
 
     /**
@@ -842,11 +886,9 @@ class Addon
      */
     public function setDesigner($designer)
     {
-        if (!User::isLoggedIn() ||
-            (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS) && $this->uploaderId !== User::getId())
-        )
+        if (!User::isLoggedIn() || (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS) && $this->uploaderId !== User::getId()))
         {
-            throw new AddonException(_h('You do not have the neccessary permissions to perform this action.'));;
+            throw new AddonException(_h('You do not have the neccessary permissions to perform this action.'));
         }
 
         try
@@ -1096,6 +1138,7 @@ class Addon
         {
             throw new AddonException('Failed to send email to user. ' . $e->getMessage());
         }
+
         Log::newEvent("Added notes to '{$this->name}'");
     }
 
@@ -1151,18 +1194,18 @@ class Addon
             }
             if ($field === 'latest')
             {
-                $fieldinfo = array('', (int)$_POST['latest']);
+                $field_info = array('', (int)$_POST['latest']);
             }
             else
             {
-                $fieldinfo = explode('-', $field);
+                $field_info = explode('-', $field);
             }
 
             // Initialize the status of the current revision if it has
             // not been created yet.
-            if (!isset($status[$fieldinfo[1]]))
+            if (!isset($status[$field_info[1]]))
             {
-                $status[$fieldinfo[1]] = 0;
+                $status[$field_info[1]] = 0;
             }
 
             // Mark the "latest" revision
@@ -1175,11 +1218,9 @@ class Addon
             // Update status values for all flags
             if ($_POST[$field] === 'on')
             {
-                $revision = (int)$fieldinfo[1];
-                switch ($fieldinfo[0])
+                $revision = (int)$field_info[1];
+                switch ($field_info[0])
                 {
-                    default:
-                        break;
                     case 'approved':
                         if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
                         {
@@ -1187,6 +1228,7 @@ class Addon
                         }
                         $status[$revision] += F_APPROVED;
                         break;
+
                     case 'invisible':
                         if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
                         {
@@ -1194,15 +1236,19 @@ class Addon
                         }
                         $status[$revision] += F_INVISIBLE;
                         break;
+
                     case 'alpha':
                         $status[$revision] += F_ALPHA;
                         break;
+
                     case 'beta':
                         $status[$revision] += F_BETA;
                         break;
+
                     case 'rc':
                         $status[$revision] += F_RC;
                         break;
+
                     case 'dfsg':
                         if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
                         {
@@ -1210,12 +1256,16 @@ class Addon
                         }
                         $status[$revision] += F_DFSG;
                         break;
+
                     case 'featured':
                         if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
                         {
                             break;
                         }
                         $status[$revision] += F_FEATURED;
+                        break;
+
+                    default:
                         break;
                 }
             }
@@ -1245,9 +1295,64 @@ class Addon
                 throw new AddonException(_h('Failed to write add-on status.'));
             }
         }
+
         writeAssetXML();
         writeNewsXML();
         Log::newEvent("Set status for add-on '{$this->name}'");
+    }
+
+    /**
+     * Factory method for the addon
+     *
+     * @param string $id
+     *
+     * @return static
+     */
+    public static function get($id)
+    {
+        return new static($id);
+    }
+
+    /**
+     * Get the addon name
+     *
+     * @param int $id
+     *
+     * @return string
+     */
+    public static function getName($id)
+    {
+        $id = static::cleanId($id);
+
+        try
+        {
+            $addon = DBConnection::get()->query(
+                'SELECT `name`
+                FROM `' . DB_PREFIX . 'addons`
+                WHERE `id` = :id
+                LIMIT 1',
+                DBConnection::FETCH_FIRST,
+                array(
+                    ':id' => $id
+                )
+            );
+        }
+        catch(DBException $e)
+        {
+            return "";
+        }
+
+        if (empty($addon))
+        {
+            if (DEBUG_MODE)
+            {
+                trigger_error("No addon with the id = {$id} found");
+            }
+
+            return "";
+        }
+
+        return $addon['name'];
     }
 
     /**
@@ -1259,12 +1364,7 @@ class Addon
      */
     public static function isAllowedType($type)
     {
-        if (in_array($type, Addon::$allowedTypes))
-        {
-            return true;
-        }
-
-        return false;
+        return in_array($type, static::$allowedTypes);
     }
 
 
@@ -1275,7 +1375,7 @@ class Addon
      */
     public static function getAllowedTypes()
     {
-        return Addon::$allowedTypes;
+        return static::$allowedTypes;
     }
 
     /**
@@ -1319,20 +1419,25 @@ class Addon
      * Search for an addon by its name or description
      *
      * @param string $search_query
+     * @param bool   $search_description search also in description
      *
      * @throws AddonException
-     *
      * @return array Matching addon id, name and type
      */
-    public static function search($search_query)
+    public static function search($search_query, $search_description = true)
     {
         try
         {
+
+            $query =  "SELECT * FROM `" . DB_PREFIX . "addons` WHERE `name` LIKE :search_query";
+
+            if($search_description)
+            {
+                $query .= " OR `description` LIKE :search_query";
+            }
+
             $addons = DBConnection::get()->query(
-                "SELECT `id`, `name`, `type`
-                FROM `" . DB_PREFIX . "addons`
-                WHERE `name` LIKE :search_query
-                OR `description` LIKE :search_query",
+                $query,
                 DBConnection::FETCH_ALL,
                 array(
                     ':search_query' => '%' . $search_query . '%'
@@ -1348,42 +1453,6 @@ class Addon
     }
 
     /**
-     * Search for an addon by its name
-     *
-     * @param string $name
-     *
-     * @throws AddonException
-     * @return array of matching names
-     */
-    public static function searchByName($name)
-    {
-        try
-        {
-            $addons = DBConnection::get()->query(
-                "SELECT `name`
-                FROM `" . DB_PREFIX . "addons`
-                WHERE `name` LIKE :search_query",
-                DBConnection::FETCH_ALL,
-                array(
-                    ':search_query' => '%' . $name . '%'
-                )
-            );
-        }
-        catch(DBException $e)
-        {
-            throw new AddonException(_h('Search failed!'));
-        }
-
-        $return = array();
-        foreach ($addons as $addon)
-        {
-            $return[] = $addon["name"];
-        }
-
-        return $return;
-    }
-
-    /**
      * Get all the addon's of a type
      *
      * @param string $type
@@ -1393,7 +1462,7 @@ class Addon
      */
     public static function getAddonList($type, $featuredFirst = false)
     {
-        if (!Addon::isAllowedType($type))
+        if (!static::isAllowedType($type))
         {
             return array();
         }
@@ -1449,14 +1518,14 @@ class Addon
             return false;
         }
 
-        $addon_id = Addon::cleanId($name);
+        $addon_id = static::cleanId($name);
         if (!$addon_id)
         {
             return false;
         }
 
         // Check database
-        while (Addon::exists($addon_id))
+        while (static::exists($addon_id))
         {
             // If the addon id already exists, add an incrementing number to it
             $matches = array();
@@ -1476,7 +1545,7 @@ class Addon
     }
 
     /**
-     * Create a new add-on record and an intial revision
+     * Create a new add-on record and an initial revision
      * @global string $moderator_message Initial revision status message
      *                                   FIXME: put this in $attributes somewhere
      *
@@ -1506,15 +1575,15 @@ class Addon
             throw new AddonException(_h('You must be logged in to create an add-on.'));
         }
 
-        if (!Addon::isAllowedType($type))
+        if (!static::isAllowedType($type))
         {
             throw new AddonException(_h('An invalid add-on type was provided.'));
         }
 
-        $id = Addon::generateId($type, $attributes['name']);
+        $id = static::generateId($type, $attributes['name']);
 
         // Make sure the add-on doesn't already exist
-        if (Addon::exists($id))
+        if (static::exists($id))
         {
             throw new AddonException(
                 _h('An add-on with this ID already exists. Please try to upload your add-on again later.')
@@ -1618,7 +1687,7 @@ class Addon
         writeNewsXML();
         Log::newEvent("New add-on '{$attributes['name']}'");
 
-        return new Addon($id);
+        return new static($id);
     }
 
     /**
@@ -1646,46 +1715,5 @@ class Addon
         {
             return false;
         }
-    }
-
-    /**
-     * Get the addon name
-     *
-     * @param int $id
-     *
-     * @return string
-     */
-    public static function getName($id)
-    {
-        if ($id === false)
-        {
-            return false;
-        }
-        $id = Addon::cleanId($id);
-
-        try
-        {
-            $addon = DBConnection::get()->query(
-                'SELECT `name`
-                FROM `' . DB_PREFIX . 'addons`
-                WHERE `id` = :id
-                LIMIT 1',
-                DBConnection::FETCH_FIRST,
-                array(
-                    ':id' => $id
-                )
-            );
-        }
-        catch(DBException $e)
-        {
-            return false;
-        }
-
-        if (empty($addon))
-        {
-            return false;
-        }
-
-        return $addon['name'];
     }
 }

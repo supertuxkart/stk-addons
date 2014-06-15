@@ -365,14 +365,6 @@ class User
     }
 
     /**
-     * @param $id
-     */
-    public static function setId($id)
-    {
-        static::$user_id = $id;
-    }
-
-    /**
      * Get all the users from the database in an associative array
      *
      * @return array|int

@@ -39,7 +39,7 @@ CREATE PROCEDURE `convert_to_utf8`()
         END IF;
 
         IF table_exists('v2_addons') THEN
-            # TODO add addon id
+            # TODO add addon idsi
             #ALTER TABLE `v2_addons` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
             ALTER TABLE `v2_addons` CHANGE `type` `type` ENUM( 'karts', 'tracks', 'arenas' ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL ;

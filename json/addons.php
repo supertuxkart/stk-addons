@@ -1,6 +1,7 @@
 <?php
 /**
- * copyright 2014 Daniel Butum <danibutum at gmail dot com>
+ * copyright 2013 Stephen Just <stephenjust@users.sourceforge.net>
+ *           2014 Daniel Butum <danibutum at gmail dot com>
  *
  * This file is part of stkaddons
  *
@@ -20,16 +21,15 @@
 
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
-if(!User::isLoggedIn())
+if (!isset($_POST["action"]) || empty($_POST["action"]))
 {
-    echo json_encode(array("error" => "Permission denied. Reason: Not logged in"));
-    exit;
+    exit(json_encode(array("error" => "action param is not defined or is empty")));
 }
 
-if(!isset($_GET["name"]) || empty($_GET["name"]))
+switch (strtolower($_POST["action"]))
 {
-    echo json_encode(array("error" => "name param is not present or is empty"));
-    exit;
-}
 
-echo json_encode(array("names" => Addon::searchByName($_GET["name"])));
+    default:
+        echo json_encode(array("error" => sprintf("action = %s is not recognized", $_POST["action"])));
+        break;
+}
