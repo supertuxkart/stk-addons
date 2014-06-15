@@ -914,7 +914,7 @@ class User
         $password = Validate::password($password, $password_conf);
         $email = Validate::email($email);
         $name = Validate::realName($name);
-        $terms = Validate::checkbox($terms, _h('You must agree to the terms to register.'));
+        Validate::checkbox($terms, _h('You must agree to the terms to register.'));
         DBConnection::get()->beginTransaction();
 
         // Make sure requested username is not taken

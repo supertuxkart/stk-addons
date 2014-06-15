@@ -89,7 +89,6 @@ class DBConnection
     {
         $this->conn = new PDO(sprintf("mysql:host=%s;dbname=%s;charset=utf8mb4", DB_HOST, DB_NAME), DB_USER, DB_PASSWORD);
         $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $this->conn->exec("set names utf8");
     }
 
     /**
@@ -271,7 +270,7 @@ class DBConnection
      * @param string $table
      * @param array  $fields_data an associative array in which the key is the column and the value is the actual value
      *                            example: "name" => "daniel", "id" => 23
-     * @param array $other_data data that is not prepared (can be a constant value, a mysql function, etc)
+     * @param array  $other_data  data that is not prepared (can be a constant value, a mysql function, etc)
      *
      * @return int the number of affected rows
      * @throws DBException
@@ -303,7 +302,30 @@ class DBConnection
             implode(", ", $values)
         );
 
-        return $this->query($query, static::ROW_COUNT, $prepared_pairs);
+        return (int)$this->query($query, static::ROW_COUNT, $prepared_pairs);
+    }
+
+    /**
+     * Perform a delete on the database
+     *
+     * @param string $table
+     * @param string $where_statement
+     * @param array  $prepared_pairs pairs to parse to pdo
+     * @param array  $data_types  data types for the prepared statements
+     *
+     * @return int
+     * @throws DBException
+     */
+    public function delete($table, $where_statement, array $prepared_pairs = array(), array $data_types = array())
+    {
+        if (!$table || !$where_statement)
+        {
+            throw new DBException("Empty table or where statement");
+        }
+
+        $query = sprintf("DELETE FROM %s WHERE %s", DB_PREFIX . $table, $where_statement);
+
+        return (int)$this->query($query, static::ROW_COUNT, $prepared_pairs, $data_types);
     }
 
     /**
@@ -319,25 +341,16 @@ class DBConnection
      */
     public function count($table, $where_statement = "", array $prepared_pairs = array(), array $data_types = array())
     {
-        if (!$table or empty($where_statement))
+        if (!$table)
         {
-            throw new DBException("Empty table or data");
+            throw new DBException("Empty table");
         }
 
-        if (empty($where_statement))
+        $query = sprintf("SELECT COUNT(*) FROM %s", DB_PREFIX . $table);
+
+        if (!empty($where_statement))
         {
-            $query = sprintf(
-                "SELECT COUNT(*) FROM %s",
-                DB_PREFIX . $table
-            );
-        }
-        else
-        {
-            $query = sprintf(
-                "SELECT COUNT(*) FROM %s WHERE %s",
-                DB_PREFIX . $table,
-                $where_statement
-            );
+            $query .= sprintf(" WHERE %s", $where_statement);
         }
 
         return (int)$this->query($query, static::FETCH_FIRST_COLUMN, $prepared_pairs, $data_types);
