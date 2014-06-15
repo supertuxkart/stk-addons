@@ -21,7 +21,7 @@
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
 
 $tpl = new StkTemplate('music-browser.tpl');
-$tpl->assign('title', htmlspecialchars(_('STK Add-ons') . ' | ' . _('Browse Music')));
+$tpl->assign('title', h(_('STK Add-ons') . ' | ' . _('Browse Music')));
 
 $music_tracks = Music::getAllByTitle();
 $music_data = array();
@@ -30,7 +30,7 @@ foreach ($music_tracks as $track)
     $music_data[] = $track->getTitle();
     $music_data[] = $track->getArtist();
     $music_data[] = $track->getLicense();
-    $music_data[] = '<a href="' . DOWN_LOCATION . 'music/' . $track->getFile() . '">' . $track->getFile() . '</a>';
+    $music_data[] = '<a href="' . DOWNLOAD_LOCATION . 'music/' . $track->getFile() . '">' . $track->getFile() . '</a>';
 }
 
 $tpl->assign(

@@ -342,9 +342,4 @@ class DBConnection
 
         return (int)$this->query($query, static::FETCH_FIRST_COLUMN, $prepared_pairs, $data_types);
     }
-
-    public function rowCount()
-    {
-
-    }
 }

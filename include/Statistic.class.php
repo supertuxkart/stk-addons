@@ -60,7 +60,7 @@ class Statistic
         }
         catch(DBException $e)
         {
-            throw new StatisticException(htmlspecialchars(
+            throw new StatisticException(h(
                 _('An error occurred while performing your statistic query') . ' ' .
                 _('Please contact a website administrator.')
             ));
@@ -103,7 +103,7 @@ class Statistic
         }
         catch(DBException $e)
         {
-            throw new StatisticException(htmlspecialchars(
+            throw new StatisticException(h(
                 _('An error occurred while performing your statistic query') . ' ' .
                 _('Please contact a website administrator.')
             ));

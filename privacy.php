@@ -21,6 +21,6 @@
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
 
 $tpl = new StkTemplate('privacy.tpl');
-$tpl->assign('title', htmlspecialchars(_('STK Add-ons') . ' | ' . _('Privacy')));
+$tpl->assign('title', h(_('STK Add-ons') . ' | ' . _('Privacy')));
 
 echo $tpl;

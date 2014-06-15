@@ -150,7 +150,7 @@ class Music
     /**
      * Get an array of Music objects containing all tracks, sorted by title
      *
-     * @return array
+     * @return array Music
      */
     public static function getAllByTitle()
     {
