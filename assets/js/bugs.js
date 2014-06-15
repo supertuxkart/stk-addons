@@ -3,10 +3,6 @@
 
     var $content_bugs = $("#bugs-content");
 
-    var loaded = {
-        "addon-name": false
-    };
-
     function registerEditors() {
         var editorOptions = {
             "html": true

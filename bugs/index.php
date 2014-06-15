@@ -26,7 +26,6 @@ $tplData = array(
     "show_btn_file" => true
 );
 
-
 if(isset($_GET["bug_id"]))
 {
     $tplData["show_btn_file"] = false;

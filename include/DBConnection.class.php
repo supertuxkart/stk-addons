@@ -273,6 +273,7 @@ class DBConnection
      *                            example: "name" => "daniel", "id" => 23
      * @param array $other_data data that is not prepared (can be a constant value, a mysql function, etc)
      *
+     * @return int the number of affected rows
      * @throws DBException
      */
     public function insert($table, array $fields_data, array $other_data = array())
@@ -302,7 +303,7 @@ class DBConnection
             implode(", ", $values)
         );
 
-        $this->query($query, static::NOTHING, $prepared_pairs);
+        return $this->query($query, static::ROW_COUNT, $prepared_pairs);
     }
 
     /**
@@ -340,5 +341,10 @@ class DBConnection
         }
 
         return (int)$this->query($query, static::FETCH_FIRST_COLUMN, $prepared_pairs, $data_types);
+    }
+
+    public function rowCount()
+    {
+
     }
 }

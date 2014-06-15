@@ -88,7 +88,7 @@ class Validate
      */
     public static function username($username)
     {
-        if (strlen($username) < 4)
+        if (mb_strlen($username) < 4)
         {
             throw new UserException(_h('Your username must be at least 4 characters long.'));
         }

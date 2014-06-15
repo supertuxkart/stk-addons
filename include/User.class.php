@@ -59,13 +59,12 @@ class User
 
     /**
      * @param int    $id
-     * @param string $userName
      * @param array  $userData
      */
-    public function __construct($id, $userName, array $userData = array())
+    public function __construct($id, array $userData = array())
     {
         $this->id = $id;
-        $this->userName = $userName;
+        $this->userName = $userData["username"];
         $this->userData = $userData;
     }
 
@@ -119,12 +118,7 @@ class User
     {
         if (!Addon::isAllowedType($type))
         {
-            if (DEBUG_MODE)
-            {
-                throw new UserException(sprintf("Addon type=%s does not exist", $type));
-            }
-
-            return array();
+            throw new UserException(sprintf("Addon type=%s does not exist", $type));
         }
 
         try
@@ -145,12 +139,7 @@ class User
         }
         catch(DBException $e)
         {
-            if (DEBUG_MODE)
-            {
-                throw new UserException("A database error occured");
-            }
-
-            return array();
+            throw new UserException(_h("A database error occurred"));
         }
 
         return $addons;
@@ -173,7 +162,7 @@ class User
 
         if (Validate::password($old_password, null, $_SESSION['user']) !== $this->userData['pass'])
         {
-            throw new UserException(htmlspecialchars(_('Your old password is not correct.')));
+            throw new UserException(_h('Your old password is not correct.'));
         }
 
         if (static::getId() === $this->id)
@@ -276,14 +265,14 @@ class User
 
 
     /**
-     * @return bool
      * @throws UserException
      */
     public static function init()
     {
+        // do not init session if we are in the api part area
         if (defined('API'))
         {
-            return null;
+            return;
         }
 
         // Validate user's session on every page
@@ -306,7 +295,7 @@ class User
                 }
                 static::logout();
 
-                return null;
+                return;
             }
         }
 
@@ -330,7 +319,7 @@ class User
         }
         catch(DBException $e)
         {
-            throw new UserException(htmlspecialchars(
+            throw new UserException(h(
                 _('An error occurred trying to validate your session.') . ' ' .
                 _('Please contact a website administrator.')
             ));
@@ -340,12 +329,9 @@ class User
         if ($count !== 1)
         {
             static::logout();
-
-            return false;
         }
         static::$user_id = $_SESSION['userid'];
         static::$logged_in = true;
-        //var_debug("Init");
     }
 
     /**
@@ -382,12 +368,7 @@ class User
         }
         catch(DBException $e)
         {
-            if (DEBUG_MODE)
-            {
-                throw new UserException("Error on selecting all users");
-            }
-
-            return array();
+            throw new UserException(_h("Error on selecting all users"));
         }
 
         return $users;
@@ -421,18 +402,18 @@ class User
             // empty result
             if (empty($user))
             {
-                throw new UserException(htmlspecialchars(
+                throw new UserException(h(
                     _("Tried to fetch an user that doesn't exist.") . ' ' .
                     _('Please contact a website administrator.')
                 ));
             }
 
             // fetch the first
-            return new User($user["id"], $user['user'], $user);
+            return new User($user["id"], $user);
         }
         catch(DBException $e)
         {
-            throw new UserException(htmlspecialchars(
+            throw new UserException(h(
                 _('An error occurred while performing your search query.') . ' ' .
                 _('Please contact a website administrator.')
             ));
@@ -470,7 +451,7 @@ class User
      */
     public static function searchUsers($search_string)
     {
-        $terms = preg_split("/[\s,]+/", strip_tags($search_string));
+        $terms = preg_split("/[\s,]+/", h($search_string));
         $index = 0;
         $parameters = array();
         $query_parts = array();
@@ -498,12 +479,12 @@ class User
                 );
                 foreach ($result as $user)
                 {
-                    $matched_users[] = new User($user['id'], $user['user']);
+                    $matched_users[] = new User($user['id'], array("username" => $user['user']));
                 }
             }
             catch(DBException $e)
             {
-                throw new UserException(htmlspecialchars(
+                throw new UserException(h(
                     _('An error occurred while performing your search query.') . ' ' .
                     _('Please contact a website administrator.')
                 ));
@@ -653,7 +634,7 @@ class User
         if (count($result) !== 1)
         {
             static::logout();
-            throw new UserException(htmlspecialchars(_('Your username or password is incorrect.')));
+            throw new UserException(_h('Your username or password is incorrect.'));
         }
 
         static::$user_id = $result[0]['id'];
@@ -702,7 +683,7 @@ class User
     {
         if(!$userid)
         {
-            throw new InvalidArgumentException("User id is not set");
+            throw new InvalidArgumentException(_h("User id is not set"));
         }
 
         try
@@ -737,7 +718,7 @@ class User
         catch(DBException $e)
         {
             static::logout();
-            throw new UserException(htmlspecialchars(
+            throw new UserException(h(
                 _('An error occurred while recording last login time.') . ' ' .
                 _('Please contact a website administrator.')
             ));
@@ -758,7 +739,7 @@ class User
         {
             if (!static::isLoggedIn())
             {
-                throw new UserException(htmlspecialchars(_('You must be logged in to change a password.')));
+                throw new UserException(_h('You must be logged in to change a password.'));
             }
             else
             {
@@ -785,7 +766,7 @@ class User
         }
         catch(DBException $e)
         {
-            throw new UserException(htmlspecialchars(
+            throw new UserException(h(
                 _('An error occured while trying to change your password.') . ' ' .
                 _('Please contact a website administrator.')
             ));
@@ -819,7 +800,7 @@ class User
 
             if ($count < 1)
             {
-                throw new UserException(htmlspecialchars(_('Current password invalid.')));
+                throw new UserException(_h('Current password invalid.'));
             }
 
             $new_hashed = Validate::password($new1, $new2);
@@ -829,7 +810,7 @@ class User
         }
         catch(DBException $e)
         {
-            throw new UserException(htmlspecialchars(
+            throw new UserException(h(
                 _('An error occured while trying to change your password.') . ' ' .
                 _('Please contact a website administrator.')
             ));
@@ -867,7 +848,7 @@ class User
         }
         catch(DBException $e)
         {
-            throw new UserException(htmlspecialchars(
+            throw new UserException(h(
                 _('An error occurred trying to activate your useraccount.') . ' ' .
                 _('Please contact a website administrator.')
             ));
@@ -900,14 +881,14 @@ class User
             catch(Exception $e)
             {
                 Log::newEvent('Password reset email for "' . $username . '" could not be sent.');
-                throw new UserException($e->getMessage() . ' ' . _('Please contact a website administrator.'));
+                throw new UserException($e->getMessage() . ' ' . _h('Please contact a website administrator.'));
             }
             Log::newEvent("Password reset request for user '$username'");
 
         }
         catch(DBException $e)
         {
-            throw new UserException(htmlspecialchars(
+            throw new UserException(h(
                 _('An error occurred trying to validate your username and email-address for password reset.') . ' ' .
                 _('Please contact a website administrator.')
             ));
@@ -933,7 +914,7 @@ class User
         $password = Validate::password($password, $password_conf);
         $email = Validate::email($email);
         $name = Validate::realName($name);
-        $terms = Validate::checkbox($terms, htmlspecialchars(_('You must agree to the terms to register.')));
+        $terms = Validate::checkbox($terms, _h('You must agree to the terms to register.'));
         DBConnection::get()->beginTransaction();
 
         // Make sure requested username is not taken
@@ -951,16 +932,14 @@ class User
         }
         catch(DBException $e)
         {
-            throw new UserException(htmlspecialchars(
+            throw new UserException(h(
                 _('An error occurred trying to validate your username.') . ' ' .
                 _('Please contact a website administrator.')
             ));
         }
         if (!empty($result))
         {
-            throw new UserException(htmlspecialchars(
-                _('This username is already taken.')
-            ));
+            throw new UserException(_h('This username is already taken.'));
         }
 
         // Make sure the email address is unique
@@ -978,38 +957,36 @@ class User
         }
         catch(DBException $e)
         {
-            throw new UserException(htmlspecialchars(
+            throw new UserException(h(
                 _('An error occurred trying to validate your email address.') . ' ' .
                 _('Please contact a website administrator.')
             ));
         }
         if (!empty($result))
         {
-            throw new UserException(htmlspecialchars(
-                _('This email address is already taken.')
-            ));
+            throw new UserException(_h('This email address is already taken.'));
         }
 
         // No exception occurred - continue with registration
         try
         {
-            $count = DBConnection::get()->query(
-                "INSERT INTO `" . DB_PREFIX . "users`
-                 (`user`,`pass`,`name`, `role`, `email`, `active`, `reg_date`)
-                 VALUES(:username, :password, :name, :role, :email, 0, CURRENT_DATE())",
-                DBConnection::ROW_COUNT,
-                array
-                (
-                    ':username' => $username,
-                    ':password' => $password,
-                    ':name'     => $name,
-                    ':role'     => "basicUser",
-                    ':email'    => $email
+            $count = DBConnection::get()->insert(
+                "users",
+                array(
+                    "user" => $username,
+                    "pass" => $password,
+                    "name" => $name,
+                    "email" => $email
+                ),
+                array(
+                    "role" => "user",
+                    "reg_date" => "CURRENT_DATE()"
                 )
             );
+
             if ($count != 1)
             {
-                throw new DBException();
+                throw new DBException("Multiple rows affected(or none). Not good");
             }
             $userid = DBConnection::get()->lastInsertId();
             DBConnection::get()->commit();
@@ -1024,13 +1001,13 @@ class User
             catch(Exception $e)
             {
                 Log::newEvent("Registration email for user '$username' with id '$userid' failed.");
-                throw new UserException($e->getMessage() . ' ' . _('Please contact a website administrator.'));
+                throw new UserException($e->getMessage() . ' ' . _h('Please contact a website administrator.'));
             }
             Log::newEvent("Registration submitted for user '$username' with id '$userid'.");
         }
         catch(DBException $e)
         {
-            throw new UserException(htmlspecialchars(
+            throw new UserException(h(
                 _('An error occurred while creating your account.') . ' ' .
                 _('Please contact a website administrator.')
             ));

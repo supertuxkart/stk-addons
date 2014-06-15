@@ -23,212 +23,265 @@
  */
 class Friend
 {
+    /**
+     * @var bool
+     */
     protected $is_asker;
+
+    /**
+     * @var
+     */
     protected $friend_id;
+
+    /**
+     * @var
+     */
     protected $date;
+
+    /**
+     * @var bool
+     */
     protected $is_pending;
+
+    /**
+     * @var User
+     */
     protected $user;
+
+    /**
+     * @var bool
+     */
     protected $online;
 
     /**
-     * 
+     * The Friend constructor
+     *
      * @param array $info_array an associative array based on the database
+     * @param bool  $online     is the user online
+     * @param bool  $extra_info initialize extra info
      */
-    protected function __construct($info_array, $online = False, $extra_info = False)
+    protected function __construct($info_array, $online = false, $extra_info = false)
     {
-        $this->user = new User($info_array['friend_id'], $info_array['friend_name']);
+        $this->user = new User($info_array['friend_id'], array("username" => $info_array['friend_name']));
         $this->extra_info = $extra_info;
-        if($extra_info){
+        if ($extra_info)
+        {
             $this->online = $online;
-    		$this->is_pending = $info_array['request'] == 1;
-    		$this->is_asker = $info_array['is_asker'] == 1;		
-    		$this->date = $info_array['date'];
+            $this->is_pending = $info_array['request'] == 1;
+            $this->is_asker = $info_array['is_asker'] == 1;
+            $this->date = $info_array['date'];
         }
     }
-    
+
+    /**
+     * @return User
+     */
     public function getUser()
     {
         return $this->user;
     }
-    
+
+    /**
+     * @return bool
+     */
     public function isOnline()
     {
         return $this->online;
     }
-    
+
+    /**
+     * @return string
+     */
     public function asXML()
     {
-    	$friend_xml = new XMLOutput();
-	    $friend_xml->startElement('friend');
-	    if($this->extra_info){
-    	    $friend_xml->writeAttribute("is_pending", ($this->is_pending ? "yes" : "no"));
-    	    if($this->is_pending){
-    	       $friend_xml->writeAttribute("is_asker", ($this->is_asker ? "yes" : "no"));
-    	    }else{
-    	       $friend_xml->writeAttribute("online", ($this->online ? "yes" : "no"));
-    	    }
-    	    $friend_xml->writeAttribute("date", $this->date);   
-	    } 
-	    $friend_xml->insert($this->user->asXML());
-	    $friend_xml->endElement();
-	    return $friend_xml->asString();
+        $friend_xml = new XMLOutput();
+        $friend_xml->startElement('friend');
+        if ($this->extra_info)
+        {
+            $friend_xml->writeAttribute("is_pending", ($this->is_pending ? "yes" : "no"));
+            if ($this->is_pending)
+            {
+                $friend_xml->writeAttribute("is_asker", ($this->is_asker ? "yes" : "no"));
+            }
+            else
+            {
+                $friend_xml->writeAttribute("online", ($this->online ? "yes" : "no"));
+            }
+            $friend_xml->writeAttribute("date", $this->date);
+        }
+        $friend_xml->insert($this->user->asXML());
+        $friend_xml->endElement();
+
+        return $friend_xml->asString();
     }
-    
+
     /**
      * Create server
-     * @param 
-     * @param 
+     *
+     * @param
+     * @param
+     *
      * @return Server
-     * @throws 
-     *//*
-    public static function create(  $ip,
-                                    $port,
-                                    $userid,
-                                    $server_name,
-                                    $max_players)
-    {
-        $max_players = (int) $max_players;
-        try{
-            $count = DBConnection::get()->query
-            (
-                "SELECT `id` FROM `" . DB_PREFIX . "servers`
-                    WHERE `ip`= :ip AND `port`= :port ",
-                DBConnection::ROW_COUNT,
-                array
+     * @throws
+     */
+    /*
+        public static function create(  $ip,
+                                        $port,
+                                        $userid,
+                                        $server_name,
+                                        $max_players)
+        {
+            $max_players = (int) $max_players;
+            try{
+                $count = DBConnection::get()->query
                 (
-                    ':ip'   => $ip,
-                    ':port' => $port
-                )
-            );
-            if ($count != 0)
-                throw new ServerException(_('Specified server already exists.'));
-            $result = DBConnection::get()->query
-            (
-                "INSERT INTO `" . DB_PREFIX ."servers` (hostid, ip, port, name, max_players)
-                VALUES (:hostid, :ip, :port, :name, :max_players)",
-                DBConnection::ROW_COUNT,
-                array
+                    "SELECT `id` FROM `" . DB_PREFIX . "servers`
+                        WHERE `ip`= :ip AND `port`= :port ",
+                    DBConnection::ROW_COUNT,
+                    array
+                    (
+                        ':ip'   => $ip,
+                        ':port' => $port
+                    )
+                );
+                if ($count != 0)
+                    throw new ServerException(_('Specified server already exists.'));
+                $result = DBConnection::get()->query
                 (
-                    ':hostid'       => (int) $userid,
-                    ':ip'           => (int) $ip,
-                    ':port'         => (int) $port,
-                    ':name'         => (string) $server_name,
-                    ':max_players'  => (int)    $max_players
-                )
-            );
-            if ($result != 1) {
-                throw new ServerException(_('Could not create server'));
-            }
-            return Server::getServer(DBConnection::get()->lastInsertId());
+                    "INSERT INTO `" . DB_PREFIX ."servers` (hostid, ip, port, name, max_players)
+                    VALUES (:hostid, :ip, :port, :name, :max_players)",
+                    DBConnection::ROW_COUNT,
+                    array
+                    (
+                        ':hostid'       => (int) $userid,
+                        ':ip'           => (int) $ip,
+                        ':port'         => (int) $port,
+                        ':name'         => (string) $server_name,
+                        ':max_players'  => (int)    $max_players
+                    )
+                );
+                if ($result != 1) {
+                    throw new ServerException(_('Could not create server'));
+                }
+                return Server::getServer(DBConnection::get()->lastInsertId());
 
-        }catch(PDOExpcetion $e){
-            throw new ServerException(
-                _('An error occurred while creating server.') .' '.
-                _('Please contact a website administrator.')
-            );
-        }
-    }*/
-    
+            }catch(PDOExpcetion $e){
+                throw new ServerException(
+                    _('An error occurred while creating server.') .' '.
+                    _('Please contact a website administrator.')
+                );
+            }
+        }*/
+
+    /**
+     * @param $userid
+     *
+     * @return Server
+     * @throws FriendException
+     */
     public static function getOnlineFriendsOf($userid)
     {
-        try{
-            $result = DBConnection::get()->query
-            (
-                "
-                    SELECT " . DB_PREFIX ."friends.asker_id AS friend_id 
-                    FROM " . DB_PREFIX ."friends, " . DB_PREFIX ."client_sessions
-                    WHERE " . DB_PREFIX ."friends.receiver_id = :userid 
-                        AND " . DB_PREFIX ."friends.request = 0
-                        AND " . DB_PREFIX ."client_sessions.uid = " . DB_PREFIX ."friends.asker_id 
-                        AND " . DB_PREFIX ."client_sessions.online = 1
+        try
+        {
+            $result = DBConnection::get()->query(
+                "   SELECT " . DB_PREFIX . "friends.asker_id AS friend_id
+                    FROM " . DB_PREFIX . "friends, " . DB_PREFIX . "client_sessions
+                    WHERE " . DB_PREFIX . "friends.receiver_id = :userid
+                        AND " . DB_PREFIX . "friends.request = 0
+                        AND " . DB_PREFIX . "client_sessions.uid = " . DB_PREFIX . "friends.asker_id
+                        AND " . DB_PREFIX . "client_sessions.online = 1
                 UNION
-                    SELECT " . DB_PREFIX ."friends.receiver_id AS friend_id 
-                    FROM " . DB_PREFIX ."friends, " . DB_PREFIX ."client_sessions
-                    WHERE " . DB_PREFIX ."friends.asker_id = :userid
-                        AND " . DB_PREFIX ."friends.request = 0
-                        AND " . DB_PREFIX ."client_sessions.uid = " . DB_PREFIX ."friends.receiver_id 
-                        AND " . DB_PREFIX ."client_sessions.online = 1
-                ",
+                    SELECT " . DB_PREFIX . "friends.receiver_id AS friend_id
+                    FROM " . DB_PREFIX . "friends, " . DB_PREFIX . "client_sessions
+                    WHERE " . DB_PREFIX . "friends.asker_id = :userid
+                        AND " . DB_PREFIX . "friends.request = 0
+                        AND " . DB_PREFIX . "client_sessions.uid = " . DB_PREFIX . "friends.receiver_id
+                        AND " . DB_PREFIX . "client_sessions.online = 1",
                 DBConnection::FETCH_ALL,
                 array
                 (
-                        ':userid'       => (int) $userid
+                    ':userid' => (int)$userid
                 )
             );
-        }catch (DBException $e){
+        }
+        catch(DBException $e)
+        {
             throw new FriendException(
-                    _('An unexpected error occured while fetching online friends.') . ' ' .
-                    _('Please contact a website administrator.'));
+                _('An unexpected error occured while fetching online friends.') . ' ' .
+                _('Please contact a website administrator.'));
         }
         $string_list = "";
-        foreach ($result as $r){
+        foreach ($result as $r)
+        {
             $string_list .= $r['friend_id'];
             $string_list .= ' ';
         }
         $string_list = trim($string_list);
+
         return $string_list;
     }
-    
+
     /**
      * Returns XML string
-     * @param int $userid
+     *
+     * @param int  $userid
+     * @param bool $is_self
+     *
+     * @throws FriendException
      * @return string
      */
-    public static function getFriendsAsXML($userid, $is_self = False)
+    public static function getFriendsAsXML($userid, $is_self = false)
     {
-        try{
-            if($is_self){
-                $result = DBConnection::get()->query
-                ( 
-                    "
-                    SELECT " . DB_PREFIX ."friends.date AS date, " . DB_PREFIX ."friends.request AS request, " . DB_PREFIX ."friends.asker_id AS friend_id, " . DB_PREFIX ."users.user AS friend_name, 1 AS is_asker FROM " . DB_PREFIX ."friends, " . DB_PREFIX ."users
-                    WHERE " . DB_PREFIX ."friends.receiver_id = :userid AND " . DB_PREFIX ."users.id = " . DB_PREFIX ."friends.asker_id
+        try
+        {
+            if ($is_self)
+            {
+                $result = DBConnection::get()->query(
+                    "   SELECT " . DB_PREFIX . "friends.date AS date, " . DB_PREFIX . "friends.request AS request, " . DB_PREFIX . "friends.asker_id AS friend_id, " . DB_PREFIX . "users.user AS friend_name, 1 AS is_asker FROM " . DB_PREFIX . "friends, " . DB_PREFIX . "users
+                        WHERE " . DB_PREFIX . "friends.receiver_id = :userid AND " . DB_PREFIX . "users.id = " . DB_PREFIX . "friends.asker_id
                     UNION
-                    SELECT " . DB_PREFIX ."friends.date AS date, " . DB_PREFIX ."friends.request AS request, " . DB_PREFIX ."friends.receiver_id AS friend_id, " . DB_PREFIX ."users.user AS friend_name, 0 AS is_asker FROM " . DB_PREFIX ."friends, " . DB_PREFIX ."users 
-                    WHERE " . DB_PREFIX ."friends.asker_id = :userid AND " . DB_PREFIX ."users.id = " . DB_PREFIX ."friends.receiver_id
-                    ORDER BY friend_name ASC                 
-                    ",       
+                        SELECT " . DB_PREFIX . "friends.date AS date, " . DB_PREFIX . "friends.request AS request, " . DB_PREFIX . "friends.receiver_id AS friend_id, " . DB_PREFIX . "users.user AS friend_name, 0 AS is_asker FROM " . DB_PREFIX . "friends, " . DB_PREFIX . "users
+                        WHERE " . DB_PREFIX . "friends.asker_id = :userid AND " . DB_PREFIX . "users.id = " . DB_PREFIX . "friends.receiver_id
+                        ORDER BY friend_name ASC",
                     DBConnection::FETCH_ALL,
-                    array
-                    (
-                        ':userid'       => (int) $userid
-                    )          
-                );
-            }else{
-                $result = DBConnection::get()->query
-                (
-                    "
-                    SELECT " . DB_PREFIX ."friends.asker_id AS friend_id, " . DB_PREFIX ."users.user AS friend_name FROM " . DB_PREFIX ."friends, " . DB_PREFIX ."users
-                    WHERE " . DB_PREFIX ."friends.receiver_id = :userid 
-                        AND " . DB_PREFIX ."users.id = " . DB_PREFIX ."friends.asker_id 
-                        AND " . DB_PREFIX ."friends.request = 0
-                    UNION
-                    SELECT " . DB_PREFIX ."friends.receiver_id AS friend_id, " . DB_PREFIX ."users.user AS friend_name FROM " . DB_PREFIX ."friends, " . DB_PREFIX ."users
-                    WHERE " . DB_PREFIX ."friends.asker_id = :userid 
-                        AND " . DB_PREFIX ."users.id = " . DB_PREFIX ."friends.receiver_id
-                        AND " . DB_PREFIX ."friends.request = 0
-                    ORDER BY friend_name ASC
-                    ",
-                    DBConnection::FETCH_ALL,
-                    array
-                    (
-                            ':userid'       => (int) $userid
-                    )
+                    array(':userid' => (int)$userid)
                 );
             }
-        }catch (DBException $e){
-            throw new FriendException(
-                _('An unexpected error occured while fetching friends.') . ' ' .
-                _('Please contact a website administrator.'));
+            else
+            {
+                $result = DBConnection::get()->query(
+                    "   SELECT " . DB_PREFIX . "friends.asker_id AS friend_id, " . DB_PREFIX . "users.user AS friend_name FROM " . DB_PREFIX . "friends, " . DB_PREFIX . "users
+                        WHERE " . DB_PREFIX . "friends.receiver_id = :userid
+                        AND " . DB_PREFIX . "users.id = " . DB_PREFIX . "friends.asker_id
+                        AND " . DB_PREFIX . "friends.request = 0
+                    UNION
+                        SELECT " . DB_PREFIX . "friends.receiver_id AS friend_id, " . DB_PREFIX . "users.user AS friend_name FROM " . DB_PREFIX . "friends, " . DB_PREFIX . "users
+                        WHERE " . DB_PREFIX . "friends.asker_id = :userid
+                        AND " . DB_PREFIX . "users.id = " . DB_PREFIX . "friends.receiver_id
+                        AND " . DB_PREFIX . "friends.request = 0
+                        ORDER BY friend_name ASC",
+                    DBConnection::FETCH_ALL,
+                    array(':userid' => (int)$userid)
+                );
+            }
         }
+        catch(DBException $e)
+        {
+            throw new FriendException(h(
+                _('An unexpected error occurred while fetching friends.') . ' ' .
+                _('Please contact a website administrator.')
+            ));
+        }
+
         $partial_output = new XMLOutput();
         $partial_output->startElement('friends');
         foreach ($result as $friend_result)
         {
-            $friend = new Friend($friend_result, False, $is_self);
+            $friend = new Friend($friend_result, false, $is_self);
             $partial_output->insert($friend->asXML());
         }
         $partial_output->endElement();
+
         return $partial_output->asString();
     }
 }
