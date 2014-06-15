@@ -295,7 +295,7 @@ try {
                 $token = isset($_POST['token']) ? $_POST['token'] : "";
                 $achievementids = isset($_POST['achievementid']) ? $_POST['achievementid'] : 0;
                 foreach (explode(',', $achievementids) AS $achievementid) {
-                    ClientSession::get($token, $userid)->onAchieving($achievementid);
+                    ClientSession::get($token, $userid)->onAchieving(trim($achievementid));
                 }
             }
             catch(Exception $e){
