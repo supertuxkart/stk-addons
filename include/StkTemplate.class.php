@@ -118,9 +118,8 @@ class StkTemplate extends Template
                 "media" => "print",
                 "href"  => CSS_LOCATION . 'print.css'
             ),
-            array(
-                "href" => LIBS_LOCATION . "bootstrap3-wysihtml5-bower/dist/bootstrap3-wysihtml5.min.css"
-            )
+            array("href" => LIBS_LOCATION . "bootstrap3-wysihtml5-bower/dist/bootstrap3-wysihtml5.min.css"),
+            array("href" => "//cdn.datatables.net/1.10.0/css/jquery.dataTables.css")
         );
         $this->smarty->assign("css_includes", array_merge($this->css_includes, $this->user_css_includes));
     }
@@ -148,6 +147,7 @@ class StkTemplate extends Template
             array('src' => "//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/js/bootstrap.min.js"),
             array('src' => "//cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.10.2/typeahead.bundle.min.js"),
             array('src' => "//cdnjs.cloudflare.com/ajax/libs/history.js/1.8/bundled-uncompressed/html4+html5/jquery.history.js"),
+            array('src' => "//cdn.datatables.net/1.10.0/js/jquery.dataTables.js"),
             array('src' => LIBS_LOCATION . "bootstrap3-wysihtml5-bower/dist/bootstrap3-wysihtml5.all.min.js"),
             array('src' => JS_LOCATION . 'jquery.newsticker.js'),
             array('src' => JS_LOCATION . 'main.js')

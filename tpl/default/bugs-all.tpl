@@ -3,10 +3,10 @@
         <strong>{t}Empty!{/t}</strong> {t}There are no bugs :){/t}
     </div>
 {else}
-    <table class="table table-hover">
+    <table class="table table-hover" id="bugs-all">
         <thead>
         <tr>
-            <th>#Id</th>
+            <th>ID</th>
             <th>{t}Addon{/t}</th>
             <th>{t}Title{/t}</th>
             <th>{t}Changed{/t}</th>

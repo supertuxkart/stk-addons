@@ -106,11 +106,8 @@ class DBConnection
      *                                  As shown in the example above the fields that are named parameters will have the column
      *                                  normal as the rest (the unescaped params) but the value will be the named parameter itself
      */
-    private static function buildQueryParams(
-        array $fields_data,
-        array &$prepared_pairs,
-        array &$column_value_pairs = array()
-    ) {
+    private static function buildQueryParams(array $fields_data, array &$prepared_pairs, array &$column_value_pairs = array())
+    {
         // In our context field = column
 
         foreach ($fields_data as $field => $value)
@@ -162,7 +159,6 @@ class DBConnection
         }
 
         return $this->in_transaction;
-
     }
 
     /**
@@ -297,7 +293,7 @@ class DBConnection
             throw new DBException($e->errorInfo[0]);
         }
 
-        throw new DBException("Unexpected reach of end of query()");
+        throw new DBException("Unexpected reach of end of query(). Possibly return_type was invalid");
     }
 
     /**
@@ -315,7 +311,7 @@ class DBConnection
      *
      * @param string $table
      * @param array  $fields_data associative array that maps column to value
-     *                            example: ":name" => "daniel", ":id" => 23, "date" => "NOW()"
+     *                            example: [":name" => "daniel", ":id" => 23, "date" => "NOW()"]
      *                            If you do not want to prepare a column do not put ":" in front of the key
      * @param array  $data_types  associative array that maps column to param_type
      *
@@ -345,7 +341,7 @@ class DBConnection
 
         Log::newEvent($query);
 
-        return (int)$this->query($query, static::ROW_COUNT, $prepared_pairs, $data_types);
+        return $this->query($query, static::ROW_COUNT, $prepared_pairs, $data_types);
     }
 
     /**
@@ -427,7 +423,7 @@ class DBConnection
      *
      * @throws DBException
      * @throws InvalidArgumentException
-     * @return int the count statement
+     * @return int the count number
      */
     public function count($table, $where_statement = "", array $fields_data = array(), array $data_types = array())
     {
@@ -445,11 +441,6 @@ class DBConnection
             $query .= sprintf(" WHERE %s", $where_statement);
         }
 
-        return (int)$this->query(
-            $query,
-            static::FETCH_FIRST_COLUMN,
-            $prepared_pairs,
-            $data_types
-        );
+        return (int)$this->query($query, static::FETCH_FIRST_COLUMN, $prepared_pairs, $data_types);
     }
 }

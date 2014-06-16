@@ -10,6 +10,8 @@
         $("#bug-description").wysihtml5(editorOptions);
         $("#bug-comment-description").wysihtml5(editorOptions);
 
+        $("#bugs-all").dataTable();
+
         $("#addon-name").typeahead({
                 hint     : true,
                 highlight: true,
@@ -40,6 +42,7 @@
     function btnToggle() {
         $("#btn-bugs-add").toggleClass("hide");
         $("#btn-bugs-back").toggleClass("hide");
+        registerEditors();
     }
 
     function bugFormSubmit(form_identifier, callback_success) {
@@ -67,14 +70,12 @@
             History.pushState({state: "add"}, '', "?add");
             loadContentWithAjax("#bug-content", BUGS_LOCATION + 'add.php', {}, function() {
                 btnToggle();
-                registerEditors();
             });
         },
         view : function(bug_id) {
             History.pushState({state: "view"}, '', "?bug_id=" + bug_id);
             loadContentWithAjax("#bug-content", BUGS_LOCATION + 'view.php', {bug_id: bug_id}, function() {
                 btnToggle();
-                registerEditors();
             });
         }
     };
