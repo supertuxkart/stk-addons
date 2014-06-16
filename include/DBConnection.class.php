@@ -94,10 +94,17 @@ class DBConnection
 
     /**
      * Build the parameters for the query method
+     * This method takes an array(eg: [":name" => "Daniel", "date" => "NOW()"] and builds 2 additional arrays
+     * The keys that start with a ':' are escaped (are added to the $prepared_pairs, which in turn will be parsed to PDO).
+     * The other keys that are NOT prefixed with ':' will just be constant values (no escaping will be done)
      *
-     * @param array $fields_data
+     * @param array $fields_data        associative array that maps column to value
      * @param array $prepared_pairs     return associative array for preparing the data
+     *                                  Example of output: [":name" => "Daniel"]
      * @param array $column_value_pairs associative array of column => value pairs
+     *                                  Example of output: ["name" => ":name", "date" => "17 May 2014"]
+     *                                  As shown in the example above the fields that are named parameters will have the column
+     *                                  normal as the rest (the unescaped params) but the value will be the named parameter itself
      */
     private static function buildQueryParams(
         array $fields_data,
@@ -304,10 +311,10 @@ class DBConnection
     }
 
     /**
-     * Insert data into the database. helper method
+     * Insert data into the database. Helper method
      *
      * @param string $table
-     * @param array  $fields_data an associative array in which the key is the column and the value is the actual value
+     * @param array  $fields_data associative array that maps column to value
      *                            example: ":name" => "daniel", ":id" => 23, "date" => "NOW()"
      *                            If you do not want to prepare a column do not put ":" in front of the key
      * @param array  $data_types  associative array that maps column to param_type
@@ -342,10 +349,13 @@ class DBConnection
     }
 
     /**
+     * Perform a update on the database. Helper method
+     *
      * @param string $table           the table name
      * @param string $where_statement the complete where statement
-     * @param array  $fields_data
-     * @param array  $data_types
+     * @param array  $fields_data     associative array that maps column to value
+     *                                If you do not want to prepare a column do not put ":" in front of the key
+     * @param array  $data_types      associative array that maps column to param_type
      *
      * @throws DBException
      * @throws InvalidArgumentException
@@ -377,11 +387,12 @@ class DBConnection
     }
 
     /**
-     * Perform a delete on the database
+     * Perform a delete on the database. Helper method
      *
      * @param string $table           the table name
      * @param string $where_statement the complete statement name
      * @param array  $fields_data     associative array that maps column to value
+     *                                If you do not want to prepare a column do not put ":" in front of the key
      * @param array  $data_types      associative array that maps column to param_type
      *
      * @throws DBException
@@ -406,11 +417,12 @@ class DBConnection
     }
 
     /**
-     * Perform an sql count on the database, much faster than PDO::rowCount()
+     * Perform an sql count on the database, much faster than PDO::rowCount(). Helper method
      *
      * @param string $table
      * @param string $where_statement the sql where part
      * @param array  $fields_data     associative array that maps column to value
+     *                                If you do not want to prepare a column do not put ":" in front of the key
      * @param array  $data_types      associative array that maps column to param_type
      *
      * @throws DBException
