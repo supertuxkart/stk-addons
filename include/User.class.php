@@ -64,7 +64,7 @@ class User
     public function __construct($id, array $userData = array())
     {
         $this->id = $id;
-        $this->userName = $userData["username"];
+        $this->userName = $userData["user"];
         $this->userData = $userData;
     }
 
@@ -184,67 +184,64 @@ class User
      */
     public function setConfig($available = null, $role = null)
     {
-        if (static::hasPermissionOnRole($this->userData['role']))
+        if(!static::hasPermissionOnRole($this->userData['role']))
         {
+            // we do not have permission
+            return false;
+        }
 
-            // Set availability status
-            if ($available === 'on')
-            {
-                $available = 1;
-            }
-            else
-            {
-                $available = 0;
-            }
+        // Set availability status
+        if ($available === 'on')
+        {
+            $available = 1;
+        }
+        else
+        {
+            $available = 0;
+        }
+        try
+        {
+            DBConnection::get()->update(
+                "users",
+                "`id` = :id",
+                array(
+                    ":id"     => $this->id,
+                    ":active" => $available
+                ),
+                array(
+                    ":id" => DBConnection::PARAM_INT,
+                    ":active" => DBConnection::PARAM_INT
+                )
+            );
+        }
+        catch(DBException $e)
+        {
+            return false;
+        }
+
+        // Set permission level
+        if ($role && static::hasPermissionOnRole($role))
+        {
             try
             {
-                DBConnection::get()->query(
-                    'UPDATE ' . DB_PREFIX . 'users
-                    SET `active` = :active
-                    WHERE `id` = :id',
-                    DBConnection::NOTHING,
+                DBConnection::get()->update(
+                    "users",
+                    "`id` = :id",
                     array(
-                        ":id"     => (int)$this->id,
-                        ":active" => $available,
-                    )
+                        ":id"     => $this->id,
+                        ":role" => $role
+                    ),
+                    array(":id" => DBConnection::PARAM_INT)
                 );
             }
             catch(DBException $e)
             {
                 return false;
             }
-
-            // Set permission level
-            if ($role)
-            {
-                if (static::hasPermissionOnRole($role))
-                {
-                    try
-                    {
-                        DBConnection::get()->query(
-                            'UPDATE ' . DB_PREFIX . 'users fdssdf
-                            SET `role` = :role
-                            WHERE `id` = :id',
-                            DBConnection::NOTHING,
-                            array(
-                                ":id"   => (int)$this->id,
-                                ":role" => $role,
-                            )
-                        );
-                    }
-                    catch(DBException $e)
-                    {
-                        return false;
-                    }
-                }
-            }
-
-            // success
-            return true;
         }
 
-        // we do not have permission
-        return false;
+        // success
+        return true;
     }
 
     /**
@@ -693,10 +690,7 @@ class User
                 SET `last_login` = NOW()
                 WHERE `id` = :userid",
                 DBConnection::NOTHING,
-                array
-                (
-                    ':userid' => $userid
-                )
+                array(':userid' => $userid)
             );
             $result = DBConnection::get()->query(
                 "SELECT `last_login`
@@ -973,12 +967,10 @@ class User
             $count = DBConnection::get()->insert(
                 "users",
                 array(
-                    "user" => $username,
-                    "pass" => $password,
-                    "name" => $name,
-                    "email" => $email
-                ),
-                array(
+                    ":user" => $username,
+                    ":pass" => $password,
+                    ":name" => $name,
+                    ":email" => $email,
                     "role" => "user",
                     "reg_date" => "CURRENT_DATE()"
                 )

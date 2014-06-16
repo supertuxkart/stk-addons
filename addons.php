@@ -226,7 +226,7 @@ foreach ($addons_list as $ad)
         $addons[] = array(
             'class' => $class,
             'url'   => "addons.php?type={$_GET['type']}&amp;name={$adc->getId()}",
-            'label' => '<div class="icon">' . $icon_html . '</div>' . htmlspecialchars($adc->getName($adc->getId())),
+            'label' => '<div class="icon">' . $icon_html . '</div>' . h($adc->getName($adc->getId())),
             'disp'  => File::rewrite("addons.php?type={$_GET['type']}&amp;name={$adc->getId()}")
         );
     }

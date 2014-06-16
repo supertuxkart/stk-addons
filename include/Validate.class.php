@@ -72,10 +72,10 @@ class Validate
     {
         if (!filter_var($email, FILTER_VALIDATE_EMAIL))
         {
-            throw new UserException(htmlspecialchars(sprintf(_('"%s" is not a valid email address.'), $email)));
+            throw new UserException(h(sprintf(_('"%s" is not a valid email address.'), $email)));
         }
 
-        return htmlspecialchars($email);
+        return h($email);
     }
 
     /**
@@ -97,7 +97,7 @@ class Validate
             throw new UserException(_h('Your username can only contain alphanumeric characters.'));
         }
 
-        return htmlspecialchars($username);
+        return h($username);
     }
 
 
@@ -200,7 +200,7 @@ class Validate
             throw new UserException(_h('You must enter a name.'));
         }
 
-        return htmlspecialchars(trim($name));
+        return h(trim($name));
     }
 
     /**

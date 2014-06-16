@@ -399,12 +399,12 @@ class Bug
             DBConnection::get()->insert(
                 "bugs",
                 array(
-                    "user_id"     => $userId,
-                    "addon_id"    => $addonId,
-                    "title"       => $bugTitle,
-                    "description" => $bugDescription,
-                ),
-                array("date_report" => "NOW()")
+                    ":user_id"     => $userId,
+                    ":addon_id"    => $addonId,
+                    ":title"       => $bugTitle,
+                    ":description" => $bugDescription,
+                    "date_report"  => "NOW()"
+                )
             );
         }
         catch(DBException $e)
@@ -449,11 +449,11 @@ class Bug
             DBConnection::get()->insert(
                 "bugs_comments",
                 array(
-                    "user_id"     => $userId,
-                    "bug_id"      => $bugId,
-                    "description" => $commentDescription,
-                ),
-                array("date" => "NOW()")
+                    ":user_id"     => $userId,
+                    ":bug_id"      => $bugId,
+                    ":description" => $commentDescription,
+                    "date"         => "NOW()"
+                )
             );
         }
         catch(DBException $e)

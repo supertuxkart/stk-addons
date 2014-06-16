@@ -96,7 +96,7 @@ switch ($_GET['action'])
                 'info'      => _h('Please enter a new password for your account.'),
                 'new_pass'  => array(
                     'label' => '<label for="reg_pass">' . _h('New Password:') . '<br />' .
-                        '<span style="font-size: x-small; color: #666666; font-weight: normal;">(' . htmlspecialchars(
+                        '<span style="font-size: x-small; color: #666666; font-weight: normal;">(' . h(
                             sprintf(_('Must be at least %d characters long.'), '8')
                         ) . ')</span></label>',
                     'field' => '<input type="password" name="pass1" id="reg_pass" />'
@@ -148,7 +148,7 @@ switch ($_GET['action'])
                 'info'      => _h('Please enter a new password for your account.'),
                 'new_pass'  => array(
                     'label' => '<label for="reg_pass">' . _h('New Password:') . '<br />' .
-                        '<span style="font-size: x-small; color: #666666; font-weight: normal;">(' . htmlspecialchars(
+                        '<span style="font-size: x-small; color: #666666; font-weight: normal;">(' . h(
                             sprintf(_('Must be at least %d characters long.'), '8')
                         ) . ')</span></label>',
                     'field' => '<input type="password" name="pass1" id="reg_pass" />'

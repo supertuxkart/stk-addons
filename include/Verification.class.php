@@ -49,16 +49,15 @@ class Verification
         }
         catch(DBException $e)
         {
-            throw new UserException(htmlspecialchars(
+            throw new UserException(h(
                 _('An error occurred while trying to validate verification information.') . ' ' .
                 _('Please contact a website administrator.')
             ));
         }
         if ($count !== 1)
         {
-            throw new UserException(_(
-                "Verification failed. Either the supplied user doesn't exist,"
-                . "the account doesn't need verification (anymore), or the verification code is incorrect."
+            throw new UserException(_h(
+                "Verification failed. Either the supplied user doesn't exist, the account doesn't need verification (anymore), or the verification code is incorrect."
             ));
         }
     }
@@ -81,7 +80,7 @@ class Verification
                 ':userid' => $userid
             )
         );
-        if ($count == 0)
+        if ($count === 0)
         {
             throw new DBException();
         }
@@ -108,7 +107,7 @@ class Verification
                 ':code'   => (string)$verification_code
             )
         );
-        if ($count == 0)
+        if ($count === 0)
         {
             throw new DBException();
         }

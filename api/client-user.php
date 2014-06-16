@@ -44,9 +44,7 @@ try
                 $output->writeAttribute('success', 'no');
                 $output->writeAttribute(
                     'info',
-                    htmlspecialchars(
-                        $e->getMessage()
-                    )
+                    h($e->getMessage())
                 );
                 $output->endElement();
             }
@@ -64,7 +62,7 @@ try
                 $output->startElement('connect');
                 $output->writeAttribute('success', 'yes');
                 $output->writeAttribute('token', $session->getSessionID());
-                $output->writeAttribute('username', htmlspecialchars($session->getUsername()));
+                $output->writeAttribute('username', h($session->getUsername()));
                 $output->writeAttribute('userid', $session->getUserID());
                 if ($achievements_string != "")
                 {
@@ -80,9 +78,7 @@ try
                 $output->writeAttribute('success', 'no');
                 $output->writeAttribute(
                     'info',
-                    htmlspecialchars(
-                        $e->getMessage()
-                    )
+                    h($e->getMessage())
                 );
                 $output->endElement();
             }
@@ -100,7 +96,7 @@ try
                 $output->startElement('saved-session');
                 $output->writeAttribute('success', 'yes');
                 $output->writeAttribute('token', $session->getSessionID());
-                $output->writeAttribute('username', htmlspecialchars($session->getUsername()));
+                $output->writeAttribute('username', h($session->getUsername()));
                 $output->writeAttribute('userid', $session->getUserID());
                 $output->writeAttribute('info', '');
                 $output->endElement();
@@ -112,9 +108,7 @@ try
                 $output->writeAttribute('success', 'no');
                 $output->writeAttribute(
                     'info',
-                    htmlspecialchars(
-                        $e->getMessage()
-                    )
+                    h($e->getMessage())
                 );
                 $output->endElement();
             }
@@ -137,9 +131,7 @@ try
                 $output->writeAttribute('success', 'no');
                 $output->writeAttribute(
                     'info',
-                    htmlspecialchars(
-                        $e->getMessage()
-                    )
+                    h($e->getMessage())
                 );
                 $output->endElement();
             }
@@ -167,9 +159,7 @@ try
                 $output->writeAttribute('success', 'no');
                 $output->writeAttribute(
                     'info',
-                    htmlspecialchars(
-                        $e->getMessage()
-                    )
+                    h($e->getMessage())
                 );
                 $output->endElement();
             }
@@ -200,9 +190,7 @@ try
                 $output->writeAttribute('success', 'no');
                 $output->writeAttribute(
                     'info',
-                    htmlspecialchars(
-                        $e->getMessage()
-                    )
+                    h($e->getMessage())
                 );
                 $output->endElement();
             }
@@ -238,9 +226,7 @@ try
                 $output->writeAttribute('success', 'no');
                 $output->writeAttribute(
                     'info',
-                    htmlspecialchars(
-                        $e->getMessage()
-                    )
+                    h($e->getMessage())
                 );
                 $output->endElement();
             }
@@ -269,9 +255,7 @@ try
                 $output->writeAttribute('success', 'no');
                 $output->writeAttribute(
                     'info',
-                    htmlspecialchars(
-                        $e->getMessage()
-                    )
+                    h($e->getMessage())
                 );
                 $output->endElement();
             }
@@ -294,9 +278,7 @@ try
                 $output->writeAttribute('success', 'no');
                 $output->writeAttribute(
                     'info',
-                    htmlspecialchars(
-                        $e->getMessage()
-                    )
+                    h($e->getMessage())
                 );
                 $output->endElement();
             }
@@ -325,9 +307,7 @@ try
                 $output->writeAttribute('success', 'no');
                 $output->writeAttribute(
                     'info',
-                    htmlspecialchars(
-                        $e->getMessage()
-                    )
+                    h($e->getMessage())
                 );
                 $output->endElement();
             }
@@ -349,6 +329,7 @@ try
 
         case 'friend-request':
             $friendid = isset($_POST['friendid']) ? $_POST['friendid'] : 0;
+
             try
             {
                 $userid = isset($_POST['userid']) ? $_POST['userid'] : 0;
@@ -367,14 +348,11 @@ try
                 $output->writeAttribute('success', 'no');
                 $output->writeAttribute(
                     'info',
-                    htmlspecialchars(
-                        $e->getMessage()
-                    )
+                    h($e->getMessage())
                 );
                 $output->writeAttribute('friendid', $friendid);
                 $output->endElement();
             }
-
             break;
 
         case 'accept-friend-request':
@@ -397,9 +375,7 @@ try
                 $output->writeAttribute('success', 'no');
                 $output->writeAttribute(
                     'info',
-                    htmlspecialchars(
-                        $e->getMessage()
-                    )
+                    h($e->getMessage())
                 );
                 $output->writeAttribute('friendid', $friendid);
                 $output->endElement();
@@ -425,12 +401,7 @@ try
             {
                 $output->startElement('decline-friend-request');
                 $output->writeAttribute('success', 'no');
-                $output->writeAttribute(
-                    'info',
-                    htmlspecialchars(
-                        $e->getMessage()
-                    )
-                );
+                $output->writeAttribute('info', h($e->getMessage()));
                 $output->writeAttribute('friendid', $friendid);
                 $output->endElement();
             }
@@ -455,12 +426,7 @@ try
             {
                 $output->startElement('cancel-friend-request');
                 $output->writeAttribute('success', 'no');
-                $output->writeAttribute(
-                    'info',
-                    htmlspecialchars(
-                        $e->getMessage()
-                    )
-                );
+                $output->writeAttribute('info', h($e->getMessage()));
                 $output->writeAttribute('friendid', $friendid);
                 $output->endElement();
             }
@@ -487,9 +453,7 @@ try
                 $output->writeAttribute('success', 'no');
                 $output->writeAttribute(
                     'info',
-                    htmlspecialchars(
-                        $e->getMessage()
-                    )
+                    h($e->getMessage())
                 );
                 $output->writeAttribute('friendid', $friendid);
                 $output->endElement();
@@ -515,12 +479,7 @@ try
             {
                 $output->startElement('user-search');
                 $output->writeAttribute('success', 'no');
-                $output->writeAttribute(
-                    'info',
-                    htmlspecialchars(
-                        $e->getMessage()
-                    )
-                );
+                $output->writeAttribute('info', h($e->getMessage()));
                 $output->endElement();
             }
 
@@ -541,12 +500,7 @@ try
             {
                 $output->startElement('disconnect');
                 $output->writeAttribute('success', 'no');
-                $output->writeAttribute(
-                    'info',
-                    htmlspecialchars(
-                        $e->getMessage()
-                    )
-                );
+                $output->writeAttribute('info', h($e->getMessage()));
                 $output->endElement();
             }
             break;
@@ -570,12 +524,7 @@ try
             {
                 $output->startElement('server_creation');
                 $output->writeAttribute('success', 'no');
-                $output->writeAttribute(
-                    'info',
-                    htmlspecialchars(
-                        $e->getMessage()
-                    )
-                );
+                $output->writeAttribute('info', h($e->getMessage()));
                 $output->endElement();
             }
             break;
@@ -605,12 +554,7 @@ try
             {
                 $output->startElement('registration');
                 $output->writeAttribute('success', 'no');
-                $output->writeAttribute(
-                    'info',
-                    htmlspecialchars(
-                        $e->getMessage()
-                    )
-                );
+                $output->writeAttribute('info', h($e->getMessage()));
                 $output->endElement();
             }
             break;
@@ -631,12 +575,7 @@ try
             {
                 $output->startElement('recovery');
                 $output->writeAttribute('success', 'no');
-                $output->writeAttribute(
-                    'info',
-                    htmlspecialchars(
-                        $e->getMessage()
-                    )
-                );
+                $output->writeAttribute('info', h($e->getMessage()));
                 $output->endElement();
             }
             break;
@@ -659,12 +598,7 @@ try
             {
                 $output->startElement('change_password');
                 $output->writeAttribute('success', 'no');
-                $output->writeAttribute(
-                    'info',
-                    htmlspecialchars(
-                        $e->getMessage()
-                    )
-                );
+                $output->writeAttribute('info', h($e->getMessage()));
                 $output->endElement();
             }
             break;
@@ -673,12 +607,7 @@ try
         default:
             $output->startElement('request');
             $output->writeAttribute('success', 'no');
-            $output->writeAttribute(
-                'info',
-                htmlspecialchars(
-                    _('Invalid action.')
-                )
-            );
+            $output->writeAttribute('info', _h('Invalid action.'));
             $output->endElement();
             break;
     }
@@ -690,10 +619,7 @@ catch(Exception $e)
     $output->writeAttribute('success', 'no');
     $output->writeAttribute(
         'info',
-        htmlspecialchars(
-            _('An unexptected error occured.') . ' ' .
-            _('Please contact a website administrator.')
-        )
+        h(_('An unexptected error occured.') . ' ' . _('Please contact a website administrator.'))
     );
     $output->endElement();
 }

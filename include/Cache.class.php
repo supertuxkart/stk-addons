@@ -128,9 +128,9 @@ class Cache
             DBConnection::get()->insert(
                 "cache",
                 array(
-                    "file" => $path,
-                    "addon" => $addon,
-                    "props" => $props
+                    ":file" => $path,
+                    ":addon" => $addon,
+                    ":props" => $props
                 )
             );
 

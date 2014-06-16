@@ -82,7 +82,7 @@ class Report
         $db = DBConnection::get();
 
         $query_result = "\t<h3>Query</h3>\n";
-        $query_result .= "\t<code>" . htmlspecialchars($query) . "</code>\n";
+        $query_result .= "\t<code>" . h($query) . "</code>\n";
         try
         {
             $result = $db->query($query, DBConnection::FETCH_ALL);
@@ -120,7 +120,7 @@ class Report
             $query_result .= "\t\t<tr>\n";
             foreach ($column_names AS $col)
             {
-                $current_result = htmlspecialchars($row[$col]);
+                $current_result = h($row[$col]);
                 $query_result .= "\t\t\t<td>{$current_result}</td>\n";
             }
             $query_result .= "\t\t</tr>\n";
@@ -146,7 +146,7 @@ class Report
         $db = DBConnection::get();
 
         $query_result = "\t<h3>Pie Chart</h3>\n";
-        $query_result .= "\t<code>" . htmlspecialchars($query) . "</code>\n";
+        $query_result .= "\t<code>" . h($query) . "</code>\n";
         try
         {
             $result = $db->query($query, DBConnection::FETCH_ALL);
@@ -195,9 +195,9 @@ class Report
      * is a numerical value. This function can handle graphs with multiple
      * lines.
      *
-     * @param string $section
-     * @param string $query
-     * @param string $chartTitle
+     * @param string      $section
+     * @param string      $query
+     * @param string      $chartTitle
      * @param string|null $graphId
      */
     public function addTimeGraph($section, $query, $chartTitle, $graphId = null)

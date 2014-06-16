@@ -62,7 +62,7 @@ class ConfigManager
             {
                 if (DEBUG_MODE)
                 {
-                    echo $e->getMessage();
+                    trigger_error($e->getMessage());
                 }
 
                 return null;
@@ -72,7 +72,7 @@ class ConfigManager
                 return null;
             }
 
-            foreach ($result AS $row)
+            foreach ($result as $row)
             {
                 ConfigManager::$cache[$row['name']] = $row['value'];
             }
@@ -91,7 +91,7 @@ class ConfigManager
      * @param string $config_name
      * @param string $config_value
      *
-     * @return bool true on succes, false otherwise
+     * @return bool true on success, false otherwise
      */
     public static function setConfig($config_name, $config_value)
     {
@@ -133,7 +133,7 @@ class ConfigManager
         {
             if (DEBUG_MODE)
             {
-                echo $e->getMessage();
+                trigger_error($e->getMessage());
             }
 
             return false;

@@ -96,7 +96,7 @@ class AccessControl
         }
         catch(DBException $e)
         {
-            throw new UserException(htmlspecialchars(
+            throw new UserException(h(
                 _('An error occurred while trying to retrieve roles.') . ' ' .
                 _('Please contact a website administrator.')
             ));
@@ -137,7 +137,7 @@ class AccessControl
         }
         catch(DBException $e)
         {
-            throw new UserException(htmlspecialchars(
+            throw new UserException(h(
                 _('An error occurred while trying to retrieve permissions') . ' ' .
                 _('Please contact a website administrator.')
             ));
@@ -186,8 +186,8 @@ class AccessControl
     {
         header('HTTP/1.0 401 Unauthorized');
         $tpl = new StkTemplate('access-denied.tpl');
-        $tpl->assign('ad_reason', htmlspecialchars(_('You do not have permission to access this page.')));
-        $tpl->assign('ad_action', htmlspecialchars(_('You will be redirected to the home page.')));
+        $tpl->assign('ad_reason', _h('You do not have permission to access this page.'));
+        $tpl->assign('ad_action', _h('You will be redirected to the home page.'));
         $tpl->assign('ad_redirect_url', File::rewrite('index.php'));
         echo $tpl;
 

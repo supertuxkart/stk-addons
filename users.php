@@ -27,7 +27,7 @@ $_GET['user'] = (isset($_GET['user'])) ? $_GET['user'] : $_SESSION['user'];
 $action = (isset($_GET['action'])) ? $_GET['action'] : null;
 
 $tpl = new StkTemplate('two-pane.tpl');
-$tpl->assign('title', htmlspecialchars(_('SuperTuxKart Add-ons')) . ' | ' . htmlspecialchars(_('Users')));
+$tpl->assign('title', h(_('SuperTuxKart Add-ons')) . ' | ' . h(_('Users')));
 $panel = array(
     'left'   => '',
     'status' => '',
@@ -108,9 +108,7 @@ foreach ($users as $user)
         }
         $templateUsers[] = array(
             'url'   => "users.php?user={$user['user']}",
-            'label' => sprintf('<img class="icon"  src="%suser.png" />', IMG_LOCATION) . htmlspecialchars(
-                    $user['user']
-                ),
+            'label' => sprintf('<img class="icon"  src="%suser.png" />', IMG_LOCATION) . h($user['user']),
             'class' => $class
         );
     }

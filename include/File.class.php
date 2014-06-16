@@ -802,7 +802,7 @@ class File
         {
             if (!move_uploaded_file($upload_handle['tmp_name'], UP_PATH . 'images' . DS . $file_name))
             {
-                throw new FileException(htmlspecialchars(_('Failed to move uploaded file.')));
+                throw new FileException(_h('Failed to move uploaded file.'));
             }
         }
         else
@@ -838,7 +838,7 @@ class File
         {
             // Image is not read-able - must be corrupt or otherwise invalid
             unlink($image_path);
-            throw new FileException(htmlspecialchars(_('The uploaded image file is invalid.')));
+            throw new FileException(_h('The uploaded image file is invalid.'));
         }
         // Validate image size
         if ($gdImageInfo[0] > ConfigManager::getConfig('max_image_dimension')
@@ -878,7 +878,7 @@ class File
         catch(DBException $e)
         {
             unlink($image_path);
-            throw new FileException(htmlspecialchars(_('Failed to associate image file with addon.')));
+            throw new FileException(_h('Failed to associate image file with addon.'));
         }
     }
 

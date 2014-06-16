@@ -34,7 +34,7 @@ class Log
             DBConnection::NOTHING,
             array(
                 ':userid'  => $userid,
-                ':message' => strip_tags((string)$message)
+                ':message' => h($message)
             )
         );
     }

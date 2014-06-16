@@ -44,9 +44,10 @@ class Achievement
         }
         catch(DBException $e)
         {
-            throw new AchievementException(
+            throw new AchievementException(h(
                 _('An unexpected error occured while fetching the achieved achievements.') . ' ' .
-                _('Please contact a website administrator.'));
+                _('Please contact a website administrator.')
+            ));
         }
         $string_list = "";
         foreach ($result as $r)
@@ -86,14 +87,14 @@ class Achievement
         {
             if ($e->getErrorCode() == "23503")
             {
-                throw new AchievementException(
-                    _("Provided an id of an achievement that doesn't exist in the database."));
+                throw new AchievementException(_h("Provided an id of an achievement that doesn't exist in the database."));
             }
             else
             {
-                throw new AchievementException(
+                throw new AchievementException(h(
                     _('An unexpected error occured while confirming your achievement.') . ' ' .
-                    _('Please contact a website administrator.'));
+                    _('Please contact a website administrator.')
+                ));
             }
         }
     }

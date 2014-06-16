@@ -53,6 +53,7 @@ class DBConnection
     private $conn;
 
     /**
+     * Flag to see if we currently in a sql transaction
      * @var bool
      */
     private $in_transaction = false;
@@ -62,7 +63,7 @@ class DBConnection
      */
     private static $instance;
 
-    // Faking enumeration
+    // Fake enumeration
     const ROW_COUNT = 1;
 
     const FETCH_ALL = 2;
@@ -89,6 +90,41 @@ class DBConnection
     {
         $this->conn = new PDO(sprintf("mysql:host=%s;dbname=%s;charset=utf8mb4", DB_HOST, DB_NAME), DB_USER, DB_PASSWORD);
         $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    }
+
+    /**
+     * Build the parameters for the query method
+     *
+     * @param array $fields_data
+     * @param array $prepared_pairs     return associative array for preparing the data
+     * @param array $column_value_pairs associative array of column => value pairs
+     */
+    private static function buildQueryParams(
+        array $fields_data,
+        array &$prepared_pairs,
+        array &$column_value_pairs = array()
+    ) {
+        // In our context field = column
+
+        foreach ($fields_data as $field => $value)
+        {
+            if ($field[0] === ":") // prepare this field
+            {
+                // :field => value
+                $prepared_pairs[$field] = $value;
+
+                // remove : from the beginning
+                $key = ltrim($field, ":");
+
+                // column => :value
+                $column_value_pairs[$key] = $field;
+            }
+            else // non prepared field
+            {
+                // column => value
+                $column_value_pairs[$field] = $value;
+            }
+        }
     }
 
     /**
@@ -137,7 +173,7 @@ class DBConnection
         }
         if (DEBUG_MODE)
         {
-            echo "Did a commit while not having a transaction running!";
+            trigger_error("Did a commit while not having a transaction running!");
         }
 
         return false;
@@ -158,7 +194,7 @@ class DBConnection
         }
         if (DEBUG_MODE)
         {
-            echo "Did a rollback while not having a transaction running!";
+            trigger_error("Did a rollback while not having a transaction running!");
         }
 
         return false;
@@ -169,8 +205,8 @@ class DBConnection
      *
      * @param string $query
      * @param int    $return_type
-     * @param array  $params     An associative array having mapping between variables for prepared statements and values
-     * @param array  $data_types variables in prepared statement for which data type should be explicitly mentioned
+     * @param array  $prepared_pairs An associative array having mapping between variables for prepared statements and values
+     * @param array  $data_types     variables in prepared statement for which data type should be explicitly mentioned
      *
      * @throws DBException
      *
@@ -179,20 +215,22 @@ class DBConnection
     public function query(
         $query,
         $return_type = DBConnection::NOTHING,
-        array $params = array(),
+        array $prepared_pairs = array(),
         array $data_types = array()
     ) {
-        if (empty($query))
+        if (!$query)
         {
             throw new DBException("Empty Query");
         }
+
         try
         {
             $sth = $this->conn->prepare($query);
 
-            foreach ($params as $key => $param)
+            foreach ($prepared_pairs as $key => $param)
             {
-                if (array_key_exists($key, $data_types))
+                // TODO maybe check if $key is valid
+                if (isset($data_types[$key]))
                 {
                     $sth->bindValue($key, $param, $data_types[$key]);
                 }
@@ -231,12 +269,12 @@ class DBConnection
                 $success = $this->conn->rollback();
                 if (DEBUG_MODE && !$success)
                 {
-                    echo "A PDO exception occurred during during a transaction, but the rollback failed";
+                    trigger_error("A PDO exception occurred during during a transaction, but the rollback failed");
                 }
             }
             if (DEBUG_MODE)
             {
-                echo "Database Error";
+                trigger_error("Database Error");
                 var_dump($e->errorInfo);
                 printf(
                     "SQLSTATE ERR: %s<br>\nmySQL ERR: %s<br>\nMessage: %s<br>\nQuery: %s<br>",
@@ -245,9 +283,10 @@ class DBConnection
                     isset($e->errorInfo[2]) ? $e->errorInfo[2] : "",
                     $query
                 );
-                echo "Params: <br>";
-                var_dump($params);
+                echo "Fields data: <br>";
+                var_dump($prepared_pairs);
             }
+
             throw new DBException($e->errorInfo[0]);
         }
 
@@ -269,63 +308,98 @@ class DBConnection
      *
      * @param string $table
      * @param array  $fields_data an associative array in which the key is the column and the value is the actual value
-     *                            example: "name" => "daniel", "id" => 23
-     * @param array  $other_data  data that is not prepared (can be a constant value, a mysql function, etc)
+     *                            example: ":name" => "daniel", ":id" => 23, "date" => "NOW()"
+     *                            If you do not want to prepare a column do not put ":" in front of the key
+     * @param array  $data_types  associative array that maps column to param_type
      *
      * @return int the number of affected rows
      * @throws DBException
      */
-    public function insert($table, array $fields_data, array $other_data = array())
+    public function insert($table, array $fields_data, array $data_types = array())
     {
-        if (empty($table) || empty($fields_data))
+        if (!$table || !$fields_data)
         {
             throw new DBException("Empty table or data");
         }
 
-        // associative array for preparing the data
-        $prepared_pairs = array();
-
-        foreach ($fields_data as $field => $value)
-        {
-            // :field => value
-            $prepared_pairs[":" . $field] = $value;
-        }
-
-        $columns = array_merge(array_keys($fields_data), array_keys($other_data));
-        $values = array_merge(array_keys($prepared_pairs), array_values($other_data));
+        // include and non escaped columns, eg: date => NOW()
+        $column_value_pairs = $prepared_pairs = array();
+        static::buildQueryParams($fields_data, $prepared_pairs, $column_value_pairs);
 
         // build the sql query
         $query = sprintf(
             "INSERT INTO %s (%s) VALUES (%s)",
             DB_PREFIX . $table,
-            '`' . implode("`, `", $columns) . '`', // use back ticks for reserved mysql keywords
-            implode(", ", $values)
+            '`' . implode("`, `", array_keys($column_value_pairs)) . '`', // use back ticks for reserved mysql keywords
+            implode(", ", array_values($column_value_pairs))
         );
+        // TODO add on duplicate key
 
-        return (int)$this->query($query, static::ROW_COUNT, $prepared_pairs);
+        Log::newEvent($query);
+
+        return (int)$this->query($query, static::ROW_COUNT, $prepared_pairs, $data_types);
     }
 
     /**
-     * Perform a delete on the database
+     * @param string $table           the table name
+     * @param string $where_statement the complete where statement
+     * @param array  $fields_data
+     * @param array  $data_types
      *
-     * @param string $table
-     * @param string $where_statement
-     * @param array  $prepared_pairs pairs to parse to pdo
-     * @param array  $data_types  data types for the prepared statements
-     *
-     * @return int
      * @throws DBException
+     * @return int the number of affected rows
      */
-    public function delete($table, $where_statement, array $prepared_pairs = array(), array $data_types = array())
+    public function update($table, $where_statement, array $fields_data, array $data_types = array())
     {
         if (!$table || !$where_statement)
         {
             throw new DBException("Empty table or where statement");
         }
 
+        $prepared_pairs = $column_value_pairs = array();
+        static::buildQueryParams($fields_data, $prepared_pairs, $column_value_pairs);
+
+        // build set value pairs
+        $set_string = "";
+        foreach ($column_value_pairs as $column => $value)
+        {
+            $set_string .= "`{$column}` = {$value}, ";
+        }
+        $set_string = rtrim($set_string, ", ");
+
+        $query = sprintf("UPDATE %s SET %s WHERE %s", DB_PREFIX . $table, $set_string, $where_statement);
+
+        Log::newEvent($query);
+
+        return $this->query($query, static::ROW_COUNT, $prepared_pairs, $data_types);
+    }
+
+    /**
+     * Perform a delete on the database
+     *
+     * @param string $table           the table name
+     * @param string $where_statement the complete statement name
+     * @param array  $fields_data     associative array that maps column to value
+     * @param array  $data_types      associative array that maps column to param_type
+     *
+     * @throws DBException
+     * @return int the number of affected rows
+     */
+    public function delete($table, $where_statement, array $fields_data = array(), array $data_types = array())
+    {
+        if (!$table || !$where_statement)
+        {
+            throw new DBException("Empty table or where statement");
+        }
+
+        $prepared_pairs = array();
+        static::buildQueryParams($fields_data, $prepared_pairs);
+
         $query = sprintf("DELETE FROM %s WHERE %s", DB_PREFIX . $table, $where_statement);
 
-        return (int)$this->query($query, static::ROW_COUNT, $prepared_pairs, $data_types);
+        Log::newEvent($query);
+
+        return $this->query($query, static::ROW_COUNT, $prepared_pairs, $data_types);
     }
 
     /**
@@ -333,26 +407,33 @@ class DBConnection
      *
      * @param string $table
      * @param string $where_statement the sql where part
-     * @param array  $prepared_pairs  pairs to parse to pdo
-     * @param array  $data_types      data types for the prepared statements
+     * @param array  $fields_data     associative array that maps column to value
+     * @param array  $data_types      associative array that maps column to param_type
      *
      * @throws DBException
      * @return int the count statement
      */
-    public function count($table, $where_statement = "", array $prepared_pairs = array(), array $data_types = array())
+    public function count($table, $where_statement = "", array $fields_data = array(), array $data_types = array())
     {
         if (!$table)
         {
             throw new DBException("Empty table");
         }
 
-        $query = sprintf("SELECT COUNT(*) FROM %s", DB_PREFIX . $table);
+        $prepared_pairs = array();
+        static::buildQueryParams($fields_data, $prepared_pairs);
 
-        if (!empty($where_statement))
+        $query = sprintf("SELECT COUNT(*) FROM %s", DB_PREFIX . $table);
+        if ($where_statement)
         {
             $query .= sprintf(" WHERE %s", $where_statement);
         }
 
-        return (int)$this->query($query, static::FETCH_FIRST_COLUMN, $prepared_pairs, $data_types);
+        return (int)$this->query(
+            $query,
+            static::FETCH_FIRST_COLUMN,
+            $prepared_pairs,
+            $data_types
+        );
     }
 }

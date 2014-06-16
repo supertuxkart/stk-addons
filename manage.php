@@ -28,7 +28,7 @@ if (!isset($_GET['view']))
 }
 
 $tpl = new StkTemplate("two-pane.tpl");
-$tpl->assign("title", htmlspecialchars(_('STK Add-ons') . ' | ' . _('Manage')));
+$tpl->assign("title", h(_('STK Add-ons') . ' | ' . _('Manage')));
 $panel = array(
     'left'   => '',
     'status' => '',

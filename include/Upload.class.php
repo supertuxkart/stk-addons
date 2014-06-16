@@ -145,9 +145,7 @@ class Upload
     {
         if (!mkdir($this->temp_dir, 0755, true))
         {
-            throw new UploadException('Failed to create temporary directory for upload: ' .
-                htmlspecialchars($this->temp_dir)
-            );
+            throw new UploadException('Failed to create temporary directory for upload: ' . h($this->temp_dir));
         }
 
         // Copy file to temp folder

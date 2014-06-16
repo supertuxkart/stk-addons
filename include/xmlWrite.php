@@ -123,16 +123,16 @@ function generateAssetXML()
             // TODO find a cleaner solution to writing these queries
             // we do not need to escape the $type variable because it is defined above
             $addons = DBConnection::get()->query(
-                    'SELECT `k`.*, `r`.`fileid`, `r`.`creation_date` AS `date`,
-                    `r`.`revision`, `r`.`format`, `r`.`image`,
-                    ' . $iconQuery . ' `r`.`status`, `u`.`user`
+                'SELECT `k`.*, `r`.`fileid`, `r`.`creation_date` AS `date`,
+                `r`.`revision`, `r`.`format`, `r`.`image`,
+                ' . $iconQuery . ' `r`.`status`, `u`.`user`
                     FROM ' . DB_PREFIX . 'addons k
                     LEFT JOIN ' . DB_PREFIX . $type . 's_revs r
                     ON (`k`.`id` = `r`.`addon_id`)
                     LEFT JOIN ' . DB_PREFIX . 'users u
                     ON (`k`.`uploader` = `u`.`id`)
                     WHERE `k`.`type` = \'' . $type . 's\'',
-                    DBConnection::FETCH_ALL
+                DBConnection::FETCH_ALL
             );
 
             // Loop through each addon record
@@ -157,9 +157,7 @@ function generateAssetXML()
                 if (!file_exists(UP_PATH . $file_path))
                 {
                     trigger_error('File not found for ' . $addon['name'], E_USER_WARNING);
-                    echo '<span class="warning">' . htmlspecialchars(
-                                    _('The following file could not be found:')
-                            ) . ' ' . $file_path . '</span><br />';
+                    echo '<span class="warning">' . _h('The following file could not be found:') . ' ' . $file_path . '</span><br />';
                     continue;
                 }
 
@@ -200,9 +198,9 @@ function generateAssetXML()
                 // Write license path
                 $license_path_format = ConfigManager::getConfig('license_json_path');
                 $license_path = str_replace(
-                        array('$aid', '$atype'),
-                        array($addon['id'], $addon['type']),
-                        $license_path_format
+                    array('$aid', '$atype'),
+                    array($addon['id'], $addon['type']),
+                    $license_path_format
                 );
                 $writer->writeAttribute('license', $license_path);
                 $image_list_path = ConfigManager::getConfig('image_json_path');
@@ -271,12 +269,12 @@ function generateAssetXML2()
 
             // we do not need to escape the $type variable because it is defined above
             $addons = DBConnection::get()->query(
-                    'SELECT `a`.*, `u`.`user`
-	                FROM `' . DB_PREFIX . 'addons` `a`
+                'SELECT `a`.*, `u`.`user`
+                FROM `' . DB_PREFIX . 'addons` `a`
                     LEFT JOIN `' . DB_PREFIX . 'users` `u`
                     ON (`a`.`uploader` = `u`.`id`)
 	                WHERE `a`.`type` = \'' . $type . 's\'',
-                    DBConnection::FETCH_ALL
+                DBConnection::FETCH_ALL
             );
 
             // Loop through each addon
@@ -293,17 +291,17 @@ function generateAssetXML2()
 
                 // Write image list path
                 $image_list_path = str_replace(
-                        array('$aid', '$atype'),
-                        array($addon['id'], $addon['type']),
-                        $image_list_path_format
+                    array('$aid', '$atype'),
+                    array($addon['id'], $addon['type']),
+                    $image_list_path_format
                 );
                 $writer->writeAttribute('image-list', $image_list_path);
 
                 // Write license path
                 $license_path = str_replace(
-                        array('$aid', '$atype'),
-                        array($addon['id'], $addon['type']),
-                        $license_path_format
+                    array('$aid', '$atype'),
+                    array($addon['id'], $addon['type']),
+                    $license_path_format
                 );
                 $writer->writeAttribute('license', $license_path);
 
@@ -315,19 +313,19 @@ function generateAssetXML2()
                 try
                 {
                     $addon_revs = DBConnection::get()->query(
-                            'SELECT * FROM `' . DB_PREFIX . $type . 's_revs`
+                        'SELECT * FROM `' . DB_PREFIX . $type . 's_revs`
 		                    WHERE `addon_id` = :id',
-                            DBConnection::FETCH_ALL,
-                            array(
-                                    ":id" => $addon['id']
-                            )
+                        DBConnection::FETCH_ALL,
+                        array(
+                            ":id" => $addon['id']
+                        )
                     );
 
                     foreach ($addon_revs as $addon_rev)
                     {
                         // Skip invisible entries
                         if (ConfigManager::getConfig('list_invisible') === 0 &&
-                                $addon_rev['status'] & F_INVISIBLE
+                            $addon_rev['status'] & F_INVISIBLE
                         )
                         {
                             continue;

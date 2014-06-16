@@ -159,7 +159,7 @@ class Server
             );
             if ($result != 1)
             {
-                throw new ServerException(_('Could not create server'));
+                throw new ServerException(_h('Could not create server'));
             }
 
             return Server::getServer(DBConnection::get()->lastInsertId());

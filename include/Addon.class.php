@@ -274,31 +274,30 @@ class Addon
         $rev = $highest_rev + 1;
 
         // Add revision entry
-        $fields = array('id', 'addon_id', 'fileid', 'revision', 'format', 'image', 'status');
-        $values = array(
-            $file_id,
-            $this->id,
-            $attributes['fileid'],
-            $rev,
-            $attributes['version'],
-            $attributes['image'],
-            $attributes['status']
+        $fields_data = array(
+            ":id" => $file_id,
+            ":addon_id" => $this->id,
+            ":fileid" => $attributes['fileid'],
+            ":revision" => $rev,
+            ":format" => $attributes['version'],
+            ":image" => $attributes['image'],
+            ":status" => $attributes['status']
         );
+
         if ($this->type === 'karts')
         {
-            $fields[] = 'icon';
-            $values[] = $attributes['image'];
+            $fields_data[":icon"] =  $attributes['image'];
         }
 
         // Add moderator message if available
         if (!empty($moderator_message))
         {
-            $fields[] = 'moderator_note';
-            $values[] = $moderator_message;
+            $fields_data[":moderator_note"] = $moderator_message;
         }
+
         try
         {
-            DBConnection::get()->insert($this->type . '_revs', array_combine($fields, $values));
+            DBConnection::get()->insert($this->type . '_revs', $fields_data);
         }
         catch(DBException $e)
         {
@@ -862,7 +861,7 @@ class Addon
                  WHERE `id` = :id',
                 DBConnection::NOTHING,
                 array(
-                    ':description' => strip_tags($description),
+                    ':description' => h($description),
                     ':id'          => $this->id
                 )
             );
@@ -899,7 +898,7 @@ class Addon
                 WHERE `id` = :id',
                 DBConnection::NOTHING,
                 array(
-                    ':designer' => strip_tags($designer),
+                    ':designer' => h($designer),
                     ':id'       => $this->id
                 )
             );
@@ -1344,11 +1343,7 @@ class Addon
 
         if (empty($addon))
         {
-            if (DEBUG_MODE)
-            {
-                trigger_error("No addon with the id = {$id} found");
-            }
-
+            // silently fail
             return "";
         }
 
@@ -1612,30 +1607,28 @@ class Addon
 
 
         echo _h('Creating a new add-on...') . '<br>';
-        $fields = array('id', 'type', 'name', 'uploader', 'designer', 'license');
-        $values = array(
-            $id,
-            $type,
-            $attributes['name'],
-            User::getId(),
-            $attributes['designer'],
-            $attributes['license']
+        $fields_data = array(
+            ":id" => $id,
+            ":type" => $type,
+            ":name" => $attributes['name'],
+            ":uploader" => User::getId(),
+            ":designer" => $attributes['designer'],
+            ":license" =>  $attributes['license']
         );
         if ($type === 'tracks')
         {
-            $fields[] = 'props';
             if ($attributes['arena'] === 'Y')
             {
-                $values[] = '1';
+                $fields_data[":props"] = '1';
             }
             else
             {
-                $values[] = '0';
+                $fields_data[":props"] = '0';
             }
         }
         try
         {
-            DBConnection::get()->insert("addons", array_combine($fields, $values));
+            DBConnection::get()->insert("addons", $fields_data);
         }
         catch(DBException $e)
         {
@@ -1647,31 +1640,30 @@ class Addon
         $rev = 1;
 
         // Generate revision entry
-        $fields = array('id', 'addon_id', 'fileid', 'revision', 'format', 'image', 'status');
-        $values = array(
-            $fileid,
-            $id,
-            $attributes['fileid'],
-            $rev,
-            $attributes['version'],
-            $attributes['image'],
-            $attributes['status']
+        $fields_data = array(
+            ":id" => $fileid,
+            ":addon_id" => $id,
+            ":fileid" => $attributes['fileid'],
+            ":revision" => $rev,
+            ":format" => $attributes['version'],
+            ":image" =>  $attributes['image'],
+            ":status" =>  $attributes['status']
+
         );
         if ($type === 'karts')
         {
-            $fields[] = 'icon';
-            $values[] = $attributes['image'];
+            $fields_data[":icon"] = $attributes['image'];
         }
 
         // Add moderator message if available
         if (!empty($moderator_message))
         {
-            $fields[] = 'moderator_note';
-            $values[] = $moderator_message;
+            $fields_data[":moderator_note"] = $moderator_message;
         }
+
         try
         {
-            DBConnection::get()->insert($type . '_revs', array_combine($fields, $values));
+            DBConnection::get()->insert($type . '_revs', $fields_data);
         }
         catch(DBException $e)
         {

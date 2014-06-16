@@ -26,23 +26,23 @@ $_POST['name'] = (empty($_POST['name'])) ? null : $_POST['name'];
 $_POST['mail'] = (empty($_POST['mail'])) ? null : $_POST['mail'];
 
 $tpl = new StkTemplate('register.tpl');
-$tpl->assign('title', htmlspecialchars(_('STK Add-ons') . ' | ' . _('Register')));
+$tpl->assign('title', h(_('STK Add-ons') . ' | ' . _('Register')));
 
 $register = array(
     'display_form' => false,
     'form'         => array(
         'username' => array(
             'min'   => 4,
-            'value' => htmlspecialchars($_POST['user'])
+            'value' => h($_POST['user'])
         ),
         'password' => array(
             'min' => 8,
         ),
         'name'     => array(
-            'value' => htmlspecialchars($_POST['name'])
+            'value' => h($_POST['name'])
         ),
         'email'    => array(
-            'value' => htmlspecialchars($_POST['mail'])
+            'value' => h($_POST['mail'])
         )
     )
 );

@@ -20,7 +20,7 @@
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
 $tpl = new StkTemplate('bugs-index.tpl');
-$tpl->assign('title', htmlspecialchars(_('STK Add-ons') . ' | ' . _('Bugs')));
+$tpl->assign('title', h(_('STK Add-ons') . ' | ' . _('Bugs')));
 $tpl->addScriptInclude("bugs.js");
 $tplData = array(
     "show_btn_file" => true
@@ -43,3 +43,4 @@ else
 
 $tpl->assign("bugs", $tplData);
 echo $tpl;
+

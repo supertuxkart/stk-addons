@@ -62,13 +62,11 @@ class News
                     // Delete old record
                     try
                     {
-                        DBConnection::get()->query(
-                            'DELETE FROM `' . DB_PREFIX . 'news`
-                            WHERE `id` = :id',
-                            DBConnection::NOTHING,
-                            array(
-                                ":id" => $entry['id']
-                            )
+                        DBConnection::get()->delete(
+                            "news",
+                            "`id` = :id",
+                            array(":id" => $entry['id']),
+                            array(":id" => DBConnection::PARAM_INT)
                         );
                     }
                     catch(DBException $e)
@@ -92,9 +90,9 @@ class News
                 DBConnection::get()->insert(
                     'news',
                     array(
-                        "content"     => "Newest add-on kart: " . $new_kart,
+                        ":content"    => "Newest add-on kart: " . $new_kart,
                         "web_display" => 1,
-                        "dynamic"     => 1,
+                        "dynamic"     => 1
                     )
                 );
             }
@@ -116,13 +114,11 @@ class News
                     // Delete old record
                     try
                     {
-                        DBConnection::get()->query(
-                            'DELETE FROM `' . DB_PREFIX . 'news`
-                            WHERE `id` = :id',
-                            DBConnection::NOTHING,
-                            array(
-                                ":id" => $entry['id']
-                            )
+                        DBConnection::get()->delete(
+                            "news",
+                            "`id` = :id",
+                            array(":id" => $entry['id']),
+                            array(":id" => DBConnection::PARAM_INT)
                         );
                     }
                     catch(DBException $e)
@@ -146,9 +142,9 @@ class News
                 DBConnection::get()->insert(
                     'news',
                     array(
-                        "content"     => "Newest add-on track: " . $new_track,
+                        ":content"    => "Newest add-on track: " . $new_track,
                         "web_display" => 1,
-                        "dynamic"     => 1,
+                        "dynamic"     => 1
                     )
                 );
             }
@@ -170,13 +166,11 @@ class News
                     // Delete old record
                     try
                     {
-                        DBConnection::get()->query(
-                            'DELETE FROM `' . DB_PREFIX . 'news`
-                            WHERE `id` = :id',
-                            DBConnection::NOTHING,
-                            array(
-                                ":id" => $entry['id']
-                            )
+                        DBConnection::get()->delete(
+                            "news",
+                            "`id` = :id",
+                            array(":id" => $entry['id']),
+                            array(":id" => DBConnection::PARAM_INT)
                         );
                     }
                     catch(DBException $e)
@@ -200,9 +194,9 @@ class News
                 DBConnection::get()->insert(
                     'news',
                     array(
-                        "content"     => "Newest add-on arena: " . $new_arena,
+                        ":content"    => "Newest add-on arena: " . $new_arena,
                         "web_display" => 1,
-                        "dynamic"     => 1,
+                        "dynamic"     => 1
                     )
                 );
             }
@@ -224,14 +218,13 @@ class News
                     // Delete old record
                     try
                     {
-                        DBConnection::get()->query(
-                            'DELETE FROM `' . DB_PREFIX . 'news`
-                            WHERE `id` = :id',
-                            DBConnection::NOTHING,
-                            array(
-                                ":id" => $entry['id']
-                            )
+                        DBConnection::get()->delete(
+                            "news",
+                            "`id` = :id",
+                            array(":id" => $entry['id']),
+                            array(":id" => DBConnection::PARAM_INT)
                         );
+
                     }
                     catch(DBException $e)
                     {
@@ -254,7 +247,7 @@ class News
                 DBConnection::get()->insert(
                     'news',
                     array(
-                        "content"     => "Latest post on stkblog.net: " . $latest_blogpost,
+                        ":content"    => "Latest post on stkblog.net: " . $latest_blogpost,
                         "web_display" => 1,
                         "dynamic"     => 1,
                     )
@@ -326,7 +319,7 @@ class News
             return false;
         }
 
-        return strip_tags($articleTitle);
+        return h($articleTitle);
     }
 
     /**
@@ -348,7 +341,7 @@ class News
             $ret = array();
             foreach ($items as $item)
             {
-                $ret[] = htmlspecialchars($item['content']);
+                $ret[] = h($item['content']);
             }
 
             return $ret;
@@ -433,12 +426,12 @@ class News
             DBConnection::get()->insert(
                 'news',
                 array(
-                    'author_id'   => (int)User::getId(),
-                    'content'     => (string)$message,
-                    'condition'   => (string)$condition,
-                    'important'   => (int)$important,
-                    'web_display' => (int)$web_display,
-                    'active'      => 1
+                    ':author_id'   => (int)User::getId(),
+                    ':content'     => (string)$message,
+                    ':condition'   => (string)$condition,
+                    ':important'   => (int)$important,
+                    ':web_display' => (int)$web_display,
+                    'active'       => 1
                 )
             );
             writeNewsXML();
@@ -464,12 +457,7 @@ class News
     {
         try
         {
-            DBConnection::get()->query(
-                'DELETE FROM `' . DB_PREFIX . 'news`
-                WHERE `id` = :id',
-                DBConnection::NOTHING,
-                array(':id' => (int)$id)
-            );
+            DBConnection::get()->delete("news", "`id` = :id", array(":id" => $id), array(":id" => DBConnection::PARAM_INT));
             writeNewsXML();
 
             return true;

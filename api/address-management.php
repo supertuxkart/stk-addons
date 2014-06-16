@@ -50,13 +50,12 @@ try
                 $output->writeAttribute('success', 'no');
                 $output->writeAttribute(
                     'info',
-                    htmlspecialchars(
-                        $e->getMessage()
-                    )
+                    h($e->getMessage())
                 );
                 $output->endElement();
             }
             break;
+
         case 'start-server':
             try
             {
@@ -85,13 +84,12 @@ try
                 $output->writeAttribute('success', 'no');
                 $output->writeAttribute(
                     'info',
-                    htmlspecialchars(
-                        $e->getMessage()
-                    )
+                    h($e->getMessage())
                 );
                 $output->endElement();
             }
             break;
+
         case 'stop-server':
             try
             {
@@ -112,13 +110,12 @@ try
                 $output->writeAttribute('success', 'no');
                 $output->writeAttribute(
                     'info',
-                    htmlspecialchars(
-                        $e->getMessage()
-                    )
+                    h($e->getMessage())
                 );
                 $output->endElement();
             }
             break;
+
         case 'unset':
             try
             {
@@ -137,13 +134,12 @@ try
                 $output->writeAttribute('success', 'no');
                 $output->writeAttribute(
                     'info',
-                    htmlspecialchars(
-                        $e->getMessage()
-                    )
+                    h($e->getMessage())
                 );
                 $output->endElement();
             }
             break;
+
         case 'get':
             try
             {
@@ -167,13 +163,12 @@ try
                 $output->writeAttribute('success', 'no');
                 $output->writeAttribute(
                     'info',
-                    htmlspecialchars(
-                        $e->getMessage()
-                    )
+                    h($e->getMessage())
                 );
                 $output->endElement();
             }
             break;
+
         case 'quick-join':
             try
             {
@@ -196,13 +191,12 @@ try
                 $output->writeAttribute('success', 'no');
                 $output->writeAttribute(
                     'info',
-                    htmlspecialchars(
-                        $e->getMessage()
-                    )
+                    h($e->getMessage())
                 );
                 $output->endElement();
             }
             break;
+
         case 'request-connection':
             try
             {
@@ -223,13 +217,12 @@ try
                 $output->writeAttribute('success', 'no');
                 $output->writeAttribute(
                     'info',
-                    htmlspecialchars(
-                        $e->getMessage()
-                    )
+                    h($e->getMessage())
                 );
                 $output->endElement();
             }
             break;
+
         case 'poll-connection-requests':
             try
             {
@@ -238,6 +231,7 @@ try
                 $address = isset($_POST['address']) ? utf8_encode($_POST['address']) : null;
                 $port = isset($_POST['port']) ? utf8_encode($_POST['port']) : null;
                 $requests = ClientSession::get($token, $id)->getServerConnectionRequests($address, $port);
+
                 $output->startElement('poll-connection-requests');
                 $output->writeAttribute('success', 'yes');
                 $output->writeAttribute('info', '');
@@ -257,9 +251,7 @@ try
                 $output->writeAttribute('success', 'no');
                 $output->writeAttribute(
                     'info',
-                    htmlspecialchars(
-                        $e->getMessage()
-                    )
+                    h($e->getMessage())
                 );
                 $output->endElement();
             }
@@ -270,9 +262,8 @@ try
             $output->writeAttribute('success', 'no');
             $output->writeAttribute(
                 'info',
-                htmlspecialchars(
-                    _('Invalid action.')
-                )
+                _h('Invalid action.')
+
             );
             $output->endElement();
             break;
@@ -284,10 +275,7 @@ catch(Exception $e)
     $output->writeAttribute('success', 'no');
     $output->writeAttribute(
         'info',
-        htmlspecialchars(
-            _('An unexptected error occured.') . ' ' .
-            _('Please contact a website administrator.')
-        )
+        h(_('An unexptected error occured.') . ' ' . _('Please contact a website administrator.'))
     );
     $output->endElement();
 }
