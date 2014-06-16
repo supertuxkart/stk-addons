@@ -312,14 +312,15 @@ class DBConnection
      *                            If you do not want to prepare a column do not put ":" in front of the key
      * @param array  $data_types  associative array that maps column to param_type
      *
-     * @return int the number of affected rows
      * @throws DBException
+     * @throws InvalidArgumentException
+     * @return int the number of affected rows
      */
     public function insert($table, array $fields_data, array $data_types = array())
     {
         if (!$table || !$fields_data)
         {
-            throw new DBException("Empty table or data");
+            throw new InvalidArgumentException("Empty table or data");
         }
 
         // include and non escaped columns, eg: date => NOW()
@@ -347,13 +348,14 @@ class DBConnection
      * @param array  $data_types
      *
      * @throws DBException
+     * @throws InvalidArgumentException
      * @return int the number of affected rows
      */
     public function update($table, $where_statement, array $fields_data, array $data_types = array())
     {
         if (!$table || !$where_statement)
         {
-            throw new DBException("Empty table or where statement");
+            throw new InvalidArgumentException("Empty table or where statement");
         }
 
         $prepared_pairs = $column_value_pairs = array();
@@ -383,13 +385,14 @@ class DBConnection
      * @param array  $data_types      associative array that maps column to param_type
      *
      * @throws DBException
+     * @throws InvalidArgumentException
      * @return int the number of affected rows
      */
     public function delete($table, $where_statement, array $fields_data = array(), array $data_types = array())
     {
         if (!$table || !$where_statement)
         {
-            throw new DBException("Empty table or where statement");
+            throw new InvalidArgumentException("Empty table or where statement");
         }
 
         $prepared_pairs = array();
@@ -411,13 +414,14 @@ class DBConnection
      * @param array  $data_types      associative array that maps column to param_type
      *
      * @throws DBException
+     * @throws InvalidArgumentException
      * @return int the count statement
      */
     public function count($table, $where_statement = "", array $fields_data = array(), array $data_types = array())
     {
         if (!$table)
         {
-            throw new DBException("Empty table");
+            throw new InvalidArgumentException("Empty table");
         }
 
         $prepared_pairs = array();
