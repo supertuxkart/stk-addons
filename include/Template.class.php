@@ -65,13 +65,8 @@ class Template
      * @return Template
      * @throws TemplateException
      */
-    public function assignments($assigns)
+    public function assignments(array $assigns)
     {
-        if (!is_array($assigns))
-        {
-            throw new TemplateException('Invalid template assignments.');
-        }
-
         foreach ($assigns as $key => $value)
         {
             $this->smarty->assign($key, $value);
@@ -113,11 +108,13 @@ class Template
         {
             throw new TemplateException('Invalid character in template name.');
         }
+
         $dir = ROOT_PATH . 'tpl' . DS . $template_dir . DS;
         if (file_exists($dir) && is_dir($dir))
         {
             return $dir;
         }
+
         throw new TemplateException(sprintf('The selected template "%s" does not exist.', h($template_dir)));
     }
 
@@ -209,6 +206,12 @@ class Template
         }
         catch(SmartyException $e)
         {
+            if (DEBUG_MODE)
+            {
+                trigger_error("Template error: ");
+                var_dump($e);
+            }
+
             return sprintf("Template Error: %s", $e->getMessage());
         }
     }

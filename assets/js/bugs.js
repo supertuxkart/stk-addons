@@ -5,8 +5,11 @@
 
     function registerEditors() {
         var editorOptions = {
-            "html": true
+            toolbar: {
+                "font-styles": false
+            }
         };
+
         $("#bug-description").wysihtml5(editorOptions);
         $("#bug-comment-description").wysihtml5(editorOptions);
 
@@ -92,11 +95,35 @@
         return false;
     });
 
+    $content_bugs.on("click", "#btn-bugs-close", function() {
+        console.log("close clicked");
+        var $modal = $("#modal-close");
+        $modal.modal();
+
+        bugFormSubmit("#modal-close-form", function(data) {
+            var jData = parseJSON(data);
+            if (jData.hasOwnProperty("error")) {
+                console.error(jData["error"]);
+                return;
+            }
+            if (jData.hasOwnProperty("success")) {
+                console.error(jData["success"]);
+            }
+
+            $modal.modal('hide');
+        })
+    });
+
+    $content_bugs.on("click", "#btn-bugs-edit", function() {
+        console.log("edit clicked");
+    });
+
     $content_bugs.on("click", "table .bugs", function() {
         NavigateTo.view($(this).parent().attr("data-id"));
 
         return false;
     });
+
 
     // add bug
     bugFormSubmit("#bug-add-form", function(data) {
@@ -107,7 +134,6 @@
                 type     : "alert-danger",
                 message  : jData["error"]
             });
-            return;
         }
         if (jData.hasOwnProperty("success")) {
             showAlert({
@@ -116,7 +142,6 @@
                 message  : jData["success"]
             });
             NavigateTo.index();
-            return;
         }
     });
 
@@ -129,7 +154,6 @@
                 type     : "alert-danger",
                 message  : jData["error"]
             });
-            return;
         }
         if (jData.hasOwnProperty("success")) {
             showAlert({
@@ -139,7 +163,7 @@
             });
 
             $("#bug-comments").prepend(jData["comment"]);
-            return;
+            $("#bug-comment-description").html("");
         }
     });
 

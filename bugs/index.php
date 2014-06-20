@@ -19,28 +19,28 @@
  */
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
-$tpl = new StkTemplate('bugs-index.tpl');
-$tpl->assign('title', h(_('STK Add-ons') . ' | ' . _('Bugs')));
-$tpl->addScriptInclude("bugs.js");
+$tpl = StkTemplate::get('bugs-index.tpl')->addScriptInclude("bugs.js");
 $tplData = array(
     "show_btn_file" => true
 );
 
 if(isset($_GET["bug_id"]))
 {
+    $tpl->assignTitle(_("View Bug"));
     $tplData["show_btn_file"] = false;
     $tplData["content"] = Util::ob_get_require_once(BUGS_PATH . "view.php");
 }
 elseif(isset($_GET["add"]))
 {
+    $tpl->assignTitle(_("Add Bug"));
     $tplData["show_btn_file"] = false;
     $tplData["content"] = Util::ob_get_require_once(BUGS_PATH . "add.php");
 }
 else
 {
+    $tpl->assignTitle(_("All bugs"));
     $tplData["content"] = Util::ob_get_require_once(BUGS_PATH . "all.php");
 }
 
 $tpl->assign("bugs", $tplData);
 echo $tpl;
-

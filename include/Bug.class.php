@@ -41,17 +41,12 @@ class Bug
     protected $commentsData = array();
 
     /**
-     * @param int   $id
-     * @param array $bugData
+     * Load the comments from the database into the current bug instance
      *
-     * @throws BugException on database error
+     * @throws BugException
      */
-    public function __construct($id, array $bugData = array())
+    protected function loadComments()
     {
-        $this->id = $id;
-        $this->bugData = $bugData;
-
-        // load comments
         try
         {
             $comments = DBConnection::get()->query(
@@ -66,11 +61,30 @@ class Bug
         {
             throw new BugException(h(
                 _("Tried to fetch comments.") . ' ' .
-                _('Please contact a website administrator.')
+                _("Please contact a website administrator.")
             ));
         }
 
         $this->commentsData = $comments;
+    }
+
+    /**
+     * @param int   $id
+     * @param array $bugData
+     * @param bool  $loadComments flag that indicates to load the comments
+     *
+     * @throws BugException on database error
+     */
+    public function __construct($id, array $bugData = array(), $loadComments = true)
+    {
+        $this->id = $id;
+        $this->bugData = $bugData;
+
+        // load comments
+        if ($loadComments)
+        {
+            $this->loadComments();
+        }
     }
 
     /**
@@ -162,6 +176,16 @@ class Bug
     }
 
     /**
+     * Check if the bug is closed
+     *
+     * @return bool
+     */
+    public function isClosed()
+    {
+        return $this->getCloseId();
+    }
+
+    /**
      * Get the instance addon data
      *
      * @return array
@@ -199,7 +223,7 @@ class Bug
         {
             throw new BugException(h(
                 _("Tried to see if a bug exists.") . '. ' .
-                _('Please contact a website administrator.')
+                _("Please contact a website administrator.")
             ));
         }
 
@@ -226,7 +250,7 @@ class Bug
         {
             throw new BugException(h(
                 _("Tried to fetch all bugs") . '. ' .
-                _('Please contact a website administrator.')
+                _("Please contact a website administrator.")
             ));
         }
 
@@ -236,12 +260,13 @@ class Bug
     /**
      * Factory method to build a Bug by id
      *
-     * @param int $bug_id
+     * @param int  $bugId
+     * @param bool $loadComments flag that indicates to load the comments
      *
      * @return Bug
      * @throws BugException
      */
-    public static function get($bug_id)
+    public static function get($bugId, $loadComments = true)
     {
         try
         {
@@ -249,7 +274,7 @@ class Bug
                 "SELECT * FROM " . DB_PREFIX . "bugs
                 WHERE `id` = :id LIMIT 1",
                 DBConnection::FETCH_FIRST,
-                array(":id" => $bug_id),
+                array(":id" => $bugId),
                 array(":id" => DBConnection::PARAM_INT)
             );
         }
@@ -257,27 +282,27 @@ class Bug
         {
             throw new BugException(h(
                 _("Tried to see if a bug exists.") . '. ' .
-                _('Please contact a website administrator.')
+                _("Please contact a website administrator.")
             ));
         }
 
         if (empty($data))
         {
-            throw new BugException(sprintf(_h("There is no bug with id %d"), $bug_id));
+            throw new BugException(sprintf(_h("There is no bug with id %d"), $bugId));
         }
 
-        return new Bug($data['id'], $data);
+        return new Bug($data['id'], $data, $loadComments);
     }
 
     /**
      * Get the data of a comment by id
      *
-     * @param $comment_id
+     * @param $commentId
      *
      * @return array
      * @throws BugException
      */
-    public static function getCommentData($comment_id)
+    public static function getCommentData($commentId)
     {
         try
         {
@@ -285,7 +310,7 @@ class Bug
                 "SELECt * FROM " . DB_PREFIX . "bugs_comments
                 WHERE `id` = :id LIMIT 1",
                 DBConnection::FETCH_FIRST,
-                array(":id" => $comment_id),
+                array(":id" => $commentId),
                 array(":id" => DBConnection::PARAM_INT)
             );
         }
@@ -293,7 +318,7 @@ class Bug
         {
             throw new BugException(h(
                 _("Tried to fetch a comments data") . '. ' .
-                _('Please contact a website administrator.')
+                _("Please contact a website administrator.")
             ));
         }
 
@@ -359,7 +384,7 @@ class Bug
         {
             throw new BugException(h(
                 _("Error on selecting all search bugs") . '. ' .
-                _('Please contact a website administrator.')
+                _("Please contact a website administrator.")
             ));
         }
 
@@ -411,7 +436,7 @@ class Bug
         {
             throw new BugException(h(
                 _("Tried to insert a bug") . '. ' .
-                _('Please contact a website administrator.')
+                _("Please contact a website administrator.")
             ));
         }
 
@@ -460,10 +485,72 @@ class Bug
         {
             throw new BugException(h(
                 _("Tried to insert a bug comment") . '. ' .
-                _('Please contact a website administrator.')
+                _("Please contact a website administrator.")
             ));
         }
 
         return DBConnection::get()->lastInsertId();
+    }
+
+    /**
+     * Close a bug
+     *
+     * @param int    $bugId       the bug id to close
+     * @param string $closeReason the closing reason
+     *
+     * @throws BugException
+     */
+    public static function close($bugId, $closeReason)
+    {
+        // not empty reason
+        if (!$closeReason)
+        {
+            throw new BugException(_h("Close reason is empty"));
+        }
+
+        // get bug
+        try
+        {
+            $bug = static::get($bugId, false);
+        }
+        catch(BugException $e)
+        {
+            // most likely the bug does not exist
+            throw new BugException(_h("The bug does not exist"));
+        }
+
+        // is already closed
+        if ($bug->isClosed())
+        {
+            throw new BugException(_h("The bug is already closed"));
+        }
+
+        // check permission
+        if (User::getId() !== $bug->getUserId() && !User::hasPermission(AccessControl::PERM_EDIT_BUGS))
+        {
+            throw new BugException(_h("You do not have the necessary permission to close this bug"));
+        }
+
+        try
+        {
+            DBConnection::get()->update(
+                "bugs",
+                "`id` = :id",
+                array(
+                    ":id"           => $bugId,
+                    ":close_id"     => User::getId(),
+                    ":close_reason" => h($closeReason),
+                    "date_close"    => "NOW()"
+                ),
+                array(":id" => DBConnection::PARAM_INT, ":close_id" => DBConnection::PARAM_INT)
+            );
+        }
+        catch(DBException $e)
+        {
+            throw new BugException(h(
+                _("Tried to close a bug") . '. ' .
+                _("Please contact a website administrator.")
+            ));
+        }
     }
 }

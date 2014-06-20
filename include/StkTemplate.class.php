@@ -78,17 +78,6 @@ class StkTemplate extends Template
     private $user_css_includes = array();
 
     /**
-     * Setup the header meta tags and js includes, the top menu and the language menu
-     */
-    protected function setup()
-    {
-        $this->setupHead();
-        $this->setupTopMenu();
-        $this->setupLanguageMenu();
-        $this->setupFooter();
-    }
-
-    /**
      * Setup the header info for the template
      */
     private function setupHead()
@@ -106,18 +95,9 @@ class StkTemplate extends Template
         // fill css
         array_push(
             $this->css_includes,
-            array(
-                "media" => "all",
-                "href"  => "//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/css/bootstrap.min.css"
-            ),
-            array(
-                "media" => "screen",
-                "href"  => CSS_LOCATION . 'screen.css'
-            ),
-            array(
-                "media" => "print",
-                "href"  => CSS_LOCATION . 'print.css'
-            ),
+            array("href"  => LIBS_LOCATION . "bootstrap/dist/css/bootstrap.css"),
+            array("href" => CSS_LOCATION . "screen.css", "media" => "screen"),
+            array("href" => CSS_LOCATION . "print.css", "media" => "print"),
             array("href" => LIBS_LOCATION . "bootstrap3-wysihtml5-bower/dist/bootstrap3-wysihtml5.min.css"),
             array("href" => "//cdn.datatables.net/1.10.0/css/jquery.dataTables.css")
         );
@@ -142,13 +122,15 @@ class StkTemplate extends Template
 
         array_push(
             $this->script_includes,
-            array('src' => '//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js'),
-            array('src' => '//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js'),
-            array('src' => "//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/js/bootstrap.min.js"),
-            array('src' => "//cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.10.2/typeahead.bundle.min.js"),
-            array('src' => "//cdnjs.cloudflare.com/ajax/libs/history.js/1.8/bundled-uncompressed/html4+html5/jquery.history.js"),
+            array('src' => LIBS_LOCATION . "jquery/dist/jquery.js"),
+            array('src' => LIBS_LOCATION . "underscore/underscore.js"),
+            array('src' => LIBS_LOCATION . "bootstrap/dist/js/bootstrap.js"),
+            array('src' => LIBS_LOCATION . "handlebars/handlebars.js"),
+            array('src' => LIBS_LOCATION . "typeahead.js/dist/typeahead.bundle.js"),
+            array('src' => LIBS_LOCATION . "history.js/scripts/bundled-uncompressed/html4+html5/jquery.history.js"),
             array('src' => "//cdn.datatables.net/1.10.0/js/jquery.dataTables.js"),
-            array('src' => LIBS_LOCATION . "bootstrap3-wysihtml5-bower/dist/bootstrap3-wysihtml5.all.min.js"),
+            array('src' => LIBS_LOCATION . "wysihtml5x/dist/wysihtml5x.js"),
+            array('src' => LIBS_LOCATION . "bootstrap3-wysihtml5-bower/dist/bootstrap3-wysihtml5.all.js"),
             array('src' => JS_LOCATION . 'jquery.newsticker.js'),
             array('src' => JS_LOCATION . 'main.js')
         );
@@ -161,6 +143,7 @@ class StkTemplate extends Template
      */
     private function setupTopMenu()
     {
+        // TODO make top menu more dynamic
         $name = isset($_SESSION['real_name']) ? $_SESSION['real_name'] : "";
         $menu = array(
             'welcome'  => sprintf(_h('Welcome, %s'), $name),
@@ -170,6 +153,7 @@ class StkTemplate extends Template
             'users'    => File::link('users.php', _h('Users')),
             'upload'   => File::link('upload.php', _h('Upload')),
             'manage'   => File::link('manage.php', _h('Manage')),
+            'bugs'     => File::link("bugs/", _h("Bugs")),
             'karts'    => File::link('addons.php?type=karts', _h('Karts')),
             'tracks'   => File::link('addons.php?type=tracks', _h('Tracks')),
             'arenas'   => File::link('addons.php?type=arenas', _h('Arenas')),
@@ -177,20 +161,21 @@ class StkTemplate extends Template
             'privacy'  => File::link('privacy.php', _h('Privacy')),
             'stk_home' => File::link('http://supertuxkart.sourceforge.net', _h('STK Homepage'))
         );
-        $this->smarty->assign('show_welcome', User::isLoggedIn());
-        $this->smarty->assign('show_login', !User::isLoggedIn());
-        $this->smarty->assign('show_users', User::isLoggedIn());
-        $this->smarty->assign('show_upload', User::isLoggedIn());
-        $this->smarty->assign(
-            'show_manage',
-            User::hasPermission(AccessControl::PERM_EDIT_ADDONS)
-        );
+
+        $logged_in = User::isLoggedIn();
+        $this->smarty->assign('show_welcome', $logged_in);
+        $this->smarty->assign('show_login', !$logged_in);
+        $this->smarty->assign('show_users', $logged_in);
+        $this->smarty->assign('show_upload', $logged_in);
+
+        // if the user can edit addons then he can access the manage panel
+        $this->smarty->assign('show_manage', User::hasPermission(AccessControl::PERM_EDIT_ADDONS));
 
         if (Util::getScriptFilename() === 'addons.php')
         {
-            $this->smarty->assign('show_karts', !($_GET['type'] == 'karts'));
-            $this->smarty->assign('show_tracks', !($_GET['type'] == 'tracks'));
-            $this->smarty->assign('show_arenas', !($_GET['type'] == 'arenas'));
+            $this->smarty->assign('show_karts', !($_GET['type'] === 'karts'));
+            $this->smarty->assign('show_tracks', !($_GET['type'] === 'tracks'));
+            $this->smarty->assign('show_arenas', !($_GET['type'] === 'arenas'));
         }
         else
         {
@@ -226,6 +211,7 @@ class StkTemplate extends Template
             array('ru_RU', -48, -99, 'RU'),
             array('zh_TW', -96, 0, 'ZH (T)')
         );
+
         $langs_count = count($langs);
         for ($i = 0; $i < $langs_count; $i++)
         {
@@ -246,7 +232,33 @@ class StkTemplate extends Template
             }
             $langs[$i][0] = $url;
         }
+
         $this->smarty->assign('lang_menu_items', $langs);
+    }
+
+    /**
+     * Setup the header meta tags and js includes, the top menu and the language menu
+     */
+    protected function setup()
+    {
+        $this->setupHead();
+        $this->setupTopMenu();
+        $this->setupLanguageMenu();
+        $this->setupFooter();
+    }
+
+    /**
+     * Assign the page title with the stk prefix. The title is html escaped
+     *
+     * @param string $title
+     *
+     * @return StkTemplate
+     */
+    public function assignTitle($title)
+    {
+        $this->smarty->assign("title", h(_('STK Add-ons') . ' | ' . $title));
+
+        return $this;
     }
 
     /**

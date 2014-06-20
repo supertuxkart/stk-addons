@@ -22,7 +22,7 @@ require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
 $bug_id = isset($_GET["bug_id"]) ? $_GET["bug_id"] : "";
 
-if (empty($bug_id))
+if (!$bug_id)
 {
     exit("No bug id provided");
 }
@@ -32,7 +32,7 @@ if (!Bug::exists($bug_id))
     exit("Bug $bug_id does not exist");
 }
 
-$tpl = new StkTemplate("bugs-view.tpl");
+$tpl = StkTemplate::get("bugs-view.tpl");
 $bug = Bug::get($_GET["bug_id"]);
 $comments = array();
 foreach ($bug->getCommentsData() as $comment)
@@ -46,18 +46,29 @@ foreach ($bug->getCommentsData() as $comment)
 }
 
 $tplData = array(
-    "id"          => $bug->getId(),
-    "title"       => $bug->getTitle(),
-    "user"        => User::getFromID($bug->getUserId())->getUserName(),
-    "addon"       => $bug->getAddonId(),
-    "date_report" => $bug->getDateReport(),
-    "date_edit"   => $bug->getDateEdit(),
-    "description" => $bug->getDescription(),
-    "comments"    => $comments
+    "id"           => $bug->getId(),
+    "title"        => $bug->getTitle(),
+    "user_id"      => $bug->getUserId(),
+    "user_name"    => User::getFromID($bug->getUserId())->getUserName(),
+    "addon"        => $bug->getAddonId(),
+    "date_report"  => $bug->getDateReport(),
+    "date_edit"    => $bug->getDateEdit(),
+
+    // close data
+    "date_close"   => $bug->getDateClose(),
+    "close_reason" => $bug->getCloseReason(),
+    "close_id"     => $bug->getCloseId(),
+    "close_name"   => ($bug->isClosed() ? User::getFromID($bug->getCloseId())->getUserName() : ""),
+    "is_closed"    => $bug->isClosed(),
+
+    "status"       => ($bug->isClosed() ? "closed" : "open"),
+    "description"  => $bug->getDescription(),
+    "comments"     => $comments
 );
 
 $tpl->assign("bug", $tplData)
     ->assign("current_url", urlencode(Util::getCurrentUrl(false, false)))
-    ->assign("add_comment", User::isLoggedIn());
+    ->assign("can_add_comment", User::isLoggedIn())
+    ->assign("can_edit_bug", (User::getId() === $tplData["id"]) || User::hasPermission(AccessControl::PERM_EDIT_BUGS));
 
 echo $tpl;

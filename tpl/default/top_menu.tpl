@@ -28,6 +28,7 @@
             {if $show_manage==true}
                 {$menu.manage}
             {/if}
+            {$menu.bugs}
         </div>
         <div class="right">
             {include file=#lang_menu#}

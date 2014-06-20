@@ -459,15 +459,15 @@ CREATE TABLE IF NOT EXISTS `v2_bugs` (
   `close_id` int(11) unsigned DEFAULT NULL COMMENT 'The user who closed the bug',
   `close_reason` varchar(512) DEFAULT NULL COMMENT 'The reason it was closed',
   `date_report` timestamp NULL DEFAULT NULL COMMENT 'Report date',
-  `date_edit` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Last edit date',
+  `date_edit` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Last edit date',
   `date_close` timestamp NULL DEFAULT NULL COMMENT 'Close date',
   `title` varchar(256) NOT NULL COMMENT 'Bug title',
   `description` varchar(2048) NOT NULL COMMENT 'Bug description',
   `is_report` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Flag to indicate if the bug is a feedback',
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
-  KEY `addon_id` (`addon_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=1 ;
+  KEY `addon_id` (`addon_id`),
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -625,7 +625,7 @@ ALTER TABLE `v2_votes`
 --
 ALTER TABLE `v2_bugs`
   ADD CONSTRAINT `v2_bugs_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `v2_users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  ADD CONSTRAINT `v2_bugs_ibfk_2` FOREIGN KEY (`addon_id`) REFERENCES `v2_addons` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+  ADD CONSTRAINT `v2_bugs_ibfk_2` FOREIGN KEY (`addon_id`) REFERENCES `v2_addons` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
 
 --
 -- Constraints for table `v2_bugs_comments`

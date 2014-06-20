@@ -30,5 +30,4 @@ if(!User::hasPermission(AccessControl::PERM_ADD_BUG))
 }
 
 $tpl->assign("bug", $tplData);
-
 echo $tpl;
