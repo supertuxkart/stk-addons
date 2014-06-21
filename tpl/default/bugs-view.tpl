@@ -5,9 +5,9 @@
     <div class="pull-right">
     {if $can_edit_bug}
         <div class="btn-group">
-            <button type="button" id="btn-bugs-edit" class="btn btn-primary">Edit</button>
+            <button type="button" id="btn-bugs-edit" class="btn btn-primary">{t}Edit{/t}</button>
             {if !$bug.is_closed}
-                <button type="button" id="btn-bugs-close" class="btn btn-danger">Close</button>
+                <button type="button" id="btn-bugs-close" class="btn btn-danger">{t}Close{/t}</button>
             {/if}
         </div>
         {if !$bug.is_closed}
@@ -16,21 +16,21 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h4 class="modal-title">Close bug</h4>
+                            <h4 class="modal-title">{t}Close bug{/t}</h4>
                         </div>
                         <form id="modal-close-form" class="form-horizontal">
                             <div class="modal-body">
                                 <div class="form-group">
                                     <div class="col-md-12">
-                                        <textarea name="modal-close-reason" id="modal-close-reason" class="form-control" rows="5" placeholder="Close Reason"></textarea>
+                                        <textarea name="modal-close-reason" id="modal-close-reason" class="form-control" rows="5" placeholder="{t}Close Reason{/t}"></textarea>
                                     </div>
                                     <input type="hidden" name="action" value="close">
                                     <input type="hidden" name="bug-id" value="{$bug.id}">
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Back</button>
-                                <input type="submit" class="btn btn-primary" value="Submit">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">{t}Back{/t}</button>
+                                <input type="submit" class="btn btn-primary" value="{t}Submit{/t}">
                             </div>
                         </form>
                     </div>
@@ -42,7 +42,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title">Edit bug</h4>
+                        <h4 class="modal-title">{t}Edit bug{/t}</h4>
                     </div>
                     <form id="modal-edit-form" class="form-horizontal">
                         <div class="modal-body">
@@ -57,7 +57,7 @@
                             <div class="form-group">
                                 <label for="bug-description-edit" class="col-md-2">
                                     {t}Description:{/t}
-                                </label><br>
+                                </label>
                                 <div class="col-md-10">
                                     <textarea id="bug-description-edit" name="bug-description-edit" class="form-control" rows="10">{$bug.description}</textarea>
                                 </div>
@@ -66,8 +66,8 @@
                             <input type="hidden" name="bug-id" value="{$bug.id}">
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Back</button>
-                            <input type="submit" class="btn btn-primary" value="Update">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">{t}Back{/t}</button>
+                            <input type="submit" class="btn btn-primary" value="{t}Update{/t}">
                         </div>
                     </form>
                 </div>
@@ -146,6 +146,34 @@
 
     {if $can_edit_bug}
         {include file="modal-delete.tpl" scope="parent"}
+        <div class="modal fade" id="modal-comment-edit" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">{t}Edit comment{/t}</h4>
+                    </div>
+                    <form id="modal-comment-edit-form" class="form-horizontal">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="bug-comment-edit-description" class="col-md-2">
+                                    {t}Description:{/t}
+                                </label>
+                                <div class="col-md-10">
+                                    <textarea id="bug-comment-edit-description" name="bug-comment-edit-description" class="form-control" rows="10"></textarea>
+                                </div>
+                                <input type="hidden" name="action" value="edit-comment">
+                                <input type="hidden" name="comment-id" id="modal-comment-edit-id" value="">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">{t}Back{/t}</button>
+                            <input type="submit" class="btn btn-primary" value="{t}Update{/t}">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     {/if}
 
     <div id="bug-comments">

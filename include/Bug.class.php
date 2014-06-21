@@ -552,6 +552,52 @@ class Bug
     }
 
     /**
+     * Update a bug comment description
+     *
+     * @param int    $commentId
+     * @param string $commentDescription
+     *
+     * @throws BugException
+     */
+    public static function updateComment($commentId, $commentDescription)
+    {
+        // get comment
+        $comment = static::getCommentData($commentId);
+
+        // validate
+        if (empty($comment))
+        {
+            throw new BugException(_h("The bug comment does not exist"));
+        }
+
+        $isOwner = (User::getId() === $comment["user_id"]);
+        $canEdit = User::hasPermission(AccessControl::PERM_EDIT_BUGS);
+
+        // check permission
+        if (!$isOwner && !$canEdit)
+        {
+            throw new BugException(_h("You do not have the necessary permission to update this bug comment"));
+        }
+
+        // clean
+        $commentDescription = Util::htmlPurify($commentDescription);
+
+        try
+        {
+            DBConnection::get()->update(
+                "bugs_comments",
+                "`id` = :id",
+                array(":id" => $commentId, ":description" => $commentDescription),
+                array(":id" => DBConnection::PARAM_INT)
+            );
+        }
+        catch(DBException $e)
+        {
+            throw new BugException(h(_("Tried to update a bug comment") . '. ' . _("Please contact a website administrator.")));
+        }
+    }
+
+    /**
      * Close a bug
      *
      * @param int    $bugId       the bug id to close

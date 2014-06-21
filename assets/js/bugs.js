@@ -62,7 +62,10 @@
                 url    : SITE_ROOT + "json/bugs.php",
                 data   : $(form_identifier).serialize(),
                 success: callback_success
+            }).fail(function() {
+                console.error("bugFormSubmit post request failed");
             });
+
             return false;
         });
     }
@@ -129,7 +132,6 @@
 
         $modal.on("shown.bs.modal", function(e) {
             if (!$modal_description.data("wysihtml5")) { // editor does not exist
-                console.log("editor set");
                 $modal_description.wysihtml5(editorOptions);
             }
         });
@@ -142,7 +144,7 @@
             if (jData.hasOwnProperty("success")) {
                 console.log(jData["success"]);
 
-                // update in real time data
+                // update view
                 // TODO check if possible user XSS
                 // most likely not because on the next page refresh the data will be from the server where it is cleaned
                 el_view_title.innerHTML = el_modal_title.value;
@@ -169,28 +171,53 @@
         var $modal = $("#modal-delete");
         var id = $modal.data("id");
 
-       console.log("yes clicked", id);
-       $.post(SITE_ROOT + "json/bugs.php", {action: "delete-comment", "comment-id": id}, function(data) {
-           var jData = parseJSON(data);
-           if (jData.hasOwnProperty("error")) {
-               console.error(jData["error"]);
-           }
-           if (jData.hasOwnProperty("success")) {
-               console.log(jData["success"]);
+        console.log("delete modal btn yes clicked", id);
+        $.post(SITE_ROOT + "json/bugs.php", {action: "delete-comment", "comment-id": id}, function(data) {
+            var jData = parseJSON(data);
+            if (jData.hasOwnProperty("error")) {
+                console.error(jData["error"]);
+            }
+            if (jData.hasOwnProperty("success")) {
+                console.log(jData["success"]);
 
-               // delete comment from view
-               $("#c" + id).remove();
+                // delete comment from view
+                $("#c" + id).remove();
 
-               $modal.modal('hide');
-           }
-       });
+                $modal.modal('hide');
+            }
+        });
     });
 
     // edit bug comment clicked
     $content_bugs.on("click", ".btn-bugs-comments-edit", function() {
-        var $this = $(this);
-        var id =  $this.data("id");
-        console.log("Edit comment clicked", id);
+        var $this = $(this), $modal = $("#modal-comment-edit"), id = $this.data("id");
+        var $modal_description = $("#bug-comment-edit-description");
+        var $view_description = $("#c" + id + " .panel-body");
+
+        console.log("Edit comment clicked", id, $modal_description.html(), $view_description.html());
+        $modal.modal();
+
+        // update view
+        $("#modal-comment-edit-id").val(id);
+        $modal_description.html($view_description.html());
+
+        $modal.on("shown.bs.modal", function(e) {
+            if (!$modal_description.data("wysihtml5")) { // editor does not exist
+                $modal_description.wysihtml5(editorOptions);
+            }
+        });
+
+        bugFormSubmit("#modal-comment-edit-form", function(data) {
+            var jData = parseJSON(data);
+            if (jData.hasOwnProperty("error")) {
+                console.error(jData["error"]);
+            }
+            if (jData.hasOwnProperty("success")) {
+                console.log(jData["success"]);
+
+                $modal.modal("hide");
+            }
+        });
 
         return false;
     });
