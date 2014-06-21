@@ -431,7 +431,6 @@ class Bug
         $bugTitle = h($bugTitle);
         $bugDescription = Util::htmlPurify($bugDescription);
 
-        // insert
         try
         {
             DBConnection::get()->insert(
@@ -478,7 +477,6 @@ class Bug
         // clean
         $commentDescription = Util::htmlPurify($commentDescription);
 
-        // insert
         try
         {
             DBConnection::get()->insert(
@@ -534,7 +532,6 @@ class Bug
         $bugTitle = h($bugTitle);
         $bugDescription = Util::htmlPurify($bugDescription);
 
-        // update
         try
         {
             DBConnection::get()->update(

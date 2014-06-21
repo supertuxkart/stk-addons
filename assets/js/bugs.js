@@ -127,9 +127,11 @@
         var el_view_title = document.getElementById("bug-view-title"), el_view_description = document.getElementById("bug-view-description");
         $modal.modal();
 
-        // TODO make transition more subtle
         $modal.on("shown.bs.modal", function(e) {
-            $modal_description.wysihtml5(editorOptions);
+            if (!$modal_description.data("wysihtml5")) { // editor does not exist
+                console.log("editor set");
+                $modal_description.wysihtml5(editorOptions);
+            }
         });
 
         bugFormSubmit("#modal-edit-form", function(data) {
