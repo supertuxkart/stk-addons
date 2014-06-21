@@ -554,7 +554,7 @@ class Util
     }
 
     /**
-     * Get the stk version formated
+     * Get the stk version formatted
      *
      * @param int    $format the version format
      * @param string $file_type

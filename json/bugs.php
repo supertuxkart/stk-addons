@@ -73,14 +73,14 @@ switch (strtolower($_POST["action"]))
                 "date"        => $comment_data["date"],
                 "description" => $comment_data["description"]
             )
-        );
+        )->assign("can_edit_bug", User::hasPermission(AccessControl::PERM_EDIT_BUGS));
 
         echo json_encode(array("success" => _h("Comment added"), "comment" => (string)$tpl_comment));
         break;
 
     case "edit":
         $errors = Validate::ensureInput($_POST, array("bug-title-edit", "bug-description-edit", "bug-id"));
-        if(!empty($errors))
+        if (!empty($errors))
         {
             exit(json_encode(array("error" => _h("One or more fields are empty"))));
         }
@@ -99,7 +99,7 @@ switch (strtolower($_POST["action"]))
 
     case "close": // close a bug
         $errors = Validate::ensureInput($_POST, array("modal-close-reason", "bug-id"));
-        if(!empty($errors))
+        if (!empty($errors))
         {
             exit(json_encode(array("error" => _h("One or more fields are empty"))));
         }
@@ -114,6 +114,25 @@ switch (strtolower($_POST["action"]))
         }
 
         echo json_encode(array("success" => _h("Bug closed successfully")));
+        break;
+
+    case "delete-comment": // delete a comment
+        $errors = Validate::ensureInput($_POST, array("comment-id"));
+        if (!empty($errors))
+        {
+            exit(json_encode(array("error" => _h("One or more fields are empty"))));
+        }
+
+        try
+        {
+            Bug::deleteComment($_POST["comment-id"]);
+        }
+        catch(BugException $e)
+        {
+            exit(json_encode(array("error" => $e->getMessage())));
+        }
+
+        echo json_encode(array("success" => _h("Comment deleted successfully")));
         break;
 
     default:

@@ -34,7 +34,7 @@ class AccessControl
 
     const PERM_EDIT_ADDONS = "editAddons";
 
-    const PERM_EDIT_BUGS = "editBugs";
+    const PERM_EDIT_BUGS = "editBugs"; // edit bugs means close,edit bugs and delete, edit comments
 
     const PERM_EDIT_USERS = "editUsers";
 

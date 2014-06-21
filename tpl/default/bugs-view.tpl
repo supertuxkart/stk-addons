@@ -16,7 +16,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h4 class="modal-title" id="myModalLabel">Close bug</h4>
+                            <h4 class="modal-title">Close bug</h4>
                         </div>
                         <form id="modal-close-form" class="form-horizontal">
                             <div class="modal-body">
@@ -42,7 +42,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title" id="myModalLabel">Edit bug</h4>
+                        <h4 class="modal-title">Edit bug</h4>
                     </div>
                     <form id="modal-edit-form" class="form-horizontal">
                         <div class="modal-body">
@@ -142,6 +142,10 @@
         </form>
     {else}
         <p><a href="{$smarty.const.SITE_ROOT}login.php?return_to={$current_url}">{t}Login{/t}</a>{t} to add a comment{/t}</p>
+    {/if}
+
+    {if $can_edit_bug}
+        {include file="modal-delete.tpl" scope="parent"}
     {/if}
 
     <div id="bug-comments">

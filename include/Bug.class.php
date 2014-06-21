@@ -217,11 +217,43 @@ class Bug
     {
         try
         {
-            $count = DBConnection::get()->count("bugs", "`id` = :id", array(":id" => $id));
+            $count = DBConnection::get()->count(
+                "bugs",
+                "`id` = :id",
+                array(":id" => $id),
+                array(":id" => DBConnection::PARAM_INT)
+            );
         }
         catch(DBException $e)
         {
             throw new BugException(h(_("Tried to see if a bug exists.") . '. ' . _("Please contact a website administrator.")));
+        }
+
+        return $count !== 0;
+    }
+
+    /**
+     * See if a bug comment exists
+     *
+     * @param int $id
+     *
+     * @return bool
+     * @throws BugException
+     */
+    public static function commentExists($id)
+    {
+        try
+        {
+            $count = DBConnection::get()->count(
+                "bugs_comments",
+                "`id` = :id",
+                array(":id" => $id),
+                array(":id" => DBConnection::PARAM_INT)
+            );
+        }
+        catch(DBException $e)
+        {
+            throw new BugException(h(_("Tried to see if a bug comment exists.") . '. ' . _("Please contact a website administrator.")));
         }
 
         return $count !== 0;
@@ -548,8 +580,11 @@ class Bug
             throw new BugException(_h("The bug is already closed"));
         }
 
+        $isOwner = (User::getId() === $bug->getUserId());
+        $canEdit = User::hasPermission(AccessControl::PERM_EDIT_BUGS);
+
         // check permission
-        if (User::getId() !== $bug->getUserId() && !User::hasPermission(AccessControl::PERM_EDIT_BUGS))
+        if (!$isOwner && !$canEdit)
         {
             throw new BugException(_h("You do not have the necessary permission to close this bug"));
         }
@@ -573,4 +608,47 @@ class Bug
             throw new BugException(h(_("Tried to close a bug") . '. ' . _("Please contact a website administrator.")));
         }
     }
+
+    /**
+     * Delete a bug comment
+     *
+     * @param int $commentId the comment to delete
+     *
+     * @throws BugException
+     */
+    public static function deleteComment($commentId)
+    {
+        // get comment
+        $comment = static::getCommentData($commentId);
+
+        // validate
+        if (empty($comment))
+        {
+            throw new BugException(_h("The bug comment does not exist"));
+        }
+
+        $isOwner = (User::getId() === $comment["user_id"]);
+        $canEdit = User::hasPermission(AccessControl::PERM_EDIT_BUGS);
+
+        // check permission
+        if (!$isOwner && !$canEdit)
+        {
+            throw new BugException(_h("You do not have the necessary permission to delete this bug comment"));
+        }
+
+        try
+        {
+            DBConnection::get()->delete(
+                "bugs_comments",
+                "`id` = :id",
+                array(":id" => $commentId),
+                array(":id" => DBConnection::PARAM_INT)
+            );
+        }
+        catch(DBException $e)
+        {
+            throw new BugException(h(_("Tried to delete a bug comment") . '. ' . _("Please contact a website administrator.")));
+        }
+    }
+
 }

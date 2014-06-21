@@ -1,6 +1,7 @@
 (function(window, document) {
     "use strict";
 
+    // load essential elements and options
     var $content_bugs = $("#bugs-content");
     var $btn_back = $("#btn-bugs-back");
     var $btn_add = $("#btn-bugs-add");
@@ -10,6 +11,7 @@
         }
     };
 
+    // helper functions
     function registerEditors() {
         $("#bug-description").wysihtml5(editorOptions); // from add page
         $("#bug-comment-description").wysihtml5(editorOptions);
@@ -113,7 +115,7 @@
             if (jData.hasOwnProperty("success")) {
                 console.success(jData["success"]);
 
-                $modal.modal('hide');
+                $modal.modal("hide");
             }
         })
     });
@@ -121,10 +123,8 @@
     // edit bug clicked
     $content_bugs.on("click", "#btn-bugs-edit", function() {
         var $modal = $("#modal-edit");
-        var $modal_description = $("#bug-description-edit");
-        var el_modal_title = document.getElementById("bug-title-edit");
-        var el_view_title = document.getElementById("bug-view-title");
-        var el_view_description = document.getElementById("bug-view-description")
+        var el_modal_title = document.getElementById("bug-title-edit"), $modal_description = $("#bug-description-edit");
+        var el_view_title = document.getElementById("bug-view-title"), el_view_description = document.getElementById("bug-view-description");
         $modal.modal();
 
         // TODO make transition more subtle
@@ -149,6 +149,48 @@
                 $modal.modal('hide');
             }
         });
+    });
+
+    // delete bug comment clicked
+    $content_bugs.on("click", ".btn-bugs-comments-delete", function() {
+        var $this = $(this), $modal = $("#modal-delete");
+        var id =  $this.data("id");
+
+        console.log("Delete comment clicked", id);
+        $modal.data("id", id).modal(); // set the id to the modal
+
+        return false;
+    });
+
+    // delete modal yes clicked
+    $content_bugs.on("click", "#modal-delete-btn-yes", function() {
+        var $modal = $("#modal-delete");
+        var id = $modal.data("id");
+
+       console.log("yes clicked", id);
+       $.post(SITE_ROOT + "json/bugs.php", {action: "delete-comment", "comment-id": id}, function(data) {
+           var jData = parseJSON(data);
+           if (jData.hasOwnProperty("error")) {
+               console.error(jData["error"]);
+           }
+           if (jData.hasOwnProperty("success")) {
+               console.log(jData["success"]);
+
+               // delete comment from view
+               $("#c" + id).remove();
+
+               $modal.modal('hide');
+           }
+       });
+    });
+
+    // edit bug comment clicked
+    $content_bugs.on("click", ".btn-bugs-comments-edit", function() {
+        var $this = $(this);
+        var id =  $this.data("id");
+        console.log("Edit comment clicked", id);
+
+        return false;
     });
 
     // clicked on a bug in the table
