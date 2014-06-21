@@ -7,7 +7,7 @@
             </div>
             <div class="modal-body">
                 {if isset($modal_delete.body)}
-                    $modal_delete.body
+                    {$modal_delete.body}
                 {else}
                     <p>{t}You are about to delete.{/t}</p>
                     <p>{t}Do you want to proceed?{/t}</p>
@@ -20,8 +20,3 @@
         </div>
     </div>
 </div>
-
-
-
-
-

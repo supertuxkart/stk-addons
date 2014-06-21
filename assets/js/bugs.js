@@ -200,7 +200,6 @@
         return false;
     });
 
-
     // add bug form
     bugFormSubmit("#bug-add-form", function(data) {
         var jData = parseJSON(data);
