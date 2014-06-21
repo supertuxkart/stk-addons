@@ -78,6 +78,25 @@ switch (strtolower($_POST["action"]))
         echo json_encode(array("success" => _h("Comment added"), "comment" => (string)$tpl_comment));
         break;
 
+    case "edit":
+        $errors = Validate::ensureInput($_POST, array("bug-title-edit", "bug-description-edit", "bug-id"));
+        if(!empty($errors))
+        {
+            exit(json_encode(array("error" => _h("One or more fields are empty"))));
+        }
+
+        try
+        {
+            Bug::update($_POST["bug-id"], $_POST["bug-title-edit"], $_POST["bug-description-edit"]);
+        }
+        catch(BugException $e)
+        {
+            exit(json_encode(array("error" => $e->getMessage())));
+        }
+
+        echo json_encode(array("success" => _h("Bug updated successfully")));
+        break;
+
     case "close": // close a bug
         $errors = Validate::ensureInput($_POST, array("modal-close-reason", "bug-id"));
         if(!empty($errors))

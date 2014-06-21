@@ -17,6 +17,7 @@ function loadContentWithAjax(selector, url_to_load, url_get_params, callback, ca
         }
     }).fail(function(e) {
         console.error("loadContentWithAjax failed");
+        console.error(e);
     });
 }
 

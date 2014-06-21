@@ -1,5 +1,4 @@
 <?php
-
 /**
  * copyright 2014 Daniel Butum <danibutum at gmail dot com>
  *
@@ -17,6 +16,10 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/**
+ * Class Bug
  */
 class Bug
 {
@@ -59,10 +62,7 @@ class Bug
         }
         catch(DBException $e)
         {
-            throw new BugException(h(
-                _("Tried to fetch comments.") . ' ' .
-                _("Please contact a website administrator.")
-            ));
+            throw new BugException(h(_("Tried to fetch comments.") . ' ' . _("Please contact a website administrator.")));
         }
 
         $this->commentsData = $comments;
@@ -221,10 +221,7 @@ class Bug
         }
         catch(DBException $e)
         {
-            throw new BugException(h(
-                _("Tried to see if a bug exists.") . '. ' .
-                _("Please contact a website administrator.")
-            ));
+            throw new BugException(h(_("Tried to see if a bug exists.") . '. ' . _("Please contact a website administrator.")));
         }
 
         return $count !== 0;
@@ -248,10 +245,7 @@ class Bug
         }
         catch(DBException $e)
         {
-            throw new BugException(h(
-                _("Tried to fetch all bugs") . '. ' .
-                _("Please contact a website administrator.")
-            ));
+            throw new BugException(h(_("Tried to fetch all bugs") . '. ' . _("Please contact a website administrator.")));
         }
 
         return $bugs;
@@ -280,10 +274,7 @@ class Bug
         }
         catch(DBException $e)
         {
-            throw new BugException(h(
-                _("Tried to see if a bug exists.") . '. ' .
-                _("Please contact a website administrator.")
-            ));
+            throw new BugException(h(_("Tried to see if a bug exists.") . '. ' . _("Please contact a website administrator.")));
         }
 
         if (empty($data))
@@ -316,10 +307,7 @@ class Bug
         }
         catch(DBException $e)
         {
-            throw new BugException(h(
-                _("Tried to fetch a comments data") . '. ' .
-                _("Please contact a website administrator.")
-            ));
+            throw new BugException(h(_("Tried to fetch a comments data") . '. ' . _("Please contact a website administrator.")));
         }
 
         return $comment;
@@ -347,8 +335,7 @@ class Bug
         {
             if ($search_description)
             {
-                $query =
-                    "SELECT * FROM `" . DB_PREFIX . "bugs` WHERE (`title` LIKE :search_term OR `description` LIKE :search_term)";
+                $query = "SELECT * FROM `" . DB_PREFIX . "bugs` WHERE (`title` LIKE :search_term OR `description` LIKE :search_term)";
             }
             else
             {
@@ -366,10 +353,7 @@ class Bug
                     $query .= " AND `close_id` is NOT NULL";
                     break;
                 default:
-                    if (DEBUG_MODE)
-                    {
-                        throw new InvalidArgumentException(sprintf("status = %s is invalid", $status));
-                    }
+                    throw new InvalidArgumentException(sprintf("status = %s is invalid", $status));
                     break;
             }
 
@@ -382,10 +366,7 @@ class Bug
         }
         catch(DBException $e)
         {
-            throw new BugException(h(
-                _("Error on selecting all search bugs") . '. ' .
-                _("Please contact a website administrator.")
-            ));
+            throw new BugException(h(_("Error on selecting all search bugs") . '. ' . _("Please contact a website administrator.")));
         }
 
         return $bugs;
@@ -416,7 +397,7 @@ class Bug
 
         // clean
         $bugTitle = h($bugTitle);
-        $bugDescription = HTMLPurifier::getInstance(Util::getHTMLPurifierConfig())->purify($bugDescription);
+        $bugDescription = Util::htmlPurify($bugDescription);
 
         // insert
         try
@@ -434,10 +415,7 @@ class Bug
         }
         catch(DBException $e)
         {
-            throw new BugException(h(
-                _("Tried to insert a bug") . '. ' .
-                _("Please contact a website administrator.")
-            ));
+            throw new BugException(h(_("Tried to insert a bug") . '. ' . _("Please contact a website administrator.")));
         }
 
         return DBConnection::get()->lastInsertId();
@@ -466,7 +444,7 @@ class Bug
         }
 
         // clean
-        $commentDescription = HTMLPurifier::getInstance(Util::getHTMLPurifierConfig())->purify($commentDescription);
+        $commentDescription = Util::htmlPurify($commentDescription);
 
         // insert
         try
@@ -483,13 +461,65 @@ class Bug
         }
         catch(DBException $e)
         {
-            throw new BugException(h(
-                _("Tried to insert a bug comment") . '. ' .
-                _("Please contact a website administrator.")
-            ));
+            throw new BugException(h(_("Tried to insert a bug comment") . '. ' . _("Please contact a website administrator.")));
         }
 
         return DBConnection::get()->lastInsertId();
+    }
+
+    /**
+     * Update a bug title and description
+     *
+     * @param int    $bugId
+     * @param string $bugTitle
+     * @param string $bugDescription
+     *
+     * @throws BugException
+     */
+    public static function update($bugId, $bugTitle, $bugDescription)
+    {
+        // get bug
+        try
+        {
+            $bug = static::get($bugId, false);
+        }
+        catch(BugException $e)
+        {
+            throw new BugException(_h("The bug does not exist"));
+        }
+
+        // TODO check if we can update bug after it is closed
+        $isOwner = (User::getId() === $bug->getUserId());
+        $canEdit = User::hasPermission(AccessControl::PERM_EDIT_BUGS);
+
+        // check permission
+        if (!$isOwner && !$canEdit)
+        {
+            throw new BugException(_h("You do not have the necessary permission to update this bug"));
+        }
+
+        // clean
+        $bugTitle = h($bugTitle);
+        $bugDescription = Util::htmlPurify($bugDescription);
+
+        // update
+        try
+        {
+            DBConnection::get()->update(
+                "bugs",
+                "`id` = :id",
+                array(
+                    ":id"          => $bugId,
+                    ":title"       => $bugTitle,
+                    ":description" => $bugDescription
+                ),
+                array(":id" => DBConnection::PARAM_INT)
+            );
+        }
+        catch(DBException $e)
+        {
+            throw new BugException(h(_("Tried to update a bug") . '. ' . _("Please contact a website administrator.")));
+        }
     }
 
     /**
@@ -502,12 +532,6 @@ class Bug
      */
     public static function close($bugId, $closeReason)
     {
-        // not empty reason
-        if (!$closeReason)
-        {
-            throw new BugException(_h("Close reason is empty"));
-        }
-
         // get bug
         try
         {
@@ -515,7 +539,6 @@ class Bug
         }
         catch(BugException $e)
         {
-            // most likely the bug does not exist
             throw new BugException(_h("The bug does not exist"));
         }
 
@@ -547,10 +570,7 @@ class Bug
         }
         catch(DBException $e)
         {
-            throw new BugException(h(
-                _("Tried to close a bug") . '. ' .
-                _("Please contact a website administrator.")
-            ));
+            throw new BugException(h(_("Tried to close a bug") . '. ' . _("Please contact a website administrator.")));
         }
     }
 }

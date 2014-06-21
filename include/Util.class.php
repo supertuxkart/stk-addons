@@ -298,6 +298,18 @@ class Util
     }
 
     /**
+     * Purify a string (html escape) with the default config
+     *
+     * @param string $string
+     *
+     * @return string the string purified
+     */
+    public static function htmlPurify($string)
+    {
+        return HTMLPurifier::getInstance(static::getHTMLPurifierConfig())->purify($string);
+    }
+
+    /**
      * Generates a string of random characters.
      *
      * @param   integer $length             The length of the string to generate

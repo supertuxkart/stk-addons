@@ -2,15 +2,16 @@
     "use strict";
 
     var $content_bugs = $("#bugs-content");
+    var $btn_back = $("#btn-bugs-back");
+    var $btn_add = $("#btn-bugs-add");
+    var editorOptions = {
+        toolbar: {
+            "font-styles": false
+        }
+    };
 
     function registerEditors() {
-        var editorOptions = {
-            toolbar: {
-                "font-styles": false
-            }
-        };
-
-        $("#bug-description").wysihtml5(editorOptions);
+        $("#bug-description").wysihtml5(editorOptions); // from add page
         $("#bug-comment-description").wysihtml5(editorOptions);
 
         $("#bugs-all").dataTable();
@@ -43,14 +44,14 @@
     }
 
     function btnToggle() {
-        $("#btn-bugs-add").toggleClass("hide");
-        $("#btn-bugs-back").toggleClass("hide");
+        $btn_add.toggleClass("hide");
+        $btn_back.toggleClass("hide");
         registerEditors();
     }
 
     function bugFormSubmit(form_identifier, callback_success) {
         if (!_.isFunction(callback_success)) {
-            throw "callback parameter is not a function"
+            throw "callback parameter is not a function";
         }
 
         $content_bugs.on("submit", form_identifier, function() {
@@ -67,7 +68,9 @@
     var NavigateTo = {
         index: function() {
             History.back();
-            loadContentWithAjax("#bug-content", BUGS_LOCATION + 'all.php', {}, btnToggle);
+            loadContentWithAjax("#bug-content", BUGS_LOCATION + 'all.php', {}, function() {
+                btnToggle();
+            });
         },
         add  : function() {
             History.pushState({state: "add"}, '', "?add");
@@ -83,20 +86,22 @@
         }
     };
 
+    // navigate add button clicked
     $content_bugs.on("click", "#btn-bugs-add", function() { // handle higher up the level for ajax
         NavigateTo.add();
 
         return false;
     });
 
+    // navigate back button clicked
     $content_bugs.on("click", "#btn-bugs-back", function() {
         NavigateTo.index();
 
         return false;
     });
 
+    // close bug clicked
     $content_bugs.on("click", "#btn-bugs-close", function() {
-        console.log("close clicked");
         var $modal = $("#modal-close");
         $modal.modal();
 
@@ -104,20 +109,49 @@
             var jData = parseJSON(data);
             if (jData.hasOwnProperty("error")) {
                 console.error(jData["error"]);
-                return;
             }
             if (jData.hasOwnProperty("success")) {
-                console.error(jData["success"]);
-            }
+                console.success(jData["success"]);
 
-            $modal.modal('hide');
+                $modal.modal('hide');
+            }
         })
     });
 
+    // edit bug clicked
     $content_bugs.on("click", "#btn-bugs-edit", function() {
-        console.log("edit clicked");
+        var $modal = $("#modal-edit");
+        var $modal_description = $("#bug-description-edit");
+        var el_modal_title = document.getElementById("bug-title-edit");
+        var el_view_title = document.getElementById("bug-view-title");
+        var el_view_description = document.getElementById("bug-view-description")
+        $modal.modal();
+
+        // TODO make transition more subtle
+        $modal.on("shown.bs.modal", function(e) {
+            $modal_description.wysihtml5(editorOptions);
+        });
+
+        bugFormSubmit("#modal-edit-form", function(data) {
+            var jData = parseJSON(data);
+            if (jData.hasOwnProperty("error")) {
+                console.error(jData["error"]);
+            }
+            if (jData.hasOwnProperty("success")) {
+                console.log(jData["success"]);
+
+                // update in real time data
+                // TODO check if possible user XSS
+                // most likely not because on the next page refresh the data will be from the server where it is cleaned
+                el_view_title.innerHTML = el_modal_title.value;
+                el_view_description.innerHTML = $modal_description.val();
+
+                $modal.modal('hide');
+            }
+        });
     });
 
+    // clicked on a bug in the table
     $content_bugs.on("click", "table .bugs", function() {
         NavigateTo.view($(this).parent().attr("data-id"));
 
@@ -125,7 +159,7 @@
     });
 
 
-    // add bug
+    // add bug form
     bugFormSubmit("#bug-add-form", function(data) {
         var jData = parseJSON(data);
         if (jData.hasOwnProperty("error")) {
@@ -145,7 +179,7 @@
         }
     });
 
-    // add bug comment
+    // add bug comment form
     bugFormSubmit("#bug-add-comment-form", function(data) {
         var jData = parseJSON(data);
         if (jData.hasOwnProperty("error")) {
