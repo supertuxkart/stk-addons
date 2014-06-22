@@ -108,7 +108,12 @@
         </tr>
         <tr>
             <td class="col-md-2">{t}Status{/t}:</td>
-            <td class="col-md-10"><span class="label label-danger">{$bug.status}</span></td>
+            <td class="col-md-10">
+                <span id="bug-view-status" class="label label-danger" data-container="body" data-toggle="popover" data-placement="right"
+                      data-original-title="{t}Close reason{/t}" data-content="{$bug.close_reason}">
+                    {$bug.status}
+                </span>
+            </td>
         </tr>
     {else}
         <tr>

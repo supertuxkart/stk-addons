@@ -222,6 +222,11 @@
         return false;
     });
 
+    // hover over close bug status
+    $content_bugs.on("mouseenter", "#bug-view-status", function() {
+       $("#bug-view-status").popover("toggle");
+    });
+
     // clicked on a bug in the table
     $content_bugs.on("click", "table .bugs", function() {
         NavigateTo.view($(this).parent().attr("data-id"));
