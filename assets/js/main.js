@@ -181,7 +181,7 @@ $(document).ready(function() {
     $('a.manage-list').click(function() {
         History.pushState(null, '', this.href);
         var view = getUrlVars(this.href)['view'];
-        loadContentWithAjax("#right-content_body", SITE_ROOT + 'manage-panel.php', {view: view}, clearPanelStatus);
+        loadContentWithAjax("#manage-body", SITE_ROOT + 'manage-panel.php', {view: view}, clearPanelStatus);
 
         return false;
     });

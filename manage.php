@@ -27,60 +27,10 @@ if (!isset($_GET['view']))
     $_GET['view'] = 'overview';
 }
 
-$tpl = new StkTemplate("two-pane.tpl");
-$tpl->assign("title", h(_('STK Add-ons') . ' | ' . _('Manage')));
-$panel = array(
-    'left'   => '',
-    'status' => '',
-    'right'  => ''
-);
-
-// create left links
-$menu_items = array(
-    array(
-        'url'   => 'manage.php?view=overview',
-        'label' => _h('Overview'),
-        'class' => 'manage-list menu-item'
-    )
-);
-if (User::hasPermission(AccessControl::PERM_EDIT_SETTINGS))
-{
-    $menu_items[] = array(
-        'url'   => 'manage.php?view=general',
-        'label' => _h('General Settings'),
-        'class' => 'manage-list menu-item'
-    );
-    $menu_items[] = array(
-        'url'   => 'manage.php?view=news',
-        'label' => _h('News Messages'),
-        'class' => 'manage-list menu-item'
-    );
-    $menu_items[] = array(
-        'url'   => 'manage.php?view=clients',
-        'label' => _h('Client Versions'),
-        'class' => 'manage-list menu-item'
-    );
-    $menu_items[] = array(
-        'url'   => 'manage.php?view=cache',
-        'label' => _h('Cache Files'),
-        'class' => 'manage-list menu-item'
-    );
-}
-$menu_items[] = array(
-    'url'   => 'manage.php?view=files',
-    'label' => _h('Uploaded Files'),
-    'class' => 'manage-list menu-item'
-);
-$menu_items[] = array(
-    'url'   => 'manage.php?view=logs',
-    'label' => _h('Event Logs'),
-    'class' => 'manage-list menu-item'
-);
-
-// left panel
-$left_tpl = new StkTemplate('url-list-panel.tpl');
-$left_tpl->assign('items', $menu_items);
-$panel['left'] = (string)$left_tpl;
+$tpl = StkTemplate::get("manage.tpl")
+        ->assignTitle("Manage")
+        ->assign("can_edit_settings", User::hasPermission(AccessControl::PERM_EDIT_SETTINGS));
+$tplData = array("header" => "", "status" => "", "body" => "");
 
 // status message
 $status_content = "";
@@ -113,6 +63,7 @@ try
 
             $status_content = _h('Saved settings.') . '<br>';
             break;
+
         case 'new_news':
             if (empty($_POST['message']) || !isset($_POST['condition']))
             {
@@ -139,6 +90,7 @@ try
             News::create($_POST['message'], $condition, $important, $web_display);
             $status_content = _h('Created message.') . '<br>';
             break;
+
         case 'del_news':
             if (empty($_POST['news_id']) || !is_numeric($_POST['news_id']))
             {
@@ -155,10 +107,12 @@ try
                     '<span class="error">' . _h('Failed to delete message.') . '</span><br>';
             }
             break;
+
         case 'cache_clear':
             Cache::clear();
             $status_content = 'Emptied cache.<br />';
             break;
+
         default:
             break;
     }
@@ -167,11 +121,11 @@ catch(Exception $e)
 {
     $status_content = '<span class="error">' . $e->getMessage() . '</span><br />';
 }
-$panel["status"] = $status_content;
+$tplData["status"] = $status_content;
 
 // right panel
-$panel['right'] = Util::ob_get_require_once(ROOT_PATH . 'manage-panel.php');
+$tplData["body"] = Util::ob_get_require_once(ROOT_PATH . "manage-panel.php");
 
 // output the view
-$tpl->assign('panel', $panel);
+$tpl->assign("manage", $tplData);
 echo $tpl;

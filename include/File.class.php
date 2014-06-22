@@ -716,7 +716,7 @@ class File
         try
         {
             $db_files = DBConnection::get()->query(
-                'SELECT `id`,`addon_id`, `addon_type`, `file_type`, `file_path`
+                'SELECT *
                 FROM `' . DB_PREFIX . 'files`
                 ORDER BY `addon_id` ASC',
                 DBConnection::FETCH_ALL

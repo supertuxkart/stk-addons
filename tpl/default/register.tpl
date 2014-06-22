@@ -100,5 +100,6 @@
         </form>
     {/if}
     {$confirmation|default:''}
-</div>{* #content *}
+</div>
+
 {include file=#footer#}

@@ -31,7 +31,7 @@ textarea {
 
 #body-wrapper {
     margin: auto;
-    width: 1000px;
+    width: 1170px;
 }
 
 #login-form {
@@ -52,11 +52,14 @@ textarea {
     background: -webkit-gradient(linear, left top, left bottom, from(#e1dbda), to(#d1ccca)); /* for webkit browsers */
     background: -moz-linear-gradient(top, #e1dbda, #d1ccca); /* for firefox 3.6+ */
     border: 0;
-    border-bottom: 1px solid #958f8e;
     color: #000000;
     display: block;
     min-height: 35px;
     overflow: auto;
+}
+
+#manage-menu {
+    margin-top: 30px;
 }
 
 #top-menu-content {
@@ -305,6 +308,10 @@ textarea {
     display: block;
     height: 32px;
     width: 32px;
+}
+
+#manage-menu-sidenav li, #manage-menu-sidenav li a {
+    width: 100%;
 }
 
 /* Panel interface */

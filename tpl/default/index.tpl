@@ -2,10 +2,7 @@
 {include file=#header#}
 
 <div id="index-body">
-    <img id="index-logo"
-	src="{$smarty.const.IMG_LOCATION}logo.png"
-	alt="SuperTuxKart Logo"
-	title="SuperTuxKart Logo" />
+    <img id="index-logo" src="{$smarty.const.IMG_LOCATION}logo.png" alt="SuperTuxKart Logo" title="SuperTuxKart Logo" />
     
     <div id="index-menu">
 	{foreach $index_menu as $index}

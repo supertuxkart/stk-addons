@@ -19,8 +19,8 @@
         <a href="http://tuxfamily.org/">{t}Website{/t}</a> | <a href="http://tuxfamily.org/en/support">{t}Donate{/t}</a>
     </p>
 
-
     <h2>{t}Credits{/t}</h2>
     <pre>{$about.credits.content}</pre>
-</div>{* #content *}
+</div>
+
 {include file=#footer#}

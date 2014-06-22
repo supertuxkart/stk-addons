@@ -14,4 +14,5 @@
         <div id="right-content_bottom"></div>
     </div>
 </div>
+
 {include file=#footer#}

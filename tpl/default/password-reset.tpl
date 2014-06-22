@@ -50,5 +50,6 @@
         </table>
         {$pass_reset.pass_form.form.end}
     {/if}
-</div>{* #content *}
+</div>
+
 {include file=#footer#}

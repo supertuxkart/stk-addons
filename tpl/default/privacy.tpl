@@ -123,7 +123,6 @@
        parties.
     </p>
 
-
     <h2>Feedback</h2>
     <p>
         If you have any questions or concerns about the content of this document,
@@ -136,4 +135,5 @@
         <li>Stephen Just &lt;stephenjust@users.sf.net&gt;</li>
     </ul>
 </div>
+
 {include file=#footer#}
