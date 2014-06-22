@@ -1,82 +1,6 @@
 "use strict";
 var oldDiv = "";
 
-// Load the content of selector with some url
-function loadContentWithAjax(selector, url_to_load, url_get_params, callback, callback_before) {
-    var $selector = $(selector);
-    url_get_params = url_get_params || {};
-
-    if (_.isFunction(callback_before)) {
-        callback_before();
-    }
-
-    $.get(url_to_load, url_get_params,function(data) {
-        $selector.html(data);
-        if (_.isFunction(callback)) {
-            callback(data);
-        }
-    }).fail(function(e) {
-        console.error("loadContentWithAjax failed");
-        console.error(e);
-    });
-}
-
-
-// Show a twitter bootstrap alert, insert into a container
-function showAlert(options) {
-    if (!_.isObject(options)) {
-        console.error("options is not an array");
-        return;
-    }
-
-    // define options
-    var options = {
-        $container  : $(options.container),
-        type        : options.type || "alert-info",
-        message     : options.message || "The alert message is empty",
-        dismiss     : options.dismiss || true,
-        auto_dismiss: options.auto_dismiss || true,
-        interval    : options.interval || 4000
-    };
-
-    // create alert
-    var divClass = "alert " + options.type + (options.dismiss ? " alert-dismissable" : "");
-    var $div = $("<div></div>").addClass(divClass);
-
-    // add dismiss button
-    if (options.dismiss) {
-        $div.append('<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>');
-    }
-
-    // add message
-    $div.append(options.message);
-
-    // set timer
-    if (options.auto_dismiss) {
-        setTimeout(function() {
-            options.$container.fadeToggle(1000, function() {
-                options.$container.empty();
-            });
-        }, options.interval);
-    }
-
-    // add to container
-    options.$container.html($div);
-    options.$container.fadeIn(500); // show because of the toggle or other css options
-}
-
-function parseJSON(raw_string) {
-    var jData;
-    try {
-        jData = JSON.parse(raw_string);
-    } catch (e) {
-        console.error("Parson JSON error: ", e);
-        console.error("Raw string: ", raw_string);
-    }
-
-    return jData;
-}
-
 function confirm_delete(url) {
     if (confirm("Really delete this item?")) {
         window.location = url;
@@ -136,23 +60,6 @@ function addRating(rating, addonId, sel_storage, disp_storage) {
     loadHTML(SITE_ROOT + 'include/addRating.php?rating=' + encodeURI(rating) + '&addonId=' + encodeURI(addonId), sel_storage);
     loadHTML(SITE_ROOT + 'include/addRating.php?addonId=' + encodeURI(addonId), disp_storage);
 }
-
-// Read a page's GET URL variables and return them as an associative array.
-function getUrlVars(url) {
-    if (url === undefined) {
-        url = window.location.href;
-    }
-
-    var vars = [], hash;
-    var hashes = url.slice(url.indexOf('?') + 1).split('&');
-    for (var i = 0; i < hashes.length; i++) {
-        hash = hashes[i].split('=');
-        vars.push(hash[0]);
-        vars[hash[0]] = hash[1];
-    }
-    return vars;
-}
-
 
 $(document).ready(function() {
     $("#news-messages").newsTicker();

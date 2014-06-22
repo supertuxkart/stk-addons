@@ -113,10 +113,10 @@
         bugFormSubmit("#modal-close-form", function(data) {
             var jData = parseJSON(data);
             if (jData.hasOwnProperty("error")) {
-                console.error(jData["error"]);
+                growlError(jData["error"]);
             }
             if (jData.hasOwnProperty("success")) {
-                console.success(jData["success"]);
+                growlSuccess(jData["success"]);
 
                 $modal.modal("hide");
             }
@@ -139,10 +139,10 @@
         bugFormSubmit("#modal-edit-form", function(data) {
             var jData = parseJSON(data);
             if (jData.hasOwnProperty("error")) {
-                console.error(jData["error"]);
+                growlError(jData["error"]);
             }
             if (jData.hasOwnProperty("success")) {
-                console.log(jData["success"]);
+                growlSuccess(jData["success"]);
 
                 // update view
                 // TODO check if possible user XSS
@@ -175,10 +175,10 @@
         $.post(SITE_ROOT + "json/bugs.php", {action: "delete-comment", "comment-id": id}, function(data) {
             var jData = parseJSON(data);
             if (jData.hasOwnProperty("error")) {
-                console.error(jData["error"]);
+                growlError(jData["error"]);
             }
             if (jData.hasOwnProperty("success")) {
-                console.log(jData["success"]);
+                growlSuccess(jData["success"]);
 
                 // delete comment from view
                 $("#c" + id).remove();
@@ -210,10 +210,10 @@
         bugFormSubmit("#modal-comment-edit-form", function(data) {
             var jData = parseJSON(data);
             if (jData.hasOwnProperty("error")) {
-                console.error(jData["error"]);
+                growlError(jData["error"]);
             }
             if (jData.hasOwnProperty("success")) {
-                console.log(jData["success"]);
+                growlSuccess(jData["success"]);
 
                 $modal.modal("hide");
             }
@@ -238,18 +238,10 @@
     bugFormSubmit("#bug-add-form", function(data) {
         var jData = parseJSON(data);
         if (jData.hasOwnProperty("error")) {
-            showAlert({
-                container: "#alert-container",
-                type     : "alert-danger",
-                message  : jData["error"]
-            });
+            growlError(jData["error"]);
         }
         if (jData.hasOwnProperty("success")) {
-            showAlert({
-                container: "#alert-container",
-                type     : "alert-success",
-                message  : jData["success"]
-            });
+            growlSuccess(jData["success"]);
             NavigateTo.index();
         }
     });
@@ -258,18 +250,10 @@
     bugFormSubmit("#bug-add-comment-form", function(data) {
         var jData = parseJSON(data);
         if (jData.hasOwnProperty("error")) {
-            showAlert({
-                container: "#alert-container-comments",
-                type     : "alert-danger",
-                message  : jData["error"]
-            });
+            growlError(jData["error"]);
         }
         if (jData.hasOwnProperty("success")) {
-            showAlert({
-                container: "#alert-container-comments",
-                type     : "alert-success",
-                message  : jData["success"]
-            });
+            growlSuccess(jData["success"]);
 
             $("#bug-comments").prepend(jData["comment"]);
             $("#bug-comment-description").html("");
@@ -280,14 +264,10 @@
     bugFormSubmit("#bug-search-form", function(data) {
         var jData = parseJSON(data);
         if (jData.hasOwnProperty("error")) {
-            showAlert({
-                container: "#alert-container",
-                type     : "alert-danger",
-                message  : jData["error"]
-            });
-            return;
+            growlError(jData["error"]);
+        } else {
+            $("#bug-content").html(data);
         }
-        $("#bug-content").html(data);
     });
 
 
