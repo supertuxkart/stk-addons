@@ -113,7 +113,6 @@ switch (strtolower($_POST["action"]))
             exit(json_encode(array("error" => $e->getMessage())));
         }
 
-
         echo json_encode(array("success" => _h("Bug comment updated successfully")));
         break;
 

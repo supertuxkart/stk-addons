@@ -48,6 +48,7 @@ switch ($_GET['view'])
             // populate addons
             $unapproved = array();
             $addon_revisions = $addon->getAllRevisions();
+
             // Don't list if the latest revision is approved
             $last_revision = Util::array_last($addon_revisions);
             if (!($last_revision["status"] & F_APPROVED))
@@ -112,6 +113,7 @@ switch ($_GET['view'])
 
         $tpl->assign("overview", $tplData);
         break;
+
     case 'general':
         $tpl = new StkTemplate("panels/manage-general.tpl");
         $tplData = array(
@@ -134,6 +136,7 @@ switch ($_GET['view'])
 
         $tpl->assign("general", $tplData);
         break;
+
     case 'news':
         /*
          * TODO Allow selecting from a list of conditions rather than typing. Too typo-prone.
@@ -148,6 +151,7 @@ switch ($_GET['view'])
 
         $tpl->assign("news", $tplData);
         break;
+
     case 'clients':
         /*
          * TODO Allow changing association of user-agent strings with versions of STK
@@ -166,6 +170,7 @@ switch ($_GET['view'])
 
         $tpl->assign("clients", $tplData);
         break;
+
     case 'cache':
         // TODO List cache files
 
@@ -174,6 +179,7 @@ switch ($_GET['view'])
 
         $tpl->assign("cache", $tplData);
         break;
+
     case 'files':
         // TODO test files overview properly
         $tpl = new StkTemplate("panels/manage-files.tpl");
@@ -243,6 +249,7 @@ switch ($_GET['view'])
         $tplData["items"] = $items;
         $tpl->assign("files", $tplData);
         break;
+
     case 'logs':
         $tpl = new StkTemplate("panels/manage-logs.tpl");
         $tplData = array(
@@ -251,6 +258,7 @@ switch ($_GET['view'])
 
         $tpl->assign("logs", $tplData);
         break;
+
     default:
         // TODO maybe redirect
         exit(_h('Invalid page. You may have followed a broken link.'));

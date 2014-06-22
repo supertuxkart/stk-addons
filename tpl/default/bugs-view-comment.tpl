@@ -10,8 +10,8 @@
                             <span class="sr-only">Toggle Dropdown</span>
                         </button>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a href="#" class="btn-bugs-comments-edit" data-id="{$comment.id}">Edit</a></li>
-                            <li><a href="#" class="btn-bugs-comments-delete" data-id="{$comment.id}">Delete</a></li>
+                            <li><a href="#" class="btn-bugs-comments-edit" data-id="{$comment.id}">{t}Edit{/t}</a></li>
+                            <li><a href="#" class="btn-bugs-comments-delete" data-id="{$comment.id}">{t}Delete{/t}</a></li>
                         </ul>
                     </div>
                 {else}
