@@ -126,7 +126,7 @@ class AccessControl
                 sprintf(
                     "SELECT `p`.`permission`
                     FROM `%s` `r` INNER JOIN `%s` `p`
-                    ON `r`.`role_id` = `p`.`role_id`
+                    ON `r`.`id` = `p`.`role_id`
                     WHERE `r`.`name` = :roleName",
                     DB_PREFIX . 'roles',
                     DB_PREFIX . "role_permissions"

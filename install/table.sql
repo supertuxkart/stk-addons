@@ -493,16 +493,16 @@ CREATE TABLE IF NOT EXISTS `v2_bugs_comments` (
 --
 
 CREATE TABLE IF NOT EXISTS `v2_roles` (
-  `role_id` int(4) NOT NULL AUTO_INCREMENT COMMENT 'The role unique identifier',
+  `id` int(4) NOT NULL AUTO_INCREMENT COMMENT 'The role unique identifier',
   `name` varchar(256) CHARACTER SET utf8mb4 NOT NULL COMMENT 'The name identifier',
-  PRIMARY KEY (`role_id`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=5 ;
 
 --
 -- Dumping data for table `v2_roles`
 --
 
-INSERT INTO `v2_roles` (`role_id`, `name`) VALUES
+INSERT INTO `v2_roles` (`id`, `name`) VALUES
   (1, 'user'),
   (2, 'moderator'),
   (3, 'administrator'),
@@ -639,7 +639,7 @@ ALTER TABLE `v2_bugs_comments`
 -- Constraints for table `v2_role_permissions`
 --
 ALTER TABLE `v2_role_permissions`
-  ADD CONSTRAINT `v2_role_permissions_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `v2_roles` (`role_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+  ADD CONSTRAINT `v2_role_permissions_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `v2_roles` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
