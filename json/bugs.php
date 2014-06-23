@@ -44,7 +44,7 @@ switch (strtolower($_POST["action"]))
             exit(json_encode(array("error" => $e->getMessage())));
         }
 
-        echo json_encode(array("success" => _h("Bug report added successfully")));
+        echo json_encode(array("success" => _h("Bug report added")));
         break;
 
     case "add-comment": // add bug comment
@@ -94,7 +94,7 @@ switch (strtolower($_POST["action"]))
             exit(json_encode(array("error" => $e->getMessage())));
         }
 
-        echo json_encode(array("success" => _h("Bug updated successfully")));
+        echo json_encode(array("success" => _h("Bug updated")));
         break;
 
     case "edit-comment":
@@ -113,7 +113,7 @@ switch (strtolower($_POST["action"]))
             exit(json_encode(array("error" => $e->getMessage())));
         }
 
-        echo json_encode(array("success" => _h("Bug comment updated successfully")));
+        echo json_encode(array("success" => _h("Bug comment updated")));
         break;
 
     case "close": // close a bug
@@ -132,7 +132,7 @@ switch (strtolower($_POST["action"]))
             exit(json_encode(array("error" => $e->getMessage())));
         }
 
-        echo json_encode(array("success" => _h("Bug closed successfully")));
+        echo json_encode(array("success" => _h("Bug closed")));
         break;
 
     case "delete-comment": // delete a comment
@@ -151,7 +151,7 @@ switch (strtolower($_POST["action"]))
             exit(json_encode(array("error" => $e->getMessage())));
         }
 
-        echo json_encode(array("success" => _h("Comment deleted successfully")));
+        echo json_encode(array("success" => _h("Comment deleted")));
         break;
 
     default:
