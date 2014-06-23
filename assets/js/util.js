@@ -33,7 +33,7 @@ function parseJSON(raw_string) {
 }
 
 function growlError(message) {
-    return $.growl({
+    $.growl({
         title   : "Error",
         icon    : "glyphicon glyphicon-warning-sign",
         position: {
@@ -46,7 +46,7 @@ function growlError(message) {
     });
 }
 function growlSuccess(messsage) {
-    return $.growl({
+    $.growl({
         title   : "Success",
         icon    : "glyphicon glyphicon-ok-sign",
         position: {

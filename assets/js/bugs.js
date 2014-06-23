@@ -108,6 +108,8 @@
     // close bug clicked
     $content_bugs.on("click", "#btn-bugs-close", function() {
         var $modal = $("#modal-close");
+
+        console.info("Close bug clicked");
         $modal.modal();
 
         bugFormSubmit("#modal-close-form", function(data) {
@@ -125,9 +127,13 @@
 
     // edit bug clicked
     $content_bugs.on("click", "#btn-bugs-edit", function() {
-        var $modal = $("#modal-edit");
-        var el_modal_title = document.getElementById("bug-title-edit"), $modal_description = $("#bug-description-edit");
-        var el_view_title = document.getElementById("bug-view-title"), el_view_description = document.getElementById("bug-view-description");
+        var $modal = $("#modal-edit"),
+            el_modal_title = document.getElementById("bug-title-edit"),
+            $modal_description = $("#bug-description-edit"),
+            el_view_title = document.getElementById("bug-view-title"),
+            el_view_description = document.getElementById("bug-view-description");
+
+        console.info("Edit bug clicked");
         $modal.modal();
 
         $modal.on("shown.bs.modal", function(e) {
@@ -145,8 +151,6 @@
                 growlSuccess(jData["success"]);
 
                 // update view
-                // TODO check if possible user XSS
-                // most likely not because on the next page refresh the data will be from the server where it is cleaned
                 el_view_title.innerHTML = el_modal_title.value;
                 el_view_description.innerHTML = $modal_description.val();
 
@@ -160,7 +164,7 @@
         var $this = $(this), $modal = $("#modal-delete");
         var id =  $this.data("id");
 
-        console.log("Delete comment clicked", id);
+        console.info("Delete comment clicked", id);
         $modal.data("id", id).modal(); // set the id to the modal
 
         return false;
@@ -168,10 +172,10 @@
 
     // delete modal yes clicked
     $content_bugs.on("click", "#modal-delete-btn-yes", function() {
-        var $modal = $("#modal-delete");
-        var id = $modal.data("id");
+        var $modal = $("#modal-delete"),
+            id = $modal.data("id");
 
-        console.log("delete modal btn yes clicked", id);
+        console.info("Delete modal btn yes clicked", id);
         $.post(SITE_ROOT + "json/bugs.php", {action: "delete-comment", "comment-id": id}, function(data) {
             var jData = parseJSON(data);
             if (jData.hasOwnProperty("error")) {
@@ -190,21 +194,23 @@
 
     // edit bug comment clicked
     $content_bugs.on("click", ".btn-bugs-comments-edit", function() {
-        var $this = $(this), $modal = $("#modal-comment-edit"), id = $this.data("id");
-        var $modal_description = $("#bug-comment-edit-description");
-        var $view_description = $("#c" + id + " .panel-body");
+        var $this = $(this),
+            $modal = $("#modal-comment-edit"),
+            id = $this.data("id"),
+            $modal_description = $("#bug-comment-edit-description"),
+            $view_description = $("#c" + id + " .panel-body");
 
-        console.log("Edit comment clicked", id, $modal_description.html(), $view_description.html());
+        console.info("Edit comment clicked", id);
         $modal.modal();
-
-        // update view
-        $("#modal-comment-edit-id").val(id);
-        $modal_description.html($view_description.html());
 
         $modal.on("shown.bs.modal", function(e) {
             if (!$modal_description.data("wysihtml5")) { // editor does not exist
                 $modal_description.wysihtml5(editorOptions);
             }
+
+            // update view
+            $("#modal-comment-edit-id").val(id);
+            $modal_description.data("wysihtml5").editor.setValue($view_description.html());
         });
 
         bugFormSubmit("#modal-comment-edit-form", function(data) {
@@ -214,6 +220,9 @@
             }
             if (jData.hasOwnProperty("success")) {
                 growlSuccess(jData["success"]);
+
+                // update view
+                $view_description.html($modal_description.val());
 
                 $modal.modal("hide");
             }
