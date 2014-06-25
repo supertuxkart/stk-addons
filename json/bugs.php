@@ -73,7 +73,8 @@ switch (strtolower($_POST["action"]))
                 "date"        => $comment_data["date"],
                 "description" => $comment_data["description"]
             )
-        )->assign("can_edit_bug", User::hasPermission(AccessControl::PERM_EDIT_BUGS));
+        )->assign("can_edit_bug", User::hasPermission(AccessControl::PERM_EDIT_BUGS))
+         ->assign("can_edit_comment", User::hasPermission(AccessControl::PERM_EDIT_BUGS));
 
         echo json_encode(array("success" => _h("Comment added"), "comment" => (string)$tpl_comment));
         break;

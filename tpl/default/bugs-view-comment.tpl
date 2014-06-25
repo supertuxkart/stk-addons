@@ -2,7 +2,7 @@
     <div class="panel-heading">
         <h4 class="panel-title clearfix">{$comment.user_name|escape}
             <div class="pull-right">
-                {if isset($can_edit_bug) && $can_edit_bug}
+                {if isset($can_edit_comment) && $can_edit_comment}
                     <div class="btn-group">
                         <a href="#c{$comment.id}" class="btn btn-link">{$comment.date}</a>
                         <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
