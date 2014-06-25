@@ -670,11 +670,11 @@ class Bug
             throw new BugException(_h("The bug comment does not exist"));
         }
 
-        $isOwner = (User::getId() === $comment["user_id"]);
+        //$isOwner = (User::getId() === $comment["user_id"]);
         $canEdit = User::hasPermission(AccessControl::PERM_EDIT_BUGS);
 
         // check permission
-        if (!$isOwner && !$canEdit)
+        if (!$canEdit)
         {
             throw new BugException(_h("You do not have the necessary permission to delete this bug comment"));
         }
