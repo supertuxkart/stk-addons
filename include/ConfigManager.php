@@ -24,6 +24,7 @@
 class ConfigManager
 {
     /**
+     * Cache the results
      * @var array
      */
     private static $cache = array();
@@ -33,6 +34,7 @@ class ConfigManager
      *
      * @param string $config_name
      *
+     * @throws InvalidArgumentException when config_name is not a string
      * @return null|string
      */
     public static function getConfig($config_name)
@@ -40,19 +42,19 @@ class ConfigManager
         // Validate parameters
         if (!is_string($config_name))
         {
-            return null;
+            throw new InvalidArgumentException("config_name is no a string");
         }
-        if (empty($config_name))
+        if (!$config_name)
         {
             return null;
         }
 
         // Populate the config cache
-        if (empty(ConfigManager::$cache))
+        if (empty(static::$cache))
         {
             try
             {
-                $result = DBConnection::get()->query(
+                $configs = DBConnection::get()->query(
                     'SELECT `name`, `value`' .
                     'FROM `' . DB_PREFIX . 'config`',
                     DBConnection::FETCH_ALL
@@ -60,29 +62,31 @@ class ConfigManager
             }
             catch(DBException $e)
             {
-                if (DEBUG_MODE)
-                {
-                    trigger_error($e->getMessage());
-                }
+                trigger_error($e->getMessage());
 
                 return null;
             }
-            if (empty($result))
+
+            // the table is empty no need to continue
+            if (empty($configs))
             {
                 return null;
             }
 
-            foreach ($result as $row)
+            // fill cache
+            foreach ($configs as $config)
             {
-                ConfigManager::$cache[$row['name']] = $row['value'];
+                static::$cache[$config['name']] = $config['value'];
             }
         }
-        if (!isset(ConfigManager::$cache[$config_name]))
+
+        // the config does not exist
+        if (!isset(static::$cache[$config_name]))
         {
             return null;
         }
 
-        return ConfigManager::$cache[$config_name];
+        return static::$cache[$config_name];
     }
 
     /**
@@ -100,19 +104,10 @@ class ConfigManager
         {
             return false;
         }
-        if (empty($config_name))
+        if (!$config_name || !$config_value)
         {
             return false;
         }
-        if (is_array($config_value))
-        {
-            return false;
-        }
-        if (empty($config_value))
-        {
-            return true;
-        } // Not changed because we
-        // can't accept null values
 
         try
         {
@@ -124,23 +119,20 @@ class ConfigManager
                 'ON DUPLICATE KEY UPDATE `value` = :value',
                 DBConnection::NOTHING,
                 array(
-                    ':name'  => (string)$config_name,
-                    ':value' => (string)$config_value
+                    ':name'  => $config_name,
+                    ':value' => $config_value
                 )
             );
         }
         catch(DBException $e)
         {
-            if (DEBUG_MODE)
-            {
-                trigger_error($e->getMessage());
-            }
+            trigger_error($e->getMessage());
 
             return false;
         }
 
         // Update cache - first, make sure the cache exists
-        ConfigManager::getConfig($config_name);
+        ConfigManager::getConfig($config_name); // TODO check if we really need to update cache
         ConfigManager::$cache[$config_name] = $config_value;
 
         return true;
