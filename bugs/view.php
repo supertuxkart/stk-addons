@@ -61,7 +61,6 @@ $tplData = array(
     "close_name"   => ($bug->isClosed() ? User::getFromID($bug->getCloseId())->getUserName() : ""),
     "is_closed"    => $bug->isClosed(),
 
-    "status"       => ($bug->isClosed() ? "closed" : "open"),
     "description"  => $bug->getDescription(),
     "comments"     => $comments
 );

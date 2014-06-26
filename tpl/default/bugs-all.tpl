@@ -9,6 +9,7 @@
             <th>ID</th>
             <th>{t}Addon{/t}</th>
             <th>{t}Title{/t}</th>
+            <th>{t}Status{/t}</th>
             <th>{t}Changed{/t}</th>
         </tr>
         </thead>
@@ -18,6 +19,13 @@
                 <th class="bugs"><a href="{$smarty.const.BUGS_LOCATION}?bug_id={$item.id}">{$item.id}</a></th>
                 <th>{$item.addon_id}</th>
                 <th class="bugs"><a href="{$smarty.const.BUGS_LOCATION}?bug_id={$item.id}">{$item.title|truncate:30|escape}</a></th>
+                <th>
+                    {if $item.close_id}
+                        <span class="label label-danger">{t}closed{/t}</span>
+                    {else}
+                        <span class="label label-success">{t}open{/t}</span>
+                    {/if}
+                </th>
                 <th>{$item.date_edit}</th>
             </tr>
         {/foreach}

@@ -111,14 +111,14 @@
             <td class="col-md-10">
                 <span id="bug-view-status" class="label label-danger" data-container="body" data-toggle="popover" data-placement="right"
                       data-original-title="{t}Close reason{/t}" data-content="{$bug.close_reason}">
-                    {$bug.status}
+                    {t}closed{/t}
                 </span>
             </td>
         </tr>
     {else}
         <tr>
             <td class="col-md-2">{t}Status{/t}:</td>
-            <td class="col-md-10"><span class="label label-success">{$bug.status}</span></td>
+            <td class="col-md-10"><span class="label label-success">{t}open{/t}</span></td>
         </tr>
     {/if}
     <tr>
