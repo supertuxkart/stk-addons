@@ -79,15 +79,11 @@
 <table class="table">
     <tr>
         <td class="col-md-2">{t}Reported by{/t}:</td>
-        <td class="col-md-10">{$bug.user_name}</td>
+        <td class="col-md-10"><a href="{$smarty.const.SITE_ROOT}users.php?user={$bug.user_name}">{$bug.user_name}</a>  {t}on{/t} {$bug.date_report}</td>
     </tr>
     <tr>
         <td class="col-md-2">{t}Addon{/t}:</td>
         <td class="col-md-10">{$bug.addon}</td>
-    </tr>
-    <tr>
-        <td class="col-md-2">{t}Date report{/t}:</td>
-        <td class="col-md-10">{$bug.date_report}</td>
     </tr>
     <tr>
         <td class="col-md-2">{t}Date edit{/t}:</td>
@@ -95,12 +91,8 @@
     </tr>
     {if $bug.is_closed}
         <tr>
-            <td class="col-md-2">{t}Date close{/t}:</td>
-            <td class="col-md-10">{$bug.date_close}</td>
-        </tr>
-        <tr>
             <td class="col-md-2">{t}Closed by{/t}:</td>
-            <td class="col-md-10">{$bug.user_name}</td>
+            <td class="col-md-10"><a href="{$smarty.const.SITE_ROOT}users.php?user={$bug.user_name}">{$bug.user_name}</a> {t}on{/t} {$bug.date_close}</td>
         </tr>
         <tr>
             <td class="col-md-2">{t}Close reason{/t}:</td>
@@ -108,12 +100,7 @@
         </tr>
         <tr>
             <td class="col-md-2">{t}Status{/t}:</td>
-            <td class="col-md-10">
-                <span id="bug-view-status" class="label label-danger" data-container="body" data-toggle="popover" data-placement="right"
-                      data-original-title="{t}Close reason{/t}" data-content="{$bug.close_reason}">
-                    {t}closed{/t}
-                </span>
-            </td>
+            <td class="col-md-10"><span id="bug-view-status" class="label label-danger" >{t}closed{/t}</span></td>
         </tr>
     {else}
         <tr>

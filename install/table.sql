@@ -459,7 +459,7 @@ CREATE TABLE IF NOT EXISTS `v2_bugs` (
   `close_id` int(11) unsigned DEFAULT NULL COMMENT 'The user who closed the bug',
   `close_reason` varchar(512) DEFAULT NULL COMMENT 'The reason it was closed',
   `date_report` timestamp NULL DEFAULT NULL COMMENT 'Report date',
-  `date_edit` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Last edit date',
+    `date_edit` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Last edit date',
   `date_close` timestamp NULL DEFAULT NULL COMMENT 'Close date',
   `title` varchar(256) NOT NULL COMMENT 'Bug title',
   `description` varchar(2048) NOT NULL COMMENT 'Bug description',
