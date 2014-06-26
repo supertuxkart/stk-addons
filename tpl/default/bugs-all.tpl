@@ -3,7 +3,7 @@
         <strong>{t}Empty!{/t}</strong> {t}There are no bugs :){/t}
     </div>
 {else}
-    <table class="table table-hover" id="bugs-all">
+    <table class="table table-hover" id="bugs-table">
         <thead>
         <tr>
             <th>ID</th>

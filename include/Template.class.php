@@ -58,6 +58,14 @@ class Template
     }
 
     /**
+     * @return string
+     */
+    public function toString()
+    {
+        return (string)$this;
+    }
+
+    /**
      * Assign multiple values using an associative array
      *
      * @param array $assigns

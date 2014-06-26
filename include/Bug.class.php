@@ -352,43 +352,49 @@ class Bug
      * @param string $status             the status of the bug. possible: all, open, closed
      * @param bool   $search_description search also in description
      *
-     * @return array|int|null
-     * @throws InvalidArgumentException
+     * @return array|null
      * @throws BugException
      */
     public static function search($search_term, $status = "all", $search_description = false)
     {
+        // validate
         if (empty($search_term))
         {
-            return array();
+            throw new BugException(_h("The search term is empty"));
         }
+
+        $query = "SELECT id, addon_id, title, date_edit, date_close, close_id, close_reason FROM `" . DB_PREFIX . "bugs`";
+
+        // search in description
+        if ($search_description)
+        {
+            $query .= " WHERE (`title` LIKE :search_term OR `description` LIKE :search_term)";
+        }
+        else
+        {
+            $query .= " WHERE (`title` LIKE :search_term)";
+        }
+
+        switch ($status)
+        {
+            case "all";
+                break;
+            case "open":
+                $query .= " AND `close_id` is NULL";
+                break;
+            case "closed":
+                $query .= " AND `close_id` is NOT NULL";
+                break;
+            default:
+                throw new BugException(sprintf("status = %s is invalid", $status));
+                break;
+        }
+
+        // set default order
+        $query .= " ORDER BY `date_edit` DESC";
 
         try
         {
-            if ($search_description)
-            {
-                $query = "SELECT * FROM `" . DB_PREFIX . "bugs` WHERE (`title` LIKE :search_term OR `description` LIKE :search_term)";
-            }
-            else
-            {
-                $query = "SELECT * FROM `" . DB_PREFIX . "bugs` WHERE (`title` LIKE :search_term)";
-            }
-
-            switch ($status)
-            {
-                case "all";
-                    break;
-                case "open":
-                    $query .= " AND `close_id` IS NULL";
-                    break;
-                case "closed":
-                    $query .= " AND `close_id` is NOT NULL";
-                    break;
-                default:
-                    throw new InvalidArgumentException(sprintf("status = %s is invalid", $status));
-                    break;
-            }
-
             $bugs = DBConnection::get()->query(
                 $query,
                 DBConnection::FETCH_ALL,
@@ -398,7 +404,7 @@ class Bug
         }
         catch(DBException $e)
         {
-            throw new BugException(h(_("Error on selecting all search bugs") . '. ' . _("Please contact a website administrator.")));
+            throw new BugException(h(_("Error on searching bugs") . '. ' . _("Please contact a website administrator.")));
         }
 
         return $bugs;

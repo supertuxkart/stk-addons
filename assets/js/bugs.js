@@ -2,96 +2,160 @@
     "use strict";
 
     // load essential elements and options
-    var $content_bugs = $("#bugs-content");
-    var $btn_back = $("#btn-bugs-back");
-    var $btn_add = $("#btn-bugs-add");
+    var $main_bugs = $("#bugs-main"); // the top container wrapper for the bugs
+    var $content_bugs = $("#bugs-content"); // the content that always changes via ajax
+    var $btn_back = $("#btn-bugs-back"), $btn_add = $("#btn-bugs-add");
     var editorOptions = {
         toolbar: {
             "font-styles": false
         }
     };
+    var search_url = SITE_ROOT + 'json/search.php';
+    var tableOptions = {
+        searching  : false,
+        "aaSorting": [] // Disable initial sort
+    }
+    var data_table; // hold the data table object
+
 
     // helper functions
     function registerEditors() {
         $("#bug-description").wysihtml5(editorOptions); // from add page
         $("#bug-comment-description").wysihtml5(editorOptions);
 
-        $("#bugs-all").dataTable();
+        // init table
+        var $bugs_table = $("#bugs-table");
+        data_table = $bugs_table.DataTable(tableOptions);
 
-        $("#addon-name").typeahead({
-                hint     : true,
-                highlight: true,
-                minLength: 2
-            },
-            {
-                name      : 'addon-search',
-                displayKey: "id",
-                source    : function(query, cb) {
-                    var matches = [];
-                    $.get(SITE_ROOT + 'json/search.php', {"data-type": "addon", "search-filter": "name", "query": query}, function(data) {
-                        var jData = parseJSON(data);
-                        if (jData.hasOwnProperty("error")) {
-                            console.error(jData["error"]);
-                            return;
-                        }
+        // search
+        onFormSubmit("#bug-search-form", function(data) {
+            History.pushState({state: "search"}, '', "?search");
 
-                        for (var i = 0; i < jData["addons"].length; i++) {
-                            matches.push({"id": jData["addons"][i]})
-                        }
+            // not in the main page
+            if (!_.isEmpty(getUrlVars())) {
+                console.log("not main page");
+            }
 
-                        cb(matches);
-                    });
-                }
-        });
+            var jData = parseJSON(data);
+            if (jData.hasOwnProperty("error")) {
+                growlError(jData["error"]);
+            }
+            if (jData.hasOwnProperty("success")) {
+                // update view
+                data_table.destroy();
+                $content_bugs.html(jData["bugs-all"])
+                data_table = $bugs_table.DataTable(tableOptions);
+
+                // show button
+                btnToggle();
+            }
+        }, $main_bugs, search_url, {"data-type": "bug"}, "GET");
+
     }
 
     function btnToggle() {
         $btn_add.toggleClass("hide");
         $btn_back.toggleClass("hide");
-        registerEditors();
     }
 
     function bugFormSubmit(form_identifier, callback_success) {
-        onFormSubmit(form_identifier, callback_success, $content_bugs, SITE_ROOT + "json/bugs.php");
+        onFormSubmit(form_identifier, callback_success, $content_bugs, SITE_ROOT + "json/bugs.php", {}, "POST");
     }
 
     var NavigateTo = {
         index: function() {
             History.back();
-            loadContentWithAjax("#bug-content", BUGS_LOCATION + 'all.php', {}, function() {
+            loadContentWithAjax("#bugs-content", BUGS_LOCATION + 'all.php', {}, function() {
                 btnToggle();
+                registerEditors();
             });
         },
         add  : function() {
             History.pushState({state: "add"}, '', "?add");
-            loadContentWithAjax("#bug-content", BUGS_LOCATION + 'add.php', {}, function() {
+            loadContentWithAjax("#bugs-content", BUGS_LOCATION + 'add.php', {}, function() {
                 btnToggle();
+                registerEditors();
+
+                // add bug page,
+                $("#addon-name").typeahead({
+                        hint     : true,
+                        highlight: true,
+                        minLength: 2
+                    },
+                    {
+                        name      : 'addon-search',
+                        displayKey: "id",
+                        source    : function(query, cb) {
+                            var matches = [];
+                            $.get(search_url, {"data-type": "addon", "search-filter": "name", "query": query}, function(data) {
+                                var jData = parseJSON(data);
+                                if (jData.hasOwnProperty("error")) {
+                                    console.error(jData["error"]);
+                                    return;
+                                }
+
+                                for (var i = 0; i < jData["addons"].length; i++) {
+                                    matches.push({"id": jData["addons"][i]})
+                                }
+
+                                cb(matches);
+                            });
+                        }
+                    }
+                );
             });
         },
         view : function(bug_id) {
             History.pushState({state: "view"}, '', "?bug_id=" + bug_id);
-            loadContentWithAjax("#bug-content", BUGS_LOCATION + 'view.php', {bug_id: bug_id}, function() {
+            loadContentWithAjax("#bugs-content", BUGS_LOCATION + 'view.php', {bug_id: bug_id}, function() {
                 btnToggle();
+                registerEditors();
             });
         }
     };
 
     // navigate add button clicked
-    $content_bugs.on("click", "#btn-bugs-add", function() { // handle higher up the level for ajax
+    $btn_add.on("click", function() { // handle higher up the level for ajax
         NavigateTo.add();
 
         return false;
     });
 
     // navigate back button clicked
-    $content_bugs.on("click", "#btn-bugs-back", function() {
+    $btn_back.on("click", function() {
         NavigateTo.index();
 
         return false;
     });
 
+    // add bug form
+    bugFormSubmit("#bug-add-form", function(data) {
+        var jData = parseJSON(data);
+        if (jData.hasOwnProperty("error")) {
+            growlError(jData["error"]);
+        }
+        if (jData.hasOwnProperty("success")) {
+            growlSuccess(jData["success"]);
+            NavigateTo.index();
+        }
+    });
+
+    // add bug comment form
+    bugFormSubmit("#bug-add-comment-form", function(data) {
+        var jData = parseJSON(data);
+        if (jData.hasOwnProperty("error")) {
+            growlError(jData["error"]);
+        }
+        if (jData.hasOwnProperty("success")) {
+            growlSuccess(jData["success"]);
+
+            $("#bug-comments").prepend(jData["comment"]);
+            $("#bug-comment-description").html("");
+        }
+    });
+
     // close bug clicked
-    $content_bugs.on("click", "#btn-bugs-close", function() {
+    $main_bugs.on("click", "#btn-bugs-close", function() {
         var $modal = $("#modal-close");
 
         console.info("Close bug clicked");
@@ -111,7 +175,7 @@
     });
 
     // edit bug clicked
-    $content_bugs.on("click", "#btn-bugs-edit", function() {
+    $main_bugs.on("click", "#btn-bugs-edit", function() {
         var $modal = $("#modal-edit"),
             el_modal_title = document.getElementById("bug-title-edit"),
             $modal_description = $("#bug-description-edit"),
@@ -145,9 +209,9 @@
     });
 
     // delete bug comment clicked
-    $content_bugs.on("click", ".btn-bugs-comments-delete", function() {
+    $main_bugs.on("click", ".btn-bugs-comments-delete", function() {
         var $this = $(this), $modal = $("#modal-delete");
-        var id =  $this.data("id");
+        var id = $this.data("id");
 
         console.info("Delete comment clicked", id);
         $modal.data("id", id).modal(); // set the id to the modal
@@ -156,7 +220,7 @@
     });
 
     // delete modal yes clicked
-    $content_bugs.on("click", "#modal-delete-btn-yes", function() {
+    $main_bugs.on("click", "#modal-delete-btn-yes", function() {
         var $modal = $("#modal-delete"),
             id = $modal.data("id");
 
@@ -178,7 +242,7 @@
     });
 
     // edit bug comment clicked
-    $content_bugs.on("click", ".btn-bugs-comments-edit", function() {
+    $main_bugs.on("click", ".btn-bugs-comments-edit", function() {
         var $this = $(this),
             $modal = $("#modal-comment-edit"),
             id = $this.data("id"),
@@ -217,51 +281,15 @@
     });
 
     // hover over close bug status
-    $content_bugs.on("mouseenter", "#bug-view-status", function() {
-       $("#bug-view-status").popover("toggle");
+    $main_bugs.on("mouseenter", "#bug-view-status", function() {
+        $("#bug-view-status").popover("toggle");
     });
 
     // clicked on a bug in the table
-    $content_bugs.on("click", "table .bugs", function() {
+    $main_bugs.on("click", "table .bugs", function() {
         NavigateTo.view($(this).parent().attr("data-id"));
 
         return false;
-    });
-
-    // add bug form
-    bugFormSubmit("#bug-add-form", function(data) {
-        var jData = parseJSON(data);
-        if (jData.hasOwnProperty("error")) {
-            growlError(jData["error"]);
-        }
-        if (jData.hasOwnProperty("success")) {
-            growlSuccess(jData["success"]);
-            NavigateTo.index();
-        }
-    });
-
-    // add bug comment form
-    bugFormSubmit("#bug-add-comment-form", function(data) {
-        var jData = parseJSON(data);
-        if (jData.hasOwnProperty("error")) {
-            growlError(jData["error"]);
-        }
-        if (jData.hasOwnProperty("success")) {
-            growlSuccess(jData["success"]);
-
-            $("#bug-comments").prepend(jData["comment"]);
-            $("#bug-comment-description").html("");
-        }
-    });
-
-    // search
-    bugFormSubmit("#bug-search-form", function(data) {
-        var jData = parseJSON(data);
-        if (jData.hasOwnProperty("error")) {
-            growlError(jData["error"]);
-        } else {
-            $("#bug-content").html(data);
-        }
     });
 
     // Bind to StateChange Event

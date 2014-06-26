@@ -1,6 +1,6 @@
 {config_load file="{$smarty.current_dir}/tpl.conf"}
 {include file=#header#}
-<div id="bugs-content">
+<div id="bugs-main">
     <h1>{t}Bug Tracker{/t}
         <small> {t}for addons{/t}</small>
     </h1>
@@ -50,7 +50,7 @@
     </div>
     <br><br>
     <div id="alert-container"></div>
-    <div id="bug-content">
+    <div id="bugs-content">
         {$bugs.content}
     </div>
 </div>

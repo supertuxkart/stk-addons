@@ -20,20 +20,36 @@ function loadContentWithAjax(selector, url_to_load, url_get_params, callback, ca
     });
 }
 
-function onFormSubmit(form_identifier, callback_success, $container, url) {
+function onFormSubmit(form_identifier, callback_success, $container, url, data_type, request_method) {
     if (!_.isFunction(callback_success)) {
         throw "callback parameter is not a function";
     }
+
+    // make defaults
+    request_method = request_method || "POST";
+    data_type = data_type || {};
 
     // unregister previous event handler
     $container.off("submit", form_identifier);
 
     $container.on("submit", form_identifier, function() {
+        // put all values in array
+        var data = $(form_identifier).serializeArray();
+
+        // populate with our data type
+        $.each(data_type, function(name, value) {
+            data.push({name: name, value: value});
+        });
+
         $.ajax({
-            type   : "POST",
+            type   : request_method,
             url    : url,
-            data   : $(form_identifier).serialize(),
-            success: callback_success
+            data   : $.param(data),
+            success: callback_success,
+            error  : function(xhr, ajaxOptions, thrownError) {
+                console.error("Error onFormSubmit");
+                console.error(xhr.status, ajaxOptions, thrownError);
+            }
         }).fail(function() {
             console.error("onFormSubmit post request failed");
         });
@@ -41,6 +57,7 @@ function onFormSubmit(form_identifier, callback_success, $container, url) {
         return false;
     });
 }
+
 
 function parseJSON(raw_string) {
     var jData;
@@ -86,16 +103,20 @@ function growlSuccess(messsage) {
 
 // Read a page's GET URL variables and return them as an associative array.
 function getUrlVars(url) {
-    if (url === undefined) {
-        url = window.location.href;
+    url = url || window.location.href;
+
+    var vars = {}, hash, slice_start = url.indexOf('?');
+
+    // url does not have any GET params
+    if(slice_start === -1) {
+        return vars;
     }
 
-    var vars = [], hash;
-    var hashes = url.slice(url.indexOf('?') + 1).split('&');
+    var hashes = url.slice(slice_start + 1).split('&');
     for (var i = 0; i < hashes.length; i++) {
         hash = hashes[i].split('=');
-        vars.push(hash[0]);
         vars[hash[0]] = hash[1];
     }
+
     return vars;
 }

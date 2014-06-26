@@ -97,15 +97,22 @@ switch (strtolower($_GET["data-type"]))
             $search_description = true;
         }
 
-        $bugs = Bug::search($_GET["search-title"], $_GET["search-filter"], $search_description);
-        if (empty($bugs))
+        try
         {
-            echo json_encode(array("error" => _h("Nothing to search for")));
+            $bugs = Bug::search($_GET["search-title"], $_GET["search-filter"], $search_description);
         }
-        else
+        catch(BugException $e)
         {
-            echo json_encode(array("bugs" => $bugs));
+            exit(json_encode(array("error" => $e->getMessage())));
         }
+
+        echo json_encode(
+            array(
+                "success" => "",
+                "bugs-all" => StkTemplate::get('bugs-all.tpl')->assign("bugs", array("items" => $bugs))->toString()
+            )
+        );
+
         break;
 
     case "user":

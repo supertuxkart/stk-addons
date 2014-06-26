@@ -49,6 +49,7 @@ class Achievement
                 _('Please contact a website administrator.')
             ));
         }
+
         $string_list = "";
         foreach ($result as $r)
         {
