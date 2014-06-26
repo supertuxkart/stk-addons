@@ -9,7 +9,9 @@
             {if !$bug.is_closed}
                 <button type="button" id="btn-bugs-close" class="btn btn-warning">{t}Close{/t}</button>
             {/if}
-            <button type="button" id="btn-bugs-delete" class="btn btn-danger">{t}Delete{/t}</button>
+            {if $can_delete_bug}
+                <button type="button" id="btn-bugs-delete" class="btn btn-danger">{t}Delete{/t}</button>
+            {/if}
         </div>
         {if !$bug.is_closed}
             <div class="modal fade" id="modal-close" tabindex="-1" role="dialog" aria-hidden="true">
@@ -64,7 +66,7 @@
                                 </div>
                             </div>
                             <input type="hidden" name="action" value="edit">
-                            <input type="hidden" name="bug-id" value="{$bug.id}">
+                            <input type="hidden" id="bug-id" name="bug-id" value="{$bug.id}">
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">{t}Back{/t}</button>

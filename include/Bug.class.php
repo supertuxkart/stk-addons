@@ -659,6 +659,44 @@ class Bug
     }
 
     /**
+     * Delete a bug
+     *
+     * @param int $bugId the comment to delete
+     *
+     * @throws BugException
+     */
+    public static function delete($bugId)
+    {
+        // validate
+        if (!static::exists($bugId))
+        {
+            throw new BugException(_h("The bug does not exist"));
+        }
+
+        $canDelete = User::hasPermission(AccessControl::PERM_EDIT_BUGS);
+
+        // check permission
+        if (!$canDelete)
+        {
+            throw new BugException(_h("You do not have the necessary permission to delete this bug"));
+        }
+
+        try
+        {
+            DBConnection::get()->delete(
+                "bugs",
+                "`id` = :id",
+                array(":id" => $bugId),
+                array(":id" => DBConnection::PARAM_INT)
+            );
+        }
+        catch(DBException $e)
+        {
+            throw new BugException(h(_("Tried to delete a bug") . '. ' . _("Please contact a website administrator.")));
+        }
+    }
+
+    /**
      * Delete a bug comment
      *
      * @param int $commentId the comment to delete

@@ -73,8 +73,8 @@ switch (strtolower($_POST["action"]))
                 "date"        => $comment_data["date"],
                 "description" => $comment_data["description"]
             )
-        )->assign("can_edit_bug", User::hasPermission(AccessControl::PERM_EDIT_BUGS))
-         ->assign("can_edit_comment", User::hasPermission(AccessControl::PERM_EDIT_BUGS));
+        )->assign("can_edit_comment", User::hasPermission(AccessControl::PERM_EDIT_BUGS));
+
 
         echo json_encode(array("success" => _h("Comment added"), "comment" => (string)$tpl_comment));
         break;
@@ -134,6 +134,25 @@ switch (strtolower($_POST["action"]))
         }
 
         echo json_encode(array("success" => _h("Bug closed")));
+        break;
+
+    case "delete":
+        $errors = Validate::ensureInput($_POST, array("bug-id"));
+        if (!empty($errors))
+        {
+            exit(json_encode(array("error" => _h("One or more fields are empty"))));
+        }
+
+        try
+        {
+            Bug::delete($_POST["bug-id"]);
+        }
+        catch(DBException $e)
+        {
+            exit(json_encode(array("error" => $e->getMessage())));
+        }
+
+        echo json_encode(array("success" => _h("Bug deleted")));
         break;
 
     case "delete-comment": // delete a comment

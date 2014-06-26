@@ -11,6 +11,7 @@
         }
     };
     var search_url = SITE_ROOT + 'json/search.php';
+    var json_url = SITE_ROOT + "json/bugs.php";
     var tableOptions = {
         searching  : false,
         "aaSorting": [] // Disable initial sort
@@ -30,11 +31,6 @@
         onFormSubmit("#bug-search-form", function(data) {
             History.pushState({state: "search"}, '', "?search");
 
-            // not in the main page
-            if (!_.isEmpty(getUrlVars())) {
-                console.log("not main page");
-            }
-
             var jData = parseJSON(data);
             if (jData.hasOwnProperty("error")) {
                 growlError(jData["error"]);
@@ -42,11 +38,14 @@
             if (jData.hasOwnProperty("success")) {
                 // update view
                 data_table.destroy();
-                $content_bugs.html(jData["bugs-all"])
+                $content_bugs.html(jData["bugs-all"]);
                 data_table = $bugs_table.DataTable(tableOptions);
 
-                // show button
-                btnToggle();
+                // toggle buttons only when on main page, if we are already on another page
+                // the back button is already shown
+                if (_.isEmpty(getUrlVars())) {
+                    btnToggle();
+                }
             }
         }, $main_bugs, search_url, {"data-type": "bug"}, "GET");
     }
@@ -92,7 +91,7 @@
     }
 
     function bugFormSubmit(form_identifier, callback_success) {
-        onFormSubmit(form_identifier, callback_success, $content_bugs, SITE_ROOT + "json/bugs.php", {}, "POST");
+        onFormSubmit(form_identifier, callback_success, $content_bugs, json_url, {}, "POST");
     }
 
     var NavigateTo = {
@@ -160,6 +159,30 @@
         }
     });
 
+    // delete bug clicked
+    $main_bugs.on("click", "#btn-bugs-delete", function() {
+        var id = $("#bug-id").val();
+
+        console.log("Delete bug clicked", id);
+        modalDelete("Are you sure you want to delete this bug?", function() {
+            $.post(json_url, {action: "delete", "bug-id": id}, function(data) {
+                var jData = parseJSON(data);
+                if (jData.hasOwnProperty("error")) {
+                    growlError(jData["error"]);
+                }
+                if (jData.hasOwnProperty("success")) {
+                    growlSuccess(jData["success"]);
+
+                    bootbox.hideAll();
+
+                    NavigateTo.index();
+                }
+            });
+        });
+
+        return false;
+    });
+
     // close bug clicked
     $main_bugs.on("click", "#btn-bugs-close", function() {
         var $modal = $("#modal-close");
@@ -191,7 +214,7 @@
         console.info("Edit bug clicked");
         $modal.modal();
 
-        $modal.on("shown.bs.modal", function(e) {
+        $modal.on("shown.bs.modal", function() {
             if (!$modal_description.data("wysihtml5")) { // editor does not exist
                 $modal_description.wysihtml5(editorOptions);
             }
@@ -221,7 +244,7 @@
 
         console.info("Delete comment clicked", id);
         modalDelete("Are you sure you want to delete this comment?", function() {
-            $.post(SITE_ROOT + "json/bugs.php", {action: "delete-comment", "comment-id": id}, function(data) {
+            $.post(json_url, {action: "delete-comment", "comment-id": id}, function(data) {
                 var jData = parseJSON(data);
                 if (jData.hasOwnProperty("error")) {
                     growlError(jData["error"]);
@@ -232,7 +255,7 @@
                     // delete comment from view
                     $("#c" + id).remove();
 
-                    bootbox.hideAll()
+                    bootbox.hideAll();
                 }
             });
         });
