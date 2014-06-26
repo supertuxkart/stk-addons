@@ -47,6 +47,9 @@ function parseJSON(raw_string) {
     try {
         jData = JSON.parse(raw_string);
     } catch (e) {
+        // silently fail on the client side
+        jData = {};
+
         console.error("Parson JSON error: ", e);
         console.error("Raw string: ", raw_string);
     }
