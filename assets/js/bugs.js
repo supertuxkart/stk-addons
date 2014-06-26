@@ -52,22 +52,7 @@
     }
 
     function bugFormSubmit(form_identifier, callback_success) {
-        if (!_.isFunction(callback_success)) {
-            throw "callback parameter is not a function";
-        }
-
-        $content_bugs.on("submit", form_identifier, function() {
-            $.ajax({
-                type   : "POST",
-                url    : SITE_ROOT + "json/bugs.php",
-                data   : $(form_identifier).serialize(),
-                success: callback_success
-            }).fail(function() {
-                console.error("bugFormSubmit post request failed");
-            });
-
-            return false;
-        });
+        onFormSubmit(form_identifier, callback_success, $content_bugs, SITE_ROOT + "json/bugs.php");
     }
 
     var NavigateTo = {

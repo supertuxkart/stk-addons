@@ -26,7 +26,7 @@ if (!isset($_GET["data-type"]) || empty($_GET["data-type"]))
     exit(json_encode(array("error" => "data-type param is not defined or is empty")));
 }
 
-switch(strtolower($_GET["data-type"]))
+switch (strtolower($_GET["data-type"]))
 {
     case "addon";
         $errors = Validate::ensureInput($_GET, array("search-filter", "query"));
@@ -35,7 +35,7 @@ switch(strtolower($_GET["data-type"]))
             exit(json_encode(array("error" => _h("One or more fields are empty. This should never happen"))));
         }
 
-        switch($_GET["search-filter"])
+        switch ($_GET["search-filter"])
         {
             case "type":
                 if (!isset($_GET['addon-type']) || !Addon::isAllowedType($_GET['addon-type']))
@@ -68,7 +68,7 @@ switch(strtolower($_GET["data-type"]))
                 $addons = Addon::search($_GET['query']);
                 $names = array();
 
-                foreach($addons as $addon)
+                foreach ($addons as $addon)
                 {
                     $names[] = $addon["id"];
                 }
@@ -113,6 +113,6 @@ switch(strtolower($_GET["data-type"]))
         break;
 
     default:
-        echo json_encode(array("error" => sprintf("data_type = %s is not recognized", $_POST["action"])));
+        echo json_encode(array("error" => sprintf("data_type = %s is not recognized", h($_POST["action"]))));
         break;
 }

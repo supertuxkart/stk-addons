@@ -23,6 +23,7 @@ AccessControl::setLevel(AccessControl::PERM_EDIT_SETTINGS);
 
 $_GET['action'] = (isset($_GET['action'])) ? $_GET['action'] : null;
 
+// TODO make additional permission checks for individual panel
 switch ($_GET['view'])
 {
 
@@ -257,6 +258,16 @@ switch ($_GET['view'])
         );
 
         $tpl->assign("logs", $tplData);
+        break;
+
+    case 'roles':
+        $tpl = new StkTemplate("panels/manage-roles.tpl");
+        $tplData = array(
+            "roles" => AccessControl::getRoles(),
+            "permissions" => AccessControl::getPermissionsChecked()
+        );
+
+        $tpl->assign("roles", $tplData);
         break;
 
     default:

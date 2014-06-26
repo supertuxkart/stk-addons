@@ -20,6 +20,13 @@
                                 <span class="glyphicon glyphicon-dashboard"></span> {t}Overview{/t}
                             </a>
                         </li>
+                        {if isset($can_edit_roles) && $can_edit_roles}
+                            <li>
+                                <a href="manage.php?view=roles" class="manage-list">
+                                    <span class="glyphicon glyphicon-wrench"></span> {t}Manage Roles{/t}
+                                </a>
+                            </li>
+                        {/if}
                         {if isset($can_edit_settings) && $can_edit_settings}
                             <li>
                                 <a href="manage.php?view=general" class="manage-list">

@@ -20,6 +20,25 @@ function loadContentWithAjax(selector, url_to_load, url_get_params, callback, ca
     });
 }
 
+function onFormSubmit(form_identifier, callback_success, $container, url) {
+    if (!_.isFunction(callback_success)) {
+        throw "callback parameter is not a function";
+    }
+
+    $container.on("submit", form_identifier, function() {
+        $.ajax({
+            type   : "POST",
+            url    : url,
+            data   : $(form_identifier).serialize(),
+            success: callback_success
+        }).fail(function() {
+            console.error("onFormSubmit post request failed");
+        });
+
+        return false;
+    });
+}
+
 function parseJSON(raw_string) {
     var jData;
     try {

@@ -538,7 +538,6 @@ class User
                 }
 
                 // backwards compatibility
-
                 return static::oldRoleToNew($role_result['role']);
             }
             catch(DBException $e)

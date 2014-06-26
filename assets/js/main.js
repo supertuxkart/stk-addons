@@ -85,13 +85,6 @@ $(document).ready(function() {
 
     });
 
-    $('a.manage-list').click(function() {
-        History.pushState(null, '', this.href);
-        var view = getUrlVars(this.href)['view'];
-        loadContentWithAjax("#manage-body", SITE_ROOT + 'manage-panel.php', {view: view}, clearPanelStatus);
-
-        return false;
-    });
 
     $('a.user-list').click(function() {
         History.pushState(null, '', this.href);

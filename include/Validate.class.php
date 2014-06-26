@@ -291,7 +291,8 @@ class Validate
         {
             if(empty($pool[$param]))
             {
-                $errors[] = sprintf("param = %s empty", $param);
+
+                $errors[] = sprintf("%s is empty", ucfirst($param));
             }
         }
 

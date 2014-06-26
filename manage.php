@@ -28,8 +28,10 @@ if (!isset($_GET['view']))
 }
 
 $tpl = StkTemplate::get("manage.tpl")
-        ->assignTitle("Manage")
-        ->assign("can_edit_settings", User::hasPermission(AccessControl::PERM_EDIT_SETTINGS));
+    ->assignTitle("Manage")
+    ->addScriptInclude("manage.js")
+    ->assign("can_edit_settings", User::hasPermission(AccessControl::PERM_EDIT_SETTINGS))
+    ->assign("can_edit_roles", User::hasPermissionOnRole("root"));
 $tplData = array("header" => "", "status" => "", "body" => "");
 
 // status message
@@ -39,10 +41,7 @@ try
     switch ($_GET['action'])
     {
         case 'save_config':
-            if (!isset($_POST['xml_frequency']) ||
-                !isset($_POST['allowed_addon_exts']) ||
-                !isset($_POST['allowed_source_exts'])
-            )
+            if (!isset($_POST['xml_frequency']) || !isset($_POST['allowed_addon_exts']) || !isset($_POST['allowed_source_exts']))
             {
                 throw new Exception(_h('One or more fields has been left blank. Settings were not saved.'));
             }

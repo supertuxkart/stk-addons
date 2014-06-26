@@ -132,8 +132,8 @@ class ConfigManager
         }
 
         // Update cache - first, make sure the cache exists
-        ConfigManager::getConfig($config_name); // TODO check if we really need to update cache
-        ConfigManager::$cache[$config_name] = $config_value;
+        static::getConfig($config_name); // TODO check if we really need to update cache
+        static::$cache[$config_name] = $config_value;
 
         return true;
     }

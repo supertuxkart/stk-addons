@@ -47,7 +47,7 @@ class AccessControl
     const PERM_EDIT_SETTINGS = "editSettings";
 
     /**
-     * Cache for the roles
+     * Cache for the roles, with key name of the role and value the id of the role
      *
      * @var array
      */
@@ -65,38 +65,40 @@ class AccessControl
             static::PERM_EDIT_ADDONS,
             static::PERM_EDIT_USERS,
             static::PERM_EDIT_BUGS,
+            static::PERM_EDIT_SETTINGS,
             static::PERM_EDIT_MODERATORS,
             static::PERM_EDIT_ADMINISTRATORS,
-            static::PERM_EDIT_ROOTS,
-            static::PERM_EDIT_SETTINGS
+            static::PERM_EDIT_ROOTS
         );
     }
 
     /**
      * Retrieve all the roles available from the database
      *
+     * @param bool $refresh_cache flag set to refer
+     *
      * @return array
-     * @throws UserException
+     * @throws AccessControlException
      */
-    public static function getRoles()
+    public static function getRoles($refresh_cache = false)
     {
         // retrieve from cache
-        if (!empty(static::$roles))
+        if (!empty(static::$roles) && !$refresh_cache)
         {
-            return static::$roles;
+            return array_keys(static::$roles);
         }
 
         // retrieve from db
         try
         {
             $roles = DBConnection::get()->query(
-                "SELECT `name` FROM " . DB_PREFIX . "roles",
+                "SELECT * FROM " . DB_PREFIX . "roles",
                 DBConnection::FETCH_ALL
             );
         }
         catch(DBException $e)
         {
-            throw new UserException(h(
+            throw new AccessControlException(h(
                 _('An error occurred while trying to retrieve roles.') . ' ' .
                 _('Please contact a website administrator.')
             ));
@@ -105,18 +107,42 @@ class AccessControl
         // put onto cache
         foreach ($roles as $role)
         {
-            static::$roles[] = $role["name"];
+            static::$roles[$role["name"]] = $role["id"];
         }
 
 
-        return static::$roles;
+        return array_keys(static::$roles);
+    }
+
+    /**
+     * Checks if a role exists
+     *
+     * @param,string $role
+     *
+     * @return bool
+     */
+    public static function isRole($role)
+    {
+        return in_array($role, static::getRoles());
+    }
+
+    /**
+     * Checks if a permission exists
+     *
+     * @param,string $permission
+     *
+     * @return bool
+     */
+    public static function isPermission($permission)
+    {
+        return in_array($permission, static::getPermissionsChecked());
     }
 
     /**
      * @param string $role
      *
      * @return array
-     * @throws UserException
+     * @throws AccessControlException
      */
     public static function getPermissions($role = "user")
     {
@@ -128,7 +154,7 @@ class AccessControl
                     FROM `%s` `r` INNER JOIN `%s` `p`
                     ON `r`.`id` = `p`.`role_id`
                     WHERE `r`.`name` = :roleName",
-                    DB_PREFIX . 'roles',
+                    DB_PREFIX . "roles",
                     DB_PREFIX . "role_permissions"
                 ),
                 DBConnection::FETCH_ALL,
@@ -137,7 +163,7 @@ class AccessControl
         }
         catch(DBException $e)
         {
-            throw new UserException(h(
+            throw new AccessControlException(h(
                 _('An error occurred while trying to retrieve permissions') . ' ' .
                 _('Please contact a website administrator.')
             ));
@@ -150,6 +176,81 @@ class AccessControl
         }
 
         return $return_permission;
+    }
+
+    /**
+     * Set the permission of a role in the database
+     * Use with precaution. The validation is performed inside this method
+     * Only users with high privilege can call this method
+     *
+     * @param string $role
+     * @param array  $permissions
+     *
+     * @throws AccessControlException
+     */
+    public static function setPermissions($role, array $permissions)
+    {
+        // validate
+        if (!User::hasPermissionOnRole("root"))
+        {
+            throw new AccessControlException(_h("You do not have the permission to change a roles permissions"));
+        }
+        if (!static::isRole($role))
+        {
+            throw new AccessControlException(_h("The role is not valid"));
+        }
+
+        $role_id = static::$roles[$role];
+        $insert_values = array();
+
+        foreach ($permissions as $permission) // validate permission and populate insert values
+        {
+            if (!static::isPermission($permission))
+            {
+                throw new AccessControlException(sprintf("%s is not a valid permission", h($permission)));
+            }
+
+            // VALUES (1, 'viewBasicPage'), (1, 'addAddon')
+            $insert_values[] = sprintf("(%s, '%s')", (string)$role_id, $permission);
+        }
+
+        // clean current permission of the user
+        try
+        {
+            DBConnection::get()->delete(
+                "role_permissions",
+                "`role_id` = :role_id",
+                array(":role_id" => $role_id),
+                array(":role_id" => DBConnection::PARAM_INT)
+            );
+        }
+        catch(DBException $e)
+        {
+            throw new AccessControlException(h(
+                _('An error occurred while trying to clean the role permissions') . ' ' .
+                _('Please contact a website administrator.')
+            ));
+        }
+
+        // insert new permissions
+        try
+        {
+            DBConnection::get()->query(
+                sprintf(
+                    "INSERT INTO %s (`role_id`, `permission`) VALUES %s",
+                    DB_PREFIX . "role_permissions",
+                    implode(", ", $insert_values)
+                ),
+                DBConnection::NOTHING
+            );
+        }
+        catch(DBException $e)
+        {
+            throw new AccessControlException(h(
+                _('An error occurred while trying to insert new permissions') . ' ' .
+                _('Please contact a website administrator.')
+            ));
+        }
     }
 
     /**

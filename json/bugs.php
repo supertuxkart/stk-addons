@@ -156,6 +156,6 @@ switch (strtolower($_POST["action"]))
         break;
 
     default:
-        echo json_encode(array("error" => sprintf("action = %s is not recognized", $_POST["action"])));
+        echo json_encode(array("error" => sprintf("action = %s is not recognized", h($_POST["action"]))));
         break;
 }
