@@ -7,7 +7,7 @@
                 {t}Addon name:{/t}
             </label>
             <div class="col-md-10">
-                <input type="text" placeholder="Super tux" name="addon-name" id="addon-name" style="display: block; width: 100%" class="form-control">
+                <input type="text" placeholder="Super tux" name="addon-name" id="addon-name" class="form-control typeahead">
             </div>
         </div>
         <div class="form-group">
