@@ -7,8 +7,9 @@
         <div class="btn-group">
             <button type="button" id="btn-bugs-edit" class="btn btn-primary">{t}Edit{/t}</button>
             {if !$bug.is_closed}
-                <button type="button" id="btn-bugs-close" class="btn btn-danger">{t}Close{/t}</button>
+                <button type="button" id="btn-bugs-close" class="btn btn-warning">{t}Close{/t}</button>
             {/if}
+            <button type="button" id="btn-bugs-delete" class="btn btn-danger">{t}Delete{/t}</button>
         </div>
         {if !$bug.is_closed}
             <div class="modal fade" id="modal-close" tabindex="-1" role="dialog" aria-hidden="true">
@@ -137,7 +138,6 @@
     {/if}
 
     {if $can_edit_bug}
-        {include file="modal-delete.tpl" scope="parent"}
         <div class="modal fade" id="modal-comment-edit" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">

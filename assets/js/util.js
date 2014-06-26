@@ -101,6 +101,33 @@ function growlSuccess(messsage) {
     });
 }
 
+function modalDelete(message, yes_callback, no_callback) {
+    bootbox.dialog({
+        title   : "Delete",
+        message : message,
+        buttons : {
+            danger: {
+                label    : "Yes!",
+                className: "btn-danger",
+                callback : function() {
+                    if (_.isFunction(yes_callback)) {
+                        yes_callback();
+                    }
+                }
+            },
+            main  : {
+                label    : "No",
+                className: "btn-primary",
+                callback : function() {
+                    if (_.isFunction(no_callback)) {
+                        no_callback();
+                    }
+                }
+            }
+        }
+    });
+}
+
 // Read a page's GET URL variables and return them as an associative array.
 function getUrlVars(url) {
     url = url || window.location.href;

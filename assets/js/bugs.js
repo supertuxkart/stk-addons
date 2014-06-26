@@ -216,35 +216,28 @@
 
     // delete bug comment clicked
     $main_bugs.on("click", ".btn-bugs-comments-delete", function() {
-        var $this = $(this), $modal = $("#modal-delete");
+        var $this = $(this);
         var id = $this.data("id");
 
         console.info("Delete comment clicked", id);
-        $modal.data("id", id).modal(); // set the id to the modal
+        modalDelete("Are you sure you want to delete this comment?", function() {
+            $.post(SITE_ROOT + "json/bugs.php", {action: "delete-comment", "comment-id": id}, function(data) {
+                var jData = parseJSON(data);
+                if (jData.hasOwnProperty("error")) {
+                    growlError(jData["error"]);
+                }
+                if (jData.hasOwnProperty("success")) {
+                    growlSuccess(jData["success"]);
+
+                    // delete comment from view
+                    $("#c" + id).remove();
+
+                    bootbox.hideAll()
+                }
+            });
+        });
 
         return false;
-    });
-
-    // delete modal yes clicked
-    $main_bugs.on("click", "#modal-delete-btn-yes", function() {
-        var $modal = $("#modal-delete"),
-            id = $modal.data("id");
-
-        console.info("Delete modal btn yes clicked", id);
-        $.post(SITE_ROOT + "json/bugs.php", {action: "delete-comment", "comment-id": id}, function(data) {
-            var jData = parseJSON(data);
-            if (jData.hasOwnProperty("error")) {
-                growlError(jData["error"]);
-            }
-            if (jData.hasOwnProperty("success")) {
-                growlSuccess(jData["success"]);
-
-                // delete comment from view
-                $("#c" + id).remove();
-
-                $modal.modal('hide');
-            }
-        });
     });
 
     // edit bug comment clicked

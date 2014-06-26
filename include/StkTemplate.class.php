@@ -132,6 +132,7 @@ class StkTemplate extends Template
             //array('src' => LIBS_LOCATION . "wysihtml5x/dist/wysihtml5x.js"),
             array('src' => LIBS_LOCATION . "bootstrap3-wysihtml5-bower/dist/bootstrap3-wysihtml5.all.js"),
             array('src' => LIBS_LOCATION . "bootstrap.growl/bootstrap-growl.js"),
+            array('src' => LIBS_LOCATION . "bootbox/bootbox.js"),
             array('src' => JS_LOCATION . 'jquery.newsticker.js'),
             array('src' => JS_LOCATION . 'util.js'),
             array('src' => JS_LOCATION . 'main.js')
