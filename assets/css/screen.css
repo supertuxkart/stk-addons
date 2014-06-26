@@ -667,7 +667,7 @@ div.help-hidden {
 .typeahead,
 .tt-query,
 .tt-hint {
-    width: inherit;
+    width: 100%;
 }
 
 .typeahead {
@@ -717,4 +717,8 @@ div.help-hidden {
 
 .tt-suggestion p {
     margin: 0;
+}
+
+.twitter-typeahead {
+    width: 100%;
 }

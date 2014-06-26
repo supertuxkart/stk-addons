@@ -20,7 +20,6 @@
 
     // helper functions
     function registerEditors() {
-        $("#bug-description").wysihtml5(editorOptions); // from add page
         $("#bug-comment-description").wysihtml5(editorOptions);
 
         // init table
@@ -50,7 +49,41 @@
                 btnToggle();
             }
         }, $main_bugs, search_url, {"data-type": "bug"}, "GET");
+    }
 
+    function registerAddPage() {
+        $("#bug-description").wysihtml5(editorOptions);
+
+        // add bug page,
+        $("#addon-name").typeahead({
+                hint     : true,
+                highlight: true,
+                minLength: 1
+            },
+            {
+                name      : 'addon-search',
+                displayKey: "id",
+                source    : function(query, cb) {
+                    var matches = [];
+
+                    // search
+                    $.get(search_url, {"data-type": "addon", "search-filter": "name", "query": query}, function(data) {
+                        var jData = parseJSON(data);
+                        if (jData.hasOwnProperty("error")) {
+                            console.error(jData["error"]);
+                            return;
+                        }
+
+                        // fill display popup
+                        for (var i = 0; i < jData["addons"].length; i++) {
+                            matches.push({"id": jData["addons"][i]})
+                        }
+
+                        cb(matches);
+                    });
+                }
+            }
+        );
     }
 
     function btnToggle() {
@@ -75,34 +108,7 @@
             loadContentWithAjax("#bugs-content", BUGS_LOCATION + 'add.php', {}, function() {
                 btnToggle();
                 registerEditors();
-
-                // add bug page,
-                $("#addon-name").typeahead({
-                        hint     : true,
-                        highlight: true,
-                        minLength: 2
-                    },
-                    {
-                        name      : 'addon-search',
-                        displayKey: "id",
-                        source    : function(query, cb) {
-                            var matches = [];
-                            $.get(search_url, {"data-type": "addon", "search-filter": "name", "query": query}, function(data) {
-                                var jData = parseJSON(data);
-                                if (jData.hasOwnProperty("error")) {
-                                    console.error(jData["error"]);
-                                    return;
-                                }
-
-                                for (var i = 0; i < jData["addons"].length; i++) {
-                                    matches.push({"id": jData["addons"][i]})
-                                }
-
-                                cb(matches);
-                            });
-                        }
-                    }
-                );
+                registerAddPage();
             });
         },
         view : function(bug_id) {
@@ -300,5 +306,6 @@
     });
 
     registerEditors();
+    registerAddPage();
 
 })(window, document);
