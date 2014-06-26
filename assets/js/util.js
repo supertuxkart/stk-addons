@@ -25,6 +25,9 @@ function onFormSubmit(form_identifier, callback_success, $container, url) {
         throw "callback parameter is not a function";
     }
 
+    // unregister previous event handler
+    $container.off("submit", form_identifier);
+
     $container.on("submit", form_identifier, function() {
         $.ajax({
             type   : "POST",
