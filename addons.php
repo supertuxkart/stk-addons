@@ -62,7 +62,7 @@ if ($addonName)
     $title = $addonName . ' - ' . $title;
 }
 
-// build tempalte
+// build template
 $tpl = StkTemplate::get("two-pane.tpl")->assign("title", $title);
 $panel = array(
     'left'   => '',
@@ -166,6 +166,7 @@ try
             break;
 
         default:
+            $status = _h('Addon action is not recognized');
             break;
     }
 }

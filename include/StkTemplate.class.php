@@ -99,7 +99,8 @@ class StkTemplate extends Template
             array("href" => CSS_LOCATION . "screen.css", "media" => "screen"),
             array("href" => CSS_LOCATION . "print.css", "media" => "print"),
             array("href" => LIBS_LOCATION . "bootstrap3-wysihtml5-bower/dist/bootstrap3-wysihtml5.min.css"),
-            array("href" => "//cdnjs.cloudflare.com/ajax/libs/datatables/1.10.0/css/jquery.dataTables.min.css")
+            array("href" => "//cdnjs.cloudflare.com/ajax/libs/datatables/1.10.0/css/jquery.dataTables.min.css"),
+            array("href" => "//cdn.datatables.net/plug-ins/be7019ee387/integration/bootstrap/3/dataTables.bootstrap.css")
         );
         $this->smarty->assign("css_includes", array_merge($this->css_includes, $this->user_css_includes));
     }
@@ -129,6 +130,7 @@ class StkTemplate extends Template
             array('src' => LIBS_LOCATION . "typeahead.js/dist/typeahead.bundle.js"),
             array('src' => LIBS_LOCATION . "history.js/scripts/bundled-uncompressed/html4+html5/jquery.history.js"),
             array('src' => "//cdnjs.cloudflare.com/ajax/libs/datatables/1.10.0/jquery.dataTables.min.js"),
+            array('src' => "//cdn.datatables.net/plug-ins/be7019ee387/integration/bootstrap/3/dataTables.bootstrap.js"),
             //array('src' => LIBS_LOCATION . "wysihtml5x/dist/wysihtml5x.js"),
             array('src' => LIBS_LOCATION . "bootstrap3-wysihtml5-bower/dist/bootstrap3-wysihtml5.all.js"),
             array('src' => LIBS_LOCATION . "bootstrap.growl/bootstrap-growl.js"),

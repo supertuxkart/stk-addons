@@ -18,8 +18,16 @@
     }
     var data_table; // hold the data table object
 
+    // begin helper functions
+    function btnToggle() {
+        $btn_add.toggleClass("hide");
+        $btn_back.toggleClass("hide");
+    }
 
-    // helper functions
+    function bugFormSubmit(form_identifier, callback_success) {
+        onFormSubmit(form_identifier, callback_success, $content_bugs, json_url, {}, "POST");
+    }
+
     function registerEditors() {
         $("#bug-comment-description").wysihtml5(editorOptions);
 
@@ -41,9 +49,11 @@
                 $content_bugs.html(jData["bugs-all"]);
                 data_table = $bugs_table.DataTable(tableOptions);
 
+                //data_table = $bugs_table.DataTable(tableOptions);
+
                 // toggle buttons only when on main page, if we are already on another page
                 // the back button is already shown
-                if (_.isEmpty(getUrlVars())) {
+                if($btn_back.hasClass("hide")) {
                     btnToggle();
                 }
             }
@@ -85,15 +95,6 @@
         );
     }
 
-    function btnToggle() {
-        $btn_add.toggleClass("hide");
-        $btn_back.toggleClass("hide");
-    }
-
-    function bugFormSubmit(form_identifier, callback_success) {
-        onFormSubmit(form_identifier, callback_success, $content_bugs, json_url, {}, "POST");
-    }
-
     var NavigateTo = {
         index: function() {
             History.back();
@@ -118,6 +119,7 @@
             });
         }
     };
+    // end helper functions
 
     // navigate add button clicked
     $btn_add.on("click", function() { // handle higher up the level for ajax
@@ -185,10 +187,16 @@
 
     // close bug clicked
     $main_bugs.on("click", "#btn-bugs-close", function() {
-        var $modal = $("#modal-close");
+        var $modal = $("#modal-close"), $modal_description = $("#modal-close-reason");
 
         console.info("Close bug clicked");
         $modal.modal();
+
+        $modal.on("shown.bs.modal", function() {
+            if (!$modal_description.data("wysihtml5")) { // editor does not exist
+                $modal_description.wysihtml5(editorOptions);
+            }
+        });
 
         bugFormSubmit("#modal-close-form", function(data) {
             var jData = parseJSON(data);

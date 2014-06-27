@@ -638,6 +638,9 @@ class Bug
             throw new BugException(_h("You do not have the necessary permission to close this bug"));
         }
 
+        // clean
+        $closeReason = Util::htmlPurify($closeReason);
+
         try
         {
             DBConnection::get()->update(
@@ -646,7 +649,7 @@ class Bug
                 array(
                     ":id"           => $bugId,
                     ":close_id"     => User::getId(),
-                    ":close_reason" => h($closeReason),
+                    ":close_reason" => $closeReason,
                     "date_close"    => "NOW()"
                 ),
                 array(":id" => DBConnection::PARAM_INT, ":close_id" => DBConnection::PARAM_INT)
