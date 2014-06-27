@@ -16,7 +16,9 @@
         searching  : false,
         "aaSorting": [] // Disable initial sort
     }
-    var data_table; // hold the data table object
+    var index_data_table; // hold the data table object
+    var $index_bugs_table; // hold the jquery selector for the index
+
 
     // begin helper functions
     function btnToggle() {
@@ -32,32 +34,8 @@
         $("#bug-comment-description").wysihtml5(editorOptions);
 
         // init table
-        var $bugs_table = $("#bugs-table");
-        data_table = $bugs_table.DataTable(tableOptions);
-
-        // search
-        onFormSubmit("#bug-search-form", function(data) {
-            History.pushState({state: "search"}, '', "?search");
-
-            var jData = parseJSON(data);
-            if (jData.hasOwnProperty("error")) {
-                growlError(jData["error"]);
-            }
-            if (jData.hasOwnProperty("success")) {
-                // update view
-                data_table.destroy();
-                $content_bugs.html(jData["bugs-all"]);
-                data_table = $bugs_table.DataTable(tableOptions);
-
-                //data_table = $bugs_table.DataTable(tableOptions);
-
-                // toggle buttons only when on main page, if we are already on another page
-                // the back button is already shown
-                if($btn_back.hasClass("hide")) {
-                    btnToggle();
-                }
-            }
-        }, $main_bugs, search_url, {"data-type": "bug"}, "GET");
+        $index_bugs_table = $("#bugs-table");
+        index_data_table = $index_bugs_table.DataTable(tableOptions);
     }
 
     function registerAddPage() {
@@ -134,6 +112,35 @@
 
         return false;
     });
+
+    // search clicked
+    onFormSubmit("#bug-search-form", function(data) {
+        History.pushState({state: "search"}, '', "?search");
+
+        var jData = parseJSON(data);
+        if (jData.hasOwnProperty("error")) {
+            growlError(jData["error"]);
+        }
+        if (jData.hasOwnProperty("success")) {
+            // update view
+            index_data_table.destroy(true);
+
+            // replace html
+            $content_bugs.html(jData["bugs-all"]);
+            $index_bugs_table = $("#bugs-table"); // reinstate data
+
+            // FIXME possible delay may cause datatable not to initialize
+
+            // new datatable
+            index_data_table = $index_bugs_table.DataTable(tableOptions);
+
+            // toggle buttons only when on main page, if we are already on another page
+            // the back button is already shown
+            if($btn_back.hasClass("hide")) {
+                btnToggle();
+            }
+        }
+    }, $main_bugs, search_url, {"data-type": "bug"}, "GET");
 
     // add bug form
     bugFormSubmit("#bug-add-form", function(data) {
