@@ -128,6 +128,16 @@ function modalDelete(message, yes_callback, no_callback) {
     });
 }
 
+function redirectTo(url, seconds) {
+    url = url || window.location.href;
+    seconds = seconds || 0;
+
+    var timeout = setTimeout(function() {
+        window.location = url;
+        clearTimeout(timeout);
+    }, seconds * 1000);
+}
+
 // Read a page's GET URL variables and return them as an associative array.
 function getUrlVars(url) {
     url = url || window.location.href;

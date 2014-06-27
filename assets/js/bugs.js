@@ -207,6 +207,9 @@
                 growlSuccess(jData["success"]);
 
                 $modal.modal("hide");
+
+                // refresh page by redirect
+                redirectTo();
             }
         })
     });
