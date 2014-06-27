@@ -18,6 +18,7 @@
     }
     var index_data_table; // hold the data table object
     var $index_bugs_table; // hold the jquery selector for the index
+    var $view_comment_description;
 
 
     // begin helper functions
@@ -31,7 +32,8 @@
     }
 
     function registerEditors() {
-        $("#bug-comment-description").wysihtml5(editorOptions);
+        $view_comment_description = $("#bug-comment-description");
+        $view_comment_description.wysihtml5(editorOptions);
 
         // init table
         $index_bugs_table = $("#bugs-table");
@@ -164,7 +166,7 @@
             growlSuccess(jData["success"]);
 
             $("#bug-comments").prepend(jData["comment"]);
-            $("#bug-comment-description").html("");
+            editorUpdate($view_comment_description, "");
         }
     });
 
@@ -200,9 +202,7 @@
         $modal.modal();
 
         $modal.on("shown.bs.modal", function() {
-            if (!$modal_description.data("wysihtml5")) { // editor does not exist
-                $modal_description.wysihtml5(editorOptions);
-            }
+            editorInit($modal_description, editorOptions);
         });
 
         bugFormSubmit("#modal-close-form", function(data) {
@@ -233,9 +233,7 @@
         $modal.modal();
 
         $modal.on("shown.bs.modal", function() {
-            if (!$modal_description.data("wysihtml5")) { // editor does not exist
-                $modal_description.wysihtml5(editorOptions);
-            }
+            editorInit($modal_description, editorOptions);
         });
 
         bugFormSubmit("#modal-edit-form", function(data) {
@@ -293,13 +291,11 @@
         $modal.modal();
 
         $modal.on("shown.bs.modal", function(e) {
-            if (!$modal_description.data("wysihtml5")) { // editor does not exist
-                $modal_description.wysihtml5(editorOptions);
-            }
+            editorInit($modal_description, editorOptions);
 
             // update view
             $("#modal-comment-edit-id").val(id);
-            $modal_description.data("wysihtml5").editor.setValue($view_description.html());
+            editorUpdate($modal_description, $view_description.html());
         });
 
         bugFormSubmit("#modal-comment-edit-form", function(data) {

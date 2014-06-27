@@ -138,6 +138,23 @@ function redirectTo(url, seconds) {
     }, seconds * 1000);
 }
 
+// check if it is a wysiwyg5 editor
+function isEditor($editor_container) {
+    return $editor_container.data("wysihtml5");
+}
+
+// update the value of a wysiwyg5 editor
+function editorUpdate($editor_container, value) {
+    $editor_container.data("wysihtml5").editor.setValue(value);
+}
+
+// init a wysiwyg5 editor only once
+function editorInit($editor_container, editor_options) {
+    if (!isEditor($editor_container)) { // editor does not exist
+        return $editor_container.wysihtml5(editor_options);
+    }
+}
+
 // Read a page's GET URL variables and return them as an associative array.
 function getUrlVars(url) {
     url = url || window.location.href;
