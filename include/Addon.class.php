@@ -621,6 +621,16 @@ class Addon
     }
 
     /**
+     * Get the addon name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
      * Get the license text
      *
      * @return string
@@ -1317,9 +1327,9 @@ class Addon
      *
      * @param int $id
      *
-     * @return string
+     * @return string empty string on error
      */
-    public static function getName($id)
+    public static function getNameByID($id)
     {
         $id = static::cleanId($id);
 
@@ -1331,9 +1341,7 @@ class Addon
                 WHERE `id` = :id
                 LIMIT 1',
                 DBConnection::FETCH_FIRST,
-                array(
-                    ':id' => $id
-                )
+                array(':id' => $id)
             );
         }
         catch(DBException $e)
@@ -1348,6 +1356,42 @@ class Addon
         }
 
         return $addon['name'];
+    }
+
+    /**
+     * Get the addon type
+     *
+     * @param int $id
+     *
+     * @return string empty string on error
+     */
+    public static function getTypeByID($id)
+    {
+        $id = static::cleanId($id);
+
+        try
+        {
+            $addon = DBConnection::get()->query(
+                'SELECT `type`
+                FROM `' . DB_PREFIX . 'addons`
+                WHERE `id` = :id
+                LIMIT 1',
+                DBConnection::FETCH_FIRST,
+                array(':id' => $id)
+            );
+        }
+        catch(DBException $e)
+        {
+            return "";
+        }
+
+        if (empty($addon))
+        {
+            // silently fail
+            return "";
+        }
+
+        return $addon['type'];
     }
 
     /**
@@ -1593,7 +1637,7 @@ class Addon
             $rows = DBConnection::get()->query(
                 'SELECT * FROM ' . DB_PREFIX . $type . '_revs WHERE `id` = :id',
                 DBConnection::ROW_COUNT,
-                array(':id' => (string)$fileid)
+                array(':id' => $fileid)
             );
             if ($rows)
             {
@@ -1700,12 +1744,12 @@ class Addon
                 DBConnection::ROW_COUNT,
                 array(':addon_id' => Addon::cleanId($addon_id))
             );
-
-            return ($num === 1);
         }
         catch(DBException $e)
         {
             return false;
         }
+
+        return ($num === 1);
     }
 }

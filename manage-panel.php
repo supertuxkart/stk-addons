@@ -68,7 +68,7 @@ switch ($_GET['view'])
             {
                 $tplData["addons"][] = array(
                     "href"       => $addon->getLink(),
-                    "name"       => Addon::getName($addon_id),
+                    "name"       => $addon->getName(),
                     "unapproved" => implode(', ', $unapproved)
                 );
             }
@@ -87,7 +87,7 @@ switch ($_GET['view'])
             {
                 $managePanelData["images"][] = array(
                     "href"       => $addon->getLink(),
-                    "name"       => Addon::getName($addon_id),
+                    "name"       => $addon->getName(),
                     "unapproved" => implode("<br>", $unapproved)
                 );
             }
@@ -106,7 +106,7 @@ switch ($_GET['view'])
             {
                 $managePanelData["archives"][] = array(
                     "href"       => $addon->getLink(),
-                    "name"       => $addon->getName($addon_id),
+                    "name"       => $addon->getName(),
                     "unapproved" => $unapproved
                 );
             }

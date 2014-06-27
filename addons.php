@@ -21,7 +21,20 @@
 
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
 
+// Validate addon-id parameter
 $_GET['type'] = (isset($_GET['type'])) ? $_GET['type'] : null;
+$_GET['name'] = (isset($_GET['name'])) ? Addon::cleanId($_GET['name']) : null; // name is actually the id
+$_GET['save'] = (isset($_GET['save'])) ? $_GET['save'] : null;
+$_GET['rev'] = (isset($_GET['rev'])) ? (int)$_GET['rev'] : null;
+$addon_exists = Addon::exists($_GET["name"]);
+
+// addon type is optional
+if (is_null($_GET['type']))
+{
+    $_GET['type'] = Addon::getTypeByID($_GET['name']);
+}
+
+// check type
 switch ($_GET['type'])
 {
     case 'tracks':
@@ -35,44 +48,27 @@ switch ($_GET['type'])
         break;
     default:
         $type_label = _h('Unknown Type');
-        header("HTTP/1.0 404 Not Found");
+        $panel["status"] = '<span class="error">' . _h('Invalid addon type.') . '</span><br />';
+        $tpl->assign("panel", $panel);
+        exit($tpl);
         break;
 }
+
+// build title
 $title = $type_label . ' - ' . _h('SuperTuxKart Add-ons');
-
-// Validate addon-id parameter
-$_GET['name'] = (isset($_GET['name'])) ? Addon::cleanId($_GET['name']) : null;
-$_GET['save'] = (isset($_GET['save'])) ? $_GET['save'] : null;
-$_GET['rev'] = (isset($_GET['rev'])) ? (int)$_GET['rev'] : null;
-
-// Throw a 404 if the requested addon wasn't found
-if (!is_null($_GET["name"]) && !Addon::exists($_GET['name']))
-{
-    header("HTTP/1.0 404 Not Found");
-}
-
-$addonName = Addon::getName($_GET['name']);
-if ($addonName !== false)
+$addonName = Addon::getNameByID($_GET['name']);
+if ($addonName)
 {
     $title = $addonName . ' - ' . $title;
 }
 
-
-$tpl = new StkTemplate("two-pane.tpl");
-$tpl->assign("title", $title);
+// build tempalte
+$tpl = StkTemplate::get("two-pane.tpl")->assign("title", $title);
 $panel = array(
     'left'   => '',
     'status' => '',
     'right'  => ''
 );
-
-if (!Addon::isAllowedType($_GET['type']))
-{
-    $panel["status"] = '<span class="error">' . _h('Invalid addon type.') . '</span><br />';
-    $tpl->assign("panel", $panel);
-    echo $tpl;
-    exit;
-}
 
 // Execute actions
 $status = "";
@@ -80,8 +76,6 @@ try
 {
     switch ($_GET['save'])
     {
-        default:
-            break;
         case 'props':
             if (!isset($_POST['description']))
             {
@@ -92,14 +86,16 @@ try
                 break;
             }
 
-            $edit_addon = new Addon(Addon::cleanId($_GET['name']));
+            $edit_addon = new Addon($_GET['name']);
             $edit_addon->setDescription($_POST['description']);
             $edit_addon->setDesigner($_POST['designer']);
             $status = _h('Saved properties.') . '<br>';
             break;
+
         case 'rev':
             parseUpload($_FILES['file_addon'], true);
             break;
+
         case 'status':
             if (!isset($_GET['name']) || !isset($_POST['fields']))
             {
@@ -109,6 +105,7 @@ try
             $addon->setStatus($_POST['fields']);
             $status = _h('Saved status.') . '<br>';
             break;
+
         case 'notes':
             if (!isset($_GET['name']) || !isset($_POST['fields']))
             {
@@ -118,47 +115,57 @@ try
             $mAddon->setNotes($_POST['fields']);
             $status = _h('Saved notes.') . '<br>';
             break;
+
         case 'delete':
             $delAddon = new Addon($_GET['name']);
             $delAddon->delete();
             unset($delAddon);
             $status = _h('Deleted addon.') . '<br>';
             break;
+
         case 'del_rev':
             $delRev = new Addon($_GET['name']);
             $delRev->deleteRevision($_GET['rev']);
             unset($delRev);
             $status = _h('Deleted add-on revision.') . '<br>';
             break;
+
         case 'approve':
         case 'unapprove':
-            $approve = ($_GET['save'] == 'approve') ? true : false;
+            $approve = ($_GET['save'] === 'approve') ? true : false;
             File::approve((int)$_GET['id'], $approve);
             $status = _h('File updated.') . '<br>';
             break;
+
         case 'setimage':
-            $edit_addon = new Addon(Addon::cleanId($_GET['name']));
+            $edit_addon = new Addon($_GET['name']);
             $edit_addon->setImage((int)$_GET['id']);
             $status = _h('Set image.') . '<br>';
             break;
+
         case 'seticon':
             if ($_GET['type'] !== 'karts')
             {
                 break;
             }
-            $edit_addon = new Addon(Addon::cleanId($_GET['name']));
+            $edit_addon = new Addon($_GET['name']);
             $edit_addon->setImage((int)$_GET['id'], 'icon');
             $status = _h('Set icon.') . '<br>';
             break;
+
         case 'deletefile':
             $mAddon = new Addon($_GET['name']);
             $mAddon->deleteFile((int)$_GET['id']);
             $status = _h('Deleted file.') . '<br>';
             break;
+
         case 'include':
             $mAddon = new Addon($_GET['name']);
             $mAddon->setIncludeVersions($_POST['incl_start'], $_POST['incl_end']);
             $status = _h('Marked game versions in which this add-on is included.');
+            break;
+
+        default:
             break;
     }
 }
@@ -226,7 +233,7 @@ foreach ($addons_list as $ad)
         $addons[] = array(
             'class' => $class,
             'url'   => "addons.php?type={$_GET['type']}&amp;name={$adc->getId()}",
-            'label' => '<div class="icon">' . $icon_html . '</div>' . h($adc->getName($adc->getId())),
+            'label' => '<div class="icon">' . $icon_html . '</div>' . h($adc->getName()),
             'disp'  => File::rewrite("addons.php?type={$_GET['type']}&amp;name={$adc->getId()}")
         );
     }
@@ -235,15 +242,20 @@ foreach ($addons_list as $ad)
         $panel["status"] = '<span class="error">' . $e->getMessage() . '</span><br />';
     }
 }
+
 // left panel
 $left_tpl = new StkTemplate('url-list-panel.tpl');
 $left_tpl->assign('items', $addons);
 $panel['left'] = (string)$left_tpl;
 
 // right panel
-if (!is_null($_GET["name"]))
+if ($addon_exists)
 {
     $panel['right'] = Util::ob_get_require_once(ROOT_PATH . 'addons-panel.php');
+}
+else if (!is_null($_GET["name"]))
+{
+    $panel['right'] = _h("The addon name does not exist");
 }
 
 // output the view

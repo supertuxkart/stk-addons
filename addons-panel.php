@@ -2,7 +2,7 @@
 /**
  * Copyright        2009 Lucas Baudin <xapantu@gmail.com>
  *           2011 - 2014 Stephen Just <stephenjust@gmail.com>
- *
+ *                  2014 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -21,23 +21,8 @@
 
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
 
+$id = isset($_GET['name']) ? $_GET['name'] : "";
 $a_tpl = new StkTemplate('addons-panel.tpl');
-
-$id = $_GET['name'];
-if (!isset($_GET['name']))
-{
-    $id = "";
-}
-
-$type = (isset($_GET['type'])) ? $_GET['type'] : null;
-if (!Addon::isAllowedType($type))
-{
-    die(_h('This page cannot be loaded because an invalid add-on type was provided.'));
-}
-if(!Addon::exists($id))
-{
-    die(_h("The addon name does not exist"));
-}
 
 try
 {

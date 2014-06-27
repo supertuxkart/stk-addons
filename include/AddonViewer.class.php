@@ -86,7 +86,7 @@ class AddonViewer
     {
         $tpl = array();
         $tpl['addon'] = array(
-            'name'         => $this->addon->getName($this->addon->getId()),
+            'name'         => $this->addon->getName(),
             'description'  => $this->addon->getDescription(),
             'type'         => $this->addon->getType(),
             'rating'       => array(
@@ -186,7 +186,7 @@ class AddonViewer
         $file_path = $this->addon->getFile((int)$this->latestRev['revision']);
         if ($file_path !== false && File::exists($file_path))
         {
-            $button_text = h(sprintf(_('Download %s'), $this->addon->getName($this->addon->getId())));
+            $button_text = h(sprintf(_('Download %s'), $this->addon->getName()));
             $shrink = (strlen($button_text) > 20) ? 'style="font-size: 1.1em !important;"' : null;
             $tpl['addon']['dl'] = array(
                 'display'            => true,

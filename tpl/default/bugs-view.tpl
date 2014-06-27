@@ -86,7 +86,7 @@
     </tr>
     <tr>
         <td class="col-md-2">{t}Addon{/t}:</td>
-        <td class="col-md-10">{$bug.addon}</td>
+        <td class="col-md-10"><a href="{$smarty.const.SITE_ROOT}addons.php?name={$bug.addon}">{$bug.addon}</a></td>
     </tr>
     <tr>
         <td class="col-md-2">{t}Date edit{/t}:</td>

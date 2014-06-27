@@ -69,8 +69,8 @@ $pop_kart = Statistic::mostDownloadedAddon('karts');
 $pop_track = Statistic::mostDownloadedAddon('tracks');
 array_unshift(
     $news_messages,
-    sprintf(_h('The most downloaded kart is %s.'), Addon::getName($pop_kart)),
-    sprintf(_h('The most downloaded track is %s.'), Addon::getName($pop_track))
+    sprintf(_h('The most downloaded kart is %s.'), Addon::getNameByID($pop_kart)),
+    sprintf(_h('The most downloaded track is %s.'), Addon::getNameByID($pop_track))
 );
 
 $tpl->assign('news_messages', $news_messages);

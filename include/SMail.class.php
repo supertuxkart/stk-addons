@@ -129,7 +129,7 @@ class SMail
      */
     public function addonNoteNotification($email, $addon_id, $notes)
     {
-        $addon_name = Addon::getName($addon_id);
+        $addon_name = Addon::getNameByID($addon_id);
         $message =
             "A moderator has left a note concerning your add-on, '$addon_name.' The notes saved for each revision of this add-on are shown below.\n\n";
         $message .= $notes;
