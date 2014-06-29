@@ -31,7 +31,7 @@ $tpl = StkTemplate::get("manage.tpl")
     ->assignTitle("Manage")
     ->addScriptInclude("manage.js")
     ->assign("can_edit_settings", User::hasPermission(AccessControl::PERM_EDIT_SETTINGS))
-    ->assign("can_edit_roles", User::hasPermissionOnRole("root"));
+    ->assign("can_edit_roles", User::hasPermission(AccessControl::PERM_EDIT_PERMISSIONS));
 $tplData = array("header" => "", "status" => "", "body" => "");
 
 // status message

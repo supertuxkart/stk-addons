@@ -21,30 +21,29 @@
 
 /**
  * Class AccessControl
+ * That handles the roles system and permission access
  */
 class AccessControl
 {
 
     // view pages like users panel etc, non public, must be logged in
-    const PERM_VIEW_BASIC_PAGE = "viewBasicPage";
+    const PERM_VIEW_BASIC_PAGE = "view_basic_page";
 
-    const PERM_ADD_ADDON = "addAddon";
+    const PERM_ADD_ADDON = "add_addon";
 
-    const PERM_ADD_BUG = "addBug";
+    const PERM_ADD_BUG = "add_bug";
 
-    const PERM_EDIT_ADDONS = "editAddons";
+    const PERM_EDIT_ADDONS = "edit_addons";
 
-    const PERM_EDIT_BUGS = "editBugs"; // edit bugs means close,edit bugs and delete, edit comments
+    const PERM_EDIT_BUGS = "edit_bugs"; // edit bugs means close,edit bugs and delete, edit comments
 
-    const PERM_EDIT_USERS = "editUsers";
+    const PERM_EDIT_USERS = "edit_users"; // edit normal users (non-admins), means delete/change/insert
 
-    const PERM_EDIT_MODERATORS = "editModerators";
+    const PERM_EDIT_ADMINS = "edit_admins"; // the user is an admin can edit other admins
 
-    const PERM_EDIT_ADMINISTRATORS = "editAdministrators";
+    const PERM_EDIT_PERMISSIONS = "edit_permissions"; // can edit permissions
 
-    const PERM_EDIT_ROOTS = "editRoots";
-
-    const PERM_EDIT_SETTINGS = "editSettings";
+    const PERM_EDIT_SETTINGS = "edit_settings";
 
     /**
      * Cache for the roles, with key name of the role and value the id of the role
@@ -63,12 +62,11 @@ class AccessControl
             static::PERM_ADD_ADDON,
             static::PERM_ADD_BUG,
             static::PERM_EDIT_ADDONS,
-            static::PERM_EDIT_USERS,
             static::PERM_EDIT_BUGS,
+            static::PERM_EDIT_USERS,
             static::PERM_EDIT_SETTINGS,
-            static::PERM_EDIT_MODERATORS,
-            static::PERM_EDIT_ADMINISTRATORS,
-            static::PERM_EDIT_ROOTS
+            static::PERM_EDIT_PERMISSIONS,
+            static::PERM_EDIT_ADMINS
         );
     }
 
@@ -191,7 +189,7 @@ class AccessControl
     public static function setPermissions($role, array $permissions)
     {
         // validate
-        if (!User::hasPermissionOnRole("root"))
+        if (!User::hasPermission(static::PERM_EDIT_PERMISSIONS))
         {
             throw new AccessControlException(_h("You do not have the permission to change a roles permissions"));
         }

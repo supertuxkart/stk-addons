@@ -34,8 +34,7 @@ try
 }
 catch (UserException $e)
 {
-    echo "Error " . $e->getMessage();
-    exit;
+    exit("Error " . $e->getMessage());
 }
 
 $userData = $user->getUserData();
@@ -136,7 +135,10 @@ if (User::hasPermissionOnRole($userData['role']) || $userData["id"] === User::ge
     foreach (AccessControl::getRoles() as $db_role)
     {
         // has permission
-        if (User::hasPermissionOnRole($db_role) || $userData["role"] === $db_role)
+        $canEdit = User::hasPermissionOnRole($db_role);
+        $isOwner = ($userData["role"] === $db_role);
+
+        if ($canEdit || $isOwner)
         {
             $role["options"][$db_role] = $db_role;
             if ($userData["role"] === $db_role)

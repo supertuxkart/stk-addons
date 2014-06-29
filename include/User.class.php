@@ -199,6 +199,7 @@ class User
         {
             $available = 0;
         }
+
         try
         {
             DBConnection::get()->update(
@@ -219,7 +220,8 @@ class User
             return false;
         }
 
-        // Set permission level
+        // TODO can't change role higher than the user that is calling
+        // Set role
         if ($role && static::hasPermissionOnRole($role))
         {
             try
@@ -228,7 +230,7 @@ class User
                     "users",
                     "`id` = :id",
                     array(
-                        ":id"     => $this->id,
+                        ":id"   => $this->id,
                         ":role" => $role
                     ),
                     array(":id" => DBConnection::PARAM_INT)
@@ -556,9 +558,14 @@ class User
      */
     public static function oldRoleToNew($oldRole)
     {
-        if($oldRole === 'basicUser')
+        // TODO maybe make a script that does this in production
+        if($oldRole === "basicUser")
         {
-            return 'user';
+            return "user";
+        }
+        elseif($oldRole === "root" || $oldRole === "administrator")
+        {
+            return "admin";
         }
 
         return $oldRole;
@@ -604,13 +611,25 @@ class User
     /**
      * See if the current user has permission over a user
      *
-     * @param string $role_singular
+     * @param string $role
      *
      * @return bool
      */
-    public static function hasPermissionOnRole($role_singular)
+    public static function hasPermissionOnRole($role)
     {
-        return static::hasPermission('edit' . ucfirst(static::oldRoleToNew($role_singular)) . 's');
+        $role = static::oldRoleToNew($role);
+
+        // user can edit other users
+        if(static::hasPermission(AccessControl::PERM_EDIT_USERS))
+        {
+            // the role can not be an admin role
+            if(!in_array(AccessControl::PERM_EDIT_ADMINS, AccessControl::getPermissions($role)))
+            {
+                return true; // user has permission on role
+            }
+        }
+
+        return false; // user does not have permission on role
     }
 
 

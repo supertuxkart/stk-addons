@@ -58,7 +58,7 @@ switch (strtolower($_POST["action"]))
             exit(json_encode(array("error" => implode("<br>", $errors))));
         }
 
-        if (!User::hasPermissionOnRole("root"))
+        if (!User::hasPermission(AccessControl::PERM_EDIT_PERMISSIONS))
         {
             exit(json_encode(array("error" => "You do not have the necessary permission to get a role")));
         }

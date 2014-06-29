@@ -466,7 +466,7 @@ CREATE TABLE IF NOT EXISTS `v2_bugs` (
   `is_report` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Flag to indicate if the bug is a feedback',
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
-  KEY `addon_id` (`addon_id`),
+  KEY `addon_id` (`addon_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -493,10 +493,10 @@ CREATE TABLE IF NOT EXISTS `v2_bugs_comments` (
 --
 
 CREATE TABLE IF NOT EXISTS `v2_roles` (
-  `id` int(4) NOT NULL AUTO_INCREMENT COMMENT 'The role unique identifier',
-  `name` varchar(256) CHARACTER SET utf8mb4 NOT NULL COMMENT 'The name identifier',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=5 ;
+    `id` int(4) NOT NULL AUTO_INCREMENT COMMENT 'The role unique identifier',
+    `name` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'The name identifier',
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=4 ;
 
 --
 -- Dumping data for table `v2_roles`
@@ -505,8 +505,7 @@ CREATE TABLE IF NOT EXISTS `v2_roles` (
 INSERT INTO `v2_roles` (`id`, `name`) VALUES
   (1, 'user'),
   (2, 'moderator'),
-  (3, 'administrator'),
-  (4, 'root');
+  (3, 'admin');
 
 -- --------------------------------------------------------
 
