@@ -3,24 +3,29 @@ require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
 function graph_data_to_json($values, $labels, $format, $graph_id)
 {
-    if ($format !== 'time' && count($values) !== count($labels))
+    $count_values = count($values);
+    $count_labels = count($labels);
+
+    if ($format !== 'time' && $count_values !== $count_labels)
     {
         throw new Exception('Invalid data set provided.');
     }
-    else if ($format == 'time' &&
-        count($values[0]) !== count($labels) &&
-        count($values[1]) !== count($labels)
+    else if ($format === 'time' &&
+        count($values[0]) !== $count_labels &&
+        count($values[1]) !== $count_labels
     )
     {
         throw new Exception('Invalid data set for itme graph provided.');
     }
-    if (count($labels) == 0)
+
+    if (!$count_labels)
     {
         throw new Exception('No data given.');
     }
+
     if ($format !== 'time')
     {
-        foreach ($values AS $test_data)
+        foreach ($values as $test_data)
         {
             if (!is_numeric($test_data))
             {
@@ -30,14 +35,14 @@ function graph_data_to_json($values, $labels, $format, $graph_id)
     }
     else
     {
-        foreach ($values[0] AS $test_data)
+        foreach ($values[0] as $test_data)
         {
             if (!is_array($test_data))
             {
                 throw new Exception('Non-array provided in time-axis.');
             }
         }
-        foreach ($values[1] AS $test_data)
+        foreach ($values[1] as $test_data)
         {
             if (!is_array($test_data))
             {
@@ -73,16 +78,16 @@ function graph_data_to_json($values, $labels, $format, $graph_id)
         $remote_cache_file = CACHE_LOCATION . 'cache_graph_' . $rand . '.json';
     }
 
-
     $json_array = array();
-    if ($format == 'pie')
+    if ($format === 'pie') // pie chart
     {
         $json_array['cols'] = array(
             array('id' => '', 'label' => 'Name', 'pattern' => '', 'type' => 'string'),
             array('id' => '', 'label' => 'Value', 'pattern' => '', 'type' => 'number')
         );
         $json_array['rows'] = array();
-        for ($i = 0; $i < count($values); $i++)
+
+        for ($i = 0; $i < $count_values; $i++)
         {
             $json_array['rows'][] = array(
                 'c' => array(
@@ -98,10 +103,11 @@ function graph_data_to_json($values, $labels, $format, $graph_id)
             );
         }
     }
-    else if ($format == 'time')
+    else if ($format === 'time') // time chart
     {
         $xvalues = $values[0];
         $yvalues = $values[1];
+
         // Get the tallest line and get relatively small lines
         $max_value = 0;
         for ($i = 0; $i < count($yvalues); $i++)
@@ -183,6 +189,7 @@ function graph_data_to_json($values, $labels, $format, $graph_id)
                     $row[] = array('v' => 0, 'f' => null);
                 }
             }
+
             // Insert data for "other" line
             if (count($small_lines) != 0)
             {
@@ -195,6 +202,7 @@ function graph_data_to_json($values, $labels, $format, $graph_id)
             {
                 $expected_cols++;
             }
+
             $found_cols = count($row);
             if ($expected_cols != $found_cols)
             {
@@ -218,6 +226,7 @@ function graph_data_to_json($values, $labels, $format, $graph_id)
     $json_string = json_encode($json_array);
     $json_string = $graph_id . '(' . $json_string . ')';
     $json_string = preg_replace('/"(new Date\([0-9,]+\))"/', '$1', $json_string);
+
     // Write json to file
     $handle = fopen($local_cache_file, 'w');
     if (!$handle)

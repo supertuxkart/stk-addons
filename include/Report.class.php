@@ -68,9 +68,9 @@ class Report
     public function addSection($name)
     {
         $this->report_structure[] = array('name' => $name, 'content' => null);
-        end($this->report_structure);
 
-        return key($this->report_structure);
+        // return the last index added to the array
+        return Util::array_last_key($this->report_structure);
     }
 
     /**
@@ -106,9 +106,10 @@ class Report
         }
 
         $query_result .= "\t<table cellspacing=\"0\" class=\"sortable\"><thead>\n\t\t<tr>\n";
-        // List column names
+
+        // List column names, $result[0] is a assoc array
         $column_names = array_keys($result[0]);
-        foreach ($column_names AS $col)
+        foreach ($column_names as $col)
         {
             $query_result .= "\t\t\t<th>$col</th>\n";
         }
@@ -118,7 +119,7 @@ class Report
         foreach ($result AS $row)
         {
             $query_result .= "\t\t<tr>\n";
-            foreach ($column_names AS $col)
+            foreach ($column_names as $col)
             {
                 $current_result = h($row[$col]);
                 $query_result .= "\t\t\t<td>{$current_result}</td>\n";
@@ -171,8 +172,7 @@ class Report
         $col_names = array_keys($result[0]);
         if (count($col_names) !== 2)
         {
-            $this->report_structure[$section]['content'] .=
-                "<p>Error: This query did not return a result with two columns.</p>";
+            $this->report_structure[$section]['content'] .= "<p>Error: This query did not return a result with two columns.</p>";
         }
 
         $values = array();
@@ -275,6 +275,7 @@ class Report
     public function __toString()
     {
         $return = "<html>\n<head>\n\t<title>{$this->report_title}</title>\n";
+        $return . "";
         $return .= "\t<script src=\"" . JS_LOCATION . "sorttable.js\" type=\"text/javascript\"></script>\n";
         $return .= "\t<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js\" type=\"text/javascript\"></script>\n";
         $return .= "\t<script src=\"https://www.google.com/jsapi\" type=\"text/javascript\"></script>\n";

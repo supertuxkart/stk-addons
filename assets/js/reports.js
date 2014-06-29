@@ -89,7 +89,7 @@ function drawPie(jsonResponse, Element) {
     chartMeta = chartMeta.split('\n');
 
     // Create our data table out of JSON data loaded from server.
-    var data = new google.visualization.DataTable(jsonResponse );
+    var data = new google.visualization.DataTable(jsonResponse);
 
     // Instantiate and draw our chart, passing in some options.
     var chart = new google.visualization.PieChart(Element);

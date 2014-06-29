@@ -51,12 +51,6 @@ class Statistic
                     ':file_type'  => $fileType
                 )
             );
-            if (empty($download_counts))
-            {
-                return null;
-            }
-
-            return $download_counts['addon_id'];
         }
         catch(DBException $e)
         {
@@ -65,6 +59,13 @@ class Statistic
                 _('Please contact a website administrator.')
             ));
         }
+
+        if (empty($download_counts))
+        {
+            return null;
+        }
+
+        return $download_counts['addon_id'];
     }
 
     /**
@@ -94,12 +95,6 @@ class Statistic
                 LIMIT 1',
                 DBConnection::FETCH_FIRST
             );
-            if (empty($newest_addon))
-            {
-                return null;
-            }
-
-            return $newest_addon['id'];
         }
         catch(DBException $e)
         {
@@ -108,5 +103,12 @@ class Statistic
                 _('Please contact a website administrator.')
             ));
         }
+
+        if (empty($newest_addon))
+        {
+            return null;
+        }
+
+        return $newest_addon['id'];
     }
 }
