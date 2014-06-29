@@ -220,8 +220,7 @@ class User
             return false;
         }
 
-        // TODO can't change role higher than the user that is calling
-        // Set role
+        // change role, the current user can change to that role only if he can edit that role
         if ($role && static::hasPermissionOnRole($role))
         {
             try
@@ -609,24 +608,35 @@ class User
     }
 
     /**
-     * See if the current user has permission over a user
+     * See if the current user has permission over a user (that is he can edit/delete this user)
      *
-     * @param string $role
+     * @param string $role the role we want to check that the current user has permission over
      *
      * @return bool
      */
     public static function hasPermissionOnRole($role)
     {
         $role = static::oldRoleToNew($role);
+        $can_edit_users = static::hasPermission(AccessControl::PERM_EDIT_USERS);
+        $can_edit_admins = static::hasPermission(AccessControl::PERM_EDIT_ADMINS);
 
         // user can edit other users
-        if(static::hasPermission(AccessControl::PERM_EDIT_USERS))
+        if($can_edit_users)
         {
-            // the role can not be an admin role
-            if(!in_array(AccessControl::PERM_EDIT_ADMINS, AccessControl::getPermissions($role)))
+            $other_role_permission = AccessControl::getPermissions($role);
+
+            // other role is not an admin one, this means we can can edit
+            if(!in_array(AccessControl::PERM_EDIT_ADMINS, $other_role_permission))
             {
                 return true; // user has permission on role
             }
+        }
+
+        // user is admin, he can edit other admins and other users
+        // there is no need to check if he has the edit users permission
+        if($can_edit_admins)
+        {
+            return true;
         }
 
         return false; // user does not have permission on role

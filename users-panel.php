@@ -127,11 +127,14 @@ if (User::hasPermissionOnRole($userData['role']) || $userData["id"] === User::ge
 
     // role
     $role = array();
-    if (User::getId() === $userData["id"])
+    if (User::getId() === $userData["id"]) // user can not edit his own role
     {
         $role["disabled"] = 'disabled';
     }
+
     $role["options"] = array();
+
+    // check if current user can edit that role, if not we can not change to that role
     foreach (AccessControl::getRoles() as $db_role)
     {
         // has permission
@@ -141,7 +144,7 @@ if (User::hasPermissionOnRole($userData['role']) || $userData["id"] === User::ge
         if ($canEdit || $isOwner)
         {
             $role["options"][$db_role] = $db_role;
-            if ($userData["role"] === $db_role)
+            if (User::oldRoleToNew($userData["role"]) === $db_role)
             {
                 $role["selected"] = $db_role;
             }
