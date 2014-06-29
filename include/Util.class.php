@@ -24,26 +24,26 @@
 class Util
 {
     /**
-     * A constant representing the number of seconds in a minute, for
+     * A constant representing the number of seconds in a minute
      * @var int
      */
     const SECONDS_IN_A_MINUTE = 60;
 
     /**
-     * A constant representing the number of seconds in an hour, for making
+     * A constant representing the number of seconds in an hour
      * @var int
      */
     const SECONDS_IN_A_HOUR = 3600;
     const SECONDS_IN_AN_HOUR = 3600;
 
     /**
-     * A constant representing the number of seconds in a day, for making
+     * A constant representing the number of seconds in a day
      * @var int
      */
     const SECONDS_IN_A_DAY = 86400;
 
     /**
-     * A constant representing the number of seconds in a week, for making
+     * A constant representing the number of seconds in a week
      * @var int
      */
     const SECONDS_IN_A_WEEK = 604800;
