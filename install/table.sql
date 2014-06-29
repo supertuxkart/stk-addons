@@ -514,47 +514,36 @@ INSERT INTO `v2_roles` (`id`, `name`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `v2_role_permissions` (
-  `role_id` int(4) NOT NULL COMMENT 'The id from the roles table',
-  `permission` varchar(255) CHARACTER SET utf8mb4 NOT NULL COMMENT 'The actual permission',
-  KEY `role_id` (`role_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+    `role_id` int(4) NOT NULL COMMENT 'The id from the roles table',
+    `permission` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'The actual permission',
+    KEY `role_id` (`role_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `v2_role_permissions`
 --
 
 INSERT INTO `v2_role_permissions` (`role_id`, `permission`) VALUES
-  (1, 'viewBasicPage'),
-  (1, 'addAddon'),
-  (1, 'addBug'),
-  (2, 'viewBasicPage'),
-  (2, 'addAddon'),
-  (2, 'addBug'),
-  (2, 'editBugs'),
-  (2, 'editAddons'),
-  (2, 'editUsers'),
-  (3, 'viewBasicPage'),
-  (3, 'addAddon'),
-  (3, 'addBug'),
-  (3, 'editBugs'),
-  (3, 'editAddons'),
-  (3, 'editUsers'),
-  (3, 'editModerators'),
-  (3, 'editSettings'),
-  (4, 'viewBasicPage'),
-  (4, 'addAddon'),
-  (4, 'addBug'),
-  (4, 'editBugs'),
-  (4, 'editAddons'),
-  (4, 'editUsers'),
-  (4, 'editModerators'),
-  (4, 'editAdministrators'),
-  (4, 'editRoots'),
-  (4, 'editSettings');
+    (3, 'view_basic_page'),
+    (3, 'add_addon'),
+    (3, 'add_bug'),
+    (3, 'edit_addons'),
+    (3, 'edit_bugs'),
+    (3, 'edit_users'),
+    (3, 'edit_settings'),
+    (3, 'edit_permissions'),
+    (3, 'edit_admins'),
+    (2, 'view_basic_page'),
+    (2, 'add_addon'),
+    (2, 'add_bug'),
+    (2, 'edit_addons'),
+    (2, 'edit_bugs'),
+    (2, 'edit_users'),
+    (1, 'view_basic_page'),
+    (1, 'add_addon'),
+    (1, 'add_bug');
 
---
--- Constraints for dumped tables
---
+-- --------------------------------------------------------
 
 --
 -- Constraints for table `v2_achieved`
