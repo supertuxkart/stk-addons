@@ -105,7 +105,7 @@ foreach (Addon::getAllowedTypes() as $type)
         $addon["css_class"] = "";
         if (!($addon["status"] & F_APPROVED)) // not approved
         {
-            if (User::hasPermission(AccessControl::PERM_EDIT_ADDONS) == false && $addon['uploader'] !== User::getId())
+            if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS) && $addon['uploader'] !== User::getId())
             {
                 continue;
             }

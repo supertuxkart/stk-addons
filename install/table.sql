@@ -524,24 +524,27 @@ CREATE TABLE IF NOT EXISTS `v2_role_permissions` (
 --
 
 INSERT INTO `v2_role_permissions` (`role_id`, `permission`) VALUES
+    (1, 'view_basic_page'),
+    (1, 'add_addon'),
+    (1, 'add_bug'),
+    (1, 'add_bug_comment'),
+    (2, 'view_basic_page'),
+    (2, 'add_addon'),
+    (2, 'add_bug'),
+    (2, 'add_bug_comment'),
+    (2, 'edit_addons'),
+    (2, 'edit_bugs'),
+    (2, 'edit_users'),
     (3, 'view_basic_page'),
     (3, 'add_addon'),
     (3, 'add_bug'),
+    (3, 'add_bug_comment'),
     (3, 'edit_addons'),
     (3, 'edit_bugs'),
     (3, 'edit_users'),
     (3, 'edit_settings'),
     (3, 'edit_permissions'),
-    (3, 'edit_admins'),
-    (2, 'view_basic_page'),
-    (2, 'add_addon'),
-    (2, 'add_bug'),
-    (2, 'edit_addons'),
-    (2, 'edit_bugs'),
-    (2, 'edit_users'),
-    (1, 'view_basic_page'),
-    (1, 'add_addon'),
-    (1, 'add_bug');
+    (3, 'edit_admins');
 
 -- --------------------------------------------------------
 

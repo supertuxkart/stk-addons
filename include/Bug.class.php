@@ -475,7 +475,7 @@ class Bug
         {
             throw new BugException(_h("The bug does not exist"));
         }
-        if (!User::isLoggedIn())
+        if (!User::hasPermission(AccessControl::PERM_ADD_BUG_COMMENT))
         {
             throw new BugException(_h("You do not have the necessary permission to add a comment"));
         }

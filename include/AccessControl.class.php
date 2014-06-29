@@ -25,17 +25,17 @@
  */
 class AccessControl
 {
-
-    // view pages like users panel etc, non public, must be logged in
-    const PERM_VIEW_BASIC_PAGE = "view_basic_page";
+    const PERM_VIEW_BASIC_PAGE = "view_basic_page"; // can view the most basic pages
 
     const PERM_ADD_ADDON = "add_addon";
 
     const PERM_ADD_BUG = "add_bug";
 
+    const PERM_ADD_BUG_COMMENT = "add_bug_comment";
+
     const PERM_EDIT_ADDONS = "edit_addons";
 
-    const PERM_EDIT_BUGS = "edit_bugs"; // edit bugs means close,edit bugs and delete, edit comments
+    const PERM_EDIT_BUGS = "edit_bugs"; // edit bugs means close, edit bugs and delete, edit comments
 
     const PERM_EDIT_USERS = "edit_users"; // edit normal users (non-admins), means delete/change/insert
 
@@ -61,6 +61,7 @@ class AccessControl
             static::PERM_VIEW_BASIC_PAGE,
             static::PERM_ADD_ADDON,
             static::PERM_ADD_BUG,
+            static::PERM_ADD_BUG_COMMENT,
             static::PERM_EDIT_ADDONS,
             static::PERM_EDIT_BUGS,
             static::PERM_EDIT_USERS,

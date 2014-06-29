@@ -89,7 +89,7 @@ class User
      */
     public function getUserRole()
     {
-        return $this->userData["role"];
+        return static::oldRoleToNew($this->userData["role"]);
     }
 
     /**
