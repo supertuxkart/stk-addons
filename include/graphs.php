@@ -51,16 +51,19 @@ function graph_data_to_json($values, $labels, $format, $graph_id)
         }
     }
 
-    // Handle caching
+    // Handle caching, define paths
     if ($graph_id !== null)
     {
         $local_cache_file = CACHE_PATH . 'cache_graph_' . $graph_id . '.json';
         $remote_cache_file = CACHE_LOCATION . 'cache_graph_' . $graph_id . '.json';
         if (file_exists($local_cache_file))
         {
-            $mtime = filemtime($local_cache_file);
-            $time = time();
-            if (($mtime + (60 * 60 * 24)) < $time)
+            $modified_time = filemtime($local_cache_file);
+            $current_time = time();
+
+            // file is onw day old
+            // calculate if we need to refresh, by the modified time
+            if (($modified_time + Util::SECONDS_IN_A_DAY) < $current_time)
             {
                 // Refresh plot
                 unlink($local_cache_file);
@@ -71,7 +74,7 @@ function graph_data_to_json($values, $labels, $format, $graph_id)
             }
         }
     }
-    else
+    else // generate new file
     {
         $rand = rand(10000, 99999);
         $local_cache_file = CACHE_PATH . 'cache_graph_' . $rand . '.json';

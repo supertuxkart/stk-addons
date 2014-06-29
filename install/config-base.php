@@ -28,18 +28,44 @@ if (DEBUG_MODE)
     ini_set("html_errors", "On");
 }
 
-// paths
+// Paths and locations
 define("DS", DIRECTORY_SEPARATOR);
 define("ROOT_PATH", __DIR__ . DS);
 define("INCLUDE_PATH", ROOT_PATH . "include" . DS);
-define("TPL_PATH", ROOT_PATH . "tpl" . DS . "default" . DS); // Template properties (Fixme: define this in user prefs)
+define("TPL_PATH", ROOT_PATH . "tpl" . DS . "default" . DS); // Template properties
 define("TMP_PATH", sys_get_temp_dir() . DS); // define temporary directory path
-define("ASSETS_PATH", ROOT_PATH . "assets" . DS);
-define("CACHE_PATH", ASSETS_PATH . "cache" . DS); // cache for images/html/template
-define("FONTS_PATH", ASSETS_PATH . "fonts" . DS);
 define("UPLOAD_PATH", ROOT_PATH . "upload" . DS);
 define("UPLOAD_CRON_PATH", UPLOAD_PATH);
 define("BUGS_PATH", ROOT_PATH . "bugs" . DS);
+define("ASSETS_PATH", ROOT_PATH . "assets" . DS);
+define("CACHE_PATH", ASSETS_PATH . "cache" . DS); // cache for images/html/template
+define("FONTS_PATH", ASSETS_PATH . "fonts" . DS);
+
+if (defined("CRON")) // this is a cron job
+{
+    define("UP_PATH", UPLOAD_CRON_PATH);
+}
+else
+{
+    define("UP_PATH", UPLOAD_PATH);
+}
+
+define("NEWS_XML_PATH", UP_PATH . "xml" . DS . "news.xml");
+define("ASSETS_XML_PATH", UP_PATH . "xml" . DS . "assets.xml");
+
+// make sure that this ends with a trailing slash, otherwise it would break a few things (like the activation email)
+define("SITE_ROOT", "http://stkaddons.net/");
+
+define("DOWNLOAD_LOCATION", SITE_ROOT . "upload/");
+define("BUGS_LOCATION", SITE_ROOT . "bugs/");
+define("NEWS_XM_LOCATION", DOWNLOAD_LOCATION . "xml/news.xml");
+define("ASSETS_XML_LOCATION", DOWNLOAD_LOCATION . "xml/assets.xml");
+define("ASSETS_LOCATION", SITE_ROOT . "assets/");
+define("CACHE_LOCATION", ASSETS_LOCATION . "cache/");
+define("LIBS_LOCATION", ASSETS_LOCATION . "libs/");
+define("IMG_LOCATION", ASSETS_LOCATION . "img/");
+define("JS_LOCATION", ASSETS_LOCATION . "js/");
+define("CSS_LOCATION", ASSETS_LOCATION . "css/");
 
 // CAPTCHA properties
 define("CAPTCHA_PUB", ""); // reCAPTCHA public key
@@ -50,7 +76,7 @@ define("DB_USER", "root");
 define("DB_PASSWORD", "");
 define("DB_NAME", "stkbase");
 define("DB_PREFIX", "v2_");
-define("DB_HOST", "localhost:3306");
+define("DB_HOST", "localhost");
 
 // Mail proprieties
 define("MAIL_METHOD", "sendmail"); // "smtp" or "sendmail" supported
@@ -61,33 +87,6 @@ define("SMTP_PORT", null); // SMTP server port (usually 25)
 define("SMTP_AUTH", null); // Whether or not to use SMTP authentication, true/false
 define("SMTP_USER", null); // SMTP username
 define("SMTP_PASS", null); // SMTP password
-
-if (!defined("CRON"))
-{
-    define("UP_PATH", UPLOAD_PATH);
-}
-else
-{
-    define("UP_PATH", UPLOAD_CRON_PATH);
-}
-
-// make sure that this ends with a trailing slash, otherwise it would break a few things (like the activation email)
-define("SITE_ROOT", "http://stkaddons.net/");
-define("DOWNLOAD_LOCATION", SITE_ROOT . "upload/");
-define("CACHE_LOCATION", SITE_ROOT . "assets/temp/");
-define("BUGS_LOCATION", SITE_ROOT . "bugs/");
-
-define("NEWS_XM_LOCATION", DOWNLOAD_LOCATION . "xml/news.xml");
-define("ASSETS_XML_LOCATION", DOWNLOAD_LOCATION . "xml/assets.xml");
-
-define("NEWS_XML_PATH", UP_PATH . "xml" . DS . "news.xml");
-define("ASSETS_XML_PATH", UP_PATH . "xml" . DS . "assets.xml");
-
-define("ASSETS_LOCATION", SITE_ROOT . "assets/");
-define("LIBS_LOCATION", ASSETS_LOCATION . "libs/");
-define("IMG_LOCATION", ASSETS_LOCATION . "img/");
-define("JS_LOCATION", ASSETS_LOCATION . "js/");
-define("CSS_LOCATION", ASSETS_LOCATION . "css/");
 
 // set string encoding
 mb_internal_encoding('UTF-8');

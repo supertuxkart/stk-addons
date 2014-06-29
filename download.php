@@ -38,7 +38,7 @@ if (!preg_match('/^[\w\-\ ]+\.[a-z0-9]+$/i', $file))
     exit;
 }
 
-if ($dir != 'assets')
+if ($dir !== 'assets')
 {
     $assetpath = $dir . '/' . $file;
 }
@@ -111,7 +111,7 @@ catch(DBException $e)
 }
 
 // Redirect to actual resource
-if ($dir == 'xml')
+if ($dir === 'xml')
 {
     header('Location: http://stkaddons.net/xml/' . $file);
 }

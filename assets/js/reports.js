@@ -35,10 +35,10 @@ function drawCharts() {
     $('.pie_chart').each(function (index, Element) {
             var chartMeta = Element.innerHTML;
             var graph_id = Element.id;
-            chartMeta = chartMeta.split('\n');
-            console.log("Loading chart data: " + chartMeta[1]);
+            var url = chartMeta.split('\n')[1];
+            console.log("Loading chart data: " + url);
             $.ajax({
-                    url          : chartMeta[1],
+                    url          : url,
                     dataType     : "jsonp",
                     crossDomain  : true,
                     async        : true,
@@ -48,7 +48,7 @@ function drawCharts() {
                     error        : function () {
                         document.ready = true;
                     },
-                    success      : function (data, a, b) {
+                    success      : function (data) {
                         document.ready = true;
                         drawPie(data, Element);
                     }
@@ -60,10 +60,10 @@ function drawCharts() {
     $('.time_chart').each(function (index, Element) {
             var chartMeta = Element.innerHTML;
             var graph_id = Element.id;
-            chartMeta = chartMeta.split('\n');
-            console.log("Loading chart data: " + chartMeta[1]);
+            var url = chartMeta.split('\n')[1];
+            console.log("Loading chart data: " + url);
             $.when($.ajax({
-                        url          : chartMeta[1],
+                        url          : url,
                         dataType     : "jsonp",
                         crossDomain  : true,
                         async        : true,
@@ -73,7 +73,7 @@ function drawCharts() {
                         error        : function () {
                             $('.time_chart').index(index).innerHTML = 'Failed!'
                         },
-                        success      : function (data, a, jqXHR) {
+                        success      : function (data) {
                             drawTimeChart(data, Element);
                         }
                     }

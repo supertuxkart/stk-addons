@@ -275,7 +275,7 @@ class Report
     public function __toString()
     {
         $return = "<html>\n<head>\n\t<title>{$this->report_title}</title>\n";
-        $return . "";
+        $return .= '<meta http-equiv="content-type" content="text/html; charset=utf-8">';
         $return .= "\t<script src=\"" . JS_LOCATION . "sorttable.js\" type=\"text/javascript\"></script>\n";
         $return .= "\t<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js\" type=\"text/javascript\"></script>\n";
         $return .= "\t<script src=\"https://www.google.com/jsapi\" type=\"text/javascript\"></script>\n";

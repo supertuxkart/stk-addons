@@ -24,6 +24,43 @@
 class Util
 {
     /**
+     * A constant representing the number of seconds in a minute, for
+     * @var int
+     */
+    const SECONDS_IN_A_MINUTE = 60;
+
+    /**
+     * A constant representing the number of seconds in an hour, for making
+     * @var int
+     */
+    const SECONDS_IN_A_HOUR = 3600;
+    const SECONDS_IN_AN_HOUR = 3600;
+
+    /**
+     * A constant representing the number of seconds in a day, for making
+     * @var int
+     */
+    const SECONDS_IN_A_DAY = 86400;
+
+    /**
+     * A constant representing the number of seconds in a week, for making
+     * @var int
+     */
+    const SECONDS_IN_A_WEEK = 604800;
+
+    /**
+     * A constant representing the number of seconds in a month (30 days),
+     * @var int
+     */
+    const SECONDS_IN_A_MONTH = 2592000;
+
+    /**
+     * A constant representing the number of seconds in a year (365 days),
+     * @var int
+     */
+    const SECONDS_IN_A_YEAR = 31536000;
+
+    /**
      * Returns the first element in an array.
      *
      * @param  array $array
@@ -256,7 +293,7 @@ class Util
             }
         }
 
-        return (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : false);
+        return isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : false;
     }
 
     /**
