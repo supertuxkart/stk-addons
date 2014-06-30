@@ -307,7 +307,13 @@ class Addon
         // Send mail to moderators
         moderator_email(
             'New Addon Upload',
-            "{$_SESSION['user']} has uploaded a new revision for {$this->type} '{$attributes['name']}' ($this->id)"
+            sprintf(
+                "%s has uploaded a new revision for %s '%s' %s",
+                User::getLoggedUserName(),
+                $this->type,
+                $attributes['name'],
+                (string)$this->id
+            )
         );
         writeAssetXML();
         writeNewsXML();
@@ -1715,7 +1721,13 @@ class Addon
         // Send mail to moderators
         moderator_email(
             'New Addon Upload',
-            "{$_SESSION['user']} has uploaded a new {$type} '{$attributes['name']}' ($id)"
+            sprintf(
+                "%s has uploaded a new %s '%s' %s",
+                User::getLoggedUserName(),
+                $type,
+                $attributes['name'],
+                (string)$id
+            )
         );
         writeAssetXML();
         writeNewsXML();

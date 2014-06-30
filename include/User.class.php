@@ -283,7 +283,7 @@ class User
     {
         $user_xml = new XMLOutput();
         $user_xml->startElement($tag);
-        $user_xml->writeAttribute('id', $this->getUserId());
+        $user_xml->writeAttribute('id', $this->getId());
         $user_xml->writeAttribute('user_name', $this->getUserName());
         $user_xml->endElement();
 
@@ -530,7 +530,7 @@ class User
      */
     public static function getLoggedRealName()
     {
-        return static::isLoggedIn() ? static::sessionGet("real_name") : "anonymous";
+        return static::isLoggedIn() ? static::sessionGet("real_name") : "";
     }
 
     /**

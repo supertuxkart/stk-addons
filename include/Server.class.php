@@ -132,18 +132,15 @@ class Server
         try
         {
             $count = DBConnection::get()->query(
-                "SELECT `id` FROM `" . DB_PREFIX . "servers`
-                    WHERE `ip`= :ip AND `port`= :port ",
+                "SELECT `id` FROM `" . DB_PREFIX . "servers` WHERE `ip`= :ip AND `port`= :port ",
                 DBConnection::ROW_COUNT,
-                array(
-                    ':ip'   => $ip,
-                    ':port' => $port
-                )
+                array(':ip'   => $ip, ':port' => $port)
             );
-            if ($count != 0)
+            if ($count)
             {
                 throw new ServerException(_('Specified server already exists.'));
             }
+
             $result = DBConnection::get()->query(
                 "INSERT INTO `" . DB_PREFIX . "servers` (hostid, ip, port, private_port, name, max_players)
                 VALUES (:hostid, :ip, :port, :private_port, :name, :max_players)",
@@ -153,17 +150,10 @@ class Server
                     ':ip'           => $ip, // do not use (int) or it truncates to 127.255.255.255
                     ':port'         => (int)$port,
                     ':private_port' => (int)$private_port,
-                    ':name'         => (string)$server_name,
+                    ':name'         => $server_name,
                     ':max_players'  => (int)$max_players
                 )
             );
-            if ($result != 1)
-            {
-                throw new ServerException(_h('Could not create server'));
-            }
-
-            return Server::getServer(DBConnection::get()->lastInsertId());
-
         }
         catch(DBException $e)
         {
@@ -172,6 +162,13 @@ class Server
                 _('Please contact a website administrator.')
             );
         }
+
+        if ($result != 1)
+        {
+            throw new ServerException(_h('Could not create server'));
+        }
+
+        return Server::getServer(DBConnection::get()->lastInsertId());
     }
 
     /**
@@ -191,20 +188,9 @@ class Server
                 "SELECT * FROM `" . DB_PREFIX . "servers`
                 WHERE `id`= :id",
                 DBConnection::FETCH_ALL,
-                array(
-                    ':id' => (int)$id
-                )
+                array(':id' => $id),
+                array(":id" => DBConnection::PARAM_INT)
             );
-            if (empty($result))
-            {
-                throw new ServerException(_("Server doesn't exist."));
-            }
-            else if (count($result) > 1)
-            {
-                throw new PDOException();
-            }
-
-            return new Server($result[0]);
         }
         catch(DBException $e)
         {
@@ -213,6 +199,17 @@ class Server
                 _('Please contact a website administrator.')
             );
         }
+
+        if (empty($result))
+        {
+            throw new ServerException(_("Server doesn't exist."));
+        }
+        else if (count($result) > 1)
+        {
+            throw new PDOException();
+        }
+
+        return new Server($result[0]);
     }
 
     /**
@@ -227,6 +224,8 @@ class Server
             FROM `" . DB_PREFIX . "servers`",
             DBConnection::FETCH_ALL
         );
+
+        // build xml
         $partial_output = new XMLOutput();
         $partial_output->startElement('servers');
         foreach ($servers as $server_result)

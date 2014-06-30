@@ -149,9 +149,8 @@ class StkTemplate extends Template
     private function setupTopMenu()
     {
         // TODO make top menu more dynamic
-        $name = isset($_SESSION['real_name']) ? $_SESSION['real_name'] : "";
         $menu = array(
-            'welcome'  => sprintf(_h('Welcome, %s'), $name),
+            'welcome'  => sprintf(_h('Welcome, %s'), User::getLoggedRealName()),
             'home'     => File::link('index.php', _h("Home")),
             'login'    => File::link('login.php', _h('Login')),
             'logout'   => File::link('login.php?action=logout', _h('Log out')),

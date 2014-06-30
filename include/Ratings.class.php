@@ -102,11 +102,6 @@ class Ratings
         }
         catch(DBException $e)
         {
-            if (DEBUG_MODE)
-            {
-                echo $e->getMessage();
-            }
-
             return false;
         }
     }
@@ -145,7 +140,6 @@ class Ratings
                     ':addon_id' => (string)$this->addon_id
                 )
             );
-            $this->avg_rating = $result[0]['avg(vote)'];
         }
         catch(DBException $e)
         {
@@ -155,6 +149,8 @@ class Ratings
             }
             $this->avg_rating = 0.0;
         }
+
+        $this->avg_rating = $result[0]['avg(vote)'];
     }
 
     /**
@@ -237,21 +233,21 @@ class Ratings
      */
     private function fetchUserVote($session = null)
     {
+        if ($session !== null)
+        {
+            $userid = $session->getUserId();
+        }
+        else
+        {
+            if (!User::isLoggedIn())
+            {
+                return;
+            }
+            $userid = User::getLoggedId();
+        }
+
         try
         {
-            if ($session !== null)
-            {
-                $userid = $session->getUserId();
-            }
-            else
-            {
-                if (!User::isLoggedIn())
-                {
-                    return;
-                }
-                $userid = User::getLoggedId();
-            }
-
             $result = DBConnection::get()->query(
                 "SELECT `vote`
                 FROM `" . DB_PREFIX . "votes`
@@ -267,10 +263,6 @@ class Ratings
         }
         catch(DBException $e)
         {
-            if (DEBUG_MODE)
-            {
-                echo $e->getMessage();
-            }
             throw new RatingsException(
                 _h('An unexpected error occured while fetching your last vote.') . ' ' .
                 _h('Please contact a website administrator if this problem persists.')

@@ -69,7 +69,7 @@ switch (strtolower($_POST["action"]))
             "comment",
             array(
                 "id"          => $comment_data["id"],
-                "user_name"   => $_SESSION["user"],
+                "user_name"   => User::getLoggedUserName(),
                 "date"        => $comment_data["date"],
                 "description" => $comment_data["description"]
             )

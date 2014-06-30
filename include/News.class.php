@@ -338,18 +338,19 @@ class News
                 ORDER BY `date` DESC',
                 DBConnection::FETCH_ALL
             );
-            $ret = array();
-            foreach ($items as $item)
-            {
-                $ret[] = h($item['content']);
-            }
-
-            return $ret;
         }
         catch(DBException $e)
         {
             return array();
         }
+
+        $ret = array();
+        foreach ($items as $item)
+        {
+            $ret[] = h($item['content']);
+        }
+
+        return $ret;
     }
 
     /**
@@ -370,13 +371,13 @@ class News
                 ORDER BY `date` DESC',
                 DBConnection::FETCH_ALL
             );
-
-            return $news;
         }
         catch(DBException $e)
         {
             return array();
         }
+
+        return $news;
     }
 
     /**
@@ -396,13 +397,13 @@ class News
                 ORDER BY `date` DESC',
                 DBConnection::FETCH_ALL
             );
-
-            return $news;
         }
         catch(DBException $e)
         {
             return array();
         }
+
+        return $news;
     }
 
     /**
@@ -427,14 +428,13 @@ class News
                 'news',
                 array(
                     ':author_id'   => (int)User::getLoggedId(),
-                    ':content'     => (string)$message,
-                    ':condition'   => (string)$condition,
+                    ':content'     => $message,
+                    ':condition'   => $condition,
                     ':important'   => (int)$important,
                     ':web_display' => (int)$web_display,
                     'active'       => 1
                 )
             );
-            writeNewsXML();
         }
         catch(DBException $e)
         {
@@ -444,6 +444,8 @@ class News
         {
             throw new NewsException('Error while creating message.');
         }
+
+        writeNewsXML();
     }
 
     /**
@@ -458,13 +460,14 @@ class News
         try
         {
             DBConnection::get()->delete("news", "`id` = :id", array(":id" => $id), array(":id" => DBConnection::PARAM_INT));
-            writeNewsXML();
-
-            return true;
         }
         catch(DBException $e)
         {
             return false;
         }
+
+        writeNewsXML();
+
+        return true;
     }
 }

@@ -40,7 +40,7 @@ switch ($action)
 {
     case 'password':
         $user = User::getFromUserName($_GET['user']);
-        if ($_SESSION['user'] !== $_GET['user'] && !User::hasPermissionOnRole($user->getRole()))
+        if (User::getLoggedUserName() !== $_GET['user'] && !User::hasPermissionOnRole($user->getRole()))
         {
             $status = '<span class="error">' .
                 _h('You do not have the necessary permissions to perform this action.')
@@ -60,7 +60,7 @@ switch ($action)
 
     case 'config':
         $user = User::getFromUserName($_GET['user']);
-        if ($_SESSION['user'] !== $_GET['user'] && !User::hasPermissionOnRole($user->getRole()))
+        if (User::getLoggedRealName() !== $_GET['user'] && !User::hasPermissionOnRole($user->getRole()))
         {
             $status = '<span class="error">' .
                 _h('You do not have the necessary permissions to perform this action.')
