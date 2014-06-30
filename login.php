@@ -73,7 +73,7 @@ switch ($_GET['action'])
         }
         else
         {
-            //$tpl->setMetaRefresh($safe_url, 3);
+            $tpl->setMetaRefresh($safe_url, 3);
             $conf = _h('You have been logged out.') . '<br />';
             $conf .= sprintf(
                     _h('Click %shere%s if you do not automatically redirect.'),
@@ -99,7 +99,7 @@ switch ($_GET['action'])
         }
         if (User::isLoggedIn())
         {
-            //$tpl->setMetaRefresh($return_to_url, 3);
+            $tpl->setMetaRefresh($return_to_url, 3);
             $conf = sprintf(_h('Welcome, %s!') . '<br />', User::getLoggedRealName());
             $conf .= sprintf(
                     _h('Click %shere%s if you do not automatically redirect.'),
@@ -118,7 +118,7 @@ switch ($_GET['action'])
         if (User::isLoggedIn())
         {
             $login_form['display'] = false;
-            //$tpl->setMetaRefresh('index.php', 3);
+            $tpl->setMetaRefresh('index.php', 3);
             $conf = _h('You are already logged in.') . ' ';
             $conf .= sprintf(
                     _h('Click %shere%s if you do not automatically redirect.'),
