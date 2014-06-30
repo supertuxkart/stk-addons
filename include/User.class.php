@@ -25,32 +25,28 @@
 class User
 {
     /**
-     * Is the current user logged in
+     * Flag to indicate if the a user is logged in
      * @var bool
      */
     protected static $logged_in = false;
 
     /**
-     * Current user id
+     * Current user id that is logged in. Keep it around because we do not want to check the session every time.
      * @var int
      */
-    protected static $user_id = 0;
+    protected static $logged_user_id = -1;
 
     /**
-     * Required session vars to be a valid session
+     * Required session vars to be a valid session. All user vars are under the "user" key
      * @var array
      */
-    protected static $sessionRequired = array("userid", "user", "real_name", "last_login", "role");
+    protected static $sessionRequired = array("id", "user_name", "real_name", "date_last_login", "role", "permissions");
 
     /**
+     * The id of the user
      * @var int
      */
-    protected $id = 0;
-
-    /**
-     * @var string
-     */
-    protected $userName = "";
+    protected $id = -1;
 
     /**
      * @var array
@@ -59,27 +55,18 @@ class User
 
     /**
      * @param int    $id
-     * @param array  $userData
+     * @param array  $userData retrieved from the database
      */
     public function __construct($id, array $userData = array())
     {
         $this->id = $id;
-        $this->userName = $userData["user"];
         $this->userData = $userData;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUserName()
-    {
-        return $this->userName;
     }
 
     /**
      * @return int
      */
-    public function getUserID()
+    public function getId()
     {
         return $this->id;
     }
@@ -87,7 +74,15 @@ class User
     /**
      * @return string
      */
-    public function getUserRole()
+    public function getUserName()
+    {
+        return $this->userData["user"];
+    }
+
+    /**
+     * @return string
+     */
+    public function getRole()
     {
         return static::oldRoleToNew($this->userData["role"]);
     }
@@ -95,17 +90,49 @@ class User
     /**
      * @return string
      */
-    public function getUserFullName()
+    public function getRealName()
     {
         return $this->userData["name"];
     }
 
     /**
-     * @return array
+     * @return string
      */
-    public function getUserData()
+    public function getHomepage()
     {
-        return $this->userData;
+        return $this->userData["homepage"];
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAvatar()
+    {
+        return $this->userData["avatar"];
+    }
+
+    /**
+     * @return bool
+     */
+    public function isActive()
+    {
+        return $this->userData["active"] === 1;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDateLogin()
+    {
+        return $this->userData["last_login"];
+    }
+
+    /**
+     * @return string
+     */
+    public function getDateRegistration()
+    {
+        return $this->userData["reg_date"];
     }
 
     /**
@@ -160,12 +187,12 @@ class User
         // TODO: FIX error message on old password
         $new_password = Validate::password($new_password_1, $new_password_2);
 
-        if (Validate::password($old_password, null, $_SESSION['user']) !== $this->userData['pass'])
+        if (Validate::password($old_password, null, static::sessionGet("user_name")) !== $this->userData['pass'])
         {
             throw new UserException(_h('Your old password is not correct.'));
         }
 
-        if (static::getId() === $this->id)
+        if (static::getLoggedId() === $this->id)
         {
             static::changePassword($new_password);
         }
@@ -246,7 +273,9 @@ class User
     }
 
     /**
-     * @param string $tag
+     * Get the user as a xml structure
+     *
+     * @param string $tag the root tag for the user xml
      *
      * @return string
      */
@@ -254,15 +283,101 @@ class User
     {
         $user_xml = new XMLOutput();
         $user_xml->startElement($tag);
-        $user_xml->writeAttribute('id', $this->id);
-        $user_xml->writeAttribute('user_name', $this->userName);
+        $user_xml->writeAttribute('id', $this->getUserId());
+        $user_xml->writeAttribute('user_name', $this->getUserName());
         $user_xml->endElement();
 
         return $user_xml->asString();
     }
 
+    /**
+     * Set a value in the session for the user
+     *
+     * @param mixed $key
+     * @param mixed $value
+     */
+    protected static function sessionSet($key, $value)
+    {
+        $_SESSION["user"][$key] = $value;
+    }
 
     /**
+     * Get a key from the session for the user
+     *
+     * @param mixed $key
+     *
+     * @return mixed
+     */
+    protected  static function sessionGet($key)
+    {
+        return $_SESSION["user"][$key];
+    }
+
+    /**
+     * See if the key exists in the user session
+     *
+     * @param mixed $key
+     *
+     * @return bool
+     */
+    protected static function sessionExists($key)
+    {
+        return isset($_SESSION["user"][$key]);
+    }
+
+    /**
+     * Init the session. Should be called only once (by login)
+     *
+     * @param int $user_id
+     */
+    protected static function sessionInit($user_id)
+    {
+        static::sessionStart();
+
+        if(!isset($_SESSION["user"]))
+        {
+            $_SESSION["user"] = array();
+            static::$logged_in = true;
+            static::$logged_user_id = $user_id;
+        }
+        else
+        {
+            trigger_error("initSession has found a session that is already started. Maybe it is not used right");
+        }
+    }
+
+    /**
+     * Clear the session data associated with the user
+     */
+    protected static function sessionClear()
+    {
+        static::sessionStart();
+
+        unset($_SESSION["user"]);
+        static::$logged_in = false;
+        static::$logged_user_id = -1;
+    }
+
+    /**
+     * Start a session, only if was no previous started
+     */
+    protected static function sessionStart()
+    {
+        // session is already started
+        if(session_id() === "")
+        {
+            session_name("STK_SESSID");
+            if(!session_start())
+            {
+                trigger_error("Session failed to start");
+            }
+        }
+    }
+
+    /**
+     * Init the user session and do some validation on the current data in the session.
+     * This should be called once per user
+     *
      * @throws UserException
      */
     public static function init()
@@ -273,24 +388,18 @@ class User
             return;
         }
 
-        // Validate user's session on every page
-        if (session_id() === "")
-        {
-            session_name("STK_SESSID");
-            session_start();
-        }
+        // start session
+        static::sessionStart();
 
         // Check if any session variables are not set
         foreach(static::$sessionRequired as $key)
         {
             // One or more of the session variables was not set - this may be an issue, so force logout
-            if(!isset($_SESSION[$key]))
+            if(!static::sessionExists($key))
             {
-                if (DEBUG_MODE)
-                {
-                    //echo sprintf("Session key = '%s' was not set", $key);
-                    //var_debug("Init");
-                }
+//                trigger_error(sprintf("Session key = '%s' was not set", $key));
+//                var_debug("Init");
+
                 static::logout();
 
                 return;
@@ -309,9 +418,9 @@ class User
                 AND `active` = 1",
                 DBConnection::ROW_COUNT,
                 array(
-                    ':username'  => (string)$_SESSION['user'],
-                    ':lastlogin' => $_SESSION['last_login'],
-                    ':realname'  => (string)$_SESSION['real_name']
+                    ':username'  => static::sessionGet('user_name'),
+                    ':lastlogin' => static::sessionGet('date_last_login'),
+                    ':realname'  => static::sessionGet('real_name')
                 )
             );
         }
@@ -327,9 +436,63 @@ class User
         if ($count !== 1)
         {
             static::logout();
+
+            return;
         }
-        static::$user_id = $_SESSION['userid'];
+
         static::$logged_in = true;
+        static::$logged_user_id = static::sessionGet("id");
+    }
+
+    /**
+     * Try to log in a user
+     *
+     * @param string $username
+     * @param string $password
+     *
+     * @throws UserException on invalid credentials
+     */
+    public static function login($username, $password)
+    {
+        $result = Validate::credentials($username, $password);
+
+        // Check if the user exists
+        if (count($result) !== 1)
+        {
+            static::logout();
+            throw new UserException(_h('Your username or password is incorrect.'));
+        }
+
+
+        $user = $result[0];
+
+        // init session vars
+        static::sessionInit($user["id"]);
+        static::sessionSet("id", $user["id"]);
+        static::sessionSet("user_name", $user["user"]);
+        static::sessionSet("real_name", $user["name"]);
+        static::sessionSet("date_last_login", static::updateLoginTime($user["id"]));
+        static::sessionSet("role", $user["role"]);
+        static::setPermissions($user["role"]);
+
+        // backwards compatibility. Convert unsalted password to a salted one
+        if (strlen($password) === 64)
+        {
+            $password = Validate::password($password);
+            static::changePassword($password);
+            Log::newEvent("Converted the password of '$username' to use a password salting algorithm");
+        }
+    }
+
+    /**
+     * Logout the user
+     */
+    public static function logout()
+    {
+        static::sessionClear();
+
+        session_destroy();
+        static::sessionStart();
     }
 
     /**
@@ -341,11 +504,48 @@ class User
     }
 
     /**
-     * @return int
+     * Get the id of the current logged in user
+     *
+     * @return int the id of the user or -1 if the user is not logged in
      */
-    public static function getId()
+    public static function getLoggedId()
     {
-        return static::$user_id;
+        return static::$logged_user_id;
+    }
+
+    /**
+     * Get the user name of the current logged in user
+     *
+     * @return string
+     */
+    public static function getLoggedUserName()
+    {
+        return static::isLoggedIn() ? static::sessionGet("user_name") : "";
+    }
+
+    /**
+     * Get the real name of the current logged in user
+     *
+     * @return string
+     */
+    public static function getLoggedRealName()
+    {
+        return static::isLoggedIn() ? static::sessionGet("real_name") : "anonymous";
+    }
+
+    /**
+     * Get the role of the current user logged in user
+     *
+     * @return string return the role or 'unregistered' if the user is not logged int
+     */
+    public static function getLoggedRole()
+    {
+        if (!static::isLoggedIn())
+        {
+            return "unregistered";
+        }
+
+        return static::oldRoleToNew(static::sessionGet("role"));
     }
 
     /**
@@ -389,25 +589,9 @@ class User
                 FROM `" . DB_PREFIX . "users`
                 WHERE " . sprintf("`%s` = :%s", $field, $field),
                 DBConnection::FETCH_FIRST,
-                array(
-                    ':' . $field => $value
-                ),
-                array(
-                    ':' . $field => $value_type // value to bind to see DBConnection
-                )
+                array(':' . $field => $value),
+                array(':' . $field => $value_type) // bind value
             );
-
-            // empty result
-            if (empty($user))
-            {
-                throw new UserException(h(
-                    _("Tried to fetch an user that doesn't exist.") . ' ' .
-                    _('Please contact a website administrator.')
-                ));
-            }
-
-            // fetch the first
-            return new User($user["id"], $user);
         }
         catch(DBException $e)
         {
@@ -416,20 +600,36 @@ class User
                 _('Please contact a website administrator.')
             ));
         }
+
+        // empty result
+        if (empty($user))
+        {
+            throw new UserException(h(
+                _("Tried to fetch an user that doesn't exist.") . ' ' .
+                _('Please contact a website administrator.')
+            ));
+        }
+
+        // fetch the first
+        return new User($user["id"], $user);
     }
 
     /**
-     * @param int $id
+     * Get a user instance by user id
+     *
+     * @param int $user_id
      *
      * @throws UserException
      * @return User
      */
-    public static function getFromID($id)
+    public static function getFromID($user_id)
     {
-        return static::getFromField("id", $id, DBConnection::PARAM_INT);
+        return static::getFromField("id", $user_id, DBConnection::PARAM_INT);
     }
 
     /**
+     * Get a user instance by the user name
+     *
      * @param string $username
      *
      * @throws UserException
@@ -463,22 +663,19 @@ class User
                 $parameters[$parameter] = $term;
             }
         }
+
         $matched_users = array();
         if ($index > 0)
         {
             try
             {
-                $result = DBConnection::get()->query(
+                $users = DBConnection::get()->query(
                     "SELECT id, user
                     FROM `" . DB_PREFIX . "users`
                     WHERE " . implode(" OR ", $query_parts),
                     DBConnection::FETCH_ALL,
                     $parameters
                 );
-                foreach ($result as $user)
-                {
-                    $matched_users[] = new User($user['id'], array("username" => $user['user']));
-                }
             }
             catch(DBException $e)
             {
@@ -487,17 +684,23 @@ class User
                     _('Please contact a website administrator.')
                 ));
             }
+
+            foreach ($users as $user)
+            {
+                $matched_users[] = new User($user['id'], $user);
+            }
         }
 
         return $matched_users;
     }
 
     /**
+     * Get the search result as a xml string
      *
      * @param string $search_string
      *
      * @throws UserException
-     * @return multitype:User
+     * @return string
      */
     public static function searchUsersAsXML($search_string)
     {
@@ -510,42 +713,6 @@ class User
         $partial_output->endElement();
 
         return $partial_output->asString();
-    }
-
-    /**
-     * Get the role of the current user
-     * @return string Role identifier
-     */
-    public static function getRole()
-    {
-        if (!static::isLoggedIn())
-        {
-            return 'unregistered';
-        }
-        else // retrieve from database
-        {
-            try
-            {
-                $role_result = DBConnection::get()->query(
-                    'SELECT `role`
-                     FROM `' . DB_PREFIX . 'users`
-                     WHERE `user` = :user',
-                    DBConnection::FETCH_FIRST,
-                    array(':user' => $_SESSION['user'])
-                );
-                if (empty($role_result))
-                {
-                    return 'unregistered';
-                }
-
-                // backwards compatibility
-                return static::oldRoleToNew($role_result['role']);
-            }
-            catch(DBException $e)
-            {
-                return 'unregistered';
-            }
-        }
     }
 
     /**
@@ -577,7 +744,7 @@ class User
      */
     protected static function setPermissions($role)
     {
-        $_SESSION["role"] = AccessControl::getPermissions(static::oldRoleToNew($role));
+        static::sessionSet("permissions", AccessControl::getPermissions(static::oldRoleToNew($role)));
     }
 
     /**
@@ -592,7 +759,7 @@ class User
             return array();
         }
 
-        return $_SESSION["role"];
+        return static::sessionGet("permissions");
     }
 
     /**
@@ -640,61 +807,6 @@ class User
         }
 
         return false; // user does not have permission on role
-    }
-
-
-    /**
-     * Try to log in a user
-     *
-     * @param string $username
-     * @param string $password
-     *
-     * @throws UserException on invalid credentials
-     */
-    public static function login($username, $password)
-    {
-        $result = Validate::credentials($username, $password);
-
-        // Check if the user exists
-        if (count($result) !== 1)
-        {
-            static::logout();
-            throw new UserException(_h('Your username or password is incorrect.'));
-        }
-
-        static::$user_id = $result[0]['id'];
-        static::$logged_in = true;
-
-        $_SESSION['userid'] = $result[0]["id"];
-        $_SESSION['user'] = $result[0]["user"];
-        $_SESSION['real_name'] = $result[0]["name"];
-        $_SESSION['last_login'] = static::updateLoginTime(static::getId());
-        static::setPermissions($result[0]["role"]);
-
-
-        // backwards compatibility. Convert unsalted password to a salted one
-        if (strlen($password) === 64)
-        {
-            $password = Validate::password($password);
-            static::changePassword($password);
-            Log::newEvent("Converted the password of '$username' to use a password salting algorithm");
-        }
-    }
-
-    /**
-     * Logout the user
-     */
-    public static function logout()
-    {
-        foreach(static::$sessionRequired as $key)
-        {
-            unset($_SESSION[$key]);
-        }
-
-        session_destroy();
-        session_start();
-        static::$user_id = 0;
-        static::$logged_in = false;
     }
 
     /**
@@ -765,7 +877,7 @@ class User
             }
             else
             {
-                $user_id = static::getId();
+                $user_id = static::getLoggedId();
             }
         }
 
@@ -1036,5 +1148,7 @@ class User
 
     }
 }
-// TODO move init
+
+// start session and validate it
+// TODO find better position to put this in
 User::init();

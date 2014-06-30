@@ -525,7 +525,7 @@ class Bug
         }
 
         // TODO check if we can update bug after it is closed
-        $isOwner = (User::getId() === $bug->getUserId());
+        $isOwner = (User::getLoggedId() === $bug->getUserId());
         $canEdit = User::hasPermission(AccessControl::PERM_EDIT_BUGS);
 
         // check permission
@@ -576,7 +576,7 @@ class Bug
             throw new BugException(_h("The bug comment does not exist"));
         }
 
-        //$isOwner = (User::getId() === $comment["user_id"]);
+        //$isOwner = (User::getLoggedId() === $comment["user_id"]);
         $canEdit = User::hasPermission(AccessControl::PERM_EDIT_BUGS);
 
         // check permission
@@ -629,7 +629,7 @@ class Bug
             throw new BugException(_h("The bug is already closed"));
         }
 
-        $isOwner = (User::getId() === $bug->getUserId());
+        $isOwner = (User::getLoggedId() === $bug->getUserId());
         $canEdit = User::hasPermission(AccessControl::PERM_EDIT_BUGS);
 
         // check permission
@@ -648,7 +648,7 @@ class Bug
                 "`id` = :id",
                 array(
                     ":id"           => $bugId,
-                    ":close_id"     => User::getId(),
+                    ":close_id"     => User::getLoggedId(),
                     ":close_reason" => $closeReason,
                     "date_close"    => "NOW()"
                 ),
@@ -717,7 +717,7 @@ class Bug
             throw new BugException(_h("The bug comment does not exist"));
         }
 
-        //$isOwner = (User::getId() === $comment["user_id"]);
+        //$isOwner = (User::getLoggedId() === $comment["user_id"]);
         $canEdit = User::hasPermission(AccessControl::PERM_EDIT_BUGS);
 
         // check permission

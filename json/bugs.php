@@ -37,7 +37,7 @@ switch (strtolower($_POST["action"]))
 
         try
         {
-            Bug::insert(User::getId(), $_POST["addon-name"], $_POST["bug-title"], $_POST["bug-description"]);
+            Bug::insert(User::getLoggedId(), $_POST["addon-name"], $_POST["bug-title"], $_POST["bug-description"]);
         }
         catch(BugException $e)
         {
@@ -56,7 +56,7 @@ switch (strtolower($_POST["action"]))
 
         try
         {
-            $comment_id = Bug::insertComment(User::getId(), $_POST["bug-id"], $_POST["bug-comment-description"]);
+            $comment_id = Bug::insertComment(User::getLoggedId(), $_POST["bug-id"], $_POST["bug-comment-description"]);
         }
         catch(BugException $e)
         {

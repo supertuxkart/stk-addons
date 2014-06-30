@@ -27,13 +27,12 @@ class Log
      */
     public static function newEvent($message)
     {
-        $userid = (User::isLoggedIn()) ? User::getId() : 0;
         DBConnection::get()->query(
             "CALL `" . DB_PREFIX . "log_event`
             (:userid, :message)",
             DBConnection::NOTHING,
             array(
-                ':userid'  => $userid,
+                ':userid'  => User::getLoggedId(),
                 ':message' => h($message)
             )
         );

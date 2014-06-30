@@ -860,7 +860,8 @@ class RegisteredClientSession extends ClientSession
     }
 
     /**
-     * @return Server
+     * A space separated string of names
+     * @return string
      */
     public function getOnlineFriends()
     {

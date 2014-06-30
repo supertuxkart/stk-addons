@@ -235,7 +235,7 @@ class Addon
         }
 
         // Make sure user has permission to upload a new revision for this add-on
-        if (User::getId() !== $this->uploaderId && !User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
+        if (User::getLoggedId() !== $this->uploaderId && !User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
         {
             throw new AddonException(_h('You do not have the necessary permissions to perform this action.'));
         }
@@ -326,7 +326,7 @@ class Addon
             throw new AddonException(_h('You must be logged in to perform this action.'));
         }
 
-        if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS) && User::getId() !== $this->uploaderId)
+        if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS) && User::getLoggedId() !== $this->uploaderId)
         {
             throw new AddonException(_h('You do not have the necessary permissions to perform this action.'));
         }
@@ -409,7 +409,7 @@ class Addon
      */
     public function deleteFile($file_id)
     {
-        if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS) && $this->uploaderId !== User::getId())
+        if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS) && $this->uploaderId !== User::getLoggedId())
         {
             throw new AddonException(_h('You do not have the necessary permissions to perform this action.'));
         }
@@ -429,7 +429,7 @@ class Addon
      */
     public function deleteRevision($rev)
     {
-        if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS) && $this->uploaderId !== User::getId())
+        if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS) && $this->uploaderId !== User::getLoggedId())
         {
             throw new AddonException(_h('You do not have the necessary permissions to perform this action.'));
         }
@@ -856,9 +856,7 @@ class Addon
      */
     public function setDescription($description)
     {
-        if (!User::isLoggedIn() ||
-            (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS) && $this->uploaderId !== User::getId())
-        )
+        if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS) && $this->uploaderId !== User::getLoggedId())
         {
             throw new AddonException(_h('You do not have the neccessary permissions to perform this action.'));
         }
@@ -895,7 +893,7 @@ class Addon
      */
     public function setDesigner($designer)
     {
-        if (!User::isLoggedIn() || (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS) && $this->uploaderId !== User::getId()))
+        if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS) && $this->uploaderId !== User::getLoggedId())
         {
             throw new AddonException(_h('You do not have the neccessary permissions to perform this action.'));
         }
@@ -933,7 +931,7 @@ class Addon
      */
     public function setImage($image_id, $field = 'image')
     {
-        if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS) && $this->uploaderId !== User::getId())
+        if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS) && $this->uploaderId !== User::getLoggedId())
         {
             throw new AddonException(_h('You do not have the neccessary permissions to perform this action.'));
         }
@@ -1655,7 +1653,7 @@ class Addon
             ":id" => $id,
             ":type" => $type,
             ":name" => $attributes['name'],
-            ":uploader" => User::getId(),
+            ":uploader" => User::getLoggedId(),
             ":designer" => $attributes['designer'],
             ":license" =>  $attributes['license']
         );

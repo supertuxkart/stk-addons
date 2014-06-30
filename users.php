@@ -23,7 +23,7 @@ require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
 AccessControl::setLevel(AccessControl::PERM_VIEW_BASIC_PAGE);
 
 // set current user if not defined
-$_GET['user'] = (isset($_GET['user'])) ? $_GET['user'] : $_SESSION['user'];
+$_GET['user'] = (isset($_GET['user'])) ? $_GET['user'] : User::getLoggedUserName();
 $action = (isset($_GET['action'])) ? $_GET['action'] : null;
 
 $tpl = new StkTemplate('two-pane.tpl');
@@ -40,7 +40,7 @@ switch ($action)
 {
     case 'password':
         $user = User::getFromUserName($_GET['user']);
-        if ($_SESSION['user'] !== $_GET['user'] && !User::hasPermissionOnRole($user->getUserRole()))
+        if ($_SESSION['user'] !== $_GET['user'] && !User::hasPermissionOnRole($user->getRole()))
         {
             $status = '<span class="error">' .
                 _h('You do not have the necessary permissions to perform this action.')
@@ -60,7 +60,7 @@ switch ($action)
 
     case 'config':
         $user = User::getFromUserName($_GET['user']);
-        if ($_SESSION['user'] !== $_GET['user'] && !User::hasPermissionOnRole($user->getUserRole()))
+        if ($_SESSION['user'] !== $_GET['user'] && !User::hasPermissionOnRole($user->getRole()))
         {
             $status = '<span class="error">' .
                 _h('You do not have the necessary permissions to perform this action.')
@@ -89,7 +89,7 @@ $panel['status'] = $status;
 $users = User::getAllData();
 $templateUsers = array();
 $templateUsers[] = array(
-    'url'   => "users.php?user={$_SESSION['user']}",
+    'url'   => "users.php?user=" . User::getLoggedUserName(),
     'label' => sprintf('<img class="icon"  src="%suser.png" />', IMG_LOCATION) . _h('Me'),
     'class' => 'user-list menu-item'
 );

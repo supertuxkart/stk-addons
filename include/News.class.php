@@ -426,7 +426,7 @@ class News
             DBConnection::get()->insert(
                 'news',
                 array(
-                    ':author_id'   => (int)User::getId(),
+                    ':author_id'   => (int)User::getLoggedId(),
                     ':content'     => (string)$message,
                     ':condition'   => (string)$condition,
                     ':important'   => (int)$important,

@@ -31,30 +31,30 @@ if (isset($_GET["user"]) && !empty($_GET["user"]))
 try
 {
     $user = User::getFromUserName($user_name);
+    $user_role = $user->getRole();
 }
 catch (UserException $e)
 {
     exit("Error " . $e->getMessage());
 }
 
-$userData = $user->getUserData();
 
 $user_panel_tpl = new StkTemplate("user-panel.tpl");
 $user_tpl = array(
     "username"    => array(
-        "value" => $userData["user"]
+        "value" => $user->getUserName()
     ),
     "reg_date"    => array(
-        "value" => $userData["reg_date"]
+        "value" => $user->getDateRegistration()
     ),
     "real_name"   => array(
-        "value" => $userData["name"]
+        "value" => $user->getRealName()
     ),
     "role"        => array(
-        "value" => $userData["role"]
+        "value" => $user_role
     ),
     "homepage"    => array(
-        "value" => $userData["homepage"]
+        "value" => $user->getHomepage()
     ),
     "addon_types" => array()
 );
@@ -105,7 +105,7 @@ foreach (Addon::getAllowedTypes() as $type)
         $addon["css_class"] = "";
         if (!($addon["status"] & F_APPROVED)) // not approved
         {
-            if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS) && $addon['uploader'] !== User::getId())
+            if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS) && $addon['uploader'] !== User::getLoggedId())
             {
                 continue;
             }
@@ -121,13 +121,13 @@ foreach (Addon::getAllowedTypes() as $type)
 
 // config form
 // Allow current user to change own profile, and administrators to change all profiles
-if (User::hasPermissionOnRole($userData['role']) || $userData["id"] === User::getId())
+if (User::hasPermissionOnRole($user_role) || $user->getId() === User::getLoggedId())
 {
     $user_tpl["config"] = array();
 
     // role
     $role = array();
-    if (User::getId() === $userData["id"]) // user can not edit his own role
+    if (User::getLoggedId() === $user->getId()) // user can not edit his own role
     {
         $role["disabled"] = 'disabled';
     }
@@ -139,12 +139,12 @@ if (User::hasPermissionOnRole($userData['role']) || $userData["id"] === User::ge
     {
         // has permission
         $canEdit = User::hasPermissionOnRole($db_role);
-        $isOwner = ($userData["role"] === $db_role);
+        $isOwner = ($user_role === $db_role);
 
         if ($canEdit || $isOwner)
         {
             $role["options"][$db_role] = $db_role;
-            if (User::oldRoleToNew($userData["role"]) === $db_role)
+            if ($isOwner)
             {
                 $role["selected"] = $db_role;
             }
@@ -153,13 +153,13 @@ if (User::hasPermissionOnRole($userData['role']) || $userData["id"] === User::ge
     $user_tpl["config"]["role"] = $role;
 
     // activated
-    if ($userData["active"] == 1)
+    if ($user->isActive())
     {
         $user_tpl["config"]["activated"] = "checked";
     }
 
     // password form
-    if ($userData["id"] === User::getId())
+    if ($user->getId() === User::getLoggedId())
     {
         $user_tpl["config"]["password"] = array(
             "min" => 8

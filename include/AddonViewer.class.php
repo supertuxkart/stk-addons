@@ -63,7 +63,7 @@ class AddonViewer
             if (User::isLoggedIn())
             {
                 // write configuration for the submiter and administrator
-                if (User::hasPermission(AccessControl::PERM_EDIT_ADDONS) || $this->addon->getUploaderId() == User::getId())
+                if (User::hasPermission(AccessControl::PERM_EDIT_ADDONS) || $this->addon->getUploaderId() === User::getLoggedId())
                 {
                     $return .= $this->displayConfig();
                 }
@@ -119,7 +119,7 @@ class AddonViewer
             );
         }
         // Add upload button below image (or in place of image)
-        if (User::isLoggedIn() && ($this->addon->getUploaderId() == User::getId() || User::hasPermission(AccessControl::PERM_EDIT_ADDONS)))
+        if ($this->addon->getUploaderId() === User::getLoggedId() || User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
         {
             $tpl['addon']['image_upload'] = array(
                 'display'      => true,
@@ -147,7 +147,7 @@ class AddonViewer
             'submitter'     => array(
                 'label' => _h('Submitted by:'),
                 'value' => '<a href="' . SITE_ROOT . 'users.php?user=' . $addonUser->getUserName() . '">' . h(
-                        $addonUser->getUserFullName()
+                        $addonUser->getLoggedUserName()
                     ) . '</a>'
             ),
             'revision'      => array(
@@ -212,7 +212,7 @@ class AddonViewer
             'revisions' => array()
         );
 
-        if (User::isLoggedIn() && ($this->addon->getUploaderId() == User::getId() || User::hasPermission(AccessControl::PERM_EDIT_ADDONS)))
+        if ($this->addon->getUploaderId() == User::getLoggedId() || User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
         {
             $rev_list['upload']['display'] = true;
         }
@@ -233,7 +233,7 @@ class AddonViewer
                 // User is logged in
                 // If the user is not the uploader, or moderators, then they
                 // cannot see unapproved addons
-                if ($this->addon->getUploaderId() != User::getId() && !User::hasPermission(AccessControl::PERM_EDIT_ADDONS) && !($revision['status'] & F_APPROVED))
+                if ($this->addon->getUploaderId() !== User::getLoggedId() && !User::hasPermission(AccessControl::PERM_EDIT_ADDONS) && !($revision['status'] & F_APPROVED))
                 {
                     continue;
                 }
@@ -266,7 +266,7 @@ class AddonViewer
             'images'            => array(),
             'no_images_message' => _h('No images have been uploaded for this addon yet.')
         );
-        if (User::isLoggedIn() && ($this->addon->getUploaderId() == User::getId() || User::hasPermission(AccessControl::PERM_EDIT_ADDONS)))
+        if ($this->addon->getUploaderId() === User::getLoggedId() || User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
         {
             $im_list['upload']['display'] = true;
         }
@@ -298,8 +298,7 @@ class AddonViewer
                     }
                     $admin_links .= '<br />';
                 }
-                if (User::hasPermission(AccessControl::PERM_EDIT_ADDONS) || $this->addon->getUploaderId() == User::getId()
-                )
+                if (User::hasPermission(AccessControl::PERM_EDIT_ADDONS) || $this->addon->getUploaderId() === User::getLoggedId())
                 {
                     if ($this->addon->getType() == 'karts')
                     {
@@ -322,9 +321,7 @@ class AddonViewer
                 }
             }
             $image['admin_links'] = $admin_links;
-            if (User::isLoggedIn() &&
-                ($this->addon->getUploaderId() == User::getId() || User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
-            )
+            if ($this->addon->getUploaderId() === User::getLoggedId() || User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
             {
                 $image_files[] = $image;
                 continue;
@@ -349,7 +346,7 @@ class AddonViewer
             'files'            => array(),
             'no_files_message' => _h('No source files have been uploaded for this addon yet.')
         );
-        if (User::isLoggedIn() && ($this->addon->getUploaderId() == User::getId() || User::hasPermission(AccessControl::PERM_EDIT_ADDONS)))
+        if ($this->addon->getUploaderId() == User::getLoggedId() || User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
         {
             $s_list['upload']['display'] = true;
         }
@@ -385,17 +382,14 @@ class AddonViewer
                             ) . '">' . _h('Approve') . '</a>';
                     }
                 }
-                if ($this->addon->getUploaderId() == User::getId() || User::hasPermission(
-                        AccessControl::PERM_EDIT_ADDONS
-                    )
-                )
+                if ($this->addon->getUploaderId() === User::getLoggedId() || User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
                 {
                     $source['details'] .= ' | <a href="' . File::rewrite(
                             $this->addon->getLink() . '&amp;save=deletefile&amp;id=' . $source['id']
                         ) . '">' . _h('Delete File') . '</a><br />';
                 }
             }
-            if (User::isLoggedIn() && ($this->addon->getUploaderId() == User::getId() || User::hasPermission(AccessControl::PERM_EDIT_ADDONS)))
+            if ($this->addon->getUploaderId() === User::getLoggedId() || User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
             {
                 $source_files[] = $source;
                 continue;
@@ -456,7 +450,7 @@ class AddonViewer
         {
             throw new AddonException('You must be logged in to see this.');
         }
-        if (User::hasPermission(AccessControl::PERM_EDIT_ADDONS) == false && $this->addon->getUploaderId() != User::getId()
+        if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS) && $this->addon->getUploaderId() !== User::getLoggedId()
         )
         {
             throw new AddonException(_h('You do not have the necessary privileges to perform this action.'));
@@ -484,7 +478,7 @@ class AddonViewer
         echo '</form><br />';
 
         // Delete addon
-        if ($this->addon->getUploaderId() == User::getId() || User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
+        if ($this->addon->getUploaderId() === User::getLoggedId() || User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
         {
             echo '<input type="button" value="' . _h('Delete Addon') . '"onClick="confirm_delete(\'' . File::rewrite(
                     $this->addon->getLink() . '&amp;save=delete'
