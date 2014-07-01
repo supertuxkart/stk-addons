@@ -18,7 +18,7 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Statistic
+class Statistics
 {
     /**
      * Return the most downloaded addon of a given type

@@ -1,4 +1,3 @@
-<?php
 /**
  * copyright 2014 Daniel Butum <danibutum at gmail dot com>
  *
@@ -18,13 +17,11 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
+(function(window, document) {
+    "use strict";
 
-$tpl = StkTemplate::get("stats.tpl")
-    ->assignTitle("Statistics")
-    ->addScriptInclude("//cdnjs.cloudflare.com/ajax/libs/flot/0.8.2/jquery.flot.min.js", "")
-    ->addScriptInclude("//cdnjs.cloudflare.com/ajax/libs/flot/0.8.2/jquery.flot.pie.min.js", "");
-$tplData = array();
+    // load essential elements
+    var $main_stats = $("#stats-main"); // top container
 
-$tpl->assign("stats", $tplData);
-echo $tpl;
+
+})(window, document);

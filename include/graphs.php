@@ -3,31 +3,65 @@ require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
 function graph_data_to_json($values, $labels, $format, $graph_id)
 {
-    $count_values = count($values);
+    // for time chart
+    $count_x_axis_values = $count_y_axis_values = 0;
+    $x_axis_values = $y_axis_values = array();
+
+    // for pie chart
+    $count_values = 0;
+
+    // common
     $count_labels = count($labels);
 
-    if ($format !== 'time' && $count_values !== $count_labels)
-    {
-        throw new Exception('Invalid data set provided.');
-    }
-    else if ($format === 'time' &&
-        count($values[0]) !== $count_labels &&
-        count($values[1]) !== $count_labels
-    )
-    {
-        throw new Exception('Invalid data set for itme graph provided.');
-    }
-
+    // validate
     if (!$count_labels)
     {
         throw new Exception('No data given.');
     }
 
-    if ($format !== 'time')
+    if ($format === "time") // time chart
     {
-        foreach ($values as $test_data)
+        // init
+        $x_axis_values = $values[0];
+        $y_axis_values = $values[1];
+        $count_x_axis_values = count($x_axis_values);
+        $count_y_axis_values = count($y_axis_values);
+
+        // 0 index is x axis (time axis) and 1 index is y axis
+        if ($count_x_axis_values !== $count_labels && $count_y_axis_values !== $count_labels)
         {
-            if (!is_numeric($test_data))
+            throw new Exception('Invalid data set for time graph provided.');
+        }
+
+        foreach ($x_axis_values as $value) // x axis aka time
+        {
+            if (!is_array($value))
+            {
+                throw new Exception('Non-array provided in time-axis.');
+            }
+        }
+        foreach ($y_axis_values as $value) // y axis
+        {
+            if (!is_array($value))
+            {
+                throw new Exception('Non-array provided in y-axis.');
+            }
+        }
+    }
+    elseif($format === "pie") // pie chart
+    {
+        // init
+        $count_values = count($values);
+
+        // labels must be the same as values
+        if ($count_values !== $count_labels)
+        {
+            throw new Exception('Invalid data set provided. The number of labels is different than the number of values');
+        }
+
+        foreach ($values as $value)
+        {
+            if (!is_numeric($value))
             {
                 throw new Exception('Non-numeric data provided.');
             }
@@ -35,24 +69,11 @@ function graph_data_to_json($values, $labels, $format, $graph_id)
     }
     else
     {
-        foreach ($values[0] as $test_data)
-        {
-            if (!is_array($test_data))
-            {
-                throw new Exception('Non-array provided in time-axis.');
-            }
-        }
-        foreach ($values[1] as $test_data)
-        {
-            if (!is_array($test_data))
-            {
-                throw new Exception('Non-array provided in y-axis.');
-            }
-        }
+        throw new Exception(sprintf("Format %s is not recognized", $format));
     }
 
     // Handle caching, define paths
-    if ($graph_id !== null)
+    if ($graph_id)
     {
         $local_cache_file = CACHE_PATH . 'cache_graph_' . $graph_id . '.json';
         $remote_cache_file = CACHE_LOCATION . 'cache_graph_' . $graph_id . '.json';
@@ -61,7 +82,7 @@ function graph_data_to_json($values, $labels, $format, $graph_id)
             $modified_time = filemtime($local_cache_file);
             $current_time = time();
 
-            // file is onw day old
+            // file is one day old
             // calculate if we need to refresh, by the modified time
             if (($modified_time + Util::SECONDS_IN_A_DAY) < $current_time)
             {
@@ -108,47 +129,45 @@ function graph_data_to_json($values, $labels, $format, $graph_id)
     }
     else if ($format === 'time') // time chart
     {
-        $xvalues = $values[0];
-        $yvalues = $values[1];
-
         // Get the tallest line and get relatively small lines
         $max_value = 0;
-        for ($i = 0; $i < count($yvalues); $i++)
+        for ($i = 0; $i < $count_y_axis_values; $i++)
         {
-            if (max($yvalues[$i]) > $max_value)
+            if (max($y_axis_values[$i]) > $max_value)
             {
-                $max_value = max($yvalues[$i]);
+                $max_value = max($y_axis_values[$i]);
             }
         }
         $small_lines = array();
-        for ($i = 0; $i < count($yvalues); $i++)
+        for ($i = 0; $i < $count_y_axis_values; $i++)
         {
-            if (max($yvalues[$i]) < 0.02 * $max_value)
+            if (max($y_axis_values[$i]) < 0.02 * $max_value)
             {
                 $small_lines[] = $i;
             }
         }
+        $count_small_lines = count($small_lines);
 
         // Generate the line labels
         $json_array['cols'] = array();
         $json_array['cols'][] = array('id' => '', 'label' => 'Date', 'pattern' => '', 'type' => 'date');
-        for ($i = 0; $i < count($labels); $i++)
+        for ($i = 0; $i < $count_labels; $i++)
         {
             if (!in_array($i, $small_lines))
             {
                 $json_array['cols'][] = array('id' => '', 'label' => $labels[$i], 'pattern' => '', 'type' => 'number');
             }
         }
-        if (count($small_lines) != 0)
+        if ($count_small_lines !== 0)
         {
             $json_array['cols'][] = array('id' => '', 'label' => 'Other', 'pattern' => '', 'type' => 'number');
         }
 
         // Get all x-values used in data set
         $allxvalues = array();
-        for ($i = 0; $i < count($xvalues); $i++)
+        for ($i = 0; $i < $count_x_axis_values; $i++)
         {
-            $allxvalues = array_merge_recursive($allxvalues, $xvalues[$i]);
+            $allxvalues = array_merge_recursive($allxvalues, $x_axis_values[$i]);
         }
         $allxvalues = array_values(array_unique($allxvalues, SORT_NUMERIC));
         asort($allxvalues);
@@ -164,13 +183,14 @@ function graph_data_to_json($values, $labels, $format, $graph_id)
             $row[] = array('v' => $date_str, 'f' => null);
 
             // Insert data for each line
-            for ($j = 0; $j < count($labels); $j++)
+            for ($j = 0; $j < $count_labels; $j++)
             {
-                $xval = $xvalues[$j];
-                $yval = $yvalues[$j];
+                $xval = $x_axis_values[$j];
+                $yval = $y_axis_values[$j];
 
                 $found = false;
-                for ($k = 0; $k < count($xval); $k++)
+                $count_xval = count($xval);
+                for ($k = 0; $k < $count_xval; $k++)
                 {
                     if ($xval[$k] == $allxvalues[$i])
                     {
@@ -194,14 +214,14 @@ function graph_data_to_json($values, $labels, $format, $graph_id)
             }
 
             // Insert data for "other" line
-            if (count($small_lines) != 0)
+            if ($count_small_lines !== 0)
             {
                 $row[] = array('v' => $other_count, 'f' => null);
             }
 
             // Sanity check
-            $expected_cols = count($labels) - count($small_lines) + 1;
-            if (count($small_lines) != 0)
+            $expected_cols = $count_labels - $count_small_lines + 1;
+            if ($count_small_lines != 0)
             {
                 $expected_cols++;
             }
@@ -219,10 +239,6 @@ function graph_data_to_json($values, $labels, $format, $graph_id)
 
             $json_array['rows'][] = array('c' => $row);
         }
-    }
-    else
-    {
-        throw new Exception('Unsupported format!');
     }
 
     // Encode values to json

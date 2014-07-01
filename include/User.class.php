@@ -540,12 +540,7 @@ class User
      */
     public static function getLoggedRole()
     {
-        if (!static::isLoggedIn())
-        {
-            return "unregistered";
-        }
-
-        return static::oldRoleToNew(static::sessionGet("role"));
+        return static::isLoggedIn() ? static::oldRoleToNew(static::sessionGet("role")) : "unregistered";
     }
 
     /**
@@ -754,12 +749,7 @@ class User
      */
     public static function getPermissions()
     {
-        if(!static::isLoggedIn())
-        {
-            return array();
-        }
-
-        return static::sessionGet("permissions");
+        return static::isLoggedIn() ? static::sessionGet("permissions") : array();
     }
 
     /**
@@ -771,7 +761,7 @@ class User
      */
     public static function hasPermission($permission)
     {
-        return in_array($permission, static::getPermissions());
+        return $permission ? in_array($permission, static::getPermissions()) : false;
     }
 
     /**
@@ -925,11 +915,11 @@ class User
                 FROM `" . DB_PREFIX . "users`
                 WHERE `id` = :userid AND `pass` = :pass",
                 DBConnection::ROW_COUNT,
-                array
-                (
-                    ':userid' => (int)$userid,
+                array(
+                    ':userid' => $userid,
                     ':pass'   => Validate::password($current, null, null, $userid)
-                )
+                ),
+                array(":userid" => DBConnection::PARAM_INT)
             );
 
             if ($count < 1)
@@ -970,9 +960,8 @@ class User
                 SET `active` = '1' 
     	        WHERE `id` = :userid",
                 DBConnection::ROW_COUNT,
-                array(
-                    ':userid' => $userid
-                )
+                array(':userid' => $userid),
+                array(":userid" => DBConnection::PARAM_INT)
             );
             if ($count === 0)
             {
@@ -1017,6 +1006,7 @@ class User
                 Log::newEvent('Password reset email for "' . $username . '" could not be sent.');
                 throw new UserException($e->getMessage() . ' ' . _h('Please contact a website administrator.'));
             }
+
             Log::newEvent("Password reset request for user '$username'");
 
         }
@@ -1059,9 +1049,7 @@ class User
     	        FROM `" . DB_PREFIX . "users`
     	        WHERE `user` LIKE :username",
                 DBConnection::FETCH_FIRST,
-                array(
-                    ':username' => $username
-                )
+                array(':username' => $username)
             );
         }
         catch(DBException $e)
@@ -1084,9 +1072,7 @@ class User
     	        FROM `" . DB_PREFIX . "users`
     	        WHERE `email` LIKE :email",
                 DBConnection::FETCH_FIRST,
-                array(
-                    ':email' => $email
-                )
+                array(':email' => $email)
             );
         }
         catch(DBException $e)
@@ -1107,19 +1093,20 @@ class User
             $count = DBConnection::get()->insert(
                 "users",
                 array(
-                    ":user" => $username,
-                    ":pass" => $password,
-                    ":name" => $name,
-                    ":email" => $email,
-                    "role" => "user",
+                    ":user"    => $username,
+                    ":pass"    => $password,
+                    ":name"    => $name,
+                    ":email"   => $email,
+                    "role"     => "user",
                     "reg_date" => "CURRENT_DATE()"
                 )
             );
 
-            if ($count != 1)
+            if ($count !== 1)
             {
                 throw new DBException("Multiple rows affected(or none). Not good");
             }
+
             $userid = DBConnection::get()->lastInsertId();
             DBConnection::get()->commit();
             $verification_code = Verification::generate($userid);
@@ -1135,6 +1122,7 @@ class User
                 Log::newEvent("Registration email for user '$username' with id '$userid' failed.");
                 throw new UserException($e->getMessage() . ' ' . _h('Please contact a website administrator.'));
             }
+
             Log::newEvent("Registration submitted for user '$username' with id '$userid'.");
         }
         catch(DBException $e)

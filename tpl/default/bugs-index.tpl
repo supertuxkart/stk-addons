@@ -49,7 +49,6 @@
         </div>
     </div>
     <br><br>
-    <div id="alert-container"></div>
     <div id="bugs-content">
         {$bugs.content}
     </div>

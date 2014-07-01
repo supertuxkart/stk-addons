@@ -113,9 +113,10 @@ class StkTemplate extends Template
         // Fill script tags
         $this->script_inline["before"][] = array(
             'content' => sprintf(
-                "var SITE_ROOT = '%s', BUGS_LOCATION = '%s';",
+                "var SITE_ROOT = '%s', BUGS_LOCATION = '%s', JSON_LOCATION = '%s';",
                 SITE_ROOT,
-                BUGS_LOCATION
+                BUGS_LOCATION,
+                SITE_ROOT . "json/"
             )
         );
 

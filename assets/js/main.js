@@ -67,6 +67,8 @@ $(document).ready(function() {
         $('ul.menu_body').slideToggle('medium');
     });
 
+    var $right_body = $("#right-content_body");
+
     $('a.addon-list').click(function() {
         History.pushState(null, '', this.href);
         var url = this.href;
@@ -75,8 +77,9 @@ $(document).ready(function() {
             url = SITE_ROOT + $(this).children('meta').attr("content").replace('&amp;', '&');
             addonType = getUrlVars(url)['type'];
         }
+
         var addonId = getUrlVars(url)['name']; // we use the id as a varchar in the database
-        loadContentWithAjax("#right-content_body", SITE_ROOT + 'addons-panel.php', {name: addonId, type: addonType}, clearPanelStatus)
+        loadContent($right_body, SITE_ROOT + 'addons-panel.php', {name: addonId, type: addonType}, clearPanelStatus)
 
         return false;
     });
@@ -89,7 +92,7 @@ $(document).ready(function() {
     $('a.user-list').click(function() {
         History.pushState(null, '', this.href);
         var user = getUrlVars(this.href)['user'];
-        loadContentWithAjax("#right-content_body", SITE_ROOT + 'users-panel.php', {user: user}, clearPanelStatus)
+        loadContent($right_body, SITE_ROOT + 'users-panel.php', {user: user}, clearPanelStatus);
 
         return false;
     });

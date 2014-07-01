@@ -1,3 +1,22 @@
+/**
+ * copyright 2014 Daniel Butum <danibutum at gmail dot com>
+ *
+ * This file is part of stkaddons
+ *
+ * stkaddons is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * stkaddons is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 (function(window, document) {
     "use strict";
 
@@ -10,8 +29,8 @@
             "font-styles": false
         }
     };
-    var search_url = SITE_ROOT + 'json/search.php';
-    var json_url = SITE_ROOT + "json/bugs.php";
+    var search_url = JSON_LOCATION + "search.php";
+    var json_url = JSON_LOCATION + "bugs.php";
     var tableOptions = {
         searching  : false,
         "aaSorting": [] // Disable initial sort
@@ -78,14 +97,14 @@
     var NavigateTo = {
         index: function() {
             History.back();
-            loadContentWithAjax("#bugs-content", BUGS_LOCATION + 'all.php', {}, function() {
+            loadContent($content_bugs, BUGS_LOCATION + 'all.php', {}, function() {
                 btnToggle();
                 registerEditors();
             });
         },
         add  : function() {
             History.pushState({state: "add"}, '', "?add");
-            loadContentWithAjax("#bugs-content", BUGS_LOCATION + 'add.php', {}, function() {
+            loadContent($content_bugs, BUGS_LOCATION + 'add.php', {}, function() {
                 btnToggle();
                 registerEditors();
                 registerAddPage();
@@ -93,9 +112,10 @@
         },
         view : function(bug_id) {
             History.pushState({state: "view"}, '', "?bug_id=" + bug_id);
-            loadContentWithAjax("#bugs-content", BUGS_LOCATION + 'view.php', {bug_id: bug_id}, function() {
+            loadContent($content_bugs, BUGS_LOCATION + 'view.php', {bug_id: bug_id}, function() {
                 btnToggle();
                 registerEditors();
+                registerAddPage();
             });
         }
     };

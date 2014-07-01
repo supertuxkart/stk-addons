@@ -113,9 +113,7 @@ foreach ($users as $user)
 }
 
 // left panel
-$left_tpl = new StkTemplate('url-list-panel.tpl');
-$left_tpl->assign('items', $templateUsers);
-$panel['left'] = (string)$left_tpl;
+$panel['left'] = StkTemplate::get('url-list-panel.tpl')->assign('items', $templateUsers)->toString();
 
 // right panel
 $panel['right'] = Util::ob_get_require_once(ROOT_PATH . 'users-panel.php');

@@ -1,23 +1,47 @@
+/**
+ * copyright 2014 Daniel Butum <danibutum at gmail dot com>
+ *
+ * This file is part of stkaddons
+ *
+ * stkaddons is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * stkaddons is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
+ */
 "use strict";
 
-// Load the content of selector with some url
-function loadContentWithAjax(selector, url_to_load, url_get_params, callback, callback_before) {
-    var $selector = $(selector);
-    url_get_params = url_get_params || {};
+// TODO add history calls
+function loadContent($content, url, params, callback, request_type) {
+    request_type = request_type || "GET";
+    callback = callback || function() {};
 
-    if (_.isFunction(callback_before)) {
-        callback_before();
+    // define callback
+    function onComplete(response, status, xhr) {
+        if (status === "error") {
+            console.error("Error on loadContent");
+            console.error(response, status, xhr);
+            $content.html("Sorry there was an error " + xhr.status + " " + xhr.statusText);
+        } else {
+            callback();
+        }
     }
 
-    $.get(url_to_load, url_get_params,function(data) {
-        $selector.html(data);
-        if (_.isFunction(callback)) {
-            callback(data);
-        }
-    }).fail(function(e) {
-        console.error("loadContentWithAjax failed");
-        console.error(e);
-    });
+    if(request_type === "GET") {
+        $content.load(url + "?" + $.param(params), onComplete);
+    } else if(request_type === "POST") {
+        $content.load(url, params, onComplete);
+    } else {
+        console.error("request_type: ", request_type);
+        console.error("request type is invalid")
+    }
 }
 
 function onFormSubmit(form_identifier, callback_success, $container, url, data_type, request_method) {
@@ -48,7 +72,7 @@ function onFormSubmit(form_identifier, callback_success, $container, url, data_t
             success: callback_success,
             error  : function(xhr, ajaxOptions, thrownError) {
                 console.error("Error onFormSubmit");
-                console.error(xhr.status, ajaxOptions, thrownError);
+                console.error(xhr, ajaxOptions, thrownError);
             }
         }).fail(function() {
             console.error("onFormSubmit post request failed");
@@ -60,13 +84,11 @@ function onFormSubmit(form_identifier, callback_success, $container, url, data_t
 
 
 function parseJSON(raw_string) {
-    var jData;
+    var jData = {}; // silently fail on the client side
+
     try {
         jData = JSON.parse(raw_string);
     } catch (e) {
-        // silently fail on the client side
-        jData = {};
-
         console.error("Parson JSON error: ", e);
         console.error("Raw string: ", raw_string);
     }
@@ -102,31 +124,27 @@ function growlSuccess(messsage) {
 }
 
 function modalDelete(message, yes_callback, no_callback) {
+    yes_callback = yes_callback || function() {};
+    no_callback = no_callback || function() {};
+
     bootbox.dialog({
-        title   : "Delete",
-        message : message,
-        buttons : {
+        title  : "Delete",
+        message: message,
+        buttons: {
             danger: {
                 label    : "Yes!",
                 className: "btn-danger",
-                callback : function() {
-                    if (_.isFunction(yes_callback)) {
-                        yes_callback();
-                    }
-                }
+                callback : yes_callback
             },
-            main  : {
+            main   : {
                 label    : "No",
                 className: "btn-primary",
-                callback : function() {
-                    if (_.isFunction(no_callback)) {
-                        no_callback();
-                    }
-                }
+                callback : no_callback
             }
         }
     });
 }
+
 
 function redirectTo(url, seconds) {
     url = url || window.location.href;
@@ -153,6 +171,8 @@ function editorInit($editor_container, editor_options) {
     if (!isEditor($editor_container)) { // editor does not exist
         return $editor_container.wysihtml5(editor_options);
     }
+
+    return null;
 }
 
 // Read a page's GET URL variables and return them as an associative array.

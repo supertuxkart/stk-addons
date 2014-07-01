@@ -51,7 +51,7 @@ class News
         }
 
         // Dynamic newest kart display
-        $new_kart = Addon::getNameByID(Statistic::newestAddon('karts'));
+        $new_kart = Addon::getNameByID(Statistics::newestAddon('karts'));
         $existing_id = false;
         foreach ($dynamic_entries as $entry)
         {
@@ -103,7 +103,7 @@ class News
         }
 
         // Dynamic newest track display
-        $new_track = Addon::getNameByID(Statistic::newestAddon('tracks'));
+        $new_track = Addon::getNameByID(Statistics::newestAddon('tracks'));
         $existing_id = false;
         foreach ($dynamic_entries as $entry)
         {
@@ -155,7 +155,7 @@ class News
         }
 
         // Dynamic newest arena display
-        $new_arena = Addon::getNameByID(Statistic::newestAddon('arenas'));
+        $new_arena = Addon::getNameByID(Statistics::newestAddon('arenas'));
         $existing_id = false;
         foreach ($dynamic_entries as $entry)
         {
