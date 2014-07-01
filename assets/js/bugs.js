@@ -115,7 +115,6 @@
             loadContent($content_bugs, BUGS_LOCATION + 'view.php', {bug_id: bug_id}, function() {
                 btnToggle();
                 registerEditors();
-                registerAddPage();
             });
         }
     };

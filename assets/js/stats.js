@@ -23,5 +23,33 @@
     // load essential elements
     var $main_stats = $("#stats-main"); // top container
 
+    $.plot("#stat-files", [
+        {"label": "Karts", data: 1843487},
+        {"label": "Tracks", data: 1808441},
+        {"label": "Karts", data: 441016}
+    ], {
+        series: {
+            pie: {
+                show: true,
+                radius: 1,
+                label: {
+                    show: true,
+                    radius: 0.75,
+//                    formatter: function(label, series) {
+//                        console.log(series);
+//                        return label + "\n" + series.data[0][1];
+//                    },
+                    background: {
+                        opacity: 0.6,
+                        color: '#000'
+                    }
+                }
+            }
+        },
+        grid: {
+            hoverable: true,
+            clickable: true
+        }
+    });
 
 })(window, document);

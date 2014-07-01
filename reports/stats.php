@@ -20,10 +20,11 @@
 
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
-$tpl = StkTemplate::get("stats.tpl")
+$tpl = StkTemplate::get("stats-index.tpl")
     ->assignTitle("Statistics")
-    ->addScriptInclude("//cdnjs.cloudflare.com/ajax/libs/flot/0.8.2/jquery.flot.min.js", "")
-    ->addScriptInclude("//cdnjs.cloudflare.com/ajax/libs/flot/0.8.2/jquery.flot.pie.min.js", "");
+    ->addScriptInclude("http://www.flotcharts.org/flot/jquery.flot.js", "")
+    ->addScriptInclude("http://www.flotcharts.org/flot/jquery.flot.pie.js", "")
+    ->addScriptInclude("stats.js");
 $tplData = array();
 
 $tpl->assign("stats", $tplData);
