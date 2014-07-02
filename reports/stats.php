@@ -17,15 +17,39 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
 $tpl = StkTemplate::get("stats-index.tpl")
-    ->assignTitle("Statistics")
     ->addScriptInclude("http://www.flotcharts.org/flot/jquery.flot.js", "")
     ->addScriptInclude("http://www.flotcharts.org/flot/jquery.flot.pie.js", "")
     ->addScriptInclude("stats.js");
 $tplData = array();
+
+if(isset($_GET["addons"]))
+{
+    $tpl->assignTitle("Addon stats");
+    $tplData["body"] = Util::ob_get_require_once("stats-addons.php");
+}
+elseif (isset($_GET["files"]))
+{
+    $tpl->assignTitle("File stats");
+    $tplData["body"] = Util::ob_get_require_once("stats-files.php");
+}
+elseif (isset($_GET["clients"]))
+{
+    $tpl->assignTitle("Client stats");
+    $tplData["body"] = Util::ob_get_require_once("stats-clients.php");
+}
+elseif (isset($_GET["servers"]))
+{
+    $tpl->assignTitle("Server stats");
+    $tplData["body"] = Util::ob_get_require_once("stats-servers.php");
+}
+else // display overview
+{
+    $tpl->assignTitle("Stats Overview");
+    $tplData["body"] = Util::ob_get_require_once("stats-overview.php");
+}
 
 $tpl->assign("stats", $tplData);
 echo $tpl;

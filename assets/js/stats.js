@@ -24,9 +24,9 @@
     var $main_stats = $("#stats-main"); // top container
 
     $.plot("#stat-files", [
-        {"label": "Karts", data: 1843487},
-        {"label": "Tracks", data: 1808441},
-        {"label": "Karts", data: 441016}
+        {"label": "Karts", data: [1843487]},
+        {"label": "Tracks", data: [1808441]},
+        {"label": "Karts", data: [441016]}
     ], {
         series: {
             pie: {

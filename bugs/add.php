@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
 $tpl = StkTemplate::get("bugs-add.tpl")->assign("current_url", urlencode(Util::getCurrentUrl(false, false)));

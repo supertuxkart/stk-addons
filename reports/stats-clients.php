@@ -1,7 +1,6 @@
 <?php
 /**
- * copyright 2013 Stephen Just <stephenjust@users.sourceforge.net>
- *           2014 Daniel Butum <danibutum at gmail dot com>
+ * copyright 2014 Daniel Butum <danibutum at gmail dot com>
  *
  * This file is part of stkaddons
  *
@@ -20,15 +19,8 @@
  */
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
-if (!isset($_POST["action"]) || empty($_POST["action"]))
-{
-    exit(json_encode(array("error" => "action param is not defined or is empty")));
-}
+$tpl = StkTemplate::get("stats-clients.tpl");
+$tplData = array();
 
-switch (strtolower($_POST["action"]))
-{
-
-    default:
-        echo json_encode(array("error" => sprintf("action = %s is not recognized", h($_POST["action"]))));
-        break;
-}
+$tpl->assign("clients", $tplData);
+echo $tpl;

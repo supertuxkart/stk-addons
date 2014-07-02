@@ -19,7 +19,7 @@
 
 body {
     font-family: 'Open Sans', Verdana, Geneva, sans-serif;
-    font-size: 13.5px;
+    font-size: 14px;
     background-repeat: no-repeat;
     background-position: top left;
     color: black;
@@ -27,6 +27,14 @@ body {
 
 textarea {
     resize: horizontal;
+}
+
+a:hover {
+    color: #999999;
+}
+
+a img {
+    border: none;
 }
 
 #body-wrapper {
@@ -259,7 +267,6 @@ textarea {
     border-radius: 2px;
     margin: 5px;
     padding: 5px;
-    background-image: url('../img/content.png');
     clear: both;
     overflow-y: auto;
     -moz-border-radius: 2px;
@@ -430,14 +437,14 @@ div.image_thumb_container {
     background: #CCCCDD;
     border: 1px solid #666677;
     border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
     float: left;
     padding: 3px;
     margin: 1px;
     min-width: 78px;
     min-height: 78px;
     text-align: center;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
 }
 
 #addon-image {
@@ -492,18 +499,14 @@ div.image_thumb_container {
 .rating .fullstars {
     position: absolute;
     background: transparent url('../img/stars.png') bottom left no-repeat;
-    top: 0px;
-    left: 0px;
+    top: 0;
+    left: 0;
     height: 17px;
     z-index: 102;
 }
 
 #user-rating .rating {
     display: inline-block;
-}
-
-#bug-comments-container img {
-    max-height: 480px;
 }
 
 /* Flag Badges */
@@ -598,14 +601,6 @@ span.warning {
     float: left;
 }
 
-a:hover {
-    color: #999999;
-}
-
-a img {
-    border: none;
-}
-
 .subtext {
     font-size: x-small;
     color: #666666;
@@ -662,6 +657,12 @@ div.help-hidden {
 .preview {
     width: 300px;
 }
+
+/* ------------------------------ bugs  ------------------------------*/
+#bug-comments-container img {
+    max-height: 480px;
+}
+/* ------------------------------ bugs  ------------------------------*/
 
 /* ------------------------------ typehead  ------------------------------*/
 .typeahead,

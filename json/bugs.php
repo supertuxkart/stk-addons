@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
 if (!isset($_POST["action"]) || empty($_POST["action"]))

@@ -17,11 +17,11 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
 $bug_id = isset($_GET["bug_id"]) ? $_GET["bug_id"] : "";
 
+// TODO redirect to a 404 page
 if (!$bug_id)
 {
     exit("No bug id provided");
