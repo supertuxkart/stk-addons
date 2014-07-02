@@ -74,65 +74,6 @@ class Report
     }
 
     /**
-     * @param $section
-     * @param $query
-     */
-    public function addQuery($section, $query)
-    {
-        $db = DBConnection::get();
-
-        $query_result = "\t<h3>Query</h3>\n";
-        $query_result .= "\t<code>" . h($query) . "</code>\n";
-        try
-        {
-            $result = $db->query($query, DBConnection::FETCH_ALL);
-            $count = count($result);
-        }
-        catch(DBException $e)
-        {
-            $this->report_structure[$section]['content'] .= $query_result . '<p>ERROR.</p>';
-
-            return;
-        }
-        $query_result .= "\t<h3>Result</h3>\n";
-        $query_result .= "\t<p>($count rows returned)</p>\n";
-
-        // Don't draw the table if we have no results
-        if ($count === 0)
-        {
-            $this->report_structure[$section]['content'] .= $query_result;
-
-            return;
-        }
-
-        $query_result .= "\t<table cellspacing=\"0\" class=\"sortable\"><thead>\n\t\t<tr>\n";
-
-        // List column names, $result[0] is a assoc array
-        $column_names = array_keys($result[0]);
-        foreach ($column_names as $col)
-        {
-            $query_result .= "\t\t\t<th>$col</th>\n";
-        }
-        $query_result .= "\t\t</tr></thead><tbody>\n";
-
-        // List results
-        foreach ($result AS $row)
-        {
-            $query_result .= "\t\t<tr>\n";
-            foreach ($column_names as $col)
-            {
-                $current_result = h($row[$col]);
-                $query_result .= "\t\t\t<td>{$current_result}</td>\n";
-            }
-            $query_result .= "\t\t</tr>\n";
-        }
-
-        $query_result .= "\t</tbody></table>";
-
-        $this->report_structure[$section]['content'] .= $query_result;
-    }
-
-    /**
      * Inserts a pie chart into the report. The query must be formed such that
      * the first column returned is a label, and the second is a numerical
      * value.
@@ -276,7 +217,6 @@ class Report
     {
         $return = "<html>\n<head>\n\t<title>{$this->report_title}</title>\n";
         $return .= '<meta http-equiv="content-type" content="text/html; charset=utf-8">';
-        $return .= "\t<script src=\"" . JS_LOCATION . "sorttable.js\" type=\"text/javascript\"></script>\n";
         $return .= "\t<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js\" type=\"text/javascript\"></script>\n";
         $return .= "\t<script src=\"https://www.google.com/jsapi\" type=\"text/javascript\"></script>\n";
         $return .= "\t<script src=\"" . JS_LOCATION . "reports.js\" type=\"text/javascript\"></script>\n";

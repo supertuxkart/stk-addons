@@ -25,7 +25,7 @@ $tpl = StkTemplate::get("stats-index.tpl")
     ->addScriptInclude("stats.js");
 $tplData = array();
 
-if(isset($_GET["addons"]))
+if (isset($_GET["addons"]))
 {
     $tpl->assignTitle("Addon stats");
     $tplData["body"] = Util::ob_get_require_once("stats-addons.php");

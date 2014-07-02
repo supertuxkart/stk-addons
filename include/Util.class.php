@@ -128,6 +128,41 @@ class Util
     }
 
     /**
+     * Flatten a multi-dimensional array into a one dimensional array.
+     *
+     * @param array   $array         The array to flatten
+     * @param boolean $preserve_keys Whether or not to preserve array keys.  Keys from deeply nested arrays will
+     *                               overwrite keys from shallow nested arrays
+     *
+     * @return array
+     */
+    public static function array_flatten(array $array, $preserve_keys = true)
+    {
+        $flattened = array();
+
+        foreach ($array as $key => $value)
+        {
+            if (is_array($value))
+            {
+                $flattened = array_merge($flattened, static::array_flatten($value, $preserve_keys));
+            }
+            else
+            {
+                if ($preserve_keys)
+                {
+                    $flattened[$key] = $value;
+                }
+                else
+                {
+                    $flattened[] = $value;
+                }
+            }
+        }
+
+        return $flattened;
+    }
+
+    /**
      * Strip all whitespace from the given string.
      *
      * @param  string $string The string to strip

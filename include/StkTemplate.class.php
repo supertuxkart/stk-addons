@@ -28,9 +28,10 @@ require_once(INCLUDE_PATH . 'locale.php');
  */
 class StkTemplate extends Template
 {
-    const ORDER_AFTER = "after";
+    // fake order enumeration
+    const ORDER_AFTER = 1;
 
-    const ORDER_BEFORE = "before";
+    const ORDER_BEFORE = 2;
 
     /**
      * Hold the meta tags
@@ -270,12 +271,12 @@ class StkTemplate extends Template
      * Add a inline script to the page
      *
      * @param string $content the js source code
-     * @param string $order   'before' to display before the include script or 'after' to display after
+     * @param string $order   ORDER_BEFORE to display before the include script or ORDER_AFTER to display after
      *
      * @return StkTemplate
      * @throws InvalidArgumentException on invalid order
      */
-    public function addScriptInline($content, $order = "after")
+    public function addScriptInline($content, $order)
     {
         if (!in_array($order, array(static::ORDER_AFTER, static::ORDER_BEFORE)))
         {

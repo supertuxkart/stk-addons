@@ -50,20 +50,4 @@ $uaTime1y_query = 'SELECT CASE WHEN `label` = \'\' THEN \'Unknown\' ELSE `label`
     ORDER BY `t`.`date` DESC, `t`.`label` DESC;';
 $report->addTimeGraph($uaTime1y_section, $uaTime1y_query, 'File Downloads per OS', 'ua_time_1y');
 
-$last30_section = $report->addSection("File Downloads in the Last 30 Days");
-$last30_query = 'SELECT `date`,SUM(`value`) AS count
-    FROM `' . DB_PREFIX . 'stats`
-    WHERE `date` >= CURDATE() - INTERVAL 30 DAY
-    GROUP BY `date`
-    ORDER BY `date` DESC';
-$report->addQuery($last30_section, $last30_query);
-
-$last30_section = $report->addSection("File Downloads per Month in the Last 12 Months");
-$last30_query = 'SELECT CONCAT(MONTHNAME(`date`),\' \',YEAR(`date`)) AS `month`,SUM(`value`) AS count
-    FROM `' . DB_PREFIX . 'stats`
-    WHERE `date` >= CURDATE() - INTERVAL 12 MONTH
-    GROUP BY `month`
-    ORDER BY `date` DESC';
-$report->addQuery($last30_section, $last30_query);
-
 echo $report;

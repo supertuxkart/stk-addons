@@ -29,12 +29,4 @@ $chart_query = 'SELECT `type`, COUNT(`id`) AS `count`
     FROM `' . DB_PREFIX . 'addons` GROUP BY `type`';
 $report->addPieChart($addon_section, $chart_query, 'Add-On Types', 'ar_pie');
 
-$addon_query = 'SELECT `a`.`id`,`a`.`type`,`a`.`name`,`u`.`name` AS `uploader`,
-    `a`.`creation_date`,`a`.`designer`,`a`.`description`,`a`.`license` 
-    FROM `' . DB_PREFIX . 'addons` `a`
-    LEFT JOIN `' . DB_PREFIX . 'users` `u`
-    ON `a`.`uploader` = `u`.`id`
-    ORDER BY `a`.`id` ASC';
-$report->addQuery($addon_section, $addon_query);
-
 echo $report;

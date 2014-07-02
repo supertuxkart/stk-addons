@@ -23,6 +23,9 @@
     // load essential elements
     var $main_stats = $("#stats-main"); // top container
 
+    // sort all tables
+    $(".table-sort").DataTable();
+
     $.plot("#stat-files", [
         {"label": "Karts", data: [1843487]},
         {"label": "Tracks", data: [1808441]},

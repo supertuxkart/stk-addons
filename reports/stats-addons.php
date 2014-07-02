@@ -20,7 +20,33 @@
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
 $tpl = StkTemplate::get("stats-addons.tpl");
-$tplData = array();
+
+$query_addon_revisions = "SELECT `addon_id`, `addon_type`, `file_path`, `date_added`, `downloads`
+    FROM `" . DB_PREFIX . "files`
+    WHERE `file_type` = 'addon'
+    ORDER BY `addon_id` ASC, `date_added` ASC";
+
+$query_addon_cumulative = "SELECT `a`.`id`, `a`.`type`, `a`.`name`, SUM(`f`.`downloads`) AS `dl_count`
+    FROM `" . DB_PREFIX . "addons` `a`, `" . DB_PREFIX . "files` `f`
+    WHERE `a`.`id` = `f`.`addon_id`
+    AND `f`.`file_type` = 'addon'
+    GROUP BY `a`.`id`
+    ORDER BY `a`.`id` ASC";
+
+$query_addon_user = 'SELECT `a`.`id`,`a`.`type`,`a`.`name`,`u`.`name` AS `uploader`,
+    `a`.`creation_date`,`a`.`designer`,`a`.`description`,`a`.`license`
+    FROM `' . DB_PREFIX . 'addons` `a`
+    LEFT JOIN `' . DB_PREFIX . 'users` `u`
+    ON `a`.`uploader` = `u`.`id`
+    ORDER BY `a`.`id` ASC';
+
+$tplData = array(
+    "sections" => array(
+        Statistic::getSection($query_addon_revisions, "Add-Ons (by revision)"),
+        Statistic::getSection($query_addon_cumulative, "Add-Ons Cumulative Downloads"),
+        Statistic::getSection($query_addon_user, "Add-Ons - user combination")
+    ),
+);
 
 $tpl->assign("addons", $tplData);
 echo $tpl;

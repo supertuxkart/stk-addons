@@ -1,1 +1,3 @@
-Client Stats
+{foreach $clients.sections as $section}
+    {$section}
+{/foreach}

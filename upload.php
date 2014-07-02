@@ -84,10 +84,7 @@ uploadFormFieldToggle();
 JS;
 
 // assign inline javascript
-$tpl->addScriptInline(
-    $inline_script,
-    StkTemplate::ORDER_AFTER
-);
+$tpl->addScriptInline($inline_script, StkTemplate::ORDER_AFTER);
 
 $upload_form = array(
     "display" => true,

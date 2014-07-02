@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2011-2013 Stephen Just <stephenjust@users.sf.net>
  *                2014 Daniel Butum <danibutum at gmail dot com>
@@ -17,9 +18,82 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-class Statistics
+class Statistic
 {
+    // fake chart enumeration
+    const CHART_PIE = 1;
+
+    const CHART_TIME = 2;
+
+    /**
+     * @return array
+     */
+    public static function getAllowedChartTypes()
+    {
+        return array(static::CHART_PIE, static::CHART_TIME);
+    }
+
+    /**
+     * Get the selection html, with the table, title and description
+     *
+     * @param string $select_query
+     * @param string $section_title
+     * @param string $description
+     *
+     * @return string
+     * @throws StatisticException
+     */
+    public static function getSection($select_query, $section_title = "", $description = "")
+    {
+        if (!$select_query)
+        {
+            throw new StatisticException(_h("The query is empty"));
+        }
+
+        $tpl = StkTemplate::get("stats-section.tpl");
+        $tplData = array(
+            "title"       => $section_title,
+            "data"        => array(),
+            "columns"     => array(),
+            "description" => $description
+        );
+
+        // execute query
+        try
+        {
+            $data = DBConnection::get()->query($select_query, DBConnection::FETCH_ALL);
+        }
+        catch(DBException $e)
+        {
+            throw new StatisticException(_h("Tried to create a section for statistics"));
+        }
+
+        if ($data) // not empty
+        {
+            $tplData["columns"] = array_keys($data[0]);
+            $tplData["data"] = $data;
+        }
+
+        $tpl->assign("section", $tplData);
+
+        return $tpl->toString();
+    }
+
+    /**
+     * Get the plot html
+     *
+     * @param int $chartType
+     *
+     * @throws StatisticException
+     */
+    public static function getPlot($chartType)
+    {
+        if (!in_array($chartType, static::getAllowedChartTypes()))
+        {
+            throw new StatisticException(_h("The chart type is invalid"));
+        }
+    }
+
     /**
      * Return the most downloaded addon of a given type
      *
