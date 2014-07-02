@@ -20,7 +20,9 @@
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
 $tpl = StkTemplate::get("stats-clients.tpl");
-$tplData = array();
+$tplData = array(
+    "sections" => array()
+);
 
 $tpl->assign("clients", $tplData);
 echo $tpl;

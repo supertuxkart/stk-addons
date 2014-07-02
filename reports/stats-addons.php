@@ -33,12 +33,12 @@ $query_addon_cumulative = "SELECT `a`.`id`, `a`.`type`, `a`.`name`, SUM(`f`.`dow
     GROUP BY `a`.`id`
     ORDER BY `a`.`id` ASC";
 
-$query_addon_user = 'SELECT `a`.`id`,`a`.`type`,`a`.`name`,`u`.`name` AS `uploader`,
+$query_addon_user = "SELECT `a`.`id`,`a`.`type`,`a`.`name`,`u`.`name` AS `uploader`,
     `a`.`creation_date`,`a`.`designer`,`a`.`description`,`a`.`license`
-    FROM `' . DB_PREFIX . 'addons` `a`
-    LEFT JOIN `' . DB_PREFIX . 'users` `u`
+    FROM `" . DB_PREFIX . "addons` `a`
+    LEFT JOIN `" . DB_PREFIX . "users` `u`
     ON `a`.`uploader` = `u`.`id`
-    ORDER BY `a`.`id` ASC';
+    ORDER BY `a`.`id` ASC";
 
 $tplData = array(
     "sections" => array(
