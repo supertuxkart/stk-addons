@@ -80,18 +80,138 @@ class Statistic
     }
 
     /**
-     * Get the plot html
+     * Get the path of a cache file
      *
-     * @param int $chartType
+     * @param string $graph_id
+     *
+     * @return string
+     */
+    public static function getCachePath($graph_id)
+    {
+        return CACHE_PATH . "cache_graph_v2_" . $graph_id . ".json";
+    }
+
+    /**
+     * Get the url location of a cache file
+     *
+     * @param string $graph_id
+     *
+     * @return string
+     */
+    public static function getCacheLocation($graph_id)
+    {
+        return CACHE_LOCATION . "cache_graph_v2_" . $graph_id . ".json";
+    }
+
+    /**
+     * @param array  $data
+     * @param string $graph_id
      *
      * @throws StatisticException
+     * @return string the file
      */
-    public static function getPlot($chartType)
+    protected static function getPieJSON(array $data, $graph_id)
     {
-        if (!in_array($chartType, static::getAllowedChartTypes()))
+        $cache_path = static::getCachePath($graph_id);
+        $cache_location = static::getCacheLocation($graph_id);
+        $columns = array_keys($data[0]);
+        $count_columns = count($columns);
+
+        // TODO add caching
+
+        // we must have 2 columns because we have, label and data in the json call
+        if ($count_columns !== 2)
+        {
+            throw new StatisticException(_h("The data is invalid the columns count should be 2"));
+        }
+
+        // retrieve data
+        $label_index = $columns[0];
+        $data_index = $columns[1];
+
+        // build json
+        $json = array();
+
+        foreach ($data as $row)
+        {
+            $json[] = array("label" => (string)$row[$label_index], "data" => (int)$row[$data_index]);
+        }
+
+        // write json to file
+        $status = file_put_contents($cache_path, json_encode($json));
+        if ($status === false)
+        {
+            throw new StatisticException(_h("Failed to open json file for writing!"));
+        }
+
+        return $cache_location;
+    }
+
+    /**
+     * @param array  $data
+     * @param string $graph_id
+     *
+     * @return null
+     */
+    protected static function getTimeJSON(array $data, $graph_id)
+    {
+        return null;
+    }
+
+    /**
+     * Get the plot html
+     *
+     * @param string $select_query
+     * @param int    $chart_type
+     * @param string $chart_title
+     * @param string $graph_id
+     *
+     * @return string
+     * @throws StatisticException
+     */
+    public static function getChart($select_query, $chart_type, $chart_title, $graph_id)
+    {
+        if (!in_array($chart_type, static::getAllowedChartTypes()))
         {
             throw new StatisticException(_h("The chart type is invalid"));
         }
+
+        // query database
+        try
+        {
+            $data = DBConnection::get()->query($select_query, DBConnection::FETCH_ALL);
+        }
+        catch(DBException $e)
+        {
+            throw new StatisticException(_h("Tried to build a chart"));
+        }
+
+        $tpl = StkTemplate::get("stats-chart.tpl");
+        $tplData = array(
+            "title" => $chart_title,
+            "class" => "",
+            "json"  => ""
+        );
+
+        switch ($chart_type)
+        {
+            case static::CHART_PIE:
+                $tplData["class"] = "stats-pie-chart";
+                $tplData["json"] = static::getPieJSON($data, $graph_id);
+                break;
+
+            case static::CHART_TIME;
+                $tplData["class"] = "stats-time-chart";
+                $tplData["json"] = static::getTimeJSON($data, $graph_id);
+                break;
+
+            default:
+                break;
+        }
+
+        $tpl->assign("chart", $tplData);
+
+        return $tpl->toString();
     }
 
     /**

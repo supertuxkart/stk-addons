@@ -43,8 +43,14 @@ $query_file_downloads_months_12 = "SELECT CONCAT(MONTHNAME(`date`), ' ', YEAR(`d
     GROUP BY `month`
     ORDER BY `date` DESC";
 
+$query_downloads_addon_type = "SELECT `addon_type`,SUM(`downloads`)
+    FROM `" . DB_PREFIX . "files`
+    WHERE `file_type` = 'addon'
+    GROUP BY `addon_type`";
+
 $tplData = array(
     "sections" => array(
+        Statistic::getChart($query_downloads_addon_type, Statistic::CHART_PIE, "File Downloads (by add-on type)", "files_pie"),
         Statistic::getSection($query_file_downloads_month_30, "File Downloads in the Last 30 Days"),
         Statistic::getSection($query_file_downloads_months_12, "File Downloads per Month in the Last 12 Months"),
         Statistic::getSection($query_images, "Images"),

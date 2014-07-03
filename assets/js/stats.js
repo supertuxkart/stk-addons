@@ -22,37 +22,49 @@
 
     // load essential elements
     var $main_stats = $("#stats-main"); // top container
+    var pie_options = {
+        series: {
+            pie: {
+                show  : true,
+                radius: 1,
+                label : {
+                    show      : true,
+                    radius    : 0.75,
+                    //                    formatter: function(label, series) {
+                    //                        console.log(series);
+                    //                        return label + "\n" + series.data[0][1];
+                    //                    },
+                    background: {
+                        opacity: 0.6,
+                        color  : '#000'
+                    }
+                }
+            }
+        },
+        grid  : {
+            hoverable: true,
+            clickable: true
+        }
+    }
 
     // sort all tables
     $(".table-sort").DataTable();
+
+    // all pie charts
+    $(".stats-pie-chart").each(function() {
+        var $this = $(this);
+
+        var json_file = $this.data("json");
+        $.get(json_file, function(jsonData) {
+            console.log(jsonData);
+            $.plot($this, jsonData, pie_options);
+        });
+    });
 
     $.plot("#stat-files", [
         {"label": "Karts", data: [1843487]},
         {"label": "Tracks", data: [1808441]},
         {"label": "Karts", data: [441016]}
-    ], {
-        series: {
-            pie: {
-                show: true,
-                radius: 1,
-                label: {
-                    show: true,
-                    radius: 0.75,
-//                    formatter: function(label, series) {
-//                        console.log(series);
-//                        return label + "\n" + series.data[0][1];
-//                    },
-                    background: {
-                        opacity: 0.6,
-                        color: '#000'
-                    }
-                }
-            }
-        },
-        grid: {
-            hoverable: true,
-            clickable: true
-        }
-    });
+    ], pie_options);
 
 })(window, document);
