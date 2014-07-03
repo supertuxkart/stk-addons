@@ -40,8 +40,12 @@ $query_addon_user = "SELECT `a`.`id`,`a`.`type`,`a`.`name`,`u`.`name` AS `upload
     ON `a`.`uploader` = `u`.`id`
     ORDER BY `a`.`id` ASC";
 
+$query_addon_type = "SELECT `type`, COUNT(`id`) AS `count`
+    FROM `" . DB_PREFIX . "addons` GROUP BY `type`";
+
 $tplData = array(
     "sections" => array(
+        Statistic::getChart($query_addon_type, Statistic::CHART_PIE, "Add-On Types", "addon_type_pie"),
         Statistic::getSection($query_addon_revisions, "Add-Ons (by revision)"),
         Statistic::getSection($query_addon_cumulative, "Add-Ons Cumulative Downloads"),
         Statistic::getSection($query_addon_user, "Add-Ons - user combination")

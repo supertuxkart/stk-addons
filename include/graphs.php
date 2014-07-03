@@ -7,9 +7,6 @@ function graph_data_to_json($values, $labels, $format, $graph_id)
     $count_x_axis_values = $count_y_axis_values = 0;
     $x_axis_values = $y_axis_values = array();
 
-    // for pie chart
-    $count_values = 0;
-
     // common
     $count_labels = count($labels);
 
@@ -45,25 +42,6 @@ function graph_data_to_json($values, $labels, $format, $graph_id)
             if (!is_array($value))
             {
                 throw new Exception('Non-array provided in y-axis.');
-            }
-        }
-    }
-    elseif($format === "pie") // pie chart
-    {
-        // init
-        $count_values = count($values);
-
-        // labels must be the same as values
-        if ($count_values !== $count_labels)
-        {
-            throw new Exception('Invalid data set provided. The number of labels is different than the number of values');
-        }
-
-        foreach ($values as $value)
-        {
-            if (!is_numeric($value))
-            {
-                throw new Exception('Non-numeric data provided.');
             }
         }
     }
@@ -103,31 +81,7 @@ function graph_data_to_json($values, $labels, $format, $graph_id)
     }
 
     $json_array = array();
-    if ($format === 'pie') // pie chart
-    {
-        $json_array['cols'] = array(
-            array('id' => '', 'label' => 'Name', 'pattern' => '', 'type' => 'string'),
-            array('id' => '', 'label' => 'Value', 'pattern' => '', 'type' => 'number')
-        );
-        $json_array['rows'] = array();
-
-        for ($i = 0; $i < $count_values; $i++)
-        {
-            $json_array['rows'][] = array(
-                'c' => array(
-                    array(
-                        'v' => $labels[$i],
-                        'f' => null
-                    ),
-                    array(
-                        'v' => (double)$values[$i],
-                        'f' => null
-                    )
-                )
-            );
-        }
-    }
-    else if ($format === 'time') // time chart
+    if ($format === 'time') // time chart
     {
         // Get the tallest line and get relatively small lines
         $max_value = 0;
@@ -227,7 +181,7 @@ function graph_data_to_json($values, $labels, $format, $graph_id)
             }
 
             $found_cols = count($row);
-            if ($expected_cols != $found_cols)
+            if ($expected_cols !== $found_cols)
             {
                 echo '<pre>';
                 print_r($row);

@@ -74,63 +74,6 @@ class Report
     }
 
     /**
-     * Inserts a pie chart into the report. The query must be formed such that
-     * the first column returned is a label, and the second is a numerical
-     * value.
-     *
-     * @param string $section
-     * @param string $query
-     * @param string $chartTitle
-     * @param string $graphId
-     */
-    public function addPieChart($section, $query, $chartTitle, $graphId = null)
-    {
-        $db = DBConnection::get();
-
-        $query_result = "\t<h3>Pie Chart</h3>\n";
-        $query_result .= "\t<code>" . h($query) . "</code>\n";
-        try
-        {
-            $result = $db->query($query, DBConnection::FETCH_ALL);
-            $count = count($result);
-        }
-        catch(DBException $e)
-        {
-            $this->report_structure[$section]['content'] .= $query_result . '<p>ERROR.</p>';
-
-            return;
-        }
-        $query_result .= "\t<h3>Result</h3>\n";
-        $query_result .= "\t<p>($count rows returned)</p>\n";
-
-        if ($count === 0)
-        {
-            $this->report_structure[$section]['content'] .= $query_result;
-
-            return;
-        }
-
-        $col_names = array_keys($result[0]);
-        if (count($col_names) !== 2)
-        {
-            $this->report_structure[$section]['content'] .= "<p>Error: This query did not return a result with two columns.</p>";
-        }
-
-        $values = array();
-        $labels = array();
-        foreach ($result AS $row)
-        {
-            $labels[] = $row[$col_names[0]];
-            $values[] = $row[$col_names[1]];
-        }
-
-        $data_file = graph_data_to_json($values, $labels, 'pie', $graphId);
-        $query_result .= '<div class="pie_chart" id="' . $graphId . '">' . $chartTitle . "\n" . $data_file . '</div>';
-
-        $this->report_structure[$section]['content'] .= $query_result;
-    }
-
-    /**
      * Inserts a graph into the report. The query must be formed such that
      * the first column returned is a label, the second is a date, and the third
      * is a numerical value. This function can handle graphs with multiple

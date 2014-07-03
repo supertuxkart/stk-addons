@@ -159,7 +159,8 @@ class Statistic
     }
 
     /**
-     * Get the plot html
+     * Get the plot html. If the chart type is PIE then the query must value 2 columns.
+     * One the label and one the value.
      *
      * @param string $select_query
      * @param int    $chart_type
