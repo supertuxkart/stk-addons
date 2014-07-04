@@ -13,11 +13,13 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h2 class="panel-title">
-                    <a href="?files">{t}Files{/t} <small>{t}downloads (by add-on type){/t}</small></a>
+                    <a href="?files">{t}Files{/t}
+                        <small>{t}downloads (by add-on type){/t}</small>
+                    </a>
                 </h2>
             </div>
             <div class="panel-body">
-                <div class="stats-pie-chart"  data-json="{$overview.json.files}"></div>
+                <div class="stats-pie-chart" data-json="{$overview.json.files}"></div>
             </div>
         </div>
     </div>
