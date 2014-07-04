@@ -1,7 +1,7 @@
 {config_load file="{$smarty.current_dir}/tpl.conf"}
 {include file=#header#}
 <div class="row affix-row">
-    <div class="col-sm-3 col-md-3 affix-sidebar" id="manage-menu">
+    <div class="col-sm-3 col-md-3 affix-sidebar left-menu">
         <div class="sidebar-nav">
             <div class="navbar navbar-default" role="navigation">
                 <div class="navbar-header">

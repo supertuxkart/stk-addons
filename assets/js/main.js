@@ -87,14 +87,5 @@ $(document).ready(function() {
     $('.add-rating').click(function() {
 
     });
-
-
-    $('a.user-list').click(function() {
-        History.pushState(null, '', this.href);
-        var user = getUrlVars(this.href)['user'];
-        loadContent($right_body, SITE_ROOT + 'users-panel.php', {user: user}, clearPanelStatus);
-
-        return false;
-    });
 });
 

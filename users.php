@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
 AccessControl::setLevel(AccessControl::PERM_VIEW_BASIC_PAGE);
 
@@ -26,13 +25,11 @@ AccessControl::setLevel(AccessControl::PERM_VIEW_BASIC_PAGE);
 $_GET['user'] = (isset($_GET['user'])) ? $_GET['user'] : User::getLoggedUserName();
 $action = (isset($_GET['action'])) ? $_GET['action'] : null;
 
-$tpl = new StkTemplate('two-pane.tpl');
-$tpl->assign('title', h(_('SuperTuxKart Add-ons')) . ' | ' . h(_('Users')));
-$panel = array(
-    'left'   => '',
-    'status' => '',
-    'right'  => ''
-);
+$tpl = StkTemplate::get('user.tpl')
+    ->assignTitle(_h('Users'))
+    ->assign("img_location", IMG_LOCATION)
+    ->addScriptInclude("user.js");
+$tplData = array("items" => array(), "status" => "", "body" => "");
 
 // handle user actions, set user feedback
 $status = '';
@@ -83,41 +80,27 @@ switch ($action)
     default:
         break;
 }
-$panel['status'] = $status;
+$tplData['status'] = $status;
 
 // get all users from the database, create links
 $users = User::getAllData();
 $templateUsers = array();
-$templateUsers[] = array(
-    'url'   => "users.php?user=" . User::getLoggedUserName(),
-    'label' => sprintf('<img class="icon"  src="%suser.png" />', IMG_LOCATION) . _h('Me'),
-    'class' => 'user-list menu-item'
-);
 foreach ($users as $user)
 {
     // Make sure that the user is active, or the viewer has permission to
     // manage this type of user
     if (User::hasPermissionOnRole($user['role']) || $user['active'] == 1)
     {
-        $class = 'user-list menu-item';
-        if ($user["active"] == 0)
-        {
-            $class .= ' unavailable';
-        }
         $templateUsers[] = array(
-            'url'   => "users.php?user={$user['user']}",
-            'label' => sprintf('<img class="icon"  src="%suser.png" />', IMG_LOCATION) . h($user['user']),
-            'class' => $class
+            'username'   => $user['user'],
+            'active' => (int)$user["active"]
         );
     }
 }
 
-// left panel
-$panel['left'] = StkTemplate::get('url-list-panel.tpl')->assign('items', $templateUsers)->toString();
-
-// right panel
-$panel['right'] = Util::ob_get_require_once(ROOT_PATH . 'users-panel.php');
+$tplData['items'] = $templateUsers;
+$tplData['body'] = Util::ob_get_require_once(ROOT_PATH . 'users-panel.php');
 
 // output the view
-$tpl->assign('panel', $panel);
+$tpl->assign('user', $tplData);
 echo $tpl;

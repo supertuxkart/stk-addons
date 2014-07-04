@@ -28,11 +28,11 @@ if (!isset($_GET['view']))
 }
 
 $tpl = StkTemplate::get("manage.tpl")
-    ->assignTitle("Manage")
+    ->assignTitle(_h("Manage"))
     ->addScriptInclude("manage.js")
     ->assign("can_edit_settings", User::hasPermission(AccessControl::PERM_EDIT_SETTINGS))
     ->assign("can_edit_roles", User::hasPermission(AccessControl::PERM_EDIT_PERMISSIONS));
-$tplData = array("header" => "", "status" => "", "body" => "");
+$tplData = array("status" => "", "body" => "");
 
 // status message
 $status_content = "";
