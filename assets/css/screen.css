@@ -294,20 +294,6 @@ a img {
     min-height: 500px;
 }
 
-#bugs-content {
-    background: white;
-    min-height: 500px;
-}
-
-#bugs-content > h1 {
-    text-align: center;
-    margin-top: 0;
-    padding-top: 20px;
-}
-
-#bugs-content h1 > form {
-
-}
 
 /* Loading Message */
 #loading {
@@ -655,6 +641,27 @@ div.help-hidden {
 }
 
 /* ------------------------------ bugs  ------------------------------*/
+#user-body {
+    margin-top: 20px;
+}
+/* ------------------------------ bugs  ------------------------------*/
+
+/* ------------------------------ bugs  ------------------------------*/
+#bugs-content {
+    background: white;
+    min-height: 500px;
+}
+
+#bugs-content > h1 {
+    text-align: center;
+    margin-top: 0;
+    padding-top: 20px;
+}
+
+#bugs-content h1 > form {
+
+}
+
 #bug-comments-container img {
     max-height: 480px;
 }

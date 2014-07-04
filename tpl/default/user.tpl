@@ -7,10 +7,10 @@
                 {foreach $user.items as $item}
                     {$class=""}
                     {if $item.active == 0}
-                        {$class=" disabled"}
+                        {$class=" disabled unavailable"}
                     {/if}
                     <li class="list-group-item user-list{$class}">
-                        <a href="users.php?user={$item.username|escape}">
+                        <a href="users.php?user={$item.username|escape}" class="{$class}">
                             <img class="icon" src="{$img_location}user.png">{$item.username|escape|truncate:24}
                         </a>
                     </li>

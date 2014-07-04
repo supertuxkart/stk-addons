@@ -22,41 +22,26 @@
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
 AccessControl::setLevel(AccessControl::PERM_VIEW_BASIC_PAGE);
 
-$user_name = '';
-if (isset($_GET["user"]) && !empty($_GET["user"]))
-{
-    $user_name = $_GET['user'];
-}
+$user_name = (isset($_GET["user"]) && !empty($_GET["user"])) ? $_GET['user'] : "";
 
 try
 {
     $user = User::getFromUserName($user_name);
     $user_role = $user->getRole();
 }
-catch (UserException $e)
+catch(UserException $e)
 {
     exit("Error " . $e->getMessage());
 }
 
-
 $user_panel_tpl = new StkTemplate("user-panel.tpl");
 $user_tpl = array(
-    "username"    => array(
-        "value" => $user->getUserName()
-    ),
-    "reg_date"    => array(
-        "value" => $user->getDateRegistration()
-    ),
-    "real_name"   => array(
-        "value" => $user->getRealName()
-    ),
-    "role"        => array(
-        "value" => $user_role
-    ),
-    "homepage"    => array(
-        "value" => $user->getHomepage()
-    ),
-    "addon_types" => array()
+    "username"          => $user->getUserName(),
+    "date_registration" => $user->getDateRegistration(),
+    "real_name"         => $user->getRealName(),
+    "role"              => $user_role,
+    "homepage"          => $user->getHomepage(),
+    "addon_types"       => array()
 );
 
 // fill users addons
