@@ -20,7 +20,14 @@
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
 $tpl = StkTemplate::get("stats-overview.tpl");
-$tplData = array();
+$tplData = array(
+    "json" => array(
+        "addons"  => Statistic::getCacheLocation("addon_type_pie"),
+        "files"   => Statistic::getCacheLocation("files_pie"),
+        "clients" => "",
+        "servers" => ""
+    )
+);
 
 $tpl->assign("overview", $tplData);
 echo $tpl;
