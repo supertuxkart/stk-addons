@@ -116,7 +116,7 @@ class User
      */
     public function isActive()
     {
-        return $this->userData["active"] === 1;
+        return (int)$this->userData["active"] === 1;
     }
 
     /**

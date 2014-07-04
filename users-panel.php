@@ -34,8 +34,8 @@ catch(UserException $e)
     exit("Error " . $e->getMessage());
 }
 
-$user_panel_tpl = new StkTemplate("user-panel.tpl");
-$user_tpl = array(
+$tpl = new StkTemplate("user-panel.tpl");
+$tplData = array(
     "username"          => $user->getUserName(),
     "date_registration" => $user->getDateRegistration(),
     "real_name"         => $user->getRealName(),
@@ -50,15 +50,15 @@ foreach (Addon::getAllowedTypes() as $type)
     switch ($type)
     {
         case 'tracks':
-            $heading = _h('User\'s Tracks');
+            $heading = _h('Tracks');
             $no_items = _h('This user has not uploaded any tracks.');
             break;
         case 'karts':
-            $heading = _h('User\'s Karts');
+            $heading = _h('Karts');
             $no_items = _h('This user has not uploaded any karts.');
             break;
         case 'arenas':
-            $heading = _h('User\'s Arenas');
+            $heading = _h('Arenas');
             $no_items = _h('This user has not uploaded any arenas.');
             break;
         default:
@@ -67,14 +67,15 @@ foreach (Addon::getAllowedTypes() as $type)
     }
     $addon_type = array(
         "name"    => $type,
-        "heading" => $heading
+        "heading" => $heading,
+        "no_items" => $no_items,
+        "items" => array()
     );
 
     $addons = $user->getAddonsData($type);
     if (empty($addons)) // no addons for you
     {
-        $addon_type["no_items"] = $no_items;
-        $user_tpl["addon_types"][] = $addon_type;
+        $tplData["addon_types"][] = $addon_type;
         continue;
     }
 
@@ -90,7 +91,10 @@ foreach (Addon::getAllowedTypes() as $type)
         $addon["css_class"] = "";
         if (!($addon["status"] & F_APPROVED)) // not approved
         {
-            if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS) && $addon['uploader'] !== User::getLoggedId())
+            $isOwner = ($addon['uploader'] === User::getLoggedId());
+            $canEdit = User::hasPermission(AccessControl::PERM_EDIT_ADDONS);
+
+            if (!$isOwner && !$canEdit)
             {
                 continue;
             }
@@ -100,15 +104,16 @@ foreach (Addon::getAllowedTypes() as $type)
         $addonList[] = $addon;
     }
 
-    $addon_type["list"] = $addonList;
-    $user_tpl["addon_types"][] = $addon_type;
+    // add to user template data
+    $addon_type["items"] = $addonList;
+    $tplData["addon_types"][] = $addon_type;
 }
 
 // config form
 // Allow current user to change own profile, and administrators to change all profiles
 if (User::hasPermissionOnRole($user_role) || $user->getId() === User::getLoggedId())
 {
-    $user_tpl["config"] = array();
+    $tplData["config"] = array();
 
     // role
     $role = array();
@@ -135,22 +140,20 @@ if (User::hasPermissionOnRole($user_role) || $user->getId() === User::getLoggedI
             }
         }
     }
-    $user_tpl["config"]["role"] = $role;
+    $tplData["config"]["role"] = $role;
 
     // activated
     if ($user->isActive())
     {
-        $user_tpl["config"]["activated"] = "checked";
+        $tplData["config"]["activated"] = "checked";
     }
 
     // password form
     if ($user->getId() === User::getLoggedId())
     {
-        $user_tpl["config"]["password"] = array(
-            "min" => 8
-        );
+        $tplData["config"]["password"] = array("min" => 8);
     }
 }
 
-$user_panel_tpl->assign("user", $user_tpl);
-echo $user_panel_tpl;
+$tpl->assign("user", $tplData);
+echo $tpl;
