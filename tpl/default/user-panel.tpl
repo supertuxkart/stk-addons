@@ -58,29 +58,34 @@
             <h3>{t}Configuration{/t}</h3>
             <form class="form-horizontal" action="?user={$user.username|escape}&amp;action=config" method="POST">
                 <div class="form-group">
-                    <label>
-                        {t}Homepage:{/t}
-                        <input type="text" name="homepage" class="form-control" value="{$user.homepage|escape}">
+                    <label class="col-md-2 control-label" for="user-settings-homepage">
+                        {t}Homepage{/t}
                     </label>
-                </div>
-                <div class="form-group">
-                    <label>
-                        {t}Role:{/t}
-                        <select class="form-control" name="range" {$user.config.role.disabled|default:""}>
-                            {html_options options=$user.config.role.options selected=$user.config.role.selected|default:""}
-                        </select>
-                    </label>
-                </div>
-                <div class="form-group">
-                    <div class="checkbox-inline">
-                        <label>
-                            <input type="checkbox" name="available" {$user.config.activated|default:""}>
-                            {t}User Activated{/t}
-                        </label>
+                    <div class="col-md-6">
+                        <input type="text" name="homepage" id="user-settings-homepage" class="form-control" value="{$user.homepage|escape}">
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
+                    <label class="col-md-2 control-label" for="user-settings-role">
+                        {t}Role{/t}
+                    </label>
+                    <div class="col-md-6">
+                        <select class="form-control" id="user-settings-role" name="range" {$user.config.role.disabled|default:""}>
+                            {html_options options=$user.config.role.options selected=$user.config.role.selected|default:""}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="available" {$user.config.activated|default:""}> {t}User Activated{/t}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-2">
                         <input type="submit" class="btn btn-success" value="{t}Save Configuration{/t}">
                     </div>
                 </div>
@@ -91,25 +96,36 @@
                 <br>
                 <form class="form-horizontal" action="users.php?user={$user.username}&amp;action=password" method="POST">
                     <div class="form-group">
-                        <label>
-                            {t}Old Password:{/t}<br>
+                        <label class="col-md-2 control-label">
+                            {t}Old Password{/t}<br>
+                        </label>
+                        <div class="col-md-6">
                             <input type="password" class="form-control" name="oldPass">
-                        </label>
+                        </div>
                     </div>
                     <div class="form-group">
-                    <label>
-                            {t}New Password:{/t} ({t 1=$user.config.password.min}Must be at least %1 characters long{/t})<br>
+                        <label class="col-md-2 control-label">
+                            {t}New Password{/t}
+                        </label>
+                        <div class="col-md-6">
                             <input type="password" name="newPass" class="form-control">
-                        </label>
+                        </div>
+                        <span class="help-block">
+                            ({t 1=$user.config.password.min}Must be at least %1 characters long{/t})
+                        </span>
                     </div>
                     <div class="form-group">
-                        <label>
-                            {t}New Password (Confirm):{/t}<br>
+                        <label class="col-md-2 control-label">
+                            {t}New Password (Confirm){/t}<br>
+                        </label>
+                        <div class="col-md-6">
                             <input type="password" name="newPass2" class="form-control">
-                        </label>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <input type="submit" class="btn btn-warning" value="{t}Change Password{/t}">
+                        <div class="col-md-offset-2 col-md-2">
+                            <input type="submit" class="btn btn-warning" value="{t}Change Password{/t}">
+                        </div>
                     </div>
                 </form>
             {/if}
