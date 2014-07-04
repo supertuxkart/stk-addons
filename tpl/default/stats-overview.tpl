@@ -5,7 +5,8 @@
                 <h2 class="panel-title"><a href="?addons">{t}Addons{/t}</a></h2>
             </div>
             <div class="panel-body">
-
+                <div class="stats-pie-chart" data-json="http://localhost/stkaddons/assets/cache/cache_graph_v2_addon_type_pie.json">
+                </div>
             </div>
         </div>
     </div>
@@ -17,8 +18,7 @@
                 </h2>
             </div>
             <div class="panel-body">
-                <div class="stats-pie-chart" id="stat-files" data-json="TODO add url">
-
+                <div class="stats-pie-chart"  data-json="http://localhost/stkaddons/assets/cache/cache_graph_v2_files_pie.json">
                 </div>
             </div>
         </div>
@@ -31,6 +31,7 @@
                 <h2 class="panel-title"><a href="?clients">{t}Clients{/t}</a></h2>
             </div>
             <div class="panel-body">
+                TODO
             </div>
         </div>
     </div>
@@ -40,6 +41,7 @@
                 <h2 class="panel-title"><a href="?servers">{t}Servers{/t}</a></h2>
             </div>
             <div class="panel-body">
+                TODO
             </div>
         </div>
     </div>
