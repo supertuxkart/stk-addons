@@ -26,7 +26,7 @@
     $('a.user-list').click(function() {
         History.pushState(null, '', this.href);
         var user = getUrlVars(this.href)['user'];
-        loadContent($right_body, SITE_ROOT + 'users-panel.php', {user: user});
+        loadContent($user_body, SITE_ROOT + 'users-panel.php', {user: user});
 
         return false;
     });

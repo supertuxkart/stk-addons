@@ -9,8 +9,8 @@
                     {if $item.active == 0}
                         {$class=" disabled unavailable"}
                     {/if}
-                    <li class="list-group-item user-list{$class}">
-                        <a href="users.php?user={$item.username|escape}" class="{$class}">
+                    <li class="list-group-item{$class}">
+                        <a href="users.php?user={$item.username|escape}" class="user-list{$class}">
                             <img class="icon" src="{$img_location}user.png">{$item.username|escape|truncate:24}
                         </a>
                     </li>

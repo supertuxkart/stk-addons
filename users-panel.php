@@ -66,10 +66,10 @@ foreach (Addon::getAllowedTypes() as $type)
             $no_items = "";
     }
     $addon_type = array(
-        "name"    => $type,
-        "heading" => $heading,
+        "name"     => $type,
+        "heading"  => $heading,
         "no_items" => $no_items,
-        "items" => array()
+        "items"    => array()
     );
 
     $addons = $user->getAddonsData($type);
