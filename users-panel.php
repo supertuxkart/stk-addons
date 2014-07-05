@@ -34,14 +34,26 @@ catch(UserException $e)
     exit("Error " . $e->getMessage());
 }
 
-$tpl = new StkTemplate("user-panel.tpl");
+// define permissions
+$can_elevate_user = (User::hasPermissionOnRole($user_role));
+$is_owner = ($user->getId() === User::getLoggedId());
+
+$tpl = StkTemplate::get("user-panel.tpl")
+    ->assign("is_owner", $is_owner)
+    ->assign("can_elevate_user", $can_elevate_user); // change role and activated status
+
 $tplData = array(
     "username"          => $user->getUserName(),
     "date_registration" => $user->getDateRegistration(),
     "real_name"         => $user->getRealName(),
     "role"              => $user_role,
     "homepage"          => $user->getHomepage(),
-    "addon_types"       => array()
+    "addon_types"       => array(),
+    "settings"          => array(
+        "profile"  => array(),
+        "elevate"  => array(),
+        "password" => array()
+    )
 );
 
 // fill users addons
@@ -109,18 +121,12 @@ foreach (Addon::getAllowedTypes() as $type)
     $tplData["addon_types"][] = $addon_type;
 }
 
-// config form
-// Allow current user to change own profile, and administrators to change all profiles
-if (User::hasPermissionOnRole($user_role) || $user->getId() === User::getLoggedId())
+// can change the users role and activation field
+// only if we are not the active user and have the permission
+if ($can_elevate_user && !$is_owner)
 {
-    $tplData["config"] = array();
-
     // role
     $role = array();
-    if (User::getLoggedId() === $user->getId()) // user can not edit his own role
-    {
-        $role["disabled"] = 'disabled';
-    }
 
     $role["options"] = array();
 
@@ -140,18 +146,12 @@ if (User::hasPermissionOnRole($user_role) || $user->getId() === User::getLoggedI
             }
         }
     }
-    $tplData["config"]["role"] = $role;
+    $tplData["settings"]["elevate"] = $role;
 
     // activated
     if ($user->isActive())
     {
-        $tplData["config"]["activated"] = "checked";
-    }
-
-    // password form
-    if ($user->getId() === User::getLoggedId())
-    {
-        $tplData["config"]["password"] = array("min" => 8);
+        $tplData["settings"]["elevate"]["activated"] = "checked";
     }
 }
 

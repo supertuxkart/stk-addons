@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
 if (!isset($_POST["action"]) || empty($_POST["action"]))
@@ -25,7 +24,7 @@ if (!isset($_POST["action"]) || empty($_POST["action"]))
     exit(json_encode(array("error" => "action param is not defined or is empty")));
 }
 
-switch (strtolower($_POST["action"]))
+switch ($_POST["action"])
 {
 
     case "edit-role": // edit a role permissions or maybe the role name in the future

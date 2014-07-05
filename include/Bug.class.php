@@ -75,7 +75,7 @@ class Bug
      *
      * @throws BugException on database error
      */
-    public function __construct($id, array $bugData = array(), $loadComments = true)
+    protected function __construct($id, array $bugData = array(), $loadComments = true)
     {
         $this->id = $id;
         $this->bugData = $bugData;
@@ -172,7 +172,7 @@ class Bug
      */
     public function isReport()
     {
-        return $this->bugData["is_report"] == 1;
+        return (int)$this->bugData["is_report"] === 1;
     }
 
     /**

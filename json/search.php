@@ -26,7 +26,7 @@ if (!isset($_GET["data-type"]) || empty($_GET["data-type"]))
     exit(json_encode(array("error" => "data-type param is not defined or is empty")));
 }
 
-switch (strtolower($_GET["data-type"]))
+switch ($_GET["data-type"])
 {
     case "addon";
         $errors = Validate::ensureInput($_GET, array("search-filter", "query"));

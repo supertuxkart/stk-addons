@@ -63,7 +63,6 @@
         $role_edit_btn.removeClass("disabled");
         $role_delete_btn.removeClass("disabled");
 
-
         // update role checkboxes
         $.post(json_url, {action: "get-role", role: selected_role}, function(data) {
             var jData = parseJSON(data);

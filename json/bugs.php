@@ -25,7 +25,7 @@ if (!isset($_POST["action"]) || empty($_POST["action"]))
 }
 
 // TODO make user answer captcha question when he spams the add/submit button
-switch (strtolower($_POST["action"]))
+switch ($_POST["action"])
 {
     case "add": // add bug
         $errors = Validate::ensureInput($_POST, array("addon-name", "bug-title", "bug-description"));

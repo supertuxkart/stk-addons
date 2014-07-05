@@ -123,7 +123,7 @@ abstract class ClientSession
                 WHERE cid = :sessionid AND uid = :userid",
                 DBConnection::FETCH_ALL,
                 array(
-                    ':sessionid' => (string)$session_id,
+                    ':sessionid' => $session_id,
                     ':userid'    => (int)$user_id
                 )
             );
@@ -134,7 +134,6 @@ abstract class ClientSession
             }
             else
             {
-
                 //Valid session found, get more user info
                 $user_info = DBConnection::get()->query(
                     "SELECT `user`,`role`

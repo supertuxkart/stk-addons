@@ -20,12 +20,11 @@
  */
 
 /**
- * Class to contain all string validation functions
+ * Class to contain all the validation functions
  * @author stephenjust
  */
 class Validate
 {
-
     /**
      * Checks a username/email address combination and returns the user id if valid
      *
@@ -48,13 +47,14 @@ class Validate
                 ':email'    => $email
             )
         );
-        if (count($result) > 1)
-        {
-            throw new UserException(_h("Multiple accounts with the same username and email combination."));
-        }
+
         if (empty($result))
         {
             throw new UserException(_h('Username and email address combination not found.'));
+        }
+        if (count($result) > 1)
+        {
+            throw new UserException(_h("Multiple accounts with the same username and email combination."));
         }
 
         return $result[0]['id'];
@@ -99,7 +99,6 @@ class Validate
 
         return h($username);
     }
-
 
     /**
      * @param string      $password1
@@ -169,6 +168,7 @@ class Validate
                     _h('Please contact a website administrator.')
                 );
             }
+
             if (empty($result))
             {
                 $salt = md5(uniqid(null, true));
@@ -259,8 +259,6 @@ class Validate
                     ':pass'     => static::password($password, null, $username)
                 )
             );
-
-            return $result;
         }
         catch(UserException $e)
         {
@@ -273,6 +271,8 @@ class Validate
                 _h('Please contact a website administrator.')
             );
         }
+
+        return $result;
     }
 
     /**

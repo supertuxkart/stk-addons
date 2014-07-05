@@ -44,6 +44,7 @@ switch ($action)
                 . '</span><br />';
             break;
         }
+
         try
         {
             $user->setPass($_POST['oldPass'], $_POST['newPass'], $_POST['newPass2']);

@@ -174,10 +174,8 @@ class DBConnection
 
             return !$this->in_transaction;
         }
-        if (DEBUG_MODE)
-        {
-            trigger_error("Did a commit while not having a transaction running!");
-        }
+
+        trigger_error("Did a commit while not having a transaction running!");
 
         return false;
     }
@@ -195,10 +193,8 @@ class DBConnection
 
             return !$this->in_transaction;
         }
-        if (DEBUG_MODE)
-        {
-            trigger_error("Did a rollback while not having a transaction running!");
-        }
+
+        trigger_error("Did a rollback while not having a transaction running!");
 
         return false;
     }
@@ -206,8 +202,8 @@ class DBConnection
     /**
      * Perform a query on the database
      *
-     * @param string $query
-     * @param int    $return_type
+     * @param string $query          The sql string
+     * @param int    $return_type    The type of return. Use the class constants
      * @param array  $prepared_pairs An associative array having mapping between variables for prepared statements and values
      * @param array  $data_types     variables in prepared statement for which data type should be explicitly mentioned
      *
@@ -275,6 +271,7 @@ class DBConnection
                     trigger_error("A PDO exception occurred during during a transaction, but the rollback failed");
                 }
             }
+
             if (DEBUG_MODE)
             {
                 trigger_error("Database Error");

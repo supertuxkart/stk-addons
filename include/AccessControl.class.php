@@ -53,6 +53,13 @@ class AccessControl
     protected static $roles = array();
 
     /**
+     * Cache for the role permissions, with the key the role name and the value an array of permissions
+     *
+     * @var array
+     */
+    protected static $permissions = array();
+
+    /**
      * @return array
      */
     public static function getPermissionsChecked()
@@ -82,7 +89,7 @@ class AccessControl
     public static function getRoles($refresh_cache = false)
     {
         // retrieve from cache
-        if (!empty(static::$roles) && !$refresh_cache)
+        if (static::$roles && !$refresh_cache)
         {
             return array_keys(static::$roles);
         }
@@ -103,12 +110,12 @@ class AccessControl
             ));
         }
 
-        // put onto cache
+        // put into the cache
         foreach ($roles as $role)
         {
+            // role => id
             static::$roles[$role["name"]] = $role["id"];
         }
-
 
         return array_keys(static::$roles);
     }
@@ -145,6 +152,12 @@ class AccessControl
      */
     public static function getPermissions($role = "user")
     {
+        // retrieve from cache
+        if(isset(static::$permissions[$role]))
+        {
+            return static::$permissions[$role];
+        }
+
         try
         {
             $permissions = DBConnection::get()->query(
@@ -168,13 +181,14 @@ class AccessControl
             ));
         }
 
-        $return_permission = array();
+        // put into the cache
+        static::$permissions[$role] = array();
         foreach ($permissions as $permission)
         {
-            $return_permission[] = $permission["permission"];
+            static::$permissions[$role][] = $permission["permission"];
         }
 
-        return $return_permission;
+        return static::$permissions[$role];
     }
 
     /**
@@ -262,7 +276,7 @@ class AccessControl
      */
     public static function setLevel($permission)
     {
-        if (!in_array($permission, static::getPermissionsChecked()))
+        if (!static::isPermission($permission))
         {
             throw new AccessControlException(sprintf(_h("Invalid access level: %s"), $permission));
         }
@@ -289,8 +303,7 @@ class AccessControl
         $tpl->assign('ad_reason', _h('You do not have permission to access this page.'));
         $tpl->assign('ad_action', _h('You will be redirected to the home page.'));
         $tpl->assign('ad_redirect_url', File::rewrite('index.php'));
-        echo $tpl;
 
-        exit;
+        exit($tpl);
     }
 }

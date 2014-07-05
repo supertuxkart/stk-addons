@@ -1,7 +1,6 @@
 <?php
 /**
- * copyright 2013 Stephen Just <stephenjust@users.sourceforge.net>
- *           2014 Daniel Butum <danibutum at gmail dot com>
+ * copyright 2014 Daniel Butum <danibutum at gmail dot com>
  *
  * This file is part of stkaddons
  *
@@ -20,14 +19,18 @@
  */
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
-if (!isset($_POST["action"]) || empty($_POST["action"]))
+if (!isset($_POST["action"]) || !isset($_POST["user_id"]))
 {
-    exit(json_encode(array("error" => "action param is not defined or is empty")));
+    exit(json_encode(array("error" => "action/user param is not defined or is empty")));
+}
+
+if (User::getLoggedId() !== $_POST["user_id"])
+{
+    exit(json_encode(array("error" => "your are not a logged user")));
 }
 
 switch ($_POST["action"])
 {
-
     default:
         echo json_encode(array("error" => sprintf("action = %s is not recognized", h($_POST["action"]))));
         break;

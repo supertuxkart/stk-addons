@@ -159,9 +159,10 @@ class User
                 AND `a`.`type` = :addon_type',
                 DBConnection::FETCH_ALL,
                 array(
-                    ":uploader"   => (int)$this->id,
+                    ":uploader"   => $this->id,
                     ":addon_type" => $type,
-                )
+                ),
+                array(":uploader" => DBConnection::PARAM_INT)
             );
         }
         catch(DBException $e)
@@ -397,8 +398,8 @@ class User
             // One or more of the session variables was not set - this may be an issue, so force logout
             if(!static::sessionExists($key))
             {
-//                trigger_error(sprintf("Session key = '%s' was not set", $key));
-//                var_debug("Init");
+                trigger_error(sprintf("Session key = '%s' was not set", $key));
+                var_debug("Init");
 
                 static::logout();
 
@@ -432,7 +433,6 @@ class User
             ));
         }
 
-
         if ($count !== 1)
         {
             static::logout();
@@ -462,7 +462,6 @@ class User
             static::logout();
             throw new UserException(_h('Your username or password is incorrect.'));
         }
-
 
         $user = $result[0];
 
