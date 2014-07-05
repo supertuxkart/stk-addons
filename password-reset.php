@@ -50,9 +50,6 @@ $_GET['action'] = (isset($_GET['action'])) ? $_GET['action'] : null;
 
 switch ($_GET['action'])
 {
-    default:
-        break;
-
     case 'reset':
         $pw_res['reset_form']['display'] = false;
         // Look up username and try to reset
@@ -120,7 +117,7 @@ switch ($_GET['action'])
     case 'change':
         try
         {
-            $userid = (isset($_POST['user'])) ? $_POST['user'] : 0;
+            $userid = (isset($_POST['user'])) ? $_POST['user'] : User::getLoggedId();
             $verification_code = (isset($_POST['verify'])) ? $_POST['verify'] : "";
             $pass1 = (isset($_POST['pass1'])) ? $_POST['pass1'] : "";
             $pass2 = (isset($_POST['pass2'])) ? $_POST['pass2'] : "p";
@@ -162,6 +159,9 @@ switch ($_GET['action'])
                 )
             );
         }
+        break;
+
+    default:
         break;
 }
 

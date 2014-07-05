@@ -54,8 +54,8 @@ class User
     protected $userData = array();
 
     /**
-     * @param int    $id
-     * @param array  $userData retrieved from the database
+     * @param int   $id
+     * @param array $userData retrieved from the database
      */
     public function __construct($id, array $userData = array())
     {
@@ -195,83 +195,12 @@ class User
 
         if (static::getLoggedId() === $this->id)
         {
-            static::changePassword($new_password);
+            static::changePassword($new_password, static::getLoggedId());
         }
 
         return true;
     }
 
-    /**
-     * TODO throw exceptions
-     * Set the user config, only if the current user has permissions
-     *
-     * @param null $available the user active option
-     * @param null $role      the role of the user
-     *
-     * @return bool true on success false otherwise
-     */
-    public function setConfig($available = null, $role = null)
-    {
-        if(!static::hasPermissionOnRole($this->userData['role']))
-        {
-            // we do not have permission
-            return false;
-        }
-
-        // Set availability status
-        if ($available === 'on')
-        {
-            $available = 1;
-        }
-        else
-        {
-            $available = 0;
-        }
-
-        try
-        {
-            DBConnection::get()->update(
-                "users",
-                "`id` = :id",
-                array(
-                    ":id"     => $this->id,
-                    ":active" => $available
-                ),
-                array(
-                    ":id" => DBConnection::PARAM_INT,
-                    ":active" => DBConnection::PARAM_INT
-                )
-            );
-        }
-        catch(DBException $e)
-        {
-            return false;
-        }
-
-        // change role, the current user can change to that role only if he can edit that role
-        if ($role && static::hasPermissionOnRole($role))
-        {
-            try
-            {
-                DBConnection::get()->update(
-                    "users",
-                    "`id` = :id",
-                    array(
-                        ":id"   => $this->id,
-                        ":role" => $role
-                    ),
-                    array(":id" => DBConnection::PARAM_INT)
-                );
-            }
-            catch(DBException $e)
-            {
-                return false;
-            }
-        }
-
-        // success
-        return true;
-    }
 
     /**
      * Get the user as a xml structure
@@ -309,7 +238,7 @@ class User
      *
      * @return mixed
      */
-    protected  static function sessionGet($key)
+    protected static function sessionGet($key)
     {
         return $_SESSION["user"][$key];
     }
@@ -335,7 +264,7 @@ class User
     {
         static::sessionStart();
 
-        if(!isset($_SESSION["user"]))
+        if (!isset($_SESSION["user"]))
         {
             $_SESSION["user"] = array();
             static::$logged_in = true;
@@ -365,10 +294,10 @@ class User
     protected static function sessionStart()
     {
         // session is already started
-        if(session_id() === "")
+        if (session_id() === "")
         {
             session_name("STK_SESSID");
-            if(!session_start())
+            if (!session_start())
             {
                 trigger_error("Session failed to start");
             }
@@ -393,10 +322,10 @@ class User
         static::sessionStart();
 
         // Check if any session variables are not set
-        foreach(static::$sessionRequired as $key)
+        foreach (static::$sessionRequired as $key)
         {
             // One or more of the session variables was not set - this may be an issue, so force logout
-            if(!static::sessionExists($key))
+            if (!static::sessionExists($key))
             {
                 trigger_error(sprintf("Session key = '%s' was not set", $key));
                 var_debug("Init");
@@ -478,7 +407,7 @@ class User
         if (strlen($password) === 64)
         {
             $password = Validate::password($password);
-            static::changePassword($password);
+            static::changePassword($password, static::getLoggedId());
             Log::newEvent("Converted the password of '$username' to use a password salting algorithm");
         }
     }
@@ -719,11 +648,11 @@ class User
     public static function oldRoleToNew($oldRole)
     {
         // TODO maybe make a script that does this in production
-        if($oldRole === "basicUser")
+        if ($oldRole === "basicUser")
         {
             return "user";
         }
-        elseif($oldRole === "root" || $oldRole === "administrator")
+        elseif ($oldRole === "root" || $oldRole === "administrator")
         {
             return "admin";
         }
@@ -777,12 +706,12 @@ class User
         $can_edit_admins = static::hasPermission(AccessControl::PERM_EDIT_ADMINS);
 
         // user can edit other users
-        if($can_edit_users)
+        if ($can_edit_users)
         {
             $other_role_permission = AccessControl::getPermissions($role);
 
             // other role is not an admin one, this means we can can edit
-            if(!in_array(AccessControl::PERM_EDIT_ADMINS, $other_role_permission))
+            if (!in_array(AccessControl::PERM_EDIT_ADMINS, $other_role_permission))
             {
                 return true; // user has permission on role
             }
@@ -790,12 +719,62 @@ class User
 
         // user is admin, he can edit other admins and other users
         // there is no need to check if he has the edit users permission
-        if($can_edit_admins)
+        if ($can_edit_admins)
         {
             return true;
         }
 
         return false; // user does not have permission on role
+    }
+
+    /**
+     * TODO throw exceptions
+     * Set the user config, only if the current user has permissions
+     *
+     * @param int    $user_id
+     * @param string $homepage  the new homepage
+     * @param string $real_name the new name
+     *
+     * @throws UserException
+     */
+    public static function updateProfile($user_id, $homepage, $real_name)
+    {
+        // throw exception if something is wrong (the user does nto exist, or a database error)
+        $user = static::getFromID($user_id);
+
+        // verify permissions
+        $isOwner = (User::getLoggedId() === $user->getId());
+        $canEdit = static::hasPermissionOnRole($user->getRole());
+
+        if (!$isOwner && !$canEdit)
+        {
+            throw new UserException(_h("You do not have the permission to update the profile"));
+        }
+
+        // clean
+        $homepage = h($homepage);
+        $real_name = h($real_name);
+
+        try
+        {
+            DBConnection::get()->update(
+                "users",
+                "`id` = :id",
+                array(
+                    ":id"       => $user->getId(),
+                    ":homepage" => $homepage,
+                    ":name"     => $real_name
+                ),
+                array(":id" => DBConnection::PARAM_INT)
+            );
+        }
+        catch(DBException $e)
+        {
+            throw new UserException(h(
+                _('An error occurred while updating the profile') . '. ' .
+                _('Please contact a website administrator.')
+            ));
+        }
     }
 
     /**
@@ -807,7 +786,7 @@ class User
      */
     public static function updateLoginTime($userid)
     {
-        if(!$userid)
+        if (!$userid)
         {
             throw new InvalidArgumentException(_h("User id is not set"));
         }
@@ -864,10 +843,8 @@ class User
             {
                 throw new UserException(_h('You must be logged in to change a password.'));
             }
-            else
-            {
-                $user_id = static::getLoggedId();
-            }
+
+            $user_id = static::getLoggedId();
         }
 
         try

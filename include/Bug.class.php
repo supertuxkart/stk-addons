@@ -514,15 +514,8 @@ class Bug
      */
     public static function update($bugId, $bugTitle, $bugDescription)
     {
-        // get bug
-        try
-        {
-            $bug = static::get($bugId, false);
-        }
-        catch(BugException $e)
-        {
-            throw new BugException(_h("The bug does not exist"));
-        }
+        // get bug and also verify if it exists
+        $bug = static::get($bugId, false);
 
         // TODO check if we can update bug after it is closed
         $isOwner = (User::getLoggedId() === $bug->getUserId());
@@ -613,15 +606,8 @@ class Bug
      */
     public static function close($bugId, $closeReason)
     {
-        // get bug
-        try
-        {
-            $bug = static::get($bugId, false);
-        }
-        catch(BugException $e)
-        {
-            throw new BugException(_h("The bug does not exist"));
-        }
+        // get bug and verify if it exits
+        $bug = static::get($bugId, false);
 
         // is already closed
         if ($bug->isClosed())

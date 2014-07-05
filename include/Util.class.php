@@ -382,6 +382,23 @@ class Util
     }
 
     /**
+     * Convert a POST form checkbox to an integer
+     *
+     * @param string $checkbox
+     *
+     * @return int
+     */
+    public static function getCheckboxInt($checkbox)
+    {
+        if($checkbox === "on")
+        {
+            return 1;
+        }
+
+        return 0;
+    }
+
+    /**
      * Generates a string of random characters.
      *
      * @param   integer $length             The length of the string to generate

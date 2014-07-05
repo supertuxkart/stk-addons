@@ -55,29 +55,6 @@ switch ($action)
             $status = '<span class="error">' . $e->getMessage() . '</span><br />';
         }
         break;
-
-    case 'config':
-        $user = User::getFromUserName($_GET['user']);
-        if (User::getLoggedUserName() !== $_GET['user'] && !User::hasPermissionOnRole($user->getRole()))
-        {
-            $status = '<span class="error">' .
-                _h('You do not have the necessary permissions to perform this action.')
-                . '</span><br />';
-            break;
-        }
-        $available = (isset($_POST['available'])) ? $_POST['available'] : null;
-        $range = (isset($_POST['range'])) ? $_POST['range'] : null;
-
-        if ($user->setConfig($available, $range))
-        {
-            $status = 'Saved configuration.';
-        }
-        else
-        {
-            $status = 'An error occured';
-        }
-        break;
-
     default:
         break;
 }
@@ -93,8 +70,8 @@ foreach ($users as $user)
     if (User::hasPermissionOnRole($user['role']) || $user['active'] == 1)
     {
         $templateUsers[] = array(
-            'username'   => $user['user'],
-            'active' => (int)$user["active"]
+            'username' => $user['user'],
+            'active'   => (int)$user["active"]
         );
     }
 }

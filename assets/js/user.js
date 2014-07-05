@@ -21,6 +21,11 @@
     "use strict";
 
     var $user_body = $("#user-body");
+    var json_url = JSON_LOCATION +"users.php";
+
+    function userFormSubmit(form_identifier, callback_success) {
+        onFormSubmit(form_identifier, callback_success, $user_body, json_url, {}, "POST");
+    }
 
     // left panel user clicked
     $('a.user-list').click(function() {
@@ -30,5 +35,26 @@
 
         return false;
     });
+
+    userFormSubmit("#user-edit-profile", function(data) {
+        var jData = parseJSON(data);
+        if (jData.hasOwnProperty("error")) {
+            growlError(jData["error"]);
+        }
+        if (jData.hasOwnProperty("success")) {
+            growlSuccess(jData["success"]);
+
+            // update view
+            $("#user-realname").text($("#user-profile-realname").val());
+            var homepage = $("#user-profile-homepage").val();
+            var $homepage_row = $("#user-homepage-row");
+            if(_.isEmpty(homepage)) { // homepage is empty, hide the view
+                $homepage_row.addClass("hide");
+            } else { // homepage is not empty
+                $homepage_row.removeClass("hide");
+                $("#user-homepage").text(homepage);
+            }
+        }
+    })
 
 })(window, document);

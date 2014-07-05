@@ -44,6 +44,7 @@ $tpl = StkTemplate::get("user-panel.tpl")
 
 $tplData = array(
     "username"          => $user->getUserName(),
+    "user_id"           => $user->getId(),
     "date_registration" => $user->getDateRegistration(),
     "real_name"         => $user->getRealName(),
     "role"              => $user_role,

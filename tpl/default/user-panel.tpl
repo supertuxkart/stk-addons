@@ -22,18 +22,20 @@
             </div>
             <div class="row form-group">
                 <div class="col-md-3">{t}Real Name:{/t}</div>
-                <div class="col-md-3">{$user.real_name|escape}</div>
+                <div class="col-md-3" id="user-realname">{$user.real_name|escape}</div>
             </div>
             <div class="row form-group">
                 <div class="col-md-3">{t}Role:{/t}</div>
                 <div class="col-md-3">{$user.role|escape}</div>
             </div>
-            {if !empty($user.homepage)}
-                <div class="row form-group">
-                    <div class="col-md-3">{t}Homepage:{/t}</div>
-                    <div class="col-md-3"><a href="{$user.homepage|escape}">{$user.homepage|escape}</a></div>
-                </div>
+            {$homepage_class=""}
+            {if empty($user.homepage)}
+                {$homepage_class=" hide"}
             {/if}
+            <div class="row form-group{$homepage_class}" id="user-homepage-row">
+                <div class="col-md-3">{t}Homepage:{/t}</div>
+                <div class="col-md-3" id="user-homepage"><a href="{$user.homepage|escape}">{$user.homepage|escape}</a></div>
+            </div>
         </div>
         <div>
             {foreach $user.addon_types as $addon_type}
@@ -78,11 +80,13 @@
                         {t}Real name{/t}
                     </label>
                     <div class="col-md-6">
-                        <input type="text" name="homepage" id="user-profile-realname" class="form-control" value="{$user.real_name|escape}">
+                        <input type="text" name="realname" id="user-profile-realname" class="form-control" value="{$user.real_name|escape}">
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-2">
+                        <input type="hidden" name="user-id" value="{$user.user_id}">
+                        <input type="hidden" name="action" value="edit-profile">
                         <input type="submit" class="btn btn-success" value="{t}Save profile{/t}">
                     </div>
                 </div>
@@ -112,6 +116,8 @@
                     </div>
                     <div class="form-group">
                         <div class="col-md-offset-2 col-md-2">
+                            <input type="hidden" name="user-id" value="{$user.user_id}">
+                            <input type="hidden" name="action" value="edit-user">
                             <input type="submit" class="btn btn-warning" value="{t}Edit{/t}">
                         </div>
                     </div>
@@ -151,6 +157,8 @@
                     </div>
                     <div class="form-group">
                         <div class="col-md-offset-2 col-md-2">
+                            <input type="hidden" name="user-id" value="{$user.user_id}">
+                            <input type="hidden" name="action" value="edit-password">
                             <input type="submit" class="btn btn-warning" value="{t}Change Password{/t}">
                         </div>
                     </div>

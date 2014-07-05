@@ -19,18 +19,34 @@
  */
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
-if (!isset($_POST["action"]) || !isset($_POST["user_id"]))
+if (!isset($_POST["action"]) || !isset($_POST["user-id"]) || empty($_POST["user-id"]))
 {
     exit(json_encode(array("error" => "action/user param is not defined or is empty")));
 }
 
-if (User::getLoggedId() !== $_POST["user_id"])
+if (!User::isLoggedIn())
 {
-    exit(json_encode(array("error" => "your are not a logged user")));
+    exit(json_encode(array("error" => "You are not a logged in")));
 }
 
 switch ($_POST["action"])
 {
+    case "edit-profile":
+        $homepage = isset($_POST["homepage"]) ? $_POST["homepage"] : "";
+        $real_name = isset($_POST["realname"]) ? $_POST["realname"] : "";
+
+        try
+        {
+            User::updateProfile($_POST["user-id"], $_POST["homepage"], $_POST["realname"]);
+        }
+        catch(UserException $e)
+        {
+            exit(json_encode(array("error" => $e->getMessage())));
+        }
+
+        echo json_encode(array("success" => _h("Profile updated")));
+        break;
+
     default:
         echo json_encode(array("error" => sprintf("action = %s is not recognized", h($_POST["action"]))));
         break;
