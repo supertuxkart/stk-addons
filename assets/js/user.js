@@ -21,7 +21,7 @@
     "use strict";
 
     var $user_body = $("#user-body");
-    var json_url = JSON_LOCATION +"users.php";
+    var json_url = JSON_LOCATION + "users.php";
 
     function userFormSubmit(form_identifier, callback_success) {
         onFormSubmit(form_identifier, callback_success, $user_body, json_url, {}, "POST");
@@ -49,7 +49,7 @@
             $("#user-realname").text($("#user-profile-realname").val());
             var homepage = $("#user-profile-homepage").val();
             var $homepage_row = $("#user-homepage-row");
-            if(_.isEmpty(homepage)) { // homepage is empty, hide the view
+            if (_.isEmpty(homepage)) { // homepage is empty, hide the view
                 $homepage_row.addClass("hide");
             } else { // homepage is not empty
                 $homepage_row.removeClass("hide");
@@ -70,6 +70,13 @@
             // update view
             $("#user-role").text($("#user-settings-role").val());
             var username = $("#user-username").text();
+            var $side_user = $("span:contains({0})".format(username));
+            if (document.getElementById("user-settings-available").checked) { // user is active
+                $side_user.removeClass("unavailable");
+            } else { // user is not active
+                $side_user.addClass("unavailable");
+            }
+
         }
     });
 

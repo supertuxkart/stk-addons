@@ -21,7 +21,8 @@
 // TODO add history calls
 function loadContent($content, url, params, callback, request_type) {
     request_type = request_type || "GET";
-    callback = callback || function() {};
+    callback = callback || function() {
+    };
 
     // define callback
     function onComplete(response, status, xhr) {
@@ -34,9 +35,9 @@ function loadContent($content, url, params, callback, request_type) {
         }
     }
 
-    if(request_type === "GET") {
+    if (request_type === "GET") {
         $content.load(url + "?" + $.param(params), onComplete);
-    } else if(request_type === "POST") {
+    } else if (request_type === "POST") {
         $content.load(url, params, onComplete);
     } else {
         console.error("request_type: ", request_type);
@@ -124,8 +125,10 @@ function growlSuccess(messsage) {
 }
 
 function modalDelete(message, yes_callback, no_callback) {
-    yes_callback = yes_callback || function() {};
-    no_callback = no_callback || function() {};
+    yes_callback = yes_callback || function() {
+    };
+    no_callback = no_callback || function() {
+    };
 
     bootbox.dialog({
         title  : "Delete",
@@ -136,7 +139,7 @@ function modalDelete(message, yes_callback, no_callback) {
                 className: "btn-danger",
                 callback : yes_callback
             },
-            main   : {
+            main  : {
                 label    : "No",
                 className: "btn-primary",
                 callback : no_callback
@@ -144,7 +147,6 @@ function modalDelete(message, yes_callback, no_callback) {
         }
     });
 }
-
 
 function redirectTo(url, seconds) {
     url = url || window.location.href;
@@ -182,7 +184,7 @@ function getUrlVars(url) {
     var vars = {}, hash, slice_start = url.indexOf('?');
 
     // url does not have any GET params
-    if(slice_start === -1) {
+    if (slice_start === -1) {
         return vars;
     }
 
@@ -193,4 +195,14 @@ function getUrlVars(url) {
     }
 
     return vars;
+}
+
+// Extend string. Eg "{0} is {1}".format("JS", "nice") will output "JS is nice"
+if (!String.prototype.format) {
+    String.prototype.format = function() {
+        var args = arguments;
+        return this.replace(/{(\d+)}/g, function(match, number) {
+            return typeof args[number] != 'undefined' ? args[number] : match;
+        });
+    };
 }

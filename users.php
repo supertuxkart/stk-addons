@@ -29,7 +29,7 @@ $tpl = StkTemplate::get('user.tpl')
     ->assignTitle(_h('Users'))
     ->assign("img_location", IMG_LOCATION)
     ->addScriptInclude("user.js");
-$tplData = array("items" => array(), "status" => "", "body" => "");
+$tplData = ["items" => [], "status" => "", "body" => ""];
 
 // handle user actions, set user feedback
 $status = '';
@@ -62,17 +62,17 @@ $tplData['status'] = $status;
 
 // get all users from the database, create links
 $users = User::getAllData();
-$templateUsers = array();
+$templateUsers = [];
 foreach ($users as $user)
 {
     // Make sure that the user is active, or the viewer has permission to
     // manage this type of user
     if (User::hasPermissionOnRole($user['role']) || $user['active'] == 1)
     {
-        $templateUsers[] = array(
+        $templateUsers[] = [
             'username' => $user['user'],
             'active'   => (int)$user["active"]
-        );
+        ];
     }
 }
 

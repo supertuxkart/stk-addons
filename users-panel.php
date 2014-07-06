@@ -82,12 +82,12 @@ foreach (Addon::getAllowedTypes() as $type)
             $heading = "Something went wrong";
             $no_items = "";
     }
-    $addon_type = array(
+    $addon_type = [
         "name"     => $type,
         "heading"  => $heading,
         "no_items" => $no_items,
-        "items"    => array()
-    );
+        "items"    => []
+    ];
 
     $addons = $user->getAddonsData($type);
     if (empty($addons)) // no addons for you
@@ -96,7 +96,7 @@ foreach (Addon::getAllowedTypes() as $type)
         continue;
     }
 
-    $addonList = array();
+    $addonList = [];
     foreach ($addons as $addon)
     {
         // Only list the latest revision of the add-on
@@ -131,9 +131,9 @@ foreach (Addon::getAllowedTypes() as $type)
 if ($can_elevate_user && !$is_owner)
 {
     // role
-    $role = array();
-
-    $role["options"] = array();
+    $role = [
+        "options" => []
+    ];
 
     // check if current user can edit that role, if not we can not change to that role
     foreach (AccessControl::getRoles() as $db_role)

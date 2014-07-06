@@ -40,7 +40,7 @@ class User
      * Required session vars to be a valid session. All user vars are under the "user" key
      * @var array
      */
-    protected static $sessionRequired = array("id", "user_name", "real_name", "date_last_login", "role", "permissions");
+    protected static $sessionRequired = ["id", "user_name", "real_name", "date_last_login", "role", "permissions"];
 
     /**
      * The id of the user
@@ -51,13 +51,13 @@ class User
     /**
      * @var array
      */
-    protected $userData = array();
+    protected $userData = [];
 
     /**
      * @param int   $id
      * @param array $userData retrieved from the database
      */
-    public function __construct($id, array $userData = array())
+    public function __construct($id, array $userData = [])
     {
         $this->id = $id;
         $this->userData = $userData;
@@ -166,11 +166,8 @@ class User
                 WHERE `a`.`uploader` = :uploader
                 AND `a`.`type` = :addon_type',
                 DBConnection::FETCH_ALL,
-                array(
-                    ":uploader"   => $this->id,
-                    ":addon_type" => $type,
-                ),
-                array(":uploader" => DBConnection::PARAM_INT)
+                [":uploader" => $this->id, ":addon_type" => $type],
+                [":uploader" => DBConnection::PARAM_INT]
             );
         }
         catch(DBException $e)
@@ -274,7 +271,7 @@ class User
 
         if (!isset($_SESSION["user"]))
         {
-            $_SESSION["user"] = array();
+            $_SESSION["user"] = [];
             static::$logged_in = true;
             static::$logged_user_id = $user_id;
         }
@@ -355,11 +352,11 @@ class User
                 AND `name` = :realname
                 AND `active` = 1",
                 DBConnection::ROW_COUNT,
-                array(
+                [
                     ':username'  => static::sessionGet('user_name'),
                     ':lastlogin' => static::sessionGet('date_last_login'),
                     ':realname'  => static::sessionGet('real_name')
-                )
+                ]
             );
         }
         catch(DBException $e)
@@ -520,8 +517,8 @@ class User
                 FROM `" . DB_PREFIX . "users`
                 WHERE " . sprintf("`%s` = :%s", $field, $field),
                 DBConnection::FETCH_FIRST,
-                array(':' . $field => $value),
-                array(':' . $field => $value_type) // bind value
+                [':' . $field => $value],
+                [':' . $field => $value_type] // bind value
             );
         }
         catch(DBException $e)
@@ -582,8 +579,8 @@ class User
     {
         $terms = preg_split("/[\s,]+/", h($search_string));
         $index = 0;
-        $parameters = array();
-        $query_parts = array();
+        $parameters = [];
+        $query_parts = [];
         foreach ($terms as $term)
         {
             if (strlen($term) > 2)
@@ -595,7 +592,7 @@ class User
             }
         }
 
-        $matched_users = array();
+        $matched_users = [];
         if ($index > 0)
         {
             try
@@ -685,7 +682,7 @@ class User
      */
     public static function getPermissions()
     {
-        return static::isLoggedIn() ? static::sessionGet("permissions") : array();
+        return static::isLoggedIn() ? static::sessionGet("permissions") : [];
     }
 
     /**
@@ -844,7 +841,7 @@ class User
         catch(DBException $e)
         {
             throw new UserException(h(
-                _('An error occurred while updating the profile') . '. ' .
+                _('An error occurred while updating the role') . '. ' .
                 _('Please contact a website administrator.')
             ));
         }
@@ -871,17 +868,14 @@ class User
                 SET `last_login` = NOW()
                 WHERE `id` = :userid",
                 DBConnection::NOTHING,
-                array(':userid' => $userid)
+                [':userid' => $userid]
             );
             $result = DBConnection::get()->query(
                 "SELECT `last_login`
                 FROM `" . DB_PREFIX . "users`
                 WHERE `id` = :userid",
                 DBConnection::FETCH_ALL,
-                array
-                (
-                    ':userid' => $userid
-                )
+                [':userid' => $userid]
             );
             if (count($result) !== 1)
             {
@@ -927,10 +921,8 @@ class User
                 SET `pass`   = :pass
     	        WHERE `id` = :userid",
                 DBConnection::ROW_COUNT,
-                array(
-                    ':userid' => (int)$user_id,
-                    ':pass'   => (string)$new_password
-                )
+                [':userid' => $user_id, ':pass' => $new_password],
+                [":userid" => DBConnection::PARAM_INT]
             );
             if ($count === 0)
             {
@@ -964,11 +956,11 @@ class User
                 FROM `" . DB_PREFIX . "users`
                 WHERE `id` = :userid AND `pass` = :pass",
                 DBConnection::ROW_COUNT,
-                array(
+                [
                     ':userid' => $userid,
                     ':pass'   => Validate::password($current, null, null, $userid)
-                ),
-                array(":userid" => DBConnection::PARAM_INT)
+                ],
+                [":userid" => DBConnection::PARAM_INT]
             );
 
             if ($count < 1)
@@ -1009,8 +1001,8 @@ class User
                 SET `active` = '1' 
     	        WHERE `id` = :userid",
                 DBConnection::ROW_COUNT,
-                array(':userid' => $userid),
-                array(":userid" => DBConnection::PARAM_INT)
+                [":userid" => $userid],
+                [":userid" => DBConnection::PARAM_INT]
             );
             if ($count === 0)
             {
@@ -1098,7 +1090,7 @@ class User
     	        FROM `" . DB_PREFIX . "users`
     	        WHERE `user` LIKE :username",
                 DBConnection::FETCH_FIRST,
-                array(':username' => $username)
+                [':username' => $username]
             );
         }
         catch(DBException $e)
@@ -1121,7 +1113,7 @@ class User
     	        FROM `" . DB_PREFIX . "users`
     	        WHERE `email` LIKE :email",
                 DBConnection::FETCH_FIRST,
-                array(':email' => $email)
+                [':email' => $email]
             );
         }
         catch(DBException $e)
@@ -1141,14 +1133,14 @@ class User
         {
             $count = DBConnection::get()->insert(
                 "users",
-                array(
+                [
                     ":user"    => $username,
                     ":pass"    => $password,
                     ":name"    => $name,
                     ":email"   => $email,
                     "role"     => "user",
                     "reg_date" => "CURRENT_DATE()"
-                )
+                ]
             );
 
             if ($count !== 1)
