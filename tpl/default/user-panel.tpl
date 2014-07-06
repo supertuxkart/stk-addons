@@ -28,6 +28,13 @@
                 <div class="col-md-3">{t}Role:{/t}</div>
                 <div class="col-md-3">{$user.role|escape}</div>
             </div>
+            {if $can_see_email}
+                <div class="row form-group">
+                    <div class="col-md-3">{t}Email:{/t}</div>
+                    <div class="col-md-3">{$user.email|escape}</div>
+                </div>
+            {/if}
+
             {$homepage_class=""}
             {if empty($user.homepage)}
                 {$homepage_class=" hide"}

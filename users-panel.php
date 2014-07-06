@@ -37,16 +37,19 @@ catch(UserException $e)
 // define permissions
 $can_elevate_user = (User::hasPermissionOnRole($user_role));
 $is_owner = ($user->getId() === User::getLoggedId());
+$is_admin = User::isAdmin();
 
 $tpl = StkTemplate::get("user-panel.tpl")
     ->assign("is_owner", $is_owner)
-    ->assign("can_elevate_user", $can_elevate_user); // change role and activated status
+    ->assign("can_elevate_user", $can_elevate_user) // change role and activated status
+    ->assign("can_see_email", $is_owner || $is_admin);
 
 $tplData = array(
     "username"          => $user->getUserName(),
     "user_id"           => $user->getId(),
     "date_registration" => $user->getDateRegistration(),
     "real_name"         => $user->getRealName(),
+    "email"             => $user->getEmail(),
     "role"              => $user_role,
     "homepage"          => $user->getHomepage(),
     "addon_types"       => array(),

@@ -104,6 +104,14 @@ class User
     }
 
     /**
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->userData["email"];
+    }
+
+    /**
      * @return mixed
      */
     public function getAvatar()
@@ -327,8 +335,8 @@ class User
             // One or more of the session variables was not set - this may be an issue, so force logout
             if (!static::sessionExists($key))
             {
-                trigger_error(sprintf("Session key = '%s' was not set", $key));
-                var_debug("Init");
+//                trigger_error(sprintf("Session key = '%s' was not set", $key));
+//                var_debug("Init");
 
                 static::logout();
 
@@ -693,6 +701,16 @@ class User
     }
 
     /**
+     * Check if current user is an admin one
+     *
+     * @return bool
+     */
+    public static function isAdmin()
+    {
+        return static::hasPermission(AccessControl::PERM_EDIT_ADMINS);
+    }
+
+    /**
      * See if the current user has permission over a user (that is he can edit/delete this user)
      *
      * @param string $role the role we want to check that the current user has permission over
@@ -703,7 +721,14 @@ class User
     {
         $role = static::oldRoleToNew($role);
         $can_edit_users = static::hasPermission(AccessControl::PERM_EDIT_USERS);
-        $can_edit_admins = static::hasPermission(AccessControl::PERM_EDIT_ADMINS);
+        $can_edit_admins = static::isAdmin();
+
+        // user is admin, he can edit other admins and other users
+        // there is no need to check if he has the edit users permission
+        if ($can_edit_admins)
+        {
+            return true;
+        }
 
         // user can edit other users
         if ($can_edit_users)
@@ -717,18 +742,10 @@ class User
             }
         }
 
-        // user is admin, he can edit other admins and other users
-        // there is no need to check if he has the edit users permission
-        if ($can_edit_admins)
-        {
-            return true;
-        }
-
         return false; // user does not have permission on role
     }
 
     /**
-     * TODO throw exceptions
      * Set the user config, only if the current user has permissions
      *
      * @param int    $user_id

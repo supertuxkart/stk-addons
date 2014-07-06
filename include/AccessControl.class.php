@@ -121,7 +121,7 @@ class AccessControl
     }
 
     /**
-     * Checks if a role exists
+     * Checks if a role is valid
      *
      * @param,string $role
      *
@@ -133,7 +133,7 @@ class AccessControl
     }
 
     /**
-     * Checks if a permission exists
+     * Checks if a permission is valid
      *
      * @param,string $permission
      *

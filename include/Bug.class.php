@@ -342,6 +342,11 @@ class Bug
             throw new BugException(h(_("Tried to fetch a comments data") . '. ' . _("Please contact a website administrator.")));
         }
 
+        if (empty($comment))
+        {
+            throw new BugException(_h("The bug comment does not exist"));
+        }
+
         return $comment;
     }
 
@@ -560,11 +565,8 @@ class Bug
      */
     public static function updateComment($commentId, $commentDescription)
     {
-        // get comment
-        $comment = static::getCommentData($commentId);
-
-        // validate
-        if (empty($comment))
+        // validate comment
+        if (!static::commentExists($commentId))
         {
             throw new BugException(_h("The bug comment does not exist"));
         }
@@ -606,7 +608,7 @@ class Bug
      */
     public static function close($bugId, $closeReason)
     {
-        // get bug and verify if it exits
+        // get bug and also verify if it exists
         $bug = static::get($bugId, false);
 
         // is already closed
@@ -694,11 +696,8 @@ class Bug
      */
     public static function deleteComment($commentId)
     {
-        // get comment
-        $comment = static::getCommentData($commentId);
-
         // validate
-        if (empty($comment))
+        if (!static::commentExists($commentId))
         {
             throw new BugException(_h("The bug comment does not exist"));
         }

@@ -117,7 +117,7 @@ switch ($_GET['action'])
     case 'change':
         try
         {
-            $userid = (isset($_POST['user'])) ? $_POST['user'] : User::getLoggedId();
+            $userid = (isset($_POST['user'])) ? $_POST['user'] : 0;
             $verification_code = (isset($_POST['verify'])) ? $_POST['verify'] : "";
             $pass1 = (isset($_POST['pass1'])) ? $_POST['pass1'] : "";
             $pass2 = (isset($_POST['pass2'])) ? $_POST['pass2'] : "p";
