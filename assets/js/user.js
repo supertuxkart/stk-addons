@@ -36,6 +36,7 @@
         return false;
     });
 
+    // edit profile
     userFormSubmit("#user-edit-profile", function(data) {
         var jData = parseJSON(data);
         if (jData.hasOwnProperty("error")) {
@@ -55,6 +56,21 @@
                 $("#user-homepage").text(homepage);
             }
         }
-    })
+    });
+
+    // edit user role and activation status
+    userFormSubmit("#user-edit-role", function(data) {
+        var jData = parseJSON(data);
+        if (jData.hasOwnProperty("error")) {
+            growlError(jData["error"]);
+        }
+        if (jData.hasOwnProperty("success")) {
+            growlSuccess(jData["success"]);
+
+            // update view
+            $("#user-role").text($("#user-settings-role").val());
+            var username = $("#user-username").text();
+        }
+    });
 
 })(window, document);

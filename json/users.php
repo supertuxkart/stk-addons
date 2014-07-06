@@ -21,14 +21,15 @@ require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
 if (!isset($_POST["action"]) || !isset($_POST["user-id"]) || empty($_POST["user-id"]))
 {
-    exit(json_encode(array("error" => "action/user param is not defined or is empty")));
+    exit(json_encode(["error" => "action/user param is not defined or is empty"]));
 }
 
 if (!User::isLoggedIn())
 {
-    exit(json_encode(array("error" => "You are not a logged in")));
+    exit(json_encode(["error" => "You are not a logged in"]));
 }
 
+$user_id = $_POST["user-id"];
 switch ($_POST["action"])
 {
     case "edit-profile":
@@ -37,17 +38,39 @@ switch ($_POST["action"])
 
         try
         {
-            User::updateProfile($_POST["user-id"], $_POST["homepage"], $_POST["realname"]);
+            User::updateProfile($user_id, $_POST["homepage"], $_POST["realname"]);
         }
         catch(UserException $e)
         {
-            exit(json_encode(array("error" => $e->getMessage())));
+            exit(json_encode(["error" => $e->getMessage()]));
         }
 
-        echo json_encode(array("success" => _h("Profile updated")));
+        echo json_encode(["success" => _h("Profile updated")]);
+        break;
+
+    case "edit-role":
+        $errors = Validate::ensureInput($_POST, ["role"]);
+        if ($errors)
+        {
+            exit(json_encode(["error" => _h("Role field is empty")]));
+        }
+
+        $role = $_POST["role"];
+        $available = isset($_POST["available"]) ? $_POST["available"] : "";
+
+        try
+        {
+            User::updateRole($user_id, $role, $available);
+        }
+        catch(UserException $e)
+        {
+            exit(json_encode(["error" => $e->getMessage()]));
+        }
+
+        echo json_encode(["success" => _h("Role edited successfully")]);
         break;
 
     default:
-        echo json_encode(array("error" => sprintf("action = %s is not recognized", h($_POST["action"]))));
+        echo json_encode(["error" => sprintf("action = %s is not recognized", h($_POST["action"]))]);
         break;
 }

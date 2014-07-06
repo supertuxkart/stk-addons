@@ -41,10 +41,11 @@ $is_admin = User::isAdmin();
 
 $tpl = StkTemplate::get("user-panel.tpl")
     ->assign("is_owner", $is_owner)
-    ->assign("can_elevate_user", $can_elevate_user) // change role and activated status
+    ->assign("can_edit_role", $can_elevate_user && !$is_owner) // change role and activated status
+    ->assign("can_see_settings", $can_elevate_user || $is_owner)
     ->assign("can_see_email", $is_owner || $is_admin);
 
-$tplData = array(
+$tplData = [
     "username"          => $user->getUserName(),
     "user_id"           => $user->getId(),
     "date_registration" => $user->getDateRegistration(),
@@ -52,13 +53,13 @@ $tplData = array(
     "email"             => $user->getEmail(),
     "role"              => $user_role,
     "homepage"          => $user->getHomepage(),
-    "addon_types"       => array(),
-    "settings"          => array(
-        "profile"  => array(),
-        "elevate"  => array(),
-        "password" => array()
-    )
-);
+    "addon_types"       => [],
+    "settings"          => [
+        "profile"  => [],
+        "elevate"  => [],
+        "password" => []
+    ]
+];
 
 // fill users addons
 foreach (Addon::getAllowedTypes() as $type)

@@ -4,14 +4,14 @@
         "smarty-gettext/smarty-gettext": "@stable",
         "ezyang/htmlpurifier": "v4.6.0",
         "recaptcha/php5": "v1.0.0",
-        "php": ">=5.3.3",
+        "php": ">=5.4",
         "ext-gd": "*",
         "ext-pdo": "*",
         "ext-gettext": "*",
         "ext-mbstring": "*"
     },
     "require-dev": {
-        "php": ">=5.3.3",
+        "php": ">=5.4",
         "phpunit/phpunit": "4.1.*",
         "phpunit/dbunit": ">=1.2"
     },

@@ -1,8 +1,7 @@
-{$show_settings=$can_elevate_user || $is_owner}
 <ul class="nav nav-tabs" role="tablist" id="user-panel-nav">
     <li class="active"><a href="#profile" role="tab" data-toggle="tab">{t}Profile{/t}</a></li>
     <li><a href="#friends" role="tab" data-toggle="tab">{t}Friends{/t}</a></li>
-    {if $show_settings}
+    {if $can_see_settings}
         <li><a href="#settings" role="tab" data-toggle="tab">{t}Settings{/t}</a></li>
     {/if}
 </ul>
@@ -14,7 +13,7 @@
         <div class="container">
             <div class="row form-group">
                 <div class="col-md-3">{t}Username:{/t}</div>
-                <div class="col-md-3">{$user.username|escape}</div>
+                <div class="col-md-3" id="user-username">{$user.username|escape}</div>
             </div>
             <div class="row form-group">
                 <div class="col-md-3">{t}Registration Date:{/t}</div>
@@ -26,7 +25,7 @@
             </div>
             <div class="row form-group">
                 <div class="col-md-3">{t}Role:{/t}</div>
-                <div class="col-md-3">{$user.role|escape}</div>
+                <div class="col-md-3" id="user-role">{$user.role|escape}</div>
             </div>
             {if $can_see_email}
                 <div class="row form-group">
@@ -69,7 +68,7 @@
     <div class="tab-pane" id="friends">
 
     </div>
-    {if $show_settings}
+    {if $can_see_settings}
         <div class="tab-pane" id="settings">
             <hr>
             <h3>{t}Profile{/t}</h3>
@@ -99,15 +98,15 @@
                 </div>
             </form>
             <hr>
-            {if $can_elevate_user && !$is_owner}
+            {if $can_edit_role}
                 <h3>Edit user</h3>
-                <form class="form-horizontal" id="user-edit-user">
+                <form class="form-horizontal" id="user-edit-role">
                     <div class="form-group">
                         <label class="col-md-2 control-label" for="user-settings-role">
                             {t}Role{/t}
                         </label>
                         <div class="col-md-6">
-                            <select class="form-control" id="user-settings-role" name="range">
+                            <select class="form-control" id="user-settings-role" name="role">
                                 {html_options options=$user.settings.elevate.options selected=$user.settings.elevate.selected|default:""}
                             </select>
                         </div>
@@ -116,7 +115,7 @@
                         <div class="col-md-offset-2 col-md-10">
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" name="available" {$user.settings.elevate.activated|default:""}> {t}User Activated{/t}
+                                    <input type="checkbox" id="user-settings-available" name="available" {$user.settings.elevate.activated|default:""}> {t}User Activated{/t}
                                 </label>
                             </div>
                         </div>
@@ -124,7 +123,7 @@
                     <div class="form-group">
                         <div class="col-md-offset-2 col-md-2">
                             <input type="hidden" name="user-id" value="{$user.user_id}">
-                            <input type="hidden" name="action" value="edit-user">
+                            <input type="hidden" name="action" value="edit-role">
                             <input type="submit" class="btn btn-warning" value="{t}Edit{/t}">
                         </div>
                     </div>

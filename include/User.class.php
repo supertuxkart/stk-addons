@@ -335,8 +335,8 @@ class User
             // One or more of the session variables was not set - this may be an issue, so force logout
             if (!static::sessionExists($key))
             {
-//                trigger_error(sprintf("Session key = '%s' was not set", $key));
-//                var_debug("Init");
+                //                trigger_error(sprintf("Session key = '%s' was not set", $key));
+                //                var_debug("Init");
 
                 static::logout();
 
@@ -756,13 +756,12 @@ class User
      */
     public static function updateProfile($user_id, $homepage, $real_name)
     {
-        // throw exception if something is wrong (the user does nto exist, or a database error)
+        // throw exception if something is wrong (the user does not exist, or a database error)
         $user = static::getFromID($user_id);
 
         // verify permissions
         $isOwner = (User::getLoggedId() === $user->getId());
         $canEdit = static::hasPermissionOnRole($user->getRole());
-
         if (!$isOwner && !$canEdit)
         {
             throw new UserException(_h("You do not have the permission to update the profile"));
@@ -777,12 +776,69 @@ class User
             DBConnection::get()->update(
                 "users",
                 "`id` = :id",
-                array(
+                [
                     ":id"       => $user->getId(),
                     ":homepage" => $homepage,
                     ":name"     => $real_name
-                ),
-                array(":id" => DBConnection::PARAM_INT)
+                ],
+                [":id" => DBConnection::PARAM_INT]
+            );
+        }
+        catch(DBException $e)
+        {
+            throw new UserException(h(
+                _('An error occurred while updating the profile') . '. ' .
+                _('Please contact a website administrator.')
+            ));
+        }
+    }
+
+    /**
+     * Set the user role and availability.
+     * Only a select few users can call this function.
+     *
+     * @param int    $user_id
+     * @param string $role
+     * @param string $available
+     *
+     * @throws UserException
+     */
+    public static function updateRole($user_id, $role, $available)
+    {
+        // validate
+        if (!AccessControl::isRole($role))
+        {
+            throw new UserException(_h("The role specified is not valid"));
+        }
+
+        $canEdit = static::hasPermissionOnRole($role);
+        if (!$canEdit)
+        {
+            throw new UserException(_h("You do not have the permission to edit the role"));
+        }
+
+        // also does validation
+        $user = static::getFromID($user_id);
+        $available = Util::getCheckboxInt($available);
+
+        // can not edit your own role
+        if ($user->getId() === User::getLoggedId())
+        {
+            throw new UserException(_h("You can not edit your own role"));
+        }
+
+        // update
+        try
+        {
+            DBConnection::get()->update(
+                "users",
+                "`id` = :id",
+                [
+                    ":id"     => $user->getId(),
+                    ":role"   => $role,
+                    ":active" => $available
+                ],
+                [":id" => DBConnection::PARAM_INT, ":active" => DBConnection::PARAM_INT]
             );
         }
         catch(DBException $e)
