@@ -52,7 +52,7 @@ else
 // Check user-agent
 $uagent = $_SERVER['HTTP_USER_AGENT'];
 $matches = array();
-if (preg_match('#^(SuperTuxKart/[a-z0-9\\.\\-_]+)( \\(.*\\))?$#',$uagent,&$matches)) {
+if (preg_match('#^(SuperTuxKart/[a-z0-9\\.\\-_]+)( \\(.*\\))?$#', $uagent, $matches)) {
     try {
         DBConnection::get()->query(
                 'INSERT IGNORE INTO `'.DB_PREFIX.'clients`
