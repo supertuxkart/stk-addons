@@ -70,6 +70,25 @@ switch ($_POST["action"])
         echo json_encode(["success" => _h("Role edited successfully")]);
         break;
 
+    case "change-password":
+        $errors = Validate::ensureInput($_POST, ["old-pass", "new-pass", "new-pass-verify"]);
+        if ($errors)
+        {
+            exit(json_encode(["error" => _h("One or more fields are empty")]));
+        }
+
+        try
+        {
+            User::verifyAndChangePassword($_POST["old-pass"], $_POST["new-pass"], $_POST["new-pass-verify"], User::getLoggedId());
+        }
+        catch(UserException $e)
+        {
+            exit(json_encode(["error" => $e->getMessage()]));
+        }
+
+        echo json_encode(["success" => _h("Password changed")]);
+        break;
+
     default:
         echo json_encode(["error" => sprintf("action = %s is not recognized", h($_POST["action"]))]);
         break;

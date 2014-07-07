@@ -583,7 +583,7 @@ try
         case 'change_password':
             try
             {
-                $userid = isset($_POST['userid']) ? $_POST['userid'] : User::getLoggedId();
+                $userid = isset($_POST['userid']) ? $_POST['userid'] : 0;
                 $current = isset($_POST['current']) ? $_POST['current'] : "";
                 $new1 = isset($_POST['new1']) ? $_POST['new1'] : "";
                 $new2 = isset($_POST['new2']) ? $_POST['new2'] : "";

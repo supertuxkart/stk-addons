@@ -21,8 +21,7 @@
 // TODO add history calls
 function loadContent($content, url, params, callback, request_type) {
     request_type = request_type || "GET";
-    callback = callback || function() {
-    };
+    callback = callback || function() {};
 
     // define callback
     function onComplete(response, status, xhr) {
@@ -125,10 +124,8 @@ function growlSuccess(messsage) {
 }
 
 function modalDelete(message, yes_callback, no_callback) {
-    yes_callback = yes_callback || function() {
-    };
-    no_callback = no_callback || function() {
-    };
+    yes_callback = yes_callback || function() {};
+    no_callback = no_callback || function() {};
 
     bootbox.dialog({
         title  : "Delete",

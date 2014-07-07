@@ -140,9 +140,8 @@ abstract class ClientSession
                     FROM `" . DB_PREFIX . "users`
                     WHERE `id` = :userid",
                     DBConnection::FETCH_ALL,
-                    array(
-                        ':userid' => (int)$user_id
-                    )
+                    [':userid' => $user_id],
+                    [':userod' => DBConnection::PARAM_INT]
                 );
 
                 // here an if statement will come for Guest and registered
@@ -564,42 +563,41 @@ class RegisteredClientSession extends ClientSession
      */
     public static function create($username, $password, $save_session)
     {
+        // check if username/password is correct, throws exception
         try
         {
-            $result = Validate::credentials($username, $password);
-            $size = count($result);
-            if ($size == 0)
-            {
-                throw new ClientSessionConnectException(_h('Username and/or password invalid.'));
-            }
-            elseif ($size > 1)
+            $user = Validate::credentials($password, $username, Validate::CREDENTIAL_USERNAME);
+        }
+        catch(UserException $e)
+        {
+            throw new ClientSessionConnectException($e->getMessage());
+        }
+
+        try
+        {
+
+            $session_id = ClientSession::calcSessionId();
+            $user_id = $user["id"];
+            $username = $user["user"];
+            $count = DBConnection::get()->query(
+                "INSERT INTO `" . DB_PREFIX . "client_sessions` (cid, uid, save)
+                VALUES (:session_id, :user_id, :save)
+                ON DUPLICATE KEY UPDATE cid = :session_id, online = 1",
+                DBConnection::ROW_COUNT,
+                array(
+                    ':session_id' => (string)$session_id,
+                    ':user_id'    => (int)$user_id,
+                    ':save'       => ($save_session ? 1 : 0),
+                )
+            );
+            if ($count > 2 || $count < 0)
             {
                 throw new DBException();
             }
-            else
-            {
-                $session_id = ClientSession::calcSessionId();
-                $user_id = $result[0]["id"];
-                $username = $result[0]["user"];
-                $count = DBConnection::get()->query(
-                    "INSERT INTO `" . DB_PREFIX . "client_sessions` (cid, uid, save)
-                    VALUES (:session_id, :user_id, :save)
-                    ON DUPLICATE KEY UPDATE cid = :session_id, online = 1",
-                    DBConnection::ROW_COUNT,
-                    array(
-                        ':session_id' => (string)$session_id,
-                        ':user_id'    => (int)$user_id,
-                        ':save'       => ($save_session ? 1 : 0),
-                    )
-                );
-                if ($count > 2 || $count < 0)
-                {
-                    throw new DBException();
-                }
-                User::updateLoginTime($result[0]['id']);
+            User::updateLoginTime($user['id']);
 
-                return new RegisteredClientSession($session_id, $user_id, $username);
-            }
+            return new RegisteredClientSession($session_id, $user_id, $username);
+
         }
         catch(DBException $e)
         {

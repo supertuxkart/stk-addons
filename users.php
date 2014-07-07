@@ -47,7 +47,6 @@ switch ($action)
 
         try
         {
-            $user->setPass($_POST['oldPass'], $_POST['newPass'], $_POST['newPass2']);
             $status = _h('Your password has been changed successfully.');
         }
         catch(UserException $e)

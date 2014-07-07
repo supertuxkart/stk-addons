@@ -34,6 +34,7 @@ class Util
      * @var int
      */
     const SECONDS_IN_A_HOUR = 3600;
+
     const SECONDS_IN_AN_HOUR = 3600;
 
     /**
@@ -59,6 +60,12 @@ class Util
      * @var int
      */
     const SECONDS_IN_A_YEAR = 31536000;
+
+    const SALT_LENGTH = 32;
+
+    const SHA256_LENGTH = 64;
+
+    const MD5_LENGTH = 32;
 
     /**
      * Returns the first element in an array.
@@ -184,7 +191,7 @@ class Util
      */
     public static function str_starts_with($string, $starts_with)
     {
-        return (strpos($string, $starts_with) === 0);
+        return mb_strpos($string, $starts_with) === 0;
     }
 
     /**
@@ -197,7 +204,7 @@ class Util
      */
     public static function str_ends_with($string, $ends_with)
     {
-        return substr($string, -strlen($ends_with)) === $ends_with;
+        return mb_substr($string, -mb_strlen($ends_with)) === $ends_with;
     }
 
     /**
@@ -210,7 +217,7 @@ class Util
      */
     public static function str_contains($haystack, $needle)
     {
-        return (strpos($haystack, $needle) !== false);
+        return mb_strpos($haystack, $needle) !== false;
     }
 
     /**
@@ -224,7 +231,7 @@ class Util
      */
     public static function str_icontains($haystack, $needle)
     {
-        return (stripos($haystack, $needle) !== false);
+        return mb_stripos($haystack, $needle) !== false;
     }
 
     /**
@@ -303,14 +310,14 @@ class Util
      */
     public static function geClientIp()
     {
-        $ip_pool = array(
+        $ip_pool = [
             'HTTP_CLIENT_IP',
             'HTTP_X_FORWARDED_FOR',
             'HTTP_X_FORWARDED',
             'HTTP_X_CLUSTER_CLIENT_IP',
             'HTTP_FORWARDED_FOR',
             'HTTP_FORWARDED'
-        );
+        ];
 
         foreach ($ip_pool as $ip)
         {
@@ -360,11 +367,11 @@ class Util
         $config->set("Cache.SerializerPath", CACHE_PATH);
         $config->set(
             "HTML.AllowedElements",
-            array("h3", "h4", "h5", "h6", "p", "img", "a", "ol", "li", "ul", "b", "i", "u", "small", "blockquote")
+            ["h3", "h4", "h5", "h6", "p", "img", "a", "ol", "li", "ul", "b", "i", "u", "small", "blockquote"]
         );
         $config->set("HTML.MaxImgLength", 480);
         $config->set("CSS.MaxImgLength", "480px");
-        $config->set("Attr.AllowedFrameTargets", array("_blank", "_self", "_top", "_parent"));
+        $config->set("Attr.AllowedFrameTargets", ["_blank", "_self", "_top", "_parent"]);
 
         return $config;
     }
@@ -390,12 +397,55 @@ class Util
      */
     public static function getCheckboxInt($checkbox)
     {
-        if($checkbox === "on")
+        if ($checkbox === "on")
         {
             return 1;
         }
 
         return 0;
+    }
+
+    /**
+     * Checks if the password is salted
+     *
+     * @param string $hash_password the hash value of a password
+     *
+     * @return bool
+     */
+    public static function isPasswordSalted($hash_password)
+    {
+        return mb_strlen($hash_password) === (static::SALT_LENGTH + static::SHA256_LENGTH);
+    }
+
+    /**
+     * Get the salt part of a password
+     *
+     * @param string $hash_password the hash value of a passowrd
+     *
+     * @return string
+     */
+    public static function getSaltFromPassword($hash_password)
+    {
+        return mb_substr($hash_password, 0, static::SALT_LENGTH);
+    }
+
+    /**
+     * Generate the hash for a password
+     *
+     * @param string      $raw_password the plain password
+     * @param null|string $salt         optional, give it own salt
+     *
+     * @return string
+     */
+    public static function getPasswordHash($raw_password, $salt = null)
+    {
+        if (!$salt) // generate our own salt
+        {
+            // TODO use a truly random source of entropy
+            $salt = md5(uniqid(mt_rand(), true)); // md5 is 32 characters
+        }
+
+        return $salt . hash("sha256", $salt . $raw_password);
     }
 
     /**

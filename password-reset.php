@@ -121,11 +121,15 @@ switch ($_GET['action'])
             $verification_code = (isset($_POST['verify'])) ? $_POST['verify'] : "";
             $pass1 = (isset($_POST['pass1'])) ? $_POST['pass1'] : "";
             $pass2 = (isset($_POST['pass2'])) ? $_POST['pass2'] : "p";
-            Verification::verify($userid, $verification_code);
 
-            $pass = Validate::password($pass1, $pass2);
-            User::changePassword($pass, $userid);
+            // validate
+            Verification::verify($userid, $verification_code);
+            $password_hash = Validate::newPassword($pass1, $pass2);
+
+            // change password and clean up
+            User::changePassword($userid, $password_hash);
             Verification::delete($userid);
+
             $pw_res['reset_form']['display'] = false;
             $pw_res['info'] .= _h('Changed password.') . '<br />';
             $pw_res['info'] .= '<a href="login.php">' . _h('Login') . '</a>';

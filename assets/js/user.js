@@ -76,7 +76,17 @@
             } else { // user is not active
                 $side_user.addClass("unavailable");
             }
+        }
+    });
 
+    // change password form
+    userFormSubmit("#user-change-password", function(data) {
+        var jData = parseJSON(data);
+        if (jData.hasOwnProperty("error")) {
+            growlError(jData["error"]);
+        }
+        if (jData.hasOwnProperty("success")) {
+            growlSuccess(jData["success"]);
         }
     });
 

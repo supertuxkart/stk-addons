@@ -114,6 +114,14 @@ class User
     /**
      * @return mixed
      */
+    public function getPassword()
+    {
+        return $this->userData["pass"];
+    }
+
+    /**
+     * @return mixed
+     */
     public function getAvatar()
     {
         return $this->userData["avatar"];
@@ -177,35 +185,6 @@ class User
 
         return $addons;
     }
-
-    /**
-     * Validate and set the user password
-     *
-     * @param string $old_password
-     * @param string $new_password_1
-     * @param string $new_password_2
-     *
-     * @return bool true on success
-     * @throws UserException when old password does not match
-     */
-    public function setPass($old_password, $new_password_1, $new_password_2)
-    {
-        // TODO: FIX error message on old password
-        $new_password = Validate::password($new_password_1, $new_password_2);
-
-        if (Validate::password($old_password, null, static::sessionGet("user_name")) !== $this->userData['pass'])
-        {
-            throw new UserException(_h('Your old password is not correct.'));
-        }
-
-        if (static::getLoggedId() === $this->id)
-        {
-            static::changePassword($new_password, static::getLoggedId());
-        }
-
-        return true;
-    }
-
 
     /**
      * Get the user as a xml structure
@@ -388,16 +367,15 @@ class User
      */
     public static function login($username, $password)
     {
-        $result = Validate::credentials($username, $password);
-
-        // Check if the user exists
-        if (count($result) !== 1)
+        try
+        {
+            $user = Validate::credentials($password, $username, Validate::CREDENTIAL_USERNAME);
+        }
+        catch(UserException $e)
         {
             static::logout();
-            throw new UserException(_h('Your username or password is incorrect.'));
+            throw new UserException($e->getMessage());
         }
-
-        $user = $result[0];
 
         // init session vars
         static::sessionInit($user["id"]);
@@ -409,10 +387,10 @@ class User
         static::setPermissions($user["role"]);
 
         // backwards compatibility. Convert unsalted password to a salted one
-        if (strlen($password) === 64)
+        if (!Util::isPasswordSalted($user["pass"])) // TODO check server because the master repo had this implemented wrong
         {
-            $password = Validate::password($password);
-            static::changePassword($password, static::getLoggedId());
+            $password = Util::getPasswordHash($password);
+            static::changePassword(static::getLoggedId(), $password);
             Log::newEvent("Converted the password of '$username' to use a password salting algorithm");
         }
     }
@@ -501,6 +479,8 @@ class User
     }
 
     /**
+     * Get a user instance from a filed type
+     *
      * @param string $field
      * @param mixed  $value
      * @param int    $value_type
@@ -524,7 +504,7 @@ class User
         catch(DBException $e)
         {
             throw new UserException(h(
-                _('An error occurred while performing your search query.') . ' ' .
+                _('An error occurred while retrieving the user.') . ' .' .
                 _('Please contact a website administrator.')
             ));
         }
@@ -533,7 +513,7 @@ class User
         if (empty($user))
         {
             throw new UserException(h(
-                _("Tried to fetch an user that doesn't exist.") . ' ' .
+                _("Tried to fetch an user that doesn't exist.") . ' .' .
                 _('Please contact a website administrator.')
             ));
         }
@@ -608,7 +588,7 @@ class User
             catch(DBException $e)
             {
                 throw new UserException(h(
-                    _('An error occurred while performing your search query.') . ' ' .
+                    _('An error occurred while performing your search query.') . ' .' .
                     _('Please contact a website administrator.')
                 ));
             }
@@ -863,6 +843,7 @@ class User
 
         try
         {
+            // TODO use one query
             DBConnection::get()->query(
                 "UPDATE `" . DB_PREFIX . "users`
                 SET `last_login` = NOW()
@@ -870,19 +851,13 @@ class User
                 DBConnection::NOTHING,
                 [':userid' => $userid]
             );
-            $result = DBConnection::get()->query(
+            $user = DBConnection::get()->query(
                 "SELECT `last_login`
                 FROM `" . DB_PREFIX . "users`
                 WHERE `id` = :userid",
-                DBConnection::FETCH_ALL,
+                DBConnection::FETCH_FIRST,
                 [':userid' => $userid]
             );
-            if (count($result) !== 1)
-            {
-                throw new DBException();
-            }
-
-            return $result[0]['last_login'];
         }
         catch(DBException $e)
         {
@@ -892,28 +867,21 @@ class User
                 _('Please contact a website administrator.')
             ));
         }
+
+        return $user['last_login'];
     }
 
     /**
-     * Change the password of the supplied user; if none supplied, currently logged in user is used.
+     * Change the password of the supplied user.
+     * Use with care
      *
-     * @param string $new_password
-     * @param int    $user_id defaults to currently logged in user.
+     * @param int    $user_id
+     * @param string $hash_new_password the new password hash
      *
      * @throws UserException
      */
-    public static function changePassword($new_password, $user_id = 0)
+    public static function changePassword($user_id, $hash_new_password)
     {
-        if ($user_id === 0)
-        {
-            if (!static::isLoggedIn())
-            {
-                throw new UserException(_h('You must be logged in to change a password.'));
-            }
-
-            $user_id = static::getLoggedId();
-        }
-
         try
         {
             $count = DBConnection::get()->query(
@@ -921,13 +889,9 @@ class User
                 SET `pass`   = :pass
     	        WHERE `id` = :userid",
                 DBConnection::ROW_COUNT,
-                [':userid' => $user_id, ':pass' => $new_password],
+                [':userid' => $user_id, ':pass' => $hash_new_password],
                 [":userid" => DBConnection::PARAM_INT]
             );
-            if ($count === 0)
-            {
-                throw new DBException();
-            }
         }
         catch(DBException $e)
         {
@@ -935,52 +899,52 @@ class User
                 _('An error occured while trying to change your password.') . ' ' .
                 _('Please contact a website administrator.')
             ));
+        }
+
+        if (!$count)
+        {
+            throw new UserException("Change password no rows affected");
         }
     }
 
     /**
-     * @param string $current
-     * @param string $new1
-     * @param string $new2
-     * @param string $userid
+     * Verify and change to a new password
+     *
+     * @param string $current_password
+     * @param string $new_password
+     * @param string $new_password_verify
+     * @param int    $user_id
      *
      * @throws UserException
      */
-    public static function verifyAndChangePassword($current, $new1, $new2, $userid)
+    public static function verifyAndChangePassword($current_password, $new_password, $new_password_verify, $user_id)
     {
+        // verify it they added their password correctly, throws exception
+        $new_password_hash = Validate::newPassword($new_password, $new_password_verify);
+
         try
         {
             DBConnection::get()->beginTransaction();
-            $count = DBConnection::get()->query(
-                "SELECT `id`
-                FROM `" . DB_PREFIX . "users`
-                WHERE `id` = :userid AND `pass` = :pass",
-                DBConnection::ROW_COUNT,
-                [
-                    ':userid' => $userid,
-                    ':pass'   => Validate::password($current, null, null, $userid)
-                ],
-                [":userid" => DBConnection::PARAM_INT]
-            );
 
-            if ($count < 1)
+            $user = Validate::credentials($current_password, $user_id, Validate::CREDENTIAL_ID);
+
+            // only user can change his password
+            if ($user["id"] !== $user_id)
             {
-                throw new UserException(_h('Current password invalid.'));
+                throw new UserException(_h('You do not have the permission to change the password'));
             }
 
-            $new_hashed = Validate::password($new1, $new2);
-            static::changePassword($new_hashed, $userid);
+            static::changePassword($user_id, $new_password_hash);
             DBConnection::get()->commit();
-
         }
         catch(DBException $e)
         {
+            DBConnection::get()->rollback();
             throw new UserException(h(
                 _('An error occured while trying to change your password.') . ' ' .
                 _('Please contact a website administrator.')
             ));
         }
-
     }
 
     /**
@@ -1076,7 +1040,7 @@ class User
     {
         // Sanitize inputs
         $username = Validate::username($username);
-        $password = Validate::password($password, $password_conf);
+        $password_hash = Validate::newPassword($password, $password_conf);
         $email = Validate::email($email);
         $name = Validate::realName($name);
         Validate::checkbox($terms, _h('You must agree to the terms to register.'));
@@ -1135,7 +1099,7 @@ class User
                 "users",
                 [
                     ":user"    => $username,
-                    ":pass"    => $password,
+                    ":pass"    => $password_hash,
                     ":name"    => $name,
                     ":email"   => $email,
                     "role"     => "user",
