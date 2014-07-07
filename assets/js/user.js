@@ -87,6 +87,9 @@
         }
         if (jData.hasOwnProperty("success")) {
             growlSuccess(jData["success"]);
+
+            // clear password field
+            $("#user-change-password").find("input[type=password]").val("");
         }
     });
 

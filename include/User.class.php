@@ -377,20 +377,23 @@ class User
             throw new UserException($e->getMessage());
         }
 
+        $id = $user->getId();
+        $role = $user->getRole();
+
         // init session vars
-        static::sessionInit($user["id"]);
-        static::sessionSet("id", $user["id"]);
-        static::sessionSet("user_name", $user["user"]);
-        static::sessionSet("real_name", $user["name"]);
-        static::sessionSet("date_last_login", static::updateLoginTime($user["id"]));
-        static::sessionSet("role", $user["role"]);
-        static::setPermissions($user["role"]);
+        static::sessionInit($id);
+        static::sessionSet("id", $id);
+        static::sessionSet("user_name", $user->getUserName());
+        static::sessionSet("real_name", $user->getRealName());
+        static::sessionSet("date_last_login", static::updateLoginTime($id));
+        static::sessionSet("role",$role);
+        static::setPermissions($role);
 
         // backwards compatibility. Convert unsalted password to a salted one
-        if (!Util::isPasswordSalted($user["pass"])) // TODO check server because the master repo had this implemented wrong
+        if (!Util::isPasswordSalted($user->getPassword())) // TODO check server because the master repo had this implemented wrong
         {
             $password = Util::getPasswordHash($password);
-            static::changePassword(static::getLoggedId(), $password);
+            static::changePassword($id, $password);
             Log::newEvent("Converted the password of '$username' to use a password salting algorithm");
         }
     }
@@ -513,8 +516,7 @@ class User
         if (empty($user))
         {
             throw new UserException(h(
-                _("Tried to fetch an user that doesn't exist.") . ' .' .
-                _('Please contact a website administrator.')
+                _("The user does not exist") . '.'
             ));
         }
 
@@ -929,7 +931,7 @@ class User
             $user = Validate::credentials($current_password, $user_id, Validate::CREDENTIAL_ID);
 
             // only user can change his password
-            if ($user["id"] !== $user_id)
+            if ($user->getId() !== $user_id)
             {
                 throw new UserException(_h('You do not have the permission to change the password'));
             }

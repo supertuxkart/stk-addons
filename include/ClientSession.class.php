@@ -577,24 +577,25 @@ class RegisteredClientSession extends ClientSession
         {
 
             $session_id = ClientSession::calcSessionId();
-            $user_id = $user["id"];
-            $username = $user["user"];
+            $user_id = $user->getId();
+            $username = $user->getUserName();
             $count = DBConnection::get()->query(
                 "INSERT INTO `" . DB_PREFIX . "client_sessions` (cid, uid, save)
                 VALUES (:session_id, :user_id, :save)
                 ON DUPLICATE KEY UPDATE cid = :session_id, online = 1",
                 DBConnection::ROW_COUNT,
-                array(
-                    ':session_id' => (string)$session_id,
-                    ':user_id'    => (int)$user_id,
+                [
+                    ':session_id' => $session_id,
+                    ':user_id'    => $user_id,
                     ':save'       => ($save_session ? 1 : 0),
-                )
+                ],
+                [':user_id' => DBConnection::PARAM_INT, ':save' => DBConnection::PARAM_INT]
             );
             if ($count > 2 || $count < 0)
             {
                 throw new DBException();
             }
-            User::updateLoginTime($user['id']);
+            User::updateLoginTime($user_id);
 
             return new RegisteredClientSession($session_id, $user_id, $username);
 

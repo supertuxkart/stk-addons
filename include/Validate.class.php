@@ -81,71 +81,26 @@ class Validate
      *
      * @throws UserException
      * @throws InvalidArgumentException
-     * @return array associative with user information from the database
+     * @return User
      */
     public static function credentials($password, $field_value, $credential_type)
     {
+        // validate
         if ($credential_type === static::CREDENTIAL_ID)
         {
-            $password = static::password($password, $field_value, static::PASSWORD_ID);
-            $where_part = "`id` = :field_value";
+            $user = static::password($password, $field_value, static::PASSWORD_ID);
         }
         elseif ($credential_type === static::CREDENTIAL_USERNAME)
         {
-            $password = static::password($password, $field_value, static::PASSWORD_USERNAME);
             $field_value = static::username($field_value);
-            $where_part = "`user` = :field_value";
+            $user = static::password($password, $field_value, static::PASSWORD_USERNAME);
         }
         else
         {
             throw new InvalidArgumentException("credential type is invalid");
         }
 
-        // build query
-        $query = sprintf(
-            "SELECT `id`, `user`, `pass`, `name`, `role`
-             FROM `" . DB_PREFIX . "users`
-             WHERE `pass` = :pass AND %s",
-            $where_part
-        );
-
-        try
-        {
-            $users = DBConnection::get()->query(
-                $query,
-                DBConnection::FETCH_ALL,
-                [
-                    ":pass"        => $password,
-                    ":field_value" => $field_value
-                ]
-            );
-        }
-        catch(PDOException $e)
-        {
-            throw new UserException(
-                _h('An error occurred while signing in.') . ' ' .
-                _h('Please contact a website administrator.')
-            );
-        }
-
-        $count_users = count($users);
-
-        // combination is invalid
-        if ($count_users === 0)
-        {
-            throw new UserException(_h('Username and/or password combination is invalid.'));
-        }
-
-        // 2 users have the same username/password combination. This should never happen
-        if ($count_users > 1)
-        {
-            // TODO send email to moderator
-            Log::newEvent("To users with the same credentials: field_value = " . h($field_value));
-            throw new UserException(_h('Username and/or password combination is invalid.'));
-        }
-
-        // get the first
-        return $users[0];
+        return $user;
     }
 
     /**
@@ -248,7 +203,7 @@ class Validate
      * @param string $field_value
      * @param int    $field_type
      *
-     * @return string
+     * @return User
      * @throws UserException
      */
     public static function password($password, $field_value, $field_type)
@@ -269,17 +224,29 @@ class Validate
             throw new UserException(_h("Invalid validation field type"));
         }
 
-        // db password
+        // the field value exists, so something about the user is true
         $db_password_hash = $user->getPassword();
 
-        // password is salted
-        if (Util::isPasswordSalted($db_password_hash))
+        // verify if password is correct
+        if (Util::isPasswordSalted($db_password_hash)) // password is salted
         {
-            return $db_password_hash;
+            $salt = Util::getSaltFromPassword($db_password_hash);
+
+            if(Util::getPasswordHash($password, $salt) !== $db_password_hash)
+            {
+                throw new UserException(_h("Invalid password"));
+            }
+        }
+        else // not salted
+        {
+            if ($db_password_hash !== hash("sha256", $password))
+            {
+                throw new UserException(_h("Invalid password"));
+            }
         }
 
         // password is not hashed
-        return hash("sha256", $password);
+        return $user;
     }
 
     /**
