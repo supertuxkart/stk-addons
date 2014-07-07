@@ -41,7 +41,7 @@ $tpl->assign('index_menu', array(
     array('href' => File::rewrite('addons.php?type=arenas'),
 	'label' => htmlspecialchars(_('Arenas')),
 	'type' => 'arenas'),
-    array('href' => 'http://trac.stkaddons.net',
+    array('href' => 'https://github.com/supertuxkart/stkaddons/wiki',
 	'label' => 'Help',
 	'type' => 'help')
 ));
