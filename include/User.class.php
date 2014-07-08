@@ -565,7 +565,7 @@ class User
         $query_parts = [];
         foreach ($terms as $term)
         {
-            if (strlen($term) > 2)
+            if (mb_strlen($term) > 2)
             {
                 $parameter = ":userid" . $index;
                 $index++;

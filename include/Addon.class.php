@@ -1435,19 +1435,19 @@ class Addon
             return false;
         }
 
-        $length = strlen($id);
+        $length = mb_strlen($id);
         if ($length === 0)
         {
             return false;
         }
-        $id = strtolower($id);
+        $id = mb_strtolower($id);
 
         // Validate all characters in addon id
         // Rather than using str_replace, and removing bad characters,
         // it makes more sense to only allow certain characters
         for ($i = 0; $i < $length; $i++)
         {
-            $substr = substr($id, $i, 1);
+            $substr = mb_substr($id, $i, 1);
             if (!preg_match('/^[a-z0-9\-_]$/i', $substr))
             {
                 $substr = '-';

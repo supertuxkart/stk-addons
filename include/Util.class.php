@@ -321,21 +321,17 @@ class Util
 
         foreach ($ip_pool as $ip)
         {
-            if (isset($_SERVER[$ip]) && !empty($_SERVER[$ip]))
+            if (!empty($_SERVER[$ip]))
             {
-                if (filter_var(
-                    $_SERVER[$ip],
-                    FILTER_VALIDATE_IP,
-                    FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE
-                )
-                )
+                $options = FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE;
+                if (filter_var($_SERVER[$ip], FILTER_VALIDATE_IP, $options))
                 {
                     return $_SERVER[$ip];
                 }
             }
         }
 
-        return isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : false;
+        return !empty($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : false;
     }
 
     /**
@@ -457,7 +453,6 @@ class Util
      * @param   boolean $include_symbols    Whether or not to include symbols in the string. Can not be enabled if $human_friendly is true
      * @param   boolean $no_duplicate_chars Whether or not to only use characters once in the string.
      *
-     * @throws  LengthException  If $length is bigger than the available character pool and $no_duplicate_chars is enabled
      * @return  string
      */
     public static function getRandomString(
@@ -488,10 +483,10 @@ class Util
 
         // Don't allow duplicate letters to be disabled if the length is
         // longer than the available characters
-        if ($no_duplicate_chars && strlen($pool) < $length)
-        {
-            throw new \LengthException('$length exceeds the size of the pool and $no_duplicate_chars is enabled');
-        }
+        assert(
+            $no_duplicate_chars && mb_strlen($pool) < $length,
+            '$length exceeds the size of the pool and $no_duplicate_chars is enabled'
+        );
 
         // Convert the pool of characters into an array of characters and
         // shuffle the array

@@ -540,7 +540,7 @@ abstract class ClientSession
      */
     protected static function calcSessionId()
     {
-        return substr(md5(uniqid('', true)), 0, 24);
+        return mb_substr(md5(uniqid(mt_rand(), true)), 0, 24);
     }
 
 }

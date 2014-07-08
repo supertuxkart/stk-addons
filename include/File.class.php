@@ -1093,7 +1093,7 @@ class File
     public static function rewrite($link)
     {
         // Don't rewrite external links
-        if (substr($link, 0, 7) === 'http://' && substr($link, 0, strlen(SITE_ROOT)) !== SITE_ROOT)
+        if (mb_substr($link, 0, 7) === 'http://' && mb_substr($link, 0, mb_strlen(SITE_ROOT)) !== SITE_ROOT)
         {
             return $link;
         }

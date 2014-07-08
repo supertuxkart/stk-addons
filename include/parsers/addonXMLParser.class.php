@@ -168,8 +168,8 @@ class addonXMLParser extends Parser
         $new_xml = $writer->flush();
 
         rewind($this->file);
-        fwrite($this->file, $new_xml, strlen($new_xml));
-        ftruncate($this->file, strlen($new_xml));
+        fwrite($this->file, $new_xml, mb_strlen($new_xml));
+        ftruncate($this->file, mb_strlen($new_xml));
 
         // Clear attributes
         $this->attributes = array();

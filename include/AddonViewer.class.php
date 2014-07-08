@@ -187,7 +187,7 @@ class AddonViewer
         if ($file_path !== false && File::exists($file_path))
         {
             $button_text = h(sprintf(_('Download %s'), $this->addon->getName()));
-            $shrink = (strlen($button_text) > 20) ? 'style="font-size: 1.1em !important;"' : null;
+            $shrink = (mb_strlen($button_text) > 20) ? 'style="font-size: 1.1em !important;"' : null;
             $tpl['addon']['dl'] = array(
                 'display'            => true,
                 'label'              => $button_text,

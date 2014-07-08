@@ -121,11 +121,11 @@ class b3dParser extends Parser
         // Format is <name><flags><blend><xpos><ypos><xscale><yscale><rot>,
         // <name> is padded with a null byte
         // Everything following is 28 bytes long
-        while (strlen($chunk) != 0)
+        while (mb_strlen($chunk) != 0)
         {
-            $fname_len = strpos($chunk, "\x00");
-            $textures[] = substr($chunk, 0, $fname_len);
-            $chunk = substr($chunk, $fname_len + 29);
+            $fname_len = mb_strpos($chunk, "\x00");
+            $textures[] = mb_substr($chunk, 0, $fname_len);
+            $chunk = mb_substr($chunk, $fname_len + 29);
         }
 
         return $textures;
