@@ -81,6 +81,11 @@ class SLocale
         SLocale::setLocale($locale);
     }
 
+    /**
+     * Get all the supported translate languages
+     *
+     * @return array
+     */
     public static function getLanguages()
     {
         return static::$languages;
