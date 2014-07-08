@@ -441,8 +441,8 @@ class Util
     {
         if (!$salt) // generate our own salt
         {
-            // TODO use a truly random source of entropy
-            $salt = md5(uniqid(mt_rand(), true)); // md5 is 32 characters
+            // when we retrieve it from the database it will be already utf8, because we encoded it as utf8
+            $salt = utf8_encode(mcrypt_create_iv(static::SALT_LENGTH, MCRYPT_DEV_RANDOM));
         }
 
         return $salt . hash("sha256", $salt . $raw_password);

@@ -28,28 +28,28 @@ $tpl = StkTemplate::get('index.tpl')
 // Display index menu
 $tpl->assign(
     'index_menu',
-    array(
-        array(
+    [
+        [
             'href'  => File::rewrite('addons.php?type=karts'),
             'label' => _h('Karts'),
             'type'  => 'karts'
-        ),
-        array(
+        ],
+        [
             'href'  => File::rewrite('addons.php?type=tracks'),
             'label' => _h('Tracks'),
             'type'  => 'tracks'
-        ),
-        array(
+        ],
+        [
             'href'  => File::rewrite('addons.php?type=arenas'),
             'label' => _h('Arenas'),
             'type'  => 'arenas'
-        ),
-        array(
+        ],
+        [
             'href'  => 'http://trac.stkaddons.net',
             'label' => 'Help',
             'type'  => 'help'
-        )
-    )
+        ]
+    ]
 );
 
 // Display news messages
