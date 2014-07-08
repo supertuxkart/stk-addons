@@ -81,27 +81,9 @@ class SLocale
         SLocale::setLocale($locale);
     }
 
-    /**
-     * Get a locale instance
-     *
-     * @return SLocale
-     */
-    public static function get()
+    public static function getLanguages()
     {
-        // Get the current page address (without "lang" parameter)
-        $page_url = $_SERVER['REQUEST_URI'];
-        if (!Util::str_contains($page_url, "?"))
-        {
-            $page_url .= '?';
-        }
-
-        // Clean up the new url
-        $page_url = preg_replace('/lang=[a-z_]+/i', null, $page_url);
-        $page_url = preg_replace('/[&]+/i', '&', $page_url);
-        $page_url = preg_replace('/\?&/i', '?', $page_url);
-
-        // Set the locale
-        new SLocale();
+        return static::$languages;
     }
 
     /**

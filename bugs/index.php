@@ -20,9 +20,7 @@
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
 $tpl = StkTemplate::get('bugs-index.tpl')->addScriptInclude("bugs.js");
-$tplData = array(
-    "show_btn_file" => true
-);
+$tplData = ["show_btn_file" => true];
 
 if(isset($_GET["bug_id"]))
 {

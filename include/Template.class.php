@@ -51,7 +51,7 @@ class Template
     {
         if (!static::$locale)
         {
-            static::$locale = SLocale::get();
+            static::$locale = new SLocale();
         }
 
         $this->createSmartyInstance();

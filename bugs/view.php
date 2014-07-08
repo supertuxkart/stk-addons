@@ -34,18 +34,18 @@ if (!Bug::exists($bug_id))
 
 $tpl = StkTemplate::get("bugs-view.tpl");
 $bug = Bug::get($_GET["bug_id"]);
-$comments = array();
+$comments = [];
 foreach ($bug->getCommentsData() as $comment)
 {
-    $comments[] = array(
+    $comments[] = [
         "id"          => $comment["id"],
         "user_name"   => User::getFromID($comment["user_id"])->getUserName(),
         "date"        => $comment["date"],
         "description" => $comment["description"]
-    );
+    ];
 }
 
-$tplData = array(
+$tplData = [
     "id"           => $bug->getId(),
     "title"        => $bug->getTitle(),
     "user_id"      => $bug->getUserId(),
@@ -63,7 +63,7 @@ $tplData = array(
 
     "description"  => $bug->getDescription(),
     "comments"     => $comments
-);
+];
 
 $tpl->assign("bug", $tplData)
     ->assign("current_url", urlencode(Util::getCurrentUrl(false, false)))

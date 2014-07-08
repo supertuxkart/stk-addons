@@ -34,14 +34,14 @@ class Bug
      * Hold all the bug fields
      * @var array
      */
-    protected $bugData = array();
+    protected $bugData = [];
 
 
     /**
      * Hold all the comments for this bug
      * @var array
      */
-    protected $commentsData = array();
+    protected $commentsData = [];
 
     /**
      * Load the comments from the database into the current bug instance
@@ -57,7 +57,7 @@ class Bug
                 WHERE `bug_id` = :bug_id
                 ORDER BY date DESC",
                 DBConnection::FETCH_ALL,
-                array(":bug_id" => $this->id)
+                [":bug_id" => $this->id]
             );
         }
         catch(DBException $e)
@@ -75,7 +75,7 @@ class Bug
      *
      * @throws BugException on database error
      */
-    protected function __construct($id, array $bugData = array(), $loadComments = true)
+    protected function __construct($id, array $bugData = [], $loadComments = true)
     {
         $this->id = $id;
         $this->bugData = $bugData;
@@ -220,8 +220,8 @@ class Bug
             $count = DBConnection::get()->count(
                 "bugs",
                 "`id` = :id",
-                array(":id" => $id),
-                array(":id" => DBConnection::PARAM_INT)
+                [":id" => $id],
+                [":id" => DBConnection::PARAM_INT]
             );
         }
         catch(DBException $e)
@@ -247,8 +247,8 @@ class Bug
             $count = DBConnection::get()->count(
                 "bugs_comments",
                 "`id` = :id",
-                array(":id" => $id),
-                array(":id" => DBConnection::PARAM_INT)
+                [":id" => $id],
+                [":id" => DBConnection::PARAM_INT]
             );
         }
         catch(DBException $e)
@@ -300,8 +300,8 @@ class Bug
                 "SELECT * FROM " . DB_PREFIX . "bugs
                 WHERE `id` = :id LIMIT 1",
                 DBConnection::FETCH_FIRST,
-                array(":id" => $bugId),
-                array(":id" => DBConnection::PARAM_INT)
+                [":id" => $bugId],
+                [":id" => DBConnection::PARAM_INT]
             );
         }
         catch(DBException $e)
@@ -333,8 +333,8 @@ class Bug
                 "SELECt * FROM " . DB_PREFIX . "bugs_comments
                 WHERE `id` = :id LIMIT 1",
                 DBConnection::FETCH_FIRST,
-                array(":id" => $commentId),
-                array(":id" => DBConnection::PARAM_INT)
+                [":id" => $commentId],
+                [":id" => DBConnection::PARAM_INT]
             );
         }
         catch(DBException $e)
@@ -403,7 +403,7 @@ class Bug
             $bugs = DBConnection::get()->query(
                 $query,
                 DBConnection::FETCH_ALL,
-                array(":search_term" => '%' . $search_term . '%')
+                [":search_term" => '%' . $search_term . '%']
             );
 
         }
@@ -446,13 +446,13 @@ class Bug
         {
             DBConnection::get()->insert(
                 "bugs",
-                array(
+                [
                     ":user_id"     => $userId,
                     ":addon_id"    => $addonId,
                     ":title"       => $bugTitle,
                     ":description" => $bugDescription,
                     "date_report"  => "NOW()"
-                )
+                ]
             );
         }
         catch(DBException $e)
@@ -492,12 +492,12 @@ class Bug
         {
             DBConnection::get()->insert(
                 "bugs_comments",
-                array(
+                [
                     ":user_id"     => $userId,
                     ":bug_id"      => $bugId,
                     ":description" => $commentDescription,
                     "date"         => "NOW()"
-                )
+                ]
             );
         }
         catch(DBException $e)
@@ -541,12 +541,12 @@ class Bug
             DBConnection::get()->update(
                 "bugs",
                 "`id` = :id",
-                array(
+                [
                     ":id"          => $bugId,
                     ":title"       => $bugTitle,
                     ":description" => $bugDescription
-                ),
-                array(":id" => DBConnection::PARAM_INT)
+                ],
+                [":id" => DBConnection::PARAM_INT]
             );
         }
         catch(DBException $e)
@@ -588,8 +588,8 @@ class Bug
             DBConnection::get()->update(
                 "bugs_comments",
                 "`id` = :id",
-                array(":id" => $commentId, ":description" => $commentDescription),
-                array(":id" => DBConnection::PARAM_INT)
+                [":id" => $commentId, ":description" => $commentDescription],
+                [":id" => DBConnection::PARAM_INT]
             );
         }
         catch(DBException $e)
@@ -634,13 +634,13 @@ class Bug
             DBConnection::get()->update(
                 "bugs",
                 "`id` = :id",
-                array(
+                [
                     ":id"           => $bugId,
                     ":close_id"     => User::getLoggedId(),
                     ":close_reason" => $closeReason,
                     "date_close"    => "NOW()"
-                ),
-                array(":id" => DBConnection::PARAM_INT, ":close_id" => DBConnection::PARAM_INT)
+                ],
+                [":id" => DBConnection::PARAM_INT, ":close_id" => DBConnection::PARAM_INT]
             );
         }
         catch(DBException $e)
@@ -677,8 +677,8 @@ class Bug
             DBConnection::get()->delete(
                 "bugs",
                 "`id` = :id",
-                array(":id" => $bugId),
-                array(":id" => DBConnection::PARAM_INT)
+                [":id" => $bugId],
+                [":id" => DBConnection::PARAM_INT]
             );
         }
         catch(DBException $e)
@@ -716,8 +716,8 @@ class Bug
             DBConnection::get()->delete(
                 "bugs_comments",
                 "`id` = :id",
-                array(":id" => $commentId),
-                array(":id" => DBConnection::PARAM_INT)
+                [":id" => $commentId],
+                [":id" => DBConnection::PARAM_INT]
             );
         }
         catch(DBException $e)

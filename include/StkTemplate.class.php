@@ -197,47 +197,31 @@ class StkTemplate extends Template
     {
         // Language menu
         $this->smarty->assign('lang_menu_lbl', _h('Languages'));
-        $langs = [
-            // lang href, position left, position top, text
-            ['en_US', 0, 0, 'EN'],
-            ['ca_ES', -96, -99, 'CA'],
-            ['de_DE', 0, -33, 'DE'],
-            ['es_ES', -96, -66, 'ES'],
-            ['eu_ES', -144, -66, 'EU'],
-            ['fr_FR', 0, -66, 'FR'],
-            ['ga_IE', 0, -99, 'GA'],
-            ['gd_GB', -144, -33, 'GD'],
-            ['gl_ES', -48, 0, 'GL'],
-            ['id_ID', -48, -33, 'ID'],
-            ['it_IT', -96, -33, 'IT'],
-            ['nl_NL', -48, -66, 'NL'],
-            ['pt_BR', -144, 0, 'PT'],
-            ['ru_RU', -48, -99, 'RU'],
-            ['zh_TW', -96, 0, 'ZH (T)']
-        ];
+        $languages = SLocale::getLanguages();
 
-        $langs_count = count($langs);
-        for ($i = 0; $i < $langs_count; $i++)
+        $languages_count = count($languages);
+        for ($i = 0; $i < $languages_count; $i++)
         {
+            // Get the current page address (without "lang" parameter)
             $url = $_SERVER['REQUEST_URI'];
 
             // Generate the url to change the language
-            if (strstr($url, '?') === false)
+            if (!Util::str_contains($url, "?"))
             {
-                $url .= '?lang=' . $langs[$i][0];
+                $url .= '?lang=' . $languages[$i][0];
             }
             else
             {
                 // Make sure any existing instances of lang are removed
                 $url = preg_replace('/(&(amp;)?)*lang=[a-z_]+/i', null, $url);
                 $url = preg_replace('/&(amp;)?$/i', null, $url);
-                $url .= '&amp;lang=' . $langs[$i][0];
+                $url .= '&amp;lang=' . $languages[$i][0];
                 $url = str_replace('?&amp;', '?', $url);
             }
-            $langs[$i][0] = $url;
+            $languages[$i][0] = $url;
         }
 
-        $this->smarty->assign('lang_menu_items', $langs);
+        $this->smarty->assign('lang_menu_items', $languages);
     }
 
     /**
