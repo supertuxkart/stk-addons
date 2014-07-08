@@ -17,23 +17,15 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
 
-$tpl = new StkTemplate('index.tpl');
-
-// I18N: Website meta description
-$tpl->setMetaDesc(
-    _h(
-        'This is the official SuperTuxKart add-on repository. It contains extra karts and tracks for the SuperTuxKart game.'
-    )
-);
-
-// I18N: Index page title
-$tpl->assign('title', _h('SuperTuxKart Add-ons'));
+$description = _h('This is the official SuperTuxKart add-on repository. It contains extra karts and tracks for the SuperTuxKart game.');
+$tpl = StkTemplate::get('index.tpl')
+    ->assign('title', _h('SuperTuxKart Add-ons'))
+    ->assign("show_stk_image", true)
+    ->setMetaDesc($description);
 
 // Display index menu
-
 $tpl->assign(
     'index_menu',
     array(
@@ -59,7 +51,6 @@ $tpl->assign(
         )
     )
 );
-$tpl->assign("show_stk_image", true);
 
 // Display news messages
 $news_messages = News::getWebVisible();

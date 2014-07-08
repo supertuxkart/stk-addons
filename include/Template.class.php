@@ -29,6 +29,11 @@ class Template
     protected $smarty;
 
     /**
+     * @var SLocale
+     */
+    protected static $locale;
+
+    /**
      * @var string
      */
     private $file;
@@ -44,6 +49,11 @@ class Template
      */
     public function __construct($template_file, $template_dir = null)
     {
+        if (!static::$locale)
+        {
+            static::$locale = SLocale::get();
+        }
+
         $this->createSmartyInstance();
         $this->setTemplateDir($template_dir);
         $this->setTemplateFile($template_file);

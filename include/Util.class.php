@@ -702,7 +702,6 @@ class Util
      */
     public static function getVersionFormat($format, $file_type)
     {
-        // FIXME: This should not be hardcoded
         switch ($file_type)
         {
 

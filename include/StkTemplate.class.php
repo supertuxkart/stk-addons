@@ -18,8 +18,6 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(INCLUDE_PATH . 'locale.php');
-
 // TODO compress assets and html
 /**
  * Customization of generic template class for main stkaddons pages
@@ -37,7 +35,7 @@ class StkTemplate extends Template
      * Hold the meta tags
      * @var array
      */
-    private $meta_tags = array();
+    private $meta_tags = [];
 
     /**
      * The meta tag description
@@ -49,34 +47,34 @@ class StkTemplate extends Template
      * Contains the script inline
      * @var array
      */
-    private $script_inline = array(
-        "after"  => array(), // output them after the script includes
-        "before" => array() // output them before the script includes
-    );
+    private $script_inline = [
+        "after"  => [], // output them after the script includes
+        "before" => [] // output them before the script includes
+    ];
 
     /**
      * Contains the script includes defined statically
      * @var array
      */
-    private $script_includes = array();
+    private $script_includes = [];
 
     /**
      * Contains the script includes defined dynamically
      * @var array
      */
-    private $user_script_includes = array();
+    private $user_script_includes = [];
 
     /**
      * Contains the css files defined statically
      * @var array
      */
-    private $css_includes = array();
+    private $css_includes = [];
 
     /**
      * Contains the css files defined dynamically
      * @var array
      */
-    private $user_css_includes = array();
+    private $user_css_includes = [];
 
     /**
      * Setup the header info for the template
@@ -85,10 +83,10 @@ class StkTemplate extends Template
     {
         // Fill meta tags
         $meta_tags = array_merge(
-            array(
+            [
                 'content-language' => LANG,
                 'description'      => $this->meta_desc
-            ),
+            ],
             $this->meta_tags
         );
         $this->smarty->assign('meta_tags', $meta_tags);
@@ -96,12 +94,12 @@ class StkTemplate extends Template
         // fill css
         array_push(
             $this->css_includes,
-            array("href"  => LIBS_LOCATION . "bootstrap/dist/css/bootstrap.css"),
-            array("href" => CSS_LOCATION . "screen.css", "media" => "screen"),
-            array("href" => CSS_LOCATION . "print.css", "media" => "print"),
-            array("href" => LIBS_LOCATION . "bootstrap3-wysihtml5-bower/dist/bootstrap3-wysihtml5.min.css"),
-            array("href" => "//cdnjs.cloudflare.com/ajax/libs/datatables/1.10.0/css/jquery.dataTables.min.css"),
-            array("href" => "//cdn.datatables.net/plug-ins/be7019ee387/integration/bootstrap/3/dataTables.bootstrap.css")
+            ["href"  => LIBS_LOCATION . "bootstrap/dist/css/bootstrap.css"],
+            ["href" => CSS_LOCATION . "screen.css", "media" => "screen"],
+            ["href" => CSS_LOCATION . "print.css", "media" => "print"],
+            ["href" => LIBS_LOCATION . "bootstrap3-wysihtml5-bower/dist/bootstrap3-wysihtml5.min.css"],
+            ["href" => "//cdnjs.cloudflare.com/ajax/libs/datatables/1.10.0/css/jquery.dataTables.min.css"],
+            ["href" => "//cdn.datatables.net/plug-ins/be7019ee387/integration/bootstrap/3/dataTables.bootstrap.css"]
         );
         $this->smarty->assign("css_includes", array_merge($this->css_includes, $this->user_css_includes));
     }
@@ -112,34 +110,34 @@ class StkTemplate extends Template
     private function setupFooter()
     {
         // Fill script tags
-        $this->script_inline["before"][] = array(
+        $this->script_inline["before"][] = [
             'content' => sprintf(
                 "var SITE_ROOT = '%s', BUGS_LOCATION = '%s', JSON_LOCATION = '%s';",
                 SITE_ROOT,
                 BUGS_LOCATION,
                 SITE_ROOT . "json/"
             )
-        );
+        ];
 
         $this->smarty->assign('script_inline', $this->script_inline);
 
         array_push(
             $this->script_includes,
-            array('src' => LIBS_LOCATION . "jquery/dist/jquery.js"),
-            array('src' => LIBS_LOCATION . "underscore/underscore.js"),
-            array('src' => LIBS_LOCATION . "bootstrap/dist/js/bootstrap.js"),
-            //array('src' => LIBS_LOCATION . "handlebars/handlebars.js"),
-            array('src' => LIBS_LOCATION . "typeahead.js/dist/typeahead.bundle.js"),
-            array('src' => LIBS_LOCATION . "history.js/scripts/bundled-uncompressed/html4+html5/jquery.history.js"),
-            array('src' => "//cdnjs.cloudflare.com/ajax/libs/datatables/1.10.0/jquery.dataTables.min.js"),
-            array('src' => "//cdn.datatables.net/plug-ins/be7019ee387/integration/bootstrap/3/dataTables.bootstrap.js"),
-            //array('src' => LIBS_LOCATION . "wysihtml5x/dist/wysihtml5x.js"),
-            array('src' => LIBS_LOCATION . "bootstrap3-wysihtml5-bower/dist/bootstrap3-wysihtml5.all.js"),
-            array('src' => LIBS_LOCATION . "bootstrap.growl/bootstrap-growl.js"),
-            array('src' => LIBS_LOCATION . "bootbox/bootbox.js"),
-            array('src' => JS_LOCATION . 'jquery.newsticker.js'),
-            array('src' => JS_LOCATION . 'util.js'),
-            array('src' => JS_LOCATION . 'main.js')
+            ['src' => LIBS_LOCATION . "jquery/dist/jquery.js"],
+            ['src' => LIBS_LOCATION . "underscore/underscore.js"],
+            ['src' => LIBS_LOCATION . "bootstrap/dist/js/bootstrap.js"],
+            //['src' => LIBS_LOCATION . "handlebars/handlebars.js"],
+            ['src' => LIBS_LOCATION . "typeahead.js/dist/typeahead.bundle.js"],
+            ['src' => LIBS_LOCATION . "history.js/scripts/bundled-uncompressed/html4+html5/jquery.history.js"],
+            ['src' => "//cdnjs.cloudflare.com/ajax/libs/datatables/1.10.0/jquery.dataTables.min.js"],
+            ['src' => "//cdn.datatables.net/plug-ins/be7019ee387/integration/bootstrap/3/dataTables.bootstrap.js"],
+            //['src' => LIBS_LOCATION . "wysihtml5x/dist/wysihtml5x.js"],
+            ['src' => LIBS_LOCATION . "bootstrap3-wysihtml5-bower/dist/bootstrap3-wysihtml5.all.js"],
+            ['src' => LIBS_LOCATION . "bootstrap.growl/bootstrap-growl.js"],
+            ['src' => LIBS_LOCATION . "bootbox/bootbox.js"],
+            ['src' => JS_LOCATION . 'jquery.newsticker.js'],
+            ['src' => JS_LOCATION . 'util.js'],
+            ['src' => JS_LOCATION . 'main.js']
         );
 
         $this->smarty->assign('script_includes', array_merge($this->script_includes, $this->user_script_includes));
@@ -151,7 +149,7 @@ class StkTemplate extends Template
     private function setupTopMenu()
     {
         // TODO make top menu more dynamic
-        $menu = array(
+        $menu = [
             'welcome'  => sprintf(_h('Welcome, %s'), User::getLoggedRealName()),
             'home'     => File::link('index.php', _h("Home")),
             'login'    => File::link('login.php', _h('Login')),
@@ -166,7 +164,7 @@ class StkTemplate extends Template
             'about'    => File::link('about.php', _h('About')),
             'privacy'  => File::link('privacy.php', _h('Privacy')),
             'stk_home' => File::link('http://supertuxkart.sourceforge.net', _h('STK Homepage'))
-        );
+        ];
 
         $logged_in = User::isLoggedIn();
         $this->smarty->assign('show_welcome', $logged_in);
@@ -199,24 +197,24 @@ class StkTemplate extends Template
     {
         // Language menu
         $this->smarty->assign('lang_menu_lbl', _h('Languages'));
-        $langs = array(
+        $langs = [
             // lang href, position left, position top, text
-            array('en_US', 0, 0, 'EN'),
-            array('ca_ES', -96, -99, 'CA'),
-            array('de_DE', 0, -33, 'DE'),
-            array('es_ES', -96, -66, 'ES'),
-            array('eu_ES', -144, -66, 'EU'),
-            array('fr_FR', 0, -66, 'FR'),
-            array('ga_IE', 0, -99, 'GA'),
-            array('gd_GB', -144, -33, 'GD'),
-            array('gl_ES', -48, 0, 'GL'),
-            array('id_ID', -48, -33, 'ID'),
-            array('it_IT', -96, -33, 'IT'),
-            array('nl_NL', -48, -66, 'NL'),
-            array('pt_BR', -144, 0, 'PT'),
-            array('ru_RU', -48, -99, 'RU'),
-            array('zh_TW', -96, 0, 'ZH (T)')
-        );
+            ['en_US', 0, 0, 'EN'],
+            ['ca_ES', -96, -99, 'CA'],
+            ['de_DE', 0, -33, 'DE'],
+            ['es_ES', -96, -66, 'ES'],
+            ['eu_ES', -144, -66, 'EU'],
+            ['fr_FR', 0, -66, 'FR'],
+            ['ga_IE', 0, -99, 'GA'],
+            ['gd_GB', -144, -33, 'GD'],
+            ['gl_ES', -48, 0, 'GL'],
+            ['id_ID', -48, -33, 'ID'],
+            ['it_IT', -96, -33, 'IT'],
+            ['nl_NL', -48, -66, 'NL'],
+            ['pt_BR', -144, 0, 'PT'],
+            ['ru_RU', -48, -99, 'RU'],
+            ['zh_TW', -96, 0, 'ZH (T)']
+        ];
 
         $langs_count = count($langs);
         for ($i = 0; $i < $langs_count; $i++)
@@ -278,13 +276,11 @@ class StkTemplate extends Template
      */
     public function addScriptInline($content, $order)
     {
-        if (!in_array($order, array(static::ORDER_AFTER, static::ORDER_BEFORE)))
+        if (!in_array($order, [static::ORDER_AFTER, static::ORDER_BEFORE]))
         {
             throw new InvalidArgumentException("Invalid order");
         }
-        $this->script_inline[$order][] = array(
-            "content" => $content
-        );
+        $this->script_inline[$order][] = ["content" => $content];
 
         return $this;
     }
@@ -299,9 +295,7 @@ class StkTemplate extends Template
      */
     public function addScriptInclude($src, $location = JS_LOCATION)
     {
-        $this->user_script_includes[] = array(
-            "src" => $location . $src
-        );
+        $this->user_script_includes[] = ["src" => $location . $src];
 
         return $this;
     }
@@ -317,10 +311,10 @@ class StkTemplate extends Template
      */
     public function addCssInclude($href, $location = CSS_LOCATION, $media = "")
     {
-        $this->user_css_includes[] = array(
+        $this->user_css_includes[] = [
             "href"  => $location . $href,
             "media" => $media
-        );
+        ];
 
         return $this;
     }

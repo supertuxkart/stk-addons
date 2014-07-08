@@ -17,10 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
-// Note that PHP has a built-in Locale class in the newest versions of PHP
 
 /**
  * Class SLocale
+ * Note that PHP has a built-in Locale class in the newest versions of PHP
  */
 class SLocale
 {
@@ -30,37 +30,37 @@ class SLocale
      * language code, flag image x-offset, flag image y-offset, flag label
      * @var array
      */
-    private static $languages = array(
-        array('en_US', 0, 0, 'EN'),
-        array('ca_ES', -96, -99, 'CA'),
-        array('de_DE', 0, -33, 'DE'),
-        array('es_ES', -96, -66, 'ES'),
-        array('eu_ES', -144, -66, 'EU'),
-        array('fr_FR', 0, -66, 'FR'),
-        array('ga_IE', 0, -99, 'GA'),
-        array('gd_GB', -144, -33, 'GD'),
-        array('gl_ES', -48, 0, 'GL'),
-        array('id_ID', -48, -33, 'ID'),
-        array('it_IT', -96, -33, 'IT'),
-        array('nl_NL', -48, -66, 'NL'),
-        array('pt_BR', -144, 0, 'PT'),
-        array('ru_RU', -48, -99, 'RU'),
-        array('zh_TW', -96, 0, 'ZH (T)')
-    );
+    private static $languages = [
+        ['en_US', 0, 0, 'EN'],
+        ['ca_ES', -96, -99, 'CA'],
+        ['de_DE', 0, -33, 'DE'],
+        ['es_ES', -96, -66, 'ES'],
+        ['eu_ES', -144, -66, 'EU'],
+        ['fr_FR', 0, -66, 'FR'],
+        ['ga_IE', 0, -99, 'GA'],
+        ['gd_GB', -144, -33, 'GD'],
+        ['gl_ES', -48, 0, 'GL'],
+        ['id_ID', -48, -33, 'ID'],
+        ['it_IT', -96, -33, 'IT'],
+        ['nl_NL', -48, -66, 'NL'],
+        ['pt_BR', -144, 0, 'PT'],
+        ['ru_RU', -48, -99, 'RU'],
+        ['zh_TW', -96, 0, 'ZH (T)']
+    ];
 
     /**
      * @var int
      */
-    private static $cookie_lifetime = 31536000; // One year
+    const COOKIE_LIFETIME = 31536000; // One year
 
     /**
      * Create the locale object
      *
-     * @param string $locale
+     * @param string $locale optional
      */
     public function __construct($locale = null)
     {
-        if (is_null($locale) && isset($_GET['lang']) && !empty($_GET['lang']))
+        if (!$locale && isset($_GET['lang']) && !empty($_GET['lang']))
         {
             $locale = $_GET['lang'];
         }
@@ -79,6 +79,29 @@ class SLocale
         }
 
         SLocale::setLocale($locale);
+    }
+
+    /**
+     * Get a locale instance
+     *
+     * @return SLocale
+     */
+    public static function get()
+    {
+        // Get the current page address (without "lang" parameter)
+        $page_url = $_SERVER['REQUEST_URI'];
+        if (!Util::str_contains($page_url, "?"))
+        {
+            $page_url .= '?';
+        }
+
+        // Clean up the new url
+        $page_url = preg_replace('/lang=[a-z_]+/i', null, $page_url);
+        $page_url = preg_replace('/[&]+/i', '&', $page_url);
+        $page_url = preg_replace('/\?&/i', '?', $page_url);
+
+        // Set the locale
+        new SLocale();
     }
 
     /**
@@ -108,8 +131,11 @@ class SLocale
      */
     private static function setLocale($locale)
     {
+        // set header
+        header('Content-Type: text/html; charset=utf-8');
+
         // Set cookie
-        setcookie('lang', $locale, time() + SLocale::$cookie_lifetime);
+        setcookie('lang', $locale, time() + static::COOKIE_LIFETIME);
         putenv("LC_ALL=$locale.UTF-8");
         setlocale(LC_ALL, "$locale.UTF-8");
         $_COOKIE['lang'] = $locale;

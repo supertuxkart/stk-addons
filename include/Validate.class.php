@@ -75,9 +75,9 @@ class Validate
     /**
      * Check if the username/password matches
      *
-     * @param string $password unhashed password
-     * @param mixed $field_value the field value
-     * @param int $credential_type
+     * @param string $password    unhashed password
+     * @param mixed  $field_value the field value
+     * @param int    $credential_type
      *
      * @throws UserException
      * @throws InvalidArgumentException
@@ -232,7 +232,7 @@ class Validate
         {
             $salt = Util::getSaltFromPassword($db_password_hash);
 
-            if(Util::getPasswordHash($password, $salt) !== $db_password_hash)
+            if (Util::getPasswordHash($password, $salt) !== $db_password_hash)
             {
                 throw new UserException(_h("Invalid password"));
             }
@@ -245,7 +245,6 @@ class Validate
             }
         }
 
-        // password is not hashed
         return $user;
     }
 

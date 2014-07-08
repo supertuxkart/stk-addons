@@ -89,7 +89,9 @@ define("SMTP_USER", null); // SMTP username
 define("SMTP_PASS", null); // SMTP password
 
 // set string encoding
-mb_internal_encoding('UTF-8');
+assert(mb_internal_encoding("UTF-8") === true);
+assert(mb_regex_encoding("UTF-8") === true);
+assert(mb_language("uni") === true);
 
 // add composer autoload
 require_once(ROOT_PATH . "vendor" . DS . "autoload.php");
