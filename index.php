@@ -66,4 +66,3 @@ array_unshift(
 
 $tpl->assign('news_messages', $news_messages);
 echo $tpl;
-echo Util::geClientIp();

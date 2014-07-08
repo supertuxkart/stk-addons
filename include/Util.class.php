@@ -438,7 +438,7 @@ class Util
         if (!$salt) // generate our own salt
         {
             // when we retrieve it from the database it will be already utf8, because we encoded it as utf8
-            $salt = utf8_encode(mcrypt_create_iv(static::SALT_LENGTH, MCRYPT_DEV_RANDOM));
+            $salt = utf8_encode(mcrypt_create_iv(static::SALT_LENGTH, MCRYPT_DEV_URANDOM));
         }
 
         return $salt . hash("sha256", $salt . $raw_password);
