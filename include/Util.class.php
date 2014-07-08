@@ -308,7 +308,7 @@ class Util
      * Source : http://stackoverflow.com/questions/1634782/what-is-the-most-accurate-way-to-retrieve-a-users-correct-ip-address-in-php?
      * @return string|bool return the ip of the user or false in case of error
      */
-    public static function geClientIp()
+    public static function getClientIp()
     {
         $ip_pool = [
             'HTTP_CLIENT_IP',
@@ -442,6 +442,16 @@ class Util
         }
 
         return $salt . hash("sha256", $salt . $raw_password);
+    }
+
+    /**
+     * Generate a alphanumerical session id
+     *
+     * @return string session id of length 24
+     */
+    public static function getClientSessionId()
+    {
+        return mb_substr(md5(uniqid(mt_rand(), true)), 0, 24);
     }
 
     /**
@@ -699,7 +709,6 @@ class Util
     {
         switch ($file_type)
         {
-
             case 'karts':
                 if ($format == 1)
                 {

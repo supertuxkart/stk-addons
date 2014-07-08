@@ -46,7 +46,7 @@ class Server
     /**
      * @var array
      */
-    protected $info_array = array();
+    protected $info_array = [];
 
     /**
      *
@@ -120,21 +120,16 @@ class Server
      * @return Server
      * @throws ServerException
      */
-    public static function create(
-        $ip,
-        $port,
-        $private_port,
-        $userid,
-        $server_name,
-        $max_players
-    ) {
+    public static function create($ip, $port, $private_port, $userid, $server_name, $max_players)
+    {
         $max_players = (int)$max_players;
+
         try
         {
             $count = DBConnection::get()->query(
                 "SELECT `id` FROM `" . DB_PREFIX . "servers` WHERE `ip`= :ip AND `port`= :port ",
                 DBConnection::ROW_COUNT,
-                array(':ip'   => $ip, ':port' => $port)
+                [':ip' => $ip, ':port' => $port]
             );
             if ($count)
             {
@@ -145,14 +140,21 @@ class Server
                 "INSERT INTO `" . DB_PREFIX . "servers` (hostid, ip, port, private_port, name, max_players)
                 VALUES (:hostid, :ip, :port, :private_port, :name, :max_players)",
                 DBConnection::ROW_COUNT,
-                array(
-                    ':hostid'       => (int)$userid,
+                [
+                    ':hostid'       => $userid,
                     ':ip'           => $ip, // do not use (int) or it truncates to 127.255.255.255
-                    ':port'         => (int)$port,
-                    ':private_port' => (int)$private_port,
+                    ':port'         => $port,
+                    ':private_port' => $private_port,
                     ':name'         => $server_name,
-                    ':max_players'  => (int)$max_players
-                )
+                    ':max_players'  => $max_players
+                ],
+                [
+                    ':hostid'       => DBConnection::PARAM_INT,
+                    ':ip'           => DBConnection::PARAM_INT,
+                    ':port'         => DBConnection::PARAM_INT,
+                    ':private_port' => DBConnection::PARAM_INT,
+                    ':max_players'  => DBConnection::PARAM_INT,
+                ]
             );
         }
         catch(DBException $e)
@@ -188,21 +190,18 @@ class Server
                 "SELECT * FROM `" . DB_PREFIX . "servers`
                 WHERE `id`= :id",
                 DBConnection::FETCH_ALL,
-                array(':id' => $id),
-                array(":id" => DBConnection::PARAM_INT)
+                [':id' => $id],
+                [":id" => DBConnection::PARAM_INT]
             );
         }
         catch(DBException $e)
         {
-            throw new ServerException(
-                _('An error occurred while creating server.') . ' ' .
-                _('Please contact a website administrator.')
-            );
+            throw new ServerException(_h('An error occurred while creating server') . '. ' . _h('Please contact a website administrator.'));
         }
 
         if (empty($result))
         {
-            throw new ServerException(_("Server doesn't exist."));
+            throw new ServerException(_h("Server doesn't exist."));
         }
         else if (count($result) > 1)
         {
