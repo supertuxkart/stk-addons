@@ -86,7 +86,7 @@ switch ($_POST["action"])
             exit(json_encode(["error" => $e->getMessage()]));
         }
 
-        echo json_encode(["success" => _h("Password changed")]);
+        echo json_encode(["success" => _h("Your password has been changed")]);
         break;
 
     default:

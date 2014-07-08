@@ -62,20 +62,22 @@ class SImage
         $image_info = getimagesize($this->path);
         switch ($image_info[2])
         {
-            default:
-                throw new ImageException('Unsupported image format.');
             case IMAGETYPE_PNG:
                 $source = imagecreatefrompng($this->path);
                 $format = 'png';
                 break;
+
             case IMAGETYPE_JPEG:
                 $source = imagecreatefromjpeg($this->path);
                 $format = 'jpg';
                 break;
+
+            default:
+                throw new ImageException('Unsupported image format.');
         }
 
         $this->info = $image_info;
-        $this->imagedata = $source;
+        $this->$imageData = $source;
         $this->format = $format;
     }
 
@@ -124,6 +126,7 @@ class SImage
         if ($max_x === 0)
         {
             // Scale based on image height
+            $new_y = 0;
             if ($old_y > $max_y)
             {
                 $new_y = $max_y;
@@ -132,6 +135,7 @@ class SImage
             {
                 $new_y = $min_y;
             }
+
             $new_x = (int)(($new_y / $old_y) * $old_x);
             if ($new_x < $min_x)
             {
@@ -141,6 +145,7 @@ class SImage
         elseif ($max_y === 0)
         {
             // Scale based on image width
+            $new_x = 0;
             if ($old_x > $max_x)
             {
                 $new_x = $max_x;
@@ -149,6 +154,7 @@ class SImage
             {
                 $new_x = $min_x;
             }
+
             $new_y = (int)(($new_x / $old_x) * $old_y);
             if ($new_y < $min_y)
             {
@@ -160,6 +166,7 @@ class SImage
             // Scale image based on both max dimensions
             if ($old_x > $old_y)
             {
+                $new_x = 0;
                 if ($old_x > $max_x)
                 {
                     $new_x = $max_x;
@@ -181,6 +188,7 @@ class SImage
             }
             else
             {
+                $new_y = 0;
                 if ($old_y > $max_y)
                 {
                     $new_y = $max_y;

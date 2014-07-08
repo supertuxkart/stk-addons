@@ -150,33 +150,34 @@ class Music
     /**
      * Get an array of Music objects containing all tracks, sorted by title
      *
-     * @return array Music
+     * @return Music[] array of music instances
      */
     public static function getAllByTitle()
     {
         try
         {
-            $music_tracks = array();
-            $result = DBConnection::get()->query(
+            $tracks = DBConnection::get()->query(
                 'SELECT `id` FROM `' . DB_PREFIX . 'music`
                 ORDER BY `title` ASC',
                 DBConnection::FETCH_ALL
             );
-            foreach ($result as $music_track)
-            {
-                $track = Music::get($music_track['id']);
-                if ($track->getId() !== null)
-                {
-                    $music_tracks[] = $track;
-                }
-            }
-
-            return $music_tracks;
         }
         catch(DBException $e)
         {
-            return array();
+            return [];
         }
+
+        $music_tracks = [];
+        foreach ($tracks as $track)
+        {
+            $track_instance = Music::get($track['id']);
+            if ($track_instance->getId() !== null)
+            {
+                $music_tracks[] = $track_instance;
+            }
+        }
+
+        return $music_tracks;
     }
 
     /**
@@ -194,7 +195,8 @@ class Music
                 'SELECT * FROM `' . DB_PREFIX . 'music`
                 WHERE `id` = :id',
                 DBConnection::FETCH_FIRST,
-                array(':id' => (int)$id)
+                [':id' => $id],
+                [':id' => DBConnection::PARAM_INT]
             );
             if (empty($track_info))
             {

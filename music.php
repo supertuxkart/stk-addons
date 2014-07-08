@@ -17,14 +17,12 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
 
-$tpl = new StkTemplate('music-browser.tpl');
-$tpl->assign('title', h(_('STK Add-ons') . ' | ' . _('Browse Music')));
+$tpl = StkTemplate::get('music-browser.tpl')->assignTitle(_h('Browse Music'));
 
 $music_tracks = Music::getAllByTitle();
-$music_data = array();
+$music_data = [];
 foreach ($music_tracks as $track)
 {
     $music_data[] = $track->getTitle();
@@ -35,15 +33,15 @@ foreach ($music_tracks as $track)
 
 $tpl->assign(
     'music_browser',
-    array(
-        'cols' => array(
+    [
+        'cols' => [
             _h('Track Title'),
             _h('Track Artist'),
             _h('License'),
             _h('File')
-        ),
+        ],
         'data' => $music_data
-    )
+    ]
 );
 
 echo $tpl;

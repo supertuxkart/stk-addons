@@ -31,34 +31,6 @@ $tpl = StkTemplate::get('user.tpl')
     ->addScriptInclude("user.js");
 $tplData = ["items" => [], "status" => "", "body" => ""];
 
-// handle user actions, set user feedback
-$status = '';
-switch ($action)
-{
-    case 'password':
-        $user = User::getFromUserName($_GET['user']);
-        if (User::getLoggedUserName() !== $_GET['user'] && !User::hasPermissionOnRole($user->getRole()))
-        {
-            $status = '<span class="error">' .
-                _h('You do not have the necessary permissions to perform this action.')
-                . '</span><br />';
-            break;
-        }
-
-        try
-        {
-            $status = _h('Your password has been changed successfully.');
-        }
-        catch(UserException $e)
-        {
-            $status = '<span class="error">' . $e->getMessage() . '</span><br />';
-        }
-        break;
-    default:
-        break;
-}
-$tplData['status'] = $status;
-
 // get all users from the database, create links
 $users = User::getAllData();
 $templateUsers = [];

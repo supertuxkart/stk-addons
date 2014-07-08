@@ -18,6 +18,6 @@
     },
     "autoload": {
         "classmap": ["include/"],
-        "files": ["include/functions.php", "include/Constants.php", "include/xmlWrite.php"]
+        "files": ["include/functions.php", "include/xmlWrite.php"]
     }
 }

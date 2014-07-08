@@ -35,6 +35,10 @@ class Util
      */
     const SECONDS_IN_A_HOUR = 3600;
 
+    /**
+     * Alias of SECONDS_IN_A_HOUR
+     * @var int
+     */
     const SECONDS_IN_AN_HOUR = 3600;
 
     /**
@@ -61,10 +65,22 @@ class Util
      */
     const SECONDS_IN_A_YEAR = 31536000;
 
+    /**
+     * Length of our salt
+     * @var int
+     */
     const SALT_LENGTH = 32;
 
+    /**
+     * The length in characters of a sha256 hash
+     * @var int
+     */
     const SHA256_LENGTH = 64;
 
+    /**
+     * The length in characters of a md5 hash
+     * @var int
+     */
     const MD5_LENGTH = 32;
 
     /**
@@ -145,7 +161,7 @@ class Util
      */
     public static function array_flatten(array $array, $preserve_keys = true)
     {
-        $flattened = array();
+        $flattened = [];
 
         foreach ($array as $key => $value)
         {
@@ -566,7 +582,7 @@ class Util
         }
 
         // Check if a cached version is available
-        if (Cache::fileExists($cache_name) !== array())
+        if (Cache::fileExists($cache_name) !== [])
         {
             header('Cached-Image: true');
             header('Location: ' . CACHE_LOCATION . $cache_name);
@@ -671,10 +687,10 @@ class Util
             $font = FONTS_PATH . 'DejaVuSans.ttf';
             $bbox = imagettfbbox($text_size, $text_angle, $font, $text);
 
-            $min_x = min(array($bbox[0], $bbox[2], $bbox[4], $bbox[6]));
-            $max_x = max(array($bbox[0], $bbox[2], $bbox[4], $bbox[6]));
-            $min_y = min(array($bbox[1], $bbox[3], $bbox[5], $bbox[7]));
-            $max_y = max(array($bbox[1], $bbox[3], $bbox[5], $bbox[7]));
+            $min_x = min([$bbox[0], $bbox[2], $bbox[4], $bbox[6]]);
+            $max_x = max([$bbox[0], $bbox[2], $bbox[4], $bbox[6]]);
+            $min_y = min([$bbox[1], $bbox[3], $bbox[5], $bbox[7]]);
+            $max_y = max([$bbox[1], $bbox[3], $bbox[5], $bbox[7]]);
 
             $width = $max_x - $min_x + 2;
             $height = $max_y - $min_y + 2;
