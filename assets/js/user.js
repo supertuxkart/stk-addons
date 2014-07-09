@@ -17,7 +17,7 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-(function(window, document) {
+(function($, document) {
     "use strict";
 
     var $user_body = $("#user-body");
@@ -93,4 +93,4 @@
         }
     });
 
-})(window, document);
+})(jQuery, document);

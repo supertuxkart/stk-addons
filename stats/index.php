@@ -28,28 +28,28 @@ $tplData = array();
 
 if (isset($_GET["addons"]))
 {
-    $tpl->assignTitle("Addon stats");
-    $tplData["body"] = Util::ob_get_require_once("stats-addons.php");
+    $tpl->assignTitle(_h("Addon stats"));
+    $tplData["body"] = Util::ob_get_require_once(STATS_PATH . "addons.php");
 }
 elseif (isset($_GET["files"]))
 {
-    $tpl->assignTitle("File stats");
-    $tplData["body"] = Util::ob_get_require_once("stats-files.php");
+    $tpl->assignTitle(_h("File stats"));
+    $tplData["body"] = Util::ob_get_require_once(STATS_PATH . "files.php");
 }
 elseif (isset($_GET["clients"]))
 {
-    $tpl->assignTitle("Client stats");
-    $tplData["body"] = Util::ob_get_require_once("stats-clients.php");
+    $tpl->assignTitle(_h("Client stats"));
+    $tplData["body"] = Util::ob_get_require_once(STATS_PATH . "clients.php");
 }
 elseif (isset($_GET["servers"]))
 {
-    $tpl->assignTitle("Server stats");
-    $tplData["body"] = Util::ob_get_require_once("stats-servers.php");
+    $tpl->assignTitle(_h("Server stats"));
+    $tplData["body"] = Util::ob_get_require_once(STATS_PATH . "servers.php");
 }
 else // display overview
 {
-    $tpl->assignTitle("Stats Overview");
-    $tplData["body"] = Util::ob_get_require_once("stats-overview.php");
+    $tpl->assignTitle(_h("Stats Overview"));
+    $tplData["body"] = Util::ob_get_require_once(STATS_PATH . "overview.php");
 }
 
 $tpl->assign("stats", $tplData);

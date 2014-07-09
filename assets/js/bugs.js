@@ -17,7 +17,7 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-(function(window, document) {
+(function($, document) {
     "use strict";
 
     // load essential elements and options
@@ -352,4 +352,4 @@
     registerEditors();
     registerAddPage();
 
-})(window, document);
+})(jQuery, document);

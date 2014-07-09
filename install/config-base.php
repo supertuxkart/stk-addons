@@ -37,6 +37,7 @@ define("TMP_PATH", sys_get_temp_dir() . DS); // define temporary directory path
 define("UPLOAD_PATH", ROOT_PATH . "upload" . DS);
 define("UPLOAD_CRON_PATH", UPLOAD_PATH);
 define("BUGS_PATH", ROOT_PATH . "bugs" . DS);
+define("STATS_PATH", ROOT_PATH . "stats" . DS);
 define("ASSETS_PATH", ROOT_PATH . "assets" . DS);
 define("CACHE_PATH", ASSETS_PATH . "cache" . DS); // cache for images/html/template
 define("FONTS_PATH", ASSETS_PATH . "fonts" . DS);
@@ -58,6 +59,7 @@ define("SITE_ROOT", "http://stkaddons.net/");
 
 define("DOWNLOAD_LOCATION", SITE_ROOT . "upload/");
 define("BUGS_LOCATION", SITE_ROOT . "bugs/");
+define("STATS_LOCATION", SITE_ROOT . "stats/");
 define("NEWS_XM_LOCATION", DOWNLOAD_LOCATION . "xml/news.xml");
 define("ASSETS_XML_LOCATION", DOWNLOAD_LOCATION . "xml/assets.xml");
 define("ASSETS_LOCATION", SITE_ROOT . "assets/");

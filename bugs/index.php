@@ -22,21 +22,21 @@ require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 $tpl = StkTemplate::get('bugs-index.tpl')->addScriptInclude("bugs.js");
 $tplData = ["show_btn_file" => true];
 
-if(isset($_GET["bug_id"]))
+if (isset($_GET["bug_id"]))
 {
-    $tpl->assignTitle(_("View Bug"));
+    $tpl->assignTitle(_h("View Bug"));
     $tplData["show_btn_file"] = false;
     $tplData["content"] = Util::ob_get_require_once(BUGS_PATH . "view.php");
 }
-elseif(isset($_GET["add"]))
+elseif (isset($_GET["add"]))
 {
-    $tpl->assignTitle(_("Add Bug"));
+    $tpl->assignTitle(_h("Add Bug"));
     $tplData["show_btn_file"] = false;
     $tplData["content"] = Util::ob_get_require_once(BUGS_PATH . "add.php");
 }
 else
 {
-    $tpl->assignTitle(_("All bugs"));
+    $tpl->assignTitle(_h("All bugs"));
     $tplData["content"] = Util::ob_get_require_once(BUGS_PATH . "all.php");
 }
 
