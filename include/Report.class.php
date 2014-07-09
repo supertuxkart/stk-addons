@@ -95,7 +95,6 @@ class Report
         try
         {
             $points = $db->query($query, DBConnection::FETCH_ALL);
-            var_dump($points);
             $count = count($points);
         }
         catch(DBException $e)
@@ -147,7 +146,7 @@ class Report
 
         // get rid of the hash values for some reason and make the indices to be numbers
         $lines = array_values($lines);
-        var_dump($lines[0]['x']);
+        //var_dump($lines[0]['x']);
 
         // combine all of them
         // Split into arrays of x-values, y-values and labels
@@ -172,7 +171,7 @@ class Report
             }
         }
 
-        var_dump($labels);
+        //var_dump($x_values);
 
         $data_file = graph_data_to_json($x_values, $y_values, $labels, $graphId);
         $query_result .= '<div class="time_chart" id="' . $graphId . '">' . $chartTitle . "\n" . $data_file . '</div>';

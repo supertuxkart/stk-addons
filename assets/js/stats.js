@@ -56,9 +56,9 @@
             show: true
         },
         legend: {
-            margin: [-70, 0]
+            margin: [-70, 0],
+            sorted: null
         },
-
         grid: {
             hoverable: true,
             clickable: true

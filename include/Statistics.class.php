@@ -165,7 +165,44 @@ class Statistic
         $y_index = $columns[2];
 
         // build json
-        $lines = [];
+        $max_y_lines = [];
+        $small_lines = []; // array of labels of each small line
+
+        // calculate maximum
+        foreach ($data as $point)
+        {
+            $label = $point[$label_index];
+            $y = (int)$point[$y_index];
+
+            // create first time
+            if(!isset($max_y_lines[$label]))
+            {
+                $max_y_lines[$label] = 0;
+            }
+
+            // get maximum on each line
+            $max_y_lines[$label] = max($max_y_lines[$label], $y);
+        }
+
+        // get maximum of y in all lines
+        $max_y_value = max(array_values($max_y_lines));
+
+        // identify small lines
+        foreach ($max_y_lines as $label => $max_y_line)
+        {
+            // a small line has less than 2% of the max general value
+            if($max_y_line < 0.02 * $max_y_value)
+            {
+                $small_lines[] = $label;
+            }
+        }
+
+        $json = [];
+        $other_line = [
+            "label" => "Other",
+            "data"  => []
+        ];
+        $other_data = []; // map from x value to y value
 
         // group by points
         foreach ($data as $point)
@@ -173,24 +210,46 @@ class Statistic
             $label = $point[$label_index];
             $x = strtotime($point[$x_index]) * 1000;
             $y = (int)$point[$y_index];
-            $key = md5($label);
 
-            // create first time
-            if(!isset($lines[$key]))
+            // check if in "other"
+            if (in_array($label, $small_lines))
             {
-                $lines[$key] = [
-                    "label" => $label,
-                    "data"  => []
-                ];
+                // create x value for the first time
+                if (!isset($other_data[$x]))
+                {
+                    $other_data[$x] = $y;
+                }
+                else // aggregate data, aka add all the y values for all the small lines
+                {
+                    $other_data[$x] += $y;
+                }
             }
+            else // regular category
+            {
+                // create first time
+                if(!isset($json[$label]))
+                {
+                    $json[$label] = [
+                        "label" => $label,
+                        "data"  => []
+                    ];
+                }
 
-            $lines[$key]["data"][] = [$x, $y];
+                $json[$label]["data"][] = [$x, $y];
+            }
         }
 
-        // degoup by hash
-        $lines = array_values($lines);
+        // degroup
+        $json = array_values($json);
 
-        return $lines;
+        // add other line
+        if ($other_data) // not empty
+        {
+            $other_line["data"] = $other_data;
+            $json[] = $other_line;
+        }
+
+        return $json;
     }
 
     /**

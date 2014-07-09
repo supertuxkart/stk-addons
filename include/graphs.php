@@ -74,15 +74,18 @@ function graph_data_to_json($x_axis_values, $y_axis_values, $labels, $graph_id)
             $max_value = max($y_axis_values[$i]);
         }
     }
+    var_dump($max_value);
 
     $small_lines = array();
     for ($i = 0; $i < $count_y_axis_values; $i++)
     {
         if (max($y_axis_values[$i]) < 0.02 * $max_value)
         {
+            var_dump($labels[$i]);
             $small_lines[] = $i;
         }
     }
+    var_dump($small_lines);
     $count_small_lines = count($small_lines);
 
     // Generate the line labels aka columns
@@ -114,7 +117,7 @@ function graph_data_to_json($x_axis_values, $y_axis_values, $labels, $graph_id)
     }
     $all_x_values = array_values(array_unique($all_x_values, SORT_NUMERIC));
     asort($all_x_values);
-    var_dump($all_x_values);
+    //var_dump($all_x_values);
 
     // Iterate through each possible x-value
     $count_all_x_values = count($all_x_values);
@@ -180,7 +183,7 @@ function graph_data_to_json($x_axis_values, $y_axis_values, $labels, $graph_id)
             print_r($labels);
             print_r($small_lines);
             echo '</pre>';
-            throw new Exception("Expected to get $expected_cols columns, got $found_cols!");
+            throw new Exception("Expected to get $expected_cols columns, got!");
         }
 
         $json_array['rows'][] = ['c' => $row];
