@@ -1,198 +1,189 @@
 <?php
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
-function graph_data_to_json($values, $labels, $format, $graph_id)
+// time chart
+function graph_data_to_json($x_axis_values, $y_axis_values, $labels, $graph_id)
 {
-    // for time chart
-    $count_x_axis_values = $count_y_axis_values = 0;
-    $x_axis_values = $y_axis_values = array();
-
-    // common
+    // $x_axis_values array of arrays
+    // $y_axis_values array of arrays
     $count_labels = count($labels);
 
     // validate
-    if (!$count_labels)
+    if (!$count_labels || !$graph_id)
     {
         throw new Exception('No data given.');
     }
 
-    if ($format === "time") // time chart
+    // init
+    $count_x_axis_values = count($x_axis_values);
+    $count_y_axis_values = count($y_axis_values);
+    $json_array = [
+        "cols" => [],
+        "rows" => []
+    ];
+
+    if ($count_x_axis_values !== $count_labels && $count_y_axis_values !== $count_labels)
     {
-        // init
-        $x_axis_values = $values[0];
-        $y_axis_values = $values[1];
-        $count_x_axis_values = count($x_axis_values);
-        $count_y_axis_values = count($y_axis_values);
+        throw new Exception('Invalid data set for time graph provided.');
+    }
 
-        // 0 index is x axis (time axis) and 1 index is y axis
-        if ($count_x_axis_values !== $count_labels && $count_y_axis_values !== $count_labels)
+    // x axis aka time
+    foreach ($x_axis_values as $value)
+    {
+        if (!is_array($value))
         {
-            throw new Exception('Invalid data set for time graph provided.');
-        }
-
-        foreach ($x_axis_values as $value) // x axis aka time
-        {
-            if (!is_array($value))
-            {
-                throw new Exception('Non-array provided in time-axis.');
-            }
-        }
-        foreach ($y_axis_values as $value) // y axis
-        {
-            if (!is_array($value))
-            {
-                throw new Exception('Non-array provided in y-axis.');
-            }
+            throw new Exception('Non-array provided in time-axis.');
         }
     }
-    else
+    // y axis
+    foreach ($y_axis_values as $value)
     {
-        throw new Exception(sprintf("Format %s is not recognized", $format));
+        if (!is_array($value))
+        {
+            throw new Exception('Non-array provided in y-axis.');
+        }
     }
 
     // Handle caching, define paths
-    if ($graph_id)
-    {
-        $local_cache_file = CACHE_PATH . 'cache_graph_' . $graph_id . '.json';
-        $remote_cache_file = CACHE_LOCATION . 'cache_graph_' . $graph_id . '.json';
-        if (file_exists($local_cache_file))
-        {
-            $modified_time = filemtime($local_cache_file);
-            $current_time = time();
+    $local_cache_file = CACHE_PATH . 'cache_graph_' . $graph_id . '.json';
+    $remote_cache_file = CACHE_LOCATION . 'cache_graph_' . $graph_id . '.json';
+    //    if (file_exists($local_cache_file))
+    //    {
+    //        $modified_time = filemtime($local_cache_file);
+    //        $current_time = time();
+    //
+    //        // file is one day old
+    //        // calculate if we need to refresh, by the modified time
+    //        if (($modified_time + Util::SECONDS_IN_A_DAY) < $current_time)
+    //        {
+    //            // Refresh plot
+    //            unlink($local_cache_file);
+    //        }
+    //        else
+    //        {
+    //            return $remote_cache_file;
+    //        }
+    //    }
 
-            // file is one day old
-            // calculate if we need to refresh, by the modified time
-            if (($modified_time + Util::SECONDS_IN_A_DAY) < $current_time)
-            {
-                // Refresh plot
-                unlink($local_cache_file);
-            }
-            else
-            {
-                return $remote_cache_file;
-            }
+    // Get the tallest line and get relatively small lines
+    $max_value = 0;
+    for ($i = 0; $i < $count_y_axis_values; $i++)
+    {
+        if (max($y_axis_values[$i]) > $max_value)
+        {
+            $max_value = max($y_axis_values[$i]);
         }
     }
-    else // generate new file
+
+    $small_lines = array();
+    for ($i = 0; $i < $count_y_axis_values; $i++)
     {
-        $rand = rand(10000, 99999);
-        $local_cache_file = CACHE_PATH . 'cache_graph_' . $rand . '.json';
-        $remote_cache_file = CACHE_LOCATION . 'cache_graph_' . $rand . '.json';
+        if (max($y_axis_values[$i]) < 0.02 * $max_value)
+        {
+            $small_lines[] = $i;
+        }
+    }
+    $count_small_lines = count($small_lines);
+
+    // Generate the line labels aka columns
+    $json_array['cols'][] = [
+        'id'      => '',
+        'label'   => 'Date',
+        'pattern' => '',
+        'type'    => 'date'
+    ];
+    for ($i = 0; $i < $count_labels; $i++)
+    {
+        // do not include the small lines into the labels
+        if (!in_array($i, $small_lines))
+        {
+            $json_array['cols'][] = ['id' => '', 'label' => $labels[$i], 'pattern' => '', 'type' => 'number'];
+        }
+    }
+    // we have small lines
+    if ($count_small_lines)
+    {
+        $json_array['cols'][] = ['id' => '', 'label' => 'Other', 'pattern' => '', 'type' => 'number'];
     }
 
-    $json_array = array();
-    if ($format === 'time') // time chart
+    // Get all x-values used in data set, aka time
+    $all_x_values = [];
+    for ($i = 0; $i < $count_x_axis_values; $i++)
     {
-        // Get the tallest line and get relatively small lines
-        $max_value = 0;
-        for ($i = 0; $i < $count_y_axis_values; $i++)
-        {
-            if (max($y_axis_values[$i]) > $max_value)
-            {
-                $max_value = max($y_axis_values[$i]);
-            }
-        }
-        $small_lines = array();
-        for ($i = 0; $i < $count_y_axis_values; $i++)
-        {
-            if (max($y_axis_values[$i]) < 0.02 * $max_value)
-            {
-                $small_lines[] = $i;
-            }
-        }
-        $count_small_lines = count($small_lines);
+        $all_x_values = array_merge_recursive($all_x_values, $x_axis_values[$i]);
+    }
+    $all_x_values = array_values(array_unique($all_x_values, SORT_NUMERIC));
+    asort($all_x_values);
+    var_dump($all_x_values);
 
-        // Generate the line labels
-        $json_array['cols'] = array();
-        $json_array['cols'][] = array('id' => '', 'label' => 'Date', 'pattern' => '', 'type' => 'date');
-        for ($i = 0; $i < $count_labels; $i++)
+    // Iterate through each possible x-value
+    $count_all_x_values = count($all_x_values);
+    for ($i = 0; $i < $count_all_x_values; $i++)
+    {
+        $other_count = 0;
+        $row = [];
+        $date_str = 'new Date(' . ($all_x_values[$i] * 1000) . ')';
+        $row[] = array('v' => $date_str, 'f' => null);
+
+        // Insert data for each line
+        for ($j = 0; $j < $count_labels; $j++)
         {
-            if (!in_array($i, $small_lines))
+            $xval = $x_axis_values[$j];
+            $yval = $y_axis_values[$j];
+
+            $found = false;
+            $count_xval = count($xval);
+            for ($k = 0; $k < $count_xval; $k++)
             {
-                $json_array['cols'][] = array('id' => '', 'label' => $labels[$i], 'pattern' => '', 'type' => 'number');
+                if ($xval[$k] == $all_x_values[$i])
+                {
+                    $found = true;
+
+                    // check if part of "other"
+                    if (!in_array($j, $small_lines))
+                    {
+                        $row[] = array('v' => $yval[$k], 'f' => null);
+                    }
+                    else
+                    {
+                        // Is part of "other" line
+                        $other_count = $other_count + $yval[$k];
+                    }
+                    break;
+                }
+            }
+
+
+            if (!$found && !in_array($j, $small_lines))
+            {
+                $row[] = array('v' => 0, 'f' => null);
             }
         }
+
+        // Insert data for "other" line
         if ($count_small_lines !== 0)
         {
-            $json_array['cols'][] = array('id' => '', 'label' => 'Other', 'pattern' => '', 'type' => 'number');
+            $row[] = array('v' => $other_count, 'f' => null);
         }
 
-        // Get all x-values used in data set
-        $allxvalues = array();
-        for ($i = 0; $i < $count_x_axis_values; $i++)
+        // Sanity check
+        $expected_cols = $count_labels - $count_small_lines + 1;
+        if ($count_small_lines !== 0)
         {
-            $allxvalues = array_merge_recursive($allxvalues, $x_axis_values[$i]);
+            $expected_cols++;
         }
-        $allxvalues = array_values(array_unique($allxvalues, SORT_NUMERIC));
-        asort($allxvalues);
 
-        $json_array['rows'] = array();
-
-        // Iterate through each possible x-value
-        for ($i = 0; $i < count($allxvalues); $i++)
+        if ($expected_cols !== count($row))
         {
-            $other_count = 0;
-            $row = array();
-            $date_str = 'new Date(' . ($allxvalues[$i] * 1000) . ')';
-            $row[] = array('v' => $date_str, 'f' => null);
-
-            // Insert data for each line
-            for ($j = 0; $j < $count_labels; $j++)
-            {
-                $xval = $x_axis_values[$j];
-                $yval = $y_axis_values[$j];
-
-                $found = false;
-                $count_xval = count($xval);
-                for ($k = 0; $k < $count_xval; $k++)
-                {
-                    if ($xval[$k] == $allxvalues[$i])
-                    {
-                        $found = true;
-                        if (!in_array($j, $small_lines))
-                        {
-                            $row[] = array('v' => $yval[$k], 'f' => null);
-                        }
-                        else
-                        {
-                            // Is part of "other" line
-                            $other_count = $other_count + $yval[$k];
-                        }
-                        break;
-                    }
-                }
-                if (!$found && !in_array($j, $small_lines))
-                {
-                    $row[] = array('v' => 0, 'f' => null);
-                }
-            }
-
-            // Insert data for "other" line
-            if ($count_small_lines !== 0)
-            {
-                $row[] = array('v' => $other_count, 'f' => null);
-            }
-
-            // Sanity check
-            $expected_cols = $count_labels - $count_small_lines + 1;
-            if ($count_small_lines != 0)
-            {
-                $expected_cols++;
-            }
-
-            $found_cols = count($row);
-            if ($expected_cols !== $found_cols)
-            {
-                echo '<pre>';
-                print_r($row);
-                print_r($labels);
-                print_r($small_lines);
-                echo '</pre>';
-                throw new Exception("Expected to get $expected_cols columns, got $found_cols!");
-            }
-
-            $json_array['rows'][] = array('c' => $row);
+            echo '<pre>';
+            print_r($row);
+            print_r($labels);
+            print_r($small_lines);
+            echo '</pre>';
+            throw new Exception("Expected to get $expected_cols columns, got $found_cols!");
         }
+
+        $json_array['rows'][] = ['c' => $row];
     }
 
     // Encode values to json

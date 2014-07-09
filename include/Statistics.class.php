@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright 2011-2013 Stephen Just <stephenjust@users.sf.net>
  *                2014 Daniel Butum <danibutum at gmail dot com>
@@ -18,11 +17,21 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+/**
+ * Class Statistic
+ */
 class Statistic
 {
     // fake chart enumeration
+    /**
+     * @var int
+     */
     const CHART_PIE = 1;
 
+    /**
+     * @var int
+     */
     const CHART_TIME = 2;
 
     /**
@@ -30,7 +39,7 @@ class Statistic
      */
     public static function getAllowedChartTypes()
     {
-        return array(static::CHART_PIE, static::CHART_TIME);
+        return [static::CHART_PIE, static::CHART_TIME];
     }
 
     /**
@@ -105,20 +114,14 @@ class Statistic
 
     /**
      * @param array  $data
-     * @param string $graph_id
+     * @param array $columns
+     * @param int $count_columns
      *
      * @throws StatisticException
-     * @return string the file
+     * @return array
      */
-    protected static function getPieJSON(array $data, $graph_id)
+    protected static function getPieJSON(array $data, array $columns, $count_columns)
     {
-        $cache_path = static::getCachePath($graph_id);
-        $cache_location = static::getCacheLocation($graph_id);
-        $columns = array_keys($data[0]);
-        $count_columns = count($columns);
-
-        // TODO add caching
-
         // we must have 2 columns because we have, label and data in the json call
         if ($count_columns !== 2)
         {
@@ -130,32 +133,64 @@ class Statistic
         $data_index = $columns[1];
 
         // build json
-        $json = array();
+        $json = [];
 
         foreach ($data as $row)
         {
-            $json[] = array("label" => (string)$row[$label_index], "data" => (int)$row[$data_index]);
+            $json[] = ["label" => (string)$row[$label_index], "data" => (int)$row[$data_index]];
         }
 
-        // write json to file
-        $status = file_put_contents($cache_path, json_encode($json));
-        if ($status === false)
-        {
-            throw new StatisticException(_h("Failed to open json file for writing!"));
-        }
-
-        return $cache_location;
+        return $json;
     }
 
     /**
      * @param array  $data
-     * @param string $graph_id
+     * @param array $columns
+     * @param int $count_columns
      *
-     * @return null
+     * @throws StatisticException
+     * @return array
      */
-    protected static function getTimeJSON(array $data, $graph_id)
+    protected static function getTimeJSON(array $data, array $columns, $count_columns)
     {
-        return null;
+        // we must have 3 columns, label, x axis column(time), y axis column
+        if ($count_columns !== 3)
+        {
+            throw new StatisticException(_h("The data is invalid the columns count should be 3"));
+        }
+
+        // retrieve data
+        $label_index = $columns[0];
+        $x_index = $columns[1];
+        $y_index = $columns[2];
+
+        // build json
+        $lines = [];
+
+        // group by points
+        foreach ($data as $point)
+        {
+            $label = $point[$label_index];
+            $x = strtotime($point[$x_index]) * 1000;
+            $y = (int)$point[$y_index];
+            $key = md5($label);
+
+            // create first time
+            if(!isset($lines[$key]))
+            {
+                $lines[$key] = [
+                    "label" => $label,
+                    "data"  => []
+                ];
+            }
+
+            $lines[$key]["data"][] = [$x, $y];
+        }
+
+        // degoup by hash
+        $lines = array_values($lines);
+
+        return $lines;
     }
 
     /**
@@ -187,27 +222,39 @@ class Statistic
             throw new StatisticException(_h("Tried to build a chart"));
         }
 
+        // init
         $tpl = StkTemplate::get("stats-chart.tpl");
-        $tplData = array(
+        $tplData = [
             "title" => $chart_title,
             "class" => "",
-            "json"  => ""
-        );
+            "json"  => static::getCacheLocation($graph_id)
+        ];
+        $cache_path = static::getCachePath($graph_id); // TODO add caching
+        $columns = array_keys($data[0]);
+        $count_columns = count($columns);
 
+        // check chart type
         switch ($chart_type)
         {
             case static::CHART_PIE:
                 $tplData["class"] = "stats-pie-chart";
-                $tplData["json"] = static::getPieJSON($data, $graph_id);
+                $data = static::getPieJSON($data, $columns, $count_columns);
                 break;
 
             case static::CHART_TIME;
-                $tplData["class"] = "stats-time-chart";
-                $tplData["json"] = static::getTimeJSON($data, $graph_id);
+                $tplData["class"] = "stats-time-chart-wide";
+                $data = static::getTimeJSON($data, $columns, $count_columns);
                 break;
 
             default:
                 break;
+        }
+
+        // write json to file
+        $status = file_put_contents($cache_path, json_encode($data));
+        if ($status === false)
+        {
+            throw new StatisticException(_h("Failed to open json file for writing!"));
         }
 
         $tpl->assign("chart", $tplData);
@@ -241,10 +288,10 @@ class Statistic
                 GROUP BY `addon_id`
                 ORDER BY SUM(`downloads`) DESC',
                 DBConnection::FETCH_FIRST,
-                array(
+                [
                     ':addon_type' => $addonType,
                     ':file_type'  => $fileType
-                )
+                ]
             );
         }
         catch(DBException $e)

@@ -48,15 +48,15 @@ $query_downloads_addon_type = "SELECT `addon_type`,SUM(`downloads`)
     WHERE `file_type` = 'addon'
     GROUP BY `addon_type`";
 
-$tplData = array(
-    "sections" => array(
+$tplData = [
+    "sections" => [
         Statistic::getChart($query_downloads_addon_type, Statistic::CHART_PIE, "File Downloads (by add-on type)", "files_pie"),
         Statistic::getSection($query_file_downloads_month_30, "File Downloads in the Last 30 Days"),
         Statistic::getSection($query_file_downloads_months_12, "File Downloads per Month in the Last 12 Months"),
         Statistic::getSection($query_images, "Images"),
         Statistic::getSection($query_source, "Source")
-    ),
-);
+    ],
+];
 
 $tpl->assign("files", $tplData);
 echo $tpl;

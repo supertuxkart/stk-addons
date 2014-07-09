@@ -22,6 +22,7 @@ require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 $tpl = StkTemplate::get("stats-index.tpl")
     ->addScriptInclude("http://www.flotcharts.org/flot/jquery.flot.js", "")
     ->addScriptInclude("http://www.flotcharts.org/flot/jquery.flot.pie.js", "")
+    ->addScriptInclude("http://www.flotcharts.org/flot/jquery.flot.time.js", "")
     ->addScriptInclude("stats.js");
 $tplData = array();
 

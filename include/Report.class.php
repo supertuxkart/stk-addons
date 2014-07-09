@@ -90,9 +90,12 @@ class Report
 
         $query_result = "\t<h3>Graph</h3>\n";
         $query_result .= "\t<code>" . htmlspecialchars($query) . "</code>\n";
+
+        // retrieve from the database
         try
         {
             $points = $db->query($query, DBConnection::FETCH_ALL);
+            var_dump($points);
             $count = count($points);
         }
         catch(DBException $e)
@@ -101,6 +104,8 @@ class Report
 
             return;
         }
+
+        // build view
         $query_result .= "\t<h3>Result</h3>\n";
         $query_result .= "\t<p>($count rows returned)</p>\n";
         if ($count === 0)
@@ -110,44 +115,66 @@ class Report
             return;
         }
 
+        // get columns
         $col_names = array_keys($points[0]);
 
         // Group points by label
-        $lines = array();
-        foreach ($points AS $point)
+        $lines = [];
+        foreach ($points as $point)
         {
+            // group by different types, aka different lines on the time plot
+
             // Hash the line label in the key to remove bad characters
-            if (!array_key_exists(md5($point[$col_names[0]]), $lines))
+            $label = $point[$col_names[0]];
+            $x = $point[$col_names[1]];
+            $y = $point[$col_names[2]];
+            $key = md5($label);
+
+            // create key for the first time
+            if (!array_key_exists($key, $lines))
             {
-                $lines[md5($point[$col_names[0]])] =
-                    array('label' => $point[$col_names[0]], 'x' => array(), 'y' => array());
+                $lines[$key] = [
+                    'label' => $label,
+                    'x'     => [],
+                    'y'     => []
+                ];
             }
 
-            $lines[md5($point[$col_names[0]])]['x'][] = $point[$col_names[1]];
-            $lines[md5($point[$col_names[0]])]['y'][] = $point[$col_names[2]];
+            // fill the x and y values
+            $lines[$key]['x'][] = $x;
+            $lines[$key]['y'][] = $y;
         }
-        $lines = array_values($lines);
 
+        // get rid of the hash values for some reason and make the indices to be numbers
+        $lines = array_values($lines);
+        var_dump($lines[0]['x']);
+
+        // combine all of them
         // Split into arrays of x-values, y-values and labels
-        $xvalues = array();
-        $yvalues = array();
-        $labels = array();
+        $x_values = [];
+        $y_values = [];
+        $labels = [];
         foreach ($lines AS $line)
         {
-            $xvalues[] = $line['x'];
-            $yvalues[] = $line['y'];
-            $labels[] = $line['label'];
+            $x_values[] = $line['x']; // array of arrays
+            $y_values[] = $line['y']; // array of arrays
+            $labels[] = $line['label']; // array of labels
         }
+
         // Make x-values numeric
-        for ($i = 0; $i < count($xvalues); $i++)
+        $count_x_values = count($x_values);
+        for ($i = 0; $i < $count_x_values; $i++)
         {
-            for ($j = 0; $j < count($xvalues[$i]); $j++)
+            $count_xi_values = count($x_values[$i]);
+            for ($j = 0; $j < $count_xi_values; $j++)
             {
-                $xvalues[$i][$j] = strtotime($xvalues[$i][$j]);
+                $x_values[$i][$j] = strtotime($x_values[$i][$j]);
             }
         }
 
-        $data_file = graph_data_to_json(array($xvalues, $yvalues), $labels, 'time', $graphId);
+        var_dump($labels);
+
+        $data_file = graph_data_to_json($x_values, $y_values, $labels, $graphId);
         $query_result .= '<div class="time_chart" id="' . $graphId . '">' . $chartTitle . "\n" . $data_file . '</div>';
 
         $this->report_structure[$section]['content'] .= $query_result;

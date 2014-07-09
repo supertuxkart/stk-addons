@@ -31,7 +31,7 @@
                 <h2 class="panel-title"><a href="?clients">{t}Clients{/t}</a></h2>
             </div>
             <div class="panel-body">
-                <div data-json="{$overview.json.clients}"></div>
+                <div class="stats-time-chart" data-json="{$overview.json.clients}"></div>
             </div>
         </div>
     </div>
@@ -41,7 +41,7 @@
                 <h2 class="panel-title"><a href="?servers">{t}Servers{/t}</a></h2>
             </div>
             <div class="panel-body">
-                <div data-json="{$overview.json.servers}"></div>
+                <div class="stats-pie-time" data-json="{$overview.json.servers}"></div>
             </div>
         </div>
     </div>

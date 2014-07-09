@@ -17,7 +17,7 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-(function(window, document) {
+(function($) {
     "use strict";
 
     // load essential elements
@@ -30,10 +30,6 @@
                 label : {
                     show      : true,
                     radius    : 0.75,
-                    //                    formatter: function(label, series) {
-                    //                        console.log(series);
-                    //                        return label + "\n" + series.data[0][1];
-                    //                    },
                     background: {
                         opacity: 0.6,
                         color  : '#000'
@@ -45,7 +41,29 @@
             hoverable: true,
             clickable: true
         }
-    }
+    };
+    var time_options = {
+        series: {
+            lines: { show: true },
+            points: { show: false }
+        },
+        xaxis: {
+            show: true,
+            mode: "time",
+            timeformat: "%b %y"
+        },
+        yaxis: {
+            show: true
+        },
+        legend: {
+            margin: [-70, 0]
+        },
+
+        grid: {
+            hoverable: true,
+            clickable: true
+        }
+    };
 
     // sort all tables
     $(".table-sort").DataTable();
@@ -61,4 +79,14 @@
         });
     });
 
-})(window, document);
+    // all time charts
+    $(".stats-time-chart, .stats-time-chart-wide").each(function() {
+        var $this = $(this);
+
+        var json_file = $this.data("json");
+        $.get(json_file, function(jsonData) {
+            console.log(jsonData);
+            $.plot($this, jsonData, time_options);
+        });
+    });
+})(jQuery);

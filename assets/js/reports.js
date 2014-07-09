@@ -32,31 +32,6 @@ function drawCharts() {
         }
     );
 
-    $('.pie_chart').each(function (index, Element) {
-            var chartMeta = Element.innerHTML;
-            var graph_id = Element.id;
-            var url = chartMeta.split('\n')[1];
-            console.log("Loading chart data: " + url);
-            $.ajax({
-                    url          : url,
-                    dataType     : "jsonp",
-                    crossDomain  : true,
-                    async        : true,
-                    mimeType     : "application/json",
-                    jsonp        : false,
-                    jsonpCallback: graph_id,
-                    error        : function () {
-                        document.ready = true;
-                    },
-                    success      : function (data) {
-                        document.ready = true;
-                        drawPie(data, Element);
-                    }
-                }
-            );
-        }
-    );
-
     $('.time_chart').each(function (index, Element) {
             var chartMeta = Element.innerHTML;
             var graph_id = Element.id;
@@ -82,18 +57,6 @@ function drawCharts() {
             );
         }
     );
-}
-
-function drawPie(jsonResponse, Element) {
-    var chartMeta = Element.innerHTML;
-    chartMeta = chartMeta.split('\n');
-
-    // Create our data table out of JSON data loaded from server.
-    var data = new google.visualization.DataTable(jsonResponse);
-
-    // Instantiate and draw our chart, passing in some options.
-    var chart = new google.visualization.PieChart(Element);
-    chart.draw(data, {title: chartMeta[0], width: 400, height: 240});
 }
 
 function drawTimeChart(jsonResponse, Element) {

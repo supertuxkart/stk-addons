@@ -20,9 +20,34 @@
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
 $tpl = StkTemplate::get("stats-clients.tpl");
-$tplData = array(
-    "sections" => array()
-);
+
+$uaVer1y_query = "SELECT `label`, `date`, SUM(`value`) FROM (
+        SELECT SUBSTRING_INDEX(SUBSTRING(`type`, 21), ' ', 1) AS `label`, `date`, `value`
+        FROM `" . DB_PREFIX . "stats`
+        WHERE `date` >= CURDATE() - INTERVAL 1 YEAR
+        AND `type` LIKE 'uagent %'
+        ORDER BY `date` DESC
+    ) AS `t`
+    GROUP BY `t`.`date`, `t`.`label`
+    ORDER BY `t`.`date` DESC, `t`.`label` DESC";
+
+$uaTime1y_query = "SELECT CASE WHEN `label` = '' THEN 'Unknown' ELSE `label` END AS `label`,`date`,SUM(`value`) FROM (
+        SELECT TRIM(REPLACE(REPLACE(REPLACE(`type`,SUBSTRING_INDEX(`type`,' ',2),''),')',''),'(',''))
+        AS `label`,`date`,`value`
+        FROM `" . DB_PREFIX . "stats`
+        WHERE `date` >= CURDATE() - INTERVAL 1 YEAR
+        AND `type` LIKE 'uagent %'
+        ORDER BY `date` DESC
+    ) AS `t`
+    GROUP BY `t`.`date`,`t`.`label`
+    ORDER BY `t`.`date` DESC, `t`.`label` DESC";
+
+$tplData = [
+    "sections" => [
+        Statistic::getChart($uaVer1y_query, Statistic::CHART_TIME, "File Downloads per Version in the Last Year", "downloads_year"),
+        Statistic::getChart($uaTime1y_query, Statistic::CHART_TIME, "File Downloads per OS in the Last Year", "downloads_os_year")
+    ]
+];
 
 $tpl->assign("clients", $tplData);
 echo $tpl;

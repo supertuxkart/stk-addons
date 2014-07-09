@@ -335,11 +335,11 @@ class Util
             'HTTP_FORWARDED'
         ];
 
+        $options = FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE;
         foreach ($ip_pool as $ip)
         {
             if (!empty($_SERVER[$ip]))
             {
-                $options = FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE;
                 if (filter_var($_SERVER[$ip], FILTER_VALIDATE_IP, $options))
                 {
                     return $_SERVER[$ip];

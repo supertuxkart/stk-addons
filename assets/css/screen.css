@@ -732,4 +732,16 @@ div.help-hidden {
     width: 500px;
     height: 300px;
 }
+
+#stats-main .stats-time-chart {
+    width: 500px;
+    height: 300px;
+}
+
+#stats-main .stats-time-chart-wide {
+    margin: 0 auto;
+    width: 950px;
+    height: 500px;
+}
+
 /* ------------------------------ stats  ------------------------------*/
