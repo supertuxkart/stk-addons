@@ -113,9 +113,9 @@ class Statistic
     }
 
     /**
-     * @param array  $data
+     * @param array $data
      * @param array $columns
-     * @param int $count_columns
+     * @param int   $count_columns
      *
      * @throws StatisticException
      * @return array
@@ -144,9 +144,9 @@ class Statistic
     }
 
     /**
-     * @param array  $data
+     * @param array $data
      * @param array $columns
-     * @param int $count_columns
+     * @param int   $count_columns
      *
      * @throws StatisticException
      * @return array
@@ -175,7 +175,7 @@ class Statistic
             $y = (int)$point[$y_index];
 
             // create first time
-            if(!isset($max_y_lines[$label]))
+            if (!isset($max_y_lines[$label]))
             {
                 $max_y_lines[$label] = 0;
             }
@@ -191,7 +191,7 @@ class Statistic
         foreach ($max_y_lines as $label => $max_y_line)
         {
             // a small line has less than 2% of the max general value
-            if($max_y_line < 0.02 * $max_y_value)
+            if ($max_y_line < 0.02 * $max_y_value)
             {
                 $small_lines[] = $label;
             }
@@ -217,17 +217,20 @@ class Statistic
                 // create x value for the first time
                 if (!isset($other_data[$x]))
                 {
-                    $other_data[$x] = $y;
+                    $other_data[$x] = [$x, $y];
                 }
                 else // aggregate data, aka add all the y values for all the small lines
                 {
-                    $other_data[$x] += $y;
+                    $other_x = $other_data[$x][0];
+                    $other_y = $other_data[$x][1];
+                    $other_data[$x] = [$other_x, $other_y + $y];
+
                 }
             }
             else // regular category
             {
                 // create first time
-                if(!isset($json[$label]))
+                if (!isset($json[$label]))
                 {
                     $json[$label] = [
                         "label" => $label,
@@ -245,7 +248,7 @@ class Statistic
         // add other line
         if ($other_data) // not empty
         {
-            $other_line["data"] = $other_data;
+            $other_line["data"] = array_values($other_data);
             $json[] = $other_line;
         }
 
