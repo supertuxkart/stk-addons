@@ -28,6 +28,7 @@ $action = (isset($_GET['action'])) ? $_GET['action'] : null;
 $tpl = StkTemplate::get('user.tpl')
     ->assignTitle(_h('Users'))
     ->assign("img_location", IMG_LOCATION)
+    ->addUtilLibrary()
     ->addScriptInclude("user.js");
 $tplData = ["items" => [], "status" => "", "body" => ""];
 

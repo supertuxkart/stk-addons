@@ -29,6 +29,7 @@ if (!isset($_GET['view']))
 
 $tpl = StkTemplate::get("manage.tpl")
     ->assignTitle(_h("Manage"))
+    ->addUtilLibrary()
     ->addScriptInclude("manage.js")
     ->assign("can_edit_settings", User::hasPermission(AccessControl::PERM_EDIT_SETTINGS))
     ->assign("can_edit_roles", User::hasPermission(AccessControl::PERM_EDIT_PERMISSIONS));

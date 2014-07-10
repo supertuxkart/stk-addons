@@ -3,16 +3,22 @@
   "dependencies": {
     "jquery": "1.11.*",
     "underscore": "1.6.*",
-    "bootstrap": "3.1.*",
+    "bootstrap": "3.2.*",
     "typeahead.js": "0.10.*",
     "history.js": "1.8.*",
     "bootstrap3-wysihtml5-bower": "*",
     "bootstrap.growl": "*",
     "parsleyjs": "~2.0.0",
     "handlebars": "1.3.0",
-    "bootbox": "~4.2.0"
+    "bootbox": "~4.2.0",
+    "flot": "~0.8.3",
+    "flot.tooltip": "~0.7.1",
+    "datatables": "~1.10.0",
+    "datatables-bootstrap3": "*"
   },
   "resolutions": {
-    "jquery": "1.11.*"
+    "jquery": "1.11.*",
+    "bootstrap": "3.2.*",
+    "datatables": "~1.10.0"
   }
 }

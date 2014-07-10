@@ -23,7 +23,9 @@ $description = _h('This is the official SuperTuxKart add-on repository. It conta
 $tpl = StkTemplate::get('index.tpl')
     ->assign('title', _h('SuperTuxKart Add-ons'))
     ->assign("show_stk_image", true)
-    ->setMetaDesc($description);
+    ->setMetaDesc($description)
+    ->addScriptInclude("jquery.newsticker.js")
+    ->addScriptInline('$("#news-messages").newsTicker();', StkTemplate::ORDER_AFTER);
 
 // Display index menu
 $tpl->assign(

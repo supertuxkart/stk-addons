@@ -63,7 +63,10 @@ if ($addonName)
 }
 
 // build template
-$tpl = StkTemplate::get("two-pane.tpl")->assign("title", $title);
+$tpl = StkTemplate::get("two-pane.tpl")
+    ->assign("title", $title)
+    ->addUtilLibrary()
+    ->addScriptInclude("addon.js");
 $panel = array(
     'left'   => '',
     'status' => '',

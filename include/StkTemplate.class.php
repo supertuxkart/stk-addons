@@ -27,9 +27,15 @@
 class StkTemplate extends Template
 {
     // fake order enumeration
-    const ORDER_AFTER = 1;
+    /**
+     * @var string
+     */
+    const ORDER_AFTER = "after";
 
-    const ORDER_BEFORE = 2;
+    /**
+     * @var string
+     */
+    const ORDER_BEFORE = "before";
 
     /**
      * Hold the meta tags
@@ -94,12 +100,9 @@ class StkTemplate extends Template
         // fill css
         array_push(
             $this->css_includes,
-            ["href"  => LIBS_LOCATION . "bootstrap/dist/css/bootstrap.css"],
+            ["href" => LIBS_LOCATION . "bootstrap/dist/css/bootstrap.css"],
             ["href" => CSS_LOCATION . "screen.css", "media" => "screen"],
-            ["href" => CSS_LOCATION . "print.css", "media" => "print"],
-            ["href" => LIBS_LOCATION . "bootstrap3-wysihtml5-bower/dist/bootstrap3-wysihtml5.min.css"],
-            ["href" => "//cdnjs.cloudflare.com/ajax/libs/datatables/1.10.0/css/jquery.dataTables.min.css"],
-            ["href" => "//cdn.datatables.net/plug-ins/be7019ee387/integration/bootstrap/3/dataTables.bootstrap.css"]
+            ["href" => CSS_LOCATION . "print.css", "media" => "print"]
         );
         $this->smarty->assign("css_includes", array_merge($this->css_includes, $this->user_css_includes));
     }
@@ -126,17 +129,9 @@ class StkTemplate extends Template
             ['src' => LIBS_LOCATION . "jquery/dist/jquery.js"],
             ['src' => LIBS_LOCATION . "underscore/underscore.js"],
             ['src' => LIBS_LOCATION . "bootstrap/dist/js/bootstrap.js"],
-            //['src' => LIBS_LOCATION . "handlebars/handlebars.js"],
-            ['src' => LIBS_LOCATION . "typeahead.js/dist/typeahead.bundle.js"],
             ['src' => LIBS_LOCATION . "history.js/scripts/bundled-uncompressed/html4+html5/jquery.history.js"],
-            ['src' => "//cdnjs.cloudflare.com/ajax/libs/datatables/1.10.0/jquery.dataTables.min.js"],
-            ['src' => "//cdn.datatables.net/plug-ins/be7019ee387/integration/bootstrap/3/dataTables.bootstrap.js"],
-            //['src' => LIBS_LOCATION . "wysihtml5x/dist/wysihtml5x.js"],
-            ['src' => LIBS_LOCATION . "bootstrap3-wysihtml5-bower/dist/bootstrap3-wysihtml5.all.js"],
             ['src' => LIBS_LOCATION . "bootstrap.growl/bootstrap-growl.js"],
             ['src' => LIBS_LOCATION . "bootbox/bootbox.js"],
-            ['src' => JS_LOCATION . 'jquery.newsticker.js'],
-            ['src' => JS_LOCATION . 'util.js'],
             ['src' => JS_LOCATION . 'main.js']
         );
 
@@ -343,6 +338,77 @@ class StkTemplate extends Template
     public function setMetaTag($key, $value)
     {
         $this->meta_tags[$key] = $value;
+
+        return $this;
+    }
+
+    /**
+     * Add the util.js library
+     *
+     * @return $this
+     */
+    public function addUtilLibrary()
+    {
+        $this->addScriptInclude("util.js");
+
+        return $this;
+    }
+
+    /**
+     * Add twitter typehead library for autocompletion
+     *
+     * @link http://twitter.github.io/typeahead.js/
+     * @return $this
+     */
+    public function addTypeHeadLibrary()
+    {
+        $this->addScriptInclude("typeahead.js/dist/typeahead.bundle.js", LIBS_LOCATION);
+
+        return $this;
+    }
+
+    /**
+     * Add the editor library
+     *
+     * @link https://github.com/Waxolunist/bootstrap3-wysihtml5-bower
+     * @return $this
+     */
+    public function addWYSIWYGLibrary()
+    {
+        $this->addCssInclude("bootstrap3-wysihtml5-bower/dist/bootstrap3-wysihtml5.min.css", LIBS_LOCATION);
+        $this->addScriptInclude("bootstrap3-wysihtml5-bower/dist/bootstrap3-wysihtml5.all.js", LIBS_LOCATION);
+
+        return $this;
+    }
+
+    /**
+     * Add the datatables library
+     *
+     * @link http://www.datatables.net/
+     * @return $this
+     */
+    public function addDataTablesLibrary()
+    {
+        $this->addCssInclude("datatables/media/css/jquery.dataTables.css", LIBS_LOCATION);
+        $this->addCssInclude("datatables-bootstrap3/BS3/assets/css/datatables.css", LIBS_LOCATION);
+        $this->addScriptInclude("datatables/media/js/jquery.dataTables.js", LIBS_LOCATION);
+        $this->addScriptInclude("datatables-bootstrap3/BS3/assets/js/datatables.js", LIBS_LOCATION);
+
+        return $this;
+    }
+
+    /**
+     * Add the flot library
+     *
+     * @link http://www.flotcharts.org/
+     * @return $this
+     */
+    public function addFlotLibrary()
+    {
+        $this->addScriptInclude("flot/jquery.flot.js", LIBS_LOCATION);
+        $this->addScriptInclude("flot/jquery.flot.pie.js", LIBS_LOCATION);
+        $this->addScriptInclude("flot/jquery.flot.time.js", LIBS_LOCATION);
+        $this->addScriptInclude("flot.tooltip/js/jquery.flot.tooltip.js", LIBS_LOCATION);
 
         return $this;
     }

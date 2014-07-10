@@ -7,7 +7,6 @@
         <meta http-equiv="{$meta_field}" content="{$meta_content}">
     {/foreach}
     <meta http-equiv="X-UA-Compatible" content="IE=9" />
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
     {foreach $css_includes as $css}
         {if empty($css.media)}
             <link rel="stylesheet" href="{$css.href}">

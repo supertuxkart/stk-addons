@@ -17,6 +17,14 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+@font-face {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Open Sans'), local('OpenSans'), url(../fonts/OpenSans.woff) format('woff');
+}
+
+
 body {
     font-family: 'Open Sans', Verdana, Geneva, sans-serif;
     font-size: 14px;
