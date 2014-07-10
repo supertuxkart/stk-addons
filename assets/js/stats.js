@@ -43,25 +43,31 @@
         }
     };
     var time_options = {
-        series: {
-            lines: { show: true },
+        series     : {
+            lines : { show: true },
             points: { show: false }
         },
-        xaxis: {
-            show: true,
-            mode: "time",
+        xaxis      : {
+            show      : true,
+            mode      : "time",
             timeformat: "%b %y"
         },
-        yaxis: {
+        yaxis      : {
             show: true
         },
-        legend: {
+        legend     : {
             margin: [-70, 0],
             sorted: null
         },
-        grid: {
+        grid       : {
             hoverable: true,
             clickable: true
+        },
+        tooltip    : true,
+        tooltipOpts: {
+            defaultTheme: false,
+            content     : "<b>%x</b><br> %s: <b>%y</b>",
+            xDateFormat : "%e %b, %Y"
         }
     };
 
