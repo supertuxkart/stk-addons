@@ -269,12 +269,13 @@ class StkTemplate extends Template
      *
      * @param string $src      the js file location
      * @param string $location the path to get the resource from
+     * @param bool   $ie       see if this script is for IE only, add it as a conditional
      *
      * @return StkTemplate
      */
-    public function addScriptInclude($src, $location = JS_LOCATION)
+    public function addScriptInclude($src, $location = JS_LOCATION, $ie = false)
     {
-        $this->user_script_includes[] = ["src" => $location . $src];
+        $this->user_script_includes[] = ["src" => $location . $src, "ie" => $ie];
 
         return $this;
     }
@@ -405,6 +406,7 @@ class StkTemplate extends Template
      */
     public function addFlotLibrary()
     {
+        $this->addScriptInclude("flot/excanvas.min.js", LIBS_LOCATION, true);
         $this->addScriptInclude("flot/jquery.flot.js", LIBS_LOCATION);
         $this->addScriptInclude("flot/jquery.flot.pie.js", LIBS_LOCATION);
         $this->addScriptInclude("flot/jquery.flot.time.js", LIBS_LOCATION);
