@@ -21,7 +21,7 @@ require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
 if (!isset($_POST["action"]) || empty($_POST["action"]))
 {
-    exit(json_encode(["error" => "action param is not defined or is empty"]));
+    exit_json_error("action param is not defined or is empty");
 }
 
 // TODO make user answer captcha question when he spams the add/submit button
@@ -53,6 +53,7 @@ switch ($_POST["action"])
             exit_json_error(_h("One or more fields are empty"));
         }
 
+        $comment_id = -1;
         try
         {
             $comment_id = Bug::addComment(User::getLoggedId(), $_POST["bug-id"], $_POST["bug-comment-description"]);
@@ -66,16 +67,16 @@ switch ($_POST["action"])
         $comment_data = Bug::getCommentData($comment_id);
         $tpl_comment = StkTemplate::get("bugs-view-comment.tpl")->assign(
             "comment",
-            array(
+            [
                 "id"          => $comment_data["id"],
                 "user_name"   => User::getLoggedUserName(),
                 "date"        => $comment_data["date"],
                 "description" => $comment_data["description"]
-            )
+            ]
         )->assign("can_edit_comment", User::hasPermission(AccessControl::PERM_EDIT_BUGS));
 
 
-        echo json_encode(["success" => _h("Comment added"), "comment" => (string)$tpl_comment]);
+        exit_json_success(_h("Comment added"), ["comment" => (string)$tpl_comment]);
         break;
 
     case "edit":

@@ -23,16 +23,16 @@ require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
 if (!isset($_GET["data-type"]) || empty($_GET["data-type"]))
 {
-    exit(json_encode(array("error" => "data-type param is not defined or is empty")));
+    exit_json_error("data-type param is not defined or is empty");
 }
 
 switch ($_GET["data-type"])
 {
     case "addon";
-        $errors = Validate::ensureInput($_GET, array("search-filter", "query"));
-        if (!empty($errors))
+        $errors = Validate::ensureInput($_GET, ["search-filter", "query"]);
+        if ($errors)
         {
-            exit(json_encode(array("error" => _h("One or more fields are empty. This should never happen"))));
+            exit_json_error(_h("One or more fields are empty. This should never happen"));
         }
 
         switch ($_GET["search-filter"])
@@ -40,86 +40,79 @@ switch ($_GET["data-type"])
             case "type":
                 if (!isset($_GET['addon-type']) || !Addon::isAllowedType($_GET['addon-type']))
                 {
-                    exit(json_encode(array("error" => sprintf("invalid addon_type = %s is not recognized", $_POST["addon_type"]))));
+                    exit_json_error(sprintf("invalid addon_type = %s is not recognized", $_POST["addon_type"]));
                 }
 
                 $results = Addon::search($_GET['query']);
 
                 // Populate our addon list
-                $addon_list = array();
+                $addon_list = [];
                 foreach ($results as $result)
                 {
                     $a = new Addon($result['id']);
                     if ($a->getType() === $_GET['type'])
                     {
                         $icon = ($_GET['type'] === 'karts') ? $a->getImage(true) : null;
-                        $addon_list[] = array(
+                        $addon_list[] = [
                             'id'       => $result['id'],
                             'name'     => $result['name'],
                             'featured' => $a->getStatus() & F_FEATURED,
                             'icon'     => File::getPath($icon)
-                        );
+                        ];
                     }
                 }
-                echo json_encode(array("addons" => $addon_list));
+                exit_json_success("", ["addons" => $addon_list]);
                 break;
 
             case "name": // return an array of names
                 $addons = Addon::search($_GET['query']);
-                $names = array();
+                $names = [];
 
                 foreach ($addons as $addon)
                 {
                     $names[] = $addon["id"];
                 }
 
-                echo json_encode(array("addons" => $names));
+                exit_json_success("", ["addons" => $names]);
                 break;
 
             default:
-                echo json_encode(array("error" => "search_filter unknown"));
+                exit_json_error("search_filter unknown");
                 break;
         }
-
         break;
 
     case "bug":
-        $errors = Validate::ensureInput($_GET, array("search-filter"));
-        if (!empty($errors))
+        $errors = Validate::ensureInput($_GET, ["search-filter"]);
+        if ($errors)
         {
-            exit(json_encode(array("error" => _h("One or more fields are empty. This should never happen"))));
+            exit_json_error(_h("One or more fields are empty. This should never happen"));
         }
 
         // search also the description
         $search_description = false;
-        if (isset($_GET["search-description"]) && $_GET["search-description"] === "on")
+        if (isset($_GET["search-description"]) && Util::getCheckboxInt($_GET["search-description"]))
         {
             $search_description = true;
         }
 
+        $bugs = [];
         try
         {
             $bugs = Bug::search($_GET["search-title"], $_GET["search-filter"], $search_description);
         }
         catch(BugException $e)
         {
-            exit(json_encode(array("error" => $e->getMessage())));
+            exit_json_error($e->getMessage());
         }
 
-        echo json_encode(
-            array(
-                "success" => "",
-                "bugs-all" => StkTemplate::get('bugs-all.tpl')->assign("bugs", array("items" => $bugs))->toString()
-            )
-        );
-
+        exit_json_success("", ["bugs-all" => StkTemplate::get('bugs-all.tpl')->assign("bugs", ["items" => $bugs])->toString()]);
         break;
 
     case "user":
-
         break;
 
     default:
-        echo json_encode(array("error" => sprintf("data_type = %s is not recognized", h($_POST["action"]))));
+        exit_json_error(sprintf("data_type = %s is not recognized", h($_POST["action"])));
         break;
 }

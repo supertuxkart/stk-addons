@@ -22,13 +22,13 @@ require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
 if (!isset($_POST["action"]) || empty($_POST["action"]))
 {
-    exit(json_encode(array("error" => "action param is not defined or is empty")));
+    exit_json_error("action param is not defined or is empty");
 }
 
 switch ($_POST["action"])
 {
 
     default:
-        echo json_encode(array("error" => sprintf("action = %s is not recognized", h($_POST["action"]))));
+        exit_json_error(printf("action = %s is not recognized", h($_POST["action"])));
         break;
 }

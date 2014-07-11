@@ -21,7 +21,7 @@ require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
 if (!isset($_POST["action"]) || empty($_POST["action"]))
 {
-    exit(json_encode(["error" => "action param is not defined or is empty"]));
+    exit_json_error("action param is not defined or is empty");
 }
 
 switch ($_POST["action"])
@@ -86,7 +86,7 @@ switch ($_POST["action"])
             exit_json_error("The role is not valid");
         }
 
-        echo json_encode(["success" => "", "permissions" => AccessControl::getPermissions($_POST["role"])]);
+        exit_json_success("", ["permissions" => AccessControl::getPermissions($_POST["role"])]);
         break;
 
     default:

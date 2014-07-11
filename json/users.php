@@ -21,12 +21,12 @@ require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
 if (!isset($_POST["action"]) || !isset($_POST["user-id"]) || empty($_POST["user-id"]))
 {
-    exit(json_encode(["error" => "action/user param is not defined or is empty"]));
+    exit_json_error("action/user param is not defined or is empty");
 }
 
 if (!User::isLoggedIn())
 {
-    exit(json_encode(["error" => "You are not a logged in"]));
+    exit_json_error("You are not a logged in");
 }
 
 $user_id = $_POST["user-id"];
@@ -42,17 +42,17 @@ switch ($_POST["action"])
         }
         catch(UserException $e)
         {
-            exit(json_encode(["error" => $e->getMessage()]));
+            exit_json_error($e->getMessage());
         }
 
-        echo json_encode(["success" => _h("Profile updated")]);
+        exit_json_success(_h("Profile updated"));
         break;
 
     case "edit-role":
         $errors = Validate::ensureInput($_POST, ["role"]);
         if ($errors)
         {
-            exit(json_encode(["error" => _h("Role field is empty")]));
+            exit_json_error(_h("Role field is empty"));
         }
 
         $role = $_POST["role"];
@@ -64,17 +64,17 @@ switch ($_POST["action"])
         }
         catch(UserException $e)
         {
-            exit(json_encode(["error" => $e->getMessage()]));
+            exit_json_error($e->getMessage());
         }
 
-        echo json_encode(["success" => _h("Role edited successfully")]);
+        exit_json_success(_h("Role edited successfully"));
         break;
 
     case "change-password":
         $errors = Validate::ensureInput($_POST, ["old-pass", "new-pass", "new-pass-verify"]);
         if ($errors)
         {
-            exit(json_encode(["error" => _h("One or more fields are empty")]));
+            exit_json_error(_h("One or more fields are empty"));
         }
 
         try
@@ -83,13 +83,13 @@ switch ($_POST["action"])
         }
         catch(UserException $e)
         {
-            exit(json_encode(["error" => $e->getMessage()]));
+            exit_json_error($e->getMessage());
         }
 
-        echo json_encode(["success" => _h("Your password has been changed")]);
+        exit_json_success(_h("Your password has been changed"));
         break;
 
     default:
-        echo json_encode(["error" => sprintf("action = %s is not recognized", h($_POST["action"]))]);
+        exit_json_error(sprintf("action = %s is not recognized", h($_POST["action"])));
         break;
 }

@@ -43,25 +43,26 @@ function h($message)
     return htmlspecialchars($message, ENT_QUOTES | ENT_HTML5, "UTF-8", false);
 }
 
-
 /**
  * Macro function that calls exit and json_encode
  *
  * @param string $message
+ * @param array  $other_values other options to send back
  */
-function exit_json_error($message)
+function exit_json_error($message, array $other_values = [])
 {
-    exit(json_encode(["error" => $message]));
+    exit(json_encode(["error" => $message] + $other_values));
 }
 
 /**
  * Macro function that calls exit and json_encode
  *
  * @param string $message
+ * @param array  $other_values other options to send back
  */
-function exit_json_success($message)
+function exit_json_success($message, array $other_values = [])
 {
-    exit(json_encode(["success" => $message]));
+    exit(json_encode(["success" => $message] + $other_values));
 }
 
 /**
