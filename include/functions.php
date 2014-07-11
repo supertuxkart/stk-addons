@@ -43,6 +43,27 @@ function h($message)
     return htmlspecialchars($message, ENT_QUOTES | ENT_HTML5, "UTF-8", false);
 }
 
+
+/**
+ * Macro function that calls exit and json_encode
+ *
+ * @param string $message
+ */
+function exit_json_error($message)
+{
+    exit(json_encode(["error" => $message]));
+}
+
+/**
+ * Macro function that calls exit and json_encode
+ *
+ * @param string $message
+ */
+function exit_json_success($message)
+{
+    exit(json_encode(["success" => $message]));
+}
+
 /**
  * @param string $subject
  * @param string $message_html

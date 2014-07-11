@@ -21,45 +21,45 @@ require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
 if (!isset($_POST["action"]) || empty($_POST["action"]))
 {
-    exit(json_encode(array("error" => "action param is not defined or is empty")));
+    exit(json_encode(["error" => "action param is not defined or is empty"]));
 }
 
 // TODO make user answer captcha question when he spams the add/submit button
 switch ($_POST["action"])
 {
     case "add": // add bug
-        $errors = Validate::ensureInput($_POST, array("addon-name", "bug-title", "bug-description"));
-        if (!empty($errors))
+        $errors = Validate::ensureInput($_POST, ["addon-name", "bug-title", "bug-description"]);
+        if ($errors)
         {
-            exit(json_encode(array("error" => _h("One or more fields are empty"))));
+            exit_json_error(_h("One or more fields are empty"));
         }
 
         try
         {
-            Bug::insert(User::getLoggedId(), $_POST["addon-name"], $_POST["bug-title"], $_POST["bug-description"]);
+            Bug::add(User::getLoggedId(), $_POST["addon-name"], $_POST["bug-title"], $_POST["bug-description"]);
         }
         catch(BugException $e)
         {
-            exit(json_encode(array("error" => $e->getMessage())));
+            exit_json_error($e->getMessage());
         }
 
-        echo json_encode(array("success" => _h("Bug report added")));
+        exit_json_success(_h("Bug report added"));
         break;
 
     case "add-comment": // add bug comment
-        $errors = Validate::ensureInput($_POST, array("bug-comment-description", "bug-id"));
-        if (!empty($errors))
+        $errors = Validate::ensureInput($_POST, ["bug-comment-description", "bug-id"]);
+        if ($errors)
         {
-            exit(json_encode(array("error" => _h("One or more fields are empty"))));
+            exit_json_error(_h("One or more fields are empty"));
         }
 
         try
         {
-            $comment_id = Bug::insertComment(User::getLoggedId(), $_POST["bug-id"], $_POST["bug-comment-description"]);
+            $comment_id = Bug::addComment(User::getLoggedId(), $_POST["bug-id"], $_POST["bug-comment-description"]);
         }
         catch(BugException $e)
         {
-            exit(json_encode(array("error" => $e->getMessage())));
+            exit_json_error($e->getMessage());
         }
 
         // send back to comment to the user
@@ -75,14 +75,14 @@ switch ($_POST["action"])
         )->assign("can_edit_comment", User::hasPermission(AccessControl::PERM_EDIT_BUGS));
 
 
-        echo json_encode(array("success" => _h("Comment added"), "comment" => (string)$tpl_comment));
+        echo json_encode(["success" => _h("Comment added"), "comment" => (string)$tpl_comment]);
         break;
 
     case "edit":
-        $errors = Validate::ensureInput($_POST, array("bug-title-edit", "bug-description-edit", "bug-id"));
-        if (!empty($errors))
+        $errors = Validate::ensureInput($_POST, ["bug-title-edit", "bug-description-edit", "bug-id"]);
+        if ($errors)
         {
-            exit(json_encode(array("error" => _h("One or more fields are empty"))));
+            exit_json_error(_h("One or more fields are empty"));
         }
 
         try
@@ -91,17 +91,17 @@ switch ($_POST["action"])
         }
         catch(BugException $e)
         {
-            exit(json_encode(array("error" => $e->getMessage())));
+            exit_json_error($e->getMessage());
         }
 
-        echo json_encode(array("success" => _h("Bug updated")));
+        exit_json_success(_h("Bug updated"));
         break;
 
     case "edit-comment":
-        $errors = Validate::ensureInput($_POST, array("bug-comment-edit-description", "comment-id"));
-        if (!empty($errors))
+        $errors = Validate::ensureInput($_POST, ["bug-comment-edit-description", "comment-id"]);
+        if ($errors)
         {
-            exit(json_encode(array("error" => _h("One or more fields are empty"))));
+            exit_json_error(_h("One or more fields are empty"));
         }
 
         try
@@ -110,17 +110,17 @@ switch ($_POST["action"])
         }
         catch(BugException $e)
         {
-            exit(json_encode(array("error" => $e->getMessage())));
+            exit_json_error($e->getMessage());
         }
 
-        echo json_encode(array("success" => _h("Bug comment updated")));
+        exit_json_success(_h("Bug comment updated"));
         break;
 
     case "close": // close a bug
-        $errors = Validate::ensureInput($_POST, array("modal-close-reason", "bug-id"));
-        if (!empty($errors))
+        $errors = Validate::ensureInput($_POST, ["modal-close-reason", "bug-id"]);
+        if ($errors)
         {
-            exit(json_encode(array("error" => _h("One or more fields are empty"))));
+            exit_json_error(_h("One or more fields are empty"));
         }
 
         try
@@ -129,17 +129,17 @@ switch ($_POST["action"])
         }
         catch(BugException $e)
         {
-            exit(json_encode(array("error" => $e->getMessage())));
+            exit_json_error($e->getMessage());
         }
 
-        echo json_encode(array("success" => _h("Bug closed")));
+        exit_json_success(_h("Bug closed"));
         break;
 
     case "delete":
-        $errors = Validate::ensureInput($_POST, array("bug-id"));
-        if (!empty($errors))
+        $errors = Validate::ensureInput($_POST, ["bug-id"]);
+        if ($errors)
         {
-            exit(json_encode(array("error" => _h("One or more fields are empty"))));
+            exit_json_error(_h("One or more fields are empty"));
         }
 
         try
@@ -148,17 +148,17 @@ switch ($_POST["action"])
         }
         catch(DBException $e)
         {
-            exit(json_encode(array("error" => $e->getMessage())));
+            exit_json_error($e->getMessage());
         }
 
-        echo json_encode(array("success" => _h("Bug deleted")));
+        exit_json_success(_h("Bug deleted"));
         break;
 
     case "delete-comment": // delete a comment
-        $errors = Validate::ensureInput($_POST, array("comment-id"));
-        if (!empty($errors))
+        $errors = Validate::ensureInput($_POST, ["comment-id"]);
+        if ($errors)
         {
-            exit(json_encode(array("error" => _h("One or more fields are empty"))));
+            exit_json_error(_h("One or more fields are empty"));
         }
 
         try
@@ -167,13 +167,13 @@ switch ($_POST["action"])
         }
         catch(BugException $e)
         {
-            exit(json_encode(array("error" => $e->getMessage())));
+            exit_json_error($e->getMessage());
         }
 
-        echo json_encode(array("success" => _h("Comment deleted")));
+        exit_json_success(_h("Comment deleted"));
         break;
 
     default:
-        echo json_encode(array("error" => sprintf("action = %s is not recognized", h($_POST["action"]))));
+        exit_json_error(sprintf("action = %s is not recognized", h($_POST["action"])));
         break;
 }

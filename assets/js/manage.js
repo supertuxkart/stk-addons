@@ -41,6 +41,7 @@
 
     // role clicked
     $manage_body.on("click", "#manage-roles-roles button", function() {
+        console.log("Role clicked");
         var $this = $(this);
         var $siblings = $this.siblings();
 
@@ -72,7 +73,6 @@
             if (jData.hasOwnProperty("success")) {
                 var permissions = jData["permissions"];
                 var $checkboxes = $(".manage-roles-permission-checkbox");
-                console.log(permissions);
 
                 // update permissions checkboxes
                 $checkboxes.each(function() {
@@ -89,7 +89,19 @@
 
     // role add clicked
     $manage_body.on("click", "#manage-roles-add-btn", function() {
+        console.log("Add role clicked");
+        var role = $("#manage-roles-add-value").val();
 
+        $.post(json_url, {role: role, action: "add-role"}, function(data) {
+            var jData = parseJSON(data);
+            if (jData.hasOwnProperty("error")) {
+                growlError(jData["error"]);
+            }
+            if (jData.hasOwnProperty("success")) {
+                growlSuccess(jData["success"]);
+                $("#manage-roles-roles").append('<button type="button" class="btn btn-default">{0}</button>'.format(role))
+            }
+        });
     });
 
     // role edit clicked

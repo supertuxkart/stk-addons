@@ -6,7 +6,7 @@
 {/foreach}
 {foreach $script_includes as $script}
     {if isset($script.ie) && $script.ie}
-<!--[if lte IE 8]><<script language="JavaScript" type="{$script.type|default:'text/javascript'}" src="{$script.src}"></script><![endif]-->
+<!--[if lte IE 8]><<script language="javascript" type="{$script.type|default:'text/javascript'}" src="{$script.src}"></script><![endif]-->
     {else}
         <script type="{$script.type|default:'text/javascript'}" src="{$script.src}"></script>
     {/if}

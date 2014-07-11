@@ -426,7 +426,7 @@ class Bug
      * @return int bug id
      * @throws BugException the error
      */
-    public static function insert($userId, $addonId, $bugTitle, $bugDescription)
+    public static function add($userId, $addonId, $bugTitle, $bugDescription)
     {
         // validate
         if (!Addon::exists($addonId))
@@ -473,7 +473,7 @@ class Bug
      * @return int comment id
      * @throws BugException
      */
-    public static function insertComment($userId, $bugId, $commentDescription)
+    public static function addComment($userId, $bugId, $commentDescription)
     {
         // validate
         if (!static::exists($bugId))

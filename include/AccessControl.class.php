@@ -25,24 +25,63 @@
  */
 class AccessControl
 {
-    const PERM_VIEW_BASIC_PAGE = "view_basic_page"; // can view the most basic pages
+    /**
+     * Can view the most basic pages
+     * @var string
+     */
+    const PERM_VIEW_BASIC_PAGE = "view_basic_page"; //
 
+    /**
+     * Can add an addon
+     * @var string
+     */
     const PERM_ADD_ADDON = "add_addon";
 
+    /**
+     * Can add a bug
+     * @var string
+     */
     const PERM_ADD_BUG = "add_bug";
 
+    /**
+     * Can add a comment to a bug
+     * @var string
+     */
     const PERM_ADD_BUG_COMMENT = "add_bug_comment";
 
+    /**
+     * Can update/delete/insert addons
+     * @var string
+     */
     const PERM_EDIT_ADDONS = "edit_addons";
 
-    const PERM_EDIT_BUGS = "edit_bugs"; // edit bugs means close, edit bugs and delete, edit comments
+    /**
+     * Edit bugs means close, edit bugs and delete, edit comments
+     * @var string
+     */
+    const PERM_EDIT_BUGS = "edit_bugs";
 
-    const PERM_EDIT_USERS = "edit_users"; // edit normal users (non-admins), means delete/change/insert
+    /**
+     * Edit normal users (non-admins), means delete/change/insert
+     * @var string
+     */
+    const PERM_EDIT_USERS = "edit_users";
 
-    const PERM_EDIT_ADMINS = "edit_admins"; // the user is an admin can edit other admins
+    /**
+     * The user is an admin can edit other admins
+     * @var string
+     */
+    const PERM_EDIT_ADMINS = "edit_admins";
 
-    const PERM_EDIT_PERMISSIONS = "edit_permissions"; // can edit permissions
+    /**
+     * Can edit permissions
+     * @var string
+     */
+    const PERM_EDIT_PERMISSIONS = "edit_permissions";
 
+    /**
+     * @var string
+     */
     const PERM_EDIT_SETTINGS = "edit_settings";
 
     /**
@@ -50,21 +89,21 @@ class AccessControl
      *
      * @var array
      */
-    protected static $roles = array();
+    protected static $roles = [];
 
     /**
      * Cache for the role permissions, with the key the role name and the value an array of permissions
      *
      * @var array
      */
-    protected static $permissions = array();
+    protected static $permissions = [];
 
     /**
      * @return array
      */
     public static function getPermissionsChecked()
     {
-        return array(
+        return [
             static::PERM_VIEW_BASIC_PAGE,
             static::PERM_ADD_ADDON,
             static::PERM_ADD_BUG,
@@ -75,7 +114,40 @@ class AccessControl
             static::PERM_EDIT_SETTINGS,
             static::PERM_EDIT_PERMISSIONS,
             static::PERM_EDIT_ADMINS
-        );
+        ];
+    }
+
+    /**
+     * Add a new role to the database.
+     * Only high privilege users can call this method
+     *
+     * @param string $role
+     *
+     * @throws AccessControlException
+     */
+    public static function addRole($role)
+    {
+        // validate
+        if (!User::hasPermission(static::PERM_EDIT_PERMISSIONS))
+        {
+            throw new AccessControlException(_h("You do not have the permission to add a role"));
+        }
+        if (static::isRole($role))
+        {
+            throw new AccessControlException(_h("The role already exists"));
+        }
+
+        try
+        {
+            DBConnection::get()->insert("roles", [":name" => $role]);
+        }
+        catch(DBException $e)
+        {
+            throw new AccessControlException(h(
+                _('An error occurred while trying add a role') . ' ' .
+                _('Please contact a website administrator.')
+            ));
+        }
     }
 
     /**
@@ -145,6 +217,8 @@ class AccessControl
     }
 
     /**
+     * Get all the permission of a role
+     *
      * @param string $role
      *
      * @return array
@@ -153,7 +227,7 @@ class AccessControl
     public static function getPermissions($role = "user")
     {
         // retrieve from cache
-        if(isset(static::$permissions[$role]))
+        if (isset(static::$permissions[$role]))
         {
             return static::$permissions[$role];
         }
@@ -170,7 +244,7 @@ class AccessControl
                     DB_PREFIX . "role_permissions"
                 ),
                 DBConnection::FETCH_ALL,
-                array(":roleName" => $role)
+                [":roleName" => $role]
             );
         }
         catch(DBException $e)
@@ -182,7 +256,7 @@ class AccessControl
         }
 
         // put into the cache
-        static::$permissions[$role] = array();
+        static::$permissions[$role] = [];
         foreach ($permissions as $permission)
         {
             static::$permissions[$role][] = $permission["permission"];
@@ -213,8 +287,8 @@ class AccessControl
             throw new AccessControlException(_h("The role is not valid"));
         }
 
-        $role_id = static::$roles[$role];
-        $insert_values = array();
+        $role_id = static::$roles[$role]; // getRoles is called by isRole
+        $insert_values = [];
 
         foreach ($permissions as $permission) // validate permission and populate insert values
         {
@@ -233,8 +307,8 @@ class AccessControl
             DBConnection::get()->delete(
                 "role_permissions",
                 "`role_id` = :role_id",
-                array(":role_id" => $role_id),
-                array(":role_id" => DBConnection::PARAM_INT)
+                [":role_id" => $role_id],
+                [":role_id" => DBConnection::PARAM_INT]
             );
         }
         catch(DBException $e)
