@@ -650,6 +650,13 @@ div.help-hidden {
     margin-top: 20px;
 }
 
+#user-search-form {
+    position: absolute;
+    left: 80%;
+    margin-top: 20px;
+    z-index: 1000;
+}
+
 /* ------------------------------ users  ------------------------------*/
 
 /* ------------------------------ bugs  ------------------------------*/

@@ -30,7 +30,7 @@ $tpl = StkTemplate::get('user.tpl')
     ->assign("img_location", IMG_LOCATION)
     ->addUtilLibrary()
     ->addScriptInclude("user.js");
-$tplData = ["items" => [], "status" => "", "body" => ""];
+$tplData = ["status" => "", "body" => ""];
 
 // get all users from the database, create links
 $users = User::getAllData();
@@ -48,9 +48,9 @@ foreach ($users as $user)
     }
 }
 
-$tplData['items'] = $templateUsers;
 $tplData['body'] = Util::ob_get_require_once(ROOT_PATH . 'users-panel.php');
 
 // output the view
-$tpl->assign('user', $tplData);
+$tpl->assign("user", $tplData)
+    ->assign("menu_users", $templateUsers);
 echo $tpl;

@@ -82,6 +82,9 @@ function onFormSubmit(form_identifier, callback_success, $container, url, data_t
     });
 }
 
+function getByID(id) {
+    return document.getElementById(id);
+}
 
 function parseJSON(raw_string) {
     var jData = {}; // silently fail on the client side

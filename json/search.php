@@ -110,6 +110,48 @@ switch ($_GET["data-type"])
         break;
 
     case "user":
+        $errors = Validate::ensureInput($_GET, ["search-term"]);
+        if ($errors)
+        {
+            exit_json_error(_h("One or more fields are empty. This should never happen"));
+        }
+
+
+        $return_html = isset($_GET["return-html"]) ? true : false;
+        $users = [];
+        try
+        {
+            $users = User::search($_GET["search-term"]);
+        }
+        catch(BugException $e)
+        {
+            exit_json_error($e->getMessage());
+        }
+
+        $templateUsers = [];
+        foreach ($users as $user)
+        {
+            // Make sure that the user is active, or the viewer has permission to
+            // manage this type of user
+            if (User::hasPermissionOnRole($user->getRole()) || $user->isActive())
+            {
+                $templateUsers[] = [
+                    'username' => $user->getUserName(),
+                    'active'   => $user->isActive()
+                ];
+            }
+        }
+
+        if ($return_html)
+        {
+            $users_html = StkTemplate::get("user-menu.tpl")
+                ->assign("img_location", IMG_LOCATION)
+                ->assign("menu_users", $templateUsers)
+                ->toString();
+            exit_json_success("", ["users-html" => $users_html]);
+        }
+
+        exit_json_success("", ["users" => $templateUsers]);
         break;
 
     default:

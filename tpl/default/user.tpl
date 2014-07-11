@@ -2,21 +2,18 @@
 {include file=#header#}
 <div class="container">
     <div class="row">
-        <div class="col-sm-2 col-md-2 left-menu">
-            <ul class="list-group">
-                {foreach $user.items as $item}
-                    {$class=""}
-                    {if $item.active == 0}
-                        {$class=" unavailable"}
-                    {/if}
-                    <li class="list-group-item">
-                        <a href="users.php?user={$item.username|escape}" class="user-list{$class}">
-                            <img class="icon" src="{$img_location}user.png">
-                            <span>{$item.username|escape|truncate:24}</span>
-                        </a>
-                    </li>
-                {/foreach}
-            </ul>
+        <div class="col-md-12">
+            <form class="form-inline" role="form" id="user-search-form">
+                <div class="form-group has-feedback">
+                    <input type="text" class="form-control input-md" id="user-search-val" placeholder="Search users">
+                    <span class="glyphicon glyphicon-search form-control-feedback"></span>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-2 col-md-2 left-menu" id="user-menu">
+            {include file="user-menu.tpl" scope="parent"}
         </div>
         <div class="col-sm-10 col-md-10">
             <div id="user-status">

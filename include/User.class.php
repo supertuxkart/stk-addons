@@ -386,7 +386,7 @@ class User
         static::sessionSet("user_name", $user->getUserName());
         static::sessionSet("real_name", $user->getRealName());
         static::sessionSet("date_last_login", static::updateLoginTime($id));
-        static::sessionSet("role",$role);
+        static::sessionSet("role", $role);
         static::setPermissions($role);
 
         // backwards compatibility. Convert unsalted password to a salted one
@@ -551,15 +551,17 @@ class User
     }
 
     /**
+     * Search a user
      *
-     * @param string $search_string
+     * @param string $search_string the string can pe space or comma separated to search multiple users
      *
      * @throws UserException
-     * @return array of Users
+     * @return User[] array of users
      */
-    public static function searchUsers($search_string)
+    public static function search($search_string)
     {
-        $terms = preg_split("/[\s,]+/", h($search_string));
+        // split by space or comma
+        $terms = preg_split("/[\s,]+/", $search_string);
         $index = 0;
         $parameters = [];
         $query_parts = [];
@@ -567,6 +569,7 @@ class User
         {
             if (mb_strlen($term) > 2)
             {
+                // build sql query
                 $parameter = ":userid" . $index;
                 $index++;
                 $query_parts[] = "`user` RLIKE " . $parameter;
@@ -574,31 +577,34 @@ class User
             }
         }
 
-        $matched_users = [];
-        if ($index > 0)
+        // nothing to search for
+        if (!$index)
         {
-            try
-            {
-                $users = DBConnection::get()->query(
-                    "SELECT id, user
-                    FROM `" . DB_PREFIX . "users`
-                    WHERE " . implode(" OR ", $query_parts),
-                    DBConnection::FETCH_ALL,
-                    $parameters
-                );
-            }
-            catch(DBException $e)
-            {
-                throw new UserException(h(
-                    _('An error occurred while performing your search query.') . ' .' .
-                    _('Please contact a website administrator.')
-                ));
-            }
+            return [];
+        }
 
-            foreach ($users as $user)
-            {
-                $matched_users[] = new User($user['id'], $user);
-            }
+        try
+        {
+            $users = DBConnection::get()->query(
+                "SELECT id, user, role, active
+                FROM `" . DB_PREFIX . "users`
+                WHERE " . implode(" OR ", $query_parts),
+                DBConnection::FETCH_ALL,
+                $parameters
+            );
+        }
+        catch(DBException $e)
+        {
+            throw new UserException(h(
+                _('An error occurred while performing your search query.') . ' .' .
+                _('Please contact a website administrator.')
+            ));
+        }
+
+        $matched_users = [];
+        foreach ($users as $user)
+        {
+            $matched_users[] = new User($user['id'], $user);
         }
 
         return $matched_users;
@@ -616,7 +622,7 @@ class User
     {
         $partial_output = new XMLOutput();
         $partial_output->startElement('users');
-        foreach (static::searchUsers($search_string) as $user)
+        foreach (static::search($search_string) as $user)
         {
             $partial_output->insert($user->asXML());
         }
@@ -698,6 +704,11 @@ class User
      */
     public static function hasPermissionOnRole($role)
     {
+        if (!static::isLoggedIn()) // do not bother to check permissions if the user is not logged in
+        {
+            return false;
+        }
+
         $role = static::oldRoleToNew($role);
         $can_edit_users = static::hasPermission(AccessControl::PERM_EDIT_USERS);
         $can_edit_admins = static::isAdmin();

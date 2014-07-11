@@ -40,11 +40,11 @@ function addonRequest(page, id, value) {
 }
 function loadDiv(newDiv) {
     newDiv = "disp" + newDiv;
-    if (oldDiv !== "")    document.getElementById(oldDiv).style.display = "none";
-    document.getElementById(newDiv).style.display = "block";
+    if (oldDiv !== "")    getByID(oldDiv).style.display = "none";
+    getByID(newDiv).style.display = "block";
     oldDiv = newDiv;
-    document.getElementById("content-addon_body").innerHTML = "";
-    document.getElementById("content-addon_body").style.display = "none";
+    getByID("content-addon_body").innerHTML = "";
+    getByID("content-addon_body").style.display = "none";
 }
 
 function clearPanelStatus() {

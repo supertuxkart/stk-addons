@@ -17,18 +17,48 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-(function($, document) {
+(function($) {
     "use strict";
 
     var $user_body = $("#user-body");
+    var $user_menu = $("#user-menu");
     var json_url = JSON_LOCATION + "users.php";
+    var search_url = JSON_LOCATION + "search.php";
+    var original_menu;
 
     function userFormSubmit(form_identifier, callback_success) {
         onFormSubmit(form_identifier, callback_success, $user_body, json_url, {}, "POST");
     }
 
+    // search form
+    $("#user-search-val").keyup(function() {
+        var search_term = this.value;
+        if (search_term.length <= 2) { // only if length is 3 or greater
+            // restore original menu
+            if (!_.isEmpty(original_menu)) {
+                $user_menu.html(original_menu);
+                original_menu = ""; // clear
+            }
+
+            return null;
+        }
+
+        $.get(search_url, {"data-type": "user", "search-term": search_term, "return-html": true}, function(data) {
+            var jData = parseJSON(data);
+            if (jData.hasOwnProperty("success")) {
+                if(_.isEmpty(original_menu)) { // keep original menu
+                    original_menu =  $user_menu.html();
+                }
+                $user_menu.html(jData["users-html"]);
+            }
+        });
+
+        console.log(search_term);
+
+    });
+
     // left panel user clicked
-    $('a.user-list').click(function() {
+    $user_body.on("click", 'a.user-list', function() {
         History.pushState(null, '', this.href);
         var user = getUrlVars(this.href)['user'];
         loadContent($user_body, SITE_ROOT + 'users-panel.php', {user: user});
@@ -46,8 +76,8 @@
             growlSuccess(jData["success"]);
 
             // update view
-            $("#user-realname").text($("#user-profile-realname").val());
-            var homepage = $("#user-profile-homepage").val();
+            $("#user-realname").text(getByID("user-profile-realname").value);
+            var homepage = getByID("user-profile-homepage").value;
             var $homepage_row = $("#user-homepage-row");
             if (_.isEmpty(homepage)) { // homepage is empty, hide the view
                 $homepage_row.addClass("hide");
@@ -68,10 +98,10 @@
             growlSuccess(jData["success"]);
 
             // update view
-            $("#user-role").text($("#user-settings-role").val());
+            $("#user-role").text(getByID("user-settings-role").value);
             var username = $("#user-username").text();
             var $side_user = $("span:contains({0})".format(username));
-            if (document.getElementById("user-settings-available").checked) { // user is active
+            if (getByID("user-settings-available").checked) { // user is active
                 $side_user.removeClass("unavailable");
             } else { // user is not active
                 $side_user.addClass("unavailable");
@@ -93,4 +123,4 @@
         }
     });
 
-})(jQuery, document);
+})(jQuery);

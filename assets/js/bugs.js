@@ -243,10 +243,10 @@
     // edit bug clicked
     $main_bugs.on("click", "#btn-bugs-edit", function() {
         var $modal = $("#modal-edit"),
-            el_modal_title = document.getElementById("bug-title-edit"),
+            el_modal_title = getByID("bug-title-edit"),
             $modal_description = $("#bug-description-edit"),
-            el_view_title = document.getElementById("bug-view-title"),
-            el_view_description = document.getElementById("bug-view-description");
+            el_view_title = getByID("bug-view-title"),
+            el_view_description = getByID("bug-view-description");
 
         console.info("Edit bug clicked");
         $modal.modal();
