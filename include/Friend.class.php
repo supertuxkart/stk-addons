@@ -24,12 +24,7 @@
 class Friend
 {
     /**
-     * @var bool
-     */
-    protected $is_asker;
-
-    /**
-     * @var
+     * @var int
      */
     protected $friend_id;
 
@@ -44,14 +39,19 @@ class Friend
     protected $is_pending;
 
     /**
-     * @var User
+     * @var bool
      */
-    protected $user;
+    protected $is_online;
 
     /**
      * @var bool
      */
-    protected $online;
+    protected $is_asker;
+
+    /**
+     * @var User
+     */
+    protected $user;
 
     /**
      * The Friend constructor
@@ -62,11 +62,11 @@ class Friend
      */
     protected function __construct($info_array, $online = false, $extra_info = false)
     {
-        $this->user = new User($info_array['friend_id'], array("user" => $info_array['friend_name']));
+        $this->user = new User($info_array['friend_id'], ["user" => $info_array['friend_name']]);
         $this->extra_info = $extra_info;
         if ($extra_info)
         {
-            $this->online = $online;
+            $this->is_online = $online;
             $this->is_pending = $info_array['request'] == 1;
             $this->is_asker = $info_array['is_asker'] == 1;
             $this->date = $info_array['date'];
@@ -86,7 +86,7 @@ class Friend
      */
     public function isOnline()
     {
-        return $this->online;
+        return $this->is_online;
     }
 
     /**
@@ -105,7 +105,7 @@ class Friend
             }
             else
             {
-                $friend_xml->writeAttribute("online", ($this->online ? "yes" : "no"));
+                $friend_xml->writeAttribute("online", ($this->is_online ? "yes" : "no"));
             }
             $friend_xml->writeAttribute("date", $this->date);
         }
@@ -120,7 +120,7 @@ class Friend
      *
      * @param $userid
      *
-     * @return string
+     * @return int[] array of friend id's
      * @throws FriendException
      */
     public static function getOnlineFriendsOf($userid)
@@ -142,8 +142,8 @@ class Friend
                         AND " . DB_PREFIX . "client_sessions.uid = " . DB_PREFIX . "friends.receiver_id
                         AND " . DB_PREFIX . "client_sessions.online = 1",
                 DBConnection::FETCH_ALL,
-                array(":userid" => $userid),
-                array(":userid" => DBConnection::PARAM_INT)
+                [":userid" => $userid],
+                [":userid" => DBConnection::PARAM_INT]
             );
         }
         catch(DBException $e)
@@ -154,15 +154,94 @@ class Friend
             );
         }
 
-        // build the string
-        $string_list = "";
+        // build array of ids
+        $return_friends = [];
         foreach ($friends as $friend)
         {
-            $string_list .= $friend['friend_id'] . " ";
+            $return_friends[] = $friend['friend_id'];
         }
-        $string_list = trim($string_list);
 
-        return $string_list;
+        return $return_friends;
+    }
+
+    /**
+     * Return all the friends of a user
+     *
+     * @param int  $userid
+     * @param bool $is_self
+     *
+     * @throws FriendException
+     * @return Friend[] an array of friends
+     */
+    public static function getFriendsOf($userid, $is_self = false)
+    {
+        // TODO clean up the look of the SQL queries
+        try
+        {
+            if ($is_self)
+            {
+                $friends = DBConnection::get()->query(
+                    "   SELECT " . DB_PREFIX . "friends.date AS date, "
+                    . DB_PREFIX . "friends.request AS request, "
+                    . DB_PREFIX . "friends.asker_id AS friend_id, "
+                    . DB_PREFIX . "users.user AS friend_name, 1 AS is_asker
+                        FROM " . DB_PREFIX . "friends, " . DB_PREFIX . "users
+                        WHERE   " . DB_PREFIX . "friends.receiver_id = :userid
+                            AND " . DB_PREFIX . "users.id = " . DB_PREFIX . "friends.asker_id
+                    UNION
+                        SELECT " . DB_PREFIX . "friends.date AS date, "
+                    . DB_PREFIX . "friends.request AS request, "
+                    . DB_PREFIX . "friends.receiver_id AS friend_id, "
+                    . DB_PREFIX . "users.user AS friend_name, 0 AS is_asker
+                        FROM " . DB_PREFIX . "friends, " . DB_PREFIX . "users
+                        WHERE " . DB_PREFIX . "friends.asker_id = :userid
+                            AND " . DB_PREFIX . "users.id = " . DB_PREFIX . "friends.receiver_id
+                        ORDER BY friend_name ASC",
+                    DBConnection::FETCH_ALL,
+                    [":userid" => $userid],
+                    [":userid" => DBConnection::PARAM_INT]
+                );
+            }
+            else
+            {
+                $friends = DBConnection::get()->query(
+                    "   SELECT " . DB_PREFIX . "friends.asker_id AS friend_id, "
+                    . DB_PREFIX . "users.user AS friend_name
+                        FROM " . DB_PREFIX . "friends, " . DB_PREFIX . "users
+                        WHERE   " . DB_PREFIX . "friends.receiver_id = :userid
+                            AND " . DB_PREFIX . "users.id = " . DB_PREFIX . "friends.asker_id
+                            AND " . DB_PREFIX . "friends.request = 0
+                    UNION
+                        SELECT " . DB_PREFIX . "friends.receiver_id AS friend_id, "
+                    . DB_PREFIX . "users.user AS friend_name
+                        FROM " . DB_PREFIX . "friends, " . DB_PREFIX . "users
+                        WHERE   " . DB_PREFIX . "friends.asker_id = :userid
+                            AND " . DB_PREFIX . "users.id = " . DB_PREFIX . "friends.receiver_id
+                            AND " . DB_PREFIX . "friends.request = 0
+                        ORDER BY friend_name ASC",
+                    DBConnection::FETCH_ALL,
+                    [":userid" => $userid],
+                    [":userid" => DBConnection::PARAM_INT]
+                );
+            }
+        }
+        catch(DBException $e)
+        {
+            throw new FriendException(h(
+                _('An unexpected error occurred while fetching friends.') . ' .' .
+                _('Please contact a website administrator.')
+            ));
+        }
+
+        // build friends array
+        $return_friends = [];
+        foreach ($friends as $friend)
+        {
+            /// TODO also get online status
+            $return_friends[] = new Friend($friend, false, $is_self);
+        }
+
+        return $return_friends;
     }
 
     /**
@@ -176,69 +255,12 @@ class Friend
      */
     public static function getFriendsAsXML($userid, $is_self = false)
     {
-        // TODO clean up the look of the SQL queries
-        try
-        {
-            if ($is_self)
-            {
-                $friends = DBConnection::get()->query(
-                    "   SELECT " . DB_PREFIX . "friends.date AS date, "
-                                 . DB_PREFIX . "friends.request AS request, "
-                                 . DB_PREFIX . "friends.asker_id AS friend_id, "
-                                 . DB_PREFIX . "users.user AS friend_name, 1 AS is_asker
-                        FROM " . DB_PREFIX . "friends, " . DB_PREFIX . "users
-                        WHERE   " . DB_PREFIX . "friends.receiver_id = :userid
-                            AND " . DB_PREFIX . "users.id = " . DB_PREFIX . "friends.asker_id
-                    UNION
-                        SELECT " . DB_PREFIX . "friends.date AS date, "
-                                 . DB_PREFIX . "friends.request AS request, "
-                                 . DB_PREFIX . "friends.receiver_id AS friend_id, "
-                                 . DB_PREFIX . "users.user AS friend_name, 0 AS is_asker
-                        FROM " . DB_PREFIX . "friends, " . DB_PREFIX . "users
-                        WHERE " . DB_PREFIX . "friends.asker_id = :userid
-                            AND " . DB_PREFIX . "users.id = " . DB_PREFIX . "friends.receiver_id
-                        ORDER BY friend_name ASC",
-                    DBConnection::FETCH_ALL,
-                    array(":userid" => $userid),
-                    array(":userid" => DBConnection::PARAM_INT)
-                );
-            }
-            else
-            {
-                $friends = DBConnection::get()->query(
-                    "   SELECT " . DB_PREFIX . "friends.asker_id AS friend_id, "
-                                 . DB_PREFIX . "users.user AS friend_name
-                        FROM " . DB_PREFIX . "friends, " . DB_PREFIX . "users
-                        WHERE   " . DB_PREFIX . "friends.receiver_id = :userid
-                            AND " . DB_PREFIX . "users.id = " . DB_PREFIX . "friends.asker_id
-                            AND " . DB_PREFIX . "friends.request = 0
-                    UNION
-                        SELECT " . DB_PREFIX . "friends.receiver_id AS friend_id, "
-                                 . DB_PREFIX . "users.user AS friend_name
-                        FROM " . DB_PREFIX . "friends, " . DB_PREFIX . "users
-                        WHERE   " . DB_PREFIX . "friends.asker_id = :userid
-                            AND " . DB_PREFIX . "users.id = " . DB_PREFIX . "friends.receiver_id
-                            AND " . DB_PREFIX . "friends.request = 0
-                        ORDER BY friend_name ASC",
-                    DBConnection::FETCH_ALL,
-                    array(":userid" => $userid),
-                    array(":userid" => DBConnection::PARAM_INT)
-                );
-            }
-        }
-        catch(DBException $e)
-        {
-            throw new FriendException(h(
-                _('An unexpected error occurred while fetching friends.') . ' ' .
-                _('Please contact a website administrator.')
-            ));
-        }
+        $friends = static::getFriendsOf($userid, $is_self);
 
         $partial_output = new XMLOutput();
         $partial_output->startElement('friends');
         foreach ($friends as $friend)
         {
-            $friend = new Friend($friend, false, $is_self);
             $partial_output->insert($friend->asXML());
         }
         $partial_output->endElement();

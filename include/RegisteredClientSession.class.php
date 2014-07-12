@@ -306,7 +306,7 @@ class RegisteredClientSession extends ClientSession
      */
     public function getOnlineFriends()
     {
-        return Friend::getOnlineFriendsOf($this->user_id);
+        return implode(" ", Friend::getOnlineFriendsOf($this->user_id));
     }
 
     /**

@@ -1158,8 +1158,6 @@ class User
                 _('Please contact a website administrator.')
             ));
         }
-
-
     }
 }
 

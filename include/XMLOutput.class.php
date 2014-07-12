@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 class XMLOutput extends XMLWriter
 {
     /**
@@ -25,12 +26,11 @@ class XMLOutput extends XMLWriter
     public function __construct()
     {
         $this->openMemory();
-        $this->setIndent(true);
-        $this->setIndentString('    ');
+        $this->setIndent(false);
     }
 
     /**
-     * Insert XML as a string. (
+     * Insert XML as a string.
      */
     public function insert($xml)
     {
