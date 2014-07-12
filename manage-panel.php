@@ -27,12 +27,12 @@ switch ($_GET['view'])
 {
 
     case 'overview':
-        $tpl = new StkTemplate("panels/manage-overview.tpl");
-        $tplData = array(
-            "addons"   => array(),
-            "images"   => array(),
-            "archives" => array()
-        );
+        $tpl = new StkTemplate("manage-overview.tpl");
+        $tplData = [
+            "addons"   => [],
+            "images"   => [],
+            "archives" => []
+        ];
 
         // Get all add-ons
         $addons_ids = array_merge(
@@ -46,7 +46,7 @@ switch ($_GET['view'])
             $addon = new Addon($addon_id);
 
             // populate addons
-            $unapproved = array();
+            $unapproved = [];
             $addon_revisions = $addon->getAllRevisions();
 
             // Don't list if the latest revision is approved
@@ -65,15 +65,15 @@ switch ($_GET['view'])
             // add to view
             if (!empty($unapproved))
             {
-                $tplData["addons"][] = array(
+                $tplData["addons"][] = [
                     "href"       => $addon->getLink(),
                     "name"       => $addon->getName(),
                     "unapproved" => implode(', ', $unapproved)
-                );
+                ];
             }
 
             // populate images
-            $unapproved = array();
+            $unapproved = [];
             foreach ($addon->getImages() as $image)
             {
                 if ($image["approved"] == 0)
@@ -82,13 +82,13 @@ switch ($_GET['view'])
                 }
             }
             // add to view
-            if (!empty($unapproved))
+            if ($unapproved)
             {
-                $managePanelData["images"][] = array(
+                $managePanelData["images"][] = [
                     "href"       => $addon->getLink(),
                     "name"       => $addon->getName(),
                     "unapproved" => implode("<br>", $unapproved)
-                );
+                ];
             }
 
             // populate archives
@@ -103,11 +103,11 @@ switch ($_GET['view'])
             // add to view
             if ($unapproved)
             {
-                $managePanelData["archives"][] = array(
+                $managePanelData["archives"][] = [
                     "href"       => $addon->getLink(),
                     "name"       => $addon->getName(),
                     "unapproved" => $unapproved
-                );
+                ];
             }
         }
 
@@ -115,24 +115,24 @@ switch ($_GET['view'])
         break;
 
     case 'general':
-        $tpl = new StkTemplate("panels/manage-general.tpl");
-        $tplData = array(
+        $tpl = new StkTemplate("manage-general.tpl");
+        $tplData = [
             "xml_frequency"       => ConfigManager::getConfig("xml_frequency"),
             "allowed_addon_exts"  => ConfigManager::getConfig("allowed_addon_exts"),
             "allowed_source_exts" => ConfigManager::getConfig("allowed_source_exts"),
             "admin_email"         => ConfigManager::getConfig("admin_email"),
             "list_email"          => ConfigManager::getConfig("list_email"),
-            "list_invisible"      => array(
-                "options"  => array(
+            "list_invisible"      => [
+                "options"  => [
                     0 => _h("False"),
                     1 => _h("True"),
-                ),
+                ],
                 "selected" => (ConfigManager::getConfig('list_invisible') == 1) ? 1 : 0
-            ),
+            ],
             "blog_feed"           => ConfigManager::getConfig("blog_feed"),
             "max_image_dimension" => ConfigManager::getConfig("max_image_dimension"),
             "apache_rewrites"     => ConfigManager::getConfig("apache_rewrites"),
-        );
+        ];
 
         $tpl->assign("general", $tplData);
         break;
@@ -144,10 +144,8 @@ switch ($_GET['view'])
          * TODO Allow editing in future, in case of goofs or changes.
          */
 
-        $tpl = new StkTemplate("panels/manage-news.tpl");
-        $tplData = array(
-            "items" => News::getAll()
-        );
+        $tpl = new StkTemplate("manage-news.tpl");
+        $tplData = ["items" => News::getAll()];
 
         $tpl->assign("news", $tplData);
         break;
@@ -159,14 +157,14 @@ switch ($_GET['view'])
          * TODO Make XML generating script generate files for each configuration set
          * TODO Make download script provide a certain file based on the user-agent
          */
-        $tpl = new StkTemplate("panels/manage-clients.tpl");
-        $tplData = array(
+        $tpl = new StkTemplate("manage-clients.tpl");
+        $tplData = [
             "items" => DBConnection::get()->query(
                     'SELECT * FROM ' . DB_PREFIX . 'clients
                     ORDER BY `agent_string` ASC',
                     DBConnection::FETCH_ALL
                 )
-        );
+        ];
 
         $tpl->assign("clients", $tplData);
         break;
@@ -174,19 +172,19 @@ switch ($_GET['view'])
     case 'cache':
         // TODO List cache files
 
-        $tpl = new StkTemplate("panels/manage-cache.tpl");
-        $tplData = array();
+        $tpl = new StkTemplate("manage-cache.tpl");
+        $tplData = [];
 
         $tpl->assign("cache", $tplData);
         break;
 
     case 'files':
         // TODO test files overview properly
-        $tpl = new StkTemplate("panels/manage-files.tpl");
-        $tplData = array();
+        $tpl = new StkTemplate("manage-files.tpl");
+        $tplData = [];
 
         $files = File::getAllFiles();
-        $items = array();
+        $items = [];
         foreach ($files as $file)
         {
             //var_dump($file);
@@ -195,10 +193,11 @@ switch ($_GET['view'])
                 case false:
                     $references = '<span class="error">No record found.</span>';
                     break;
-                case "addon":
-                    $references = array();
 
-                    $types = array("track", "kart", "arena");
+                case "addon":
+                    $references = [];
+
+                    $types = ["track", "kart", "arena"];
                     foreach ($types as $type)
                     {
                         $type_plural = $type . 's_revs';
@@ -208,9 +207,7 @@ switch ($_GET['view'])
                                 'SELECT * FROM `' . DB_PREFIX . $type_plural .
                                 'WHERE `fileid` = :id',
                                 DBConnection::FETCH_ALL,
-                                array(
-                                    ':id' => $file["id"]
-                                )
+                                [':id' => $file["id"]]
                             );
 
                             // add to
@@ -232,6 +229,7 @@ switch ($_GET['view'])
 
                     $references = implode(', ', $references);
                     break;
+
                 default:
                     $references = "TODO";
                     break;
@@ -251,20 +249,18 @@ switch ($_GET['view'])
         break;
 
     case 'logs':
-        $tpl = new StkTemplate("panels/manage-logs.tpl");
-        $tplData = array(
-            "items" => Log::getEvents()
-        );
+        $tpl = new StkTemplate("manage-logs.tpl");
+        $tplData = ["items" => Log::getEvents()];
 
         $tpl->assign("logs", $tplData);
         break;
 
     case 'roles':
-        $tpl = new StkTemplate("panels/manage-roles.tpl");
-        $tplData = array(
-            "roles" => AccessControl::getRoles(),
+        $tpl = new StkTemplate("manage-roles.tpl");
+        $tplData = [
+            "roles"       => AccessControl::getRoles(),
             "permissions" => AccessControl::getPermissionsChecked()
-        );
+        ];
 
         $tpl->assign("roles", $tplData);
         break;
