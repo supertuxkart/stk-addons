@@ -135,6 +135,14 @@ CREATE PROCEDURE `convert_to_utf8`()
             ALTER TABLE `v2_friends` ENGINE = InnoDB;
             ALTER TABLE `v2_friends` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
+            ALTER TABLE `v2_friends`
+            ADD CONSTRAINT `v2_friends_ibfk_1` FOREIGN KEY (`asker_id`) REFERENCES `v2_users` (`id`)
+                ON DELETE CASCADE
+                ON UPDATE NO ACTION,
+            ADD CONSTRAINT `v2_friends_ibfk_2` FOREIGN KEY (`receiver_id`) REFERENCES `v2_users` (`id`)
+                ON DELETE CASCADE
+                ON UPDATE NO ACTION;
+
             REPAIR TABLE `v2_friends`;
             OPTIMIZE TABLE `v2_friends`;
         END IF;
