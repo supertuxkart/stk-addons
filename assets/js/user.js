@@ -46,15 +46,14 @@
         $.get(search_url, {"data-type": "user", "search-term": search_term, "return-html": true}, function(data) {
             var jData = parseJSON(data);
             if (jData.hasOwnProperty("success")) {
-                if(_.isEmpty(original_menu)) { // keep original menu
-                    original_menu =  $user_menu.html();
+                if (_.isEmpty(original_menu)) { // keep original menu
+                    original_menu = $user_menu.html();
                 }
                 $user_menu.html(jData["users-html"]);
             }
         });
 
         console.log(search_term);
-
     });
 
     // left panel user clicked

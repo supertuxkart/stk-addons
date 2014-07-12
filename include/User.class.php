@@ -554,11 +554,12 @@ class User
      * Search a user
      *
      * @param string $search_string the string can pe space or comma separated to search multiple users
+     * @param bool $return_instance flag that indicates if we want to return an array of instances
      *
      * @throws UserException
-     * @return User[] array of users
+     * @return User[]|array array of users
      */
-    public static function search($search_string)
+    public static function search($search_string, $return_instance = true)
     {
         // split by space or comma
         $terms = preg_split("/[\s,]+/", $search_string);
@@ -602,9 +603,16 @@ class User
         }
 
         $matched_users = [];
-        foreach ($users as $user)
+        if ($return_instance)
         {
-            $matched_users[] = new User($user['id'], $user);
+            foreach ($users as $user)
+            {
+                $matched_users[] = new User($user['id'], $user);
+            }
+        }
+        else
+        {
+            $matched_users = $users;
         }
 
         return $matched_users;
