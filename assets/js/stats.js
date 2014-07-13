@@ -66,7 +66,7 @@
         tooltip    : true,
         tooltipOpts: {
             defaultTheme: false,
-            content     : "<b>%x</b><br> %s: <b>%y</b>",
+            content     : "<strong>%x</strong><br> %s: <strong>%y</strong>",
             xDateFormat : "%e %b, %Y"
         }
     };

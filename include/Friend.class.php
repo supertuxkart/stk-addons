@@ -182,9 +182,9 @@ class Friend
             {
                 $friends = DBConnection::get()->query(
                     "   SELECT " . DB_PREFIX . "friends.date AS date, "
-                    . DB_PREFIX . "friends.request AS request, "
-                    . DB_PREFIX . "friends.asker_id AS friend_id, "
-                    . DB_PREFIX . "users.user AS friend_name, 1 AS is_asker
+                                 . DB_PREFIX . "friends.request AS request, "
+                                 . DB_PREFIX . "friends.asker_id AS friend_id, "
+                                 . DB_PREFIX . "users.user AS friend_name, 1 AS is_asker
                         FROM " . DB_PREFIX . "friends, " . DB_PREFIX . "users
                         WHERE   " . DB_PREFIX . "friends.receiver_id = :userid
                             AND " . DB_PREFIX . "users.id = " . DB_PREFIX . "friends.asker_id
@@ -206,14 +206,14 @@ class Friend
             {
                 $friends = DBConnection::get()->query(
                     "   SELECT " . DB_PREFIX . "friends.asker_id AS friend_id, "
-                    . DB_PREFIX . "users.user AS friend_name
+                                 . DB_PREFIX . "users.user AS friend_name
                         FROM " . DB_PREFIX . "friends, " . DB_PREFIX . "users
                         WHERE   " . DB_PREFIX . "friends.receiver_id = :userid
                             AND " . DB_PREFIX . "users.id = " . DB_PREFIX . "friends.asker_id
                             AND " . DB_PREFIX . "friends.request = 0
                     UNION
                         SELECT " . DB_PREFIX . "friends.receiver_id AS friend_id, "
-                    . DB_PREFIX . "users.user AS friend_name
+                                 . DB_PREFIX . "users.user AS friend_name
                         FROM " . DB_PREFIX . "friends, " . DB_PREFIX . "users
                         WHERE   " . DB_PREFIX . "friends.asker_id = :userid
                             AND " . DB_PREFIX . "users.id = " . DB_PREFIX . "friends.receiver_id

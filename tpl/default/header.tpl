@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>{$title|default:"SuperTuxKart Add-ons"}</title>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta charset="UTF-8" />
     {foreach $meta_tags as $meta_field => $meta_content}
         <meta http-equiv="{$meta_field}" content="{$meta_content}">
     {/foreach}
