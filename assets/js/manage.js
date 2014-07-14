@@ -20,8 +20,8 @@
 (function($) {
     "use strict";
 
-    var $manage_body = $("#manage-body");
-    var json_url = SITE_ROOT + "json/manage.php";
+    var $manage_body = $("#manage-body"),
+        json_url = SITE_ROOT + "json/manage.php";
 
     // role variables
     var $role_edit_value, $role_edit_btn, $role_delete_btn, selected_role;

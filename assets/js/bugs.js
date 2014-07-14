@@ -21,23 +21,24 @@
     "use strict";
 
     // load essential elements and options
-    var $main_bugs = $("#bugs-main"); // the top container wrapper for the bugs
-    var $content_bugs = $("#bugs-content"); // the content that always changes via ajax
-    var $btn_back = $("#btn-bugs-back"), $btn_add = $("#btn-bugs-add");
-    var editorOptions = {
-        toolbar: {
-            "font-styles": false
-        }
-    };
-    var search_url = JSON_LOCATION + "search.php";
-    var json_url = JSON_LOCATION + "bugs.php";
-    var tableOptions = {
-        searching  : false,
-        "aaSorting": [] // Disable initial sort
-    }
-    var index_data_table; // hold the data table object
-    var $index_bugs_table; // hold the jquery selector for the index
-    var $view_comment_description;
+    var $main_bugs = $("#bugs-main"), // the top container wrapper for the bugs
+        $content_bugs = $("#bugs-content"), // the content that always changes via ajax
+        $btn_back = $("#btn-bugs-back"),
+        $btn_add = $("#btn-bugs-add"),
+        editorOptions = {
+            toolbar: {
+                "font-styles": false
+            }
+        },
+        search_url = JSON_LOCATION + "search.php",
+        json_url = JSON_LOCATION + "bugs.php",
+        tableOptions = {
+            searching  : false,
+            "aaSorting": [] // Disable initial sort
+        },
+        index_data_table, // hold the data table object
+        $index_bugs_table, // hold the jquery selector for the index
+        $view_comment_description;
 
 
     // begin helper functions

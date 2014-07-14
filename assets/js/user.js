@@ -20,12 +20,12 @@
 (function($) {
     "use strict";
 
-    var $user_body = $("#user-body");
-    var $user_menu = $("#user-menu");
-    var $user_main = $("#user-main");
-    var json_url = JSON_LOCATION + "users.php";
-    var search_url = JSON_LOCATION + "search.php";
-    var original_menu;
+    var $user_body = $("#user-body"),
+        $user_menu = $("#user-menu"),
+        $user_main = $("#user-main"),
+        json_url = JSON_LOCATION + "users.php",
+        search_url = JSON_LOCATION + "search.php",
+        original_menu;
 
     function userFormSubmit(form_identifier, callback_success) {
         onFormSubmit(form_identifier, callback_success, $user_body, json_url, {}, "POST");
