@@ -28,42 +28,31 @@ $_POST['mail'] = (empty($_POST['mail'])) ? null : $_POST['mail'];
 $tpl = new StkTemplate('register.tpl');
 $tpl->assign('title', h(_('STK Add-ons') . ' | ' . _('Register')));
 
-$register = array(
+$register = [
     'display_form' => false,
-    'form'         => array(
-        'username' => array(
-            'min'   => 4,
-            'value' => h($_POST['user'])
-        ),
-        'password' => array(
-            'min' => 8,
-        ),
-        'name'     => array(
-            'value' => h($_POST['name'])
-        ),
-        'email'    => array(
-            'value' => h($_POST['mail'])
-        )
-    )
-);
+    'form'         => [
+        'username' => ['min' => 4, 'value' => h($_POST['user'])],
+        'password' => ['min' => 8],
+        'name'     => ['value' => h($_POST['name'])],
+        'email'    => ['value' => h($_POST['mail'])]
+    ]
+];
 
 // define possibly undefined variables
 $_GET['action'] = (isset($_GET['action'])) ? $_GET['action'] : null;
 
 switch ($_GET['action'])
 {
-    default:
-        $register['display_form'] = true;
-        break;
-
-    case 'reg':
-        // Register new account
+    case 'register': // Register new account
         try
         {
-            if (!isset($_POST['terms']))
+            // validate
+            $errors = Validate::ensureInput($_POST, ["user", "pass1", "pass2", "mail", "name", "terms"]);
+            if ($errors)
             {
-                $_POST['terms'] = null;
+                break;
             }
+
             User::register(
                 $_POST['user'],
                 $_POST['pass1'],
@@ -72,6 +61,7 @@ switch ($_GET['action'])
                 $_POST['name'],
                 $_POST['terms']
             );
+
             $tpl->assign(
                 'confirmation',
                 _h("Account creation was successful. Please activate your account using the link emailed to you.")
@@ -87,8 +77,8 @@ switch ($_GET['action'])
     case 'valid':
         try
         {
-            $username = strip_tags($_GET['user']);
-            $verification_code = strip_tags($_GET['num']);
+            $username = h($_GET['user']);
+            $verification_code = h($_GET['num']);
             User::activate($username, $verification_code);
             $tpl->assign('confirmation', _h('Your account has been activated.'));
         }
@@ -100,6 +90,10 @@ switch ($_GET['action'])
                 _h('Could not validate your account. The link you followed is not valid.')
             );
         }
+        break;
+
+    default:
+        $register['display_form'] = true;
         break;
 }
 $tpl->assign('register', $register);
