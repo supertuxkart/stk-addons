@@ -68,7 +68,9 @@
 
     // remove friend clicked
     $user_main.on("click", "#btn-remove-friend", function() {
-        var $this = $(this), id = $this.parent().data("id");
+        var $this = $(this),
+            $parent = $this.parent(),
+            id = $parent.data("id");
 
         console.log("Remove friend clicked", id);
         modalDelete("Are you sure you want to remove this friend?", function() {
@@ -80,7 +82,8 @@
                 if (jData.hasOwnProperty("success")) {
                     growlSuccess(jData["success"]);
 
-                    bootbox.hideAll();
+                    // update view
+                    $parent.closest("tr").remove();
                 }
             });
         });
@@ -88,7 +91,9 @@
 
     // accept friend clicked
     $user_main.on("click", "#btn-accept-friend", function() {
-        var id = $(this).parent().data("id");
+        var $this = $(this),
+            $parent = $this.parent(),
+            id = $parent.data("id");
 
         console.log("Accept friend clicked", id);
         $.post(json_url, {action: "accept-friend", "friend-id": id}, function(data) {
@@ -98,13 +103,20 @@
             }
             if (jData.hasOwnProperty("success")) {
                 growlSuccess(jData["success"]);
+
+                // update view
+                $parent.html('<button type="button" id="btn-remove-friend" class="btn btn-danger">Remove friend</button>');
+                $parent.closest("tr").removeClass("danger");
+                $parent.closest("td").prev().text("Offline");
             }
         });
     });
 
     // decline friend clicked
     $user_main.on("click", "#btn-decline-friend", function() {
-        var id = $(this).parent().data("id");
+        var $this = $(this),
+            $parent = $this.parent(),
+            id = $parent.data("id");
 
         console.log("Decline friend clicked", id);
         $.post(json_url, {action: "decline-friend", "friend-id": id}, function(data) {
@@ -114,13 +126,18 @@
             }
             if (jData.hasOwnProperty("success")) {
                 growlSuccess(jData["success"]);
+
+                // update view
+                $parent.closest("tr").remove();
             }
         });
     });
 
     // cancel friend clicked
     $user_main.on("click", "#btn-cancel-friend", function() {
-        var id = $(this).parent().data("id");
+        var $this = $(this),
+            $parent = $this.parent(),
+            id = $parent.data("id");
 
         console.log("Cancel friend clicked", id);
         $.post(json_url, {action: "cancel-friend", "friend-id": id}, function(data) {
@@ -130,6 +147,9 @@
             }
             if (jData.hasOwnProperty("success")) {
                 growlSuccess(jData["success"]);
+
+                // update view
+                $parent.closest("tr").remove();
             }
         });
     });
