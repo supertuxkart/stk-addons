@@ -9,8 +9,9 @@
             <thead>
             <tr>
                 <th>{t}Username{/t}</th>
-                <th>{t}Date{/t}</th>
+                <th>{t}Since{/t}</th>
                 {if $is_owner}
+                    <th>{t}Status{/t}</th>
                     <th>{t}Actions{/t}</th>
                 {/if}
             </tr>
@@ -19,20 +20,29 @@
             {if $is_owner}
                 {foreach $user.friends as $friend}
                     {$class=""}
-                    {if $friend.is_pending}
+                    {$is_pending=$friend->isPending()}
+                    {$is_asker=$friend->isAsker()}
+                    {if $is_pending}
                         {$class=" class=\"danger\""}
                     {/if}
-
-                    <tr data-id="{$friend.id}"{$class}>
-                        <td>{$friend.username}</td>
-                        <td>{$friend.date}</td>
+                    <tr data-id="{$friend->getUser()->getId()}"{$class}>
+                        <td>{$friend->getUser()->getUsername()}</td>
+                        <td>{$friend->getDate()}</td>
+                        <td>
+                            {if $is_pending}
+                                {t}Pending{/t}
+                            {else}
+                                {t}Offline{/t}
+                            {/if}
+                        </td>
                         <td>
                             <div class="btn-group">
-                                {if $friend.is_pending}
-                                    {if $friend.is_asker}
-                                        <button type="button" class="btn btn-success">{t}Accept friend request{/t}</button>
+                                {if $is_pending}
+                                    {if $is_asker}
+                                        <button type="button" class="btn btn-success">{t}Accept{/t}</button>
+                                        <button type="button" class="btn btn-primary">{t}Decline{/t}</button>
                                     {else}
-                                        <button type="button" class="btn btn-warning">{t}Cancel friend request{/t}</button>
+                                        <button type="button" class="btn btn-warning">{t}Cancel request{/t}</button>
                                     {/if}
                                 {else}
                                     <button type="button" class="btn btn-danger">{t}Remove friend{/t}</button>
@@ -44,8 +54,8 @@
             {else}
                 {foreach $user.friends as $friend}
                     <tr>
-                        <td>{$friend.username}</td>
-                        <td>{$friend.date}</td>
+                        <td>{$friend->getUser()->getUsername()}</td>
+                        <td>{$friend->getDate()}</td>
                     </tr>
                 {/foreach}
             {/if}
