@@ -30,7 +30,6 @@ function _h($message)
     return h(_($message));
 }
 
-
 /**
  * Macro function for htmlspecialchar() with additional options
  *

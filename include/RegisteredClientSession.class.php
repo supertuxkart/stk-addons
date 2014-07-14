@@ -36,10 +36,11 @@ class RegisteredClientSession extends ClientSession
     }
 
     /**
+     * Get the friends as an xml string
      *
      * @param int $visiting_id
      *
-     * @return string
+     * @return string and xml string
      */
     public function getFriendsOf($visiting_id)
     {

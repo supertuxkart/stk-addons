@@ -57,6 +57,20 @@ class XMLOutput extends XMLWriter
     }
 
     /**
+     * Add an error element that is sent to the server, with attribute success no
+     *
+     * @param string $element_name
+     * @param string $info
+     */
+    public function addErrorElement($element_name, $info)
+    {
+        $this->startElement($element_name);
+            $this->writeAttribute('success', 'no');
+            $this->writeAttribute('info', h($info));
+        $this->endElement();
+    }
+
+    /**
      * Can be used for debugging purposes or to pass between methods. Flushes the memory.
      */
     public function asString()
