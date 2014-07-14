@@ -286,7 +286,7 @@ try
                 $token = isset($_POST['token']) ? $_POST['token'] : "";
 
                 $session = ClientSession::get($token, $userid);
-                $session->friendRequest($friendid);
+                Friend::friendRequest($userid, $friendid);
 
                 $output->startElement('friend-request');
                     $output->writeAttribute('success', 'yes');
@@ -315,7 +315,7 @@ try
                 $token = isset($_POST['token']) ? $_POST['token'] : "";
 
                 $session = ClientSession::get($token, $userid);
-                $session->acceptFriendRequest($friendid);
+                Friend::acceptFriendRequest($friendid, $userid);
 
                 $output->startElement('accept-friend-request');
                     $output->writeAttribute('success', 'yes');
@@ -334,7 +334,6 @@ try
                     $output->writeAttribute('friendid', $friendid);
                 $output->endElement();
             }
-
             break;
 
         case 'decline-friend-request':
@@ -345,7 +344,7 @@ try
                 $token = isset($_POST['token']) ? $_POST['token'] : "";
 
                 $session = ClientSession::get($token, $userid);
-                $session->declineFriendRequest($friendid);
+                Friend::declineFriendRequest($friendid, $userid);
 
                 $output->startElement('decline-friend-request');
                     $output->writeAttribute('success', 'yes');
@@ -361,7 +360,6 @@ try
                     $output->writeAttribute('friendid', $friendid);
                 $output->endElement();
             }
-
             break;
 
         case 'cancel-friend-request':
@@ -372,7 +370,7 @@ try
                 $token = isset($_POST['token']) ? $_POST['token'] : "";
 
                 $session = ClientSession::get($token, $userid);
-                $session->cancelFriendRequest($friendid);
+                Friend::cancelFriendRequest($userid, $friendid);
 
                 $output->startElement('cancel-friend-request');
                     $output->writeAttribute('success', 'yes');
@@ -398,7 +396,7 @@ try
                 $token = isset($_POST['token']) ? $_POST['token'] : "";
 
                 $session = ClientSession::get($token, $userid);
-                $session->removeFriend($friendid);
+                Friend::removeFriend($userid, $friendid);
 
                 $output->startElement('remove-friend');
                     $output->writeAttribute('success', 'yes');

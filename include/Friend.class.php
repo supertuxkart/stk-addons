@@ -313,4 +313,200 @@ class Friend
 
         return $partial_output->asString();
     }
+
+    /**
+     * Send a friend request to a user
+     *
+     * @param int $asker_id
+     * @param int $friend_id the id of the user we want to be friends with
+     *
+     * @throws FriendException
+     */
+    public static function friendRequest($asker_id, $friend_id)
+    {
+        if ($friend_id == $asker_id)
+        {
+            throw new FriendException(_h('You cannot ask yourself to be your friend!'));
+        }
+
+        try
+        {
+            DBConnection::get()->beginTransaction();
+
+            // see if request already exists
+            $result = DBConnection::get()->query(
+                "SELECT asker_id, receiver_id FROM `" . DB_PREFIX . "friends`
+                WHERE (asker_id = :asker AND receiver_id = :receiver)
+                OR (asker_id = :receiver AND receiver_id = :asker)",
+                DBConnection::FETCH_FIRST,
+                [
+                    ':asker'    => $asker_id,
+                    ':receiver' => $friend_id
+                ],
+                [':asker' => DBConnection::PARAM_INT, ':receiver' => DBConnection::PARAM_INT]
+            );
+
+            if ($result) // request already exists, maybe by the asker or by the friend
+            {
+                DBConnection::get()->commit();
+                if ($result['asker_id'] == $asker_id)
+                {
+                    // The request was already in there by the asker, should not be possible normally
+                    // ignore it but log this! FIXME
+                }
+                else
+                {
+                    // The friend already did a friend request! interpret as accepting the friend request!
+                    static::acceptFriendRequest($friend_id, $asker_id);
+                }
+            }
+            else
+            {
+                // add friend request
+                DBConnection::get()->query(
+                    "INSERT INTO `" . DB_PREFIX . "friends` (asker_id, receiver_id, date)
+                    VALUES (:asker, :receiver, CURRENT_DATE())
+                    ON DUPLICATE KEY UPDATE asker_id = :asker",
+                    DBConnection::ROW_COUNT,
+                    [
+                        ':asker'    => $asker_id,
+                        ':receiver' => $friend_id
+                    ],
+                    [':asker' => DBConnection::PARAM_INT, ':receiver' => DBConnection::PARAM_INT]
+                );
+
+                // add notification
+                DBConnection::get()->query(
+                    "INSERT INTO `" . DB_PREFIX . "notifications` (`to`, `from`, `type`)
+                    VALUES (:to, :from, 'f_request')
+                    ON DUPLICATE KEY UPDATE `to` = :to",
+                    DBConnection::ROW_COUNT,
+                    [
+                        ':to'   => $friend_id,
+                        ':from' => $asker_id
+                    ],
+                    [':to' => DBConnection::PARAM_INT, ':from' => DBConnection::PARAM_INT]
+                );
+
+                DBConnection::get()->commit();
+            }
+        }
+        catch(DBException $e)
+        {
+            DBConnection::get()->rollback();
+            throw new FriendException(
+                _h('An unexpected error occured while adding your friend request.') . ' ' .
+                _h('Please contact a website administrator.')
+            );
+        }
+    }
+
+    /**
+     * Accept a friend request
+     *
+     * @param int $friend_id the user who sent the friend request, usually the friend
+     * @param int $receiver_id the user who accepts the friend request, usually the logged in user
+     *
+     * @throws FriendException
+     */
+    public static function acceptFriendRequest($friend_id, $receiver_id)
+    {
+        try
+        {
+            DBConnection::get()->query(
+                "UPDATE `" . DB_PREFIX . "friends`
+                SET request = 0
+                WHERE asker_id = :asker AND receiver_id = :receiver",
+                DBConnection::ROW_COUNT,
+                [
+                    ':asker'    => $friend_id,
+                    ':receiver' => $receiver_id
+                ],
+                [':asker' => DBConnection::PARAM_INT, ':receiver' => DBConnection::PARAM_INT]
+            );
+        }
+        catch(DBException $e)
+        {
+            throw new FriendException(
+                _h('An unexpected error occured while accepting a friend request.') . ' ' .
+                _h('Please contact a website administrator.')
+            );
+        }
+    }
+
+    /**
+     * Remove a friend by deleting the record from the database.
+     * This is used bu the decline and cancel methods.
+     *
+     * @param int $asker_id the asker
+     * @param int $receiver_id the receiver
+     * @param string $message_error
+     *
+     * @return int the number of affected rows
+     * @throws FriendException
+     */
+    protected static function removeFriendRecord($asker_id, $receiver_id, $message_error)
+    {
+        try
+        {
+            $count = DBConnection::get()->query(
+                "DELETE FROM `" . DB_PREFIX . "friends`
+                WHERE asker_id = :asker AND receiver_id = :receiver",
+                DBConnection::ROW_COUNT,
+                [
+                    ':asker'    => $asker_id,
+                    ':receiver' => $receiver_id
+                ],
+                [':asker' => DBConnection::PARAM_INT, ':receiver' => DBConnection::PARAM_INT]
+            );
+        }
+        catch(DBException $e)
+        {
+            throw new FriendException(
+                $message_error . ' ' .
+                _h('Please contact a website administrator.')
+            );
+        }
+
+        return $count;
+    }
+
+    /**
+     * Decline a friend request by deleting the record. We are the receiver
+     *
+     * @param int $friend_id the user who sent the friend request
+     * @param int $receiver_id the user who declines the friend request
+     *
+     * @throws FriendException
+     */
+    public static function declineFriendRequest($friend_id, $receiver_id)
+    {
+        static::removeFriendRecord($friend_id, $receiver_id, _h('An unexpected error occurred while declining a friend request.'));
+    }
+
+    /**
+     * Cancel a friend request by deleting the record. The logged in user is the asker
+     *
+     * @param int $asker_id the user who sent the friend request, usually the logged user
+     * @param int $friend_id the user who was asked by the logged in user
+     *
+     * @throws FriendException
+     */
+    public static function cancelFriendRequest($asker_id, $friend_id)
+    {
+        static::removeFriendRecord($asker_id, $friend_id, _h('An unexpected error occurred while cancelling your friend request.'));
+    }
+
+    /**
+     * Remove a friend from the database. The order does not matter if the order is correct.
+     * As long as the 2 ids exists. remove all connections between the 2
+     *
+     * @param int $user1_id
+     * @param int $user2_id
+     */
+    public static function removeFriend($user1_id, $user2_id)
+    {
+        static::cancelFriendRequest($user1_id, $user2_id);
+        static::declineFriendRequest($user2_id, $user1_id);
+    }
 }

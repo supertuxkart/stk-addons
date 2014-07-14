@@ -429,30 +429,30 @@ abstract class ClientSession
                 [':userid' => DBConnection::PARAM_INT]
             );
 
+            // session is not valid
             $size = count($session_info);
-            if ($size != 1)
+            if ($size !== 1)
             {
                 throw new ClientSessionExpiredException(_h('Session not valid. Please sign in.'));
             }
-            else
-            {
-                //Valid session found, get more user info
-                $user_info = DBConnection::get()->query(
-                    "SELECT `user`,`role`
-                    FROM `" . DB_PREFIX . "users`
-                    WHERE `id` = :userid",
-                    DBConnection::FETCH_ALL,
-                    [':userid' => $user_id],
-                    [':userid' => DBConnection::PARAM_INT]
-                );
 
-                // here an if statement will come for Guest and registered
-                return new RegisteredClientSession(
-                    $session_info[0]["cid"],
-                    $session_info[0]["uid"],
-                    $user_info[0]["user"]
-                );
-            }
+            // Valid session found, get more user info
+            $user_info = DBConnection::get()->query(
+                "SELECT `user`,`role`
+                FROM `" . DB_PREFIX . "users`
+                WHERE `id` = :userid",
+                DBConnection::FETCH_ALL,
+                [':userid' => $user_id],
+                [':userid' => DBConnection::PARAM_INT]
+            );
+
+            // here an if statement will come for Guest and registered
+            return new RegisteredClientSession(
+                $session_info[0]["cid"],
+                $session_info[0]["uid"],
+                $user_info[0]["user"]
+            );
+
         }
         catch(DBException $e)
         {

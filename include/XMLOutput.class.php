@@ -53,7 +53,7 @@ class XMLOutput extends XMLWriter
      */
     public function printAsString()
     {
-        echo htmlentities($this->outputMemory());
+        echo h($this->outputMemory());
     }
 
     /**
