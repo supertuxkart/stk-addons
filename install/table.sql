@@ -240,7 +240,7 @@ CREATE TABLE IF NOT EXISTS `v2_friends` (
     `asker_id`    INT(10) UNSIGNED NOT NULL,
     `receiver_id` INT(10) UNSIGNED NOT NULL,
     `request`     TINYINT(1)       NOT NULL DEFAULT '1',
-    `date`        DATE             NOT NULL,
+    `date`        TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`asker_id`, `receiver_id`),
     KEY `v2_friends_ibfk_2` (`receiver_id`)
 )

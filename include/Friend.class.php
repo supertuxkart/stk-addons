@@ -362,8 +362,8 @@ class Friend
             {
                 // add friend request
                 DBConnection::get()->query(
-                    "INSERT INTO `" . DB_PREFIX . "friends` (asker_id, receiver_id, date)
-                    VALUES (:asker, :receiver, CURRENT_DATE())
+                    "INSERT INTO `" . DB_PREFIX . "friends` (asker_id, receiver_id)
+                    VALUES (:asker, :receiver)
                     ON DUPLICATE KEY UPDATE asker_id = :asker",
                     DBConnection::ROW_COUNT,
                     [

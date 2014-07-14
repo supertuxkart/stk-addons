@@ -143,6 +143,8 @@ CREATE PROCEDURE `convert_to_utf8`()
                 ON DELETE CASCADE
                 ON UPDATE NO ACTION;
 
+            ALTER TABLE `v2_friends` CHANGE `date` `date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ;
+
             REPAIR TABLE `v2_friends`;
             OPTIMIZE TABLE `v2_friends`;
         END IF;
