@@ -65,8 +65,8 @@ class News
                         DBConnection::get()->delete(
                             "news",
                             "`id` = :id",
-                            array(":id" => $entry['id']),
-                            array(":id" => DBConnection::PARAM_INT)
+                            [":id" => $entry['id']],
+                            [":id" => DBConnection::PARAM_INT]
                         );
                     }
                     catch(DBException $e)
@@ -89,11 +89,11 @@ class News
             {
                 DBConnection::get()->insert(
                     'news',
-                    array(
+                    [
                         ":content"    => "Newest add-on kart: " . $new_kart,
                         "web_display" => 1,
                         "dynamic"     => 1
-                    )
+                    ]
                 );
             }
             catch(DBException $e)
@@ -117,8 +117,8 @@ class News
                         DBConnection::get()->delete(
                             "news",
                             "`id` = :id",
-                            array(":id" => $entry['id']),
-                            array(":id" => DBConnection::PARAM_INT)
+                            [":id" => $entry['id']],
+                            [":id" => DBConnection::PARAM_INT]
                         );
                     }
                     catch(DBException $e)
@@ -141,11 +141,11 @@ class News
             {
                 DBConnection::get()->insert(
                     'news',
-                    array(
+                    [
                         ":content"    => "Newest add-on track: " . $new_track,
                         "web_display" => 1,
                         "dynamic"     => 1
-                    )
+                    ]
                 );
             }
             catch(DBException $e)
@@ -169,8 +169,8 @@ class News
                         DBConnection::get()->delete(
                             "news",
                             "`id` = :id",
-                            array(":id" => $entry['id']),
-                            array(":id" => DBConnection::PARAM_INT)
+                            [":id" => $entry['id']],
+                            [":id" => DBConnection::PARAM_INT]
                         );
                     }
                     catch(DBException $e)
@@ -193,11 +193,11 @@ class News
             {
                 DBConnection::get()->insert(
                     'news',
-                    array(
+                    [
                         ":content"    => "Newest add-on arena: " . $new_arena,
                         "web_display" => 1,
                         "dynamic"     => 1
-                    )
+                    ]
                 );
             }
             catch(DBException $e)
@@ -221,8 +221,8 @@ class News
                         DBConnection::get()->delete(
                             "news",
                             "`id` = :id",
-                            array(":id" => $entry['id']),
-                            array(":id" => DBConnection::PARAM_INT)
+                            [":id" => $entry['id']],
+                            [":id" => DBConnection::PARAM_INT]
                         );
 
                     }
@@ -246,11 +246,11 @@ class News
             {
                 DBConnection::get()->insert(
                     'news',
-                    array(
+                    [
                         ":content"    => "Latest post on stkblog.net: " . $latest_blogpost,
                         "web_display" => 1,
                         "dynamic"     => 1,
-                    )
+                    ]
                 );
             }
             catch(DBException $e)
@@ -341,10 +341,10 @@ class News
         }
         catch(DBException $e)
         {
-            return array();
+            return [];
         }
 
-        $ret = array();
+        $ret = [];
         foreach ($items as $item)
         {
             $ret[] = h($item['content']);
@@ -374,7 +374,7 @@ class News
         }
         catch(DBException $e)
         {
-            return array();
+            return [];
         }
 
         return $news;
@@ -400,7 +400,7 @@ class News
         }
         catch(DBException $e)
         {
-            return array();
+            return [];
         }
 
         return $news;
@@ -426,14 +426,19 @@ class News
             }
             DBConnection::get()->insert(
                 'news',
-                array(
-                    ':author_id'   => (int)User::getLoggedId(),
+                [
+                    ':author_id'   => User::getLoggedId(),
                     ':content'     => $message,
                     ':condition'   => $condition,
-                    ':important'   => (int)$important,
-                    ':web_display' => (int)$web_display,
+                    ':important'   => $important,
+                    ':web_display' => $web_display,
                     'active'       => 1
-                )
+                ],
+                [
+                    ':author_id'   => DBConnection::PARAM_INT,
+                    ':important'   => DBConnection::PARAM_INT,
+                    ':web_display' => DBConnection::PARAM_INT,
+                ]
             );
         }
         catch(DBException $e)
@@ -459,7 +464,7 @@ class News
     {
         try
         {
-            DBConnection::get()->delete("news", "`id` = :id", array(":id" => $id), array(":id" => DBConnection::PARAM_INT));
+            DBConnection::get()->delete("news", "`id` = :id", [":id" => $id], [":id" => DBConnection::PARAM_INT]);
         }
         catch(DBException $e)
         {

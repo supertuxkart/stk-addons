@@ -1123,7 +1123,7 @@ class User
                     ":pass"    => $password_hash,
                     ":name"    => $name,
                     ":email"   => $email,
-                    "role"     => "user",
+                    "role"     => "'user'",
                     "reg_date" => "CURRENT_DATE()"
                 ]
             );

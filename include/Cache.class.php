@@ -55,16 +55,16 @@ class Cache
                     'DELETE FROM `' . DB_PREFIX . 'cache`
                     WHERE `file` = :file',
                     DBConnection::NOTHING,
-                    array(':file' => (string)$cache_item['file'])
+                    [':file' => $cache_item['file']]
                 );
             }
-
-            return true;
         }
         catch(DBException $e)
         {
             return false;
         }
+
+        return true;
     }
 
     /**
@@ -89,7 +89,7 @@ class Cache
                 FROM `' . DB_PREFIX . 'cache`
                 WHERE `addon` = :addon',
                 DBConnection::FETCH_ALL,
-                array(':addon' => (string)$addon)
+                [':addon' => $addon]
             );
             foreach ($cache_list AS $cache_item)
             {
@@ -98,7 +98,7 @@ class Cache
                     'DELETE FROM `' . DB_PREFIX . 'cache`
                     WHERE `file` = :file',
                     DBConnection::NOTHING,
-                    array(':file' => (string)$cache_item['file'])
+                    [':file' => $cache_item['file']]
                 );
             }
 
@@ -127,19 +127,19 @@ class Cache
         {
             DBConnection::get()->insert(
                 "cache",
-                array(
-                    ":file" => $path,
+                [
+                    ":file"  => $path,
                     ":addon" => $addon,
                     ":props" => $props
-                )
+                ]
             );
-
-            return true;
         }
         catch(DBException $e)
         {
             return false;
         }
+
+        return true;
     }
 
     /**
@@ -158,19 +158,20 @@ class Cache
                 FROM `' . DB_PREFIX . 'cache`
                 WHERE `file` = :file',
                 DBConnection::FETCH_ALL,
-                array(':file' => (string)$path)
+                [':file' => (string)$path]
             );
-            if (empty($result))
-            {
-                return array();
-            }
-
-            return $result;
         }
         catch(DBException $e)
         {
-            return array();
+            return [];
         }
+
+        if (empty($result))
+        {
+            return [];
+        }
+
+        return $result;
     }
 
     /**
@@ -182,7 +183,7 @@ class Cache
      * @return array
      * @throws CacheException
      */
-    public static function getImage($id, $props = array())
+    public static function getImage($id, $props = [])
     {
         try
         {
@@ -192,43 +193,44 @@ class Cache
                 WHERE `id` = :id
                 LIMIT 1',
                 DBConnection::FETCH_ALL,
-                array(':id' => (int)$id)
+                [':id' => $id],
+                [':id' => DBConnection::PARAM_INT]
             );
-
-            if (empty($result))
-            {
-                return array(
-                    'url'      => SITE_ROOT . 'image/notfound.png',
-                    'approved' => true,
-                    'exists'   => false
-                );
-            }
-
-            $return = array(
-                'url'      => DOWNLOAD_LOCATION . $result[0]['file_path'],
-                'approved' => (boolean)$result[0]['approved'],
-                'exists'   => true
-            );
-
-            $cache_prefix = null;
-            if (array_key_exists('size', $props))
-            {
-                $cache_prefix = Cache::cachePrefix($props['size']);
-
-                $return['url'] = SITE_ROOT . 'image.php?type=' . $props['size'] . '&amp;pic=' . $result[0]['file_path'];
-            }
-
-            if (Cache::fileExists($cache_prefix . basename($result[0]['file_path'])))
-            {
-                $return['url'] = CACHE_LOCATION . $cache_prefix . basename($result[0]['file_path']);
-            }
-
-            return $return;
         }
         catch(DBException $e)
         {
             throw new CacheException('Failed to look up image file.');
         }
+
+        if (empty($result))
+        {
+            return [
+                'url'      => SITE_ROOT . 'image/notfound.png',
+                'approved' => true,
+                'exists'   => false
+            ];
+        }
+
+        $return = [
+            'url'      => DOWNLOAD_LOCATION . $result[0]['file_path'],
+            'approved' => (bool)$result[0]['approved'],
+            'exists'   => true
+        ];
+
+        $cache_prefix = null;
+        if (array_key_exists('size', $props))
+        {
+            $cache_prefix = Cache::cachePrefix($props['size']);
+
+            $return['url'] = SITE_ROOT . 'image.php?type=' . $props['size'] . '&amp;pic=' . $result[0]['file_path'];
+        }
+
+        if (Cache::fileExists($cache_prefix . basename($result[0]['file_path'])))
+        {
+            $return['url'] = CACHE_LOCATION . $cache_prefix . basename($result[0]['file_path']);
+        }
+
+        return $return;
     }
 
     /**

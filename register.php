@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
 
 $_POST['user'] = (empty($_POST['user'])) ? null : $_POST['user'];
@@ -96,6 +95,6 @@ switch ($_GET['action'])
         $register['display_form'] = true;
         break;
 }
-$tpl->assign('register', $register);
 
+$tpl->assign('register', $register);
 echo $tpl;

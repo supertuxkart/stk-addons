@@ -479,6 +479,7 @@ class Util
      * @param   boolean $include_symbols    Whether or not to include symbols in the string. Can not be enabled if $human_friendly is true
      * @param   boolean $no_duplicate_chars Whether or not to only use characters once in the string.
      *
+     * @throws LengthException
      * @return  string
      */
     public static function getRandomString(
@@ -509,10 +510,9 @@ class Util
 
         // Don't allow duplicate letters to be disabled if the length is
         // longer than the available characters
-        assert(
-            $no_duplicate_chars && mb_strlen($pool) < $length,
-            '$length exceeds the size of the pool and $no_duplicate_chars is enabled'
-        );
+        if ($no_duplicate_chars && mb_strlen($pool) < $length ) {
+            throw new \LengthException('$length exceeds the size of the pool and $no_duplicate_chars is enabled' );
+        }
 
         // Convert the pool of characters into an array of characters and
         // shuffle the array
