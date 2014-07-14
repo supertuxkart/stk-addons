@@ -22,6 +22,7 @@
 
     var $user_body = $("#user-body");
     var $user_menu = $("#user-menu");
+    var $user_main = $("#user-main");
     var json_url = JSON_LOCATION + "users.php";
     var search_url = JSON_LOCATION + "search.php";
     var original_menu;
@@ -57,7 +58,7 @@
     });
 
     // left panel user clicked
-    $user_body.on("click", 'a.user-list', function() {
+    $user_main.on("click", 'a.user-list', function() {
         History.pushState(null, '', this.href);
         var user = getUrlVars(this.href)['user'];
         loadContent($user_body, SITE_ROOT + 'users-panel.php', {user: user});

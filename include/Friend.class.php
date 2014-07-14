@@ -211,7 +211,6 @@ class Friend
      */
     public static function getFriendsOf($userid, $is_self = false, $return_instance = true)
     {
-        // TODO clean up the look of the SQL queries
         try
         {
             if ($is_self) // get all users if we are the logged in user
@@ -285,7 +284,6 @@ class Friend
         {
             $return_friends = $friends;
         }
-
 
         return $return_friends;
     }
@@ -404,7 +402,7 @@ class Friend
     /**
      * Accept a friend request
      *
-     * @param int $friend_id the user who sent the friend request, usually the friend
+     * @param int $friend_id   the user who sent the friend request, usually the friend
      * @param int $receiver_id the user who accepts the friend request, usually the logged in user
      *
      * @throws FriendException
@@ -438,8 +436,8 @@ class Friend
      * Remove a friend by deleting the record from the database.
      * This is used bu the decline and cancel methods.
      *
-     * @param int $asker_id the asker
-     * @param int $receiver_id the receiver
+     * @param int    $asker_id    the asker
+     * @param int    $receiver_id the receiver
      * @param string $message_error
      *
      * @return int the number of affected rows
@@ -474,7 +472,7 @@ class Friend
     /**
      * Decline a friend request by deleting the record. We are the receiver
      *
-     * @param int $friend_id the user who sent the friend request
+     * @param int $friend_id   the user who sent the friend request
      * @param int $receiver_id the user who declines the friend request
      *
      * @throws FriendException
@@ -487,7 +485,7 @@ class Friend
     /**
      * Cancel a friend request by deleting the record. The logged in user is the asker
      *
-     * @param int $asker_id the user who sent the friend request, usually the logged user
+     * @param int $asker_id  the user who sent the friend request, usually the logged user
      * @param int $friend_id the user who was asked by the logged in user
      *
      * @throws FriendException
