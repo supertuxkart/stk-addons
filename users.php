@@ -48,7 +48,7 @@ foreach ($users as $user)
     }
 }
 
-$tplData['body'] = Util::ob_get_require_once(ROOT_PATH . 'users-panel.php');
+$tplData["body"] = Util::ob_get_require_once(ROOT_PATH . 'users-panel.php');
 
 // output the view
 $tpl->assign("user", $tplData)

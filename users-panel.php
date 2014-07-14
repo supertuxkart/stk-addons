@@ -45,6 +45,20 @@ $tpl = StkTemplate::get("user-panel.tpl")
     ->assign("can_see_settings", $can_elevate_user || $is_owner)
     ->assign("can_see_email", $is_owner || $is_admin);
 
+// build friends data
+$friends = [];
+foreach (Friend::getFriendsOf($user->getId(), $is_owner) as $friend)
+{
+    $friends[] = [
+        "id"         => $friend->getUser()->getId(),
+        "username"   => $friend->getUser()->getUserName(),
+        "date"       => $friend->getDate(),
+        "is_online"  => $friend->isOnline(),
+        "is_pending" => $friend->isPending(),
+        "is_asker"   => $friend->isAsker()
+    ];
+}
+
 $tplData = [
     "username"          => $user->getUserName(),
     "user_id"           => $user->getId(),
@@ -58,8 +72,10 @@ $tplData = [
         "profile"  => [],
         "elevate"  => [],
         "password" => []
-    ]
+    ],
+    "friends"           => $friends
 ];
+
 
 // fill users addons
 foreach (Addon::getAllowedTypes() as $type)

@@ -29,24 +29,30 @@ class Friend
     protected $friend_id;
 
     /**
-     * @var
+     * @var string
      */
     protected $date;
 
     /**
      * @var bool
      */
-    protected $is_pending;
+    protected $is_pending = false;
 
     /**
      * @var bool
      */
-    protected $is_online;
+    protected $is_online = false;
 
     /**
      * @var bool
      */
-    protected $is_asker;
+    protected $is_asker = false;
+
+    /**
+     * We are the logged in user
+     * @var bool
+     */
+    protected $is_self = false;
 
     /**
      * @var User
@@ -58,18 +64,19 @@ class Friend
      *
      * @param array $info_array an associative array based on the database
      * @param bool  $online     is the user online
-     * @param bool  $extra_info initialize extra info
+     * @param bool  $is_self initialize extra info
      */
-    protected function __construct($info_array, $online = false, $extra_info = false)
+    protected function __construct($info_array, $online = false, $is_self = false)
     {
         $this->user = new User($info_array['friend_id'], ["user" => $info_array['friend_name']]);
-        $this->extra_info = $extra_info;
-        if ($extra_info)
+        $this->is_self = $is_self;
+        $this->is_online = $online;
+        $this->date = $info_array['date'];
+
+        if ($is_self) // we are logged in
         {
-            $this->is_online = $online;
-            $this->is_pending = $info_array['request'] == 1;
-            $this->is_asker = $info_array['is_asker'] == 1;
-            $this->date = $info_array['date'];
+            $this->is_pending = ((int)$info_array['request'] === 1);
+            $this->is_asker = ((int)$info_array['is_asker'] === 1);
         }
     }
 
@@ -82,6 +89,14 @@ class Friend
     }
 
     /**
+     * @return string
+     */
+    public function getDate()
+    {
+        return $this->date;
+    }
+
+    /**
      * @return bool
      */
     public function isOnline()
@@ -90,13 +105,32 @@ class Friend
     }
 
     /**
+     * @return bool
+     */
+    public function isAsker()
+    {
+        return $this->is_asker;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPending()
+    {
+        return $this->is_pending;
+    }
+
+    /**
+     * Get the friend as an xml string
+     *
      * @return string
      */
     public function asXML()
     {
         $friend_xml = new XMLOutput();
         $friend_xml->startElement('friend');
-        if ($this->extra_info)
+
+        if ($this->is_self)
         {
             $friend_xml->writeAttribute("is_pending", ($this->is_pending ? "yes" : "no"));
             if ($this->is_pending)
@@ -109,6 +143,7 @@ class Friend
             }
             $friend_xml->writeAttribute("date", $this->date);
         }
+
         $friend_xml->insert($this->user->asXML());
         $friend_xml->endElement();
 
@@ -169,16 +204,17 @@ class Friend
      *
      * @param int  $userid
      * @param bool $is_self
+     * @param bool $return_instance
      *
      * @throws FriendException
-     * @return Friend[] an array of friends
+     * @return Friend[]|array an array of friends
      */
-    public static function getFriendsOf($userid, $is_self = false)
+    public static function getFriendsOf($userid, $is_self = false, $return_instance = true)
     {
         // TODO clean up the look of the SQL queries
         try
         {
-            if ($is_self)
+            if ($is_self) // get all users if we are the logged in user
             {
                 $friends = DBConnection::get()->query(
                     "   SELECT " . DB_PREFIX . "friends.date AS date, "
@@ -190,35 +226,37 @@ class Friend
                             AND " . DB_PREFIX . "users.id = " . DB_PREFIX . "friends.asker_id
                     UNION
                         SELECT " . DB_PREFIX . "friends.date AS date, "
-                    . DB_PREFIX . "friends.request AS request, "
-                    . DB_PREFIX . "friends.receiver_id AS friend_id, "
-                    . DB_PREFIX . "users.user AS friend_name, 0 AS is_asker
+                                 . DB_PREFIX . "friends.request AS request, "
+                                 . DB_PREFIX . "friends.receiver_id AS friend_id, "
+                                 . DB_PREFIX . "users.user AS friend_name, 0 AS is_asker
                         FROM " . DB_PREFIX . "friends, " . DB_PREFIX . "users
                         WHERE " . DB_PREFIX . "friends.asker_id = :userid
                             AND " . DB_PREFIX . "users.id = " . DB_PREFIX . "friends.receiver_id
-                        ORDER BY friend_name ASC",
+                        ORDER BY date ASC",
                     DBConnection::FETCH_ALL,
                     [":userid" => $userid],
                     [":userid" => DBConnection::PARAM_INT]
                 );
             }
-            else
+            else // get only the accepted friends, viewing other user profile
             {
                 $friends = DBConnection::get()->query(
-                    "   SELECT " . DB_PREFIX . "friends.asker_id AS friend_id, "
+                    "   SELECT " . DB_PREFIX . "friends.date AS date, "
+                                 . DB_PREFIX . "friends.asker_id AS friend_id, "
                                  . DB_PREFIX . "users.user AS friend_name
                         FROM " . DB_PREFIX . "friends, " . DB_PREFIX . "users
                         WHERE   " . DB_PREFIX . "friends.receiver_id = :userid
                             AND " . DB_PREFIX . "users.id = " . DB_PREFIX . "friends.asker_id
                             AND " . DB_PREFIX . "friends.request = 0
                     UNION
-                        SELECT " . DB_PREFIX . "friends.receiver_id AS friend_id, "
+                        SELECT " . DB_PREFIX . "friends.date AS date, "
+                                 . DB_PREFIX . "friends.receiver_id AS friend_id, "
                                  . DB_PREFIX . "users.user AS friend_name
                         FROM " . DB_PREFIX . "friends, " . DB_PREFIX . "users
                         WHERE   " . DB_PREFIX . "friends.asker_id = :userid
                             AND " . DB_PREFIX . "users.id = " . DB_PREFIX . "friends.receiver_id
                             AND " . DB_PREFIX . "friends.request = 0
-                        ORDER BY friend_name ASC",
+                        ORDER BY date ASC",
                     DBConnection::FETCH_ALL,
                     [":userid" => $userid],
                     [":userid" => DBConnection::PARAM_INT]
@@ -235,17 +273,25 @@ class Friend
 
         // build friends array
         $return_friends = [];
-        foreach ($friends as $friend)
+        if($return_instance)
         {
-            /// TODO also get online status
-            $return_friends[] = new Friend($friend, false, $is_self);
+            foreach ($friends as $friend)
+            {
+                /// TODO also get online status
+                $return_friends[] = new Friend($friend, false, $is_self);
+            }
         }
+        else
+        {
+            $return_friends = $friends;
+        }
+
 
         return $return_friends;
     }
 
     /**
-     * Returns XML string
+     * Returns XML string of all friends
      *
      * @param int  $userid
      * @param bool $is_self
