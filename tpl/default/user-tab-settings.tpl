@@ -92,7 +92,6 @@
             </div>
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-2">
-                    <input type="hidden" name="user-id" value="{$user.user_id}">
                     <input type="hidden" name="action" value="change-password">
                     <input type="submit" class="btn btn-warning" value="{t}Change Password{/t}">
                 </div>

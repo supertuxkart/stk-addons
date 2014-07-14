@@ -25,7 +25,7 @@
                     {if $is_pending}
                         {$class=" class=\"danger\""}
                     {/if}
-                    <tr data-id="{$friend->getUser()->getId()}"{$class}>
+                    <tr{$class}>
                         <td>{$friend->getUser()->getUsername()}</td>
                         <td>{$friend->getDate()}</td>
                         <td>
@@ -36,16 +36,16 @@
                             {/if}
                         </td>
                         <td>
-                            <div class="btn-group">
+                            <div class="btn-group" data-id="{$friend->getUser()->getId()}">
                                 {if $is_pending}
                                     {if $is_asker}
-                                        <button type="button" class="btn btn-success">{t}Accept{/t}</button>
-                                        <button type="button" class="btn btn-primary">{t}Decline{/t}</button>
+                                        <button type="button" id="btn-accept-friend" class="btn btn-success">{t}Accept{/t}</button>
+                                        <button type="button" id="btn-decline-friend" class="btn btn-primary">{t}Decline{/t}</button>
                                     {else}
-                                        <button type="button" class="btn btn-warning">{t}Cancel request{/t}</button>
+                                        <button type="button" id="btn-cancel-friend" class="btn btn-warning">{t}Cancel request{/t}</button>
                                     {/if}
                                 {else}
-                                    <button type="button" class="btn btn-danger">{t}Remove friend{/t}</button>
+                                    <button type="button" id="btn-remove-friend" class="btn btn-danger">{t}Remove friend{/t}</button>
                                 {/if}
                             </div>
                         </td>

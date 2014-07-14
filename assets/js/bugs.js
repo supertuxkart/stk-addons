@@ -216,7 +216,8 @@
 
     // close bug clicked
     $main_bugs.on("click", "#btn-bugs-close", function() {
-        var $modal = $("#modal-close"), $modal_description = $("#modal-close-reason");
+        var $modal = $("#modal-close"),
+            $modal_description = $("#modal-close-reason");
 
         console.info("Close bug clicked");
         $modal.modal();
@@ -338,7 +339,7 @@
 
     // clicked on a bug in the table
     $main_bugs.on("click", "table .bugs", function() {
-        NavigateTo.view($(this).parent().attr("data-id"));
+        NavigateTo.view($(this).parent().data("id"));
 
         return false;
     });

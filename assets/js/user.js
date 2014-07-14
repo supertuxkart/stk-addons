@@ -66,6 +66,74 @@
         return false;
     });
 
+    // remove friend clicked
+    $user_main.on("click", "#btn-remove-friend", function() {
+        var $this = $(this), id = $this.parent().data("id");
+
+        console.log("Remove friend clicked", id);
+        modalDelete("Are you sure you want to remove this friend?", function() {
+            $.post(json_url, {action: "remove-friend", "friend-id": id}, function(data) {
+                var jData = parseJSON(data);
+                if (jData.hasOwnProperty("error")) {
+                    growlError(jData["error"]);
+                }
+                if (jData.hasOwnProperty("success")) {
+                    growlSuccess(jData["success"]);
+
+                    bootbox.hideAll();
+                }
+            });
+        });
+    });
+
+    // accept friend clicked
+    $user_main.on("click", "#btn-accept-friend", function() {
+        var id = $(this).parent().data("id");
+
+        console.log("Accept friend clicked", id);
+        $.post(json_url, {action: "accept-friend", "friend-id": id}, function(data) {
+            var jData = parseJSON(data);
+            if (jData.hasOwnProperty("error")) {
+                growlError(jData["error"]);
+            }
+            if (jData.hasOwnProperty("success")) {
+                growlSuccess(jData["success"]);
+            }
+        });
+    });
+
+    // decline friend clicked
+    $user_main.on("click", "#btn-decline-friend", function() {
+        var id = $(this).parent().data("id");
+
+        console.log("Decline friend clicked", id);
+        $.post(json_url, {action: "decline-friend", "friend-id": id}, function(data) {
+            var jData = parseJSON(data);
+            if (jData.hasOwnProperty("error")) {
+                growlError(jData["error"]);
+            }
+            if (jData.hasOwnProperty("success")) {
+                growlSuccess(jData["success"]);
+            }
+        });
+    });
+
+    // cancel friend clicked
+    $user_main.on("click", "#btn-cancel-friend", function() {
+        var id = $(this).parent().data("id");
+
+        console.log("Cancel friend clicked", id);
+        $.post(json_url, {action: "cancel-friend", "friend-id": id}, function(data) {
+            var jData = parseJSON(data);
+            if (jData.hasOwnProperty("error")) {
+                growlError(jData["error"]);
+            }
+            if (jData.hasOwnProperty("success")) {
+                growlSuccess(jData["success"]);
+            }
+        });
+    });
+
     // edit profile
     userFormSubmit("#user-edit-profile", function(data) {
         var jData = parseJSON(data);
