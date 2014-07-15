@@ -39,6 +39,11 @@ class PaginationTemplate extends Template
     protected $itemsPerPage = 5;
 
     /**
+     * @var int
+     */
+    protected $numberButtons = 4;
+
+    /**
      * @var string
      */
     protected $pageUrl;
@@ -56,15 +61,28 @@ class PaginationTemplate extends Template
      *
      * @return static
      */
-    public static function  get($template_dir = null)
+    public static function get($template_dir = null)
     {
         return new static($template_dir);
     }
 
+    public static function testTemplate()
+    {
+        $totalItems = 30;
+        for ($perPage = 1; $perPage < $totalItems / 2; $perPage++)
+        {
+            for ($i = 1; $i <= ceil($totalItems / $perPage); $i++)
+            {
+                echo PaginationTemplate::get()->setCurrentPage($i)->setTotalItems($totalItems)->setItemsPerPage($perPage);
+                echo "<br>";
+            }
+        }
+    }
+
     /**
-     *
+     * Build the
      */
-    public function setup()
+    protected function setup()
     {
         $totalPages = (int)ceil($this->totalItems / $this->itemsPerPage);
         $hasPagination = ($this->totalItems > $this->itemsPerPage); // do not paginate
@@ -85,17 +103,28 @@ class PaginationTemplate extends Template
             $this->pageUrl = Util::getCurrentUrl();
         }
 
-        $this->assign(
-            "pagination",
-            [
-                "has_pagination" => $hasPagination,
-                "current_page"   => $this->currentPage,
-                "prev_page"      => $prevPage,
-                "next_page"      => $nextPage,
-                "total_pages"    => $totalPages,
-                "url"            => $this->pageUrl
-            ]
-        );
+        // see if we build the ... on one direction or the other
+        $buildLeft = ($this->currentPage - 1) > $this->numberButtons;
+        $buildRight = (($this->currentPage - 1 + $this->numberButtons) !== $totalPages)
+            && (($this->currentPage - 1 + $this->numberButtons) < $totalPages);
+
+        if (!$buildLeft && !$buildRight) // both are false, should not happen build right by default
+        {
+            $buildRight = true;
+        }
+
+        $pagination = [
+            "has_pagination" => $hasPagination,
+            "current_page"   => $this->currentPage,
+            "prev_page"      => $prevPage,
+            "next_page"      => $nextPage,
+            "total_pages"    => $totalPages,
+            "url"            => $this->pageUrl,
+            "nr_buttons"     => $this->numberButtons,
+            "build_left"     => $buildLeft,
+            "build_right"    => $buildRight
+        ];
+        $this->assign("pagination", $pagination);
     }
 
     /**
@@ -132,6 +161,14 @@ class PaginationTemplate extends Template
         $this->pageUrl = $url;
 
         return $this;
+    }
+
+    /**
+     * @param int $nr
+     */
+    public function setNumberButtons($nr)
+    {
+        $this->numberButtons = $nr;
     }
 
     /**

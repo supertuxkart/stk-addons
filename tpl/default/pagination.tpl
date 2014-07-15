@@ -15,17 +15,48 @@
             {$last_class=" class=\"active\""}
         {/if}
 
-        {$sum_buttons=2}
-        <li{$prev_class}><a href="{$pagination.url}?{$prev_href}">&laquo;</a></li>
+        <li{$prev_class}><a href="{$pagination.url}?p={$prev_href}">&laquo;</a></li>
         <li{$first_class}><a href="{$pagination.url}?p=1">1</a></li>
-        {for $i=2 to $pagination.total_pages - 1}
-            {if $i === $pagination.current_page}
-                <li class="active"><a href="{$pagination.url}?p={$i}">{$i}</a></li>
+        {if $pagination.nr_buttons + 3 > $pagination.total_pages}
+            {*just display the buttons normally*}
+            {for $i=2 to $pagination.total_pages - 1}
+                {include file="pagination-inner-for.tpl" scope="parent"}
+            {/for}
+        {else}
+            {*calculate where we are and build buttons*}
+            {if $pagination.build_left && $pagination.build_right}
+                {*build both sides*}
+                {$nr_buttons = floor($pagination.nr_buttons/2)}
+
+                <li><a href="#" class="disabled">...</a></li>
+                {for $i = $pagination.current_page - $nr_buttons to $pagination.current_page - 1}
+                    <li><a href="{$pagination.url}?p={$i}">{$i}</a></li>
+                {/for}
+                <li class="active"><a href="{$pagination.url}?p={$pagination.current_page}">{$pagination.current_page}</a></li>
+                {for $i = $pagination.current_page + 1 to $pagination.current_page + $nr_buttons}
+                    <li><a href="{$pagination.url}?p={$i}">{$i}</a></li>
+                {/for}
+                <li><a href="#" class="disabled">...</a></li>
             {else}
-                <li><a href="{$pagination.url}?p={$i}">{$i}</a></li>
+                {*build one side*}
+                {if $pagination.build_left}
+                    <li><a href="#" class="disabled">...</a></li>
+                {else}
+                    {for $i = 2 to $pagination.nr_buttons + 2}
+                        {include file="pagination-inner-for.tpl" scope="parent"}
+                    {/for}
+                {/if}
+
+                {if $pagination.build_right}
+                    <li><a href="#" class="disabled">...</a></li>
+                {else}
+                    {for $i = ($pagination.total_pages - $pagination.nr_buttons) to $pagination.total_pages - 1}
+                        {include file="pagination-inner-for.tpl" scope="parent"}
+                    {/for}
+                {/if}
             {/if}
-        {/for}
+        {/if}
         <li{$last_class}><a href="{$pagination.url}?p={$pagination.total_pages}">{$pagination.total_pages}</a></li>
-        <li{$next_class}><a href="{$pagination.url}?{$next_href}">&raquo;</a></li>
+        <li{$next_class}><a href="{$pagination.url}?p={$next_href}">&raquo;</a></li>
     </ul>
 {/if}

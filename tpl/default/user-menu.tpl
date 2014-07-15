@@ -15,5 +15,4 @@
             </li>
         {/foreach}
     </ul>
-    {$pagination}
 {/if}
