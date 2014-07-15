@@ -137,19 +137,6 @@ class Template
     }
 
     /**
-     * Return a instance of the class, factory method
-     *
-     * @param string      $template_file
-     * @param string|null $template_dir
-     *
-     * @return static
-     */
-    public static function get($template_file, $template_dir = null)
-    {
-        return new static($template_file, $template_dir);
-    }
-
-    /**
      * Setup function for children to override
      */
     protected function setup() { throw new TemplateException("Not Implemented"); }

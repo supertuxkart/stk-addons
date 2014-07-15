@@ -510,7 +510,8 @@ class Util
 
         // Don't allow duplicate letters to be disabled if the length is
         // longer than the available characters
-        if ($no_duplicate_chars && mb_strlen($pool) < $length ) {
+        if ($no_duplicate_chars && mb_strlen($pool) < $length)
+        {
             throw new \LengthException('$length exceeds the size of the pool and $no_duplicate_chars is enabled' );
         }
 

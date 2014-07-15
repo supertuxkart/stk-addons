@@ -83,6 +83,19 @@ class StkTemplate extends Template
     private $user_css_includes = [];
 
     /**
+     * Return a instance of the class, factory method
+     *
+     * @param string      $template_file
+     * @param string|null $template_dir
+     *
+     * @return static
+     */
+    public static function get($template_file, $template_dir = null)
+    {
+        return new static($template_file, $template_dir);
+    }
+
+    /**
      * Setup the header info for the template
      */
     private function setupHead()

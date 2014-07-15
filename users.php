@@ -50,7 +50,10 @@ foreach ($users as $user)
 
 $tplData["body"] = Util::ob_get_require_once(ROOT_PATH . 'users-panel.php');
 
+$pagination = PaginationTemplate::get()->setCurrentPage(1)->setTotalItems(100)->setItemsPerPage(5);
+
 // output the view
 $tpl->assign("user", $tplData)
-    ->assign("menu_users", $templateUsers);
+    ->assign("menu_users", $templateUsers)
+    ->assign("pagination", $pagination->toString());
 echo $tpl;
