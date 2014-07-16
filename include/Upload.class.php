@@ -1,5 +1,4 @@
 <?php
-
 /**
  * copyright 2012 Stephen Just <stephenjust@users.sf.net>
  *           2014 Daniel Butum <danibutum at gmail dot com>

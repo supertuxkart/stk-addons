@@ -22,7 +22,7 @@
 /**
  * Class User
  */
-class User
+class User extends Base
 {
     /**
      * Flag to indicate if the a user is logged in
@@ -41,6 +41,16 @@ class User
      * @var array
      */
     protected static $sessionRequired = ["id", "user_name", "real_name", "date_last_login", "role", "permissions"];
+
+    /**
+     * @param string $message
+     *
+     * @throws UserException
+     */
+    protected static function throwException($message)
+    {
+        throw new UserException($message);
+    }
 
     /**
      * The id of the user
@@ -482,49 +492,6 @@ class User
     }
 
     /**
-     * Get a user instance from a filed type
-     *
-     * @param string $field
-     * @param mixed  $value
-     * @param int    $value_type
-     *
-     * @return User
-     * @throws UserException
-     */
-    protected static function getFromField($field, $value, $value_type = DBConnection::PARAM_STR)
-    {
-        try
-        {
-            $user = DBConnection::get()->query(
-                "SELECT *
-                FROM `" . DB_PREFIX . "users`
-                WHERE " . sprintf("`%s` = :%s", $field, $field),
-                DBConnection::FETCH_FIRST,
-                [':' . $field => $value],
-                [':' . $field => $value_type] // bind value
-            );
-        }
-        catch(DBException $e)
-        {
-            throw new UserException(h(
-                _('An error occurred while retrieving the user.') . ' .' .
-                _('Please contact a website administrator.')
-            ));
-        }
-
-        // empty result
-        if (empty($user))
-        {
-            throw new UserException(h(
-                _("The user does not exist") . '.'
-            ));
-        }
-
-        // fetch the first
-        return new User($user["id"], $user);
-    }
-
-    /**
      * Get a user instance by user id
      *
      * @param int $user_id
@@ -534,7 +501,9 @@ class User
      */
     public static function getFromID($user_id)
     {
-        return static::getFromField("id", $user_id, DBConnection::PARAM_INT);
+        $data = static::getFromField("users", "id", $user_id, DBConnection::PARAM_INT, "User does not exist");
+
+        return new User($data["id"], $data);
     }
 
     /**
@@ -547,14 +516,16 @@ class User
      */
     public static function getFromUserName($username)
     {
-        return static::getFromField("user", $username, DBConnection::PARAM_STR);
+        $data = static::getFromField("users", "user", $username, DBConnection::PARAM_STR, "User does not exist");
+
+        return new User($data["id"], $data);
     }
 
     /**
      * Search a user
      *
-     * @param string $search_string the string can pe space or comma separated to search multiple users
-     * @param bool $return_instance flag that indicates if we want to return an array of instances
+     * @param string $search_string   the string can pe space or comma separated to search multiple users
+     * @param bool   $return_instance flag that indicates if we want to return an array of instances
      *
      * @throws UserException
      * @return User[]|array array of users

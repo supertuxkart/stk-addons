@@ -18,10 +18,12 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+class BaseException extends Exception {}
+class BugException extends BaseException {}
+class UserException extends BaseException {}
 class AddonException extends Exception {}
 class FileException extends Exception {}
 class UploadException extends Exception {}
-class UserException extends Exception {}
 class NewsException extends  Exception {}
 class RatingsException extends Exception {}
 class ImageException extends Exception {}
@@ -32,7 +34,6 @@ class CacheException extends Exception {}
 class StatisticException extends Exception {}
 class AchievementException extends Exception {}
 class FriendException extends Exception {}
-class BugException extends Exception {}
 class AccessControlException extends Exception {}
 
 class ParserException extends Exception {}

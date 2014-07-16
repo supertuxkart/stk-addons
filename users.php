@@ -50,7 +50,7 @@ foreach ($users as $user)
 
 $tplData["body"] = Util::ob_get_require_once(ROOT_PATH . 'users-panel.php');
 
-PaginationTemplate::testTemplate();
+//PaginationTemplate::testTemplate();
 
 // output the view
 $tpl->assign("user", $tplData)

@@ -21,9 +21,8 @@
 /**
  * Class Bug
  */
-class Bug
+class Bug extends Base
 {
-
     /**
      * Hold the bug id
      * @var int
@@ -86,6 +85,17 @@ class Bug
             $this->loadComments();
         }
     }
+
+    /**
+     * @param string $message
+     *
+     * @throws BugException
+     */
+    protected static function throwException($message)
+    {
+        throw new BugException($message);
+    }
+
 
     /**
      * @return int
@@ -215,21 +225,7 @@ class Bug
      */
     public static function exists($id)
     {
-        try
-        {
-            $count = DBConnection::get()->count(
-                "bugs",
-                "`id` = :id",
-                [":id" => $id],
-                [":id" => DBConnection::PARAM_INT]
-            );
-        }
-        catch(DBException $e)
-        {
-            throw new BugException(h(_("Tried to see if a bug exists.") . '. ' . _("Please contact a website administrator.")));
-        }
-
-        return $count !== 0;
+        return static::existsField("bugs", "id", $id, DBConnection::PARAM_INT);
     }
 
     /**
@@ -242,21 +238,7 @@ class Bug
      */
     public static function commentExists($id)
     {
-        try
-        {
-            $count = DBConnection::get()->count(
-                "bugs_comments",
-                "`id` = :id",
-                [":id" => $id],
-                [":id" => DBConnection::PARAM_INT]
-            );
-        }
-        catch(DBException $e)
-        {
-            throw new BugException(h(_("Tried to see if a bug comment exists.") . '. ' . _("Please contact a website administrator.")));
-        }
-
-        return $count !== 0;
+        return static::existsField("bugs_comments", "id", $id, DBConnection::PARAM_INT);
     }
 
     /**
@@ -294,25 +276,7 @@ class Bug
      */
     public static function get($bugId, $loadComments = true)
     {
-        try
-        {
-            $data = DBConnection::get()->query(
-                "SELECT * FROM " . DB_PREFIX . "bugs
-                WHERE `id` = :id LIMIT 1",
-                DBConnection::FETCH_FIRST,
-                [":id" => $bugId],
-                [":id" => DBConnection::PARAM_INT]
-            );
-        }
-        catch(DBException $e)
-        {
-            throw new BugException(h(_("Tried to see if a bug exists.") . '. ' . _("Please contact a website administrator.")));
-        }
-
-        if (empty($data))
-        {
-            throw new BugException(sprintf(_h("There is no bug with id %d"), $bugId));
-        }
+        $data = static::getFromField("bugs", "id", $bugId, DBConnection::PARAM_INT, sprintf(_h("There is no bug with id %d"), $bugId));
 
         return new Bug($data['id'], $data, $loadComments);
     }
