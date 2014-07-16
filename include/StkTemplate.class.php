@@ -88,7 +88,7 @@ class StkTemplate extends Template
      * @param string      $template_file
      * @param string|null $template_dir
      *
-     * @return static
+     * @return StkTemplate
      */
     public static function get($template_file, $template_dir = null)
     {

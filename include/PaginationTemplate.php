@@ -36,7 +36,7 @@ class PaginationTemplate extends Template
     /**
      * @var int
      */
-    protected $itemsPerPage = 5;
+    protected $itemsPerPage = 8;
 
     /**
      * @var int
@@ -66,9 +66,28 @@ class PaginationTemplate extends Template
         return new static($template_dir);
     }
 
-    public static function testTemplate()
+    /**
+     * Get the current page number
+     *
+     * @return int
+     */
+    public static function getPageNumber()
     {
-        $totalItems = 30;
+        if (!empty($_GET["p"]))
+        {
+            return $_GET["p"];
+        }
+
+        return 1;
+    }
+
+    /**
+     * Test the template by outputting consecutive
+     *
+     * @param int $totalItems
+     */
+    public static function testTemplate($totalItems = 30)
+    {
         for ($perPage = 1; $perPage < $totalItems / 2; $perPage++)
         {
             for ($i = 1; $i <= ceil($totalItems / $perPage); $i++)
@@ -80,7 +99,7 @@ class PaginationTemplate extends Template
     }
 
     /**
-     * Build the
+     * Build the template
      */
     protected function setup()
     {
@@ -105,8 +124,9 @@ class PaginationTemplate extends Template
 
         // see if we build the ... on one direction or the other
         $buildLeft = ($this->currentPage - 1) > $this->numberButtons;
-        $buildRight = (($this->currentPage - 1 + $this->numberButtons) !== $totalPages)
-            && (($this->currentPage - 1 + $this->numberButtons) < $totalPages);
+
+        $rightOffset = $this->currentPage - 1 + $this->numberButtons;
+        $buildRight = ($rightOffset !== $totalPages) && ($rightOffset < $totalPages);
 
         if (!$buildLeft && !$buildRight) // both are false, should not happen build right by default
         {
