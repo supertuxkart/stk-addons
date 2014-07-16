@@ -16,3 +16,4 @@
         {/foreach}
     </ul>
 {/if}
+{$pagination}

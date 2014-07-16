@@ -470,25 +470,15 @@ class User extends Base
     /**
      * Get all the users from the database in an associative array
      *
+     * @param int $limit
+     * @param int $current_page
+     *
      * @return array|int
      * @throws UserException
      */
-    public static function getAllData()
+    public static function getAll($limit = -1, $current_page = 1)
     {
-        try
-        {
-            $users = DBConnection::get()->query(
-                'SELECT * FROM ' . DB_PREFIX . 'users
-                ORDER BY `user` ASC, `id` ASC',
-                DBConnection::FETCH_ALL
-            );
-        }
-        catch(DBException $e)
-        {
-            throw new UserException(_h("Error on selecting all users"));
-        }
-
-        return $users;
+        return static::getAllFromTable("users", "ORDER BY `user` ASC, `id` ASC", $limit, $current_page);
     }
 
     /**
@@ -712,6 +702,26 @@ class User extends Base
         }
 
         return false; // user does not have permission on role
+    }
+
+    /**
+     * Get the total number of users
+     *
+     * @return int
+     * @throws UserException
+     */
+    public static function count()
+    {
+        try
+        {
+            $count = DBConnection::get()->count("users");
+        }
+        catch(DBException $e)
+        {
+            throw new UserException(_h("Tried to count the number of users"));
+        }
+
+        return $count;
     }
 
     /**

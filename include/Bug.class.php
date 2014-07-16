@@ -244,25 +244,15 @@ class Bug extends Base
     /**
      * Get all the bugs data without the comments
      *
+     * @param int $limit
+     * @param int $current_page
+     *
      * @return array
      * @throws BugException
      */
-    public static function getAllData()
+    public static function getAll($limit = -1, $current_page = 1)
     {
-        try
-        {
-            $bugs = DBConnection::get()->query(
-                'SELECT * FROM ' . DB_PREFIX . 'bugs
-                ORDER BY `date_edit` DESC, `id` ASC',
-                DBConnection::FETCH_ALL
-            );
-        }
-        catch(DBException $e)
-        {
-            throw new BugException(h(_("Tried to fetch all bugs") . '. ' . _("Please contact a website administrator.")));
-        }
-
-        return $bugs;
+        return static::getAllFromTable("bugs", "ORDER BY `date_edit` DESC, `id` ASC", $limit, $current_page);
     }
 
     /**

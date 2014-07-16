@@ -24,6 +24,8 @@ AccessControl::setLevel(AccessControl::PERM_VIEW_BASIC_PAGE);
 // set current user if not defined
 $_GET['user'] = (isset($_GET['user'])) ? $_GET['user'] : User::getLoggedUserName();
 $action = (isset($_GET['action'])) ? $_GET['action'] : null;
+$current_page = PaginationTemplate::getPageNumber();
+$limit = 8;
 
 $tpl = StkTemplate::get('user.tpl')
     ->assignTitle(_h('Users'))
@@ -33,7 +35,7 @@ $tpl = StkTemplate::get('user.tpl')
 $tplData = ["status" => "", "body" => ""];
 
 // get all users from the database, create links
-$users = User::getAllData();
+$users = User::getAll($limit, $current_page);
 $templateUsers = [];
 foreach ($users as $user)
 {
@@ -51,8 +53,13 @@ foreach ($users as $user)
 $tplData["body"] = Util::ob_get_require_once(ROOT_PATH . 'users-panel.php');
 
 //PaginationTemplate::testTemplate();
+$pagination = PaginationTemplate::get()
+    ->setItemsPerPage($limit)
+    ->setTotalItems(User::count())
+    ->setCurrentPage($current_page);
 
 // output the view
 $tpl->assign("user", $tplData)
-    ->assign("menu_users", $templateUsers);
+    ->assign("menu_users", $templateUsers)
+    ->assign("pagination", $pagination->toString());
 echo $tpl;

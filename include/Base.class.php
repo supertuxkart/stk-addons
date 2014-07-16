@@ -118,4 +118,53 @@ abstract class Base
 
         return $count !== 0;
     }
+
+    /**
+     * Get all the data from the database
+     *
+     * @param string $table        the table name
+     * @param string $order_by     the sql order clause
+     * @param int    $limit        number of retrievals, -1 for all
+     * @param int    $current_page the current page
+     *
+     * @return array
+     */
+    protected static function getAllFromTable($table, $order_by, $limit = -1, $current_page = 1)
+    {
+        // build query
+        $query = "SELECt * FROM `" . DB_PREFIX . $table . "` " . $order_by;
+        $data = [];
+
+        try
+        {
+            if ($limit !== -1) // get pagination
+            {
+                $offset = ($current_page - 1) * $limit;
+                $query .= " LIMIT :limit OFFSET :offset";
+
+                $data = DBConnection::get()->query(
+                    $query,
+                    DBConnection::FETCH_ALL,
+                    [
+                        ":limit"  => $limit,
+                        ":offset" => $offset
+                    ],
+                    [
+                        ":limit"  => DBConnection::PARAM_INT,
+                        ":offset" => DBConnection::PARAM_INT
+                    ]
+                );
+            }
+            else // get all
+            {
+                $data = DBConnection::get()->query($query, DBConnection::FETCH_ALL);
+            }
+        }
+        catch(DBException $e)
+        {
+            static::throwException(_h("Error on selecting all from table"));
+        }
+
+        return $data;
+    }
 }

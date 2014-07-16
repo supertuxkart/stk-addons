@@ -75,7 +75,7 @@ class PaginationTemplate extends Template
     {
         if (!empty($_GET["p"]))
         {
-            return $_GET["p"];
+            return (int)$_GET["p"];
         }
 
         return 1;
