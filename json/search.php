@@ -147,6 +147,7 @@ switch ($_GET["data-type"])
             $users_html = StkTemplate::get("user-menu.tpl")
                 ->assign("img_location", IMG_LOCATION)
                 ->assign("menu_users", $templateUsers)
+                ->assign("pagination", "")
                 ->toString();
             exit_json_success("", ["users-html" => $users_html]);
         }
