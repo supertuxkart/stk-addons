@@ -30,7 +30,7 @@ try
 }
 catch(UserException $e)
 {
-    exit("Error " . $e->getMessage());
+    exit("Error: " . $e->getMessage());
 }
 
 // define permissions
@@ -44,6 +44,7 @@ $tpl = StkTemplate::get("user-panel.tpl")
     ->assign("can_see_settings", $can_elevate_user || $is_owner)
     ->assign("can_see_email", $is_owner || $is_admin);
 
+$friends = Friend::getFriendsOf($user->getId(), $is_owner);
 $tplData = [
     "username"          => $user->getUserName(),
     "user_id"           => $user->getId(),
@@ -58,8 +59,28 @@ $tplData = [
         "elevate"  => [],
         "password" => []
     ],
-    "friends"           => Friend::getFriendsOf($user->getId(), $is_owner)
+    "friends"           => $friends
 ];
+
+// refresh friends cache and build friend array
+$logged_friend = [];
+if ($is_owner)
+{
+    User::setFriends($friends);
+}
+else // build buttons
+{
+    $friend = User::isLoggedFriendsWith($user->getUserName());
+
+    if ($friend)
+    {
+        $logged_friend = [
+            "is_pending" => $friend->isPending(),
+            "is_asker"   => $friend->isAsker(),
+        ];
+    }
+}
+$tpl->assign("logged_friend", $logged_friend);
 
 // fill users addons
 foreach (Addon::getAllowedTypes() as $type)

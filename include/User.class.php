@@ -398,6 +398,7 @@ class User extends Base
         static::sessionSet("date_last_login", static::updateLoginTime($id));
         static::sessionSet("role", $role);
         static::setPermissions($role);
+        static::setFriends(Friend::getFriendsOf($id, true));
 
         // backwards compatibility. Convert unsalted password to a salted one
         if (!Util::isPasswordSalted($user->getPassword())) // TODO check server because the master repo had this implemented wrong
@@ -620,6 +621,47 @@ class User extends Base
         }
 
         return $oldRole;
+    }
+
+    /**
+     * Cache the friends into the session
+     *
+     * @param Friend[] $friends
+     */
+    public static function setFriends(array $friends)
+    {
+        static::sessionSet("friends", serialize($friends));
+    }
+
+    /**
+     * Get the friends from the cache
+     *
+     * @return Friend[]
+     */
+    public static function getFriends()
+    {
+        return unserialize(static::sessionGet("friends"));
+    }
+
+    /**
+     * See if we are friends with a username
+     *
+     * @param string $username
+     *
+     * @return null|Friend
+     */
+    public static function isLoggedFriendsWith($username)
+    {
+        $friends = static::getFriends();
+        foreach ($friends as $friend)
+        {
+            if ($friend->getUser()->getUserName() === $username)
+            {
+                return $friend;
+            }
+        }
+
+        return null;
     }
 
     /**

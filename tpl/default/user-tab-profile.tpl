@@ -1,5 +1,28 @@
 <div class="tab-pane active" id="profile">
-    <h1>{$user.username|escape}</h1>
+    <div>
+        <h1>
+            {$user.username|escape}
+            {if !$is_owner}
+                {*Friend buttons*}
+                <div data-id="{$user.user_id}">
+                {if !empty($logged_friend)}
+                    {if $logged_friend.is_pending}
+                        {if $logged_friend.is_asker}
+                            <button type="button" id="btn-accept-friend" class="btn btn-xs btn-default pull-right">{t}Accept friend request{/t}</button>
+                            <button type="button" id="btn-decline-friend" class="btn btn-xs btn-default pull-right">{t}Decline friend request{/t}</button>
+                        {else}
+                            <button type="button" id="btn-cancel-friend" class="btn btn-xs btn-default pull-right">{t}Cancel friend request{/t}</button>
+                        {/if}
+                    {else}
+                        <button class="btn btn-xs btn-default pull-right disabled">{t}Already friends{/t}</button>
+                    {/if}
+                {else}
+                    <button class="btn btn-xs btn-default pull-right">{t}Send friend Request{/t}</button>
+                {/if}
+                </div>
+            {/if}
+        </h1>
+    </div>
     <div class="container">
         <div class="row form-group">
             <div class="col-md-3">{t}Username:{/t}</div>
