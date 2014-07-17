@@ -16,9 +16,6 @@
             {include file="user-menu.tpl" scope="parent"}
         </div>
         <div class="col-sm-10 col-md-10">
-            <div id="user-status">
-                {$user.status}
-            </div>
             <div id="user-body">
                 {$user.body}
             </div>

@@ -32,7 +32,7 @@ $tpl = StkTemplate::get('user.tpl')
     ->assign("img_location", IMG_LOCATION)
     ->addUtilLibrary()
     ->addScriptInclude("user.js");
-$tplData = ["status" => "", "body" => ""];
+$tplData = ["body" => ""];
 
 // get all users from the database, create links
 $users = User::getAll($limit, $current_page);

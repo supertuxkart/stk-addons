@@ -23,6 +23,8 @@
  */
 class PaginationTemplate extends Template
 {
+    const PAGE_ARGUMENT = "p";
+
     /**
      * @var int
      */
@@ -73,9 +75,9 @@ class PaginationTemplate extends Template
      */
     public static function getPageNumber()
     {
-        if (!empty($_GET["p"]))
+        if (!empty($_GET[static::PAGE_ARGUMENT]))
         {
-            return (int)$_GET["p"];
+            return (int)$_GET[static::PAGE_ARGUMENT];
         }
 
         return 1;
@@ -119,7 +121,7 @@ class PaginationTemplate extends Template
         // set default page, if not set already
         if (!$this->pageUrl)
         {
-            $this->pageUrl = Util::getCurrentUrl();
+            $this->pageUrl = Util::removeQueryArguments([static::PAGE_ARGUMENT], Util::getCurrentUrl());
         }
 
         // see if we build the ... on one direction or the other

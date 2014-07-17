@@ -137,7 +137,7 @@ abstract class Base
 
         try
         {
-            if ($limit !== -1) // get pagination
+            if ($limit > 0) // get pagination
             {
                 $offset = ($current_page - 1) * $limit;
                 $query .= " LIMIT :limit OFFSET :offset";

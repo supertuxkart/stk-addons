@@ -15,8 +15,8 @@
             {$last_class=" class=\"active\""}
         {/if}
 
-        <li{$prev_class}><a href="{$pagination.url}?p={$prev_href}">&laquo;</a></li>
-        <li{$first_class}><a href="{$pagination.url}?p=1">1</a></li>
+        <li{$prev_class}><a href="{$pagination.url}p={$prev_href}">&laquo;</a></li>
+        <li{$first_class}><a href="{$pagination.url}p=1">1</a></li>
         {if $pagination.nr_buttons + 3 > $pagination.total_pages}
             {*just display the buttons normally*}
             {for $i=2 to $pagination.total_pages - 1}
@@ -30,11 +30,11 @@
 
                 <li><a href="#" class="disabled">...</a></li>
                 {for $i = $pagination.current_page - $nr_buttons to $pagination.current_page - 1}
-                    <li><a href="{$pagination.url}?p={$i}">{$i}</a></li>
+                    <li><a href="{$pagination.url}p={$i}">{$i}</a></li>
                 {/for}
                 <li class="active"><a href="{$pagination.url}?p={$pagination.current_page}">{$pagination.current_page}</a></li>
                 {for $i = $pagination.current_page + 1 to $pagination.current_page + $nr_buttons}
-                    <li><a href="{$pagination.url}?p={$i}">{$i}</a></li>
+                    <li><a href="{$pagination.url}p={$i}">{$i}</a></li>
                 {/for}
                 <li><a href="#" class="disabled">...</a></li>
             {else}
@@ -56,7 +56,7 @@
                 {/if}
             {/if}
         {/if}
-        <li{$last_class}><a href="{$pagination.url}?p={$pagination.total_pages}">{$pagination.total_pages}</a></li>
-        <li{$next_class}><a href="{$pagination.url}?p={$next_href}">&raquo;</a></li>
+        <li{$last_class}><a href="{$pagination.url}p={$pagination.total_pages}">{$pagination.total_pages}</a></li>
+        <li{$next_class}><a href="{$pagination.url}p={$next_href}">&raquo;</a></li>
     </ul>
 {/if}

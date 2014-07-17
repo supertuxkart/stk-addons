@@ -319,6 +319,62 @@ class Util
     }
 
     /**
+     * Get an hash map of all the url vars where the key is the name
+     *
+     * @param string $query
+     *
+     * @return array
+     */
+    public static function getQueryVars($query)
+    {
+        // build vars
+        $vars = [];
+        $hashes = explode("&", $query);
+        foreach ($hashes as $hash)
+        {
+            $hash = explode("=", $hash);
+            // key => balue
+            $vars[$hash[0]] = $hash[1];
+        }
+
+        return $vars;
+    }
+
+    /**
+     * Removes an item or list from the query string.
+     *
+     * @param string|array $keys Query key or keys to remove.
+     * @param string       $url
+     *
+     * @return string
+     */
+    public static function removeQueryArguments(array $keys, $url)
+    {
+        $parsed = parse_url($url);
+        $url = rtrim($url, "?&");
+
+        // the query is empty
+        if (empty($parsed["query"]))
+        {
+            return $url . "?";
+        }
+
+        $vars = static::getQueryVars($parsed["query"]);
+
+        // remove query
+        foreach ($keys as $key)
+        {
+            unset($vars[$key]);
+        }
+
+        $query = empty($vars) ? "" : http_build_query($vars) . "&";
+
+        $new_url = $parsed["scheme"] . "://" . $parsed["host"] . $parsed["path"] . "?" . $query;
+
+        return $new_url;
+    }
+
+    /**
      * Returns ip address of the client
      *
      * Source : http://stackoverflow.com/questions/1634782/what-is-the-most-accurate-way-to-retrieve-a-users-correct-ip-address-in-php?
@@ -512,7 +568,7 @@ class Util
         // longer than the available characters
         if ($no_duplicate_chars && mb_strlen($pool) < $length)
         {
-            throw new \LengthException('$length exceeds the size of the pool and $no_duplicate_chars is enabled' );
+            throw new \LengthException('$length exceeds the size of the pool and $no_duplicate_chars is enabled');
         }
 
         // Convert the pool of characters into an array of characters and
