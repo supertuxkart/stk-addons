@@ -21,21 +21,33 @@
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
 AccessControl::setLevel(AccessControl::PERM_VIEW_BASIC_PAGE);
 
-// set current user if not defined
-$_GET['user'] = (isset($_GET['user'])) ? $_GET['user'] : User::getLoggedUserName();
-$action = (isset($_GET['action'])) ? $_GET['action'] : null;
+$current_page = PaginationTemplate::getPageNumber();
+$limit = PaginationTemplate::getLimitNumber();
 
+// get all users from the database, create links
+$users = User::getAll($limit, $current_page);
+$templateUsers = [];
+foreach ($users as $user)
+{
+    // Make sure that the user is active, or the viewer has permission to
+    // manage this type of user
+    if (User::hasPermissionOnRole($user['role']) || $user['active'] == 1)
+    {
+        $templateUsers[] = [
+            'username' => $user['user'],
+            'active'   => (int)$user["active"]
+        ];
+    }
+}
 
-$tpl = StkTemplate::get('user.tpl')
-    ->assignTitle(_h('Users'))
-    ->addUtilLibrary()
-    ->addScriptInclude("user.js");
+$pagination = PaginationTemplate::get()
+    ->setItemsPerPage($limit)
+    ->setTotalItems(User::count())
+    ->setCurrentPage($current_page);
 
-$tplData = [
-    "body" => Util::ob_get_require_once(ROOT_PATH . "users-panel.php"),
-    "menu" => Util::ob_get_require_once(ROOT_PATH . "users-menu.php")
-];
+$tpl = StkTemplate::get("user-menu.tpl")
+    ->assign("img_location", IMG_LOCATION)
+    ->assign("menu_users", $templateUsers)
+    ->assign("pagination", $pagination->toString());
 
-// output the view
-$tpl->assign("user", $tplData);
 echo $tpl;

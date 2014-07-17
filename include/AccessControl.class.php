@@ -350,10 +350,7 @@ class AccessControl
      */
     public static function setLevel($permission)
     {
-        if (!static::isPermission($permission))
-        {
-            throw new AccessControlException(sprintf(_h("Invalid access level: %s"), $permission));
-        }
+        assert(static::isPermission($permission) === true);
 
         $allow = false;
         if (User::hasPermission($permission))

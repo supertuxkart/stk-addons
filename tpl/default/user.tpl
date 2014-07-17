@@ -13,7 +13,7 @@
     </div>
     <div class="row">
         <div class="col-sm-2 col-md-2 left-menu" id="user-menu">
-            {include file="user-menu.tpl" scope="parent"}
+            {$user.menu}
         </div>
         <div class="col-sm-10 col-md-10">
             <div id="user-body">

@@ -25,6 +25,8 @@ class PaginationTemplate extends Template
 {
     const PAGE_ARGUMENT = "p";
 
+    const LIMIT_ARGUMENT = "l";
+
     /**
      * @var int
      */
@@ -69,18 +71,37 @@ class PaginationTemplate extends Template
     }
 
     /**
-     * Get the current page number
+     * Get the current page number from the get params
+     *
+     * @param int $default_page the default page
      *
      * @return int
      */
-    public static function getPageNumber()
+    public static function getPageNumber($default_page = 1)
     {
         if (!empty($_GET[static::PAGE_ARGUMENT]))
         {
             return (int)$_GET[static::PAGE_ARGUMENT];
         }
 
-        return 1;
+        return $default_page;
+    }
+
+    /**
+     * Get the items per page number from the get params
+     *
+     * @param int $default_limit the default number of items
+     *
+     * @return int
+     */
+    public static function getLimitNumber($default_limit = 8)
+    {
+        if (!empty($_GET[static::LIMIT_ARGUMENT]))
+        {
+            return (int)$_GET[static::LIMIT_ARGUMENT];
+        }
+
+        return $default_limit; // default limit
     }
 
     /**
