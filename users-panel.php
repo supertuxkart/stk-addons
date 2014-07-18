@@ -60,7 +60,7 @@ $tplData = [
         "password" => []
     ],
     "friends"           => $friends,
-    "achievements"      => Achievement::getAchievementsOf($user->getLoggedId())
+    "achievements"      => Achievement::getAchievementsOf($user->getId())
 ];
 
 // refresh friends cache and build friend array
