@@ -4,21 +4,27 @@
             {$user.username|escape}
             {if !$is_owner}
                 {*Friend buttons*}
-                <div data-id="{$user.user_id}">
-                {if !empty($logged_friend)}
-                    {if $logged_friend.is_pending}
-                        {if $logged_friend.is_asker}
-                            <button type="button" id="btn-accept-friend" class="btn btn-xs btn-default pull-right">{t}Accept friend request{/t}</button>
-                            <button type="button" id="btn-decline-friend" class="btn btn-xs btn-default pull-right">{t}Decline friend request{/t}</button>
+                <div class="btn-group pull-right" data-id="{$user.user_id}" data-tab="profile">
+                    {$class_accept=" hide"} {$class_decline=" hide"} {$class_cancel=" hide"} {$class_already=" hide"} {$class_send=" hide"}
+                    {if !empty($logged_friend)}
+                        {if $logged_friend.is_pending}
+                            {if $logged_friend.is_asker}
+                                {$class_accept=""}
+                                {$class_decline=""}
+                            {else}
+                                {$class_cancel=""}
+                            {/if}
                         {else}
-                            <button type="button" id="btn-cancel-friend" class="btn btn-xs btn-default pull-right">{t}Cancel friend request{/t}</button>
+                            {$class_already=""}
                         {/if}
                     {else}
-                        <button class="btn btn-xs btn-default pull-right disabled">{t}Already friends{/t}</button>
+                        {$class_send=""}
                     {/if}
-                {else}
-                    <button class="btn btn-xs btn-default pull-right">{t}Send friend Request{/t}</button>
-                {/if}
+                    <button type="button" class="btn btn-xs btn-default btn-accept-friend{$class_accept}">{t}Accept friend request{/t}</button>
+                    <button type="button" class="btn btn-xs btn-default btn-decline-friend{$class_decline}">{t}Decline friend request{/t}</button>
+                    <button type="button" class="btn btn-xs btn-default btn-cancel-friend{$class_cancel}">{t}Cancel friend request{/t}</button>
+                    <button type="button" class="btn btn-xs btn-default btn-already-friend disabled{$class_already}">{t}Already friends{/t}</button>
+                    <button type="button" class="btn btn-xs btn-default btn-send-friend{$class_send}">{t}Send friend Request{/t}</button>
                 </div>
             {/if}
         </h1>

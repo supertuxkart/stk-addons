@@ -69,7 +69,7 @@ class User extends Base
      */
     public function __construct($id, array $userData = [])
     {
-        $this->id = $id;
+        $this->id = (int)$id;
         $this->userData = $userData;
     }
 
@@ -262,7 +262,7 @@ class User extends Base
         {
             $_SESSION["user"] = [];
             static::$logged_in = true;
-            static::$logged_user_id = $user_id;
+            static::$logged_user_id = (int)$user_id;
         }
         else
         {
@@ -364,7 +364,7 @@ class User extends Base
         }
 
         static::$logged_in = true;
-        static::$logged_user_id = static::sessionGet("id");
+        static::$logged_user_id = (int)static::sessionGet("id");
     }
 
     /**

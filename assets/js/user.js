@@ -66,11 +66,39 @@
         return false;
     });
 
-    // remove friend clicked
-    $user_main.on("click", "#btn-remove-friend", function() {
+    // send friend request clicked
+    $user_main.on("click", ".btn-send-friend", function() {
         var $this = $(this),
             $parent = $this.parent(),
-            id = $parent.data("id");
+            id = $parent.data("id"),
+            tab = $parent.data("tab");
+
+        console.log("Send friend clicked", id);
+        $.post(json_url, {action: "send-friend", "friend-id": id}, function(data) {
+            var jData = parseJSON(data);
+            if (jData.hasOwnProperty("error")) {
+                growlError(jData["error"]);
+            }
+            if (jData.hasOwnProperty("success")) {
+                growlSuccess(jData["success"]);
+
+                // update view
+                if (tab === "friends") {
+                    console.log("not handled");
+                } else if (tab === "profile") {
+                    $this.addClass("hide");
+                    $("#profile .btn-cancel-friend").removeClass("hide");
+                }
+            }
+        });
+    });
+
+    // remove friend clicked
+    $user_main.on("click", ".btn-remove-friend", function() {
+        var $this = $(this),
+            $parent = $this.parent(),
+            id = $parent.data("id"),
+            tab = $parent.data("tab");
 
         console.log("Remove friend clicked", id);
         modalDelete("Are you sure you want to remove this friend?", function() {
@@ -83,17 +111,22 @@
                     growlSuccess(jData["success"]);
 
                     // update view
-                    $parent.closest("tr").remove();
+                    if (tab === "friends") {
+                        $parent.closest("tr").remove();
+                    } else if (tab === "profile") {
+                        console.log("not handled");
+                    }
                 }
             });
         });
     });
 
     // accept friend clicked
-    $user_main.on("click", "#btn-accept-friend", function() {
+    $user_main.on("click", ".btn-accept-friend", function() {
         var $this = $(this),
             $parent = $this.parent(),
-            id = $parent.data("id");
+            id = $parent.data("id"),
+            tab = $parent.data("tab");
 
         console.log("Accept friend clicked", id);
         $.post(json_url, {action: "accept-friend", "friend-id": id}, function(data) {
@@ -105,18 +138,25 @@
                 growlSuccess(jData["success"]);
 
                 // update view
-                $parent.html('<button type="button" id="btn-remove-friend" class="btn btn-danger">Remove friend</button>');
-                $parent.closest("tr").removeClass("danger");
-                $parent.closest("td").prev().text("Offline");
+                if (tab === "friends") {
+                    $parent.html('<button type="button" id="btn-remove-friend" class="btn btn-danger">Remove friend</button>');
+                    $parent.closest("tr").removeClass("danger");
+                    $parent.closest("td").prev().text("Offline");
+                } else if (tab === "profile") {
+                    $this.addClass("hide");
+                    $("#profile .btn-decline-friend").addClass("hide");
+                    $("#profile .btn-already-friend").removeClass("hide");
+                }
             }
         });
     });
 
     // decline friend clicked
-    $user_main.on("click", "#btn-decline-friend", function() {
+    $user_main.on("click", ".btn-decline-friend", function() {
         var $this = $(this),
             $parent = $this.parent(),
-            id = $parent.data("id");
+            id = $parent.data("id"),
+            tab = $parent.data("tab");
 
         console.log("Decline friend clicked", id);
         $.post(json_url, {action: "decline-friend", "friend-id": id}, function(data) {
@@ -128,16 +168,23 @@
                 growlSuccess(jData["success"]);
 
                 // update view
-                $parent.closest("tr").remove();
+                if (tab === "friends") {
+                    $parent.closest("tr").remove();
+                } else if (tab === "profile") {
+                    $this.addClass("hide");
+                    $("#profile .btn-accept-friend").addClass("hide");
+                    $("#profile .btn-send-friend").removeClass("hide");
+                }
             }
         });
     });
 
     // cancel friend clicked
-    $user_main.on("click", "#btn-cancel-friend", function() {
+    $user_main.on("click", ".btn-cancel-friend", function() {
         var $this = $(this),
             $parent = $this.parent(),
-            id = $parent.data("id");
+            id = $parent.data("id"),
+            tab = $parent.data("tab");
 
         console.log("Cancel friend clicked", id);
         $.post(json_url, {action: "cancel-friend", "friend-id": id}, function(data) {
@@ -149,7 +196,12 @@
                 growlSuccess(jData["success"]);
 
                 // update view
-                $parent.closest("tr").remove();
+                if (tab === "friends") {
+                    $parent.closest("tr").remove();
+                } else if (tab === "profile") {
+                    $this.addClass("hide");
+                    $("#profile .btn-send-friend").removeClass("hide");
+                }
             }
         });
     });

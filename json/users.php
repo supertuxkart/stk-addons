@@ -96,6 +96,25 @@ switch ($_POST["action"])
         exit_json_success(_h("Your password has been changed"));
         break;
 
+    case "send-friend": // send friend request
+        $errors = Validate::ensureInput($_POST, ["friend-id"]);
+        if ($errors)
+        {
+            exit_json_error(_h("Friend id is empty"));
+        }
+
+        try
+        {
+            Friend::friendRequest(User::getLoggedId(), (int)$_POST["friend-id"]);
+        }
+        catch(FriendException $e)
+        {
+            exit_json_error($e->getMessage());
+        }
+
+        exit_json_success(_h("Friend request sent"));
+        break;
+
     case "remove-friend": // remove friend
         $errors = Validate::ensureInput($_POST, ["friend-id"]);
         if ($errors)
@@ -105,7 +124,7 @@ switch ($_POST["action"])
 
         try
         {
-            Friend::removeFriend(User::getLoggedId(), $_POST["friend-id"]);
+            Friend::removeFriend(User::getLoggedId(), (int)$_POST["friend-id"]);
         }
         catch(FriendException $e)
         {
@@ -124,7 +143,7 @@ switch ($_POST["action"])
 
         try
         {
-            Friend::acceptFriendRequest($_POST["friend-id"], User::getLoggedId());
+            Friend::acceptFriendRequest((int)$_POST["friend-id"], User::getLoggedId());
         }
         catch(FriendException $e)
         {
@@ -143,7 +162,7 @@ switch ($_POST["action"])
 
         try
         {
-            Friend::declineFriendRequest($_POST["friend-id"], User::getLoggedId());
+            Friend::declineFriendRequest((int)$_POST["friend-id"], User::getLoggedId());
         }
         catch(FriendException $e)
         {
@@ -162,7 +181,7 @@ switch ($_POST["action"])
 
         try
         {
-            Friend::cancelFriendRequest(User::getLoggedId(), $_POST["friend-id"]);
+            Friend::cancelFriendRequest(User::getLoggedId(), (int)$_POST["friend-id"]);
         }
         catch(FriendException $e)
         {
