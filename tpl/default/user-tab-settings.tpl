@@ -1,5 +1,4 @@
-<div class="tab-pane" id="settings">
-    <hr>
+<div class="tab-pane" id="settings"><br>
     <h3>{t}Profile{/t}</h3>
     <form class="form-horizontal" id="user-edit-profile">
         <div class="form-group">

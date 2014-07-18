@@ -554,7 +554,7 @@ try
 }
 catch(Exception $e)
 {
-    $output->addErrorElement('request', _('An unexptected error occured.') . ' ' . _('Please contact a website administrator.'));
+    $output->addErrorElement('request', _('An unexpected error occurred.') . ' ' . _('Please contact a website administrator.'));
 }
 
 $output->endDocument();
