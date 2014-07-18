@@ -139,7 +139,8 @@
 
                 // update view
                 if (tab === "friends") {
-                    $parent.html('<button type="button" id="btn-remove-friend" class="btn btn-danger">Remove friend</button>');
+                    $this.addClass("hide");
+                    $this.siblings(".btn-remove-friend").removeClass("hide");
                     $parent.closest("tr").removeClass("danger");
                     $parent.closest("td").prev().text("Offline");
                 } else if (tab === "profile") {

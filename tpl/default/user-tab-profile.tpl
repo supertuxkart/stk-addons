@@ -9,8 +9,7 @@
                     {if !empty($logged_friend)}
                         {if $logged_friend.is_pending}
                             {if $logged_friend.is_asker}
-                                {$class_accept=""}
-                                {$class_decline=""}
+                                {$class_accept=""} {$class_decline=""}
                             {else}
                                 {$class_cancel=""}
                             {/if}

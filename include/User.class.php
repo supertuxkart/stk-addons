@@ -644,6 +644,14 @@ class User extends Base
     }
 
     /**
+     * Refresh the friends of the logged in user
+     */
+    public static function refreshFriends()
+    {
+        static::setFriends(Friend::getFriendsOf(User::getLoggedId(), true));
+    }
+
+    /**
      * See if we are friends with a username
      *
      * @param string $username

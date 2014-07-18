@@ -112,6 +112,7 @@ switch ($_POST["action"])
             exit_json_error($e->getMessage());
         }
 
+        User::refreshFriends();
         exit_json_success(_h("Friend request sent"));
         break;
 
@@ -131,6 +132,7 @@ switch ($_POST["action"])
             exit_json_error($e->getMessage());
         }
 
+        User::refreshFriends();
         exit_json_success(_h("Friend removed"));
         break;
 
@@ -150,6 +152,7 @@ switch ($_POST["action"])
             exit_json_error($e->getMessage());
         }
 
+        User::refreshFriends();
         exit_json_success(_h("Friend request accepted"));
         break;
 
@@ -169,6 +172,7 @@ switch ($_POST["action"])
             exit_json_error($e->getMessage());
         }
 
+        User::refreshFriends();
         exit_json_success(_h("Friend request declined"));
         break;
 
@@ -188,6 +192,7 @@ switch ($_POST["action"])
             exit_json_error($e->getMessage());
         }
 
+        User::refreshFriends();
         exit_json_success(_h("Friend request canceled"));
         break;
 

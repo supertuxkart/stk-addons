@@ -37,16 +37,20 @@
                         </td>
                         <td>
                             <div class="btn-group" data-id="{$friend->getUser()->getId()}" data-tab="friends">
+                                {$class_accept=" hide"} {$class_decline=" hide"} {$class_cancel=" hide"} {$class_remove=" hide"}
                                 {if $is_pending}
                                     {if $is_asker}
-                                        <button type="button" class="btn btn-success btn-accept-friend">{t}Accept{/t}</button>
-                                        <button type="button" class="btn btn-primary btn-decline-friend">{t}Decline{/t}</button>
+                                        {$class_accept=""} {$class_decline=""}
                                     {else}
-                                        <button type="button" class="btn btn-warning btn-cancel-friend">{t}Cancel request{/t}</button>
+                                        {$class_cancel=""}
                                     {/if}
                                 {else}
-                                    <button type="button" class="btn btn-danger btn-remove-friend">{t}Remove friend{/t}</button>
+                                    {$class_remove=""}
                                 {/if}
+                                <button type="button" class="btn btn-success btn-accept-friend{$class_accept}">{t}Accept{/t}</button>
+                                <button type="button" class="btn btn-primary btn-decline-friend{$class_decline}">{t}Decline{/t}</button>
+                                <button type="button" class="btn btn-warning btn-cancel-friend{$class_cancel}">{t}Cancel request{/t}</button>
+                                <button type="button" class="btn btn-danger btn-remove-friend{$class_remove}">{t}Remove friend{/t}</button>
                             </div>
                         </td>
                     </tr>
