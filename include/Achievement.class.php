@@ -24,22 +24,23 @@
 class Achievement
 {
     /**
-     * @param int $userid
+     * Get all the achievements of a user
      *
-     * @return string
+     * @param int $user_id
+     *
+     * @return array of achievement id's
      * @throws AchievementException
      */
-    public static function getAchievementsOf($userid)
+    public static function getAchievementsOf($user_id)
     {
         try
         {
-            $result = DBConnection::get()->query(
+            $achievements = DBConnection::get()->query(
                 "SELECT `achievementid` FROM " . DB_PREFIX . "achieved
                 WHERE `userid` = :userid",
                 DBConnection::FETCH_ALL,
-                array(
-                    ':userid' => (int)$userid
-                )
+                [':userid' => $user_id],
+                [':userid' => DBConnection::PARAM_INT]
             );
         }
         catch(DBException $e)
@@ -50,26 +51,25 @@ class Achievement
             ));
         }
 
-        $string_list = "";
-        foreach ($result as $r)
+        // build array of id's
+        $return_achievements = [];
+        foreach ($achievements as $achievement)
         {
-            $string_list .= $r['achievementid'];
-            $string_list .= ' ';
+            $return_achievements[] = $achievement['achievementid'];
         }
-        $string_list = trim($string_list);
 
-        return $string_list;
+        return $return_achievements;
     }
 
     /**
-     * Add to a user a specific achievement
+     * a use has achieved an achievement
      *
-     * @param int $userid
+     * @param int $user_id
      * @param int $achievement_id
      *
      * @throws AchievementException
      */
-    public static function achieve($userid, $achievement_id)
+    public static function achieve($user_id, $achievement_id)
     {
         try
         {
@@ -77,11 +77,15 @@ class Achievement
                 "INSERT INTO `" . DB_PREFIX . "achieved` (`userid`, `achievementid`)
                 VALUES (:userid, :achievementid)
                 ON DUPLICATE KEY UPDATE `userid` = :userid",
-                DBConnection::ROW_COUNT,
-                array(
-                    ':achievementid' => (int)$achievement_id,
-                    ':userid'        => (int)$userid
-                )
+                DBConnection::NOTHING,
+                [
+                    ':achievementid' => $achievement_id,
+                    ':userid'        => $user_id
+                ],
+                [
+                    ':achievementid' => DBConnection::PARAM_INT,
+                    ':userid'        => DBConnection::PARAM_INT
+                ]
             );
         }
         catch(DBException $e)

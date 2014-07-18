@@ -266,10 +266,10 @@ class RegisteredClientSession extends ClientSession
     {
         if ($id == 0)
         {
-            return Achievement::getAchievementsOf($this->user_id);
+            return implode(" ", Achievement::getAchievementsOf($this->user_id));
         }
 
-        return Achievement::getAchievementsOf($id);
+        return implode(" ", Achievement::getAchievementsOf($id));
     }
 
     /**
