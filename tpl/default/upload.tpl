@@ -12,7 +12,7 @@
                 <p>{t}Please upload a new revision of your kart or track.{/t}</p>
             {else}
                 <p>{t}What type of file are you uploading?{/t}</p>
-                <select name="upload-type" id="upload-type" onChange="uploadFormFieldToggle();">
+                <select name="upload-type" id="upload-type">
                     <option value="source">{t}Source Archive{/t}</option>
                     <option value="image">{t}Image File{/t} (.png, .jpg, .jpeg)</option>
                 </select>
@@ -36,8 +36,7 @@
         <table width="800" id="upload_agreement">
             <tr>
                 <td width="1">
-                    <input type="radio" name="l_author" id="l_author1" value="1"
-                           onChange="uploadFormFieldToggle();" checked />
+                    <input type="radio" name="l_author" id="l_author1" value="1" checked />
                 </td>
                 <td colspan="3">{t}I am the sole author of every file (model, texture, sound effect, etc.) in this package{/t}</td>
             </tr>
@@ -55,7 +54,7 @@
             </tr>
             <tr>
                 <td width="1">
-                    <input type="radio" name="l_author" id="l_author2" value="2" onChange="uploadFormFieldToggle();">
+                    <input type="radio" name="l_author" id="l_author2" value="2">
                 </td>
                 <td colspan="3">{t}I have included open content made by people other than me{/t}</td>
             </tr>
@@ -134,10 +133,7 @@
                 </td>
             </tr>
         </table>
-        <script type="text/javascript">
-            uploadFormFieldToggle();
-        </script>
-        <input type="submit" value="{t}Upload file{/t}">
+        <input type="submit" class="btn btn-primary" value="{t}Upload file{/t}">
         </form>
     {/if}
 </div>

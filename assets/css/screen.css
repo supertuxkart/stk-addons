@@ -614,6 +614,10 @@ span.warning {
     margin-right: 10px;
 }
 
+.available {
+    color: #000000;
+}
+
 .unavailable {
     color: #999999;
 }

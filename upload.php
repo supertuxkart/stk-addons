@@ -26,73 +26,15 @@ $_GET['action'] = (isset($_GET['action'])) ? $_GET['action'] : null;
 $_GET['type'] = (isset($_GET['type'])) ? $_GET['type'] : null;
 $_GET['name'] = (isset($_GET['name'])) ? $_GET['name'] : null;
 
-$tpl = new StkTemplate('upload.tpl');
+$tpl = StkTemplate::get('upload.tpl')->addScriptInclude("upload.js");
 
-$inline_script = <<<JS
-function uploadFormFieldToggle()
-{
-    var radio1 = document.getElementById('l_author1');
-    var check1 = document.getElementById('l_licensefile1');
-    var check2 = document.getElementById('l_licensefile2');
-    var checklabel1 = document.getElementById('l_licensetext1');
-    var checklabel2 = document.getElementById('l_licensetext2');
-    var filetypeselect = document.getElementById('upload-type');
-
-    if(radio1.checked)
-    {
-        check1.disabled = false;
-        check2.disabled = true;
-        checklabel1.style.color = '#000000';
-        checklabel2.style.color = '#999999';
-    }
-    else
-    {
-        check1.disabled = true;
-        check2.disabled = false;
-        checklabel1.style.color = '#999999';
-        checklabel2.style.color = '#000000';
-    }
-    if(filetypeselect != undefined)
-    {
-        if(filetypeselect.value == 'image')
-        {
-            check1.disabled = true;
-            check2.disabled = true;
-            checklabel1.style.color = '#999999';
-            checklabel2.style.color = '#999999';
-        }
-        else
-        {
-            if(radio1.checked)
-            {
-                check1.disabled = false;
-                check2.disabled = true;
-                checklabel1.style.color = '#000000';
-                checklabel2.style.color = '#999999';
-            }
-            else
-            {
-                check1.disabled = true;
-                check2.disabled = false;
-                checklabel1.style.color = '#999999';
-                checklabel2.style.color = '#000000';
-            }
-        }
-    }
-}
-uploadFormFieldToggle();
-JS;
-
-// assign inline javascript
-$tpl->addScriptInline($inline_script, StkTemplate::ORDER_AFTER);
-
-$upload_form = array(
+$upload_form = [
     "display" => true,
-    "form"    => array(
+    "form"    => [
         // new addon revision
         "update" => false, // update addon or insert addon
-    )
-);
+    ]
+];
 
 $errors = '';
 if ($_GET['action'] === "submit") // form submitted
@@ -103,8 +45,7 @@ if ($_GET['action'] === "submit") // form submitted
         $tpl->assign("upload", $upload_form);
         $tpl->assign("errors", _h("Maximum POST size exceeded. Your file is too large!"));
 
-        echo $tpl;
-        exit;
+        exit($tpl);
     }
 
     // Check to make sure all form license boxes are good
@@ -121,14 +62,17 @@ if ($_GET['action'] === "submit") // form submitted
         {
             $agreement_form = 0;
         }
+
         if (!isset($_POST['l_agreement']) || !isset($_POST['l_clean']))
         {
             $agreement_form = 0;
         }
+
         if (!isset($_POST['l_author']))
         {
             $agreement_form = 0;
         }
+
         if (isset($_POST['upload-type']) && $_POST['upload-type'] == 'image')
         {
             if ($_POST['l_author'] != 1 && $_POST['l_author'] != 2)
@@ -149,6 +93,7 @@ if ($_GET['action'] === "submit") // form submitted
         }
         break;
     }
+
     if ($agreement_form === 0)
     {
         $upload_form["display"] = false;
@@ -189,9 +134,11 @@ if ($_GET['action'] === "submit") // form submitted
                 case 'image':
                     $expected_type = 'image';
                     break;
+
                 case 'source':
                     $expected_type = 'source';
                     break;
+
                 default:
                     $expected_type = 'addon';
                     break;
@@ -218,9 +165,7 @@ if ($_GET['action'] === "submit") // form submitted
 }
 
 // Working with an already existing addon
-if (($_GET['type'] === 'karts' || $_GET['type'] === 'tracks' || $_GET['type'] === 'arenas')
-    && !empty($_GET['name'])
-)
+if (($_GET['type'] === 'karts' || $_GET['type'] === 'tracks' || $_GET['type'] === 'arenas') && !empty($_GET['name']))
 {
     $upload_form["form"]["update"] = true;
 }
