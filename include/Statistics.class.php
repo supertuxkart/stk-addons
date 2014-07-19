@@ -224,7 +224,6 @@ class Statistic
                     $other_x = $other_data[$x][0];
                     $other_y = $other_data[$x][1];
                     $other_data[$x] = [$other_x, $other_y + $y];
-
                 }
             }
             else // regular category

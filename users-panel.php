@@ -88,15 +88,15 @@ foreach (Addon::getAllowedTypes() as $type)
 {
     switch ($type)
     {
-        case 'tracks':
+        case Addon::TRACK:
             $heading = _h('Tracks');
             $no_items = _h('This user has not uploaded any tracks.');
             break;
-        case 'karts':
+        case Addon::KART:
             $heading = _h('Karts');
             $no_items = _h('This user has not uploaded any karts.');
             break;
-        case 'arenas':
+        case Addon::ARENA:
             $heading = _h('Arenas');
             $no_items = _h('This user has not uploaded any arenas.');
             break;

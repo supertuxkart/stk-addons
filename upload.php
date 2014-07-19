@@ -17,14 +17,13 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons. If not, see <http://www.gnu.org/licenses/>.
  */
-
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
 AccessControl::setLevel(AccessControl::PERM_ADD_ADDON);
 
 // Define possibly undefined variables
-$_GET['action'] = (isset($_GET['action'])) ? $_GET['action'] : null;
-$_GET['type'] = (isset($_GET['type'])) ? $_GET['type'] : null;
-$_GET['name'] = (isset($_GET['name'])) ? $_GET['name'] : null;
+$action = (isset($_GET['action'])) ? $_GET['action'] : null;
+$type = (isset($_GET['type'])) ? $_GET['type'] : null;
+$name = (isset($_GET['name'])) ? $_GET['name'] : null;
 
 $tpl = StkTemplate::get('upload.tpl')->addScriptInclude("upload.js");
 
@@ -36,8 +35,7 @@ $upload_form = [
     ]
 ];
 
-$errors = '';
-if ($_GET['action'] === "submit") // form submitted
+if ($action === "submit") // form submitted
 {
     if (empty($_POST))
     {
@@ -165,7 +163,7 @@ if ($_GET['action'] === "submit") // form submitted
 }
 
 // Working with an already existing addon
-if (($_GET['type'] === 'karts' || $_GET['type'] === 'tracks' || $_GET['type'] === 'arenas') && !empty($_GET['name']))
+if (($type === 'karts' || $type === 'tracks' || $type === 'arenas') && $name)
 {
     $upload_form["form"]["update"] = true;
 }

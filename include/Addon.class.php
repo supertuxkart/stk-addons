@@ -23,10 +23,11 @@
  */
 class Addon
 {
-    /**
-     * @var array
-     */
-    protected static $allowedTypes = array('karts', 'tracks', 'arenas');
+    const KART = "karts";
+
+    const TRACK = "tracks";
+
+    const ARENA = "arenas";
 
     /**
      * @var string
@@ -1407,7 +1408,7 @@ class Addon
      */
     public static function isAllowedType($type)
     {
-        return in_array($type, static::$allowedTypes);
+        return in_array($type, static::getAllowedTypes());
     }
 
 
@@ -1418,7 +1419,7 @@ class Addon
      */
     public static function getAllowedTypes()
     {
-        return static::$allowedTypes;
+        return [static::KART, static::TRACK, static::ARENA];
     }
 
     /**
