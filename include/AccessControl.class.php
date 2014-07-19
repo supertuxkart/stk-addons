@@ -29,7 +29,7 @@ class AccessControl
      * Can view the most basic pages
      * @var string
      */
-    const PERM_VIEW_BASIC_PAGE = "view_basic_page"; //
+    const PERM_VIEW_BASIC_PAGE = "view_basic_page";
 
     /**
      * Can add an addon

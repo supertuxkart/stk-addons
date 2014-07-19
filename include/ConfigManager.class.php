@@ -27,7 +27,7 @@ class ConfigManager
      * Cache the results
      * @var array
      */
-    private static $cache = array();
+    private static $cache = [];
 
     /**
      * Get a config option by name
@@ -118,10 +118,10 @@ class ConfigManager
                 '(:name, :value) ' .
                 'ON DUPLICATE KEY UPDATE `value` = :value',
                 DBConnection::NOTHING,
-                array(
+                [
                     ':name'  => $config_name,
                     ':value' => $config_value
-                )
+                ]
             );
         }
         catch(DBException $e)
