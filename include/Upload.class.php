@@ -60,7 +60,7 @@ class Upload
     /**
      * @var string
      */
-    private $dest;
+    private $destination;
 
     /**
      * The directory we create to extract the archive
@@ -71,7 +71,7 @@ class Upload
     /**
      * @var array
      */
-    private $properties = array();
+    private $properties = [];
 
     /**
      * @var string
@@ -93,6 +93,18 @@ class Upload
      */
     private $addon_id;
 
+
+    /**
+     * Hold the warning messages
+     * @var array
+     */
+    private $warnings = [];
+
+    /**
+     * Hold the success messages
+     * @var array
+     */
+    private $success = [];
 
     /**
      * Constructor
@@ -133,6 +145,24 @@ class Upload
     public function removeTempFiles()
     {
         File::deleterecursive($this->temp_dir);
+    }
+
+    /**
+     * Get the success message
+     * @return string
+     */
+    public function getSuccessMessage()
+    {
+        return implode("<br>", $this->success);
+    }
+
+    /**
+     * Get the warning message
+     * @return string
+     */
+    public function getWarningMessage()
+    {
+        return implode("<br>", $this->warnings);
     }
 
     /**
@@ -202,8 +232,7 @@ class Upload
                 )
             );
         }
-        $this->properties['xml_attributes']['license'] =
-            htmlentities(file_get_contents($this->properties['license_file'], false));
+        $this->properties['xml_attributes']['license'] = h(file_get_contents($this->properties['license_file'], false));
 
         // Get addon id from page request if possible
         $addon_id = null;
@@ -259,13 +288,13 @@ class Upload
             static::editInfoFile();
 
             // Get image file
-            if($this->upload_type === 'karts')
+            if ($this->upload_type === 'karts')
             {
                 $image_file = $this->properties['xml_attributes']['icon-file'];
             }
             else
             {
-                $image_file =  $this->properties['xml_attributes']['screenshot'];
+                $image_file = $this->properties['xml_attributes']['screenshot'];
             }
 
             $image_file = $this->temp_dir . $image_file;
@@ -290,16 +319,16 @@ class Upload
                         "CALL `" . DB_PREFIX . "create_file_record`
                         (:addon_id, :upload_type, 'image', :file, @result_id)",
                         DBConnection::NOTHING,
-                        array(
+                        [
                             ":addon_id"    => $addon_id,
                             ":upload_type" => $this->upload_type,
                             ":file"        => 'images' . DS . $fileid . $imageext[1]
-                        )
+                        ]
                     );
                 }
                 catch(DBException $e)
                 {
-                    echo '<span class="error">' . _h('Failed to associate image file with addon.') . '</span><br />';
+                    $this->warnings[] = _h('Failed to associate image file with addon.');
                     unlink($this->properties['image_path']);
                     $image_file = null;
                 }
@@ -319,10 +348,7 @@ class Upload
                 catch(DBException $e)
                 {
                     $image_file = null;
-                    if (DEBUG_MODE)
-                    {
-                        trigger_error("Could not select the return from the procedure", E_ERROR);
-                    }
+                    trigger_error("Could not select the return from the procedure", E_ERROR);
                 }
             }
             else
@@ -340,7 +366,7 @@ class Upload
             }
             catch(FileException $e)
             {
-                echo '<span class="error">' . $e->getMessage() . '</span><br />';
+                throw new UploadException($e->getMessage());
             }
 
             $filetype = 'addon';
@@ -354,7 +380,7 @@ class Upload
         }
 
         // Pack zip file
-        $this->dest = UP_PATH;
+        $this->destination = UP_PATH;
         $this->generateFilename('zip');
         if (!File::compress($this->temp_dir, $this->upload_name))
         {
@@ -368,12 +394,12 @@ class Upload
                 "CALL `" . DB_PREFIX . "create_file_record`
                 (:addon_id, :upload_type, :file_type, :file, @result_id)",
                 DBConnection::NOTHING,
-                array(
+                [
                     ":addon_id"    => $addon_id,
                     ":upload_type" => $this->upload_type,
                     ":file_type"   => (string)$filetype,
                     ":file"        => basename($this->upload_name)
-                )
+                ]
             );
         }
         catch(DBException $e)
@@ -399,21 +425,19 @@ class Upload
         catch(DBException $e)
         {
             $this->properties['xml_attributes']['fileid'] = 0;
-            if (DEBUG_MODE)
-            {
-                trigger_error("Could not select the return from the procedure", E_ERROR);
-            }
+
+            trigger_error("Could not select the return from the procedure", E_ERROR);
         }
 
 
         if ($_POST['upload-type'] === 'source')
         {
-            echo _h('Successfully uploaded source archive.') . '<br />';
-            echo '<span style="font-size: large"><a href="' . File::rewrite(
+            $this->success[] = _h('Successfully uploaded source archive.');
+            $this->success[] = '<a href="' . File::rewrite(
                     'addons.php?type=' . $this->upload_type . '&amp;name=' . $this->addon_id
-                ) . '">' . _h('Continue.') . '</a></span><br />';
+                ) . '">' . _h('Continue.') . '</a>';
 
-            return true;
+            return null;
         }
 
         // Set first revision to be "latest"
@@ -443,6 +467,7 @@ class Upload
             else
             {
                 $addon = new Addon($this->addon_id);
+
                 // Check if we are the original uploader, or a moderator
                 if (User::getLoggedId() != $addon->getUploaderId() && !User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
                 {
@@ -453,23 +478,19 @@ class Upload
         }
         catch(AddonException $e)
         {
-            echo '<span class="error">' . $e->getMessage() . '</span><br />';
+            throw new UploadException($e->getMessage());
         }
 
-        echo _h(
-                'Your add-on was uploaded successfully. It will be reviewed by our moderators before becoming publicly available.'
-            )
-            . '<br /><br />';
-        echo '<a href="upload.php?type=' . $this->upload_type . '&amp;name=' . $this->addon_id . '&amp;action=file">' .
+        $this->success[] =
+            _h('Your add-on was uploaded successfully. It will be reviewed by our moderators before becoming publicly available.');
+        $this->success[] = '<a href="upload.php?type=' . $this->upload_type . '&amp;name=' . $this->addon_id . '&amp;action=file">' .
             _h('Click here to upload the sources to your add-on now.')
-            . '</a><br />';
-        echo _h(
-                '(Uploading the sources to your add-on enables others to improve your work and also ensure your add-on will not be lost in the future if new SuperTuxKart versions are not compatible with the current format.)'
-            )
-            . '<br /><br />';
-        echo '<a href="' . File::rewrite(
-                'addons.php?type=' . $this->upload_type . '&amp;name=' . $this->addon_id
-            ) . '">' . _h('Click here to view your add-on.') . '</a><br />';
+            . '</a>';
+        $this->success[] = _h(
+            '(Uploading the sources to your add-on enables others to improve your work and also ensure your add-on will not be lost in the future if new SuperTuxKart versions are not compatible with the current format.)'
+        );
+        $this->success[] = '<a href="' . File::rewrite('addons.php?type=' . $this->upload_type . '&amp;name=' . $this->addon_id) . '">'
+            . _h('Click here to view your add-on.') . '</a>';
 
         return null;
     }
@@ -483,23 +504,21 @@ class Upload
     {
         try
         {
-            $this->dest = UP_PATH . 'images' . DS;
+            $this->destination = UP_PATH . 'images' . DS;
             $this->generateFilename();
             $addon_id = Addon::cleanId($_GET['name']);
             $addon_type = $_GET['type'];
+
             rename($this->temp_dir . $this->file_name, $this->upload_name);
             File::newImage(null, $this->upload_name, $addon_id, $addon_type);
-            echo _h('Successfully uploaded image.') . '<br />';
-            echo '<span style="font-size: large"><a href="addons.php?type=' . $_GET['type'] . '&amp;name=' . $_GET['name'] . '">' .
-                _h('Continue.')
-                . '</a></span><br />';
-
-            return true;
         }
         catch(FileException $e)
         {
             throw new UploadException($e->getMessage());
         }
+
+        $this->success[] = _h('Successfully uploaded image.');
+        $this->success[] = '<a href="addons.php?type=' . $_GET['type'] . '&amp;name=' . $_GET['name'] . '">' . _h('Continue.') . '</a>';
     }
 
     /**
@@ -519,9 +538,8 @@ class Upload
 
         if (is_array($invalid_files) && !empty($invalid_files))
         {
-            echo '<span class="warning">' .
-                _h('Some invalid files were found in the uploaded add-on. These files have been removed from the archive:')
-                . ' ' . h(implode(', ', $invalid_files)) . '</span><br />';
+            $this->warnings[] = _h('Some invalid files were found in the uploaded add-on. These files have been removed from the archive:')
+                . ' ' . h(implode(', ', $invalid_files));
         }
     }
 
@@ -538,18 +556,18 @@ class Upload
         {
             $file_ext = $this->file_ext;
         }
-        if ($this->dest === null)
+        if ($this->destination === null)
         {
             throw new UploadException(_h('A destination has not been set yet'));
         }
 
         $fileid = uniqid();
-        while (file_exists($this->dest . $fileid . '.' . $file_ext))
+        while (file_exists($this->destination . $fileid . '.' . $file_ext))
         {
             $fileid = uniqid();
         }
 
-        $this->upload_name = $this->dest . $fileid . '.' . $file_ext;
+        $this->upload_name = $this->destination . $fileid . '.' . $file_ext;
     }
 
     /**
@@ -560,7 +578,7 @@ class Upload
         $files = scandir($this->temp_dir);
 
         // Initialize counters
-        $b3d_textures = array();
+        $b3d_textures = [];
 
         // Loop through all files
         foreach ($files as $file)
@@ -633,15 +651,14 @@ class Upload
         // Check to make sure all image dimensions are powers of 2
         if (!File::imageCheck($this->temp_dir))
         {
-            echo '<span class="warning">' .
-                _h('Some images in this add-on do not have dimensions that are a power of two.')
-                . ' ' . _h('This may cause display errors on some video cards.') . '</span><br />';
+            $this->warnings[] = _h('Some images in this add-on do not have dimensions that are a power of two.') . ' ' .
+                _h('This may cause display errors on some video cards.');
             $this->properties['status'] += F_TEX_NOT_POWER_OF_2;
         }
 
         // List missing textures
         $this->properties['b3d_textures'] = $b3d_textures;
-        $missing_textures = array();
+        $missing_textures = [];
         foreach ($this->properties['b3d_textures'] as $tex)
         {
             if (!file_exists($this->temp_dir . $tex))

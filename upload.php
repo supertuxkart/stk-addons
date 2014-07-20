@@ -144,7 +144,8 @@ if ($action === "submit") // form submitted
 
             var_dump($_FILES['file_addon'], $expected_type);
             $upload = new Upload($_FILES['file_addon'], $expected_type);
-            //$upload->removeTempFiles();
+            $tpl->assign("warnings", $upload->getWarningMessage());
+            $tpl->assign("success", $upload->getSuccessMessage());
         }
         catch(UploadException $e)
         {

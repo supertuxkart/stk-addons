@@ -2,8 +2,9 @@
 {include file=#header#}
 
 <div id="content">
-    {include file=#feedback_errors#}
-
+    {include file="feedback/errors.tpl"}
+    {include file="feedback/warnings.tpl"}
+    {include file="feedback/success.tpl"}
     {if $upload.display == true}
         {if $upload.form.update == true}
             <form id="formKart" enctype="multipart/form-data" action="upload.php?type={$smarty.get.type}&amp;
