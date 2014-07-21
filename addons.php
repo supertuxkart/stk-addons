@@ -37,15 +37,18 @@ if (is_null($_GET['type']))
 // check type
 switch ($_GET['type'])
 {
-    case 'tracks':
+    case Addon::TRACK:
         $type_label = _h('Tracks');
         break;
-    case 'karts':
+
+    case Addon::KART:
         $type_label = _h('Karts');
         break;
-    case 'arenas':
+
+    case Addon::ARENA:
         $type_label = _h('Arenas');
         break;
+
     default:
         $type_label = _h('Unknown Type');
         $panel["status"] = '<span class="error">' . _h('Invalid addon type.') . '</span><br />';
@@ -67,11 +70,11 @@ $tpl = StkTemplate::get("two-pane.tpl")
     ->assign("title", $title)
     ->addUtilLibrary()
     ->addScriptInclude("addon.js");
-$panel = array(
+$panel = [
     'left'   => '',
     'status' => '',
     'right'  => ''
-);
+];
 
 // Execute actions
 $status = "";
@@ -114,6 +117,7 @@ try
             {
                 break;
             }
+
             $mAddon = new Addon($_GET['name']);
             $mAddon->setNotes($_POST['fields']);
             $status = _h('Saved notes.') . '<br>';
@@ -122,14 +126,12 @@ try
         case 'delete':
             $delAddon = new Addon($_GET['name']);
             $delAddon->delete();
-            unset($delAddon);
             $status = _h('Deleted addon.') . '<br>';
             break;
 
         case 'del_rev':
             $delRev = new Addon($_GET['name']);
             $delRev->deleteRevision($_GET['rev']);
-            unset($delRev);
             $status = _h('Deleted add-on revision.') . '<br>';
             break;
 
@@ -179,7 +181,7 @@ catch(Exception $e)
 }
 $panel["status"] = $status;
 
-$addons = array();
+$addons = [];
 $addons_list = Addon::getAddonList($_GET['type'], true);
 foreach ($addons_list as $ad)
 {
@@ -188,12 +190,12 @@ foreach ($addons_list as $ad)
         $adc = new Addon($ad);
 
         // Get link icon
-        if ($adc->getType() === 'karts')
+        if ($adc->getType() === Addon::KART)
         {
             // Make sure an icon file is set for kart
             if ($adc->getImage(true) != 0)
             {
-                $im = Cache::getImage($adc->getImage(true), array('size' => 'small'));
+                $im = Cache::getImage($adc->getImage(true), ['size' => 'small']);
                 if ($im['exists'] && $im['approved'])
                 {
                     $icon = $im['url'];
@@ -234,12 +236,12 @@ foreach ($addons_list as $ad)
         {
             $icon_html = '<div class="icon-featured"></div>' . $icon_html;
         }
-        $addons[] = array(
+        $addons[] = [
             'class' => $class,
             'url'   => "addons.php?type={$_GET['type']}&amp;name={$adc->getId()}",
             'label' => '<div class="icon">' . $icon_html . '</div>' . h($adc->getName()),
             'disp'  => File::rewrite("addons.php?type={$_GET['type']}&amp;name={$adc->getId()}")
-        );
+        ];
     }
     catch(AddonException $e)
     {
