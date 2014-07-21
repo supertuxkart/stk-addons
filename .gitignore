@@ -3,4 +3,3 @@ config.php
 assets/xml/*
 .idea/
 vendor/
-upload/

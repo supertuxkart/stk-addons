@@ -34,7 +34,7 @@ define("ROOT_PATH", __DIR__ . DS);
 define("INCLUDE_PATH", ROOT_PATH . "include" . DS);
 define("TPL_PATH", ROOT_PATH . "tpl" . DS . "default" . DS); // Template properties
 define("TMP_PATH", sys_get_temp_dir() . DS); // define temporary directory path
-define("UPLOAD_PATH", ROOT_PATH . "upload" . DS);
+define("UPLOAD_PATH", ROOT_PATH . "uploads" . DS);
 define("UPLOAD_CRON_PATH", UPLOAD_PATH);
 define("BUGS_PATH", ROOT_PATH . "bugs" . DS);
 define("STATS_PATH", ROOT_PATH . "stats" . DS);
