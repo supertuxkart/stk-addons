@@ -654,10 +654,7 @@ class AddonViewer
 
             // Delete revision button
             echo '<td>';
-            echo '<input type="button" value="' . sprintf(
-                    _h('Delete revision %d')
-                ),
-                $rev_n
+            echo '<input type="button" value="' . sprintf(_h('Delete revision %d'),  $rev_n)
                 . '" onClick="confirm_delete(\'' . File::rewrite(
                     $this->addon->getLink() . '&amp;save=del_rev&amp;rev=' . $rev_n
                 ) . '\');" />';

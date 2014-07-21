@@ -57,7 +57,7 @@ define("ASSETS_XML_PATH", UP_PATH . "xml" . DS . "assets.xml");
 // make sure that this ends with a trailing slash, otherwise it would break a few things (like the activation email)
 define("SITE_ROOT", "http://stkaddons.net/");
 
-define("DOWNLOAD_LOCATION", SITE_ROOT . "upload/");
+define("DOWNLOAD_LOCATION", SITE_ROOT . "uploads/");
 define("BUGS_LOCATION", SITE_ROOT . "bugs/");
 define("STATS_LOCATION", SITE_ROOT . "stats/");
 define("NEWS_XM_LOCATION", DOWNLOAD_LOCATION . "xml/news.xml");
