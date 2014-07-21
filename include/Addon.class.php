@@ -207,12 +207,12 @@ class Addon extends Base
      *
      * @param array  $attributes
      * @param string $file_id
+     * @param string $moderator_message
      *
      * @throws AddonException
      */
-    public function createRevision($attributes, $file_id)
+    public function createRevision($attributes, $file_id, $moderator_message = "")
     {
-        global $moderator_message;
         foreach ($attributes['missing_textures'] as $tex)
         {
             $moderator_message .= "Texture not found: $tex\n";
@@ -298,7 +298,7 @@ class Addon extends Base
         }
 
         // Add moderator message if available
-        if (!empty($moderator_message))
+        if ($moderator_message)
         {
             $fields_data[":moderator_note"] = $moderator_message;
         }
@@ -1353,7 +1353,7 @@ class Addon extends Base
                 WHERE `id` = :id
                 LIMIT 1',
                 DBConnection::FETCH_FIRST,
-                array(':id' => $id)
+                [':id' => $id]
             );
         }
         catch(DBException $e)
@@ -1440,7 +1440,7 @@ class Addon extends Base
     {
         if (!is_string($id))
         {
-            trigger_error("ID is not a string", E_ERROR);
+            trigger_error("ID is not a string");
             return false;
         }
 
@@ -1478,21 +1478,20 @@ class Addon extends Base
      */
     public static function search($search_query, $search_description = true)
     {
+        // build query
+        $query = "SELECT * FROM `" . DB_PREFIX . "addons` WHERE `name` LIKE :search_query";
+
+        if ($search_description)
+        {
+            $query .= " OR `description` LIKE :search_query";
+        }
+
         try
         {
-            $query = "SELECT * FROM `" . DB_PREFIX . "addons` WHERE `name` LIKE :search_query";
-
-            if ($search_description)
-            {
-                $query .= " OR `description` LIKE :search_query";
-            }
-
             $addons = DBConnection::get()->query(
                 $query,
                 DBConnection::FETCH_ALL,
-                array(
-                    ':search_query' => '%' . $search_query . '%'
-                )
+                [':search_query' => '%' . $search_query . '%']
             );
         }
         catch(DBException $e)
@@ -1607,14 +1606,14 @@ class Addon extends Base
      * @param array   $attributes        Contains properties of the add-on. Must have the
      *                                   following elements: name, designer, license, image, fileid, status, (arena)
      * @param string  $fileid            ID for revision file (see FIXME below)
+     * @param string $moderator_message
      *
      * @throws AddonException
      *
      * @return Addon Object for newly created add-on
      */
-    public static function create($type, $attributes, $fileid)
+    public static function create($type, $attributes, $fileid, $moderator_message)
     {
-        global $moderator_message;
         foreach ($attributes['missing_textures'] as $tex)
         {
             $moderator_message .= "Texture not found: $tex\n";
@@ -1636,9 +1635,7 @@ class Addon extends Base
         // Make sure the add-on doesn't already exist
         if (static::exists($id))
         {
-            throw new AddonException(
-                _h('An add-on with this ID already exists. Please try to upload your add-on again later.')
-            );
+            throw new AddonException(_h('An add-on with this ID already exists. Please try to upload your add-on again later.'));
         }
 
         // Make sure no revisions with this id exists
@@ -1713,7 +1710,7 @@ class Addon extends Base
         }
 
         // Add moderator message if available
-        if (!empty($moderator_message))
+        if ($moderator_message)
         {
             $fields_data[":moderator_note"] = $moderator_message;
         }

@@ -96,6 +96,12 @@ class Upload
     private $addon_id;
 
     /**
+     * Hold the addon moderator message
+     * @var string
+     */
+    private $moderator_message;
+
+    /**
      * Hold the warning messages
      * @var array
      */
@@ -112,14 +118,16 @@ class Upload
      *
      * @param array $file_record
      * @param int $expected_type see File::SOURCE, FILE::ADDON
+     * @param string $moderator_message
      */
-    public function __construct($file_record, $expected_type)
+    public function __construct($file_record, $expected_type, $moderator_message)
     {
         $this->file_name = $file_record['name'];
         $this->file_type = $file_record['type'];
         $this->file_tmp = $file_record['tmp_name'];
         $this->file_size = $file_record['size'];
         $this->expected_file_type = $expected_type;
+        $this->moderator_message = $moderator_message;
 
         // validate
         static::checkUploadError($file_record['error']);
@@ -470,7 +478,7 @@ class Upload
                     );
                 }
 
-                $addon = Addon::create($this->upload_type, $this->properties['xml_attributes'], $fileid);
+                $addon = Addon::create($this->upload_type, $this->properties['xml_attributes'], $fileid, $this->moderator_message);
             }
             else
             {
@@ -481,7 +489,7 @@ class Upload
                 {
                     throw new UploadException(_h('You do not have the necessary permissions to perform this action.'));
                 }
-                $addon->createRevision($this->properties['xml_attributes'], $fileid);
+                $addon->createRevision($this->properties['xml_attributes'], $fileid, $this->moderator_message);
             }
         }
         catch(AddonException $e)
