@@ -21,7 +21,7 @@
 /**
  * Class Addon
  */
-class Addon
+class Addon extends Base
 {
     const KART = "karts";
 
@@ -106,6 +106,16 @@ class Addon
 
 
     /**
+     * @param string $message
+     *
+     * @throws AddonException
+     */
+    protected static function throwException($message)
+    {
+        throw new AddonException($message);
+    }
+
+    /**
      * Instance constructor
      *
      * @param string $id
@@ -124,7 +134,7 @@ class Addon
                 FROM `' . DB_PREFIX . 'addons`
                 WHERE `id` = :id',
                 DBConnection::FETCH_FIRST,
-                array(':id' => (string)$this->id)
+                [':id' => (string)$this->id]
             );
         }
         catch(DBException $e)
@@ -206,9 +216,6 @@ class Addon
         foreach ($attributes['missing_textures'] as $tex)
         {
             $moderator_message .= "Texture not found: $tex\n";
-            echo '<span class="warning">' . h(
-                    sprintf(_('Texture not found: %s'), $tex)
-                ) . '</span><br />';
         }
 
         // Check if logged in
@@ -276,18 +283,18 @@ class Addon
 
         // Add revision entry
         $fields_data = array(
-            ":id" => $file_id,
+            ":id"       => $file_id,
             ":addon_id" => $this->id,
-            ":fileid" => $attributes['fileid'],
+            ":fileid"   => $attributes['fileid'],
             ":revision" => $rev,
-            ":format" => $attributes['version'],
-            ":image" => $attributes['image'],
-            ":status" => $attributes['status']
+            ":format"   => $attributes['version'],
+            ":image"    => $attributes['image'],
+            ":status"   => $attributes['status']
         );
 
         if ($this->type === 'karts')
         {
-            $fields_data[":icon"] =  $attributes['image'];
+            $fields_data[":icon"] = $attributes['image'];
         }
 
         // Add moderator message if available
@@ -1433,11 +1440,12 @@ class Addon
     {
         if (!is_string($id))
         {
+            trigger_error("ID is not a string", E_ERROR);
             return false;
         }
 
         $length = mb_strlen($id);
-        if ($length === 0)
+        if (!$length)
         {
             return false;
         }
@@ -1472,10 +1480,9 @@ class Addon
     {
         try
         {
+            $query = "SELECT * FROM `" . DB_PREFIX . "addons` WHERE `name` LIKE :search_query";
 
-            $query =  "SELECT * FROM `" . DB_PREFIX . "addons` WHERE `name` LIKE :search_query";
-
-            if($search_description)
+            if ($search_description)
             {
                 $query .= " OR `description` LIKE :search_query";
             }
@@ -1508,42 +1515,45 @@ class Addon
     {
         if (!static::isAllowedType($type))
         {
-            return array();
+            return [];
         }
 
-        try
-        {
-            $query = 'SELECT `a`.`id`, (`r`.`status` & ' . F_FEATURED . ') AS `featured`
+        // build query
+        $query = 'SELECT `a`.`id`, (`r`.`status` & ' . F_FEATURED . ') AS `featured`
                       FROM `' . DB_PREFIX . 'addons` `a`
                       LEFT JOIN `' . DB_PREFIX . $type . '_revs` `r`
                       ON `a`.`id` = `r`.`addon_id`
                       WHERE `a`.`type` = :type
                       AND `r`.`status` & :latest_bit ';
-            if ($featuredFirst)
-            {
-                $query .= 'ORDER BY `featured` DESC, `a`.`name` ASC, `a`.`id` ASC';
-            }
-            else
-            {
-                $query .= 'ORDER BY `name` ASC, `id` ASC';
-            }
+        if ($featuredFirst)
+        {
+            $query .= 'ORDER BY `featured` DESC, `a`.`name` ASC, `a`.`id` ASC';
+        }
+        else
+        {
+            $query .= 'ORDER BY `name` ASC, `id` ASC';
+        }
+
+        try
+        {
             $list = DBConnection::get()->query(
                 $query,
                 DBConnection::FETCH_ALL,
                 array(':type' => $type, ':latest_bit' => F_LATEST)
             );
-            $return = array();
-            foreach ($list as $addon)
-            {
-                $return[] = $addon['id'];
-            }
-
-            return $return;
         }
         catch(DBException $e)
         {
-            return array();
+            return [];
         }
+
+        $return = [];
+        foreach ($list as $addon)
+        {
+            $return[] = $addon['id'];
+        }
+
+        return $return;
     }
 
     /**
@@ -1608,9 +1618,6 @@ class Addon
         foreach ($attributes['missing_textures'] as $tex)
         {
             $moderator_message .= "Texture not found: $tex\n";
-            echo '<span class="warning">' . h(
-                    sprintf(_('Texture not found: %s'), $tex)
-                ) . '</span><br />';
         }
 
         // Check if logged in
@@ -1642,29 +1649,29 @@ class Addon
             $rows = DBConnection::get()->query(
                 'SELECT * FROM ' . DB_PREFIX . $type . '_revs WHERE `id` = :id',
                 DBConnection::ROW_COUNT,
-                array(':id' => $fileid)
+                [':id' => $fileid]
             );
-            if ($rows)
-            {
-                throw new AddonException(_h('The add-on you are trying to create already exists.'));
-            }
         }
         catch(DBException $e)
         {
             throw new AddonException(sprintf('Failed to acces the %s_revs table.', $type));
         }
 
+        if ($rows)
+        {
+            throw new AddonException(_h('The add-on you are trying to create already exists.'));
+        }
 
-        echo _h('Creating a new add-on...') . '<br>';
+        // add addon to database
         $fields_data = array(
-            ":id" => $id,
-            ":type" => $type,
-            ":name" => $attributes['name'],
+            ":id"       => $id,
+            ":type"     => $type,
+            ":name"     => $attributes['name'],
             ":uploader" => User::getLoggedId(),
             ":designer" => $attributes['designer'],
-            ":license" =>  $attributes['license']
+            ":license"  => $attributes['license']
         );
-        if ($type === 'tracks')
+        if ($type === static::TRACK)
         {
             if ($attributes['arena'] === 'Y')
             {
@@ -1675,6 +1682,7 @@ class Addon
                 $fields_data[":props"] = '0';
             }
         }
+
         try
         {
             DBConnection::get()->insert("addons", $fields_data);
@@ -1690,16 +1698,16 @@ class Addon
 
         // Generate revision entry
         $fields_data = array(
-            ":id" => $fileid,
+            ":id"       => $fileid,
             ":addon_id" => $id,
-            ":fileid" => $attributes['fileid'],
+            ":fileid"   => $attributes['fileid'],
             ":revision" => $rev,
-            ":format" => $attributes['version'],
-            ":image" =>  $attributes['image'],
-            ":status" =>  $attributes['status']
+            ":format"   => $attributes['version'],
+            ":image"    => $attributes['image'],
+            ":status"   => $attributes['status']
 
         );
-        if ($type === 'karts')
+        if ($type === static::KART)
         {
             $fields_data[":icon"] = $attributes['image'];
         }
@@ -1753,7 +1761,7 @@ class Addon
                 FROM `' . DB_PREFIX . 'addons`
                 WHERE `id` = :addon_id',
                 DBConnection::ROW_COUNT,
-                array(':addon_id' => Addon::cleanId($addon_id))
+                [':addon_id' => Addon::cleanId($addon_id)]
             );
         }
         catch(DBException $e)

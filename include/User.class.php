@@ -867,7 +867,10 @@ class User extends Base
                     ":role"   => $role,
                     ":active" => $available
                 ],
-                [":id" => DBConnection::PARAM_INT, ":active" => DBConnection::PARAM_INT]
+                [
+                    ":id"     => DBConnection::PARAM_INT,
+                    ":active" => DBConnection::PARAM_INT
+                ]
             );
         }
         catch(DBException $e)

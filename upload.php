@@ -142,7 +142,6 @@ if ($action === "submit") // form submitted
                     break;
             }
 
-            var_dump($_FILES['file_addon'], $expected_type);
             $upload = new Upload($_FILES['file_addon'], $expected_type);
             $tpl->assign("warnings", $upload->getWarningMessage());
             $tpl->assign("success", $upload->getSuccessMessage());

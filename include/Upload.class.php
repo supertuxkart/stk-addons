@@ -510,14 +510,15 @@ class Upload
      */
     private function doImageUpload()
     {
+        $this->destination = UP_PATH . 'images' . DS;
+        $this->generateFilename();
+        $addon_id = Addon::cleanId($_GET['name']);
+        $addon_type = $_GET['type'];
+
+        rename($this->temp_dir . $this->file_name, $this->upload_name);
+
         try
         {
-            $this->destination = UP_PATH . 'images' . DS;
-            $this->generateFilename();
-            $addon_id = Addon::cleanId($_GET['name']);
-            $addon_type = $_GET['type'];
-
-            rename($this->temp_dir . $this->file_name, $this->upload_name);
             File::newImage(null, $this->upload_name, $addon_id, $addon_type);
         }
         catch(FileException $e)
