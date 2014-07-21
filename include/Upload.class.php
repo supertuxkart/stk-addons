@@ -48,14 +48,16 @@ class Upload
     private $file_tmp;
 
     /**
+     * The upload file extension
      * @var string
      */
     private $file_ext;
 
     /**
-     * @var string
+     * The expected file type
+     * @var int
      */
-    private $expected_type;
+    private $expected_file_type;
 
     /**
      * @var string
@@ -93,7 +95,6 @@ class Upload
      */
     private $addon_id;
 
-
     /**
      * Hold the warning messages
      * @var array
@@ -109,8 +110,8 @@ class Upload
     /**
      * Constructor
      *
-     * @param $file_record
-     * @param $expected_type
+     * @param array $file_record
+     * @param int $expected_type see File::SOURCE, FILE::ADDON
      */
     public function __construct($file_record, $expected_type)
     {
@@ -118,10 +119,11 @@ class Upload
         $this->file_type = $file_record['type'];
         $this->file_tmp = $file_record['tmp_name'];
         $this->file_size = $file_record['size'];
-        $this->expected_type = $expected_type;
+        $this->expected_file_type = $expected_type;
 
+        // validate
         static::checkUploadError($file_record['error']);
-        $this->file_ext = static::checkUploadExtension($this->file_name, $this->expected_type);
+        $this->file_ext = static::checkUploadExtension($this->file_name, $this->expected_file_type);
 
         $this->temp_dir = TMP_PATH . 'uploads' . DS . time() . '-' . $this->file_name . DS;
 
@@ -144,7 +146,7 @@ class Upload
      */
     public function removeTempFiles()
     {
-        File::deleterecursive($this->temp_dir);
+        File::deleteDir($this->temp_dir);
     }
 
     /**
@@ -186,7 +188,7 @@ class Upload
         }
 
         // treat images separately
-        if ($this->expected_type === 'image')
+        if ($this->expected_file_type === File::IMAGE)
         {
             $this->doImageUpload();
 
@@ -243,7 +245,7 @@ class Upload
             {
                 $addon_id = null;
             }
-            elseif ($this->expected_type !== 'source')
+            elseif ($this->expected_file_type !== File::SOURCE)
             {
                 $addon = new Addon($addon_id);
                 $revisions = $addon->getAllRevisions();
@@ -254,7 +256,7 @@ class Upload
         }
 
         // For source packages
-        if ($this->expected_type === 'source')
+        if ($this->expected_file_type === File::SOURCE)
         {
             if ($addon_id === null)
             {
@@ -382,9 +384,15 @@ class Upload
         // Pack zip file
         $this->destination = UP_PATH;
         $this->generateFilename('zip');
-        if (!File::compress($this->temp_dir, $this->upload_name))
+
+        try
         {
-            throw new UploadException(_h('Failed to re-pack archive file.'));
+            File::compress($this->temp_dir, $this->upload_name);
+        }
+        catch(FileException $e)
+        {
+            throw new UploadException(_h('Failed to re-pack archive file. Reason: ' . $e->getMessage()));
+
         }
 
         // Record addon's file in database
@@ -397,7 +405,7 @@ class Upload
                 [
                     ":addon_id"    => $addon_id,
                     ":upload_type" => $this->upload_type,
-                    ":file_type"   => (string)$filetype,
+                    ":file_type"   => $filetype,
                     ":file"        => basename($this->upload_name)
                 ]
             );
@@ -527,14 +535,7 @@ class Upload
     private function removeInvalidFiles()
     {
         // Check for invalid files
-        if ($this->expected_type !== 'source')
-        {
-            $invalid_files = File::typeCheck($this->temp_dir);
-        }
-        else
-        {
-            $invalid_files = File::typeCheck($this->temp_dir, true);
-        }
+        $invalid_files = File::typeCheck($this->temp_dir, $this->expected_file_type === File::SOURCE);
 
         if (is_array($invalid_files) && !empty($invalid_files))
         {
@@ -546,13 +547,13 @@ class Upload
     /**
      * Generate a random file name for our upload_name attribute
      *
-     * @$file_ext string $file_ext
+     * @param string $file_ext optional param
      *
      * @throws UploadException if the destination is not set
      */
     private function generateFilename($file_ext = null)
     {
-        if ($file_ext === null)
+        if (!$file_ext)
         {
             $file_ext = $this->file_ext;
         }
@@ -666,6 +667,7 @@ class Upload
                 $missing_textures[] = $tex;
             }
         }
+
         // Remove duplicate values
         $this->properties['missing_textures'] = array_unique($missing_textures, SORT_STRING);
     }
@@ -708,24 +710,23 @@ class Upload
             case UPLOAD_ERR_CANT_WRITE:
                 throw new UploadException(_h('Unable to write uploaded file to disk.'));
             default:
-                throw new UploadException(_h('Unknown file upload error.'));
+                throw new UploadException(_h('Unknown file upload error.') . $error_code);
         }
     }
 
     /**
-     * Check the filename for an uploaded file to make sure the extension is
-     * one that can be handled
+     * Check the filename for an uploaded file to make sure the extension is one that can be handled
      *
      * @param string $filename
-     * @param string $type
+     * @param int $type
      *
      * @throws UploadException
      * @return string
      */
-    public static function checkUploadExtension($filename, $type = null)
+    public static function checkUploadExtension($filename, $type = -1)
     {
         // Check file-extension for uploaded file
-        if ($type === 'image')
+        if ($type === File::IMAGE)
         {
             if (!preg_match('/\.(png|jpg|jpeg)$/i', $filename, $file_ext))
             {

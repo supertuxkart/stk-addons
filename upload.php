@@ -130,15 +130,15 @@ if ($action === "submit") // form submitted
             switch ($_POST['upload-type'])
             {
                 case 'image':
-                    $expected_type = 'image';
+                    $expected_type = File::IMAGE;
                     break;
 
                 case 'source':
-                    $expected_type = 'source';
+                    $expected_type = File::SOURCE;
                     break;
 
                 default:
-                    $expected_type = 'addon';
+                    $expected_type = File::ADDON;
                     break;
             }
 

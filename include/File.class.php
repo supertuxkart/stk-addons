@@ -26,6 +26,21 @@
 class File
 {
     /**
+     * @const int
+     */
+    const IMAGE = 1;
+
+    /**
+     * @const int
+     */
+    const SOURCE = 2;
+
+    /**
+     * @const int
+     */
+    const ADDON = 3;
+
+    /**
      * Approve a file
      *
      * @param int  $file_id
@@ -44,7 +59,7 @@ class File
 
         if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
         {
-            throw new FileException(_h('Insufficient permissions.'));
+            throw new FileException(_h('Insufficient permissions to approve a file'));
         }
 
         try
@@ -54,10 +69,14 @@ class File
                 SET `approved` = :approve
                 WHERE `id` = :file_id',
                 DBConnection::NOTHING,
-                array(
+                [
                     ':approve' => (int)$approve,
                     ':file_id' => $file_id
-                )
+                ],
+                [
+                    ":approve" => DBConnection::PARAM_INT,
+                    ":file_id" => DBConnection::PARAM_INT
+                ]
             );
         }
         catch(DBException $e)
@@ -85,9 +104,7 @@ class File
                 FROM `' . DB_PREFIX . 'files`
                 WHERE `file_path` = :path',
                 DBConnection::FETCH_ALL,
-                array(
-                    ':path' => $path,
-                )
+                [':path' => $path]
             );
 
         }
@@ -189,11 +206,10 @@ class File
      * @param string $directory
      * @param string $out_file
      *
-     * @return bool
+     * @throws FileException
      */
     public static function compress($directory, $out_file)
     {
-        // TODO throw exceptions
         $zip = new ZipArchive();
         $filename = $out_file;
 
@@ -204,9 +220,7 @@ class File
 
         if ($zip->open($filename, ZIPARCHIVE::CREATE) !== true)
         {
-            echo("Cannot open <$filename>\n");
-
-            return false;
+            throw new FileException("Cannot open <$filename>");
         }
 
         // Find files to add to archive
@@ -218,26 +232,18 @@ class File
             }
             if (!$zip->addFile($directory . $file, $file))
             {
-                echo "Can't add this file: " . $file . "\n";
-
-                return false;
+                throw new FileException("Can't add this file: " . $file);
             }
             if (!file_exists($directory . $file))
             {
-                echo "Can't add this file (it doesn't exist): " . $file . "\n";
-
-                return false;
+                throw new FileException("Can't add this file (it doesn't exist): " . $file);
             }
         }
 
         if (!$zip->close())
         {
-            echo "Can't close the zip\n";
-
-            return false;
+            throw new FileException("Can't close the zip");
         }
-
-        return true;
     }
 
     /**
@@ -263,7 +269,7 @@ class File
             if (is_dir($current_dir . $file))
             {
                 File::flattenDirectory($current_dir . $file . DS, $destination_dir);
-                File::deleteRecursive($current_dir . $file);
+                File::deleteDir($current_dir . $file);
                 continue;
             }
 
@@ -275,7 +281,9 @@ class File
     }
 
     /**
-     * @param string $path
+     * Check that all image sizes are power of 2 and
+     *
+     * @param string $path the path to an image
      *
      * @return bool
      */
@@ -292,31 +300,31 @@ class File
 
         // Check supported image types
         $image_types = imagetypes();
-        $imageFileExts = array();
+        $image_file_ext = [];
         if ($image_types & IMG_GIF)
         {
-            $imageFileExts[] = 'gif';
+            $image_file_ext[] = 'gif';
         }
         if ($image_types & IMG_PNG)
         {
-            $imageFileExts[] = 'png';
+            $image_file_ext[] = 'png';
         }
         if ($image_types & IMG_JPG)
         {
-            $imageFileExts[] = 'jpg';
-            $imageFileExts[] = 'jpeg';
+            $image_file_ext[] = 'jpg';
+            $image_file_ext[] = 'jpeg';
         }
         if ($image_types & IMG_WBMP)
         {
-            $imageFileExts[] = 'wbmp';
+            $image_file_ext[] = 'wbmp';
         }
         if ($image_types & IMG_XPM)
         {
-            $imageFileExts[] = 'xpm';
+            $image_file_ext[] = 'xpm';
         }
 
-
-        foreach (scandir($path) as $file)
+        $files = scandir($path);
+        foreach ($files as $file)
         {
             // Don't check current and parent directory
             if ($file === '.' || $file === '..' || is_dir($path . $file))
@@ -328,20 +336,22 @@ class File
             $file = $path . $file;
 
             // Don't check files that aren't images
-            if (!preg_match('/\.(' . implode('|', $imageFileExts) . ')$/i', $file))
+            if (!preg_match('/\.(' . implode('|', $image_file_ext) . ')$/i', $file))
             {
                 continue;
             }
 
             // If we're still in the loop, there is an image to check
             $image_size = getimagesize($file);
+            $image_width = $image_size[0];
+            $image_height = $image_size[1];
 
-            // Make sure dimensions are powers of 2
-            if (($image_size[0] & ($image_size[0] - 1)) || ($image_size[0] <= 0))
+            // Make sure dimensions are powers of 2. By using: num & (num - 1)
+            if (($image_width & ($image_width - 1)) || ($image_width <= 0))
             {
                 return false;
             }
-            if (($image_size[1] & ($image_size[1] - 1)) || ($image_size[1] <= 0))
+            if (($image_height & ($image_height - 1)) || ($image_height <= 0))
             {
                 return false;
             }
@@ -377,7 +387,7 @@ class File
             $approved_types = ConfigManager::getConfig('allowed_source_exts');
         }
         $approved_types = array_map("trim", explode(',', $approved_types));
-        $removed_files = array();
+        $removed_files = [];
 
         foreach (scandir($path) as $file)
         {
@@ -414,6 +424,7 @@ class File
      */
     public static function delete($file_id)
     {
+        // delete from filesystem
         try
         {
             $file = DBConnection::get()->query(
@@ -422,41 +433,31 @@ class File
                 WHERE `id` = :file_id
                 LIMIT 1',
                 DBConnection::FETCH_FIRST,
-                array(
-                    ':file_id' => $file_id,
-                ),
-                array(
-                    ':file_id' => DBConnection::PARAM_INT
-                )
+                [':file_id' => $file_id],
+                [':file_id' => DBConnection::PARAM_INT]
             );
-
-            if (!empty($file))
-            {
-                if (file_exists(UP_PATH . $file['file_path']))
-                {
-                    unlink(UP_PATH . $file['file_path']);
-                }
-            }
-
         }
         catch(DBException $e)
         {
             return false;
         }
+        if ($file)
+        {
+            if (file_exists(UP_PATH . $file['file_path']))
+            {
+                unlink(UP_PATH . $file['file_path']);
+            }
+        }
 
-        // Delete file record
+        // delete file from databse
         try
         {
             DBConnection::get()->query(
                 'DELETE FROM `' . DB_PREFIX . 'files`
                 WHERE `id` = :file_id',
                 DBConnection::NOTHING,
-                array(
-                    ':file_id' => $file_id,
-                ),
-                array(
-                    ':file_id' => DBConnection::PARAM_INT
-                )
+                [':file_id' => $file_id],
+                [':file_id' => DBConnection::PARAM_INT]
             );
         }
         catch(DBException $e)
@@ -487,9 +488,7 @@ class File
                 WHERE `delete_date` <= :date
                 AND `delete_date` <> \'0000-00-00\'',
                 DBConnection::FETCH_ALL,
-                array(
-                    ':date' => date('Y-m-d'),
-                )
+                [':date' => date('Y-m-d')]
             );
         }
         catch(DBException $e)
@@ -514,10 +513,10 @@ class File
      * Delete subdirectories of a folder which have not been modified recently
      *
      * @param string $dir
-     * @param int    $max_age in seconds
+     * @param int    $max_age in milliseconds
      *
      * @return null
-     * @throws FileException only in debug mode
+     * @throws FileException
      */
     public static function deleteOldSubdirectories($dir, $max_age)
     {
@@ -525,14 +524,10 @@ class File
         $dir = rtrim($dir, DS);
         if (!is_dir($dir))
         {
-            if (DEBUG_MODE)
-            {
-                echo sprintf("%s is not a directory", $dir);
-            }
+            trigger_error(sprintf("%s is not a directory", $dir));
 
             return null;
         }
-
 
         $files = scandir($dir);
         foreach ($files as $file)
@@ -545,7 +540,7 @@ class File
                 // Check if our folder is old enough to delete
                 if (time() - $last_mod > $max_age)
                 {
-                    File::deleteRecursive($dir . DS . $file);
+                    File::deleteDir($dir . DS . $file);
                 }
             }
         }
@@ -553,26 +548,22 @@ class File
     }
 
     /**
-     * Recursively delete files. This does not touch the database.
+     * Recursively delete a directory. This does not touch the database.
      *
-     * @param string $dir
-     * @param string $exclude_regex
+     * @param string      $dir the directory to delete
+     * @param string|null $exclude_regex
      *
-     * @return bool
      * @throws FileException only in debug mode
      */
-    public static function deleteRecursive($dir, $exclude_regex = null)
+    public static function deleteDir($dir, $exclude_regex = null)
     {
         // Make sure we are looking at a directory
         $dir = rtrim($dir, DS);
         if (!is_dir($dir))
         {
-            if (DEBUG_MODE)
-            {
-                echo sprintf("%s is not a directory", $dir);
-            }
+            trigger_error(sprintf("%s is not a directory", $dir));
 
-            return false;
+            return;
         }
 
         $oDir = dir($dir);
@@ -580,25 +571,25 @@ class File
         {
             if ($sFile !== '.' && $sFile !== '..')
             {
-                if ($exclude_regex !== null && preg_match($exclude_regex, $sFile))
+                if ($exclude_regex && preg_match($exclude_regex, $sFile))
                 {
                     continue;
                 }
 
-                if (!is_link($dir . DS . $sFile) && is_dir($dir . DS . $sFile))
+                // delete file or directory
+                $file_path = $dir . DS . $sFile;
+                if (!is_link($file_path) && is_dir($file_path))
                 {
-                    File::deleteRecursive($dir . DS . $sFile);
+                    File::deleteDir($file_path);
                 }
                 else
                 {
-                    unlink($dir . DS . $sFile);
+                    unlink($file_path);
                 }
             }
         }
         $oDir->close();
         rmdir($dir);
-
-        return true;
     }
 
     /**
@@ -631,12 +622,8 @@ class File
                 WHERE `id` = :file_id
                 LIMIT 1',
                 DBConnection::FETCH_FIRST,
-                array(
-                    ':file_id' => $file_id
-                ),
-                array(
-                    ':file_id' => DBConnection::PARAM_INT
-                )
+                [':file_id' => $file_id],
+                [':file_id' => DBConnection::PARAM_INT]
             );
         }
         catch(DBException $e)
@@ -683,12 +670,8 @@ class File
                 WHERE `id` = :file_id
                 LIMIT 1',
                 DBConnection::FETCH_FIRST,
-                array(
-                    ':file_id' => $file_id
-                ),
-                array(
-                    ':file_id' => DBConnection::PARAM_INT
-                )
+                [':file_id' => $file_id],
+                [':file_id' => DBConnection::PARAM_INT]
             );
         }
         catch(DBException $e)
@@ -728,7 +711,7 @@ class File
         }
 
         // Look-up all existing files on the disk
-        $files = array();
+        $files = [];
         $folder = UP_PATH;
         $dir_handle = opendir($folder);
         while (false !== ($entry = readdir($dir_handle)))
@@ -752,7 +735,7 @@ class File
 
         // Loop through database records and remove those entries from the list
         // of files existing on the disk
-        $return_files = array();
+        $return_files = [];
         foreach ($db_files as $db_file)
         {
             $search = array_search($db_file['file_path'], $files);
@@ -773,14 +756,14 @@ class File
         $files_count = count($files);
         for ($i = 0; $i < $files_count; $i++)
         {
-            $return_files[] = array(
+            $return_files[] = [
                 'id'         => false,
                 'addon_id'   => false,
                 'addon_type' => false,
                 'file_type'  => false,
                 'file_path'  => $files[$i],
                 'exists'     => true
-            );
+            ];
         }
 
         return $return_files;
@@ -816,9 +799,7 @@ class File
                         'DELETE FROM `' . DB_PREFIX . 'files`
                         WHERE `file_path` = :file_name',
                         DBConnection::NOTHING,
-                        array(
-                            ":file_name" => 'images/' . basename($file_name)
-                        )
+                        [":file_name" => 'images/' . basename($file_name)]
                     );
                 }
                 catch(DBException $e)
@@ -840,6 +821,7 @@ class File
             unlink($image_path);
             throw new FileException(_h('The uploaded image file is invalid.'));
         }
+
         // Validate image size
         if ($gdImageInfo[0] > ConfigManager::getConfig('max_image_dimension')
             || $gdImageInfo[1] > ConfigManager::getConfig('max_image_dimension')
@@ -868,11 +850,11 @@ class File
                 "CALL `" . DB_PREFIX . "create_file_record`
                 (:addon_id, :upload_type, 'image', :file, @result_id)",
                 DBConnection::NOTHING,
-                array(
+                [
                     ":addon_id"    => $addon_id,
                     ":upload_type" => $addon_type,
                     ":file"        => 'images/' . basename($file_name)
-                )
+                ]
             );
         }
         catch(DBException $e)
@@ -904,7 +886,7 @@ class File
         }
 
         // Cycle through all of the xml file's elements
-        $quads = array();
+        $quads = [];
         foreach ($vals as $val)
         {
             if ($val['type'] === 'close' || $val['type'] === 'comment')
@@ -1011,7 +993,7 @@ class File
         imagesavealpha($image, true);
 
         // Set up colors
-        $color = array();
+        $color = [];
         for ($i = 0; $i <= 255; $i++)
         {
             $color[$i] = imagecolorallocate($image, (int)($i / 1.5), (int)($i / 1.5), $i);
@@ -1025,16 +1007,16 @@ class File
             $color_index = (int)(($quads[$i][0][1] + $quads[$i][1][1] + $quads[$i][2][1] + $quads[$i][3][1]) / 4);
             imagefilledpolygon(
                 $image, // image
-                array( // points
-                       $quads[$i][0][0],
-                       $quads[$i][0][2],
-                       $quads[$i][1][0],
-                       $quads[$i][1][2],
-                       $quads[$i][2][0],
-                       $quads[$i][2][2],
-                       $quads[$i][3][0],
-                       $quads[$i][3][2]
-                ),
+                [ // points
+                  $quads[$i][0][0],
+                  $quads[$i][0][2],
+                  $quads[$i][1][0],
+                  $quads[$i][1][2],
+                  $quads[$i][2][0],
+                  $quads[$i][2][2],
+                  $quads[$i][3][0],
+                  $quads[$i][3][2]
+                ],
                 4, // num_points
                 $color[$color_index] // color
             );
@@ -1066,13 +1048,11 @@ class File
                 SET  `delete_date` = :date
                 WHERE  `id` = :file_id',
                 DBConnection::NOTHING,
-                array(
+                [
                     ":file_id" => $file_id,
                     ":date"    => $del_date
-                ),
-                array(
-                    ":file_id" => DBConnection::PARAM_INT
-                )
+                ],
+                [":file_id" => DBConnection::PARAM_INT]
             );
         }
         catch(DBException $e)

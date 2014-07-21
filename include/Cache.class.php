@@ -35,7 +35,7 @@ class Cache
     public static function clear()
     {
         $exclude_regex = '/^(cache_graph_.*\.png)$/i';
-        File::deleteRecursive(CACHE_PATH, $exclude_regex);
+        File::deleteDir(CACHE_PATH, $exclude_regex);
         @mkdir(CACHE_PATH);
 
         try
