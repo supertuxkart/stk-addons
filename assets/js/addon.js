@@ -80,8 +80,9 @@ function addRating(rating, addonId, sel_storage, disp_storage) {
 (function($, document) {
     "use strict";
 
-    var $right_body = $("#right-content_body");
+    var $addon_body = $("#addon-body");
 
+    // left panel user addon clicked
     $('a.addon-list').click(function() {
         History.pushState(null, '', this.href);
         var url = this.href;
@@ -92,7 +93,7 @@ function addRating(rating, addonId, sel_storage, disp_storage) {
         }
 
         var addonId = getUrlVars(url)['name']; // we use the id as a varchar in the database
-        loadContent($right_body, SITE_ROOT + 'addons-panel.php', {name: addonId, type: addonType});
+        loadContent($addon_body, SITE_ROOT + 'addons-panel.php', {name: addonId, type: addonType});
 
         return false;
     });

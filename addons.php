@@ -26,6 +26,7 @@ $_GET['name'] = (isset($_GET['name'])) ? Addon::cleanId($_GET['name']) : null; /
 $_GET['save'] = (isset($_GET['save'])) ? $_GET['save'] : null;
 $_GET['rev'] = (isset($_GET['rev'])) ? (int)$_GET['rev'] : null;
 $addon_exists = is_null($_GET['name']) ? false : Addon::exists($_GET["name"]);
+$status = "";
 
 // addon type is optional
 if (!$_GET['type'])
@@ -49,17 +50,13 @@ switch ($_GET['type'])
         break;
 
     default:
-        $type_label = _h('Unknown Type');
-        $panel["status"] = '<span class="error">' . _h('Invalid addon type.') . '</span><br />';
-        $tpl->assign("panel", $panel);
-        exit($tpl);
+        exit(_h('Invalid addon type.'));
         break;
 }
 
 // build title
 $title = $type_label . ' - ' . _h('SuperTuxKart Add-ons');
-$status = "";
-if($addon_exists)
+if ($addon_exists)
 {
     $addonName = Addon::getNameByID($_GET['name']);
     if ($addonName)
@@ -159,15 +156,11 @@ if($addon_exists)
                 $mAddon->setIncludeVersions($_POST['incl_start'], $_POST['incl_end']);
                 $status = _h('Marked game versions in which this add-on is included.');
                 break;
-
-            default:
-                $status = _h('Addon action is not recognized');
-                break;
         }
     }
     catch(Exception $e)
     {
-        $status = '<span class="error">' . $e->getMessage() . '</span><br />';
+        $status = $e->getMessage();
     }
 }
 
