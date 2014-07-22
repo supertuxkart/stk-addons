@@ -58,12 +58,12 @@ foreach ($addons as $addon)
         // Approved?
         if ($addon->hasApprovedRevision())
         {
-            $class = ' menu-item';
+            $class = '';
         }
         elseif (User::hasPermission(AccessControl::PERM_EDIT_ADDONS) || User::getLoggedId() == $addon->getUploaderId())
         {
             // not approved, see of we are logged in and we have permission
-            $class = ' menu-item unavailable';
+            $class = ' unavailable';
         }
         else
         {

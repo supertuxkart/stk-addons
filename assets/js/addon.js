@@ -47,10 +47,6 @@ function loadDiv(newDiv) {
     getByID("content-addon_body").style.display = "none";
 }
 
-function clearPanelStatus() {
-    document.getElementById('right-content_status').innerHTML = '';
-}
-
 function textLimit(field, num) {
     if (field.value.length > num) {
         field.value = field.value.substring(0, num);
@@ -96,7 +92,7 @@ function addRating(rating, addonId, sel_storage, disp_storage) {
         }
 
         var addonId = getUrlVars(url)['name']; // we use the id as a varchar in the database
-        loadContent($right_body, SITE_ROOT + 'addons-panel.php', {name: addonId, type: addonType}, clearPanelStatus)
+        loadContent($right_body, SITE_ROOT + 'addons-panel.php', {name: addonId, type: addonType});
 
         return false;
     });

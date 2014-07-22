@@ -205,7 +205,7 @@ class Cache
         if (empty($result))
         {
             return [
-                'url'      => SITE_ROOT . 'image/notfound.png',
+                'url'      => IMG_LOCATION . 'notfound.png',
                 'approved' => true,
                 'exists'   => false
             ];
