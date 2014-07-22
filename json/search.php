@@ -116,7 +116,6 @@ switch ($_GET["data-type"])
             exit_json_error(_h("One or more fields are empty. This should never happen"));
         }
 
-
         $return_html = isset($_GET["return-html"]) ? true : false;
         $users = [];
         try

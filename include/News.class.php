@@ -300,6 +300,7 @@ class News
                 break;
             }
         }
+
         if ($startSearch === -1)
         {
             return false;
@@ -314,6 +315,7 @@ class News
                 break;
             }
         }
+
         if ($articleTitle === null)
         {
             return false;

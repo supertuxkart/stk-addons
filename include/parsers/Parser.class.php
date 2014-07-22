@@ -1,4 +1,5 @@
 <?php
+
 /**
  * copyright 2012 Stephen Just <stephenjust@users.sf.net>
  *
@@ -17,17 +18,33 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 abstract class Parser
 {
+    /**
+     * @var bool
+     */
     protected $binary_file = false;
 
-    protected $file = null;
+    /**
+     * The file resource
+     * @var resource
+     */
+    protected $file;
 
-    protected $file_name = null;
+    /**
+     * @var string
+     */
+    protected $file_name;
 
+    /**
+     * @var int
+     */
     protected $file_size = 0;
 
+    /**
+     * Flag that indicates to open the file with write access
+     * @var bool
+     */
     protected $writeable = false;
 
     /**
@@ -56,18 +73,22 @@ abstract class Parser
             $read_flag .= 'b';
         }
         $handle = fopen($file, $read_flag);
+
         $this->file_name = basename($file);
         if (!$handle)
         {
             throw new ParserException('Error opening file');
         }
-        $this->file = $handle;
 
+        $this->file = $handle;
         $this->file_size = filesize($file);
 
         $this->writeable = $write;
         $this->_loadFile();
     }
 
+    /**
+     * Custom load file
+     */
     abstract protected function _loadFile();
 }

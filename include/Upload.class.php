@@ -473,12 +473,10 @@ class Upload
                 // Check if we were trying to add a new revision
                 if ($this->properties['addon_revision'] != 1)
                 {
-                    throw new UploadException(
-                        _h('You are trying to add a new revision of an add-on that does not exist.')
-                    );
+                    throw new UploadException(_h('You are trying to add a new revision of an add-on that does not exist.'));
                 }
 
-                $addon = Addon::create($this->upload_type, $this->properties['xml_attributes'], $fileid, $this->moderator_message);
+                Addon::create($this->upload_type, $this->properties['xml_attributes'], $fileid, $this->moderator_message);
             }
             else
             {
@@ -566,7 +564,7 @@ class Upload
         {
             $file_ext = $this->file_ext;
         }
-        if ($this->destination === null)
+        if (!$this->destination)
         {
             throw new UploadException(_h('A destination has not been set yet'));
         }
@@ -601,7 +599,7 @@ class Upload
             // Parse any B3D models
             if (preg_match('/\.b3d$/i', $file))
             {
-                $b3d_parse = new b3dParser();
+                $b3d_parse = new B3DParser();
                 $b3d_parse->loadFile($this->temp_dir . $file);
                 $b3d_textures = array_merge($b3d_parse->listTextures(), $b3d_textures);
             }
@@ -609,7 +607,7 @@ class Upload
             // Parse any XML files
             if (preg_match('/\.xml/i', $file))
             {
-                $xml_parse = new addonXMLParser();
+                $xml_parse = new AddonXMLParser();
                 $xml_parse->loadFile($this->temp_dir . $file);
                 $xml_type = $xml_parse->getType();
 
@@ -642,6 +640,7 @@ class Upload
                     $this->properties['addon_file'] = $this->temp_dir . $file;
                     $this->addon_name = $this->properties['xml_attributes']['name'];
                 }
+
                 if ($xml_type === 'QUADS')
                 {
                     $this->properties['quad_file'] = $this->temp_dir . $file;
@@ -686,7 +685,7 @@ class Upload
      */
     private function editInfoFile()
     {
-        $xml_parse = new addonXMLParser();
+        $xml_parse = new AddonXMLParser();
         $xml_parse->loadFile($this->properties['addon_file'], true);
         $xml_parse->setAttribute('groups', 'Add-Ons');
         $xml_parse->setAttribute('revision', $this->properties['addon_revision']);

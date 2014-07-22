@@ -96,7 +96,6 @@ class Bug extends Base
         throw new BugException($message);
     }
 
-
     /**
      * @return int
      */
@@ -338,12 +337,15 @@ class Bug extends Base
         {
             case "all";
                 break;
+
             case "open":
                 $query .= " AND `close_id` is NULL";
                 break;
+
             case "closed":
                 $query .= " AND `close_id` is NOT NULL";
                 break;
+
             default:
                 throw new BugException(sprintf("status = %s is invalid", $status));
                 break;

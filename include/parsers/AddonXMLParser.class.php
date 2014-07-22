@@ -21,38 +21,52 @@
 /**
  * Helper class to parse XML files included with addons
  */
-class addonXMLParser extends Parser
+class AddonXMLParser extends Parser
 {
+    /**
+     * @var string
+     */
     private $file_type;
 
+    /**
+     * The content of the file
+     * @var string
+     */
     private $file_contents;
 
+    /**
+     * The values of the xml data
+     * @var array
+     */
     private $values;
 
+    /**
+     * The pointers to the $values
+     * @var array
+     */
     private $index;
 
-    private $attributes = array();
+    /**
+     * @var array
+     */
+    private $attributes = [];
 
+    /**
+     * @throws XMLParserException
+     */
     protected function _loadFile()
     {
         $this->file_contents = fread($this->file, $this->file_size);
+
         // Fix common XML errors
         $this->file_contents = trim($this->file_contents);
         $this->file_contents = str_replace('& ', '&amp; ', $this->file_contents);
 
         // Get type of xml file
         $reader = xml_parser_create();
-        if (!xml_parse_into_struct(
-            $reader,
-            $this->file_contents,
-            $values,
-            $index
-        )
-        )
+        if (!xml_parse_into_struct($reader, $this->file_contents, $values, $index))
         {
-            throw new XMLParserException('XML Error: ' . xml_error_string(
-                    xml_get_error_code($reader)
-                ) . ' - file: ' . $this->file_name);
+            throw new XMLParserException('XML Error: ' . xml_error_string(xml_get_error_code($reader)) . ' - file: ' . $this->file_name);
         }
 
         $this->file_type = $values[0]['tag'];
@@ -60,25 +74,27 @@ class addonXMLParser extends Parser
         $this->index = $index;
     }
 
+    /**
+     * @return array
+     */
     public function addonFileAttributes()
     {
         // Loop through xml tags
-        $attributes = array();
-        foreach ($this->values AS $val)
+        $attributes = [];
+        foreach ($this->values as $val)
         {
-            if ($val['tag'] != $this->file_type)
+            if ($val['tag'] !== $this->file_type)
             {
                 continue;
             }
-
             if (!isset($val['attributes']))
             {
                 continue;
             }
 
-            foreach ($val['attributes'] AS $attribute => $value)
+            foreach ($val['attributes'] as $attribute => $value)
             {
-                $attributes[strtolower($attribute)] = $value;
+                $attributes[mb_strtolower($attribute)] = $value;
             }
         }
 
@@ -95,11 +111,18 @@ class addonXMLParser extends Parser
         return $attributes;
     }
 
-    public function setAttribute($attb, $value)
+    /**
+     * @param string $key
+     * @param mixed  $value
+     */
+    public function setAttribute($key, $value)
     {
-        $this->attributes[$attb] = $value;
+        $this->attributes[$key] = $value;
     }
 
+    /**
+     * @throws XMLParserException
+     */
     public function writeAttributes()
     {
         if (!$this->writeable)
@@ -115,25 +138,27 @@ class addonXMLParser extends Parser
         $writer->setIndentString('    ');
 
         // Cycle through all of the xml file's elements
-        foreach ($this->values AS $val)
+        foreach ($this->values as $val)
         {
-            if ($val['type'] == 'close')
+            if ($val['type'] === 'close')
             {
                 $writer->endElement();
                 continue;
             }
-            if ($val['type'] == 'open' || $val['type'] == 'complete')
+
+            if ($val['type'] === 'open' || $val['type'] === 'complete')
             {
-                $writer->startElement(strtolower($val['tag']));
+                $writer->startElement(mb_strtolower($val['tag']));
             }
+
             if (isset($val['attributes']))
             {
-                foreach ($val['attributes'] AS $attribute => $value)
+                foreach ($val['attributes'] as $attribute => $value)
                 {
                     // Add attributes to the root element
                     if ($val['tag'] == $this->file_type)
                     {
-                        $attribute = strtolower($attribute);
+                        $attribute = mb_strtolower($attribute);
                         if (isset($this->attributes[$attribute]))
                         {
                             $writer->writeAttribute($attribute, $this->attributes[$attribute]);
@@ -147,9 +172,10 @@ class addonXMLParser extends Parser
                     else
                     {
                         // For all other elements, just write all attributes
-                        $writer->writeAttribute(strtolower($attribute), $value);
+                        $writer->writeAttribute(mb_strtolower($attribute), $value);
                     }
                 }
+
                 // Write any remaining attributes that we wanted to set
                 if ($val['tag'] == $this->file_type)
                 {
@@ -159,7 +185,8 @@ class addonXMLParser extends Parser
                     }
                 }
             }
-            if ($val['type'] == 'complete')
+
+            if ($val['type'] === 'complete')
             {
                 $writer->endElement();
             }
@@ -172,9 +199,12 @@ class addonXMLParser extends Parser
         ftruncate($this->file, mb_strlen($new_xml));
 
         // Clear attributes
-        $this->attributes = array();
+        $this->attributes = [];
     }
 
+    /**
+     * @return string
+     */
     public function getType()
     {
         return $this->file_type;
