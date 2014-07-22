@@ -1,5 +1,4 @@
 <?php
-
 /**
  * copyright 2012 Stephen Just <stephenjust@users.sf.net>
  *
@@ -17,6 +16,10 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/**
+ * Class Parser
  */
 abstract class Parser
 {

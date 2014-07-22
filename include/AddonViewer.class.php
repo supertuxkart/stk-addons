@@ -233,7 +233,10 @@ class AddonViewer
                 // User is logged in
                 // If the user is not the uploader, or moderators, then they
                 // cannot see unapproved addons
-                if ($this->addon->getUploaderId() !== User::getLoggedId() && !User::hasPermission(AccessControl::PERM_EDIT_ADDONS) && !($revision['status'] & F_APPROVED))
+                if ($this->addon->getUploaderId() !== User::getLoggedId() && !User::hasPermission(
+                        AccessControl::PERM_EDIT_ADDONS
+                    ) && !($revision['status'] & F_APPROVED)
+                )
                 {
                     continue;
                 }
@@ -654,7 +657,7 @@ class AddonViewer
 
             // Delete revision button
             echo '<td>';
-            echo '<input type="button" value="' . sprintf(_h('Delete revision %d'),  $rev_n)
+            echo '<input type="button" value="' . sprintf(_h('Delete revision %d'), $rev_n)
                 . '" onClick="confirm_delete(\'' . File::rewrite(
                     $this->addon->getLink() . '&amp;save=del_rev&amp;rev=' . $rev_n
                 ) . '\');" />';

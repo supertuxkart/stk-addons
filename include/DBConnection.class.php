@@ -106,10 +106,9 @@ class DBConnection
      *                                  As shown in the example above the fields that are named parameters will have the column
      *                                  normal as the rest (the unescaped params) but the value will be the named parameter itself
      */
-    private static function buildQueryParams(array $fields_data, array &$prepared_pairs, array &$column_value_pairs = array())
+    private static function buildQueryParams(array $fields_data, array &$prepared_pairs, array &$column_value_pairs = [])
     {
         // In our context field = column
-
         foreach ($fields_data as $field => $value)
         {
             if ($field[0] === ":") // prepare this field
@@ -214,8 +213,8 @@ class DBConnection
     public function query(
         $query,
         $return_type = DBConnection::NOTHING,
-        array $prepared_pairs = array(),
-        array $data_types = array()
+        array $prepared_pairs = [],
+        array $data_types = []
     ) {
         if (!$query)
         {
@@ -316,7 +315,7 @@ class DBConnection
      * @throws InvalidArgumentException
      * @return int the number of affected rows
      */
-    public function insert($table, array $fields_data, array $data_types = array())
+    public function insert($table, array $fields_data, array $data_types = [])
     {
         if (!$table || !$fields_data)
         {
@@ -354,14 +353,14 @@ class DBConnection
      * @throws InvalidArgumentException
      * @return int the number of affected rows
      */
-    public function update($table, $where_statement, array $fields_data, array $data_types = array())
+    public function update($table, $where_statement, array $fields_data, array $data_types = [])
     {
         if (!$table || !$where_statement)
         {
             throw new InvalidArgumentException("Empty table or where statement");
         }
 
-        $prepared_pairs = $column_value_pairs = array();
+        $prepared_pairs = $column_value_pairs = [];
         static::buildQueryParams($fields_data, $prepared_pairs, $column_value_pairs);
 
         // build set value pairs
@@ -392,14 +391,14 @@ class DBConnection
      * @throws InvalidArgumentException
      * @return int the number of affected rows
      */
-    public function delete($table, $where_statement, array $fields_data = array(), array $data_types = array())
+    public function delete($table, $where_statement, array $fields_data = [], array $data_types = [])
     {
         if (!$table || !$where_statement)
         {
             throw new InvalidArgumentException("Empty table or where statement");
         }
 
-        $prepared_pairs = array();
+        $prepared_pairs = [];
         static::buildQueryParams($fields_data, $prepared_pairs);
 
         $query = sprintf("DELETE FROM %s WHERE %s", DB_PREFIX . $table, $where_statement);
@@ -422,14 +421,14 @@ class DBConnection
      * @throws InvalidArgumentException
      * @return int the count number
      */
-    public function count($table, $where_statement = "", array $fields_data = array(), array $data_types = array())
+    public function count($table, $where_statement = "", array $fields_data = [], array $data_types = [])
     {
         if (!$table)
         {
             throw new InvalidArgumentException("Empty table");
         }
 
-        $prepared_pairs = array();
+        $prepared_pairs = [];
         static::buildQueryParams($fields_data, $prepared_pairs);
 
         $query = sprintf("SELECT COUNT(*) FROM %s", DB_PREFIX . $table);

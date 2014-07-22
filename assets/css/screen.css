@@ -313,55 +313,20 @@ a img {
 }
 
 /* Panel interface */
-#left-menu {
-    float: left;
-    width: 250px;
-    padding: 30px;
-}
-
-#left-menu_body {
-    background-image: url('../img/left-menu.png');
-    overflow-x: hidden;
-    width: 230px;
-    height: 800px;
-    padding: 0 10px;
-}
-
-#left-menu_body ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-#left-menu_body .menu-item {
-    display: block;
-    font-size: 1.2em;
-    line-height: 1.5em;
-    padding: 2px;
-    margin: 5px 0;
-    min-height: 25px;
-    width: 300px;
-}
-
-#left-menu_body .menu-item:hover {
-    background-color: #000000;
-    color: #FFFFFF;
-}
-
-#left-menu_body li div.icon {
+li div.icon {
     position: relative;
     float: left;
     width: 25px;
     height: 25px;
 }
 
-#left-menu_body .icon {
+.icon {
     height: 25px;
     margin-left: 2px;
     margin-right: 10px;
 }
 
-#left-menu_body .icon-featured {
+.icon-featured {
     background: url('../img/emblem-favorite.png') no-repeat right;
     float: left;
     height: 25px;
@@ -369,44 +334,6 @@ a img {
     position: absolute;
     left: 5px;
     top: 5px;
-}
-
-#right-content {
-    float: left;
-    width: 620px;
-    padding: 30px;
-}
-
-#right-content_status {
-    background-image: url("../img/content-addon.png");
-    overflow-x: hidden;
-    width: 580px;
-    padding: 0 20px 0 20px;
-}
-
-#right-content_body {
-    background-image: url("../img/content-addon.png");
-    width: 580px;
-    height: auto;
-    padding: 0 20px 0 20px;
-    overflow-x: hidden;
-}
-
-#right-content h1 {
-    display: block;
-    border-bottom: 1px solid #CCCCCC;
-}
-
-#right-content h2 {
-    border-bottom: 1px solid #CCCCCC;
-    font-size: 1.4em;
-    font-weight: normal;
-}
-
-#right-content h3 {
-    clear: both;
-    display: block;
-    border-bottom: 1px dashed #CCCCCC;
 }
 
 #logo_center {
@@ -480,8 +407,8 @@ div.image_thumb_container {
 .rating .emptystars {
     position: absolute;
     background: transparent url('../img/stars.png') top left no-repeat;
-    top: 0px;
-    left: 0px;
+    top: 0;
+    left: 0;
     width: 55px;
     height: 17px;
     z-index: 101;

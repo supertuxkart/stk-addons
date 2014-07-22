@@ -28,7 +28,7 @@ $_GET['rev'] = (isset($_GET['rev'])) ? (int)$_GET['rev'] : null;
 $addon_exists = Addon::exists($_GET["name"]);
 
 // addon type is optional
-if (is_null($_GET['type']))
+if (!$_GET['type'])
 {
     $_GET['type'] = Addon::getTypeByID($_GET['name']);
 }
@@ -65,14 +65,14 @@ if ($addonName)
 }
 
 // build template
-$tpl = StkTemplate::get("two-pane.tpl")
+$tpl = StkTemplate::get("addons.tpl")
     ->assign("title", $title)
     ->addUtilLibrary()
     ->addScriptInclude("addon.js");
-$panel = [
-    'left'   => '',
-    'status' => '',
-    'right'  => ''
+$tplData = [
+    'menu'   => '',
+    'body'   => '',
+    'status' => ''
 ];
 
 // Execute actions
@@ -148,7 +148,7 @@ try
             break;
 
         case 'seticon':
-            if ($_GET['type'] !== 'karts')
+            if ($_GET['type'] !== Addon::KART)
             {
                 break;
             }
@@ -178,92 +178,21 @@ catch(Exception $e)
 {
     $status = '<span class="error">' . $e->getMessage() . '</span><br />';
 }
-$panel["status"] = $status;
+$tplData["status"] = $status;
 
-$addons = [];
-$addons_list = Addon::getAddonList($_GET['type'], true);
-foreach ($addons_list as $ad)
-{
-    try
-    {
-        $adc = new Addon($ad);
-
-        // Get link icon
-        if ($adc->getType() === Addon::KART)
-        {
-            // Make sure an icon file is set for kart
-            if ($adc->getImage(true) != 0)
-            {
-                $im = Cache::getImage($adc->getImage(true), ['size' => 'small']);
-                if ($im['exists'] && $im['approved'])
-                {
-                    $icon = $im['url'];
-                }
-                else
-                {
-                    $icon = IMG_LOCATION . 'kart-icon.png';
-                }
-            }
-            else
-            {
-                $icon = IMG_LOCATION . 'kart-icon.png';
-            }
-        }
-        else
-        {
-            $icon = IMG_LOCATION . 'track-icon.png';
-        }
-
-        // Approved?
-        if ($adc->hasApprovedRevision())
-        {
-            $class = 'addon-list menu-item';
-        }
-        elseif (User::hasPermission(AccessControl::PERM_EDIT_ADDONS) || User::getLoggedId() == $adc->getUploaderId())
-        {
-            // not approved, see of we are logged in and we have permission
-            $class = 'addon-list menu-item unavailable';
-        }
-        else
-        {
-            // do not show
-            continue;
-        }
-
-        $icon_html = '<img class="icon" src="' . $icon . '" height="25" width="25" />';
-        if (($adc->getStatus() & F_FEATURED) == F_FEATURED)
-        {
-            $icon_html = '<div class="icon-featured"></div>' . $icon_html;
-        }
-        $addons[] = [
-            'class' => $class,
-            'url'   => "addons.php?type={$_GET['type']}&amp;name={$adc->getId()}",
-            'label' => '<div class="icon">' . $icon_html . '</div>' . h($adc->getName()),
-            'disp'  => File::rewrite("addons.php?type={$_GET['type']}&amp;name={$adc->getId()}")
-        ];
-    }
-    catch(AddonException $e)
-    {
-        $panel["status"] = '<span class="error">' . $e->getMessage() . '</span><br />';
-    }
-}
-
-// left panel
-$left_tpl = new StkTemplate('url-list-panel.tpl');
-$left_tpl->assign('items', $addons);
-$panel['left'] = (string)$left_tpl;
+// build menu
+$tplData["menu"] = Util::ob_get_require_once(ROOT_PATH . "addons-menu.php");
 
 // right panel
 if ($addon_exists)
 {
-    $panel['right'] = Util::ob_get_require_once(ROOT_PATH . 'addons-panel.php');
+    $tplData['body'] = Util::ob_get_require_once(ROOT_PATH . 'addons-panel.php');
 }
 else if (!is_null($_GET["name"]))
 {
-    $panel['right'] = _h("The addon name does not exist");
+    $tplData['body'] = _h("The addon name does not exist");
 }
 
 // output the view
-$tpl->assign('panel', $panel);
+$tpl->assign('addon', $tplData);
 echo $tpl;
-
