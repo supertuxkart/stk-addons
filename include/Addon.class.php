@@ -97,7 +97,7 @@ class Addon extends Base
     /**
      * @var array
      */
-    protected $revisions = array();
+    protected $revisions = [];
 
     /**
      * @var
@@ -116,49 +116,12 @@ class Addon extends Base
     }
 
     /**
-     * Instance constructor
-     *
-     * @param string $id
+     * Load the revisions from the database into the current instance
      *
      * @throws AddonException
      */
-    public function __construct($id)
+    protected function loadRevisions()
     {
-        $this->id = static::cleanId($id);
-
-        // get addon data
-        try
-        {
-            $addon = DBConnection::get()->query(
-                'SELECT *
-                FROM `' . DB_PREFIX . 'addons`
-                WHERE `id` = :id',
-                DBConnection::FETCH_FIRST,
-                [':id' => (string)$this->id]
-            );
-        }
-        catch(DBException $e)
-        {
-            throw new AddonException(_h('Failed to read the requested add-on\'s information.'));
-        }
-
-        if (empty($addon))
-        {
-            throw new AddonException(_h('The requested add-on does not exist.'));
-        }
-
-        $this->type = $addon['type'];
-        $this->name = $addon['name'];
-        $this->uploaderId = $addon['uploader'];
-        $this->creationDate = $addon['creation_date'];
-        $this->designer = $addon['designer'];
-        $this->description = $addon['description'];
-        $this->license = $addon['license'];
-        $this->permalink = SITE_ROOT . 'addons.php?type=' . $this->type . '&amp;name=' . $this->id;
-        $this->minInclude = $addon['min_include_ver'];
-        $this->maxInclude = $addon['max_include_ver'];
-
-        // get revisions
         try
         {
             $revisions = DBConnection::get()->query(
@@ -167,7 +130,7 @@ class Addon extends Base
                 WHERE `addon_id` = :id
                 ORDER BY `revision` ASC',
                 DBConnection::FETCH_ALL,
-                array(':id' => $this->id)
+                [':id' => $this->id]
             );
         }
         catch(DBException $e)
@@ -182,7 +145,7 @@ class Addon extends Base
 
         foreach ($revisions as $rev)
         {
-            $currentRev = array(
+            $currentRev = [
                 'file'           => $rev['fileid'],
                 'format'         => $rev['format'],
                 'image'          => $rev['image'],
@@ -191,14 +154,46 @@ class Addon extends Base
                 'revision'       => $rev['revision'],
                 'status'         => $rev['status'],
                 'timestamp'      => $rev['creation_date']
-            );
+            ];
+
             if ($currentRev['status'] & F_LATEST)
             {
                 $this->latestRevision = $rev['revision'];
                 $this->image = $rev['image'];
                 $this->icon = (isset($rev['icon'])) ? $rev['icon'] : 0;
             }
+
             $this->revisions[$rev['revision']] = $currentRev;
+        }
+    }
+
+    /**
+     * Instance constructor
+     *
+     * @param string $id
+     * @param array  $addonData
+     * @param bool   $loadRevisions load also the revisions
+     *
+     * @throws AddonException
+     */
+    protected function __construct($id, $addonData, $loadRevisions = true)
+    {
+        $this->id = (string)static::cleanId($id);
+        $this->type = $addonData['type'];
+        $this->name = $addonData['name'];
+        $this->uploaderId = $addonData['uploader'];
+        $this->creationDate = $addonData['creation_date'];
+        $this->designer = $addonData['designer'];
+        $this->description = $addonData['description'];
+        $this->license = $addonData['license'];
+        $this->permalink = SITE_ROOT . 'addons.php?type=' . $this->type . '&amp;name=' . $this->id;
+        $this->minInclude = $addonData['min_include_ver'];
+        $this->maxInclude = $addonData['max_include_ver'];
+
+        // load revisions
+        if ($loadRevisions)
+        {
+            $this->loadRevisions();
         }
     }
 
@@ -230,16 +225,16 @@ class Addon extends Base
             $rows = DBConnection::get()->query(
                 'SELECT * FROM ' . DB_PREFIX . $this->type . '_revs WHERE `id` = :id',
                 DBConnection::ROW_COUNT,
-                array(':id' => (string)$file_id)
+                [':id' => $file_id]
             );
-            if ($rows)
-            {
-                throw new AddonException(_h('The file you are trying to create already exists.'));
-            }
         }
         catch(DBException $e)
         {
             throw new AddonException(sprintf('Failed to acces the %s_revs table.', $this->type));
+        }
+        if ($rows)
+        {
+            throw new AddonException(_h('The file you are trying to create already exists.'));
         }
 
         // Make sure user has permission to upload a new revision for this add-on
@@ -282,7 +277,7 @@ class Addon extends Base
         $rev = $highest_rev + 1;
 
         // Add revision entry
-        $fields_data = array(
+        $fields_data = [
             ":id"       => $file_id,
             ":addon_id" => $this->id,
             ":fileid"   => $attributes['fileid'],
@@ -290,7 +285,7 @@ class Addon extends Base
             ":format"   => $attributes['version'],
             ":image"    => $attributes['image'],
             ":status"   => $attributes['status']
-        );
+        ];
 
         if ($this->type === 'karts')
         {
@@ -356,9 +351,7 @@ class Addon extends Base
                 FROM `' . DB_PREFIX . "files`
                 WHERE `addon_id` = :id",
                 DBConnection::FETCH_ALL,
-                array(
-                    ":id" => $this->id
-                )
+                [":id" => $this->id]
             );
         }
         catch(DBException $e)
@@ -377,14 +370,7 @@ class Addon extends Base
         // Remove file records associated with addon
         try
         {
-            DBConnection::get()->query(
-                'DELETE FROM `' . DB_PREFIX . 'files`
-                WHERE `addon_id` = :id',
-                DBConnection::NOTHING,
-                array(
-                    ":id" => $this->id
-                )
-            );
+            DBConnection::get()->delete("files", "`addon_id` = :id", [":id" => $this->id]);
         }
         catch(DBException $e)
         {
@@ -397,12 +383,7 @@ class Addon extends Base
         // queries above are no longer needed.
         try
         {
-            DBConnection::get()->query(
-                'DELETE FROM `' . DB_PREFIX . 'addons`
-                WHERE `id` = :id',
-                DBConnection::NOTHING,
-                array(':id' => $this->id)
-            );
+            DBConnection::get()->delete("addons", "`id` = :id", [":id" => $this->id]);
         }
         catch(DBException $e)
         {
@@ -447,6 +428,7 @@ class Addon extends Base
         {
             throw new AddonException(_h('You do not have the necessary permissions to perform this action.'));
         }
+
         $rev = (int)$rev;
         if ($rev < 1 || !isset($this->revisions[$rev]))
         {
@@ -478,10 +460,10 @@ class Addon extends Base
                 'DELETE FROM `' . DB_PREFIX . $this->type . '_revs`
                 WHERE `addon_id` = :id AND `revision` = :revision',
                 DBConnection::NOTHING,
-                array(
+                [
                     ':addon_id' => $this->id,
                     ':revision' => $rev
-                )
+                ]
             );
         }
         catch(DBException $e)
@@ -720,10 +702,10 @@ class Addon extends Base
                 WHERE `addon_id` = :addon_id
                 AND `revision` = :revision',
                 DBConnection::FETCH_FIRST,
-                array(
+                [
                     ':addon_id' => $this->id,
                     ':revision' => $revision
-                )
+                ]
             );
         }
         catch(DBException $e)
@@ -746,9 +728,7 @@ class Addon extends Base
                 WHERE `id` = :id
                 LIMIT 1',
                 DBConnection::FETCH_FIRST,
-                array(
-                    ':id' => $file_id,
-                )
+                [':id' => $file_id]
             );
         }
         catch(DBException $e)
@@ -782,9 +762,7 @@ class Addon extends Base
                 AND `file_type` = 'image'
                 LIMIT 50",
                 DBConnection::FETCH_ALL,
-                array(
-                    ':addon_id' => $this->id,
-                )
+                [':addon_id' => $this->id]
             );
         }
         catch(DBException $e)
@@ -792,14 +770,14 @@ class Addon extends Base
             throw new AddonException(_h('DB error when fetching images associated with this add-on.'));
         }
 
-        $return = array();
+        $return = [];
         foreach ($paths as $path)
         {
-            $return[] = array(
+            $return[] = [
                 'id'   => $path['id'],
                 'path' => $path['file_path'],
                 'hash' => md5_file(UP_PATH . $path['file_path'])
-            );
+            ];
         }
 
         return $return;
@@ -819,15 +797,15 @@ class Addon extends Base
                 WHERE `addon_id` = :addon_id
                 AND `file_type` = :file_type',
                 DBConnection::FETCH_ALL,
-                array(
-                    ':addon_id'  => (string)$this->id,
+                [
+                    ':addon_id'  => $this->id,
                     ':file_type' => 'image'
-                )
+                ]
             );
         }
         catch(DBException $e)
         {
-            return array();
+            return [];
         }
 
         return $result;
@@ -847,15 +825,15 @@ class Addon extends Base
                 WHERE `addon_id` = :addon_id
                 AND `file_type` = :file_type',
                 DBConnection::FETCH_ALL,
-                array(
-                    ':addon_id'  => (string)$this->id,
-                    ':file_type' => (string)'source'
-                )
+                [
+                    ':addon_id'  => $this->id,
+                    ':file_type' => 'source'
+                ]
             );
         }
         catch(DBException $e)
         {
-            return array();
+            return [];
         }
 
         return $result;
@@ -882,10 +860,10 @@ class Addon extends Base
                  SET `description` = :description
                  WHERE `id` = :id',
                 DBConnection::NOTHING,
-                array(
+                [
                     ':description' => h($description),
                     ':id'          => $this->id
-                )
+                ]
             );
         }
         catch(DBException $e)
@@ -919,10 +897,10 @@ class Addon extends Base
                 SET `description` = :description
                 WHERE `id` = :id',
                 DBConnection::NOTHING,
-                array(
+                [
                     ':designer' => h($designer),
                     ':id'       => $this->id
-                )
+                ]
             );
         }
         catch(DBException $e)
@@ -958,10 +936,10 @@ class Addon extends Base
                 WHERE `addon_id` = :addon_id
                 AND `status` & " . F_LATEST,
                 DBConnection::NOTHING,
-                array(
+                [
                     ':image_id' => $image_id,
                     ':addon_id' => $this->id
-                )
+                ]
             );
         }
         catch(DBException $e)
@@ -992,21 +970,22 @@ class Addon extends Base
                 SET `min_include_ver` = :start_ver, `max_include_ver` = :end_ver
                 WHERE `id` = :addon_id',
                 DBConnection::NOTHING,
-                array(
-                    ':addon_id'  => (string)$this->id,
-                    ':start_ver' => (string)$start_ver,
-                    ':end_ver'   => (string)$end_ver
-                )
+                [
+                    ':addon_id'  => $this->id,
+                    ':start_ver' => $start_ver,
+                    ':end_ver'   => $end_ver
+                ]
             );
-            writeAssetXML();
-            writeNewsXML();
-            $this->minInclude = $start_ver;
-            $this->maxInclude = $end_ver;
         }
         catch(DBException $e)
         {
             throw new AddonException(_h('An error occurred while setting the min/max include versions.'));
         }
+
+        writeAssetXML();
+        writeNewsXML();
+        $this->minInclude = $start_ver;
+        $this->maxInclude = $end_ver;
     }
 
     /**
@@ -1025,10 +1004,10 @@ class Addon extends Base
                 SET `license` = :license,
                 WHERE `id` = :addon_id',
                 DBConnection::NOTHING,
-                array(
+                [
                     ':license'  => $license,
-                    ':addon_id' => (string)$this->id
-                )
+                    ':addon_id' => $this->id
+                ]
             );
         }
         catch(DBException $e)
@@ -1055,10 +1034,10 @@ class Addon extends Base
                 SET `name` = :name,
                 WHERE `id` = :addon_id',
                 DBConnection::NOTHING,
-                array(
+                [
                     ':name'     => $name,
-                    ':addon_id' => (string)$this->id
-                )
+                    ':addon_id' => $this->id
+                ]
             );
         }
         catch(DBException $e)
@@ -1084,7 +1063,7 @@ class Addon extends Base
         }
 
         $fields = explode(',', $fields);
-        $notes = array();
+        $notes = [];
         foreach ($fields as $field)
         {
             if (!isset($_POST[$field]))
@@ -1108,11 +1087,11 @@ class Addon extends Base
                     WHERE `addon_id` = :addon_id
                     AND `revision` = :revision',
                     DBConnection::NOTHING,
-                    array(
+                    [
                         ':moderator_note' => $value,
                         ':addon_id'       => $this->id,
                         ':revision'       => $revision
-                    )
+                    ]
                 );
             }
             catch(DBException $e)
@@ -1140,9 +1119,9 @@ class Addon extends Base
                 WHERE `id` = :user_id
                 LIMIT 1',
                 DBConnection::FETCH_FIRST,
-                array(
+                [
                     ':user_id' => $this->uploaderId,
-                )
+                ]
             );
         }
         catch(DBException $e)
@@ -1194,7 +1173,7 @@ class Addon extends Base
 
         // Initialise the status field to its present values
         // (Remove any checkboxes that the user could have checked)
-        $status = array();
+        $status = [];
         foreach ($this->revisions as $rev_n => $rev)
         {
             $mask = F_LATEST + F_ALPHA + F_BETA + F_RC;
@@ -1215,7 +1194,7 @@ class Addon extends Base
             }
             if ($field === 'latest')
             {
-                $field_info = array('', (int)$_POST['latest']);
+                $field_info = ['', (int)$_POST['latest']];
             }
             else
             {
@@ -1304,11 +1283,11 @@ class Addon extends Base
                     WHERE `addon_id` = :addon_id
                     AND `revision` = :revision',
                     DBConnection::NOTHING,
-                    array(
+                    [
                         ':status'   => $value,
                         ':addon_id' => $this->id,
                         ':revision' => $revision
-                    )
+                    ]
                 );
             }
             catch(DBException $e)
@@ -1325,13 +1304,17 @@ class Addon extends Base
     /**
      * Factory method for the addon
      *
-     * @param string $id
+     * @param string $addonId
+     * @param bool   $loadRevisions flag that indicates to load the addon revisions
      *
-     * @return static
+     * @return Addon
+     * @throws AddonException
      */
-    public static function get($id)
+    public static function get($addonId, $loadRevisions = true)
     {
-        return new static($id);
+        $data = static::getFromField("addons", "id", $addonId, DBConnection::PARAM_STR, _h('The requested add-on does not exist.'));
+
+        return new Addon($data["id"], $data, $loadRevisions);
     }
 
     /**
@@ -1389,7 +1372,7 @@ class Addon extends Base
                 WHERE `id` = :id
                 LIMIT 1',
                 DBConnection::FETCH_FIRST,
-                array(':id' => $id)
+                [':id' => $id]
             );
         }
         catch(DBException $e)
@@ -1441,6 +1424,7 @@ class Addon extends Base
         if (!is_string($id))
         {
             trigger_error("ID is not a string");
+
             return false;
         }
 
@@ -1538,7 +1522,10 @@ class Addon extends Base
             $list = DBConnection::get()->query(
                 $query,
                 DBConnection::FETCH_ALL,
-                array(':type' => $type, ':latest_bit' => F_LATEST)
+                [
+                    ':type'       => $type,
+                    ':latest_bit' => F_LATEST
+                ]
             );
         }
         catch(DBException $e)
@@ -1581,7 +1568,7 @@ class Addon extends Base
         while (static::exists($addon_id))
         {
             // If the addon id already exists, add an incrementing number to it
-            $matches = array();
+            $matches = [];
             if (preg_match('/^.+_([0-9]+)$/i', $addon_id, $matches))
             {
                 $next_num = (int)$matches[1];
@@ -1606,7 +1593,7 @@ class Addon extends Base
      * @param array   $attributes        Contains properties of the add-on. Must have the
      *                                   following elements: name, designer, license, image, fileid, status, (arena)
      * @param string  $fileid            ID for revision file (see FIXME below)
-     * @param string $moderator_message
+     * @param string  $moderator_message
      *
      * @throws AddonException
      *
@@ -1660,14 +1647,14 @@ class Addon extends Base
         }
 
         // add addon to database
-        $fields_data = array(
+        $fields_data = [
             ":id"       => $id,
             ":type"     => $type,
             ":name"     => $attributes['name'],
             ":uploader" => User::getLoggedId(),
             ":designer" => $attributes['designer'],
             ":license"  => $attributes['license']
-        );
+        ];
         if ($type === static::TRACK)
         {
             if ($attributes['arena'] === 'Y')
@@ -1689,12 +1676,11 @@ class Addon extends Base
             throw new AddonException(_h('Your add-on could not be uploaded.'));
         }
 
-
         // Add the first revision
         $rev = 1;
 
         // Generate revision entry
-        $fields_data = array(
+        $fields_data = [
             ":id"       => $fileid,
             ":addon_id" => $id,
             ":fileid"   => $attributes['fileid'],
@@ -1703,7 +1689,7 @@ class Addon extends Base
             ":image"    => $attributes['image'],
             ":status"   => $attributes['status']
 
-        );
+        ];
         if ($type === static::KART)
         {
             $fields_data[":icon"] = $attributes['image'];
@@ -1738,34 +1724,17 @@ class Addon extends Base
         writeAssetXML();
         writeNewsXML();
         Log::newEvent("New add-on '{$attributes['name']}'");
-
-        return new static($id);
     }
 
     /**
      * Check if an add-on of the specified ID exists
      *
-     * @param string $addon_id Addon ID
+     * @param string $id Addon ID
      *
      * @return boolean
      */
-    public static function exists($addon_id)
+    public static function exists($id)
     {
-        try
-        {
-            $num = DBConnection::get()->query(
-                'SELECT `id`
-                FROM `' . DB_PREFIX . 'addons`
-                WHERE `id` = :addon_id',
-                DBConnection::ROW_COUNT,
-                [':addon_id' => Addon::cleanId($addon_id)]
-            );
-        }
-        catch(DBException $e)
-        {
-            return false;
-        }
-
-        return ($num === 1);
+        return static::existsField("addons", "id", Addon::cleanId($id), DBConnection::PARAM_STR);
     }
 }

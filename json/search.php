@@ -49,7 +49,7 @@ switch ($_GET["data-type"])
                 $addon_list = [];
                 foreach ($results as $result)
                 {
-                    $a = new Addon($result['id']);
+                    $a = Addon::get($result['id']);
                     if ($a->getType() === $_GET['type'])
                     {
                         $icon = ($_GET['type'] === 'karts') ? $a->getImage(true) : null;

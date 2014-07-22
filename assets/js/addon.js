@@ -77,7 +77,7 @@ function addRating(rating, addonId, sel_storage, disp_storage) {
 }
 
 
-(function($, document) {
+(function($) {
     "use strict";
 
     var $addon_body = $("#addon-body");
@@ -102,4 +102,4 @@ function addRating(rating, addonId, sel_storage, disp_storage) {
 
     });
 
-})(jQuery, document);
+})(jQuery);

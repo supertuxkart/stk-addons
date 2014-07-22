@@ -255,7 +255,7 @@ class Upload
             }
             elseif ($this->expected_file_type !== File::SOURCE)
             {
-                $addon = new Addon($addon_id);
+                $addon = Addon::get($addon_id);
                 $revisions = $addon->getAllRevisions();
                 end($revisions);
                 $this->properties['addon_revision'] = key($revisions) + 1;
@@ -480,7 +480,7 @@ class Upload
             }
             else
             {
-                $addon = new Addon($this->addon_id);
+                $addon = Addon::get($this->addon_id);
 
                 // Check if we are the original uploader, or a moderator
                 if (User::getLoggedId() != $addon->getUploaderId() && !User::hasPermission(AccessControl::PERM_EDIT_ADDONS))

@@ -43,7 +43,7 @@ switch ($_GET['view'])
 
         foreach ($addons_ids as $addon_id)
         {
-            $addon = new Addon($addon_id);
+            $addon = Addon::get($addon_id);
 
             // populate addons
             $unapproved = [];

@@ -79,7 +79,7 @@ if ($addon_exists)
                     break;
                 }
 
-                $edit_addon = new Addon($_GET['name']);
+                $edit_addon = Addon::get($_GET['name']);
                 $edit_addon->setDescription($_POST['description']);
                 $edit_addon->setDesigner($_POST['designer']);
                 $status = _h('Saved properties.') . '<br>';
@@ -94,7 +94,7 @@ if ($addon_exists)
                 {
                     break;
                 }
-                $addon = new Addon($_GET['name']);
+                $addon = Addon::get($_GET['name']);
                 $addon->setStatus($_POST['fields']);
                 $status = _h('Saved status.') . '<br>';
                 break;
@@ -105,19 +105,19 @@ if ($addon_exists)
                     break;
                 }
 
-                $mAddon = new Addon($_GET['name']);
+                $mAddon = Addon::get($_GET['name']);
                 $mAddon->setNotes($_POST['fields']);
                 $status = _h('Saved notes.') . '<br>';
                 break;
 
             case 'delete':
-                $delAddon = new Addon($_GET['name']);
+                $delAddon = Addon::get($_GET['name']);
                 $delAddon->delete();
                 $status = _h('Deleted addon.') . '<br>';
                 break;
 
             case 'del_rev':
-                $delRev = new Addon($_GET['name']);
+                $delRev = Addon::get($_GET['name']);
                 $delRev->deleteRevision($_GET['rev']);
                 $status = _h('Deleted add-on revision.') . '<br>';
                 break;
@@ -130,7 +130,7 @@ if ($addon_exists)
                 break;
 
             case 'setimage':
-                $edit_addon = new Addon($_GET['name']);
+                $edit_addon = Addon::get($_GET['name']);
                 $edit_addon->setImage((int)$_GET['id']);
                 $status = _h('Set image.') . '<br>';
                 break;
@@ -140,19 +140,19 @@ if ($addon_exists)
                 {
                     break;
                 }
-                $edit_addon = new Addon($_GET['name']);
+                $edit_addon = Addon::get($_GET['name']);
                 $edit_addon->setImage((int)$_GET['id'], 'icon');
                 $status = _h('Set icon.') . '<br>';
                 break;
 
             case 'deletefile':
-                $mAddon = new Addon($_GET['name']);
+                $mAddon = Addon::get($_GET['name']);
                 $mAddon->deleteFile((int)$_GET['id']);
                 $status = _h('Deleted file.') . '<br>';
                 break;
 
             case 'include':
-                $mAddon = new Addon($_GET['name']);
+                $mAddon = Addon::get($_GET['name']);
                 $mAddon->setIncludeVersions($_POST['incl_start'], $_POST['incl_end']);
                 $status = _h('Marked game versions in which this add-on is included.');
                 break;
@@ -179,10 +179,6 @@ $tplData = [
 if ($addon_exists)
 {
     $tplData['body'] = Util::ob_get_require_once(ROOT_PATH . 'addons-panel.php');
-}
-else if (!is_null($_GET["name"]))
-{
-    $tplData['body'] = _h("The addon name does not exist");
 }
 
 // output the view

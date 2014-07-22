@@ -41,7 +41,7 @@ if (!Addon::exists($addon_id))
 }
 
 // Addon exists, get images
-$addon = new Addon($addon_id);
+$addon = Addon::get($addon_id);
 $addon_images = $addon->getImages();
 
 $json_array = array();

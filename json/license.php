@@ -40,7 +40,7 @@ if (!Addon::exists($addon_id))
 }
 
 // Addon exists, get images
-$addon = new Addon($addon_id);
+$addon = Addon::get($addon_id);
 $license = $addon->getLicense();
 
 // This isn't really JSON, but no reason to wrap one value in braces

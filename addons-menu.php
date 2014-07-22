@@ -27,7 +27,7 @@ foreach ($addons as $addon)
 {
     try
     {
-        $addon = new Addon($addon);
+        $addon = Addon::get($addon);
 
         // Get link icon
         if ($addon->getType() === Addon::KART)

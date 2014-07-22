@@ -10,7 +10,13 @@
                 {$addon.status}
             </div>
             <div id="addon-body">
-                {$addon.body}
+                {if empty($addon.body)}
+                    <div class="alert alert-danger">
+                        {t}The addon name does not exist{/t}
+                    </div>
+                {else}
+                    {$addon.body}
+                {/if}
             </div>
         </div>
     </div>
