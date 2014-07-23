@@ -156,6 +156,7 @@ class Addon extends Base
                 'timestamp'      => $rev['creation_date']
             ];
 
+            // revision is latest
             if ($currentRev['status'] & F_LATEST)
             {
                 $this->latestRevision = $rev['revision'];
@@ -287,7 +288,7 @@ class Addon extends Base
             ":status"   => $attributes['status']
         ];
 
-        if ($this->type === 'karts')
+        if ($this->type === static::KART)
         {
             $fields_data[":icon"] = $attributes['image'];
         }
