@@ -457,10 +457,9 @@ class Addon extends Base
         // Remove the revision record from the database
         try
         {
-            DBConnection::get()->query(
-                'DELETE FROM `' . DB_PREFIX . $this->type . '_revs`
-                WHERE `addon_id` = :id AND `revision` = :revision',
-                DBConnection::NOTHING,
+            DBConnection::get()->delete(
+                $this->type . '_revs',
+                "`addon_id` = :id AND `revision` = :revision",
                 [
                     ':addon_id' => $this->id,
                     ':revision' => $rev
@@ -1401,7 +1400,6 @@ class Addon extends Base
     {
         return in_array($type, static::getAllowedTypes());
     }
-
 
     /**
      * Get an array of allowed types
