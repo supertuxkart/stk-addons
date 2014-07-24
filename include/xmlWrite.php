@@ -208,7 +208,7 @@ function generateAssetXML()
                 $writer->writeAttribute('image-list', $image_list_path);
 
                 // Get add-on rating
-                $rating = new Ratings($addon['id']);
+                $rating = new Rating($addon['id']);
                 $writer->writeAttribute('rating', sprintf('%.3F', $rating->getAvgRating()));
                 $writer->endElement(); // close <$type>
             }
@@ -305,7 +305,7 @@ function generateAssetXML2()
                 $writer->writeAttribute('license', $license_path);
 
                 // Get add-on rating
-                $rating = new Ratings($addon['id']);
+                $rating = new Rating($addon['id']);
                 $writer->writeAttribute('rating', sprintf('%.3F', $rating->getAvgRating()));
 
                 // Search for revisions

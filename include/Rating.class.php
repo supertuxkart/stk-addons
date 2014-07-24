@@ -20,10 +20,10 @@
  */
 
 /**
- * Class Ratings to handle add-on ratings
+ * Class Rating to handle add-on ratings
  * @author computerfreak97, sj04736
  */
-class Ratings
+class Rating
 {
     /**
      * @var string
@@ -326,7 +326,7 @@ class Ratings
                     ':user_id'  => $userid,
                     ':rating'   => (float)$vote
                 ],
-                [':user_id'  =>  DBConnection::PARAM_INT]
+                [':user_id' => DBConnection::PARAM_INT]
             );
         }
         catch(DBException $e)

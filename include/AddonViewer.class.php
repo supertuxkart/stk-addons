@@ -49,7 +49,7 @@ class AddonViewer
     {
         $this->addon = Addon::get($id);
         $this->latestRev = $this->addon->getLatestRevision();
-        $this->rating = new Ratings($id);
+        $this->rating = new Rating($id);
     }
 
     /**

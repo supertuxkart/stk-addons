@@ -36,10 +36,10 @@ if (!Addon::exists($_GET['addon-id']))
     exit_json_error('The addon does not exist ' . h($_GET['addon-id']));
 }
 
-$rating = new Ratings($_GET['addon-id']);
+$rating = new Rating($_GET['addon-id']);
 $numRatingsString = 0;
 
-function getOverallRating(Ratings $rating)
+function getOverallRating(Rating $rating)
 {
     // update star ratings
     if ($rating->getNumRatings() === 1)
@@ -50,7 +50,7 @@ function getOverallRating(Ratings $rating)
     return $rating->getNumRatings() . ' Votes';
 }
 
-switch($_GET['action'])
+switch ($_GET['action'])
 {
     case "set": // set rating and get the overall rating
         if (empty($_GET["rating"]))

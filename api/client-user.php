@@ -171,7 +171,7 @@ try
                 $token = isset($_POST['token']) ? $_POST['token'] : "";
                 $addonid = isset($_POST['addonid']) ? $_POST['addonid'] : "";
 
-                $rating_object = new Ratings($addonid, false);
+                $rating_object = new Rating($addonid, false);
                 $rating = $rating_object->getUserVote(ClientSession::get($token, $userid));
 
                 $output->startElement('get-addon-vote');
@@ -203,7 +203,7 @@ try
                 $addonid = isset($_POST['addonid']) ? $_POST['addonid'] : "";
                 $rating = isset($_POST['rating']) ? $_POST['rating'] : -1.0;
 
-                $rating_object = new Ratings($addonid, false);
+                $rating_object = new Rating($addonid, false);
                 $rating_object->setUserVote($rating, ClientSession::get($token, $userid));
 
                 $output->startElement('set-addon-vote');
