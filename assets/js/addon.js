@@ -53,34 +53,14 @@ function textLimit(field, num) {
     }
 }
 
-/**
- * Loads an HTML page
- * Put the content of the body tag into the current page.
- * @param url URL of the HTML page to load
- * @param storage ID of the tag that gets to hold the output
- */
-function loadHTML(url, storage) {
-    var storage_elem = document.getElementById(storage);
-    $.get(url, function(data) {
-        if (storage_elem.innerHTML === undefined) {
-            storage_elem = data;
-        } else {
-            storage_elem.innerHTML = data;
-        }
-    });
-}
-
-function addRating(rating, addonId, sel_storage, disp_storage) {
-    // TODO fix ratings
-    loadHTML(SITE_ROOT + 'include/addRating.php?rating=' + encodeURI(rating) + '&addonId=' + encodeURI(addonId), sel_storage);
-    loadHTML(SITE_ROOT + 'include/addRating.php?addonId=' + encodeURI(addonId), disp_storage);
-}
-
-
 (function($) {
     "use strict";
 
-    var $addon_body = $("#addon-body");
+    var json_url = JSON_LOCATION + "rating.php",
+        $addon_body = $("#addon-body"),
+        $ratings_container = $("#rating-container"), // the container where you see the vote
+        $user_rating = $("#user-rating"); // the vote container
+
 
     // left panel user addon clicked
     $('a.addon-list').click(function() {
@@ -98,8 +78,24 @@ function addRating(rating, addonId, sel_storage, disp_storage) {
         return false;
     });
 
-    $('.add-rating').click(function() {
+    $addon_body.on("click", '.add-rating', function() {
+        var addon_id = $user_rating.data("id"),
+            rating = this.value;
 
+        // set new rating
+        $.get(json_url, {"addon-id": addon_id, "rating": rating}, function(data) {
+            var jData = parseJSON(data);
+            if (jData.hasOwnProperty("error")) {
+                console.log(jData["error"]);
+            }
+            if (jData.hasOwnProperty("success")) {
+                console.log(jData["success"]);
+
+                // update view
+                $ratings_container.find(".fullstars").width(jData["width"] + "%");
+                $ratings_container.find("p").html(jData["num-ratings"]);
+            }
+        });
     });
 
 })(jQuery);

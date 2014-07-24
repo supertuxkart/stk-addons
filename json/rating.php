@@ -1,6 +1,7 @@
 <?php
 /**
  * copyright 2011 computerfreak97
+ *           2014 Daniel Butum <danibutum at gmail dot com>
  *
  * This file is part of stkaddons
  *
@@ -17,36 +18,22 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-session_start();
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 AccessControl::setLevel(AccessControl::PERM_VIEW_BASIC_PAGE);
 
-if (!isset($_GET['addonId']))
+if (!isset($_GET['addon-id']))
 {
-    die('No addon.');
-}
-if (!User::isLoggedIn())
-{
-    die('Not logged in.');
-}
-$addonId = stripslashes($_GET['addonId']);
-$rating = new Ratings($addonId);
-if (isset($_GET['rating']))
-{
-    try
-    {
-        $rating->setUserVote($_GET['rating'], null);
-    }
-    catch(RatingsException $e)
-    {
-        //FIXME
-    }
-    echo $rating->displayUserRating();
-    exit;
+    exit_json_error('No addon id provided');
 }
 
-//create the string with the number of ratings (for use in the function below)
+if (!Addon::exists($_GET['addon-id']))
+{
+    exit_json_error('The addon does not exist ' . h($_GET['addon-id']));
+}
+
+$rating = new Ratings($_GET['addon-id']);
+
+// update star ratings
 if ($rating->getNumRatings() != 1)
 {
     $numRatingsString = $rating->getNumRatings() . ' Votes';
@@ -55,6 +42,22 @@ else
 {
     $numRatingsString = $rating->getNumRatings() . ' Vote';
 }
-echo '<div class="rating"><div class="emptystars">
-    </div><div class="fullstars" style="width: ' . $rating->getAvgRatingPercent(
-    ) . '%;"></div></div><p>' . $numRatingsString . '</p>';
+$other_options = ["width" => $rating->getAvgRatingPercent(), "num-ratings" => $numRatingsString];
+
+// set rating
+if (isset($_GET['rating']))
+{
+    try
+    {
+        $rating->setUserVote($_GET['rating']);
+    }
+    catch(RatingsException $e)
+    {
+        exit_json_error($e->getMessage());
+    }
+
+    exit_json_success("Rating set", $other_options);
+}
+
+// no set rating just get the addon votes
+exit_json_success("", $other_options);

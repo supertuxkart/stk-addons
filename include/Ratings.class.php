@@ -48,81 +48,13 @@ class Ratings
     /**
      * @var int
      */
-    private $count = 0;
+    private $count_ratings = 0;
 
     /**
      * The user's current vote (or false if not logged in or haven't voted)
      * @var mixed A number, or false
      */
     private $user_vote = false;
-
-    /**
-     * Constructor
-     *
-     * @param string $addon_id ID of addon to use
-     * @param bool   $fetch_everything
-     */
-    public function __construct($addon_id, $fetch_everything = true)
-    {
-        $this->addon_id = $addon_id;
-        if ($fetch_everything)
-        {
-            $this->fetchAvgRating();
-            $this->fetchNumRatings();
-            $this->fetchUserVote();
-        }
-    }
-
-    /**
-     * @return string
-     */
-    public function getAddonId()
-    {
-        return $this->addon_id;
-    }
-
-    /**
-     * Delete all ratings for an add-on
-     * @return boolean Success
-     */
-    public function delete()
-    {
-        try
-        {
-            DBConnection::get()->query(
-                'DELETE FROM `' . DB_PREFIX . 'votes`
-                WHERE `addon_id` = :addon_id',
-                DBConnection::NOTHING,
-                array(
-                    ':addon_id' => (string)$this->addon_id
-                )
-            );
-
-            return true;
-        }
-        catch(DBException $e)
-        {
-            return false;
-        }
-    }
-
-    /**
-     * @return string
-     */
-    public function displayUserRating()
-    {
-        $current_rating = $this->getUserVote();
-        $sel_1 = ($current_rating == 1) ? 'checked' : null;
-        $sel_2 = ($current_rating == 2) ? 'checked' : null;
-        $sel_3 = ($current_rating == 3) ? 'checked' : null;
-        $string = '<span id="user-rating">';
-        $string .= '<input type="radio" name="rating" id="rating-1" class="add-rating" value="1" onclick="addRating(1,\'' . $this->addon_id . '\',\'user-rating\',\'rating-container\');" ' . $sel_1 . '/><label for="rating-1"><div class="rating"><div class="emptystars"></div><div class="fullstars" style="width: 33%"></div></div></label><br />'; // 1 star
-        $string .= '<input type="radio" name="rating" id="rating-2" class="add-rating" value="2" onclick="addRating(2,\'' . $this->addon_id . '\',\'user-rating\',\'rating-container\');" ' . $sel_2 . '/><label for="rating-2"><div class="rating"><div class="emptystars"></div><div class="fullstars" style="width: 66%"></div></div></label><br />'; // 2 stars
-        $string .= '<input type="radio" name="rating" id="rating-3" class="add-rating" value="3" onclick="addRating(3,\'' . $this->addon_id . '\',\'user-rating\',\'rating-container\');" ' . $sel_3 . '/><label for="rating-3"><div class="rating"><div class="emptystars"></div><div class="fullstars" style="width: 100%"></div></div></label>'; // 3 stars
-        $string .= '</span>';
-
-        return $string;
-    }
 
     /**
      * Calculate the average rating
@@ -132,14 +64,14 @@ class Ratings
         try
         {
             $result = DBConnection::get()->query(
-                'SELECT avg(vote)
+                'SELECT AVG(vote) as avg_vote
                 FROM `' . DB_PREFIX . 'votes`
                 WHERE `addon_id` = :addon_id',
                 DBConnection::FETCH_ALL,
-                array(
-                    ':addon_id' => (string)$this->addon_id
-                )
+                [':addon_id' => $this->addon_id]
             );
+
+            $this->avg_rating = $result[0]['avg_vote'];
         }
         catch(DBException $e)
         {
@@ -147,28 +79,9 @@ class Ratings
             {
                 echo $e->getMessage();
             }
+
             $this->avg_rating = 0.0;
         }
-
-        $this->avg_rating = $result[0]['avg(vote)'];
-    }
-
-    /**
-     * Get the average rating
-     * @return int Average rating
-     */
-    public function getAvgRating()
-    {
-        return $this->avg_rating;
-    }
-
-    /**
-     * Gets the percentage of total possible rating value
-     * @return int percent value
-     */
-    public function getAvgRatingPercent()
-    {
-        return (int)($this->avg_rating / $this->max_rating * 100);
     }
 
     /**
@@ -183,44 +96,17 @@ class Ratings
                 FROM `' . DB_PREFIX . 'votes`
                 WHERE `addon_id` = :addon_id',
                 DBConnection::FETCH_ALL,
-                array(
-                    ':addon_id' => (string)$this->addon_id
-                )
+                [':addon_id' => $this->addon_id]
             );
-            $this->count = intval($result[0]['count(vote)']);
+            $this->count_ratings = intval($result[0]['count(vote)']);
         }
         catch(DBException $e)
         {
             if (DEBUG_MODE)
             {
-                echo $e->getMessage();
+                trigger_error($e->getMessage());
             }
-            $this->count = -1;
-        }
-    }
-
-    /**
-     * Get the number of ratings
-     * @return integer Number of ratings
-     */
-    public function getNumRatings()
-    {
-        return $this->count;
-    }
-
-    /**
-     * Return a string saying 'x Vote(s)'
-     * @return string
-     */
-    public function getRatingString()
-    {
-        if ($this->getNumRatings() != 1)
-        {
-            return $this->getNumRatings() . ' Votes';
-        }
-        else
-        {
-            return $this->getNumRatings() . ' Vote';
+            $this->count_ratings = 0;
         }
     }
 
@@ -254,10 +140,11 @@ class Ratings
                 WHERE `user_id` = :user_id
                 AND `addon_id` = :addon_id",
                 DBConnection::FETCH_ALL,
-                array(
+                [
                     ':addon_id' => (string)$this->addon_id,
-                    ':user_id'  => (int)$userid
-                )
+                    ':user_id'  => $userid
+                ],
+                [':user_id' => DBConnection::PARAM_INT]
             );
 
         }
@@ -273,7 +160,108 @@ class Ratings
         {
             return;
         }
-        $this->user_vote = $result[0]['vote'];
+        $this->user_vote = (int)$result[0]['vote'];
+    }
+
+    /**
+     * Constructor
+     *
+     * @param string $addon_id ID of addon to use
+     * @param bool   $fetch_everything
+     */
+    public function __construct($addon_id, $fetch_everything = true)
+    {
+        $this->addon_id = (string)$addon_id;
+
+        if ($fetch_everything)
+        {
+            $this->fetchAvgRating();
+            $this->fetchNumRatings();
+            $this->fetchUserVote();
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddonId()
+    {
+        return $this->addon_id;
+    }
+
+    /**
+     * Delete all ratings for an add-on
+     * @return boolean Success
+     */
+    public function delete()
+    {
+        try
+        {
+            DBConnection::get()->delete("votes", "`addon_id` = :addon_id", [':addon_id' => $this->addon_id]);
+        }
+        catch(DBException $e)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @return string
+     */
+    public function displayUserRating()
+    {
+        $current_rating = $this->getUserVote();
+
+        return StkTemplate::get("user-rating.tpl")
+            ->assign("addon_id", $this->addon_id)
+            ->assign("rating_1", $current_rating === 1)
+            ->assign("rating_2", $current_rating === 2)
+            ->assign("rating_3", $current_rating === 3);
+    }
+
+    /**
+     * Get the average rating
+     * @return int Average rating
+     */
+    public function getAvgRating()
+    {
+        return $this->avg_rating;
+    }
+
+    /**
+     * Gets the percentage of total possible rating value
+     * @return int percent value
+     */
+    public function getAvgRatingPercent()
+    {
+        return (int)($this->avg_rating / $this->max_rating * 100);
+    }
+
+    /**
+     * Get the number of ratings
+     * @return integer Number of ratings
+     */
+    public function getNumRatings()
+    {
+        return $this->count_ratings;
+    }
+
+    /**
+     * Return a string saying 'x Vote(s)'
+     * @return string
+     */
+    public function getRatingString()
+    {
+        if ($this->getNumRatings() != 1)
+        {
+            return $this->getNumRatings() . ' Votes';
+        }
+        else
+        {
+            return $this->getNumRatings() . ' Vote';
+        }
     }
 
     /**
@@ -299,10 +287,9 @@ class Ratings
      * @param ClientSession $session
      *
      * @throws RatingsException
-     * @throws DBException
      * @return boolean new vote or not
      */
-    public function setUserVote($vote, $session)
+    public function setUserVote($vote, $session = null)
     {
         if ($session !== null)
         {
@@ -312,7 +299,7 @@ class Ratings
         {
             if (!User::isLoggedIn())
             {
-                throw new DBException();
+                throw new RatingsException();
             }
             $userid = User::getLoggedId();
         }
@@ -333,11 +320,12 @@ class Ratings
                 VALUES (:user_id, :addon_id, :rating)
                 ON DUPLICATE KEY UPDATE vote = :rating",
                 DBConnection::NOTHING,
-                array(
-                    ':addon_id' => (string)$this->addon_id,
-                    ':user_id'  => (int)$userid,
+                [
+                    ':addon_id' => $this->addon_id,
+                    ':user_id'  => $userid,
                     ':rating'   => (float)$vote
-                )
+                ],
+                [':user_id'  =>  DBConnection::PARAM_INT]
             );
         }
         catch(DBException $e)

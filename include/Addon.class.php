@@ -1059,7 +1059,7 @@ class Addon extends Base
     {
         if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
         {
-            throw new AddonException(_h('You do not have the neccessary permissions to perform this action.'));
+            throw new AddonException(_h('You do not have the necessary permissions to perform this action.'));
         }
 
         $fields = explode(',', $fields);
@@ -1072,6 +1072,7 @@ class Addon extends Base
             }
             $fieldinfo = explode('-', $field);
             $revision = (int)$fieldinfo[1];
+
             // Update notes
             $notes[$revision] = $_POST[$field];
         }
@@ -1422,7 +1423,7 @@ class Addon extends Base
     {
         if (!is_string($id))
         {
-            trigger_error("ID is not a string");
+            //trigger_error("ID is not a string");
 
             return false;
         }
