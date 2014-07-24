@@ -33,12 +33,12 @@ class Rating
     /**
      * @var float
      */
-    private $min_rating = 0.5;
+    const MIN_RATING = 0.5;
 
     /**
      * @var float
      */
-    private $max_rating = 3.0;
+    const MAX_RATING = 3.0;
 
     /**
      * @var int
@@ -237,7 +237,7 @@ class Rating
      */
     public function getAvgRatingPercent()
     {
-        return (int)($this->avg_rating / $this->max_rating * 100);
+        return (int)($this->avg_rating / static::MAX_RATING * 100);
     }
 
     /**
@@ -304,7 +304,7 @@ class Rating
             $userid = User::getLoggedId();
         }
 
-        if ($vote < $this->min_rating || $vote > $this->max_rating)
+        if ($vote < static::MIN_RATING || $vote > static::MAX_RATING)
         {
             throw new RatingsException(
                 _h('The rating is out of allowed boundaries.') . ' ' .
@@ -358,7 +358,7 @@ class Rating
             return 0;
         }
 
-        $num_possible_ratings = $this->max_rating - $this->min_rating + 1;
+        $num_possible_ratings = static::MAX_RATING - static::MIN_RATING + 1;
 
         return intval(($this->user_vote / $num_possible_ratings) * 100);
     }

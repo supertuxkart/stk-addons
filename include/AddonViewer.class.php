@@ -78,6 +78,7 @@ class AddonViewer
      */
     public function fillTemplate($template)
     {
+        // build common variables
         $tpl = [];
         $is_logged = User::isLoggedIn();
         $is_owner = $has_permission = false;
@@ -99,8 +100,8 @@ class AddonViewer
                 'percent'    => $this->rating->getAvgRatingPercent(),
                 'decimal'    => $this->rating->getAvgRating(),
                 'count'      => $this->rating->getNumRatings(),
-                'min_rating' => 0.5,
-                'max_rating' => 3.0
+                'min_rating' => Rating::MIN_RATING,
+                'max_rating' => Rating::MAX_RATING
             ],
             'badges'       => AddonViewer::badges($this->addon->getStatus()),
             'image'        => [
