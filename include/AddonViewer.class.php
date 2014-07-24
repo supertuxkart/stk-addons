@@ -78,24 +78,14 @@ class AddonViewer
      */
     public function fillTemplate($template)
     {
-        // build common variables
-        $tpl = [];
-        $is_logged = User::isLoggedIn();
-        $is_owner = $has_permission = false;
-        if ($is_logged) // not logged in, no reason to do checking
-        {
-            $is_owner = ($this->addon->getUploaderId() === User::getLoggedId());
-            $has_permission = User::hasPermission(AccessControl::PERM_EDIT_ADDONS);
-        }
-        $can_edit = ($is_owner || $has_permission);
-
-        $tpl['addon'] = [
-            'name'         => h($this->addon->getName()),
-            'description'  => h($this->addon->getDescription()),
-            'type'         => $this->addon->getType(),
-            'designer'     => h($this->addon->getDesigner()),
-            'license'      => h($this->addon->getLicense()),
-            'rating'       => [
+        // build template
+        $tpl = [
+            'name'        => h($this->addon->getName()),
+            'description' => h($this->addon->getDescription()),
+            'type'        => $this->addon->getType(),
+            'designer'    => h($this->addon->getDesigner()),
+            'license'     => h($this->addon->getLicense()),
+            'rating'      => [
                 'label'      => $this->rating->getRatingString(),
                 'percent'    => $this->rating->getAvgRatingPercent(),
                 'decimal'    => $this->rating->getAvgRating(),
@@ -103,30 +93,32 @@ class AddonViewer
                 'min_rating' => Rating::MIN_RATING,
                 'max_rating' => Rating::MAX_RATING
             ],
-            'badges'       => AddonViewer::badges($this->addon->getStatus()),
-            'image'        => [
-                'display' => false,
-                'url'     => null
-            ],
-            'image_upload' => false
+            'badges'      => AddonViewer::badges($this->addon->getStatus()),
+            'image_url'   => false,
+            'dl'          => [],
+            'vote'        => false, // only logged users see this
         ];
 
-        // Get image
+        // build permission variables
+        $is_logged = User::isLoggedIn();
+        $is_owner = $has_permission = $can_edit = false;
+        if ($is_logged) // not logged in, no reason to do checking
+        {
+            $is_owner = ($this->addon->getUploaderId() === User::getLoggedId());
+            $has_permission = User::hasPermission(AccessControl::PERM_EDIT_ADDONS);
+            $can_edit = ($is_owner || $has_permission);
+
+            $tpl['vote'] = $this->rating->displayUserRating();
+        }
+
+        // Get image url
         $image = Cache::getImage($this->addon->getImage(), ['size' => 'big']);
         if ($this->addon->getImage() != 0 && $image['exists'] == true && $image['approved'] == true)
         {
-            $tpl['addon']['image'] = [
-                'display' => true,
-                'url'     => $image['url']
-            ];
+            $tpl['image_url'] = $image['url'];
         }
 
-        // Add upload button below image (or in place of image)
-        if ($can_edit)
-        {
-            $tpl['addon']['image_upload'] = true;
-        }
-
+        // build info table
         $addonUser = User::getFromID($this->addon->getUploaderId());
         $latestRev = $this->addon->getLatestRevision();
         $info = [
@@ -136,8 +128,8 @@ class AddonViewer
             'compatibility' => Util::getVersionFormat($latestRev['format'], $this->addon->getType()),
             'link'          => File::rewrite($this->addon->getLink())
         ];
-        $tpl['addon']['info'] = $info;
-        if ($latestRev['status'] & F_TEX_NOT_POWER_OF_2)
+        $tpl['info'] = $info;
+        if (!Addon::isTexturePowerOfTwo($latestRev['status']))
         {
             $template->assign(
                 "warnings",
@@ -145,56 +137,36 @@ class AddonViewer
             );
         }
 
-        $tpl['addon']['vote'] = [
-            'display'  => $is_logged,
-            'controls' => $this->rating->displayUserRating()
-        ];
-
-        // Download button
+        // Download button, TODO use this in some way
         $file_path = $this->addon->getFile((int)$this->latestRev['revision']);
         if ($file_path !== false && File::exists($file_path))
         {
             $button_text = h(sprintf(_('Download %s'), $this->addon->getName()));
             $shrink = (mb_strlen($button_text) > 20) ? 'style="font-size: 1.1em !important;"' : null;
-            $tpl['addon']['dl'] = [
-                'display' => true,
-                'label'   => $button_text,
-                'url'     => DOWNLOAD_LOCATION . $file_path,
-                'shrink'  => $shrink,
+            $tpl['dl'] = [
+                'label'  => $button_text,
+                'url'    => DOWNLOAD_LOCATION . $file_path,
+                'shrink' => $shrink,
             ];
-        }
-        else
-        {
-            $tpl['addon']['dl'] = ['display' => false];
         }
 
         // Revision list
-        $rev_list = [
-            'upload'    => false,
-            'revisions' => []
-        ];
-
-        if ($can_edit)
-        {
-            $rev_list['upload'] = true;
-        }
-
-        $revisions = $this->addon->getAllRevisions();
-        foreach ($revisions as $rev_n => $revision)
+        $revisions_db = $this->addon->getAllRevisions();
+        $revisions_tpl = [];
+        foreach ($revisions_db as $rev_n => $revision)
         {
             if (!$is_logged)
             {
                 // Users not logged in cannot see unapproved addons
-                if (!($revision['status'] & F_APPROVED))
+                if (!Addon::isApproved($revision['status']))
                 {
                     continue;
                 }
             }
             else
             {
-                // If the user is not the uploader, or moderators, then they
-                // cannot see unapproved addons
-                if (!$can_edit && !($revision['status'] & F_APPROVED))
+                // If the user is not the uploader, or moderators, then they cannot see unapproved addons
+                if (!$can_edit && !Addon::isApproved($revision['status']))
                 {
                     continue;
                 }
@@ -214,21 +186,11 @@ class AddonViewer
                 continue;
             }
 
-            $rev_list['revisions'][] = $rev;
+            $revisions_tpl[] = $rev;
         }
-        $tpl['addon']['revision_list'] = $rev_list;
+        $tpl['revisions'] = $revisions_tpl;
 
-        // Image list
-        $im_list = [
-            'upload' => false,
-            'images' => []
-        ];
-        if ($can_edit)
-        {
-            $im_list['upload'] = true;
-        }
-
-        // Get images
+        // Image list. Get images
         $image_files_db = $this->addon->getImages();
         $image_files = [];
         foreach ($image_files_db as $image)
@@ -293,18 +255,7 @@ class AddonViewer
                 $image_files[] = $image;
             }
         }
-        $im_list['images'] = $image_files;
-        $tpl['addon']['image_list'] = $im_list;
-
-        // Source files
-        $s_list = [
-            'upload' => false,
-            'files'  => [],
-        ];
-        if ($can_edit)
-        {
-            $s_list['upload'] = true;
-        }
+        $tpl['images'] = $image_files;
 
         // Search database for source files
         $source_files_db = $this->addon->getSourceFiles();
@@ -354,10 +305,11 @@ class AddonViewer
                 $source_files[] = $source;
             }
         }
-        $s_list['files'] = $source_files;
-        $tpl['addon']['source_list'] = $s_list;
+        $tpl['source_list'] = $source_files;
 
-        $template->assign('addon', $tpl['addon']);
+        $template->assign('addon', $tpl)
+            ->assign("can_edit", $can_edit)
+            ->assign("is_logged", $is_logged);
     }
 
     /**
@@ -370,23 +322,23 @@ class AddonViewer
     private static function badges($status)
     {
         $string = '';
-        if ($status & F_FEATURED)
+        if (Addon::isFeatured($status))
         {
             $string .= '<span class="badge f_featured">' . _h('Featured') . '</span>';
         }
-        if ($status & F_ALPHA)
+        if (Addon::isAlpha($status))
         {
             $string .= '<span class="badge f_alpha">' . _h('Alpha') . '</span>';
         }
-        if ($status & F_BETA)
+        if (Addon::isBeta($status))
         {
             $string .= '<span class="badge f_beta">' . _h('Beta') . '</span>';
         }
-        if ($status & F_RC)
+        if (Addon::isReleaseCandidate($status))
         {
             $string .= '<span class="badge f_rc">' . _h('Release-Candidate') . '</span>';
         }
-        if ($status & F_DFSG)
+        if (Addon::isDFSGCompliant($status))
         {
             $string .= '<span class="badge f_dfsg">' . _h('DFSG Compliant') . '</span>';
         }

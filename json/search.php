@@ -56,7 +56,7 @@ switch ($_GET["data-type"])
                         $addon_list[] = [
                             'id'       => $result['id'],
                             'name'     => $result['name'],
-                            'featured' => $a->getStatus() & F_FEATURED,
+                            'featured' => Addon::isFeatured($a->getStatus()),
                             'icon'     => File::getPath($icon)
                         ];
                     }

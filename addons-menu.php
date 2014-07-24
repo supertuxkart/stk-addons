@@ -74,7 +74,7 @@ foreach ($addons as $addon)
         $real_url = sprintf("addons.php?type=%s&amp;name=%s", $addon_type, $addon->getId());
         $template_addons[] = [
             "class"       => $class,
-            "is_featured" => ($addon->getStatus() & F_FEATURED) == F_FEATURED,
+            "is_featured" => Addon::isFeatured($addon->getStatus()),
             "name"        => $addon->getName(),
             "real_url"    => $real_url,
             "image_src"   => $icon,

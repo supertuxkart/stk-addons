@@ -122,13 +122,13 @@ foreach (Addon::getAllowedTypes() as $type)
     foreach ($addons as $addon)
     {
         // Only list the latest revision of the add-on
-        if (!($addon["status"] & F_LATEST))
+        if (!Addon::isLatest($addon["status"]))
         {
             continue;
         }
 
         $addon["css_class"] = "";
-        if (!($addon["status"] & F_APPROVED)) // not approved
+        if (!Addon::isApproved($addon["status"])) // not approved
         {
             $isOwner = ($addon['uploader'] === User::getLoggedId());
             $canEdit = User::hasPermission(AccessControl::PERM_EDIT_ADDONS);

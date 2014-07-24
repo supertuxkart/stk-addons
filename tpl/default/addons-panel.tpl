@@ -18,10 +18,10 @@
     </h1>
 
     <div id="addon-image">
-        {if $addon.image.display == true}
-            <img class="preview" src="{$addon.image.url}" itemprop="image" />
+        {if $addon.image_url}
+            <img class="preview" src="{$addon.image_url}" itemprop="image" />
         {/if}
-        {if $addon.image_upload}
+        {if $can_edit}
             <br />
             <form method="POST" action="{$form_action}&amp;action=file">
                 <input type="submit" value="{t}Upload Image{/t}" />
@@ -59,10 +59,10 @@
             <td><strong>{t}Compatible with:{/t}</strong></td>
             <td>{$addon.info.compatibility}</td>
         </tr>
-        {if $addon.vote.display == true}
+        {if $is_logged}
             <tr>
                 <td><strong>{t}Your Rating:{/t}</strong></td>
-                <td>{$addon.vote.controls}</td>
+                <td>{$addon.vote}</td>
             </tr>
         {/if}
     </table>
@@ -70,7 +70,7 @@
 
 {include file="feedback/warnings.tpl"}
 
-{if $addon.dl.display == true}
+{if $addon.dl}
     <br>
     <br>
     {t}Download this add-on in game!{/t}
@@ -83,14 +83,14 @@
 <a href="{$addon.info.link}">{$addon.info.link}</a>
 
 <h3>{t}Revisions{/t}</h3>
-{if $addon.revision_list.upload}
+{if $can_edit}
     <div class="pull-right">
         <form method="POST" action="{$form_action}">
             <input type="submit" value="{t}Upload Revision{/t}" />
         </form>
     </div>
 {/if}
-{foreach $addon.revision_list.revisions as $revision}
+{foreach $addon.revisions as $revision}
     <p>
         {$revision.timestamp}
         <a href="{$revision.file.path}" rel="nofollow">{$revision.dl_label}</a>
@@ -98,7 +98,7 @@
 {/foreach}
 
 <h3>{t}Images{/t}</h3>
-{if $addon.image_list.upload}
+{if $can_edit}
     <div class="pull-right">
         <form method="POST" action="{$form_action}&amp;action=file">
             <input type="submit" value="{t}Upload Image{/t}">
@@ -106,7 +106,7 @@
     </div>
 {/if}
 <div class="image_thumbs">
-    {foreach $addon.image_list.images as $image}
+    {foreach $addon.images as $image}
         {if $image.approved == 1}
             {$class="image_thumb_container"}
         {else}
@@ -126,7 +126,7 @@
 {/if}
 
 <h3>{t}Source Files{/t}</h3>
-{if $addon.source_list.upload == true}
+{if $can_edit}
     <div class="pull-right">
         <form method="POST" action="{$form_action}&amp;action=file">
             <input type="submit" value="{t}Upload Source File{/t}">
@@ -134,7 +134,7 @@
     </div>
 {/if}
 <table>
-    {foreach $addon.source_list.files AS $file}
+    {foreach $addon.source_list as $file}
         <tr>
             <td><strong>{$file.label}</strong></td>
             <td>{$file.details}</td>

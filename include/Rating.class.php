@@ -26,11 +26,6 @@
 class Rating
 {
     /**
-     * @var string
-     */
-    private $addon_id;
-
-    /**
      * @var float
      */
     const MIN_RATING = 0.5;
@@ -39,6 +34,11 @@ class Rating
      * @var float
      */
     const MAX_RATING = 3.0;
+
+    /**
+     * @var string
+     */
+    private $addon_id;
 
     /**
      * @var int

@@ -139,7 +139,7 @@ function generateAssetXML()
             {
                 if (ConfigManager::getConfig('list_invisible') == 0)
                 {
-                    if ($addon['status'] & F_INVISIBLE)
+                    if (Addon::isInvisible($addon['status']))
                     {
                         trigger_error('Hiding invisible addon ' . $addon['name'], E_USER_WARNING);
                         continue;
@@ -320,7 +320,7 @@ function generateAssetXML2()
                     foreach ($addon_revs as $addon_rev)
                     {
                         // Skip invisible entries
-                        if (ConfigManager::getConfig('list_invisible') === 0 && $addon_rev['status'] & F_INVISIBLE)
+                        if (ConfigManager::getConfig('list_invisible') === 0 && Addon::isInvisible($addon_rev['status']))
                         {
                             continue;
                         }

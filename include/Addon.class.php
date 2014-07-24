@@ -157,7 +157,7 @@ class Addon extends Base
             ];
 
             // revision is latest
-            if ($currentRev['status'] & F_LATEST)
+            if (Addon::isLatest($currentRev['status']))
             {
                 $this->latestRevision = $rev['revision'];
                 $this->image = $rev['image'];
@@ -439,7 +439,7 @@ class Addon extends Base
         {
             throw new AddonException(_h('You cannot delete the last revision of an add-on.'));
         }
-        if (($this->revisions[$rev]['status'] & F_LATEST))
+        if (Addon::isLatest($this->revisions[$rev]['status']))
         {
             throw new AddonException(
                 _h(
@@ -1152,7 +1152,7 @@ class Addon extends Base
     {
         foreach ($this->revisions as $rev)
         {
-            if ($rev['status'] & F_APPROVED)
+            if (Addon::isApproved($rev['status']))
             {
                 return true;
             }
@@ -1171,6 +1171,7 @@ class Addon extends Base
     public function setStatus($fields)
     {
         $fields = explode(',', $fields);
+        $has_permission = User::hasPermission(AccessControl::PERM_EDIT_ADDONS);
 
         // Initialise the status field to its present values
         // (Remove any checkboxes that the user could have checked)
@@ -1178,7 +1179,7 @@ class Addon extends Base
         foreach ($this->revisions as $rev_n => $rev)
         {
             $mask = F_LATEST + F_ALPHA + F_BETA + F_RC;
-            if (User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
+            if ($has_permission)
             {
                 $mask = $mask + F_APPROVED + F_INVISIBLE + F_DFSG + F_FEATURED;
             }
@@ -1223,7 +1224,7 @@ class Addon extends Base
                 switch ($field_info[0])
                 {
                     case 'approved':
-                        if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
+                        if (!$has_permission)
                         {
                             break;
                         }
@@ -1231,7 +1232,7 @@ class Addon extends Base
                         break;
 
                     case 'invisible':
-                        if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
+                        if (!$has_permission)
                         {
                             break;
                         }
@@ -1251,7 +1252,7 @@ class Addon extends Base
                         break;
 
                     case 'dfsg':
-                        if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
+                        if (!$has_permission)
                         {
                             break;
                         }
@@ -1259,7 +1260,7 @@ class Addon extends Base
                         break;
 
                     case 'featured':
-                        if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
+                        if (!$has_permission)
                         {
                             break;
                         }
@@ -1596,8 +1597,6 @@ class Addon extends Base
      * @param string  $moderator_message
      *
      * @throws AddonException
-     *
-     * @return Addon Object for newly created add-on
      */
     public static function create($type, $attributes, $fileid, $moderator_message)
     {
@@ -1707,7 +1706,7 @@ class Addon extends Base
         }
         catch(DBException $e)
         {
-            return false;
+            throw new AddonException($e->getMessage());
         }
 
         // Send mail to moderators
@@ -1731,10 +1730,118 @@ class Addon extends Base
      *
      * @param string $id Addon ID
      *
-     * @return boolean
+     * @return bool
      */
     public static function exists($id)
     {
         return static::existsField("addons", "id", Addon::cleanId($id), DBConnection::PARAM_STR);
+    }
+
+    /**
+     * If addon is approved
+     *
+     * @param int $status
+     *
+     * @return bool
+     */
+    public static function isApproved($status)
+    {
+        return $status & F_APPROVED;
+    }
+
+    /**
+     * If addon is in alpha
+     *
+     * @param int $status
+     *
+     * @return bool
+     */
+    public static function isAlpha($status)
+    {
+        return $status & F_ALPHA;
+    }
+
+    /**
+     * If addon is in beta
+     *
+     * @param int $status
+     *
+     * @return bool
+     */
+    public static function isBeta($status)
+    {
+        return $status & F_BETA;
+    }
+
+    /**
+     * If addon is in release candidate
+     *
+     * @param int $status
+     *
+     * @return bool
+     */
+    public static function isReleaseCandidate($status)
+    {
+        return $status & F_RC;
+    }
+
+    /**
+     * If addon is invisible
+     *
+     * @param int $status
+     *
+     * @return bool
+     */
+    public static function isInvisible($status)
+    {
+        return $status & F_INVISIBLE;
+    }
+
+    /**
+     * If addon is Debian Free Software Guidelines compliant
+     *
+     * @param int $status
+     *
+     * @return bool
+     */
+    public static function isDFSGCompliant($status)
+    {
+        return $status & F_DFSG;
+    }
+
+    /**
+     * If addon is featured
+     *
+     * @param int $status
+     *
+     * @return bool
+     */
+    public static function isFeatured($status)
+    {
+        return $status & F_FEATURED;
+    }
+
+    /**
+     * If addon is latest
+     *
+     * @param int $status
+     *
+     * @return bool
+     */
+    public static function isLatest($status)
+    {
+        return $status & F_LATEST;
+    }
+
+    /**
+     * If texture is a power of two
+     *
+     * @param int $status
+     *
+     * @return bool
+     */
+    public static function isTexturePowerOfTwo($status)
+    {
+        return !($status & F_TEX_NOT_POWER_OF_2);
     }
 }
