@@ -97,6 +97,9 @@ class AddonViewer
             'image_url'   => false,
             'dl'          => [],
             'vote'        => false, // only logged users see this
+            'revisions'   => [],
+            'images'      => [],
+            'sources'     => []
         ];
 
         // build permission variables
@@ -152,7 +155,6 @@ class AddonViewer
 
         // Revision list
         $revisions_db = $this->addon->getAllRevisions();
-        $revisions_tpl = [];
         foreach ($revisions_db as $rev_n => $revision)
         {
             if (!$is_logged)
@@ -186,37 +188,38 @@ class AddonViewer
                 continue;
             }
 
-            $revisions_tpl[] = $rev;
+            $tpl['revisions'][] = $rev;
         }
-        $tpl['revisions'] = $revisions_tpl;
 
-        // Image list. Get images
+        // Images
         $image_files_db = $this->addon->getImages();
-        $image_files = [];
         foreach ($image_files_db as $image)
         {
-            $image['url'] = DOWNLOAD_LOCATION . $image['file_path'];
             $imageCache = Cache::getImage($image['id'], ['size' => 'medium']);
             $image['thumb']['url'] = $imageCache['url'];
+            $image['url'] = DOWNLOAD_LOCATION . $image['file_path'];
+            $image['approved'] = (bool)$image['approved'];
+
+            // do not compute anything
+            if (!$can_edit && !$image['approved'])
+            {
+                continue;
+            }
+
             $admin_links = null;
             if ($is_logged)
             {
                 // only users that can edit addons
                 if ($has_permission)
                 {
-                    if ($image['approved'] == 1)
+                    if ($image['approved'])
                     {
-                        $admin_links .= '<a href="' . File::rewrite(
-                                $this->addon->getLink() . '&amp;save=unapprove&amp;id=' . $image['id']
-                            ) . '">' . _h('Unapprove') . '</a>';
+                        $image["unapprove_link"] = File::rewrite($this->addon->getLink() . '&amp;save=unapprove&amp;id=' . $image['id']);
                     }
                     else
                     {
-                        $admin_links .= '<a href="' . File::rewrite(
-                                $this->addon->getLink() . '&amp;save=approve&amp;id=' . $image['id']
-                            ) . '">' . _h('Approve') . '</a>';
+                        $image["approve_link"] = File::rewrite($this->addon->getLink() . '&amp;save=approve&amp;id=' . $image['id']);
                     }
-                    $admin_links .= '<br />';
                 }
 
                 // edit addons and the owner
@@ -226,86 +229,57 @@ class AddonViewer
                     {
                         if ($this->addon->getImage(true) != $image['id'])
                         {
-                            $admin_links .= '<a href="' . File::rewrite(
-                                    $this->addon->getLink() . '&amp;save=seticon&amp;id=' . $image['id']
-                                ) . '">' . _h('Set Icon') . '</a><br />';
+                            $image["icon_link"] = File::rewrite($this->addon->getLink() . '&amp;save=seticon&amp;id=' . $image['id']);
                         }
                     }
                     if ($this->addon->getImage() != $image['id'])
                     {
-                        $admin_links .= '<a href="' . File::rewrite(
-                                $this->addon->getLink() . '&amp;save=setimage&amp;id=' . $image['id']
-                            ) . '">' . _h('Set Image') . '</a><br />';
+                        $image["image_link"] = File::rewrite($this->addon->getLink() . '&amp;save=setimage&amp;id=' . $image['id']);
                     }
-                    $admin_links .= '<a href="' . File::rewrite(
-                            $this->addon->getLink() . '&amp;save=deletefile&amp;id=' . $image['id']
-                        ) . '">' . _h('Delete File') . '</a><br />';
+                    $image["delete_link"] = File::rewrite($this->addon->getLink() . '&amp;save=deletefile&amp;id=' . $image['id']);
                 }
             }
 
-            $image['admin_links'] = $admin_links;
-            if ($can_edit)
-            {
-                $image_files[] = $image;
-                continue;
-            }
-
-            if ($image['approved'] == 1)
-            {
-                $image_files[] = $image;
-            }
+            $tpl['images'][] = $image;
         }
-        $tpl['images'] = $image_files;
 
         // Search database for source files
         $source_files_db = $this->addon->getSourceFiles();
-        $source_files = [];
+        $source_number = 0;
         foreach ($source_files_db as $source)
         {
-            $source['label'] = sprintf(_h('Source File %u'), count($source_files) + 1);
-            $source['details'] = null;
-            if ($source['approved'] == 0)
+            $source['label'] = sprintf(_h('Source File %u'), $source_number + 1);
+            $source['approved'] = (bool)$source;
+
+            // do not compute anything
+            if (!$can_edit && !$source['approved'])
             {
-                $source['details'] .= '(' . _h('Not Approved') . ') ';
+                continue;
             }
-            $source['details'] .= '<a href="' . DOWNLOAD_LOCATION . $source['file_path'] . '" rel="nofollow">' . _(
-                    'Download'
-                ) . '</a>';
+
+            $source['download_link'] = DOWNLOAD_LOCATION . $source['file_path'];
             if ($is_logged)
             {
                 if ($has_permission)
                 {
-                    if ($source['approved'] == 1)
+                    if ($source['approved'])
                     {
-                        $source['details'] .= ' | <a href="' . File::rewrite(
-                                $this->addon->getLink() . '&amp;save=unapprove&amp;id=' . $source['id']
-                            ) . '">' . _h('Unapprove') . '</a>';
+                        $source['unapprove_link'] = File::rewrite($this->addon->getLink() . '&amp;save=unapprove&amp;id=' . $source['id']);
                     }
                     else
                     {
-                        $source['details'] .= ' | <a href="' . File::rewrite(
-                                $this->addon->getLink() . '&amp;save=approve&amp;id=' . $source['id']
-                            ) . '">' . _h('Approve') . '</a>';
+                        $source['approve_link'] = File::rewrite($this->addon->getLink() . '&amp;save=approve&amp;id=' . $source['id']);
                     }
                 }
                 if ($can_edit)
                 {
-                    $source['details'] .= ' | <a href="' . File::rewrite(
-                            $this->addon->getLink() . '&amp;save=deletefile&amp;id=' . $source['id']
-                        ) . '">' . _h('Delete File') . '</a><br />';
+                    $source['delete_link'] = File::rewrite($this->addon->getLink() . '&amp;save=deletefile&amp;id=' . $source['id']);
                 }
             }
-            if ($can_edit)
-            {
-                $source_files[] = $source;
-                continue;
-            }
-            if ($source['approved'] == 1)
-            {
-                $source_files[] = $source;
-            }
+
+            $tpl['sources'][] = $source;
+            $source_number++;
         }
-        $tpl['source_list'] = $source_files;
 
         $template->assign('addon', $tpl)
             ->assign("can_edit", $can_edit)

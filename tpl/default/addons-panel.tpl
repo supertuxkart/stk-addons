@@ -107,7 +107,7 @@
 {/if}
 <div class="image_thumbs">
     {foreach $addon.images as $image}
-        {if $image.approved == 1}
+        {if $image.approved}
             {$class="image_thumb_container"}
         {else}
             {$class="image_thumb_container unapproved"}
@@ -117,7 +117,21 @@
                 <img src="{$image.thumb.url}">
             </a>
             <br>
-            {$image.admin_links}
+            {if isset($image.unapprove_link)}
+                <a href="{$image.unapprove_link}">{t}Unapprove{/t}</a><br>
+            {/if}
+            {if isset($image.approve_link)}
+                <a href="{$image.approve_link}">{t}Approve{/t}</a><br>
+            {/if}
+            {if isset($image.icon_link)}
+                <a href="{$image.icon_link}">{t}Set Icon{/t}</a><br>
+            {/if}
+            {if isset($image.image_link)}
+                <a href="{$image.image_link}">{t}Set Image{/t}</a><br>
+            {/if}
+            {if isset($image.delete_link)}
+                <a href="{$image.delete_link}">{t}Delete File{/t}</a><br>
+            {/if}
         </div>
     {/foreach}
 </div>
@@ -134,13 +148,27 @@
     </div>
 {/if}
 <table>
-    {foreach $addon.source_list as $file}
+    {foreach $addon.sources as $source}
         <tr>
-            <td><strong>{$file.label}</strong></td>
-            <td>{$file.details}</td>
+            <td><strong>{$source.label}</strong></td>
+            <td>
+                {if !$source.approved}
+                    ({t}Not Approved{/t})
+                {/if}
+                <a rel="nofollow" href="{$source.download_link}">{t}Download{/t}</a><br>
+                {if isset($source.unapprove_link)}
+                    | <a href="{$source.unapprove_link}">{t}Unapprove{/t}</a><br>
+                {/if}
+                {if isset($source.approve_link)}
+                    | <a href="{$source.approve_link}">{t}Approve{/t}</a><br>
+                {/if}
+                {if isset($source.delete_link)}
+                    | <a href="{$source.delete_link}">{t}Delete File{/t}</a><br>
+                {/if}
+            </td>
         </tr>
     {/foreach}
-    {if $file@total == 0}
+    {if $source@total == 0}
         <tr>
             <td>{t}No source files have been uploaded for this addon yet.{/t}</td>
         </tr>
