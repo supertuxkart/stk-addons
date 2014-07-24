@@ -21,9 +21,14 @@
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 AccessControl::setLevel(AccessControl::PERM_VIEW_BASIC_PAGE);
 
-if (!isset($_GET['addon-id']))
+if (empty($_GET['addon-id']))
 {
     exit_json_error('No addon id provided');
+}
+
+if (empty($_GET["action"]))
+{
+    exit_json_error("action param is not defined or is empty");
 }
 
 if (!Addon::exists($_GET['addon-id']))
@@ -32,31 +37,45 @@ if (!Addon::exists($_GET['addon-id']))
 }
 
 $rating = new Ratings($_GET['addon-id']);
+$numRatingsString = 0;
 
-// update star ratings
-if ($rating->getNumRatings() != 1)
+function getOverallRating(Ratings $rating)
 {
-    $numRatingsString = $rating->getNumRatings() . ' Votes';
-}
-else
-{
-    $numRatingsString = $rating->getNumRatings() . ' Vote';
-}
-
-// set rating
-if (!empty($_GET['rating']))
-{
-    try
+    // update star ratings
+    if ($rating->getNumRatings() === 1)
     {
-        $rating->setUserVote($_GET['rating']);
-    }
-    catch(RatingsException $e)
-    {
-        exit_json_error($e->getMessage());
+        return $rating->getNumRatings() . ' Vote';
     }
 
-    exit_json_success("Rating set", ["width" => $rating->getAvgRatingPercent(), "num-ratings" => $numRatingsString]);
+    return $rating->getNumRatings() . ' Votes';
 }
 
-// no set rating just get the addon votes
-exit_json_success("", ["width" => $rating->getAvgRatingPercent(), "num-ratings" => $numRatingsString]);
+switch($_GET['action'])
+{
+    case "set": // set rating and get the overall rating
+        if (empty($_GET["rating"]))
+        {
+            exit_json_error("rating param is not defined or is empty");
+        }
+
+        // set rating
+        try
+        {
+            $rating->setUserVote($_GET['rating']);
+        }
+        catch(RatingsException $e)
+        {
+            exit_json_error($e->getMessage());
+        }
+
+        exit_json_success("Rating set", ["width" => $rating->getAvgRatingPercent(), "num-ratings" => getOverallRating($rating)]);
+        break;
+
+    case "get": // get overall rating
+        exit_json_success("", ["width" => $rating->getAvgRatingPercent(), "num-ratings" => getOverallRating($rating)]);
+        break;
+
+    default:
+        exit_json_error(sprintf("action = %s is not recognized", h($_GET["action"])));
+        break;
+}

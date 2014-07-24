@@ -19,7 +19,7 @@
  */
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
-if (!isset($_POST["action"]) || empty($_POST["action"]))
+if (empty($_POST["action"]))
 {
     exit_json_error("action param is not defined or is empty");
 }

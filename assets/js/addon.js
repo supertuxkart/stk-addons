@@ -57,10 +57,7 @@ function textLimit(field, num) {
     "use strict";
 
     var json_url = JSON_LOCATION + "rating.php",
-        $addon_body = $("#addon-body"),
-        $ratings_container = $("#rating-container"), // the container where you see the vote
-        $user_rating = $("#user-rating"); // the vote container
-
+        $addon_body = $("#addon-body");
 
     // left panel user addon clicked
     $('a.addon-list').click(function() {
@@ -79,11 +76,12 @@ function textLimit(field, num) {
     });
 
     $addon_body.on("click", '.add-rating', function() {
-        var addon_id = $user_rating.data("id"),
+        var addon_id = $("#user-rating").data("id"),
+            $ratings_container = $("#rating-container"),
             rating = this.value;
 
         // set new rating
-        $.get(json_url, {"addon-id": addon_id, "rating": rating}, function(data) {
+        $.get(json_url, {"action": "set", "addon-id": addon_id, "rating": rating}, function(data) {
             var jData = parseJSON(data);
             if (jData.hasOwnProperty("error")) {
                 console.log(jData["error"]);
