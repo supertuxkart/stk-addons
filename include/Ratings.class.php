@@ -218,7 +218,8 @@ class Ratings
             ->assign("addon_id", $this->addon_id)
             ->assign("rating_1", $current_rating === 1)
             ->assign("rating_2", $current_rating === 2)
-            ->assign("rating_3", $current_rating === 3);
+            ->assign("rating_3", $current_rating === 3)
+            ->toString();
     }
 
     /**

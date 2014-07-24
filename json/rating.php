@@ -42,10 +42,9 @@ else
 {
     $numRatingsString = $rating->getNumRatings() . ' Vote';
 }
-$other_options = ["width" => $rating->getAvgRatingPercent(), "num-ratings" => $numRatingsString];
 
 // set rating
-if (isset($_GET['rating']))
+if (!empty($_GET['rating']))
 {
     try
     {
@@ -56,8 +55,8 @@ if (isset($_GET['rating']))
         exit_json_error($e->getMessage());
     }
 
-    exit_json_success("Rating set", $other_options);
+    exit_json_success("Rating set", ["width" => $rating->getAvgRatingPercent(), "num-ratings" => $numRatingsString]);
 }
 
 // no set rating just get the addon votes
-exit_json_success("", $other_options);
+exit_json_success("", ["width" => $rating->getAvgRatingPercent(), "num-ratings" => $numRatingsString]);
