@@ -36,7 +36,7 @@ class AddonViewer
     private $latestRev;
 
     /**
-     * @var Ratings
+     * @var Rating
      */
     private $rating = false;
 
@@ -58,20 +58,14 @@ class AddonViewer
     public function __toString()
     {
         $return = '';
-        try
+
+        if (User::isLoggedIn())
         {
-            if (User::isLoggedIn())
+            // write configuration for the submiter and administrator
+            if (User::hasPermission(AccessControl::PERM_EDIT_ADDONS) || $this->addon->getUploaderId() === User::getLoggedId())
             {
-                // write configuration for the submiter and administrator
-                if (User::hasPermission(AccessControl::PERM_EDIT_ADDONS) || $this->addon->getUploaderId() === User::getLoggedId())
-                {
-                    $return .= $this->displayConfig();
-                }
+                $return .= $this->displayConfig();
             }
-        }
-        catch(Exception $e)
-        {
-            $return .= '<span class="error">' . $e->getMessage() . '</span><br />';
         }
 
         return $return;
@@ -84,103 +78,76 @@ class AddonViewer
      */
     public function fillTemplate($template)
     {
-        $tpl = array();
-        $tpl['addon'] = array(
-            'name'         => $this->addon->getName(),
-            'description'  => $this->addon->getDescription(),
+        $tpl = [];
+        $is_logged = User::isLoggedIn();
+        $is_owner = $has_permission = false;
+        if ($is_logged) // not logged in, no reason to do checking
+        {
+            $is_owner = ($this->addon->getUploaderId() === User::getLoggedId());
+            $has_permission = User::hasPermission(AccessControl::PERM_EDIT_ADDONS);
+        }
+        $can_edit = ($is_owner || $has_permission);
+
+        $tpl['addon'] = [
+            'name'         => h($this->addon->getName()),
+            'description'  => h($this->addon->getDescription()),
             'type'         => $this->addon->getType(),
-            'rating'       => array(
+            'designer'     => h($this->addon->getDesigner()),
+            'license'      => h($this->addon->getLicense()),
+            'rating'       => [
                 'label'      => $this->rating->getRatingString(),
                 'percent'    => $this->rating->getAvgRatingPercent(),
                 'decimal'    => $this->rating->getAvgRating(),
                 'count'      => $this->rating->getNumRatings(),
                 'min_rating' => 0.5,
                 'max_rating' => 3.0
-            ),
+            ],
             'badges'       => AddonViewer::badges($this->addon->getStatus()),
-            'image'        => array(
+            'image'        => [
                 'display' => false,
                 'url'     => null
-            ),
-            'image_upload' => array(
-                'display'      => false,
-                'target'       => null,
-                'button_label' => null
-            )
-        );
+            ],
+            'image_upload' => false
+        ];
 
         // Get image
-        $image = Cache::getImage($this->addon->getImage(), array('size' => 'big'));
+        $image = Cache::getImage($this->addon->getImage(), ['size' => 'big']);
         if ($this->addon->getImage() != 0 && $image['exists'] == true && $image['approved'] == true)
         {
-            $tpl['addon']['image'] = array(
+            $tpl['addon']['image'] = [
                 'display' => true,
                 'url'     => $image['url']
-            );
+            ];
         }
+
         // Add upload button below image (or in place of image)
-        if ($this->addon->getUploaderId() === User::getLoggedId() || User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
+        if ($can_edit)
         {
-            $tpl['addon']['image_upload'] = array(
-                'display'      => true,
-                'target'       => SITE_ROOT . 'upload.php?type=' . $this->addon->getType() . '&amp;name=' . $this->addon->getId(
-                    ) . '&amp;action=file',
-                'button_label' => _h('Upload Image')
-            );
+            $tpl['addon']['image_upload'] = true;
         }
 
         $addonUser = User::getFromID($this->addon->getUploaderId());
         $latestRev = $this->addon->getLatestRevision();
-        $info = array(
-            'type'          => array(
-                'label' => _h('Type:'),
-                'value' => _h('Arena') // Not shown except for arenas
-            ),
-            'designer'      => array(
-                'label' => _h('Designer:'),
-                'value' => h($this->addon->getDesigner())
-            ),
-            'upload_date'   => array(
-                'label' => _h('Upload date:'),
-                'value' => $latestRev['timestamp']
-            ),
-            'submitter'     => array(
-                'label' => _h('Submitted by:'),
-                'value' => '<a href="' . SITE_ROOT . 'users.php?user=' . $addonUser->getUserName() . '">' . h(
-                        $addonUser->getLoggedUserName()
-                    ) . '</a>'
-            ),
-            'revision'      => array(
-                'label' => _h('Revision:'),
-                'value' => $latestRev['revision']
-            ),
-            'compatibility' => array(
-                'label' => _h('Compatible with:'),
-                'value' => Util::getVersionFormat($latestRev['format'], $this->addon->getType())
-            ),
-            'license'       => array(
-                'label' => _h('License'),
-                'value' => h($this->addon->getLicense())
-            ),
-            'link'          => array(
-                'label' => _h('Permalink'),
-                'value' => File::rewrite($this->addon->getLink())
-            )
-        );
+        $info = [
+            'upload_date'   => $latestRev['timestamp'],
+            'submitter'     => h($addonUser->getUserName()),
+            'revision'      => $latestRev['revision'],
+            'compatibility' => Util::getVersionFormat($latestRev['format'], $this->addon->getType()),
+            'link'          => File::rewrite($this->addon->getLink())
+        ];
         $tpl['addon']['info'] = $info;
-        $tpl['addon']['warnings'] = null;
         if ($latestRev['status'] & F_TEX_NOT_POWER_OF_2)
         {
-            $tpl['addon']['warnings'] = _h(
+            $template->assign(
+                "warnings",
                 'Warning: This addon may not display correctly on some systems. It uses textures that may not be compatible with all video cards.'
             );
         }
 
-        $tpl['addon']['vote'] = array(
-            'display'  => User::isLoggedIn(),
-            'label'    => _h('Your Rating:'),
+        $tpl['addon']['vote'] = [
+            'display'  => $is_logged,
             'controls' => $this->rating->displayUserRating()
-        );
+        ];
 
         // Download button
         $file_path = $this->addon->getFile((int)$this->latestRev['revision']);
@@ -188,39 +155,33 @@ class AddonViewer
         {
             $button_text = h(sprintf(_('Download %s'), $this->addon->getName()));
             $shrink = (mb_strlen($button_text) > 20) ? 'style="font-size: 1.1em !important;"' : null;
-            $tpl['addon']['dl'] = array(
-                'display'            => true,
-                'label'              => $button_text,
-                'url'                => DOWNLOAD_LOCATION . $file_path,
-                'shrink'             => $shrink,
-                'use_client_message' => _h('Download this add-on in game!')
-            );
+            $tpl['addon']['dl'] = [
+                'display' => true,
+                'label'   => $button_text,
+                'url'     => DOWNLOAD_LOCATION . $file_path,
+                'shrink'  => $shrink,
+            ];
         }
         else
         {
-            $tpl['addon']['dl'] = array('display' => false);
+            $tpl['addon']['dl'] = ['display' => false];
         }
 
         // Revision list
-        $rev_list = array(
-            'label'     => _h('Revisions'),
-            'upload'    => array(
-                'display'      => false,
-                'target'       => SITE_ROOT . 'upload.php?type=' . $this->addon->getType() . '&amp;name=' . $this->addon->getId(),
-                'button_label' => _h('Upload Revision')
-            ),
-            'revisions' => array()
-        );
+        $rev_list = [
+            'upload'    => false,
+            'revisions' => []
+        ];
 
-        if ($this->addon->getUploaderId() == User::getLoggedId() || User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
+        if ($can_edit)
         {
-            $rev_list['upload']['display'] = true;
+            $rev_list['upload'] = true;
         }
 
         $revisions = $this->addon->getAllRevisions();
-        foreach ($revisions AS $rev_n => $revision)
+        foreach ($revisions as $rev_n => $revision)
         {
-            if (!User::isLoggedIn())
+            if (!$is_logged)
             {
                 // Users not logged in cannot see unapproved addons
                 if (!($revision['status'] & F_APPROVED))
@@ -230,62 +191,55 @@ class AddonViewer
             }
             else
             {
-                // User is logged in
                 // If the user is not the uploader, or moderators, then they
                 // cannot see unapproved addons
-                if ($this->addon->getUploaderId() !== User::getLoggedId() && !User::hasPermission(
-                        AccessControl::PERM_EDIT_ADDONS
-                    ) && !($revision['status'] & F_APPROVED)
-                )
+                if (!$can_edit && !($revision['status'] & F_APPROVED))
                 {
                     continue;
                 }
             }
-            $rev = array(
+
+            $rev = [
                 'number'    => $rev_n,
                 'timestamp' => $revision['timestamp'],
-                'file'      => array(
+                'file'      => [
                     'path' => DOWNLOAD_LOCATION . $this->addon->getFile($rev_n)
-                ),
+                ],
                 'dl_label'  => h(sprintf(_('Download revision %u'), $rev_n))
-            );
+            ];
+
             if (!File::exists($rev['file']['path']))
             {
                 continue;
             }
+
             $rev_list['revisions'][] = $rev;
         }
         $tpl['addon']['revision_list'] = $rev_list;
 
         // Image list
-        $im_list = array(
-            'label'             => _h('Images'),
-            'upload'            => array(
-                'display'      => false,
-                'target'       => SITE_ROOT . 'upload.php?type=' . $this->addon->getType() . '&amp;name=' . $this->addon->getId(
-                    ) . '&amp;action=file',
-                'button_label' => _h('Upload Image')
-            ),
-            'images'            => array(),
-            'no_images_message' => _h('No images have been uploaded for this addon yet.')
-        );
-        if ($this->addon->getUploaderId() === User::getLoggedId() || User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
+        $im_list = [
+            'upload' => false,
+            'images' => []
+        ];
+        if ($can_edit)
         {
-            $im_list['upload']['display'] = true;
+            $im_list['upload'] = true;
         }
 
         // Get images
         $image_files_db = $this->addon->getImages();
-        $image_files = array();
-        foreach ($image_files_db AS $image)
+        $image_files = [];
+        foreach ($image_files_db as $image)
         {
             $image['url'] = DOWNLOAD_LOCATION . $image['file_path'];
-            $imageCache = Cache::getImage($image['id'], array('size' => 'medium'));
+            $imageCache = Cache::getImage($image['id'], ['size' => 'medium']);
             $image['thumb']['url'] = $imageCache['url'];
             $admin_links = null;
-            if (User::isLoggedIn())
+            if ($is_logged)
             {
-                if (User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
+                // only users that can edit addons
+                if ($has_permission)
                 {
                     if ($image['approved'] == 1)
                     {
@@ -301,9 +255,11 @@ class AddonViewer
                     }
                     $admin_links .= '<br />';
                 }
-                if (User::hasPermission(AccessControl::PERM_EDIT_ADDONS) || $this->addon->getUploaderId() === User::getLoggedId())
+
+                // edit addons and the owner
+                if ($can_edit)
                 {
-                    if ($this->addon->getType() == 'karts')
+                    if ($this->addon->getType() == Addon::KART)
                     {
                         if ($this->addon->getImage(true) != $image['id'])
                         {
@@ -323,12 +279,14 @@ class AddonViewer
                         ) . '">' . _h('Delete File') . '</a><br />';
                 }
             }
+
             $image['admin_links'] = $admin_links;
-            if ($this->addon->getUploaderId() === User::getLoggedId() || User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
+            if ($can_edit)
             {
                 $image_files[] = $image;
                 continue;
             }
+
             if ($image['approved'] == 1)
             {
                 $image_files[] = $image;
@@ -338,26 +296,19 @@ class AddonViewer
         $tpl['addon']['image_list'] = $im_list;
 
         // Source files
-        $s_list = array(
-            'label'            => _h('Source Files'),
-            'upload'           => array(
-                'display'      => false,
-                'target'       => SITE_ROOT . 'upload.php?type=' . $this->addon->getType() . '&amp;name=' . $this->addon->getId(
-                    ) . '&amp;action=file',
-                'button_label' => _h('Upload Source File')
-            ),
-            'files'            => array(),
-            'no_files_message' => _h('No source files have been uploaded for this addon yet.')
-        );
-        if ($this->addon->getUploaderId() == User::getLoggedId() || User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
+        $s_list = [
+            'upload' => false,
+            'files'  => [],
+        ];
+        if ($can_edit)
         {
-            $s_list['upload']['display'] = true;
+            $s_list['upload'] = true;
         }
 
         // Search database for source files
         $source_files_db = $this->addon->getSourceFiles();
-        $source_files = array();
-        foreach ($source_files_db AS $source)
+        $source_files = [];
+        foreach ($source_files_db as $source)
         {
             $source['label'] = sprintf(_h('Source File %u'), count($source_files) + 1);
             $source['details'] = null;
@@ -368,9 +319,9 @@ class AddonViewer
             $source['details'] .= '<a href="' . DOWNLOAD_LOCATION . $source['file_path'] . '" rel="nofollow">' . _(
                     'Download'
                 ) . '</a>';
-            if (User::isLoggedIn())
+            if ($is_logged)
             {
-                if (User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
+                if ($has_permission)
                 {
                     if ($source['approved'] == 1)
                     {
@@ -385,14 +336,14 @@ class AddonViewer
                             ) . '">' . _h('Approve') . '</a>';
                     }
                 }
-                if ($this->addon->getUploaderId() === User::getLoggedId() || User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
+                if ($can_edit)
                 {
                     $source['details'] .= ' | <a href="' . File::rewrite(
                             $this->addon->getLink() . '&amp;save=deletefile&amp;id=' . $source['id']
                         ) . '">' . _h('Delete File') . '</a><br />';
                 }
             }
-            if ($this->addon->getUploaderId() === User::getLoggedId() || User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
+            if ($can_edit)
             {
                 $source_files[] = $source;
                 continue;
@@ -404,6 +355,7 @@ class AddonViewer
         }
         $s_list['files'] = $source_files;
         $tpl['addon']['source_list'] = $s_list;
+
         $template->assign('addon', $tpl['addon']);
     }
 
@@ -448,6 +400,7 @@ class AddonViewer
     private function displayConfig()
     {
         ob_start();
+
         // Check permission
         if (User::isLoggedIn() == false)
         {

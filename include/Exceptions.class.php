@@ -21,7 +21,7 @@
 class BaseException extends Exception {}
 class BugException extends BaseException {}
 class UserException extends BaseException {}
-class AddonException extends Exception {}
+class AddonException extends BaseException {}
 class FileException extends Exception {}
 class UploadException extends Exception {}
 class NewsException extends  Exception {}

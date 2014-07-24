@@ -1,4 +1,5 @@
 {config_load file="{$smarty.current_dir}/tpl.conf"}
+{$form_action="upload.php?type={$addon.type}&amp;name={$addon.name}"}
 <div itemscope itemtype="http://www.schema.org/CreativeWork">
     <h1>
         <span itemprop="name">{$addon.name}</span>
@@ -20,10 +21,10 @@
         {if $addon.image.display == true}
             <img class="preview" src="{$addon.image.url}" itemprop="image" />
         {/if}
-        {if $addon.image_upload.display == true}
+        {if $addon.image_upload}
             <br />
-            <form method="POST" action="{$addon.image_upload.target}">
-                <input type="submit" value="{$addon.image_upload.button_label}" />
+            <form method="POST" action="{$form_action}&amp;action=file">
+                <input type="submit" value="{t}Upload Image{/t}" />
             </form>
         {/if}
     </div>
@@ -34,80 +35,78 @@
     <table class="info">
         {if $addon.type == 'arenas'}
             <tr>
-                <td><strong>{$addon.info.type.label}</strong></td>
-                <td>{$addon.info.type.value}</td>
+                <td><strong>{t}Type:{/t}</strong></td>
+                <td>{t}Arena{/t}</td>
             </tr>
         {/if}
         <tr>
-            <td><strong>{$addon.info.designer.label}</strong></td>
-            <td itemprop="author">{$addon.info.designer.value}</td>
+            <td><strong>{t}Designer:{/t}</strong></td>
+            <td itemprop="author">{$addon.designer}</td>
         </tr>
         <tr>
-            <td><strong>{$addon.info.upload_date.label}</strong></td>
-            <td itemprop="dateModified">{$addon.info.upload_date.value}</td>
+            <td><strong>{t}Upload date:{/t}</strong></td>
+            <td itemprop="dateModified">{$addon.info.upload_date}</td>
         </tr>
         <tr>
-            <td><strong>{$addon.info.submitter.label}</strong></td>
-            <td>{$addon.info.submitter.value}</td>
+            <td><strong>{t}Submitted by:{/t}</strong></td>
+            <td><a href="users.php?user={$addon.info.submitter}">{$addon.info.submitter}</a></td>
         </tr>
         <tr>
-            <td><strong>{$addon.info.revision.label}</strong></td>
-            <td itemprop="version">{$addon.info.revision.value}</td>
+            <td><strong>{t}Revision:{/t}</strong></td>
+            <td itemprop="version">{$addon.info.revision}</td>
         </tr>
         <tr>
-            <td><strong>{$addon.info.compatibility.label}</strong></td>
-            <td>{$addon.info.compatibility.value}</td>
+            <td><strong>{t}Compatible with:{/t}</strong></td>
+            <td>{$addon.info.compatibility}</td>
         </tr>
         {if $addon.vote.display == true}
             <tr>
-                <td><strong>{$addon.vote.label}</strong></td>
+                <td><strong>{t}Your Rating:{/t}</strong></td>
                 <td>{$addon.vote.controls}</td>
             </tr>
         {/if}
     </table>
 </div>
 
-{$addon.warnings}
+{include file="feedback/warnings.tpl"}
 
 {if $addon.dl.display == true}
-    <br />
-    <br />
-    {$addon.dl.use_client_message}
+    <br>
+    <br>
+    {t}Download this add-on in game!{/t}
 {/if}
 
-<h3>{$addon.info.license.label}</h3>
-<textarea name="license" rows="4" cols="60" readonly>{$addon.info.license.value}</textarea>
+<h3>{t}License{/t}</h3>
+<textarea name="license" rows="4" cols="60" readonly>{$addon.license}</textarea>
 
-<h3>{$addon.info.link.label}</h3>
-<a href="{$addon.info.link.value}">{$addon.info.link.value}</a>
+<h3>{t}Permalink{/t}</h3>
+<a href="{$addon.info.link}">{$addon.info.link}</a>
 
-<h3>{$addon.revision_list.label}</h3>
-{if $addon.revision_list.upload.display == true}
+<h3>{t}Revisions{/t}</h3>
+{if $addon.revision_list.upload}
     <div class="pull-right">
-        <form method="POST" action="{$addon.revision_list.upload.target}">
-            <input type="submit" value="{$addon.revision_list.upload.button_label}" />
+        <form method="POST" action="{$form_action}">
+            <input type="submit" value="{t}Upload Revision{/t}" />
         </form>
     </div>
 {/if}
-<table>
-    {foreach $addon.revision_list.revisions as $revision}
-        <tr>
-            <td>{$revision.timestamp}</td>
-            <td><a href="{$revision.file.path}" rel="nofollow">{$revision.dl_label}</a></td>
-        </tr>
-    {/foreach}
-</table>
+{foreach $addon.revision_list.revisions as $revision}
+    <p>
+        {$revision.timestamp}
+        <a href="{$revision.file.path}" rel="nofollow">{$revision.dl_label}</a>
+    </p>
+{/foreach}
 
-<h3>{$addon.image_list.label}</h3>
-{if $addon.image_list.upload.display == true}
+<h3>{t}Images{/t}</h3>
+{if $addon.image_list.upload}
     <div class="pull-right">
-        <form method="POST" action="{$addon.image_list.upload.target}">
-            <input type="submit" value="{$addon.image_list.upload.button_label}">
+        <form method="POST" action="{$form_action}&amp;action=file">
+            <input type="submit" value="{t}Upload Image{/t}">
         </form>
     </div>
 {/if}
 <div class="image_thumbs">
-    {foreach $addon.image_list.images AS $image}
+    {foreach $addon.image_list.images as $image}
         {if $image.approved == 1}
             {$class="image_thumb_container"}
         {else}
@@ -123,14 +122,14 @@
     {/foreach}
 </div>
 {if $image@total == 0}
-    <p>{$addon.image_list.no_images_message}</p>
+    <p>{t}No images have been uploaded for this addon yet.{/t}</p>
 {/if}
 
-<h3>{$addon.source_list.label}</h3>
-{if $addon.source_list.upload.display == true}
+<h3>{t}Source Files{/t}</h3>
+{if $addon.source_list.upload == true}
     <div class="pull-right">
-        <form method="POST" action="{$addon.source_list.upload.target}">
-            <input type="submit" value="{$addon.source_list.upload.button_label}">
+        <form method="POST" action="{$form_action}&amp;action=file">
+            <input type="submit" value="{t}Upload Source File{/t}">
         </form>
     </div>
 {/if}
@@ -143,7 +142,7 @@
     {/foreach}
     {if $file@total == 0}
         <tr>
-            <td>{$addon.source_list.no_files_message}</td>
+            <td>{t}No source files have been uploaded for this addon yet.{/t}</td>
         </tr>
     {/if}
 </table>

@@ -255,14 +255,13 @@ class Rating
      */
     public function getRatingString()
     {
-        if ($this->getNumRatings() != 1)
-        {
-            return $this->getNumRatings() . ' Votes';
-        }
-        else
+        if ($this->getNumRatings() === 1)
         {
             return $this->getNumRatings() . ' Vote';
+
         }
+
+        return $this->getNumRatings() . ' Votes';
     }
 
     /**

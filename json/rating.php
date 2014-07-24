@@ -37,19 +37,6 @@ if (!Addon::exists($_GET['addon-id']))
 }
 
 $rating = new Rating($_GET['addon-id']);
-$numRatingsString = 0;
-
-function getOverallRating(Rating $rating)
-{
-    // update star ratings
-    if ($rating->getNumRatings() === 1)
-    {
-        return $rating->getNumRatings() . ' Vote';
-    }
-
-    return $rating->getNumRatings() . ' Votes';
-}
-
 switch ($_GET['action'])
 {
     case "set": // set rating and get the overall rating
@@ -68,11 +55,11 @@ switch ($_GET['action'])
             exit_json_error($e->getMessage());
         }
 
-        exit_json_success("Rating set", ["width" => $rating->getAvgRatingPercent(), "num-ratings" => getOverallRating($rating)]);
+        exit_json_success("Rating set", ["width" => $rating->getAvgRatingPercent(), "num-ratings" => $rating->getRatingString()]);
         break;
 
     case "get": // get overall rating
-        exit_json_success("", ["width" => $rating->getAvgRatingPercent(), "num-ratings" => getOverallRating($rating)]);
+        exit_json_success("", ["width" => $rating->getAvgRatingPercent(), "num-ratings" => $rating->getRatingString()]);
         break;
 
     default:
