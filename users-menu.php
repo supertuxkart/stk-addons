@@ -42,7 +42,7 @@ foreach ($users as $user)
 
 $pagination = PaginationTemplate::get()
     ->setItemsPerPage($limit)
-    ->setTotalItems(User::count())
+    ->setTotalItems(User::count(!User::hasPermission(AccessControl::PERM_EDIT_USERS)))
     ->setCurrentPage($current_page);
 
 $tpl = StkTemplate::get("user-menu.tpl")

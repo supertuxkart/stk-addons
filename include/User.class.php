@@ -757,14 +757,23 @@ class User extends Base
     /**
      * Get the total number of users
      *
+     * @param bool $active count only the active users
+     *
      * @return int
      * @throws UserException
      */
-    public static function count()
+    public static function count($active = true)
     {
         try
         {
-            $count = DBConnection::get()->count("users");
+            if ($active)
+            {
+                $count = DBConnection::get()->count("users", "`active` = '1'");
+            }
+            else
+            {
+                $count = DBConnection::get()->count("users");
+            }
         }
         catch(DBException $e)
         {

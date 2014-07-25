@@ -28,26 +28,31 @@ class PaginationTemplate extends Template
     const LIMIT_ARGUMENT = "l";
 
     /**
+     * The total entries present
      * @var int
      */
     protected $totalItems = 0;
 
     /**
+     * The current page
      * @var int
      */
     protected $currentPage = 1;
 
     /**
+     * Items on page ratio
      * @var int
      */
     protected $itemsPerPage = 8;
 
     /**
+     * The number of button visible, expect the first and last button
      * @var int
      */
     protected $numberButtons = 4;
 
     /**
+     * The base url to build each button href/url
      * @var string
      */
     protected $pageUrl;
@@ -101,7 +106,7 @@ class PaginationTemplate extends Template
             return (int)$_GET[static::LIMIT_ARGUMENT];
         }
 
-        return $default_limit; // default limit
+        return $default_limit;
     }
 
     /**
@@ -157,15 +162,15 @@ class PaginationTemplate extends Template
         }
 
         $pagination = [
-            "has_pagination" => $hasPagination,
+            "has_pagination" => $hasPagination, // pagination is present
             "current_page"   => $this->currentPage,
             "prev_page"      => $prevPage,
             "next_page"      => $nextPage,
             "total_pages"    => $totalPages,
-            "url"            => $this->pageUrl,
-            "nr_buttons"     => $this->numberButtons,
-            "build_left"     => $buildLeft,
-            "build_right"    => $buildRight
+            "url"            => $this->pageUrl, // the base url to build each button
+            "nr_buttons"     => $this->numberButtons, // the relative number of buttons present except the first and last
+            "build_left"     => $buildLeft, // display '...' on the left
+            "build_right"    => $buildRight // display '...' on the right
         ];
         $this->assign("pagination", $pagination);
     }
@@ -208,10 +213,14 @@ class PaginationTemplate extends Template
 
     /**
      * @param int $nr
+     *
+     * @return $this
      */
     public function setNumberButtons($nr)
     {
         $this->numberButtons = $nr;
+
+        return $this;
     }
 
     /**

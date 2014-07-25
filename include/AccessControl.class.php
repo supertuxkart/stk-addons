@@ -365,7 +365,7 @@ class AccessControl
     }
 
     /**
-     * Show a 404 page
+     * Show a 401 page
      */
     public static function showAccessDeniedPage()
     {
