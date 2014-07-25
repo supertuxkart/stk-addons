@@ -271,6 +271,7 @@ class AddonViewer
                         $source['approve_link'] = File::rewrite($this->addon->getLink() . '&amp;save=approve&amp;id=' . $source['id']);
                     }
                 }
+
                 if ($can_edit)
                 {
                     $source['delete_link'] = File::rewrite($this->addon->getLink() . '&amp;save=deletefile&amp;id=' . $source['id']);

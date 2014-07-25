@@ -118,23 +118,23 @@ class SLocale
      */
     private static function setLocale($locale)
     {
-        // set header
-        header('Content-Type: text/html; charset=utf-8');
+        $domain = 'translations';
 
         // Set cookie
+        header('Content-Type: text/html; charset=utf-8');
         setcookie('lang', $locale, time() + static::COOKIE_LIFETIME);
         putenv("LC_ALL=$locale.UTF-8");
-        setlocale(LC_ALL, "$locale.UTF-8");
+        if(setlocale(LC_ALL, $locale . ".UTF-8") === false)
+        {
+            trigger_error("Set locale has failed. No localization is possible");
+        }
         $_COOKIE['lang'] = $locale;
 
         // Set translation file info
-        bindtextdomain('translations', ROOT_PATH . 'locale');
-        textdomain('translations');
-        bind_textdomain_codeset('translations', 'UTF-8');
+        bindtextdomain($domain, ROOT_PATH . 'locale');
+        textdomain($domain);
+        bind_textdomain_codeset($domain, 'UTF-8');
 
-        if (!defined('LANG'))
-        {
-            define('LANG', $locale);
-        }
+        define('LANG', $locale);
     }
 }
