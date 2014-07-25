@@ -90,10 +90,10 @@
         </form>
     </div>
 {/if}
-{foreach $addon.revisions as $revision}
+{foreach $addon.view_revisions as $revision}
     <p>
         {$revision.timestamp}
-        <a href="{$revision.file.path}" rel="nofollow">{$revision.dl_label}</a>
+        <a href="{$revision.file_path}" rel="nofollow">{$revision.dl_label}</a>
     </p>
 {/foreach}
 
@@ -174,3 +174,112 @@
         </tr>
     {/if}
 </table>
+
+{*Configuration*}
+{if $can_edit}
+    <hr><br>
+    <h3>{t}Configuration{/t}</h3>
+    <form name="changeProps" action="{$addon.config.change_props_action}" method="POST">
+        <label for="designer_field">{t}Designer:{/t}</label><br>
+        <input type="text" name="designer" id="designer_field" value="{$addon.designer}"><br>
+        <label for="desc_field">{t}Description:{/t} ({t 1=140}Max %1 characters{/t})</label><br>
+        <textarea name="description" id="desc_field" rows="4" cols="60">{$addon.description}</textarea><br>
+        <input type="submit" value="{t}Save Properties{/t}">
+    </form><br>
+
+    <input type="button" value="{t}Delete Addon{/t}" onClick="confirm_delete('{$addon.config.delete_link}')"><br>
+
+    {*Mark whether or not an add-on has ever been included in STK*}
+    {if $has_permission}
+        <strong>{t}Included in Game Versions:{/t}</strong><br>
+        <form method="POST" action="{$addon.config.include_action}">
+            {t}Start:{/t}<input type="text" name="incl_start" size="6" value="{$addon.min}"><br>
+            {t}End:{/t}<input type="text" name="incl_end" size="6" value="{$addon.max}"><br>
+            <input type="submit" value="{t}Save{/t}"><br>
+        </form><br>
+    {/if}
+
+    {*Set status flags*}
+    <strong>{t}Status Flags:{/t}</strong><br>
+    <form method="POST" action="{$addon.config.status.action}">
+        <table id="addon_flags" class="infp">
+            <thead>
+                <tr>
+                    <th></th>
+                    {if $has_permission}
+                        <th>{$addon.config.status.approve_img}</th>
+                        <th>{$addon.config.status.invisible_img}</th>
+                        <th>{$addon.config.status.dfsg_img}</th>
+                        <th>{$addon.config.status.featured_img}</th>
+                    {/if}
+                    <th>{$addon.config.status.alpha_img}</th>
+                    <th>{$addon.config.status.beta_img}</th>
+                    <th>{$addon.config.status.rc_img}</th>
+                    <th>{$addon.config.status.latest_img}</th>
+                    <th>{$addon.config.status.invalid_img}</th>
+                </tr>
+            </thead>
+            <tbody>
+            {$fields=[]}
+            {$fields[]="latest"}
+            {foreach $addon.view_revisions as $revision}
+                {$rev_n=$revision.number}
+                <tr>
+                    <td class="text-center">{t 1=$rev_n}Rev %1:{/t}</td>
+                    {if $has_permission}
+                        {$approve=""} {$invisible=""} {$dfsg=""} {$featured=""}
+                        {if $revision.is_approved} {$approve=" checked"} {/if}
+                        {if $revision.is_invisible} {$invisible=" checked"} {/if}
+                        {if $revision.is_dfsg} {$dfsg=" checked"} {/if}
+                        {if $revision.is_featured} {$featured=" checked"} {/if}
+
+                        <td><input type="checkbox" name="approved-{$rev_n}"{$approve}></td>
+                        <td><input type="checkbox" name="invisible-{$rev_n}"{$invisible}></td>
+                        <td><input type="checkbox" name="dfsg-{$rev_n}"{$dfsg}></td>
+                        <td><input type="checkbox" name="featured-{$rev_n}"{$featured}></td>
+                        {$fields[] = "approved-$rev_n"} {$fields[] = "invisible-$rev_n"}
+                        {$fields[] = "dfsg-$rev_n"} {$fields[] = "featured-$rev_n"}
+                    {/if}
+
+                    {$alpha=""} {$beta=""} {$rc=""} {$latest=""} {$invalid=""}
+                    {if $revision.is_alpha} {$alpha=" checked"} {/if}
+                    {if $revision.is_beta} {$beta=" checked"} {/if}
+                    {if $revision.is_rc} {$rc=" checked"} {/if}
+                    {if $revision.is_latest} {$latest=" checked"} {/if}
+                    {if $revision.is_invalid} {$invalid=" checked"} {/if}
+
+                    <td><input type="checkbox" name="alpha-{$rev_n}"{$alpha}></td>
+                    <td><input type="checkbox" name="beta-{$rev_n}"{$beta}></td>
+                    <td><input type="checkbox" name="rc-{$rev_n}"{$rc}></td>
+                    <td><input type="radio" name="latest-{$rev_n}"{$latest}></td>
+                    <td><input type="checkbox" disabled name="texpower-{$rev_n}"{$invalid}></td>
+                    {$fields[] = "alpha-$rev_n"} {$fields[] = "beta-$rev_n"} {$fields[] = "rc-$rev_n"}
+
+                    {*Delete revision button*}
+                    <td><input type="button" value="{t 1=$rev_n}Delete revision %1{/t}" onclick="confirm_delete('{$revision.delete_link}')"></td>
+                </tr>
+            {/foreach}
+            </tbody>
+        </table>
+        <input type="hidden" name="fields" value="{','|implode:$fields}">
+        <input type="submit" value="{t}Save Changes{/t}">
+    </form><br>
+
+    {*Moderator notes*}
+    <strong>{t}Notes from Moderator to Submitter:{/t}</strong><br>
+    {if $has_permission}
+        <form method="POST" action="{$addon.config.moderator_action}">
+    {/if}
+    {$fields=[]}
+    {foreach $addon.revisions as $revision}
+        {$rev_n=$revision@key}
+        {t 1=$rev_n}Rev %1:{/t}<br>
+        <textarea name="notes-{$rev_n}" rows="4" cols="60">{$revision.moderator_note}</textarea><br>
+        {$fields[]="notes-$rev_n"}
+    {/foreach}
+    {if $has_permission}
+         <input type="hidden" name="fields" value="{','|implode:$fields}">
+         <input type="submit" value="{t}Save Notes{/t}">
+         </form>
+    {/if}
+{/if}

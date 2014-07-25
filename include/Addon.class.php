@@ -887,14 +887,14 @@ class Addon extends Base
     {
         if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS) && $this->uploaderId !== User::getLoggedId())
         {
-            throw new AddonException(_h('You do not have the neccessary permissions to perform this action.'));
+            throw new AddonException(_h('You do not have the necessary permissions to perform this action.'));
         }
 
         try
         {
             DBConnection::get()->query(
                 'UPDATE `' . DB_PREFIX . 'addons`
-                SET `description` = :description
+                SET `designer` = :designer
                 WHERE `id` = :id',
                 DBConnection::NOTHING,
                 [
@@ -1834,14 +1834,14 @@ class Addon extends Base
     }
 
     /**
-     * If texture is a power of two
+     * If texture is not a power of two, the the texture is invalid
      *
      * @param int $status
      *
      * @return bool
      */
-    public static function isTexturePowerOfTwo($status)
+    public static function isTextureInvalid($status)
     {
-        return !($status & F_TEX_NOT_POWER_OF_2);
+        return $status & F_TEX_NOT_POWER_OF_2;
     }
 }

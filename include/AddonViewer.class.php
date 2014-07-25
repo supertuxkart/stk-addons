@@ -53,25 +53,6 @@ class AddonViewer
     }
 
     /**
-     * @return string
-     */
-    public function __toString()
-    {
-        $return = '';
-
-        if (User::isLoggedIn())
-        {
-            // write configuration for the submiter and administrator
-            if (User::hasPermission(AccessControl::PERM_EDIT_ADDONS) || $this->addon->getUploaderId() === User::getLoggedId())
-            {
-                $return .= $this->displayConfig();
-            }
-        }
-
-        return $return;
-    }
-
-    /**
      * Fill template with addon info
      *
      * @param Template $template
@@ -80,12 +61,15 @@ class AddonViewer
     {
         // build template
         $tpl = [
-            'name'        => h($this->addon->getName()),
-            'description' => h($this->addon->getDescription()),
-            'type'        => $this->addon->getType(),
-            'designer'    => h($this->addon->getDesigner()),
-            'license'     => h($this->addon->getLicense()),
-            'rating'      => [
+            'name'           => h($this->addon->getName()),
+            'description'    => h($this->addon->getDescription()),
+            'type'           => $this->addon->getType(),
+            'designer'       => h($this->addon->getDesigner()),
+            'license'        => h($this->addon->getLicense()),
+            'min'            => h($this->addon->getMinInclude()),
+            'max'            => h($this->addon->getMaxInclude()),
+            'revisions'      => $this->addon->getAllRevisions(),
+            'rating'         => [
                 'label'      => $this->rating->getRatingString(),
                 'percent'    => $this->rating->getAvgRatingPercent(),
                 'decimal'    => $this->rating->getAvgRating(),
@@ -93,13 +77,13 @@ class AddonViewer
                 'min_rating' => Rating::MIN_RATING,
                 'max_rating' => Rating::MAX_RATING
             ],
-            'badges'      => AddonViewer::badges($this->addon->getStatus()),
-            'image_url'   => false,
-            'dl'          => [],
-            'vote'        => false, // only logged users see this
-            'revisions'   => [],
-            'images'      => [],
-            'sources'     => []
+            'badges'         => AddonViewer::badges($this->addon->getStatus()),
+            'image_url'      => false,
+            'dl'             => [],
+            'vote'           => false, // only logged users see this
+            'view_revisions' => [],
+            'images'         => [],
+            'sources'        => []
         ];
 
         // build permission variables
@@ -132,7 +116,7 @@ class AddonViewer
             'link'          => File::rewrite($this->addon->getLink())
         ];
         $tpl['info'] = $info;
-        if (!Addon::isTexturePowerOfTwo($latestRev['status']))
+        if (Addon::isTextureInvalid($latestRev['status']))
         {
             $template->assign(
                 "warnings",
@@ -154,41 +138,42 @@ class AddonViewer
         }
 
         // Revision list
-        $revisions_db = $this->addon->getAllRevisions();
-        foreach ($revisions_db as $rev_n => $revision)
+        foreach ($tpl['revisions'] as $rev_n => $revision)
         {
-            if (!$is_logged)
-            {
-                // Users not logged in cannot see unapproved addons
-                if (!Addon::isApproved($revision['status']))
-                {
-                    continue;
-                }
-            }
-            else
-            {
-                // If the user is not the uploader, or moderators, then they cannot see unapproved addons
-                if (!$can_edit && !Addon::isApproved($revision['status']))
-                {
-                    continue;
-                }
-            }
+            $status = $revision['status'];
+            $is_approved = Addon::isApproved($status);
 
-            $rev = [
-                'number'    => $rev_n,
-                'timestamp' => $revision['timestamp'],
-                'file'      => [
-                    'path' => DOWNLOAD_LOCATION . $this->addon->getFile($rev_n)
-                ],
-                'dl_label'  => h(sprintf(_('Download revision %u'), $rev_n))
-            ];
-
-            if (!File::exists($rev['file']['path']))
+            // If the user is not the uploader, or moderators, then they cannot see unapproved addons
+            if (!$can_edit && !$is_approved)
             {
                 continue;
             }
 
-            $tpl['revisions'][] = $rev;
+            $rev = [
+                'number'       => $rev_n,
+                'timestamp'    => $revision['timestamp'],
+                'file_path'    => DOWNLOAD_LOCATION . $this->addon->getFile($rev_n),
+                'dl_label'     => h(sprintf(_('Download revision %u'), $rev_n)),
+                'delete_link'  => File::rewrite($this->addon->getLink() . '&amp;save=del_rev&amp;rev=' . $rev_n),
+                // status vars
+                'is_approved'  => $is_approved,
+                'is_invisible' => Addon::isInvisible($status),
+                'is_dfsg'      => Addon::isDFSGCompliant($status),
+                'is_featured'  => Addon::isFeatured($status),
+                'is_alpha'     => Addon::isAlpha($status),
+                'is_beta'      => Addon::isBeta($status),
+                'is_rc'        => Addon::isReleaseCandidate($status),
+                'is_latest'    => Addon::isLatest($status),
+                'is_invalid'   => Addon::isTextureInvalid($status)
+            ];
+
+            // TODO see if file exists
+            //            if (!File::exists($rev['file_path']))
+            //            {
+            //                continue;
+            //            }
+
+            $tpl['view_revisions'][] = $rev;
         }
 
         // Images
@@ -282,7 +267,38 @@ class AddonViewer
             $source_number++;
         }
 
+        // configuration
+        if ($can_edit)
+        {
+            $config = [
+                "change_props_action" => File::rewrite($this->addon->getLink() . '&amp;save=props'),
+                "delete_link"         => File::rewrite($this->addon->getLink() . '&amp;save=delete'),
+                "include_action"      => File::rewrite($this->addon->getLink() . '&amp;save=include'),
+                "moderator_action"    => File::rewrite($this->addon->getLink() . '&amp;save=notes'),
+                "status"              => [
+                    "action"      => File::rewrite($this->addon->getLink() . '&amp;save=status'),
+                    "alpha_img"   => Util::getImageLabel(_h('Alpha')),
+                    "beta_img"    => Util::getImageLabel(_h('Beta')),
+                    "rc_img"      => Util::getImageLabel(_h('Release-Candidate')),
+                    "latest_img"  => Util::getImageLabel(_h('Latest')),
+                    "invalid_img" => Util::getImageLabel(_h('Invalid Textures'))
+                ]
+            ];
+
+            if ($has_permission)
+            {
+                $config["status"]["approve_img"] = Util::getImageLabel(_h('Approved'));
+                $config["status"]["invisible_img"] = Util::getImageLabel(_h('Invisible'));
+                $config["status"]["dfsg_img"] = Util::getImageLabel(_h('DFSG Compliant'));
+                $config["status"]["featured_img"] = Util::getImageLabel(_h('Featured'));
+            }
+
+            $tpl['config'] = $config;
+        }
+
+
         $template->assign('addon', $tpl)
+            ->assign("has_permission", $has_permission)
             ->assign("can_edit", $can_edit)
             ->assign("is_logged", $is_logged);
     }
@@ -290,7 +306,7 @@ class AddonViewer
     /**
      * Output HTML to display flag badges
      *
-     * @param int $status The 'status' value to interperet
+     * @param int $status The 'status' value to interpreted
      *
      * @return string
      */
@@ -320,265 +336,4 @@ class AddonViewer
 
         return $string;
     }
-
-    /**
-     * @return string
-     * @throws AddonException
-     */
-    private function displayConfig()
-    {
-        ob_start();
-
-        // Check permission
-        if (User::isLoggedIn() == false)
-        {
-            throw new AddonException('You must be logged in to see this.');
-        }
-        if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS) && $this->addon->getUploaderId() !== User::getLoggedId()
-        )
-        {
-            throw new AddonException(_h('You do not have the necessary privileges to perform this action.'));
-        }
-
-        echo '<br /><hr /><br /><h3>' . _h('Configuration') . '</h3>';
-        echo '<form name="changeProps" action="' . File::rewrite(
-                $this->addon->getLink() . '&amp;save=props'
-            ) . '" method="POST" accept-charset="utf-8">';
-
-        // Edit designer
-        $designer = ($this->addon->getDesigner() == _h('Unknown')) ? null : $this->addon->getDesigner();
-        echo '<label for="designer_field">' . _h('Designer:') . '</label><br />';
-        echo '<input type="text" name="designer" id="designer_field" value="' . $designer . '" accept-charset="utf-8" /><br />';
-        echo '<br />';
-
-        // Edit description
-        echo '<label for="desc_field">' . _h('Description:') . '</label> (' . sprintf(_h('Max %u characters'), '140') . ')<br />';
-        echo '<textarea name="description" id="desc_field" rows="4" cols="60" onKeyUp="textLimit(document.getElementById(\'desc_field\'),140);"
-            onKeyDown="textLimit(document.getElementById(\'desc_field\'),140);" accept-charset="utf-8">' . $this->addon->getDescription(
-            ) . '</textarea><br />';
-
-        // Submit
-        echo '<input type="submit" value="' . _h('Save Properties') . '" />';
-        echo '</form><br />';
-
-        // Delete addon
-        if ($this->addon->getUploaderId() === User::getLoggedId() || User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
-        {
-            echo '<input type="button" value="' . _h('Delete Addon') . '"onClick="confirm_delete(\'' . File::rewrite(
-                    $this->addon->getLink() . '&amp;save=delete'
-                ) . '\')" /><br /><br />';
-        }
-
-        // Mark whether or not an add-on has ever been included in STK
-        if (User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
-        {
-            echo '<strong>' . _h('Included in Game Versions:') . '</strong><br />';
-            echo '<form method="POST" action="' . File::rewrite($this->addon->getLink() . '&amp;save=include') . '">';
-            echo _h('Start:') . ' <input type="text" name="incl_start" size="6" value="' . h(
-                    $this->addon->getIncludeMin()
-                ) . '" /><br />';
-            echo _h('End:') . ' <input type="text" name="incl_end" size="6" value="' . h(
-                    $this->addon->getIncludeMax()
-                ) . '" /><br />';
-            echo '<input type="submit" value="' . _h('Save') . '" /><br />';
-            echo '</form><br />';
-        }
-
-        // Set status flags
-        echo '<strong>' . _h('Status Flags:') . '</strong><br />';
-        echo '<form method="POST" action="' . File::rewrite($this->addon->getLink() . '&amp;save=status') . '">';
-        echo '<table id="addon_flags" class="info"><thead><tr><th></th>';
-        if (User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
-        {
-            echo '<th>' . Util::getImageLabel(_h('Approved')) . '</th><th>' . Util::getImageLabel(
-                    _h('Invisible')
-                ) . '</th>';
-        }
-        echo '<th>' . Util::getImageLabel(_h('Alpha')) . '</th><th>' . Util::getImageLabel(_h('Beta')) . '</th>
-            <th>' . Util::getImageLabel(_h('Release-Candidate')) . '</th><th>' . Util::getImageLabel(
-                _h('Latest')
-            ) . '</th>';
-        if (User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
-        {
-            echo '<th>' . Util::getImageLabel(_h('DFSG Compliant')) . '</th>
-                <th>' . Util::getImageLabel(_h('Featured')) . '</th>';
-        }
-        echo '<th>' . Util::getImageLabel(_h('Invalid Textures')) . '</th><th></th>';
-        echo '</tr></thead>';
-
-        $fields = array();
-        $fields[] = 'latest';
-        foreach ($this->addon->getAllRevisions() AS $rev_n => $revision)
-        {
-            // Row Header
-            echo '<tr><td style="text-align: center;">';
-            printf(_h('Rev %u:'), $rev_n);
-            echo '</td>';
-
-            if (User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
-            {
-                // F_APPROVED
-                echo '<td>';
-                if ($revision['status'] & F_APPROVED)
-                {
-                    echo '<input type="checkbox" name="approved-' . $rev_n . '" checked />';
-                }
-                else
-                {
-                    echo '<input type="checkbox" name="approved-' . $rev_n . '" />';
-                }
-                echo '</td>';
-                $fields[] = 'approved-' . $rev_n;
-
-                // F_INVISIBLE
-                echo '<td>';
-                if ($revision['status'] & F_INVISIBLE)
-                {
-                    echo '<input type="checkbox" name="invisible-' . $rev_n . '" checked />';
-                }
-                else
-                {
-                    echo '<input type="checkbox" name="invisible-' . $rev_n . '" />';
-                }
-                echo '</td>';
-                $fields[] = 'invisible-' . $rev_n;
-            }
-
-            // F_ALPHA
-            echo '<td>';
-            if ($revision['status'] & F_ALPHA)
-            {
-                echo '<input type="checkbox" name="alpha-' . $rev_n . '" checked />';
-            }
-            else
-            {
-                echo '<input type="checkbox" name="alpha-' . $rev_n . '" />';
-            }
-            echo '</td>';
-            $fields[] = 'alpha-' . $rev_n;
-
-            // F_BETA
-            echo '<td>';
-            if ($revision['status'] & F_BETA)
-            {
-                echo '<input type="checkbox" name="beta-' . $rev_n . '" checked />';
-            }
-            else
-            {
-                echo '<input type="checkbox" name="beta-' . $rev_n . '" />';
-            }
-            echo '</td>';
-            $fields[] = 'beta-' . $rev_n;
-
-            // F_RC
-            echo '<td>';
-            if ($revision['status'] & F_RC)
-            {
-                echo '<input type="checkbox" name="rc-' . $rev_n . '" checked />';
-            }
-            else
-            {
-                echo '<input type="checkbox" name="rc-' . $rev_n . '" />';
-            }
-            echo '</td>';
-            $fields[] = 'rc-' . $rev_n;
-
-            // F_LATEST
-            echo '<td>';
-            if ($revision['status'] & F_LATEST)
-            {
-                echo '<input type="radio" name="latest" value="' . $rev_n . '" checked />';
-            }
-            else
-            {
-                echo '<input type="radio" name="latest" value="' . $rev_n . '" />';
-            }
-            echo '</td>';
-
-            if (User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
-            {
-                // F_DFSG
-                echo '<td>';
-                if ($revision['status'] & F_DFSG)
-                {
-                    echo '<input type="checkbox" name="dfsg-' . $rev_n . '" checked />';
-                }
-                else
-                {
-                    echo '<input type="checkbox" name="dfsg-' . $rev_n . '" />';
-                }
-                echo '</td>';
-                $fields[] = 'dfsg-' . $rev_n;
-
-                // F_FEATURED
-                echo '<td>';
-                if ($revision['status'] & F_FEATURED)
-                {
-                    echo '<input type="checkbox" name="featured-' . $rev_n . '" checked />';
-                }
-                else
-                {
-                    echo '<input type="checkbox" name="featured-' . $rev_n . '" />';
-                }
-                echo '</td>';
-                $fields[] = 'featured-' . $rev_n;
-            }
-
-            // F_TEX_NOT_POWER_OF_2
-            echo '<td>';
-            if ($revision['status'] & F_TEX_NOT_POWER_OF_2)
-            {
-                echo '<input type="checkbox" name="texpower-' . $rev_n . '" checked disabled />';
-            }
-            else
-            {
-                echo '<input type="checkbox" name="texpower-' . $rev_n . '" disabled />';
-            }
-            echo '</td>';
-
-            // Delete revision button
-            echo '<td>';
-            echo '<input type="button" value="' . sprintf(_h('Delete revision %d'), $rev_n)
-                . '" onClick="confirm_delete(\'' . File::rewrite(
-                    $this->addon->getLink() . '&amp;save=del_rev&amp;rev=' . $rev_n
-                ) . '\');" />';
-            echo '</td>';
-
-            echo '</tr>';
-        }
-        echo '</table>';
-        echo '<input type="hidden" name="fields" value="' . implode(',', $fields) . '" />';
-        echo '<input type="submit" value="' . _h('Save Changes') . '" />';
-        echo '</form><br />';
-
-        // Moderator notes
-        echo '<strong>' . _h('Notes from Moderator to Submitter:') . '</strong><br />';
-        if (User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
-        {
-            echo '<form method="POST" action="' . File::rewrite($this->addon->getLink() . '&amp;save=notes') . '">';
-        }
-
-        $fields = array();
-        foreach ($this->addon->getAllRevisions() AS $rev_n => $revision)
-        {
-            printf(_h('Rev %u:') . '<br />', $rev_n);
-            echo '<textarea name="notes-' . $rev_n . '"
-                id="notes-' . $rev_n . '" rows="4" cols="60"
-                onKeyUp="textLimit(document.getElementById(\'notes-' . $rev_n . '\'),4000);"
-                onKeyDown="textLimit(document.getElementById(\'notes-' . $rev_n . '\'),4000);">';
-            echo $revision['moderator_note'];
-            echo '</textarea><br />';
-            $fields[] = 'notes-' . $rev_n;
-        }
-
-        if (User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
-        {
-            echo '<input type="hidden" name="fields" value="' . implode(',', $fields) . '" />';
-            echo '<input type="submit" value="' . _h('Save Notes') . '" />';
-            echo '</form>';
-        }
-
-        return ob_get_clean();
-    }
-
 }

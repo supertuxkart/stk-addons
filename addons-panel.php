@@ -29,7 +29,6 @@ try
     $viewer = new AddonViewer($id);
     $viewer->fillTemplate($a_tpl);
     echo $a_tpl;
-    echo $viewer;
 }
 catch(Exception $e)
 {

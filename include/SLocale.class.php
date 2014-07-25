@@ -124,7 +124,7 @@ class SLocale
         header('Content-Type: text/html; charset=utf-8');
         setcookie('lang', $locale, time() + static::COOKIE_LIFETIME);
         putenv("LC_ALL=$locale.UTF-8");
-        if(setlocale(LC_ALL, $locale . ".UTF-8") === false)
+        if (setlocale(LC_ALL, $locale . ".UTF-8") === false)
         {
             trigger_error("Set locale has failed. No localization is possible");
         }

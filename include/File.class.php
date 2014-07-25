@@ -93,32 +93,32 @@ class File
      *
      * @param string $path Relative to upload directory
      *
-     * @return int File id, or -1 if file record does not exist
+     * @return int File id, or 0 if file record does not exist
      */
     public static function exists($path)
     {
         try
         {
-            $files = DBConnection::get()->query(
+            $file = DBConnection::get()->query(
                 'SELECT `id`
                 FROM `' . DB_PREFIX . 'files`
                 WHERE `file_path` = :path',
-                DBConnection::FETCH_ALL,
+                DBConnection::FETCH_FIRST,
                 [':path' => $path]
             );
 
         }
         catch(DBException $e)
         {
-            return -1;
+            return 0;
         }
 
         if (empty($files))
         {
-            return -1;
+            return 0;
         }
 
-        return $files[0];
+        return $file;
     }
 
     /**

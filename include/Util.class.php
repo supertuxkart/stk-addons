@@ -623,10 +623,9 @@ class Util
         $local_path = UP_PATH . $file;
 
         // Check if image exists, and if it does, check its format
-        $orig_file = File::exists($file);
-        if ($orig_file === -1)
+        if (File::exists($file))
         {
-            if (!file_exists(ROOT . $file))
+            if (!file_exists(ROOT_PATH . $file))
             {
                 header('HTTP/1.1 404 Not Found');
 
@@ -634,7 +633,7 @@ class Util
             }
             else
             {
-                $local_path = ROOT . $file;
+                $local_path = ROOT_PATH . $file;
             }
         }
 
