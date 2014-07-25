@@ -471,15 +471,21 @@ class User extends Base
     /**
      * Get all the users from the database in an associative array
      *
-     * @param int $limit
-     * @param int $current_page
+     * @param bool $active get only the active users
+     * @param int  $limit
+     * @param int  $current_page
      *
      * @return array|int
      * @throws UserException
      */
-    public static function getAll($limit = -1, $current_page = 1)
+    public static function getAll($active = true, $limit = -1, $current_page = 1)
     {
-        return static::getAllFromTable("users", "ORDER BY `user` ASC, `id` ASC", $limit, $current_page);
+        if ($active)
+        {
+            return static::getAllFromTable("users", "ORDER BY `user` ASC, `id` ASC", "`active` = '1'", $limit, $current_page);
+        }
+
+        return static::getAllFromTable("users", "ORDER BY `user` ASC, `id` ASC", "", $limit, $current_page);
     }
 
     /**

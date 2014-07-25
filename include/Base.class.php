@@ -124,15 +124,21 @@ abstract class Base
      *
      * @param string $table        the table name
      * @param string $order_by     the sql order clause
+     * @param string $where        where statement
      * @param int    $limit        number of retrievals, -1 for all
      * @param int    $current_page the current page
      *
      * @return array
      */
-    protected static function getAllFromTable($table, $order_by, $limit = -1, $current_page = 1)
+    protected static function getAllFromTable($table, $order_by, $where = "", $limit = -1, $current_page = 1)
     {
         // build query
-        $query = "SELECt * FROM `" . DB_PREFIX . $table . "` " . $order_by;
+        $query = "SELECt * FROM `" . DB_PREFIX . $table . "`";
+        if ($where)
+        {
+            $query .= sprintf(" WHERE %s", $where);
+        }
+        $query .= " " . $order_by;
         $data = [];
 
         try
