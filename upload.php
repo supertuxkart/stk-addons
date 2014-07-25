@@ -163,7 +163,7 @@ if ($action === "submit") // form submitted
 }
 
 // Working with an already existing addon
-if (($type === 'karts' || $type === 'tracks' || $type === 'arenas') && $name)
+if (Addon::isAllowedType($type) && $name)
 {
     $upload_form["form"]["update"] = true;
 }

@@ -781,7 +781,7 @@ class Util
     {
         switch ($file_type)
         {
-            case 'karts':
+            case Addon::KART:
                 if ($format == 1)
                 {
                     return 'Pre-0.7';
@@ -793,8 +793,8 @@ class Util
 
                 return _h('Unknown');
                 break;
-            case 'tracks':
-            case 'arenas':
+            case Addon::TRACK:
+            case Addon::ARENA:
                 if ($format == 1 || $format == 2)
                 {
                     return 'Pre-0.7';

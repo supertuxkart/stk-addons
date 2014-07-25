@@ -185,9 +185,9 @@ class StkTemplate extends Template
 
         if (Util::getScriptFilename() === 'addons.php')
         {
-            $this->smarty->assign('show_karts', !($_GET['type'] === 'karts'));
-            $this->smarty->assign('show_tracks', !($_GET['type'] === 'tracks'));
-            $this->smarty->assign('show_arenas', !($_GET['type'] === 'arenas'));
+            $this->smarty->assign('show_karts', !($_GET['type'] === Addon::KART));
+            $this->smarty->assign('show_tracks', !($_GET['type'] === Addon::TRACK));
+            $this->smarty->assign('show_arenas', !($_GET['type'] === Addon::ARENA));
         }
         else
         {

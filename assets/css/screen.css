@@ -260,7 +260,7 @@ a img {
     text-decoration: none;
     text-shadow: #efefef 0 1px 0;
     width: 46px;
-    behavior: url('css/PIE.htc');
+    behavior: url('PIE.htc');
 }
 
 #lang-menu li.flag a:hover {
@@ -312,7 +312,108 @@ a img {
     width: 100%;
 }
 
-/* Panel interface */
+/* Error Messages */
+span.error {
+    background: #FFCCCC;
+    border: 1px solid #CC0000;
+    color: #CC0000;
+    display: inline-block;
+    padding: 0 2px 0 2px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+
+span.warning {
+    background: #FFFFCC;
+    border: 1px solid #FFCC00;
+    color: #996600;
+    display: inline-block;
+    padding: 0 2px 0 2px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+
+/* Error Pages */
+#error-container {
+    background: rgba(255, 255, 255, 0.75);
+    margin: 2em 10em 2em 10em;
+    padding: 1.5em;
+    border-radius: 10px;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+}
+
+#error-container h1 {
+    margin-top: 0;
+    font-size: 3em;
+    font-weight: bold;
+    text-align: center;
+    clear: none;
+}
+
+#error-container p {
+    font-size: 1.5em;
+    clear: none;
+}
+
+#error-container img {
+    float: left;
+}
+
+.subtext {
+    font-size: x-small;
+    color: #666666;
+    font-weight: normal;
+}
+
+.center {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    left: 50%;
+    top: 50%;
+    margin-left: -50px;
+    margin-top: -50px;
+}
+
+.available {
+    color: #000000;
+}
+
+.unavailable {
+    color: #999999;
+}
+
+.help-hidden div {
+    display: none;
+}
+
+div.unapproved {
+    border: 1px solid #CC0000;
+    background: #DDCCCC
+}
+
+span.help-hidden {
+    color: white;
+    background-color: black;
+    width: 250px;
+    display: block;
+    font-weight: bold;
+    text-align: center;
+}
+
+div.help-hidden {
+    border: 1px solid grey;
+    width: 250px;
+}
+
+.preview {
+    width: 300px;
+}
+
+/* ------------------------------ addons  ------------------------------*/
 li div.icon {
     position: relative;
     float: left;
@@ -334,6 +435,7 @@ li div.icon {
     position: absolute;
     left: 5px;
     top: 5px;
+    z-index: 9999;
 }
 
 #logo_center {
@@ -469,112 +571,7 @@ span.f_dfsg {
     color: #000000;
 }
 
-/* Error Messages */
-span.error {
-    background: #FFCCCC;
-    border: 1px solid #CC0000;
-    color: #CC0000;
-    display: inline-block;
-    padding: 0 2px 0 2px;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    border-radius: 3px;
-}
-
-span.warning {
-    background: #FFFFCC;
-    border: 1px solid #FFCC00;
-    color: #996600;
-    display: inline-block;
-    padding: 0 2px 0 2px;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    border-radius: 3px;
-}
-
-/* Error Pages */
-#error-container {
-    background: rgba(255, 255, 255, 0.75);
-    margin: 2em 10em 2em 10em;
-    padding: 1.5em;
-    border-radius: 10px;
-    -moz-border-radius: 6px;
-    -webkit-border-radius: 6px;
-}
-
-#error-container h1 {
-    margin-top: 0;
-    font-size: 3em;
-    font-weight: bold;
-    text-align: center;
-    clear: none;
-}
-
-#error-container p {
-    font-size: 1.5em;
-    clear: none;
-}
-
-#error-container img {
-    float: left;
-}
-
-.subtext {
-    font-size: x-small;
-    color: #666666;
-    font-weight: normal;
-}
-
-.center {
-    position: absolute;
-    width: 100px;
-    height: 100px;
-    left: 50%;
-    top: 50%;
-    margin-left: -50px;
-    margin-top: -50px;
-}
-
-.icon {
-    height: 25px;
-    margin-left: 2px;
-    margin-right: 10px;
-}
-
-.available {
-    color: #000000;
-}
-
-.unavailable {
-    color: #999999;
-}
-
-.help-hidden div {
-    display: none;
-}
-
-div.unapproved {
-    border: 1px solid #CC0000;
-    background: #DDCCCC
-}
-
-span.help-hidden {
-    color: white;
-    background-color: black;
-    width: 250px;
-    display: block;
-    font-weight: bold;
-    text-align: center;
-}
-
-div.help-hidden {
-    border: 1px solid grey;
-    width: 250px;
-}
-
-.preview {
-    width: 300px;
-}
+/* ------------------------------ addons  ------------------------------*/
 
 /* ------------------------------ users  ------------------------------*/
 #user-body {

@@ -36,9 +36,9 @@ switch ($_GET['view'])
 
         // Get all add-ons
         $addons_ids = array_merge(
-            Addon::getAddonList('karts'),
-            Addon::getAddonList('tracks'),
-            Addon::getAddonList('arenas')
+            Addon::getAddonList(Addon::KART),
+            Addon::getAddonList(Addon::TRACK),
+            Addon::getAddonList(Addon::ARENA)
         );
 
         foreach ($addons_ids as $addon_id)

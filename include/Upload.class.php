@@ -222,7 +222,7 @@ class Upload
         // --------------------------------------------------------------------
         // FIXME: This is only a temporary measure!
         // --------------------------------------------------------------------
-        if ($this->properties['xml_attributes']['version'] > 5 && $this->upload_type === "tracks")
+        if ($this->properties['xml_attributes']['version'] > 5 && $this->upload_type === Addon::TRACK)
         {
             throw new UploadException('You uploaded a track with version ' . $this->properties['xml_attributes']['version']
                 . ' of the track format.<br />'
@@ -298,7 +298,7 @@ class Upload
             static::editInfoFile();
 
             // Get image file
-            if ($this->upload_type === 'karts')
+            if ($this->upload_type === Addon::KART)
             {
                 $image_file = $this->properties['xml_attributes']['icon-file'];
             }
@@ -622,11 +622,11 @@ class Upload
                         }
                         if ($this->properties['xml_attributes']['arena'] != 'Y')
                         {
-                            $this->upload_type = 'tracks';
+                            $this->upload_type = Addon::TRACK;
                         }
                         else
                         {
-                            $this->upload_type = 'arenas';
+                            $this->upload_type = Addon::ARENA;
                         }
                     }
                     else
@@ -635,7 +635,7 @@ class Upload
                         {
                             continue;
                         }
-                        $this->upload_type = 'karts';
+                        $this->upload_type = Addon::KART;
                     }
                     $this->properties['addon_file'] = $this->temp_dir . $file;
                     $this->addon_name = $this->properties['xml_attributes']['name'];

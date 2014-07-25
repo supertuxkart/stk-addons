@@ -64,6 +64,7 @@ class AddonViewer
             'name'           => h($this->addon->getName()),
             'description'    => h($this->addon->getDescription()),
             'type'           => $this->addon->getType(),
+            'is_arena'       => $this->addon->getType() === Addon::ARENA,
             'designer'       => h($this->addon->getDesigner()),
             'license'        => h($this->addon->getLicense()),
             'min'            => h($this->addon->getMinInclude()),
@@ -295,7 +296,6 @@ class AddonViewer
 
             $tpl['config'] = $config;
         }
-
 
         $template->assign('addon', $tpl)
             ->assign("has_permission", $has_permission)

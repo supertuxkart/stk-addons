@@ -24,7 +24,7 @@
         {if $can_edit}
             <br />
             <form method="POST" action="{$form_action}&amp;action=file">
-                <input type="submit" value="{t}Upload Image{/t}" />
+                <input type="submit" class="btn btn-default" value="{t}Upload Image{/t}" />
             </form>
         {/if}
     </div>
@@ -33,7 +33,7 @@
     <br />
     <span id="addon-description" itemprop="description">{$addon.description}</span>
     <table class="info">
-        {if $addon.type == 'arenas'}
+        {if $addon.is_arena}
             <tr>
                 <td><strong>{t}Type:{/t}</strong></td>
                 <td>{t}Arena{/t}</td>
@@ -86,7 +86,7 @@
 {if $can_edit}
     <div class="pull-right">
         <form method="POST" action="{$form_action}">
-            <input type="submit" value="{t}Upload Revision{/t}" />
+            <input type="submit" class="btn btn-default" value="{t}Upload Revision{/t}" />
         </form>
     </div>
 {/if}
@@ -101,7 +101,7 @@
 {if $can_edit}
     <div class="pull-right">
         <form method="POST" action="{$form_action}&amp;action=file">
-            <input type="submit" value="{t}Upload Image{/t}">
+            <input type="submit" class="btn btn-default" value="{t}Upload Image{/t}">
         </form>
     </div>
 {/if}
@@ -143,7 +143,7 @@
 {if $can_edit}
     <div class="pull-right">
         <form method="POST" action="{$form_action}&amp;action=file">
-            <input type="submit" value="{t}Upload Source File{/t}">
+            <input type="submit" class="btn btn-default" value="{t}Upload Source File{/t}">
         </form>
     </div>
 {/if}
@@ -184,10 +184,10 @@
         <input type="text" name="designer" id="designer_field" value="{$addon.designer}"><br>
         <label for="desc_field">{t}Description:{/t} ({t 1=140}Max %1 characters{/t})</label><br>
         <textarea name="description" id="desc_field" rows="4" cols="60">{$addon.description}</textarea><br>
-        <input type="submit" value="{t}Save Properties{/t}">
+        <input type="submit" class="btn btn-default" value="{t}Save Properties{/t}">
     </form><br>
 
-    <input type="button" value="{t}Delete Addon{/t}" onClick="confirm_delete('{$addon.config.delete_link}')"><br>
+    <input type="button" class="btn btn-default" value="{t}Delete Addon{/t}" onClick="confirm_delete('{$addon.config.delete_link}')"><br>
 
     {*Mark whether or not an add-on has ever been included in STK*}
     {if $has_permission}
@@ -195,7 +195,7 @@
         <form method="POST" action="{$addon.config.include_action}">
             {t}Start:{/t}<input type="text" name="incl_start" size="6" value="{$addon.min}"><br>
             {t}End:{/t}<input type="text" name="incl_end" size="6" value="{$addon.max}"><br>
-            <input type="submit" value="{t}Save{/t}"><br>
+            <input type="submit" class="btn btn-default" value="{t}Save{/t}"><br>
         </form><br>
     {/if}
 
@@ -256,13 +256,13 @@
                     {$fields[] = "alpha-$rev_n"} {$fields[] = "beta-$rev_n"} {$fields[] = "rc-$rev_n"}
 
                     {*Delete revision button*}
-                    <td><input type="button" value="{t 1=$rev_n}Delete revision %1{/t}" onclick="confirm_delete('{$revision.delete_link}')"></td>
+                    <td><input type="button" class="btn btn-default" value="{t 1=$rev_n}Delete revision %1{/t}" onclick="confirm_delete('{$revision.delete_link}')"></td>
                 </tr>
             {/foreach}
             </tbody>
         </table>
         <input type="hidden" name="fields" value="{','|implode:$fields}">
-        <input type="submit" value="{t}Save Changes{/t}">
+        <input type="submit" class="btn btn-default" value="{t}Save Changes{/t}">
     </form><br>
 
     {*Moderator notes*}
@@ -279,7 +279,7 @@
     {/foreach}
     {if $has_permission}
          <input type="hidden" name="fields" value="{','|implode:$fields}">
-         <input type="submit" value="{t}Save Notes{/t}">
+         <input type="submit" class="btn btn-default" value="{t}Save Notes{/t}">
          </form>
     {/if}
 {/if}

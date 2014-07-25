@@ -34,17 +34,17 @@ $tpl->assign(
         [
             'href'  => File::rewrite('addons.php?type=karts'),
             'label' => _h('Karts'),
-            'type'  => 'karts'
+            'type'  => Addon::KART
         ],
         [
             'href'  => File::rewrite('addons.php?type=tracks'),
             'label' => _h('Tracks'),
-            'type'  => 'tracks'
+            'type'  => Addon::TRACK
         ],
         [
             'href'  => File::rewrite('addons.php?type=arenas'),
             'label' => _h('Arenas'),
-            'type'  => 'arenas'
+            'type'  => Addon::ARENA
         ],
         [
             'href'  => 'http://trac.stkaddons.net',
