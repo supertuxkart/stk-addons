@@ -358,7 +358,7 @@ class AccessControl
             $allow = true;
         }
 
-        if ($allow === false)
+        if (!$allow)
         {
             AccessControl::showAccessDeniedPage();
         }

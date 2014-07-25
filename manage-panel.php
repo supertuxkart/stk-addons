@@ -18,11 +18,10 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
-AccessControl::setLevel(AccessControl::PERM_EDIT_SETTINGS);
+AccessControl::setLevel(AccessControl::PERM_EDIT_ADDONS);
 
 $_GET['action'] = (isset($_GET['action'])) ? $_GET['action'] : null;
 
-// TODO make additional permission checks for individual panel
 switch ($_GET['view'])
 {
 
@@ -115,6 +114,10 @@ switch ($_GET['view'])
         break;
 
     case 'general':
+        if (!User::hasPermission(AccessControl::PERM_EDIT_SETTINGS))
+        {
+            exit("You do not have the necessary permission");
+        }
         $tpl = new StkTemplate("manage-general.tpl");
         $tplData = [
             "xml_frequency"       => ConfigManager::getConfig("xml_frequency"),
@@ -143,7 +146,10 @@ switch ($_GET['view'])
          * TODO Type semicolon-delimited expressions, e.g. stkversion > 0.7.0;addonid not installed;
          * TODO Allow editing in future, in case of goofs or changes.
          */
-
+        if (!User::hasPermission(AccessControl::PERM_EDIT_SETTINGS))
+        {
+            exit("You do not have the necessary permission");
+        }
         $tpl = new StkTemplate("manage-news.tpl");
         $tplData = ["items" => News::getAll()];
 
@@ -157,6 +163,10 @@ switch ($_GET['view'])
          * TODO Make XML generating script generate files for each configuration set
          * TODO Make download script provide a certain file based on the user-agent
          */
+        if (!User::hasPermission(AccessControl::PERM_EDIT_SETTINGS))
+        {
+            exit("You do not have the necessary permission");
+        }
         $tpl = new StkTemplate("manage-clients.tpl");
         $tplData = [
             "items" => DBConnection::get()->query(
@@ -171,7 +181,10 @@ switch ($_GET['view'])
 
     case 'cache':
         // TODO List cache files
-
+        if (!User::hasPermission(AccessControl::PERM_EDIT_SETTINGS))
+        {
+            exit("You do not have the necessary permission");
+        }
         $tpl = new StkTemplate("manage-cache.tpl");
         $tplData = [];
 
@@ -256,6 +269,10 @@ switch ($_GET['view'])
         break;
 
     case 'roles':
+        if (!User::hasPermission(AccessControl::PERM_EDIT_PERMISSIONS))
+        {
+            exit("You do not have the necessary permission");
+        }
         $tpl = new StkTemplate("manage-roles.tpl");
         $tplData = [
             "roles"       => AccessControl::getRoles(),

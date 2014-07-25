@@ -17,15 +17,11 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
 AccessControl::setLevel(AccessControl::PERM_EDIT_ADDONS);
 
 $_GET['action'] = (isset($_GET['action'])) ? $_GET['action'] : null;
-if (!isset($_GET['view']))
-{
-    $_GET['view'] = 'overview';
-}
+$_GET['view'] = (isset($_GET['view'])) ? $_GET['view'] : 'overview';
 
 $tpl = StkTemplate::get("manage.tpl")
     ->assignTitle(_h("Manage"))
@@ -33,7 +29,7 @@ $tpl = StkTemplate::get("manage.tpl")
     ->addScriptInclude("manage.js")
     ->assign("can_edit_settings", User::hasPermission(AccessControl::PERM_EDIT_SETTINGS))
     ->assign("can_edit_roles", User::hasPermission(AccessControl::PERM_EDIT_PERMISSIONS));
-$tplData = array("status" => "", "body" => "");
+$tplData = ["status" => "", "body" => ""];
 
 // status message
 $status_content = "";
@@ -42,6 +38,10 @@ try
     switch ($_GET['action'])
     {
         case 'save_config':
+            if (!User::hasPermission(AccessControl::PERM_EDIT_SETTINGS))
+            {
+                exit("You do not have the necessary permission");
+            }
             if (!isset($_POST['xml_frequency']) || !isset($_POST['allowed_addon_exts']) || !isset($_POST['allowed_source_exts']))
             {
                 throw new Exception(_h('One or more fields has been left blank. Settings were not saved.'));
@@ -65,6 +65,10 @@ try
             break;
 
         case 'new_news':
+            if (!User::hasPermission(AccessControl::PERM_EDIT_SETTINGS))
+            {
+                exit("You do not have the necessary permission");
+            }
             if (empty($_POST['message']) || !isset($_POST['condition']))
             {
                 throw new Exception('Missing response for message and condition fields.');
@@ -92,6 +96,10 @@ try
             break;
 
         case 'del_news':
+            if (!User::hasPermission(AccessControl::PERM_EDIT_SETTINGS))
+            {
+                exit("You do not have the necessary permission");
+            }
             if (empty($_POST['news_id']) || !is_numeric($_POST['news_id']))
             {
                 $status_content = "Form is invalid";
@@ -109,6 +117,10 @@ try
             break;
 
         case 'cache_clear':
+            if (!User::hasPermission(AccessControl::PERM_EDIT_SETTINGS))
+            {
+                exit("You do not have the necessary permission");
+            }
             Cache::clear();
             $status_content = 'Emptied cache.<br />';
             break;

@@ -36,7 +36,7 @@ foreach ($users as $user)
     {
         $templateUsers[] = [
             'username' => $user['user'],
-            'active'   => (int)$user["active"]
+            'active'   => (bool)$user["active"]
         ];
     }
 }
