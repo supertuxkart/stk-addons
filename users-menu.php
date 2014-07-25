@@ -27,12 +27,14 @@ $limit = PaginationTemplate::getLimitNumber();
 // get all users from the database, create links
 $users = User::getAll($limit, $current_page);
 $templateUsers = [];
+$count = 1;
 foreach ($users as $user)
 {
     // Make sure that the user is active, or the viewer has permission to
     // manage this type of user
     if (User::hasPermissionOnRole($user['role']) || $user['active'] == 1)
     {
+        $count++;
         $templateUsers[] = [
             'username' => $user['user'],
             'active'   => (int)$user["active"]
@@ -42,7 +44,7 @@ foreach ($users as $user)
 
 $pagination = PaginationTemplate::get()
     ->setItemsPerPage($limit)
-    ->setTotalItems(User::count(!User::hasPermission(AccessControl::PERM_EDIT_USERS)))
+    ->setTotalItems($count)
     ->setCurrentPage($current_page);
 
 $tpl = StkTemplate::get("user-menu.tpl")
