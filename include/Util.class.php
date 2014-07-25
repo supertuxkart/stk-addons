@@ -623,7 +623,8 @@ class Util
         $local_path = UP_PATH . $file;
 
         // Check if image exists, and if it does, check its format
-        if (File::exists($file))
+        $orig_file = File::exists($file);
+        if ($orig_file)
         {
             if (!file_exists(ROOT_PATH . $file))
             {
@@ -638,7 +639,7 @@ class Util
         }
 
         // Check if a cached version is available
-        if (Cache::fileExists($cache_name) !== [])
+        if (Cache::fileExists($cache_name))
         {
             header('Cached-Image: true');
             header('Location: ' . CACHE_LOCATION . $cache_name);
@@ -733,8 +734,8 @@ class Util
         $write_dir = UP_PATH . 'images' . DS;
         $read_dir = DOWNLOAD_LOCATION . 'images/';
 
-        $text_noaccent = preg_replace('/\W/s', '_', $text); // remove some accents
-        $image_name = 'im_' . $text_noaccent . '.png';
+        $text_no_accent = preg_replace('/\W/s', '_', $text); // remove some accents
+        $image_name = 'im_' . $text_no_accent . '.png';
 
         if (!file_exists($write_dir . $image_name))
         {
@@ -793,6 +794,7 @@ class Util
 
                 return _h('Unknown');
                 break;
+
             case Addon::TRACK:
             case Addon::ARENA:
                 if ($format == 1 || $format == 2)
@@ -806,6 +808,7 @@ class Util
 
                 return _h('Unknown');
                 break;
+
             default:
                 return _h('Unknown');
         }

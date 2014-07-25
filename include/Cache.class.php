@@ -36,7 +36,7 @@ class Cache
     {
         $exclude_regex = '/^(cache_graph_.*\.png)$/i';
         File::deleteDir(CACHE_PATH, $exclude_regex);
-        @mkdir(CACHE_PATH);
+        mkdir(CACHE_PATH);
 
         try
         {

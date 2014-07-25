@@ -60,7 +60,7 @@ class SLocale
      */
     public function __construct($locale = null)
     {
-        if (!$locale && isset($_GET['lang']) && !empty($_GET['lang']))
+        if (!$locale && !empty($_GET['lang']))
         {
             $locale = $_GET['lang'];
         }

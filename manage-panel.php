@@ -63,7 +63,7 @@ switch ($_GET['view'])
                 }
             }
             // add to view
-            if (!empty($unapproved))
+            if ($unapproved)
             {
                 $tplData["addons"][] = [
                     "href"       => $addon->getLink(),

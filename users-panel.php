@@ -21,7 +21,7 @@
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
 AccessControl::setLevel(AccessControl::PERM_VIEW_BASIC_PAGE);
 
-$user_name = (isset($_GET["user"]) && !empty($_GET["user"])) ? $_GET['user'] : "";
+$user_name = !empty($_GET["user"]) ? $_GET['user'] : "";
 
 try
 {
@@ -92,14 +92,17 @@ foreach (Addon::getAllowedTypes() as $type)
             $heading = _h('Tracks');
             $no_items = _h('This user has not uploaded any tracks.');
             break;
+
         case Addon::KART:
             $heading = _h('Karts');
             $no_items = _h('This user has not uploaded any karts.');
             break;
+
         case Addon::ARENA:
             $heading = _h('Arenas');
             $no_items = _h('This user has not uploaded any arenas.');
             break;
+
         default:
             $heading = "Something went wrong";
             $no_items = "";

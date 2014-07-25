@@ -22,10 +22,8 @@
             <img class="preview" src="{$addon.image_url}" itemprop="image" />
         {/if}
         {if $can_edit}
-            <br />
-            <form method="POST" action="{$form_action}&amp;action=file">
-                <input type="submit" class="btn btn-default" value="{t}Upload Image{/t}" />
-            </form>
+            <br >
+            <a href="{$form_action}&amp;action=file" class="btn btn-default">{t}Upload Image{/t}</a>
         {/if}
     </div>
 

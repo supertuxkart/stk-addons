@@ -314,10 +314,10 @@ class Upload
                 preg_match('/\.([a-z]+)$/i', $image_file, $imageext);
 
                 // Save file
-                $fileid = uniqid();
+                $fileid = uniqid(mt_rand(), true);
                 while (file_exists(UP_PATH . 'images' . DS . $fileid . '.' . $imageext[1]))
                 {
-                    $fileid = uniqid();
+                    $fileid = uniqid(mt_rand(), true);
                 }
                 $this->properties['image_path'] = UP_PATH . 'images' . DS . $fileid . '.' . $imageext[1];
                 copy($image_file, $this->properties['image_path']);
@@ -510,7 +510,7 @@ class Upload
     }
 
     /**
-     * Perform the actual upload to our server
+     * Perform the upload of an image to the server
      *
      * @throws UploadException
      */
@@ -544,7 +544,7 @@ class Upload
         // Check for invalid files
         $invalid_files = File::typeCheck($this->temp_dir, $this->expected_file_type === File::SOURCE);
 
-        if (is_array($invalid_files) && !empty($invalid_files))
+        if (is_array($invalid_files) && $invalid_files)
         {
             $this->warnings[] = _h('Some invalid files were found in the uploaded add-on. These files have been removed from the archive:')
                 . ' ' . h(implode(', ', $invalid_files));
@@ -569,10 +569,10 @@ class Upload
             throw new UploadException(_h('A destination has not been set yet'));
         }
 
-        $fileid = uniqid();
+        $fileid = uniqid(mt_rand(), true);
         while (file_exists($this->destination . $fileid . '.' . $file_ext))
         {
-            $fileid = uniqid();
+            $fileid = uniqid(mt_rand(), true);
         }
 
         $this->upload_name = $this->destination . $fileid . '.' . $file_ext;

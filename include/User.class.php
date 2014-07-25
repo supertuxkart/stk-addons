@@ -1119,7 +1119,7 @@ class User extends Base
                 _('Please contact a website administrator.')
             ));
         }
-        if (!empty($result))
+        if ($result)
         {
             throw new UserException(_h('This username is already taken.'));
         }
@@ -1142,7 +1142,7 @@ class User extends Base
                 _('Please contact a website administrator.')
             ));
         }
-        if (!empty($result))
+        if ($result)
         {
             throw new UserException(_h('This email address is already taken.'));
         }
