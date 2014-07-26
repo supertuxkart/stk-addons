@@ -21,17 +21,17 @@ require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
 $tpl = StkTemplate::get("stats-files.tpl");
 
-$query_images = "SELECT `addon_id`,`addon_type`,`file_path`,`date_added`,`approved`,`downloads`
+$query_images = "SELECT `addon_id`, `addon_type`, `file_path`, `date_added`, `approved`, `downloads`
     FROM `" . DB_PREFIX . "files`
     WHERE `file_type` = 'image'
     ORDER BY `addon_id` ASC, `date_added` ASC";
 
-$query_source = "SELECT `addon_id`,`addon_type`,`file_path`,`date_added`,`approved`,`downloads`
+$query_source = "SELECT `addon_id`, `addon_type`, `file_path`, `date_added`, `approved`, `downloads`
     FROM `" . DB_PREFIX . "files`
     WHERE `file_type` = 'source'
     ORDER BY `addon_id` ASC, `date_added` ASC";
 
-$query_file_downloads_month_30 = "SELECT `date`,SUM(`value`) AS count
+$query_file_downloads_month_30 = "SELECT `date`, SUM(`value`) AS count
     FROM `" . DB_PREFIX . "stats`
     WHERE `date` >= CURDATE() - INTERVAL 30 DAY
     GROUP BY `date`
@@ -43,7 +43,7 @@ $query_file_downloads_months_12 = "SELECT CONCAT(MONTHNAME(`date`), ' ', YEAR(`d
     GROUP BY `month`
     ORDER BY `date` DESC";
 
-$query_downloads_addon_type = "SELECT `addon_type`,SUM(`downloads`)
+$query_downloads_addon_type = "SELECT `addon_type`, SUM(`downloads`)
     FROM `" . DB_PREFIX . "files`
     WHERE `file_type` = 'addon'
     GROUP BY `addon_type`";

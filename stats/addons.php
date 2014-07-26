@@ -33,24 +33,23 @@ $query_addon_cumulative = "SELECT `a`.`id`, `a`.`type`, `a`.`name`, SUM(`f`.`dow
     GROUP BY `a`.`id`
     ORDER BY `a`.`id` ASC";
 
-$query_addon_user = "SELECT `a`.`id`,`a`.`type`,`a`.`name`,`u`.`name` AS `uploader`,
-    `a`.`creation_date`,`a`.`designer`,`a`.`description`,`a`.`license`
+$query_addon_user = "SELECT `a`.`id`, `a`.`type`, `a`.`name`, `u`.`name` AS `uploader`,
+    `a`.`creation_date`, `a`.`designer`, `a`.`description`, `a`.`license`
     FROM `" . DB_PREFIX . "addons` `a`
     LEFT JOIN `" . DB_PREFIX . "users` `u`
     ON `a`.`uploader` = `u`.`id`
     ORDER BY `a`.`id` ASC";
 
-$query_addon_type = "SELECT `type`, COUNT(`id`) AS `count`
-    FROM `" . DB_PREFIX . "addons` GROUP BY `type`";
+$query_addon_type = "SELECT `type`, COUNT(`id`) AS `count` FROM `" . DB_PREFIX . "addons` GROUP BY `type`";
 
-$tplData = array(
-    "sections" => array(
+$tplData = [
+    "sections" => [
         Statistic::getChart($query_addon_type, Statistic::CHART_PIE, "Add-On Types", "addon_type_pie"),
         Statistic::getSection($query_addon_revisions, "Add-Ons (by revision)"),
         Statistic::getSection($query_addon_cumulative, "Add-Ons Cumulative Downloads"),
         Statistic::getSection($query_addon_user, "Add-Ons - user combination")
-    ),
-);
+    ],
+];
 
 $tpl->assign("addons", $tplData);
 echo $tpl;

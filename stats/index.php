@@ -24,7 +24,7 @@ $tpl = StkTemplate::get("stats-index.tpl")
     ->addFlotLibrary()
     ->addUtilLibrary()
     ->addScriptInclude("stats.js");
-$tplData = array();
+$tplData = [];
 
 if (isset($_GET["addons"]))
 {

@@ -60,12 +60,12 @@ class Statistic
         }
 
         $tpl = StkTemplate::get("stats-section.tpl");
-        $tplData = array(
+        $tplData = [
             "title"       => $section_title,
-            "data"        => array(),
-            "columns"     => array(),
+            "data"        => [],
+            "columns"     => [],
             "description" => $description
-        );
+        ];
 
         // execute query
         try

@@ -31,9 +31,9 @@ $uaVer1y_query = "SELECT `label`, `date`, SUM(`value`) FROM (
     GROUP BY `t`.`date`, `t`.`label`
     ORDER BY `t`.`date` DESC, `t`.`label` DESC";
 
-$uaTime1y_query = "SELECT CASE WHEN `label` = '' THEN 'Unknown' ELSE `label` END AS `label`,`date`,SUM(`value`) FROM (
-        SELECT TRIM(REPLACE(REPLACE(REPLACE(`type`,SUBSTRING_INDEX(`type`,' ',2),''),')',''),'(',''))
-        AS `label`,`date`,`value`
+$uaTime1y_query = "SELECT CASE WHEN `label` = '' THEN 'Unknown' ELSE `label` END AS `label`, `date`, SUM(`value`) FROM (
+        SELECT TRIM(REPLACE(REPLACE(REPLACE(`type`, SUBSTRING_INDEX(`type`,' ',2),''),')',''),'(',''))
+        AS `label`, `date`, `value`
         FROM `" . DB_PREFIX . "stats`
         WHERE `date` >= CURDATE() - INTERVAL 1 YEAR
         AND `type` LIKE 'uagent %'
