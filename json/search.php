@@ -132,7 +132,7 @@ switch ($_GET["data-type"])
         {
             // Make sure that the user is active, or the viewer has permission to
             // manage this type of user
-            if (User::hasPermissionOnRole($user->getRole()) || $user->isActive())
+            if ($user->isActive() || User::hasPermissionOnRole($user->getRole()))
             {
                 $templateUsers[] = [
                     'username' => $user->getUserName(),

@@ -20,15 +20,13 @@
  */
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
 
-$addon_type = $_GET['type'];
+$_GET['type'] = isset($_GET['type']) ? $_GET['type'] : null;
+$has_permission = User::hasPermission(AccessControl::PERM_EDIT_ADDONS);
 $template_addons = [];
-$addons = Addon::getAddonList($_GET['type'], true);
-foreach ($addons as $addon)
+foreach (Addon::getAll($_GET['type'], true) as $addon)
 {
     try
     {
-        $addon = Addon::get($addon);
-
         // Get link icon
         if ($addon->getType() === Addon::KART)
         {
@@ -60,7 +58,7 @@ foreach ($addons as $addon)
         {
             $class = '';
         }
-        elseif (User::hasPermission(AccessControl::PERM_EDIT_ADDONS) || User::getLoggedId() == $addon->getUploaderId())
+        elseif ($has_permission || User::getLoggedId() == $addon->getUploaderId())
         {
             // not approved, see of we are logged in and we have permission
             $class = ' unavailable';
@@ -71,7 +69,7 @@ foreach ($addons as $addon)
             continue;
         }
 
-        $real_url = sprintf("addons.php?type=%s&amp;name=%s", $addon_type, $addon->getId());
+        $real_url = sprintf("addons.php?type=%s&amp;name=%s", $_GET['type'], $addon->getId());
         $template_addons[] = [
             "class"       => $class,
             "is_featured" => Addon::isFeatured($addon->getStatus()),
@@ -87,7 +85,6 @@ foreach ($addons as $addon)
     }
 }
 
-$tpl = StkTemplate::get("addons-menu.tpl")
-    ->assign("addons", $template_addons);
+$tpl = StkTemplate::get("addons-menu.tpl")->assign("addons", $template_addons);
 
 echo $tpl;

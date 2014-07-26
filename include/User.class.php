@@ -59,18 +59,90 @@ class User extends Base
     protected $id = -1;
 
     /**
-     * @var array
+     * The username
+     * @var string
      */
-    protected $userData = [];
+    protected $username;
 
     /**
-     * @param int   $id
-     * @param array $userData retrieved from the database
+     * The real name
+     * @var string
      */
-    public function __construct($id, array $userData = [])
+    protected $realname;
+
+    /**
+     * The password hashed
+     * @var string
+     */
+    protected $password;
+
+    /**
+     * The user email
+     * @var string
+     */
+    protected $email;
+
+    /**
+     * The user role
+     * @var string
+     */
+    protected $role;
+
+    /**
+     * Flag that indicates if the user is active
+     * @var bool
+     */
+    protected $active = false;
+
+    /**
+     * The last login date
+     * @var string
+     */
+    protected $date_login;
+
+    /**
+     * The registration date
+     * @var
+     */
+    protected $date_registration;
+
+    /**
+     * The homepage of the user
+     * @var string
+     */
+    protected $homepage;
+
+    /**
+     * The avatar
+     * @var string
+     */
+    protected $avatar;
+
+    /**
+     * The user constructor
+     *
+     * @param array $userData    retrieved from the database
+     * @param bool  $from_friend flag that indicates this constructor was called from the friend class
+     */
+    public function __construct(array $userData = [], $from_friend = false)
     {
-        $this->id = (int)$id;
-        $this->userData = $userData;
+        $this->id = (int)$userData["id"];
+        $this->username = $userData["user"];
+
+        if ($from_friend) // we called the constructor from the friend class
+        {
+            return;
+        }
+
+        $this->realname = $userData["name"];
+        $this->password = $userData["pass"];
+        $this->email = $userData["email"];
+        $this->role = $userData["role"];
+        $this->active = (bool)$userData["active"];
+        $this->date_login = $userData["last_login"];
+        $this->date_registration = $userData["reg_date"];
+        $this->homepage = $userData["homepage"];
+        $this->avatar = $userData["avatar"];
     }
 
     /**
@@ -86,7 +158,7 @@ class User extends Base
      */
     public function getUserName()
     {
-        return $this->userData["user"];
+        return $this->username;
     }
 
     /**
@@ -94,7 +166,7 @@ class User extends Base
      */
     public function getRole()
     {
-        return static::oldRoleToNew($this->userData["role"]);
+        return static::oldRoleToNew($this->role);
     }
 
     /**
@@ -102,7 +174,7 @@ class User extends Base
      */
     public function getRealName()
     {
-        return $this->userData["name"];
+        return $this->realname;
     }
 
     /**
@@ -110,7 +182,7 @@ class User extends Base
      */
     public function getHomepage()
     {
-        return $this->userData["homepage"];
+        return $this->homepage;
     }
 
     /**
@@ -118,15 +190,15 @@ class User extends Base
      */
     public function getEmail()
     {
-        return $this->userData["email"];
+        return $this->email;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getPassword()
     {
-        return $this->userData["pass"];
+        return $this->password;
     }
 
     /**
@@ -134,7 +206,7 @@ class User extends Base
      */
     public function getAvatar()
     {
-        return $this->userData["avatar"];
+        return $this->avatar;
     }
 
     /**
@@ -142,7 +214,7 @@ class User extends Base
      */
     public function isActive()
     {
-        return (int)$this->userData["active"] === 1;
+        return $this->active;
     }
 
     /**
@@ -150,7 +222,7 @@ class User extends Base
      */
     public function getDateLogin()
     {
-        return $this->userData["last_login"];
+        return $this->date_login;
     }
 
     /**
@@ -158,7 +230,7 @@ class User extends Base
      */
     public function getDateRegistration()
     {
-        return $this->userData["reg_date"];
+        return $this->date_registration;
     }
 
     /**
@@ -475,17 +547,27 @@ class User extends Base
      * @param int  $limit
      * @param int  $current_page
      *
-     * @return array|int
+     * @return User[] array of users
      * @throws UserException
      */
     public static function getAll($active = true, $limit = -1, $current_page = 1)
     {
         if ($active)
         {
-            return static::getAllFromTable("users", "ORDER BY `user` ASC, `id` ASC", "`active` = '1'", $limit, $current_page);
+            $users = static::getAllFromTable("users", "ORDER BY `user` ASC, `id` ASC", "`active` = '1'", $limit, $current_page);
+        }
+        else
+        {
+            $users = static::getAllFromTable("users", "ORDER BY `user` ASC, `id` ASC", "", $limit, $current_page);
         }
 
-        return static::getAllFromTable("users", "ORDER BY `user` ASC, `id` ASC", "", $limit, $current_page);
+        $return = [];
+        foreach ($users as $user)
+        {
+            $return[] = new User($user);
+        }
+
+        return $return;
     }
 
     /**
@@ -500,7 +582,7 @@ class User extends Base
     {
         $data = static::getFromField("users", "id", $user_id, DBConnection::PARAM_INT, "User does not exist");
 
-        return new User($data["id"], $data);
+        return new User($data);
     }
 
     /**
@@ -515,19 +597,18 @@ class User extends Base
     {
         $data = static::getFromField("users", "user", $username, DBConnection::PARAM_STR, "User does not exist");
 
-        return new User($data["id"], $data);
+        return new User($data);
     }
 
-    /**
+    /*
      * Search a user
      *
      * @param string $search_string   the string can pe space or comma separated to search multiple users
-     * @param bool   $return_instance flag that indicates if we want to return an array of instances
      *
      * @throws UserException
-     * @return User[]|array array of users
+     * @return User[]
      */
-    public static function search($search_string, $return_instance = true)
+    public static function search($search_string)
     {
         // split by space or comma
         $terms = preg_split("/[\s,]+/", $search_string);
@@ -555,7 +636,7 @@ class User extends Base
         try
         {
             $users = DBConnection::get()->query(
-                "SELECT id, user, role, active
+                "SELECT *
                 FROM `" . DB_PREFIX . "users`
                 WHERE " . implode(" OR ", $query_parts),
                 DBConnection::FETCH_ALL,
@@ -571,16 +652,9 @@ class User extends Base
         }
 
         $matched_users = [];
-        if ($return_instance)
+        foreach ($users as $user)
         {
-            foreach ($users as $user)
-            {
-                $matched_users[] = new User($user['id'], $user);
-            }
-        }
-        else
-        {
-            $matched_users = $users;
+            $matched_users[] = new User($user);
         }
 
         return $matched_users;

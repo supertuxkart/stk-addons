@@ -32,11 +32,11 @@ foreach ($users as $user)
 {
     // Make sure that the user is active, or the viewer has permission to
     // manage this type of user
-    if (User::hasPermissionOnRole($user['role']) || $user['active'] == 1)
+    if ($user->isActive() || User::hasPermissionOnRole($user->getRole()))
     {
         $templateUsers[] = [
-            'username' => $user['user'],
-            'active'   => (bool)$user["active"]
+            'username' => $user->getUserName(),
+            'active'   => $user->isActive()
         ];
     }
 }

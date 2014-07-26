@@ -1322,7 +1322,7 @@ class Addon extends Base
     /**
      * Get the addon name
      *
-     * @param int $id
+     * @param string $id the addon id
      *
      * @return string empty string on error
      */
@@ -1358,7 +1358,7 @@ class Addon extends Base
     /**
      * Get the addon type
      *
-     * @param int $id
+     * @param string $id the addon id
      *
      * @return string empty string on error
      */
@@ -1490,12 +1490,12 @@ class Addon extends Base
     /**
      * Get all the addon's of a type
      *
-     * @param string $type
-     * @param bool   $featuredFirst
+     * @param string $type type of addon
+     * @param bool   $featuredFirst flag that indicates to show featured first addons
      *
-     * @return array
+     * @return Addon[] array of addons
      */
-    public static function getAddonList($type, $featuredFirst = false)
+    public static function getAll($type, $featuredFirst = false)
     {
         if (!static::isAllowedType($type))
         {
@@ -1504,11 +1504,11 @@ class Addon extends Base
 
         // build query
         $query = 'SELECT `a`.`id`, (`r`.`status` & ' . F_FEATURED . ') AS `featured`
-                      FROM `' . DB_PREFIX . 'addons` `a`
-                      LEFT JOIN `' . DB_PREFIX . $type . '_revs` `r`
-                      ON `a`.`id` = `r`.`addon_id`
-                      WHERE `a`.`type` = :type
-                      AND `r`.`status` & :latest_bit ';
+                  FROM `' . DB_PREFIX . 'addons` `a`
+                  LEFT JOIN `' . DB_PREFIX . $type . '_revs` `r`
+                  ON `a`.`id` = `r`.`addon_id`
+                  WHERE `a`.`type` = :type
+                  AND `r`.`status` & :latest_bit ';
         if ($featuredFirst)
         {
             $query .= 'ORDER BY `featured` DESC, `a`.`name` ASC, `a`.`id` ASC';
@@ -1520,7 +1520,7 @@ class Addon extends Base
 
         try
         {
-            $list = DBConnection::get()->query(
+            $addons = DBConnection::get()->query(
                 $query,
                 DBConnection::FETCH_ALL,
                 [
@@ -1535,9 +1535,9 @@ class Addon extends Base
         }
 
         $return = [];
-        foreach ($list as $addon)
+        foreach ($addons as $addon)
         {
-            $return[] = $addon['id'];
+            $return[] = static::get($addon['id']);
         }
 
         return $return;

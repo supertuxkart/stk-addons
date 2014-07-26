@@ -55,6 +55,7 @@ class Friend
     protected $is_self = false;
 
     /**
+     * The user instance associated with the friend
      * @var User
      */
     protected $user;
@@ -68,7 +69,7 @@ class Friend
      */
     protected function __construct($info_array, $online = false, $is_self = false)
     {
-        $this->user = new User($info_array['friend_id'], ["user" => $info_array['friend_name']]);
+        $this->user = new User(["id" => $info_array['friend_id'], "user" => $info_array['friend_name']], true);
         $this->is_self = $is_self;
         $this->is_online = $online;
         $this->date = $info_array['date'];

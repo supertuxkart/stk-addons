@@ -34,16 +34,14 @@ switch ($_GET['view'])
         ];
 
         // Get all add-ons
-        $addons_ids = array_merge(
-            Addon::getAddonList(Addon::KART),
-            Addon::getAddonList(Addon::TRACK),
-            Addon::getAddonList(Addon::ARENA)
+        $addons = array_merge(
+            Addon::getAll(Addon::KART),
+            Addon::getAll(Addon::TRACK),
+            Addon::getAll(Addon::ARENA)
         );
-
-        foreach ($addons_ids as $addon_id)
+        /**@var Addon[] $addons */
+        foreach ($addons as $addon)
         {
-            $addon = Addon::get($addon_id);
-
             // populate addons
             $unapproved = [];
             $addon_revisions = $addon->getAllRevisions();
