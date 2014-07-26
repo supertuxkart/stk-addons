@@ -273,49 +273,62 @@ class Statistic
             throw new StatisticException(_h("The chart type is invalid"));
         }
 
-        // query database
-        try
-        {
-            $data = DBConnection::get()->query($select_query, DBConnection::FETCH_ALL);
-        }
-        catch(DBException $e)
-        {
-            throw new StatisticException(_h("Tried to build a chart"));
-        }
-
         // init
         $tpl = StkTemplate::get("stats-chart.tpl");
         $tplData = [
             "title" => $chart_title,
-            "class" => "",
+            "class" => ($chart_type === static::CHART_PIE) ? "stats-pie-chart" : "stats-time-chart-wide",
             "json"  => static::getCacheLocation($graph_id)
         ];
-        $cache_path = static::getCachePath($graph_id); // TODO add caching
-        $columns = array_keys($data[0]);
-        $count_columns = count($columns);
+        $cache_path = static::getCachePath($graph_id);
 
-        // check chart type
-        switch ($chart_type)
+        // cache file
+        $is_cached = false;
+        if (file_exists($cache_path))
         {
-            case static::CHART_PIE:
-                $tplData["class"] = "stats-pie-chart";
-                $data = static::getPieJSON($data, $columns, $count_columns);
-                break;
-
-            case static::CHART_TIME;
-                $tplData["class"] = "stats-time-chart-wide";
-                $data = static::getTimeJSON($data, $columns, $count_columns);
-                break;
-
-            default:
-                break;
+            $modified_time = filemtime($cache_path);
+            if (!Util::isOldEnough($modified_time, Util::SECONDS_IN_A_DAY)) // cache is not old
+            {
+                $is_cached = true;
+            }
         }
 
-        // write json to file
-        $status = file_put_contents($cache_path, json_encode($data));
-        if ($status === false)
+        if (!$is_cached)
         {
-            throw new StatisticException(_h("Failed to open json file for writing!"));
+            // query database
+            try
+            {
+                $data = DBConnection::get()->query($select_query, DBConnection::FETCH_ALL);
+            }
+            catch(DBException $e)
+            {
+                throw new StatisticException(_h("Tried to build a chart"));
+            }
+
+            $columns = array_keys($data[0]);
+            $count_columns = count($columns);
+
+            // check chart type
+            switch ($chart_type)
+            {
+                case static::CHART_PIE:
+                    $data = static::getPieJSON($data, $columns, $count_columns);
+                    break;
+
+                case static::CHART_TIME;
+                    $data = static::getTimeJSON($data, $columns, $count_columns);
+                    break;
+
+                default:
+                    break;
+            }
+
+            // write json to file
+            $status = file_put_contents($cache_path, json_encode($data));
+            if ($status === false)
+            {
+                throw new StatisticException(_h("Failed to open json file for writing!"));
+            }
         }
 
         $tpl->assign("chart", $tplData);

@@ -136,7 +136,7 @@ class Upload
         $this->temp_dir = TMP_PATH . 'uploads' . DS . time() . '-' . $this->file_name . DS;
 
         // Clean up old temp files to make room for new upload
-        File::deleteOldSubdirectories(TMP_PATH . 'uploads', 3600);
+        File::deleteOldSubdirectories(TMP_PATH . 'uploads', Util::SECONDS_IN_A_HOUR);
 
         $this->doUpload();
     }

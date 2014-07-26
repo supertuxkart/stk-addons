@@ -538,13 +538,12 @@ class File
                 $last_mod = filemtime($dir . DS . $file . DS . '.');
 
                 // Check if our folder is old enough to delete
-                if (time() - $last_mod > $max_age)
+                if (Util::isOldEnough($last_mod, $max_age))
                 {
                     File::deleteDir($dir . DS . $file);
                 }
             }
         }
-
     }
 
     /**
@@ -1040,7 +1039,7 @@ class File
      */
     public static function queueDelete($file_id)
     {
-        $del_date = date('Y-m-d', time() + ConfigManager::getConfig('xml_frequency') + (60 * 60 * 24));
+        $del_date = date('Y-m-d', time() + ConfigManager::getConfig('xml_frequency') + Util::SECONDS_IN_A_DAY);
         try
         {
             DBConnection::get()->query(

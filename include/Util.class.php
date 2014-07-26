@@ -186,6 +186,19 @@ class Util
     }
 
     /**
+     * A time is old enough if the current time is greater than the user time + the mas age
+     *
+     * @param int $time current time in seconds
+     * @param int $max_age max time in seconds
+     *
+     * @return bool
+     */
+    public static function isOldEnough($time, $max_age)
+    {
+        return time() > ($time + $max_age);
+    }
+
+    /**
      * Strip all whitespace from the given string.
      *
      * @param  string $string The string to strip
