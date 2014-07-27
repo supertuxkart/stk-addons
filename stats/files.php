@@ -39,7 +39,7 @@ $query_file_downloads_month_30 = "SELECT `date`, SUM(`value`) AS count
 
 $query_file_downloads_months_12 = "SELECT CONCAT(MONTHNAME(`date`), ' ', YEAR(`date`)) AS `month`, SUM(`value`) AS count
     FROM `" . DB_PREFIX . "stats`
-    WHERE `date` >= CURDATE() - INTERVAL 12 MONTH
+    WHERE `date` >= CURDATE() - INTERVAL 1 YEAR
     GROUP BY `month`
     ORDER BY `date` DESC";
 

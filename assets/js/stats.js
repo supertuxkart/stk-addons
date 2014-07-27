@@ -21,7 +21,8 @@
     "use strict";
 
     // load essential elements
-    var $main_stats = $("#stats-main"); // top container
+    var $main_stats = $("#stats-main"), // top container
+        cache_json = {}; // cache json data responses
     var pie_options = {
         series: {
             pie: {
@@ -91,8 +92,58 @@
 
         var json_file = $this.data("json");
         $.get(json_file, function(jsonData) {
-            console.log(jsonData);
+            cache_json[json_file] = jsonData;
             $.plot($this, jsonData, time_options);
         });
     });
+
+    // time limit filter selected
+    $main_stats.on("click", ".stats-buttons label", function() {
+        var $this = $(this),
+            $stats = $this.closest(".panel").find(".stats-time-chart, .stats-time-chart-wide"),
+            json_file = $stats.data("json"),
+            date = $this.data("date");
+
+        var time_limit;
+        if (date === "1-year") {
+            time_limit = MSECONDS_YEAR;
+        } else if (date === "6-months") {
+            time_limit = MSECONDS_MONTH * 6;
+        } else if (date === "1-month") {
+            time_limit = MSECONDS_MONTH;
+        } else {
+            console.error("date is not valid:", date);
+            return;
+        }
+
+
+        var new_json_data = [],
+            json_data = cache_json[json_file]; // take from cache, should always be there
+
+        // build new data
+        for (var i = 0; i < json_data.length; i++) {
+            var label = json_data[i]["label"],
+                data = json_data[i]["data"],
+                new_data = [],
+                found = false;
+
+            // find the data that is in time interval
+            for (var j = 0; j < data.length; j++) {
+                var timestamp = data[j][0];
+
+                if (isInTimeInterval(timestamp, time_limit)) {
+                    new_data.push(data[j]);
+                    found = true;
+                }
+            }
+
+            if (found) {
+                new_json_data.push({"label": label, "data": new_data})
+            }
+        }
+
+        $.plot($stats, new_json_data, time_options);
+    })
+
+
 })(jQuery);

@@ -701,4 +701,14 @@ span.f_dfsg {
     box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.75);
 }
 
+.stats-buttons-container {
+    position: relative;
+}
+
+.stats-buttons {
+    position: absolute;
+    right: 0;
+    top: 2px;
+}
+
 /* ------------------------------ stats  ------------------------------*/

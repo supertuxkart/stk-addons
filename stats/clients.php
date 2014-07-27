@@ -44,7 +44,7 @@ $uaTime1y_query = "SELECT CASE WHEN `label` = '' THEN 'Unknown' ELSE `label` END
 
 $tplData = [
     "sections" => [
-        Statistic::getChart($uaVer1y_query, Statistic::CHART_TIME, "File Downloads per Version in the Last Year", "downloads_year"),
+        Statistic::getChart($uaVer1y_query, Statistic::CHART_TIME, "File Downloads per Version in the Last Year", "downloads_version_year"),
         Statistic::getChart($uaTime1y_query, Statistic::CHART_TIME, "File Downloads per OS in the Last Year", "downloads_os_year")
     ]
 ];

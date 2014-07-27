@@ -186,7 +186,7 @@ class Util
     }
 
     /**
-     * A time is old enough if the current time is greater than the user time + the mas age
+     * A time is old enough if the current time is greater than the user time + the max age
      *
      * @param int $time current time in seconds
      * @param int $max_age max time in seconds

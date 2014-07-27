@@ -208,7 +208,7 @@ class Statistic
         foreach ($data as $point)
         {
             $label = $point[$label_index];
-            $x = strtotime($point[$x_index]) * 1000;
+            $x = strtotime($point[$x_index]) * 1000; // javascript uses milliseconds for unix timestamp instead of seconds(reason for 1000)
             $y = (int)$point[$y_index];
 
             // check if in "other"
@@ -276,9 +276,10 @@ class Statistic
         // init
         $tpl = StkTemplate::get("stats-chart.tpl");
         $tplData = [
-            "title" => $chart_title,
-            "class" => ($chart_type === static::CHART_PIE) ? "stats-pie-chart" : "stats-time-chart-wide",
-            "json"  => static::getCacheLocation($graph_id)
+            "title"        => $chart_title,
+            "class"        => ($chart_type === static::CHART_PIE) ? "stats-pie-chart" : "stats-time-chart-wide",
+            "json"         => static::getCacheLocation($graph_id),
+            "show_buttons" => ($chart_type === static::CHART_TIME) ? true : false
         ];
         $cache_path = static::getCachePath($graph_id);
 

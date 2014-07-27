@@ -18,6 +18,22 @@
  */
 "use strict";
 
+// define time constants
+var MSECONDS_MINUTE = 60000,
+    MSECONDS_HOUR = 3600000,
+    MSECONDS_DAY = 86400000,
+    MSECONDS_WEEK = 604800000,
+    MSECONDS_MONTH = 2592000000,
+    MSECONDS_YEAR = 31536000000;
+
+
+function isInTimeInterval(time, past_time_limit) {
+    var current_time = (new Date()).getTime(),
+        elapsed = current_time - time;
+
+    return elapsed < past_time_limit;
+}
+
 // TODO add history calls
 function loadContent($content, url, params, callback, request_type) {
     request_type = request_type || "GET";
