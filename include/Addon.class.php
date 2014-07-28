@@ -1453,23 +1453,125 @@ class Addon extends Base
     }
 
     /**
+     * Filter an array of addons for the addon menu template
+     *
+     * @param Addon[] $addons
+     * @param string  $type addon type
+     *
+     * @return array
+     */
+    public static function filterMenuTemplate($addons, $type)
+    {
+        $has_permission = User::hasPermission(AccessControl::PERM_EDIT_ADDONS);
+        $template_addons = [];
+
+        foreach ($addons as $addon)
+        {
+            // Get link icon
+            if ($addon->getType() === Addon::KART)
+            {
+                // Make sure an icon file is set for kart
+                if ($addon->getImage(true) != 0)
+                {
+                    $im = Cache::getImage($addon->getImage(true), ['size' => 'small']);
+                    if ($im['exists'] && $im['approved'])
+                    {
+                        $icon = $im['url'];
+                    }
+                    else
+                    {
+                        $icon = IMG_LOCATION . 'kart-icon.png';
+                    }
+                }
+                else
+                {
+                    $icon = IMG_LOCATION . 'kart-icon.png';
+                }
+            }
+            else
+            {
+                $icon = IMG_LOCATION . 'track-icon.png';
+            }
+
+            // Approved?
+            if ($addon->hasApprovedRevision())
+            {
+                $class = '';
+            }
+            elseif ($has_permission || User::getLoggedId() == $addon->getUploaderId())
+            {
+                // not approved, see of we are logged in and we have permission
+                $class = ' unavailable';
+            }
+            else
+            {
+                // do not show
+                continue;
+            }
+
+            $real_url = sprintf("addons.php?type=%s&amp;name=%s", $type, $addon->getId());
+            $template_addons[] = [
+                "class"       => $class,
+                "is_featured" => Addon::isFeatured($addon->getStatus()),
+                "name"        => $addon->getName(),
+                "real_url"    => $real_url,
+                "image_src"   => $icon,
+                "disp"        => File::rewrite($real_url)
+            ];
+        }
+
+        return $template_addons;
+    }
+
+    /**
      * Search for an addon by its name or description
      *
      * @param string $search_query
-     * @param bool   $search_description search also in description
+     * @param string $type
+     * @param array  $search_flags
      *
      * @throws AddonException
      * @return array Matching addon id, name and type
      */
-    public static function search($search_query, $search_description = true)
+    public static function search($search_query, $type, array $search_flags)
     {
-        // build query
-        $query = "SELECT * FROM `" . DB_PREFIX . "addons` WHERE `name` LIKE :search_query";
-
-        if ($search_description)
+        // validate
+        if (!$search_query)
         {
-            $query .= " OR `description` LIKE :search_query";
+            throw new AddonException(_h("The search term is empty"));
         }
+        if (!$search_flags)
+        {
+            throw new AddonException(_h("No search field specified"));
+        }
+        if (!Addon::isAllowedType($type) && $type !== "all")
+        {
+            throw new AddonException(sprintf("Invalid search type = %s is not recognized", $type));
+        }
+
+        // build query
+        $query = "SELECT id FROM `" . DB_PREFIX . "addons` WHERE";
+
+        // check addon type
+        if ($type !== "all")
+        {
+            $query .= sprintf(" (`type` = '%s') AND", $type);
+        }
+
+        // check search flags
+        $query .= " (";
+        $flags_part = [];
+        foreach ($search_flags as $flag)
+        {
+            if (!in_array($flag, ["name", "description", "designer"]))
+            {
+                throw new AddonException(sprintf("search flag = %s is invalid", h($flag)));
+            }
+
+            $flags_part[] = sprintf("`%s` LIKE :search_query", $flag);
+        }
+        $query .= implode(" OR ", $flags_part);
+        $query .= ")";
 
         try
         {
@@ -1484,13 +1586,19 @@ class Addon extends Base
             throw new AddonException(_h('Search failed!'));
         }
 
-        return $addons;
+        $return_addons = [];
+        foreach ($addons as $addon)
+        {
+            $return_addons[] = static::get($addon["id"]);
+        }
+
+        return $return_addons;
     }
 
     /**
      * Get all the addon's of a type
      *
-     * @param string $type type of addon
+     * @param string $type          type of addon
      * @param bool   $featuredFirst flag that indicates to show featured first addons
      *
      * @return Addon[] array of addons

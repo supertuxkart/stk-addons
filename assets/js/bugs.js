@@ -76,7 +76,7 @@
                     var matches = [];
 
                     // search
-                    $.get(search_url, {"data-type": "addon", "addon-type": "all", "query": query}, function(data) {
+                    $.get(search_url, {"data-type": "addon", "addon-type": "all", "query": query, "flags": ["name"]}, function(data) {
                         var jData = parseJSON(data);
                         if (jData.hasOwnProperty("error")) {
                             console.error(jData["error"]);

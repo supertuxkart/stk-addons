@@ -609,21 +609,21 @@ class User extends Base
      */
     public static function filterMenuTemplate($users)
     {
-        $templateUsers = [];
+        $template_users = [];
         foreach ($users as $user)
         {
             // Make sure that the user is active, or the viewer has permission to
             // manage this type of user
             if ($user->isActive() || User::hasPermissionOnRole($user->getRole()))
             {
-                $templateUsers[] = [
+                $template_users[] = [
                     'username' => $user->getUserName(),
                     'active'   => $user->isActive()
                 ];
             }
         }
 
-        return $templateUsers;
+        return $template_users;
     }
 
     /**

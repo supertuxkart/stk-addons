@@ -316,7 +316,7 @@ class Bug extends Base
     public static function search($search_term, $status = "all", $search_description = false)
     {
         // validate
-        if (empty($search_term))
+        if (!$search_term)
         {
             throw new BugException(_h("The search term is empty"));
         }

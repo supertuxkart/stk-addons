@@ -18,38 +18,9 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-var oldDiv = "";
-
 function confirm_delete(url) {
     if (confirm("Really delete this item?")) {
         window.location = url;
-    }
-}
-
-function loadAddon(id, page) {
-    addonRequest(page, id);
-}
-
-function addonRequest(page, id, value) {
-    $.post(page, {id: id, value: value},
-        function(data) {
-            $("#content-addon_body").html(data);
-            $("#content-addon_body").scrollTop(0);
-        }
-    );
-}
-function loadDiv(newDiv) {
-    newDiv = "disp" + newDiv;
-    if (oldDiv !== "")    getByID(oldDiv).style.display = "none";
-    getByID(newDiv).style.display = "block";
-    oldDiv = newDiv;
-    getByID("content-addon_body").innerHTML = "";
-    getByID("content-addon_body").style.display = "none";
-}
-
-function textLimit(field, num) {
-    if (field.value.length > num) {
-        field.value = field.value.substring(0, num);
     }
 }
 
@@ -60,6 +31,7 @@ function textLimit(field, num) {
         $addon_body = $("#addon-body"),
         $addon_menu = $("#addon-menu"),
         $search_by = $("#addon-search-by"),
+        addon_type = getUrlVars()["type"],
         original_menu;
 
     $('.multiselect').multiselect({
@@ -68,21 +40,40 @@ function textLimit(field, num) {
 
     // search form
     $("#addon-search-val").keyup(function() {
-        var search_term = this.value;
-        if (search_term.length <= 2) { // only if length is 3 or greater
+        var query = this.value;
+        if (query.length <= 2) { // only if length is 3 or greater
             // restore original menu
             if (!_.isEmpty(original_menu)) {
                 $addon_menu.html(original_menu);
                 original_menu = ""; // clear
             }
 
-            return null;
+            return;
         }
 
+        // flags is empty
+        if ($search_by.val() === null) {
+            growlError("Please select a filter for searching");
+            return;
+        }
 
+        // search
+        $.get(SEARCH_URL, {"data-type": "addon", "addon-type": addon_type, "query": query, "flags": $search_by.val(), "return-html": true},
+            function(data) {
+                var jData = parseJSON(data);
+                if (jData.hasOwnProperty("success")) {
+                    if (_.isEmpty(original_menu)) { // keep original menu
+                        original_menu = $addon_menu.html();
+                    }
+                    $addon_menu.html(jData["addons-html"]);
+                }
+                if (jData.hasOwnProperty("error")) {
+                    growlError(jData["error"]);
+                }
+            });
 
         console.log($search_by.val());
-        console.log(search_term);
+        console.log(query);
     });
 
     // left panel user addon clicked

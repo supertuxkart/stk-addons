@@ -9,7 +9,6 @@
                         <option value="name" selected>{t}By Name{/t}</option>
                         <option value="description">{t}By Description{/t}</option>
                         <option value="designer">{t}By Designer{/t}</option>
-                        <option value="submitter">{t}By Submitter{/t}</option>
                     </select>
                     <input type="text" class="form-control input-md" id="addon-search-val" placeholder="Search addons">
                     <span class="glyphicon glyphicon-search form-control-feedback"></span>

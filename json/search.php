@@ -29,36 +29,39 @@ if (empty($_GET["data-type"]))
 switch ($_GET["data-type"])
 {
     case "addon";
-        $errors = Validate::ensureInput($_GET, ["addon-type", "query"]);
+        $errors = Validate::ensureInput($_GET, ["addon-type", "query", "flags"]);
         if ($errors)
         {
             exit_json_error(_h("One or more fields are empty. This should never happen"));
         }
 
-        if (!Addon::isAllowedType($_GET['addon-type']) && $_GET['addon-type'] !== "all")
+        $return_html = isset($_GET["return-html"]) ? true : false;
+        if (!isset($_GET["query"]))
         {
-            exit_json_error(sprintf("invalid addon_type = %s is not recognized", $_GET["addon-type"]));
+            $_GET["query"] = "";
         }
 
-        $results = Addon::search($_GET['query']);
-
-        // Populate our addon list
-        $addon_list = [];
-        foreach ($results as $result)
+        $addons = [];
+        try
         {
-            $a = Addon::get($result['id']);
-            if ($a->getType() === $_GET['addon-type'] || $_GET['addon-type'] === "all")
-            {
-                $icon = ($_GET['addon-type'] === Addon::KART) ? $a->getImage(true) : null;
-                $addon_list[] = [
-                    'id'       => $result['id'],
-                    'name'     => $result['name'],
-                    'featured' => Addon::isFeatured($a->getStatus()),
-                    'icon'     => File::getPath($icon)
-                ];
-            }
+            $addons = Addon::search($_GET['query'], $_GET["addon-type"], $_GET["flags"]);
         }
-        exit_json_success("", ["addons" => $addon_list]);
+        catch(AddonException $e)
+        {
+            exit_json_error($e->getMessage());
+        }
+
+        $template_addons = Addon::filterMenuTemplate($addons, $_GET["addon-type"]);
+
+        if ($return_html)
+        {
+            $addons_html = StkTemplate::get("addons-menu.tpl")
+                ->assign("addons", $template_addons)
+                ->toString();
+            exit_json_success("", ["addons-html" => $addons_html]);
+        }
+
+        exit_json_success("", ["addons" => $template_addons]);
         break;
 
         break;

@@ -51,6 +51,9 @@
                 }
                 $user_menu.html(jData["users-html"]);
             }
+            if (jData.hasOwnProperty("error")) {
+                growlError(jData["error"]);
+            }
         });
 
         console.log(query);

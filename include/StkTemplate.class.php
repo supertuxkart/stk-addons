@@ -368,6 +368,12 @@ class StkTemplate extends Template
         return $this;
     }
 
+    /**
+     * Add the bootstrap 3 multiselect plugin
+     *
+     * @link http://davidstutz.github.io/bootstrap-multiselect/
+     * @return $this
+     */
     public function addMultiSelectLibrary()
     {
         $this->addCssInclude("bootstrap-multiselect/css/bootstrap-multiselect.css", LIBS_LOCATION);
