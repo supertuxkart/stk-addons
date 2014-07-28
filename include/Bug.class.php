@@ -326,11 +326,11 @@ class Bug extends Base
         // search in description
         if ($search_description)
         {
-            $query .= " WHERE (`title` LIKE :search_term OR `description` LIKE :search_term)";
+            $query .= " WHERE (`addon_id` LIKE :search_term OR `title` LIKE :search_term OR `description` LIKE :search_term)";
         }
         else
         {
-            $query .= " WHERE (`title` LIKE :search_term)";
+            $query .= " WHERE (`addon_id` LIKE :search_term OR `title` LIKE :search_term)";
         }
 
         switch ($status)

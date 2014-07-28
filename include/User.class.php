@@ -600,7 +600,33 @@ class User extends Base
         return new User($data);
     }
 
-    /*
+    /**
+     * Filter an array of users of the template menu view
+     *
+     * @param User[] $users
+     *
+     * @return array
+     */
+    public static function filterMenuTemplate($users)
+    {
+        $templateUsers = [];
+        foreach ($users as $user)
+        {
+            // Make sure that the user is active, or the viewer has permission to
+            // manage this type of user
+            if ($user->isActive() || User::hasPermissionOnRole($user->getRole()))
+            {
+                $templateUsers[] = [
+                    'username' => $user->getUserName(),
+                    'active'   => $user->isActive()
+                ];
+            }
+        }
+
+        return $templateUsers;
+    }
+
+    /**
      * Search a user
      *
      * @param string $search_string   the string can pe space or comma separated to search multiple users
@@ -674,6 +700,7 @@ class User extends Base
         $partial_output->startElement('users');
         foreach (static::search($search_string) as $user)
         {
+            /**@var User $user */
             $partial_output->insert($user->asXML());
         }
         $partial_output->endElement();

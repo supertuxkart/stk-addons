@@ -76,19 +76,21 @@
                     var matches = [];
 
                     // search
-                    $.get(search_url, {"data-type": "addon", "search-filter": "name", "query": query}, function(data) {
+                    $.get(search_url, {"data-type": "addon", "addon-type": "all", "query": query}, function(data) {
                         var jData = parseJSON(data);
                         if (jData.hasOwnProperty("error")) {
                             console.error(jData["error"]);
                             return;
                         }
+                        if (jData.hasOwnProperty("success")) {
+                            // fill display popup
+                            var addons = jData["addons"];
+                            for (var i = 0; i < addons.length; i++) {
+                                matches.push({"id": addons[i]["name"]})
+                            }
 
-                        // fill display popup
-                        for (var i = 0; i < jData["addons"].length; i++) {
-                            matches.push({"id": jData["addons"][i]})
+                            cb(matches);
                         }
-
-                        cb(matches);
                     });
                 }
             }

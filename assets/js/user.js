@@ -32,8 +32,8 @@
 
     // search form
     $("#user-search-val").keyup(function() {
-        var search_term = this.value;
-        if (search_term.length <= 2) { // only if length is 3 or greater
+        var query = this.value;
+        if (query.length <= 2) { // only if length is 3 or greater
             // restore original menu
             if (!_.isEmpty(original_menu)) {
                 $user_menu.html(original_menu);
@@ -43,7 +43,7 @@
             return null;
         }
 
-        $.get(SEARCH_URL, {"data-type": "user", "search-term": search_term, "return-html": true}, function(data) {
+        $.get(SEARCH_URL, {"data-type": "user", "query": query, "return-html": true}, function(data) {
             var jData = parseJSON(data);
             if (jData.hasOwnProperty("success")) {
                 if (_.isEmpty(original_menu)) { // keep original menu
@@ -53,7 +53,7 @@
             }
         });
 
-        console.log(search_term);
+        console.log(query);
     });
 
     // left panel user clicked

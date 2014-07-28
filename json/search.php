@@ -29,41 +29,38 @@ if (empty($_GET["data-type"]))
 switch ($_GET["data-type"])
 {
     case "addon";
-        $errors = Validate::ensureInput($_GET, ["search-filter", "query"]);
+        $errors = Validate::ensureInput($_GET, ["addon-type", "query"]);
         if ($errors)
         {
             exit_json_error(_h("One or more fields are empty. This should never happen"));
         }
 
-        switch ($_GET["search-filter"])
+        if (!Addon::isAllowedType($_GET['addon-type']) && $_GET['addon-type'] !== "all")
         {
-            case "type":
-                if (!isset($_GET['addon-type']) || !Addon::isAllowedType($_GET['addon-type']))
-                {
-                    exit_json_error(sprintf("invalid addon_type = %s is not recognized", $_POST["addon_type"]));
-                }
-
-                $results = Addon::search($_GET['query']);
-
-                // Populate our addon list
-                $addon_list = [];
-                foreach ($results as $result)
-                {
-                    $a = Addon::get($result['id']);
-                    if ($a->getType() === $_GET['type'])
-                    {
-                        $icon = ($_GET['type'] === Addon::KART) ? $a->getImage(true) : null;
-                        $addon_list[] = [
-                            'id'       => $result['id'],
-                            'name'     => $result['name'],
-                            'featured' => Addon::isFeatured($a->getStatus()),
-                            'icon'     => File::getPath($icon)
-                        ];
-                    }
-                }
-                exit_json_success("", ["addons" => $addon_list]);
-                break;
+            exit_json_error(sprintf("invalid addon_type = %s is not recognized", $_GET["addon-type"]));
         }
+
+        $results = Addon::search($_GET['query']);
+
+        // Populate our addon list
+        $addon_list = [];
+        foreach ($results as $result)
+        {
+            $a = Addon::get($result['id']);
+            if ($a->getType() === $_GET['addon-type'] || $_GET['addon-type'] === "all")
+            {
+                $icon = ($_GET['addon-type'] === Addon::KART) ? $a->getImage(true) : null;
+                $addon_list[] = [
+                    'id'       => $result['id'],
+                    'name'     => $result['name'],
+                    'featured' => Addon::isFeatured($a->getStatus()),
+                    'icon'     => File::getPath($icon)
+                ];
+            }
+        }
+        exit_json_success("", ["addons" => $addon_list]);
+        break;
+
         break;
 
     case "bug":
@@ -71,6 +68,11 @@ switch ($_GET["data-type"])
         if ($errors)
         {
             exit_json_error(_h("One or more fields are empty. This should never happen"));
+        }
+
+        if (!isset($_GET["query"]))
+        {
+            $_GET["query"] = "";
         }
 
         // search also the description
@@ -83,7 +85,7 @@ switch ($_GET["data-type"])
         $bugs = [];
         try
         {
-            $bugs = Bug::search($_GET["search-title"], $_GET["search-filter"], $search_description);
+            $bugs = Bug::search($_GET["query"], $_GET["search-filter"], $search_description);
         }
         catch(BugException $e)
         {
@@ -94,7 +96,7 @@ switch ($_GET["data-type"])
         break;
 
     case "user":
-        $errors = Validate::ensureInput($_GET, ["search-term"]);
+        $errors = Validate::ensureInput($_GET, ["query"]);
         if ($errors)
         {
             exit_json_error(_h("One or more fields are empty. This should never happen"));
@@ -104,26 +106,14 @@ switch ($_GET["data-type"])
         $users = [];
         try
         {
-            $users = User::search($_GET["search-term"]);
+            $users = User::search($_GET["query"]);
         }
         catch(BugException $e)
         {
             exit_json_error($e->getMessage());
         }
 
-        $templateUsers = [];
-        foreach ($users as $user)
-        {
-            // Make sure that the user is active, or the viewer has permission to
-            // manage this type of user
-            if ($user->isActive() || User::hasPermissionOnRole($user->getRole()))
-            {
-                $templateUsers[] = [
-                    'username' => $user->getUserName(),
-                    'active'   => $user->isActive()
-                ];
-            }
-        }
+        $templateUsers = User::filterMenuTemplate($users);
 
         if ($return_html)
         {

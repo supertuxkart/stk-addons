@@ -27,19 +27,7 @@ $limit = PaginationTemplate::getLimitNumber();
 
 // get all users from the database, create links
 $users = User::getAll(!$has_permission, $limit, $current_page);
-$templateUsers = [];
-foreach ($users as $user)
-{
-    // Make sure that the user is active, or the viewer has permission to
-    // manage this type of user
-    if ($user->isActive() || User::hasPermissionOnRole($user->getRole()))
-    {
-        $templateUsers[] = [
-            'username' => $user->getUserName(),
-            'active'   => $user->isActive()
-        ];
-    }
-}
+$templateUsers = User::filterMenuTemplate($users);
 
 $pagination = PaginationTemplate::get()
     ->setItemsPerPage($limit)

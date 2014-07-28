@@ -10,7 +10,7 @@
         <div class="col-md-10">
             <form class="form-inline center-block" role="form" id="bug-search-form">
                 <div class="form-group">
-                    <input type="text" class="form-control input-lg" id="search-title" name="search-title"
+                    <input type="text" class="form-control input-lg" id="search-val" name="query"
                            placeholder="Enter bug title">
                 </div>
                 <div class="form-group">
@@ -27,7 +27,6 @@
                         <input type="checkbox" id="search-description" name="search-description">{t}Search Description{/t}
                     </label>
                 </div>
-                <input type="hidden" name="action" value="search">
                 <button type="submit" class="btn btn-info btn-lg">{t}Search{/t}</button>
             </form>
         </div>
