@@ -538,6 +538,9 @@ function format_compat($format, $filetype) {
             if ($format >= 3 && $format <= 5) {
                 return '0.7.0 - 0.8.1';
             }
+            if ($format == 6) {
+                return 'Latest development version';
+            }
             return htmlspecialchars(_('Unknown'));
             break;
     }

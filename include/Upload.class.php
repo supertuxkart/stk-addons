@@ -80,15 +80,6 @@ class Upload {
             throw new UploadException("Parser Exception: " . $e->getMessage());
         }
 
-        // --------------------------------------------------------------------
-        // FIXME: This is only a temporary measure!
-        // --------------------------------------------------------------------
-        if ($this->properties['xml_attributes']['version'] > 5 && $this->upload_type == "tracks") {
-            throw new UploadException('You uploaded a track with version ' . $this->properties['xml_attributes']['version'] . ' of the track format.<br />'
-            . 'This new format is not yet supported by stkaddons. The stkaddons developer is working on distributing add-ons in a sort of "main package/dependency" manner to save internet bandwidth for users by sharing resources. The developer is using the format change to ensure STK 0.7.x can still access their own addons without disruption.<br />'
-            . 'Thank you for your patience. The developer hopes to have this finished before any "beta" versions of STK 0.8 are released.');
-        }
-
         // Make sure the parser found a license file
         if (!isset($this->properties['license_file'])) {
             throw new UploadException(htmlspecialchars(_('A valid License.txt file was not found. Please add a License.txt file to your archive and re-submit it.')));
