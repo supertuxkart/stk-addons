@@ -22,7 +22,7 @@ define('ROOT', './');
 require_once(ROOT.'config.php');
 require_once(INCLUDE_DIR.'StkTemplate.class.php');
 
-$tpl = StkTemplate('info-page.tpl');
+$tpl = new StkTemplate('info-page.tpl');
 $tpl->assign('title', htmlspecialchars(_('STK Add-ons').' | '._('Privacy')));
 
 $page_content = <<< EOF
@@ -142,5 +142,3 @@ feel free to contact the website administrators by email at
 EOF;
 $tpl->assign('info_page', $page_content);
 echo $tpl;
-?>
-

@@ -75,9 +75,6 @@ Description: menu
         echo htmlspecialchars(_('Login'));
         echo '</a>';
     }
-    echo'<a href="'.SITE_ROOT.'about.php">';
-    echo htmlspecialchars(_('About'));
-    echo '</a>';
      ?>
         </div>
         <div class="right">
