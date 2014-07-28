@@ -209,15 +209,15 @@ class Addon extends Base
      */
     public function createRevision($attributes, $file_id, $moderator_message = "")
     {
-        foreach ($attributes['missing_textures'] as $tex)
-        {
-            $moderator_message .= "Texture not found: $tex\n";
-        }
-
         // Check if logged in
         if (!User::isLoggedIn())
         {
             throw new AddonException(_h('You must be logged in to create an add-on revision.'));
+        }
+
+        foreach ($attributes['missing_textures'] as $tex)
+        {
+            $moderator_message .= "Texture not found: $tex\n";
         }
 
         // Make sure an add-on file with this id does not exist

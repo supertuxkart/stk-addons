@@ -116,7 +116,6 @@
             return;
         }
 
-
         var new_json_data = [],
             json_data = cache_json[json_file]; // take from cache, should always be there
 
@@ -144,6 +143,5 @@
 
         $.plot($stats, new_json_data, time_options);
     })
-
 
 })(jQuery);

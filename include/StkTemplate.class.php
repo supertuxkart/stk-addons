@@ -368,6 +368,14 @@ class StkTemplate extends Template
         return $this;
     }
 
+    public function addMultiSelectLibrary()
+    {
+        $this->addCssInclude("bootstrap-multiselect/css/bootstrap-multiselect.css", LIBS_LOCATION);
+        $this->addScriptInclude("bootstrap-multiselect/js/bootstrap-multiselect.js", LIBS_LOCATION);
+
+        return $this;
+    }
+
     /**
      * Add twitter typehead library for autocompletion
      *

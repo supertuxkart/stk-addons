@@ -421,6 +421,17 @@ li div.icon {
     height: 25px;
 }
 
+#addon-body {
+    margin-top: 65px;
+}
+
+#addon-search-form {
+    position: absolute;
+    right: 10px;
+    margin-top: 20px;
+    z-index: 1000;
+}
+
 .icon {
     height: 25px;
     margin-left: 2px;

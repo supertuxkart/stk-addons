@@ -26,6 +26,7 @@ var MSECONDS_MINUTE = 60000,
     MSECONDS_MONTH = 2592000000,
     MSECONDS_YEAR = 31536000000;
 
+var SEARCH_URL = JSON_LOCATION + "search.php";
 
 function isInTimeInterval(time, past_time_limit) {
     var current_time = (new Date()).getTime(),

@@ -21,7 +21,7 @@
 
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
-if (!isset($_GET["data-type"]) || empty($_GET["data-type"]))
+if (empty($_GET["data-type"]))
 {
     exit_json_error("data-type param is not defined or is empty");
 }
@@ -62,22 +62,6 @@ switch ($_GET["data-type"])
                     }
                 }
                 exit_json_success("", ["addons" => $addon_list]);
-                break;
-
-            case "name": // return an array of names
-                $addons = Addon::search($_GET['query']);
-                $names = [];
-
-                foreach ($addons as $addon)
-                {
-                    $names[] = $addon["id"];
-                }
-
-                exit_json_success("", ["addons" => $names]);
-                break;
-
-            default:
-                exit_json_error("search_filter unknown");
                 break;
         }
         break;

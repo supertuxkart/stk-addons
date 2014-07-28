@@ -24,7 +24,6 @@
         $user_menu = $("#user-menu"),
         $user_main = $("#user-main"),
         json_url = JSON_LOCATION + "users.php",
-        search_url = JSON_LOCATION + "search.php",
         original_menu;
 
     function userFormSubmit(form_identifier, callback_success) {
@@ -44,7 +43,7 @@
             return null;
         }
 
-        $.get(search_url, {"data-type": "user", "search-term": search_term, "return-html": true}, function(data) {
+        $.get(SEARCH_URL, {"data-type": "user", "search-term": search_term, "return-html": true}, function(data) {
             var jData = parseJSON(data);
             if (jData.hasOwnProperty("success")) {
                 if (_.isEmpty(original_menu)) { // keep original menu

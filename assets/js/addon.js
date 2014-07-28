@@ -57,7 +57,33 @@ function textLimit(field, num) {
     "use strict";
 
     var json_url = JSON_LOCATION + "rating.php",
-        $addon_body = $("#addon-body");
+        $addon_body = $("#addon-body"),
+        $addon_menu = $("#addon-menu"),
+        $search_by = $("#addon-search-by"),
+        original_menu;
+
+    $('.multiselect').multiselect({
+
+    });
+
+    // search form
+    $("#addon-search-val").keyup(function() {
+        var search_term = this.value;
+        if (search_term.length <= 2) { // only if length is 3 or greater
+            // restore original menu
+            if (!_.isEmpty(original_menu)) {
+                $addon_menu.html(original_menu);
+                original_menu = ""; // clear
+            }
+
+            return null;
+        }
+
+
+
+        console.log($search_by.val());
+        console.log(search_term);
+    });
 
     // left panel user addon clicked
     $('a.addon-list').click(function() {
@@ -75,6 +101,7 @@ function textLimit(field, num) {
         return false;
     });
 
+    // rating clicked
     $addon_body.on("click", '.add-rating', function() {
         var addon_id = $("#user-rating").data("id"),
             $ratings_container = $("#rating-container"),
