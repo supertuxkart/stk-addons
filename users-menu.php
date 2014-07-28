@@ -27,7 +27,7 @@ $limit = PaginationTemplate::getLimitNumber();
 
 // get all users from the database, create links
 $users = User::getAll(!$has_permission, $limit, $current_page);
-$templateUsers = User::filterMenuTemplate($users);
+$template_users = User::filterMenuTemplate($users);
 
 $pagination = PaginationTemplate::get()
     ->setItemsPerPage($limit)
@@ -36,7 +36,7 @@ $pagination = PaginationTemplate::get()
 
 $tpl = StkTemplate::get("user-menu.tpl")
     ->assign("img_location", IMG_LOCATION)
-    ->assign("menu_users", $templateUsers)
+    ->assign("users", $template_users)
     ->assign("pagination", $pagination->toString());
 
 echo $tpl;

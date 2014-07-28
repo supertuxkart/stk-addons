@@ -113,19 +113,19 @@ switch ($_GET["data-type"])
             exit_json_error($e->getMessage());
         }
 
-        $templateUsers = User::filterMenuTemplate($users);
+        $template_users = User::filterMenuTemplate($users);
 
         if ($return_html)
         {
             $users_html = StkTemplate::get("user-menu.tpl")
                 ->assign("img_location", IMG_LOCATION)
-                ->assign("menu_users", $templateUsers)
+                ->assign("users", $template_users)
                 ->assign("pagination", "")
                 ->toString();
             exit_json_success("", ["users-html" => $users_html]);
         }
 
-        exit_json_success("", ["users" => $templateUsers]);
+        exit_json_success("", ["users" => $template_users]);
         break;
 
     default:
