@@ -18,15 +18,14 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
 
 // define possibly undefined variables
-$_POST['user'] = (isset($_POST['user'])) ? $_POST['user'] : null;
-$_POST['pass'] = (isset($_POST['pass'])) ? $_POST['pass'] : null;
-$_GET['action'] = (isset($_GET['action'])) ? $_GET['action'] : null;
+$_POST['username'] = isset($_POST['username']) ? $_POST['username'] : null;
+$_POST['password'] = isset($_POST['password']) ? $_POST['password'] : null;
+$_GET['action'] = isset($_GET['action']) ? $_GET['action'] : null;
 
-// set default
+// set default redirect url from where the user was
 $return_to_url = $safe_url = SITE_ROOT . "index.php";
 if (isset($_POST["return_to"]))
 {
@@ -39,48 +38,42 @@ elseif (isset($_GET["return_to"]))
 }
 
 // prevent foreign domain
-if(!Util::str_starts_with($return_to_url, SITE_ROOT))
+if (!Util::str_starts_with($return_to_url, SITE_ROOT))
 {
     // silently fall back to safe url
     $return_to_url = $safe_url;
 }
 
-$tpl = new StkTemplate('login.tpl');
+$tpl = StkTemplate::get('login.tpl')->assignTitle(_h("Login"));
 
 // Prepare forms
-$login_form = array(
-    'display'   => true,
-    'return_to' => $return_to_url,
-    'form'      => array(
-        'action' => File::rewrite('login.php?action=submit'),
-    ),
-    'links'     => array(
-        'register'       => File::link('register.php', _h('Create an account.')),
-        'reset_password' => File::link('password-reset.php', _h('Forgot password?'))
-    )
-);
+$login_form = [
+    'display'     => true,
+    'return_to'   => $return_to_url,
+    'form_action' => File::rewrite('login.php?action=submit'),
+    'links'       => [
+        'register'       => File::link('register.php', _h('Sign up here.')),
+        'reset_password' => File::link('password-reset.php', _h('(forgot password)'))
+    ]
+];
 
-$errors = '';
 switch ($_GET['action'])
 {
     case 'logout':
         $login_form['display'] = false;
 
         User::logout();
-        if (User::isLoggedIn() == true)
+
+        if (User::isLoggedIn())
         {
-            $tpl->assign('confirmation', _h('Failed to logout.'));
+            $tpl->assign('errors', _h('Failed to logout.'));
         }
         else
         {
             $tpl->setMetaRefresh($safe_url, 3);
-            $conf = _h('You have been logged out.') . '<br />';
-            $conf .= sprintf(
-                    _h('Click %shere%s if you do not automatically redirect.'),
-                    "<a href=\"{$safe_url}\">",
-                    '</a>'
-                ) . '<br />';
-            $tpl->assign('confirmation', $conf);
+            $conf = _h('You have been logged out.') . '. ';
+            $conf .= sprintf(_h('Click %shere%s if you do not automatically redirect.'), "<a href=\"{$safe_url}\">", '</a>');
+            $tpl->assign('success', $conf);
         }
 
         break;
@@ -88,30 +81,28 @@ switch ($_GET['action'])
     case 'submit':
         $login_form['display'] = false;
 
+        $errors = "";
         try
         {
-            // Variable validation is done by the function below
-            User::login($_POST['user'], $_POST['pass']);
+            User::login($_POST['username'], $_POST['password']);
         }
         catch(UserException $e)
         {
-            $errors .= $e->getMessage();
+            $errors = $e->getMessage();
         }
+
         if (User::isLoggedIn())
         {
             $tpl->setMetaRefresh($return_to_url, 3);
-            $conf = sprintf(_h('Welcome, %s!') . '<br />', User::getLoggedRealName());
-            $conf .= sprintf(
-                    _h('Click %shere%s if you do not automatically redirect.'),
-                    "<a href=\"{$return_to_url}\">",
-                    '</a>'
-                ) . '<br />';
-            $tpl->assign('confirmation', $conf);
+            $conf = sprintf(_h('Welcome, %s!'), User::getLoggedRealName()) . '. ';
+            $conf .= sprintf(_h('Click %shere%s if you do not automatically redirect.'), "<a href=\"{$return_to_url}\">", '</a>');
+            $tpl->assign('success', $conf);
         }
         else
         {
-            $tpl->assign('confirmation', $errors);
+            $tpl->assign('errors', $errors);
         }
+
         break;
 
     default:
@@ -119,18 +110,13 @@ switch ($_GET['action'])
         {
             $login_form['display'] = false;
             $tpl->setMetaRefresh('index.php', 3);
-            $conf = _h('You are already logged in.') . ' ';
-            $conf .= sprintf(
-                    _h('Click %shere%s if you do not automatically redirect.'),
-                    '<a href="index.php">',
-                    '</a>'
-                ) . '<br />';
-            $tpl->assign('confirmation', $conf);
+
+            $conf = _h('You are already logged in.') . '. ';
+            $conf .= 'Click <a href="index.php">here</a> if you do not automatically redirect.';
+            $tpl->assign('success', $conf);
         }
         break;
 }
 
-$tpl->assign('title', h(_('STK Add-ons') . ' | ' . _('Login')));
 $tpl->assign('login', $login_form);
-
 echo $tpl;
