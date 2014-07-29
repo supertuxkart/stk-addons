@@ -7,7 +7,7 @@
     {include file="feedback/success.tpl"}
 
     {if $pass_reset.reset_form.display == true}
-        <form id="reset_pw" action="password-reset.php?action=reset" class="form-horizontal" method="POST">
+        <form id="reset_pw" action="?action=reset" class="form-horizontal" method="POST">
             <div class="form-group col-md-12">
                 {t}In order to reset your password, please enter your username and your email address. A password reset link will be emailed to you. Your old password will become inactive until your password is reset.{/t}
             </div>
@@ -36,7 +36,7 @@
         </form>
     {/if}
     {if $pass_reset.pass_form.display == true}
-        <form id="change_pw" action="password-reset.php?action=change" method="POST" class="form-horizontal">
+        <form id="change_pw" action="?action=change" method="POST" class="form-horizontal">
             <div class="form-group col-md-12"">
                 {t}Please enter a new password for your account.{/t}
             </div>
@@ -59,9 +59,9 @@
             </div>
             <div class="form-group">
                 <div class="col-md-offset-3 col-md-4">
-                    <input type="hidden" name="verify" value="{$pass_reset.pass_form.verification_code}" />
-                    <input type="hidden" name="user" value="{$pass_reset.pass_form.user_id}" />
-                    <td><input type="submit" class="btn btn-primary" value="{t}Change Password{/t}"></td>
+                    <input type="hidden" name="verify" value="{$pass_reset.pass_form.verification_code}">
+                    <input type="hidden" name="user" value="{$pass_reset.pass_form.user_id}">
+                    <input type="submit" class="btn btn-primary" value="{t}Change Password{/t}">
                 </div>
             </div>
         </form>
