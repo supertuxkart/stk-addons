@@ -71,6 +71,7 @@ class Upload
     private $temp_dir;
 
     /**
+     * Hold the data from the zip archive. b3d files, license, texture etc
      * @var array
      */
     private $properties = [];
@@ -116,8 +117,8 @@ class Upload
     /**
      * Constructor
      *
-     * @param array $file_record
-     * @param int $expected_type see File::SOURCE, FILE::ADDON
+     * @param array  $file_record
+     * @param int    $expected_type see File::SOURCE, FILE::ADDON
      * @param string $moderator_message
      */
     public function __construct($file_record, $expected_type, $moderator_message)
@@ -146,7 +147,7 @@ class Upload
      */
     public function __destruct()
     {
-        //$this->removeTempFiles();
+        $this->removeTempFiles();
     }
 
     /**
@@ -186,13 +187,16 @@ class Upload
         {
             throw new UploadException('Failed to create temporary directory for upload: ' . h($this->temp_dir));
         }
+        $file_archive = $this->temp_dir . $this->file_name;
 
         // Copy file to temp folder
-        if (move_uploaded_file($this->file_tmp, $this->temp_dir . $this->file_name) === false &&
-            file_exists($this->temp_dir . $this->file_name) === false
-        )
+        try
         {
-            throw new UploadException(_('Failed to move uploaded file.'));
+            File::moveUploadFile($this->file_tmp, $file_archive);
+        }
+        catch(FileException $e)
+        {
+            throw new UploadException($e->getMessage());
         }
 
         // treat images separately
@@ -203,15 +207,20 @@ class Upload
             return null;
         }
 
+        // load the data from the archive, and validate it
         try
         {
-            File::extractArchive($this->temp_dir . $this->file_name, $this->temp_dir, $this->file_ext);
+            File::extractArchive($file_archive, $this->temp_dir, $this->file_ext);
             File::flattenDirectory($this->temp_dir, $this->temp_dir);
             Upload::removeInvalidFiles();
             Upload::parseFiles();
         }
         catch(FileException $e)
         {
+            if (file_exists($file_archive))
+            {
+                unlink($file_archive);
+            }
             throw new UploadException("File Exception: " . $e);
         }
         catch(ParserException $e)
@@ -233,11 +242,10 @@ class Upload
                 . 'have this finished before any "beta" versions of STK 0.8 are released.');
         }
 
-        // Make sure the parser found a license file
+        // Make sure the parser found a license file, and load it into the xml atributes
         if (!isset($this->properties['license_file']))
         {
-            throw new UploadException(
-                _h(
+            throw new UploadException(_h(
                     'A valid License.txt file was not found. Please add a License.txt file to your archive and re-submit it.'
                 )
             );
@@ -266,7 +274,7 @@ class Upload
         // For source packages
         if ($this->expected_file_type === File::SOURCE)
         {
-            if ($addon_id === null)
+            if (!$addon_id)
             {
                 throw new UploadException('No add-on id was provided with your source archive.');
             }
@@ -274,15 +282,16 @@ class Upload
             {
                 throw new UploadException('The add-on you want to add a source file to does not exist');
             }
-            if ($this->upload_type === null)
+            if (!$this->upload_type)
             {
                 $this->upload_type = $_GET['type'];
             }
+
             $filetype = 'source';
         }
-        else
+        else // For add-on files
         {
-            // For add-on files
+
             if ($this->upload_type === null)
             {
                 throw new UploadException('No add-on information file was found.');
@@ -306,65 +315,63 @@ class Upload
             {
                 $image_file = $this->properties['xml_attributes']['screenshot'];
             }
-
             $image_file = $this->temp_dir . $image_file;
-            if (file_exists($image_file))
+
+            if(!file_exists($image_file))
             {
-                // Get image file extension
-                preg_match('/\.([a-z]+)$/i', $image_file, $imageext);
-
-                // Save file
-                $fileid = uniqid(mt_rand(), true);
-                while (file_exists(UP_PATH . 'images' . DS . $fileid . '.' . $imageext[1]))
-                {
-                    $fileid = uniqid(mt_rand(), true);
-                }
-                $this->properties['image_path'] = UP_PATH . 'images' . DS . $fileid . '.' . $imageext[1];
-                copy($image_file, $this->properties['image_path']);
-
-                // Record image file in database
-                try
-                {
-                    DBConnection::get()->query(
-                        "CALL `" . DB_PREFIX . "create_file_record`
-                        (:addon_id, :upload_type, 'image', :file, @result_id)",
-                        DBConnection::NOTHING,
-                        [
-                            ":addon_id"    => $addon_id,
-                            ":upload_type" => $this->upload_type,
-                            ":file"        => 'images' . DS . $fileid . $imageext[1]
-                        ]
-                    );
-                }
-                catch(DBException $e)
-                {
-                    $this->warnings[] = _h('Failed to associate image file with addon.');
-                    unlink($this->properties['image_path']);
-                    $image_file = null;
-                }
-
-                try
-                {
-                    $id = DBConnection::get()->query(
-                        'SELECT @result_id',
-                        DBConnection::FETCH_FIRST
-                    );
-
-                    // example taken from
-                    // http://stackoverflow.com/questions/118506/stored-procedures-mysql-and-php/4502524#4502524
-                    // TODO test it
-                    $image_file = $id["@result_id"];
-                }
-                catch(DBException $e)
-                {
-                    $image_file = null;
-                    trigger_error("Could not select the return from the procedure", E_ERROR);
-                }
+                throw new UploadException(_h("A screenshot/icon file does not exist. Please upload one"));
             }
-            else
+
+            // Get image file extension
+            preg_match('/\.([a-z]+)$/i', $image_file, $image_ext);
+            if (count($image_ext) !== 2)
             {
+                throw new UploadException(sprintf("The image = '%s', does not have a file extension", h($image_file)));
+            }
+            $image_ext = $image_ext[1];
+
+            // Save file to local filesystem
+            $file_id = static::generateUniqueFileName(UP_PATH . 'images' . DS, $image_ext);
+            $image_path = 'images' . DS . $file_id . '.' .$image_ext;
+            $this->properties['image_path'] = UP_PATH . $image_path;
+            copy($image_file, $this->properties['image_path']);
+
+            // Record image file in database
+            try
+            {
+                DBConnection::get()->query(
+                    "CALL `" . DB_PREFIX . "create_file_record`
+                    (:addon_id, :upload_type, 'image', :file, @result_id)",
+                    DBConnection::NOTHING,
+                    [
+                        ":addon_id"    => $addon_id,
+                        ":upload_type" => $this->upload_type,
+                        ":file"        => $image_path
+                    ]
+                );
+            }
+            catch(DBException $e)
+            {
+                $this->warnings[] = _h('Failed to associate image file with addon.');
+                unlink($this->properties['image_path']);
                 $image_file = null;
             }
+
+            try
+            {
+                $id = DBConnection::get()->query(
+                    'SELECT @result_id',
+                    DBConnection::FETCH_FIRST
+                );
+
+                $image_file = $id["@result_id"];
+            }
+            catch(DBException $e)
+            {
+                $image_file = null;
+                trigger_error("Could not select the return from the procedure", E_ERROR);
+            }
+
             $this->properties['image_file'] = $image_file;
 
             try
@@ -476,7 +483,7 @@ class Upload
                     throw new UploadException(_h('You are trying to add a new revision of an add-on that does not exist.'));
                 }
 
-                Addon::create($this->upload_type, $this->properties['xml_attributes'], $fileid, $this->moderator_message);
+                Addon::create($this->upload_type, $this->properties['xml_attributes'], $file_id, $this->moderator_message);
             }
             else
             {
@@ -487,7 +494,7 @@ class Upload
                 {
                     throw new UploadException(_h('You do not have the necessary permissions to perform this action.'));
                 }
-                $addon->createRevision($this->properties['xml_attributes'], $fileid, $this->moderator_message);
+                $addon->createRevision($this->properties['xml_attributes'], $file_id, $this->moderator_message);
             }
         }
         catch(AddonException $e)
@@ -542,9 +549,9 @@ class Upload
     private function removeInvalidFiles()
     {
         // Check for invalid files
-        $invalid_files = File::typeCheck($this->temp_dir, $this->expected_file_type === File::SOURCE);
+        $invalid_files = File::removeInvalidFiles($this->temp_dir, $this->expected_file_type === File::SOURCE);
 
-        if (is_array($invalid_files) && $invalid_files)
+        if ($invalid_files)
         {
             $this->warnings[] = _h('Some invalid files were found in the uploaded add-on. These files have been removed from the archive:')
                 . ' ' . h(implode(', ', $invalid_files));
@@ -569,13 +576,8 @@ class Upload
             throw new UploadException(_h('A destination has not been set yet'));
         }
 
-        $fileid = uniqid(mt_rand(), true);
-        while (file_exists($this->destination . $fileid . '.' . $file_ext))
-        {
-            $fileid = uniqid(mt_rand(), true);
-        }
-
-        $this->upload_name = $this->destination . $fileid . '.' . $file_ext;
+        $file_id = static::generateUniqueFileName($this->destination, $file_ext);
+        $this->upload_name = $this->destination . $file_id . $file_ext;
     }
 
     /**
@@ -614,12 +616,14 @@ class Upload
                 if ($xml_type === 'TRACK' || $xml_type === 'KART')
                 {
                     $this->properties['xml_attributes'] = $xml_parse->addonFileAttributes();
+
                     if ($xml_type === 'TRACK')
                     {
                         if ($file !== 'track.xml')
                         {
                             continue;
                         }
+
                         if ($this->properties['xml_attributes']['arena'] != 'Y')
                         {
                             $this->upload_type = Addon::TRACK;
@@ -631,12 +635,13 @@ class Upload
                     }
                     else
                     {
-                        if ($file != 'kart.xml')
+                        if ($file !== 'kart.xml')
                         {
                             continue;
                         }
                         $this->upload_type = Addon::KART;
                     }
+
                     $this->properties['addon_file'] = $this->temp_dir . $file;
                     $this->addon_name = $this->properties['xml_attributes']['name'];
                 }
@@ -693,6 +698,25 @@ class Upload
     }
 
     /**
+     * Generate a unique file name tha does not exist
+     *
+     * @param string $directory the directory where the file resides
+     * @param string $extension the extension of the file
+     *
+     * @return string the filename
+     */
+    private static function generateUniqueFileName($directory, $extension)
+    {
+        $filename = uniqid(mt_rand());
+        while (file_exists($directory . $filename . '.' . $extension))
+        {
+            $filename = uniqid(mt_rand());
+        }
+
+        return $filename;
+    }
+
+    /**
      * Read the error code passed and throw an appropriate exception
      *
      * @param int $error_code
@@ -717,6 +741,8 @@ class Upload
                 throw new UploadException(_h('There is no TEMP directory to store the uploaded file in.'));
             case UPLOAD_ERR_CANT_WRITE:
                 throw new UploadException(_h('Unable to write uploaded file to disk.'));
+            case UPLOAD_ERR_EXTENSION:
+                throw new UploadException(_h('Upload file stopped by extension'));
             default:
                 throw new UploadException(_h('Unknown file upload error.') . $error_code);
         }
@@ -726,7 +752,7 @@ class Upload
      * Check the filename for an uploaded file to make sure the extension is one that can be handled
      *
      * @param string $filename
-     * @param int $type
+     * @param int    $type
      *
      * @throws UploadException
      * @return string

@@ -127,6 +127,7 @@ if ($action === "submit") // form submitted
             {
                 $_POST['upload-type'] = null;
             }
+
             switch ($_POST['upload-type'])
             {
                 case 'image':

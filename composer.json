@@ -5,6 +5,7 @@
         "ezyang/htmlpurifier": "v4.6.0",
         "recaptcha/php5": "v1.0.0",
         "php": ">=5.4",
+        "pear/archive_tar": "1.3.*",
         "ext-gd": "*",
         "ext-pdo": "*",
         "ext-gettext": "*",

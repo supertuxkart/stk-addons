@@ -44,7 +44,7 @@ switch ($_GET["data-type"])
         $addons = [];
         try
         {
-            $addons = Addon::search($_GET['query'], $_GET["addon-type"], $_GET["flags"]);
+            $addons = Addon::search($_GET["query"], $_GET["addon-type"], $_GET["flags"]);
         }
         catch(AddonException $e)
         {

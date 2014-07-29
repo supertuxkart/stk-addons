@@ -122,10 +122,10 @@ class File
     }
 
     /**
-     * Extract an archive file
+     * Extract an archive file.
      *
-     * @param string $file
-     * @param string $destination
+     * @param string $file the file to extract
+     * @param string $destination the directory where to extract
      * @param string $file_ext
      *
      * @throws FileException
@@ -137,7 +137,7 @@ class File
             throw new FileException(_h('The file to extract does not exist.'));
         }
 
-        if ($file_ext === null)
+        if (!$file_ext)
         {
             $file_ext = pathinfo($file, PATHINFO_EXTENSION);
         }
@@ -148,18 +148,18 @@ class File
             // Handle archives using ZipArchive class
             case 'zip':
                 $archive = new ZipArchive;
+
                 if (!$archive->open($file))
                 {
-                    unlink($file);
                     throw new FileException(_h('Could not open archive file. It may be corrupted.'));
                 }
                 if (!$archive->extractTo($destination))
                 {
-                    unlink($file);
                     throw new FileException(_h('Failed to extract archive file.') . ' (zip)');
                 }
+
                 $archive->close();
-                unlink($file);
+                unlink($file); // delete file archive from inside folder
                 break;
 
             // Handle archives using Archive_Tar class
@@ -170,7 +170,6 @@ class File
             case 'tbz':
             case 'tar.bz2':
             case 'bz2':
-                require_once('Archive/Tar.php');
                 $compression = null;
                 if ($file_ext === 'tar.gz' || $file_ext === 'tgz' || $file_ext === 'gz')
                 {
@@ -180,22 +179,20 @@ class File
                 {
                     $compression = 'bz2';
                 }
+
                 $archive = new Archive_Tar($file, $compression);
                 if (!$archive)
                 {
-                    unlink($file);
                     throw new FileException(_h('Could not open archive file. It may be corrupted.'));
                 }
                 if (!$archive->extract($destination))
                 {
-                    unlink($file);
                     throw new FileException(_h('Failed to extract archive file.') . ' (' . $compression . ')');
                 }
-                unlink($file);
+                unlink($file); // delete file archive from inside folder
                 break;
 
             default:
-                unlink($file);
                 throw new FileException(_h('Unknown archive type.'));
         }
     }
@@ -247,6 +244,8 @@ class File
     }
 
     /**
+     * Reduce the directory tree to a single level
+     *
      * @param string $current_dir
      * @param string $destination_dir
      *
@@ -262,10 +261,11 @@ class File
         $dir_contents = scandir($current_dir);
         foreach ($dir_contents as $file)
         {
-            if (($file === '.') || ($file === '..'))
+            if ($file === '.' || $file === '..')
             {
                 continue;
             }
+
             if (is_dir($current_dir . $file))
             {
                 File::flattenDirectory($current_dir . $file . DS, $destination_dir);
@@ -361,20 +361,23 @@ class File
     }
 
     /**
-     * @param string $path
-     * @param bool   $source
+     * Remove invalid files from the path that are not allowed extensions
      *
-     * @return array|bool
+     * @param string $path
+     * @param bool   $source flag that indicates the removal of invalid source extensions
+     *
+     * @return array of removed file names
      */
-    public static function typeCheck($path, $source = false)
+    public static function removeInvalidFiles($path, $source = false)
     {
-        if (!file_exists($path))
+        if (!file_exists($path) || !is_dir($path))
         {
-            return false;
-        }
-        if (!is_dir($path))
-        {
-            return false;
+            if (DEBUG_MODE)
+            {
+                trigger_error(sprintf("%s does not exist or is not a directory"), $path);
+            }
+
+            return [];
         }
 
         // Make a list of approved file types
@@ -387,8 +390,8 @@ class File
             $approved_types = ConfigManager::getConfig('allowed_source_exts');
         }
         $approved_types = array_map("trim", explode(',', $approved_types));
-        $removed_files = [];
 
+        $removed_files = [];
         foreach (scandir($path) as $file)
         {
             // Don't check current and parent directory
@@ -407,12 +410,33 @@ class File
                 unlink($file);
             }
         }
+
         if (empty($removed_files))
         {
-            return true;
+            return [];
         }
 
         return $removed_files;
+    }
+
+    /**
+     * Move an uploaded file to a new destination
+     *
+     * @param string $from
+     * @param string $to
+     *
+     * @throws FileException
+     */
+    public static function moveUploadFile($from, $to)
+    {
+        if (move_uploaded_file($from, $to) === false)
+        {
+            throw new FileException(_h('Failed to move uploaded file.'));
+        }
+        if (!file_exists($to))
+        {
+            throw new FileException('The file was not moved. This should never happen');
+        }
     }
 
     /**
@@ -524,8 +548,6 @@ class File
         $dir = rtrim($dir, DS);
         if (!is_dir($dir))
         {
-            trigger_error(sprintf("%s is not a directory", $dir));
-
             return null;
         }
 

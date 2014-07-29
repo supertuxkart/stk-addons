@@ -1424,7 +1424,7 @@ class Addon extends Base
     {
         if (!is_string($id))
         {
-            //trigger_error("ID is not a string");
+            trigger_error("ID is not a string");
 
             return false;
         }
@@ -1531,7 +1531,7 @@ class Addon extends Base
      * @param array  $search_flags
      *
      * @throws AddonException
-     * @return array Matching addon id, name and type
+     * @return Addon[] array of addons
      */
     public static function search($search_query, $type, array $search_flags)
     {
@@ -1745,7 +1745,7 @@ class Addon extends Base
         }
         catch(DBException $e)
         {
-            throw new AddonException(sprintf('Failed to acces the %s_revs table.', $type));
+            throw new AddonException(sprintf('Failed to access the %s_revs table.', $type));
         }
 
         if ($rows)
