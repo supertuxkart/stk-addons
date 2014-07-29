@@ -49,6 +49,8 @@ switch ($_GET['action'])
             $errors = Validate::ensureInput($_POST, ["user", "pass1", "pass2", "mail", "name", "terms"]);
             if ($errors)
             {
+                $tpl->assign('errors', implode("<br>", $errors));
+                $register['display_form'] = true;
                 break;
             }
 
