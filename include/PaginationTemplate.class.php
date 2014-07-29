@@ -156,7 +156,7 @@ class PaginationTemplate extends Template
         $rightOffset = $this->currentPage - 1 + $this->numberButtons;
         $buildRight = ($rightOffset !== $totalPages) && ($rightOffset < $totalPages);
 
-        if (!$buildLeft && !$buildRight) // both are false, should not happen build right by default
+        if (!$buildLeft && !$buildRight) // both are false, should not happen, build right by default
         {
             $buildRight = true;
         }

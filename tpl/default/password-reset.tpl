@@ -1,55 +1,70 @@
 {config_load file="{$smarty.current_dir}/tpl.conf"}
 {include file=#header#}
-
-<div id="content">
+<div class="container" id="main-reset-password">
     <h1>{t}Reset Password{/t}</h1>
-
-    <p>{$pass_reset.info}</p>
+    {include file="feedback/errors.tpl"}
+    {include file="feedback/warnings.tpl"}
+    {include file="feedback/success.tpl"}
 
     {if $pass_reset.reset_form.display == true}
-        <form id="reset_pw" action="password-reset.php?action=reset" method="POST">
-            <p>
+        <form id="reset_pw" action="password-reset.php?action=reset" class="form-horizontal" method="POST">
+            <div class="form-group col-md-12">
                 {t}In order to reset your password, please enter your username and your email address. A password reset link will be emailed to you. Your old password will become inactive until your password is reset.{/t}
-            </p>
-            <table>
-                <tr>
-                    <td><label for="reg_user">{t}Username:{/t}</label></td>
-                    <td><input type="text" name="user" id="reg_user"></td>
-                </tr>
-                <tr>
-                    <td><label for="reg_email">{t}Email Address:{/t}</label></td>
-                    <td><input type="text" name="mail" id="reg_email"></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td>{$pass_reset.reset_form.captcha.field}</td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td><input type="submit" value="{t}Send Reset Link{/t}"></td>
-                </tr>
-            </table>
+            </div>
+            <div class="form-group">
+                <label for="reg_user" class="col-md-2">{t}Username:{/t}</label>
+                <div class="col-md-4">
+                    <input type="text" name="user" class="form-control" id="reg_user">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="reg_email" class="col-md-2">{t}Email Address:{/t}</label>
+                <div class="col-md-4">
+                    <input type="text" name="mail" class="form-control" id="reg_email">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-4">
+                    {$pass_reset.reset_form.captcha}
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-4">
+                    <input type="submit" class="btn btn-primary" value="{t}Send Reset Link{/t}">
+                </div>
+            </div>
         </form>
     {/if}
     {if $pass_reset.pass_form.display == true}
-        {$pass_reset.pass_form.form.start}
-        {$pass_reset.pass_form.info}
-        <table>
-            <tr>
-                <td>{$pass_reset.pass_form.new_pass.label}</td>
-                <td>{$pass_reset.pass_form.new_pass.field}</td>
-            </tr>
-            <tr>
-                <td>{$pass_reset.pass_form.new_pass2.label}</td>
-                <td>{$pass_reset.pass_form.new_pass2.field}</td>
-            </tr>
-            <tr>
-                <td></td>
-                <td>{$pass_reset.pass_form.submit.field}</td>
-            </tr>
-        </table>
-        {$pass_reset.pass_form.form.end}
+        <form id="change_pw" action="password-reset.php?action=change" method="POST" class="form-horizontal">
+            <div class="form-group col-md-12"">
+                {t}Please enter a new password for your account.{/t}
+            </div>
+            <div class="form-group">
+                <label for="reg_pass" class="col-md-3">
+                    {t}New Password:{/t}<br>
+                    <span class="subtext">
+                    {t 1=8}Must be at least %1 characters long.{/t}
+                    </span>
+                </label>
+                <div class="col-md-4">
+                    <input type="password" class="form-control" name="pass1" id="reg_pass">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="reg_pass2" class="col-md-3">{t}New Password (confirm){/t}</label>
+                <div class="col-md-4">
+                    <input type="password" class="form-control" name="pass2" id="reg_pass2">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-3 col-md-4">
+                    <input type="hidden" name="verify" value="{$pass_reset.pass_form.verification_code}" />
+                    <input type="hidden" name="user" value="{$pass_reset.pass_form.user_id}" />
+                    <td><input type="submit" class="btn btn-primary" value="{t}Change Password{/t}"></td>
+                </div>
+            </div>
+        </form>
     {/if}
 </div>
-
 {include file=#footer#}
