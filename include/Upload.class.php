@@ -228,6 +228,12 @@ class Upload
             throw new UploadException("Parser Exception: " . $e->getMessage());
         }
 
+        // empty xml files
+        if (empty($this->properties['xml_attributes']))
+        {
+            throw new UploadException(_h("The archive does not contain any addon information"));
+        }
+
         // --------------------------------------------------------------------
         // FIXME: This is only a temporary measure!
         // --------------------------------------------------------------------
@@ -317,7 +323,7 @@ class Upload
             }
             $image_file = $this->temp_dir . $image_file;
 
-            if(!file_exists($image_file))
+            if (!file_exists($image_file))
             {
                 throw new UploadException(_h("A screenshot/icon file does not exist. Please upload one"));
             }
@@ -332,7 +338,7 @@ class Upload
 
             // Save file to local filesystem
             $file_id = static::generateUniqueFileName(UP_PATH . 'images' . DS, $image_ext);
-            $image_path = 'images' . DS . $file_id . '.' .$image_ext;
+            $image_path = 'images' . DS . $file_id . '.' . $image_ext;
             $this->properties['image_path'] = UP_PATH . $image_path;
             copy($image_file, $this->properties['image_path']);
 

@@ -192,7 +192,7 @@ CREATE TABLE IF NOT EXISTS `v2_client_sessions` (
 --
 
 CREATE TABLE IF NOT EXISTS `v2_config` (
-    `name`  VARCHAR(256) NOT NULL,
+    `name`  VARCHAR(128) NOT NULL,
     `value` VARCHAR(512) NOT NULL,
     UNIQUE KEY `name` (`name`)
 )
