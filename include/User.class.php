@@ -999,15 +999,17 @@ class User extends Base
     }
 
     /**
-     * @param $userid
+     * Update the login time of a user
      *
-     * @return mixed
+     * @param int $user_id
+     *
+     * @return string
      * @throws UserException
      * @throws InvalidArgumentException
      */
-    public static function updateLoginTime($userid)
+    public static function updateLoginTime($user_id)
     {
-        if (!$userid)
+        if (!$user_id)
         {
             throw new InvalidArgumentException(_h("User id is not set"));
         }
@@ -1020,14 +1022,14 @@ class User extends Base
                 SET `last_login` = NOW()
                 WHERE `id` = :userid",
                 DBConnection::NOTHING,
-                [':userid' => $userid]
+                [':userid' => $user_id]
             );
             $user = DBConnection::get()->query(
                 "SELECT `last_login`
                 FROM `" . DB_PREFIX . "users`
                 WHERE `id` = :userid",
                 DBConnection::FETCH_FIRST,
-                [':userid' => $userid]
+                [':userid' => $user_id]
             );
         }
         catch(DBException $e)

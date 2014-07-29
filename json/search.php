@@ -57,6 +57,7 @@ switch ($_GET["data-type"])
         {
             $addons_html = StkTemplate::get("addons-menu.tpl")
                 ->assign("addons", $template_addons)
+                ->assign("pagination", "")
                 ->toString();
             exit_json_success("", ["addons-html" => $addons_html]);
         }

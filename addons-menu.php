@@ -22,9 +22,19 @@ require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
 
 $_GET['type'] = isset($_GET['type']) ? $_GET['type'] : null;
 
-$addons = Addon::getAll($_GET['type'], true);
+$current_page = PaginationTemplate::getPageNumber();
+$limit = PaginationTemplate::getLimitNumber();
+
+$addons = Addon::getAll($_GET['type'], true, $limit, $current_page);
 $template_addons = Addon::filterMenuTemplate($addons, $_GET['type']);
 
-$tpl = StkTemplate::get("addons-menu.tpl")->assign("addons", $template_addons);
+$pagination = PaginationTemplate::get()
+    ->setItemsPerPage($limit)
+    ->setTotalItems(Addon::count($_GET['type']))
+    ->setCurrentPage($current_page);
+
+$tpl = StkTemplate::get("addons-menu.tpl")
+    ->assign("addons", $template_addons)
+    ->assign("pagination", $pagination->toString());
 
 echo $tpl;

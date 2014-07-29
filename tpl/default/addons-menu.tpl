@@ -18,3 +18,4 @@
         {/foreach}
     </ul>
 {/if}
+{$pagination}

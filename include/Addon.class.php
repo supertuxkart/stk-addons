@@ -1369,6 +1369,11 @@ class Addon extends Base
      */
     public static function getTypeByID($id)
     {
+        if (!$id)
+        {
+            return "";
+        }
+
         $id = static::cleanId($id);
 
         try
@@ -1531,9 +1536,9 @@ class Addon extends Base
     /**
      * Search for an addon by its name or description
      *
-     * @param string $search_query
-     * @param string $type
-     * @param array  $search_flags
+     * @param string $search_query  the search query
+     * @param string $type          the addon type
+     * @param array  $search_flags  an array of flags
      *
      * @throws AddonException
      * @return Addon[] array of addons
@@ -1605,14 +1610,17 @@ class Addon extends Base
      *
      * @param string $type          type of addon
      * @param bool   $featuredFirst flag that indicates to show featured first addons
+     * @param int    $limit         the number of results
+     * @param int    $current_page  current page that the user is on
      *
+     * @throws AddonException
      * @return Addon[] array of addons
      */
-    public static function getAll($type, $featuredFirst = false)
+    public static function getAll($type, $featuredFirst = false, $limit = -1, $current_page = 1)
     {
         if (!static::isAllowedType($type))
         {
-            return [];
+            throw new AddonException(_h("Invalid addon type"));
         }
 
         // build query
@@ -1622,6 +1630,13 @@ class Addon extends Base
                   ON `a`.`id` = `r`.`addon_id`
                   WHERE `a`.`type` = :type
                   AND `r`.`status` & :latest_bit ';
+        $db_params = [
+            ':type'       => $type,
+            ':latest_bit' => F_LATEST
+        ];
+        $db_types = [];
+
+        // apply ordering
         if ($featuredFirst)
         {
             $query .= 'ORDER BY `featured` DESC, `a`.`name` ASC, `a`.`id` ASC';
@@ -1631,20 +1646,27 @@ class Addon extends Base
             $query .= 'ORDER BY `name` ASC, `id` ASC';
         }
 
+        // apply pagination
+        if ($limit > 0)
+        {
+            $query .= " LIMIT :limit OFFSET :offset";
+            $db_params[":limit"] = $limit;
+            $db_params[":offset"] = ($current_page - 1) * $limit;
+            $db_types[":limit"] = $db_types[":offset"] = DBConnection::PARAM_INT;
+        }
+
         try
         {
             $addons = DBConnection::get()->query(
                 $query,
                 DBConnection::FETCH_ALL,
-                [
-                    ':type'       => $type,
-                    ':latest_bit' => F_LATEST
-                ]
+                $db_params,
+                $db_types
             );
         }
         catch(DBException $e)
         {
-            return [];
+            throw new AddonException(_h("Error selecting all addons from the database"));
         }
 
         $return = [];
@@ -1848,6 +1870,30 @@ class Addon extends Base
     public static function exists($id)
     {
         return static::existsField("addons", "id", Addon::cleanId($id), DBConnection::PARAM_STR);
+    }
+
+    /**
+     * Get the total number of addons of a type
+     *
+     * @param string $type the addon type
+     *
+     * @return int
+     * @throws AddonException
+     */
+    public static function count($type)
+    {
+        assert(static::isAllowedType($type));
+
+        try
+        {
+            $count = DBConnection::get()->count("addons", "`type` = :type", [":type" => $type]);
+        }
+        catch(DBException $e)
+        {
+            throw new AddonException(_h("Tried to count the number of addons"));
+        }
+
+        return $count;
     }
 
     /**
