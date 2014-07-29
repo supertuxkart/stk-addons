@@ -1328,6 +1328,11 @@ class Addon extends Base
      */
     public static function getNameByID($id)
     {
+        if (!$id)
+        {
+            return "";
+        }
+
         $id = static::cleanId($id);
 
         try

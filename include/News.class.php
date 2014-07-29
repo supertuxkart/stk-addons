@@ -83,7 +83,7 @@ class News
         }
 
         // Add new entry
-        if ($existing_id === false && $new_kart !== false)
+        if (!$existing_id  && $new_kart)
         {
             try
             {
