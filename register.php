@@ -90,7 +90,7 @@ switch ($_GET['action'])
         {
             if (empty($_GET["num"]))
             {
-
+                throw new UserException(_h("Activation code is empty"));
             }
 
             $username = h($_GET['user']);
