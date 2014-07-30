@@ -33,11 +33,9 @@ switch ($_POST["action"])
             exit_json_error(implode("<br>", $errors));
         }
 
-        $role = mb_strtolower($_POST["role"]);
-
         try
         {
-            AccessControl::addRole($role);
+            AccessControl::addRole($_POST["role"]);
         }
         catch(AccessControlException $e)
         {
@@ -45,6 +43,25 @@ switch ($_POST["action"])
         }
 
         exit_json_success("Role added");
+        break;
+
+    case "delete-role":
+        $errors = Validate::ensureInput($_POST, ["role"]);
+        if ($errors)
+        {
+            exit_json_error(implode("<br>", $errors));
+        }
+
+        try
+        {
+            AccessControl::deleteRole($_POST["role"]);
+        }
+        catch(AccessControlException $e)
+        {
+            exit_json_error($e->getMessage());
+        }
+
+        exit_json_success("Role Deleted");
         break;
 
     case "edit-role": // edit a role permissions or maybe the role name in the future

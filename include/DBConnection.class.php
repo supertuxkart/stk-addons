@@ -305,7 +305,7 @@ class DBConnection
     /**
      * Insert data into the database. Helper method
      *
-     * @param string $table
+     * @param string $table       the database table
      * @param array  $fields_data associative array that maps column to value
      *                            example: [":name" => "daniel", ":id" => 23, "date" => "NOW()"]
      *                            If you do not want to prepare a column do not put ":" in front of the key

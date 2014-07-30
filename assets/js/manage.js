@@ -106,12 +106,27 @@
 
     // role edit clicked
     $manage_body.on("click", "#manage-roles-edit-btn", function() {
-
+        console.log("Role edit clicked");
+        growlError("Role edit not yet implemented.");
     });
 
     // role delete clicked
     $manage_body.on("click", "#manage-roles-delete-btn", function() {
+        console.log("Delete role clicked");
+        var role = $("#manage-roles-edit-value").val(); // use the value from edit
 
+        $.post(json_url, {role: role, action: "delete-role"}, function(data) {
+            var jData = parseJSON(data);
+            if (jData.hasOwnProperty("error")) {
+                growlError(jData["error"]);
+            }
+            if (jData.hasOwnProperty("success")) {
+                growlSuccess(jData["success"]);
+
+                // update view
+                $("#manage-roles-roles button:contains('{0}')".format(role)).remove();
+            }
+        })
     });
 
     // role permission submitted

@@ -130,11 +130,11 @@ class AccessControl
         // validate
         if (!User::hasPermission(static::PERM_EDIT_PERMISSIONS))
         {
-            throw new AccessControlException(_h("You do not have the permission to add a role"));
+            throw new AccessControlException("You do not have the permission to add a role");
         }
         if (static::isRole($role))
         {
-            throw new AccessControlException(_h("The role already exists"));
+            throw new AccessControlException("The role already exists");
         }
 
         try
@@ -143,10 +143,53 @@ class AccessControl
         }
         catch(DBException $e)
         {
-            throw new AccessControlException(h(
-                _('An error occurred while trying add a role') . ' ' .
-                _('Please contact a website administrator.')
-            ));
+            throw new AccessControlException('An error occurred while trying add a role');
+        }
+    }
+
+    /**
+     * Delete a role from the database
+     * Only high privilege users can call this method
+     *
+     * @param string $role
+     *
+     * @throws AccessControlException
+     */
+    public static function deleteRole($role)
+    {
+        // validate
+        if (!User::hasPermission(static::PERM_EDIT_PERMISSIONS))
+        {
+            throw new AccessControlException("You do not have the permission to delete a role");
+        }
+        if (!static::isRole($role))
+        {
+            throw new AccessControlException("The role does not exist");
+        }
+
+        // find out if there are any users with that role, TODO check production server because of old roles
+        try
+        {
+            $count = DBConnection::get()->count("users", "`role` = :role", [":role" => $role]);
+        }
+        catch(DBException $e)
+        {
+            throw new AccessControlException("An error occurred while trying to count users");
+        }
+
+        // there are users with that role, not good
+        if ($count)
+        {
+            throw new AccessControlException("There are already users with that role. Can not delete. Do it manually");
+        }
+
+        try
+        {
+            DBConnection::get()->delete("roles", "`name` = :name", [":name" => $role]);
+        }
+        catch(DBException $e)
+        {
+            throw new AccessControlException("An error occurred while trying to delete a role");
         }
     }
 
