@@ -142,6 +142,7 @@
                 // update view
                 if (tab === "friends") {
                     $this.addClass("hide");
+                    $this.siblings(".btn-decline-friend").addClass("hide");
                     $this.siblings(".btn-remove-friend").removeClass("hide");
                     $parent.closest("tr").removeClass("danger");
                     $parent.closest("td").prev().text("Offline");
