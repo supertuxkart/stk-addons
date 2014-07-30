@@ -27,7 +27,7 @@ switch ($_GET['view'])
 
     case 'overview':
         $tpl = new StkTemplate("manage-overview.tpl");
-        $tplData = [
+        $tpl_data = [
             "addons"   => [],
             "images"   => [],
             "archives" => []
@@ -62,7 +62,7 @@ switch ($_GET['view'])
             // add to view
             if ($unapproved)
             {
-                $tplData["addons"][] = [
+                $tpl_data["addons"][] = [
                     "href"       => $addon->getLink(),
                     "name"       => $addon->getName(),
                     "unapproved" => implode(', ', $unapproved)
@@ -108,7 +108,7 @@ switch ($_GET['view'])
             }
         }
 
-        $tpl->assign("overview", $tplData);
+        $tpl->assign("overview", $tpl_data);
         break;
 
     case 'general':
@@ -117,7 +117,7 @@ switch ($_GET['view'])
             exit("You do not have the necessary permission");
         }
         $tpl = new StkTemplate("manage-general.tpl");
-        $tplData = [
+        $tpl_data = [
             "xml_frequency"       => ConfigManager::getConfig("xml_frequency"),
             "allowed_addon_exts"  => ConfigManager::getConfig("allowed_addon_exts"),
             "allowed_source_exts" => ConfigManager::getConfig("allowed_source_exts"),
@@ -135,7 +135,7 @@ switch ($_GET['view'])
             "apache_rewrites"     => ConfigManager::getConfig("apache_rewrites"),
         ];
 
-        $tpl->assign("general", $tplData);
+        $tpl->assign("general", $tpl_data);
         break;
 
     case 'news':
@@ -149,9 +149,9 @@ switch ($_GET['view'])
             exit("You do not have the necessary permission");
         }
         $tpl = new StkTemplate("manage-news.tpl");
-        $tplData = ["items" => News::getAll()];
+        $tpl_data = ["items" => News::getAll()];
 
-        $tpl->assign("news", $tplData);
+        $tpl->assign("news", $tpl_data);
         break;
 
     case 'clients':
@@ -166,7 +166,7 @@ switch ($_GET['view'])
             exit("You do not have the necessary permission");
         }
         $tpl = new StkTemplate("manage-clients.tpl");
-        $tplData = [
+        $tpl_data = [
             "items" => DBConnection::get()->query(
                     'SELECT * FROM ' . DB_PREFIX . 'clients
                     ORDER BY `agent_string` ASC',
@@ -174,7 +174,7 @@ switch ($_GET['view'])
                 )
         ];
 
-        $tpl->assign("clients", $tplData);
+        $tpl->assign("clients", $tpl_data);
         break;
 
     case 'cache':
@@ -184,15 +184,14 @@ switch ($_GET['view'])
             exit("You do not have the necessary permission");
         }
         $tpl = new StkTemplate("manage-cache.tpl");
-        $tplData = [];
+        $tpl_data = [];
 
-        $tpl->assign("cache", $tplData);
+        $tpl->assign("cache", $tpl_data);
         break;
 
     case 'files':
-        // TODO test files overview properly
         $tpl = new StkTemplate("manage-files.tpl");
-        $tplData = [];
+        $tpl_data = [];
 
         $files = File::getAllFiles();
         $items = [];
@@ -202,12 +201,11 @@ switch ($_GET['view'])
             {
                 continue;
             }
-            var_dump($file);
 
+            $references = "";
             switch ($file["file_type"])
             {
                 case false:
-                    $references = '<span class="error">No record found.</span>';
                     break;
 
                 case "addon":
@@ -219,28 +217,23 @@ switch ($_GET['view'])
                         $type_plural = $type . 's_revs';
                         try
                         {
-                            $files = DBConnection::get()->query(
+                            $rev_files = DBConnection::get()->query(
                                 'SELECT * FROM `' . DB_PREFIX . $type_plural .
-                                'WHERE `fileid` = :id',
+                                '` WHERE `fileid` = :id',
                                 DBConnection::FETCH_ALL,
                                 [':id' => $file["id"]]
                             );
 
                             // add to
-                            foreach ($files as $file)
+                            foreach ($rev_files as $rev_file)
                             {
-                                $references[] = $file['addon_id'] . sprintf(' (%s)', $type);
+                                $references[] = $rev_file['addon_id'] . sprintf(' (%s)', $type);
                             }
                         }
                         catch(DBException $e)
                         {
                             throw new Exception(sprintf("Error on selecting all %s", $type_plural));
                         }
-                    }
-
-                    if (empty($references))
-                    {
-                        $references[] = '<span class="error">None</span>';
                     }
 
                     $references = implode(', ', $references);
@@ -251,24 +244,19 @@ switch ($_GET['view'])
                     break;
             }
 
-            if (!$file["exists"])
-            {
-                $references .= ' <span class="error">File not found.</span>';
-            }
-
             $file["references"] = $references;
             $items[] = $file;
         }
 
-        $tplData["items"] = $items;
-        $tpl->assign("upload", $tplData);
+        $tpl_data["items"] = $items;
+        $tpl->assign("upload", $tpl_data);
         break;
 
     case 'logs':
         $tpl = new StkTemplate("manage-logs.tpl");
-        $tplData = ["items" => Log::getEvents()];
+        $tpl_data = ["items" => Log::getEvents()];
 
-        $tpl->assign("logs", $tplData);
+        $tpl->assign("logs", $tpl_data);
         break;
 
     case 'roles':
@@ -277,12 +265,12 @@ switch ($_GET['view'])
             exit("You do not have the necessary permission");
         }
         $tpl = new StkTemplate("manage-roles.tpl");
-        $tplData = [
+        $tpl_data = [
             "roles"       => AccessControl::getRoles(),
             "permissions" => AccessControl::getPermissionsChecked()
         ];
 
-        $tpl->assign("roles", $tplData);
+        $tpl->assign("roles", $tpl_data);
         break;
 
     default:

@@ -26,6 +26,11 @@
     // role variables
     var $role_edit_value, $role_edit_btn, $role_delete_btn, selected_role;
 
+    function onPageLoad() {
+        $(".table-no-sort").DataTable({"bSort": false, "iDisplayLength": 25});
+    }
+
+
     function manageFormSubmit(form_identifier, callback_success) {
         onFormSubmit(form_identifier, callback_success, $manage_body, json_url);
     }
@@ -35,7 +40,7 @@
         History.pushState(null, '', this.href);
         var view = getUrlVars(this.href)['view'];
         loadContent($manage_body, SITE_ROOT + 'manage-panel.php', {view: view}, function() {
-
+            onPageLoad();
         });
 
         return false;
@@ -141,5 +146,7 @@
             growlSuccess(jData["success"]);
         }
     });
+
+    onPageLoad();
 
 })(jQuery);

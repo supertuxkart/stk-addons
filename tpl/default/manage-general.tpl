@@ -1,14 +1,6 @@
 <h1>{t}General Settings{/t}</h1>
 <form method="POST" class="form-horizontal" id="manage-general-form" action="manage.php?view=general&amp;action=save_config">
     <div class="form-group">
-        <label class="col-md-3">
-
-        </label>
-        <div class="col-md-5">
-
-        </div>
-    </div>
-    <div class="form-group">
         <label for="xml_frequency" class="col-md-3">
             {t}XML Download Frequency{/t}
         </label>

@@ -124,7 +124,7 @@ class File
     /**
      * Extract an archive file.
      *
-     * @param string $file the file to extract
+     * @param string $file        the file to extract
      * @param string $destination the directory where to extract
      * @param string $file_ext
      *
@@ -710,7 +710,7 @@ class File
     }
 
     /**
-     * Get all files
+     * Get all files from the database and filesystem
      *
      * @return array of all file
      */
@@ -732,8 +732,7 @@ class File
         }
 
         // Look-up all existing files on the disk
-        $files = [];
-        var_dump(UP_PATH);
+        $fs_files = [];
         $folder = UP_PATH;
         $dir_handle = opendir($folder);
         while (false !== ($entry = readdir($dir_handle)))
@@ -742,7 +741,7 @@ class File
             {
                 continue;
             }
-            $files[] = $entry;
+            $fs_files[] = $entry;
         }
 
         $folder = UP_PATH . 'images' . DS;
@@ -753,42 +752,38 @@ class File
             {
                 continue;
             }
-            $files[] = 'images' . DS . $entry;
+            $fs_files[] = 'images' . DS . $entry;
         }
 
-        var_dump($files);
-
-        // Loop through database records and remove those entries from the list
-        // of files existing on the disk
+        // Loop through database records and remove those entries from the list of files existing on the disk
         $return_files = [];
         foreach ($db_files as $db_file)
         {
-            $search = array_search($db_file['file_path'], $files);
-            if ($search === false)
+            $key = array_search($db_file['file_path'], $fs_files, true);
+            if ($key === false) // files does not exist in the database
             {
-                $files_result['exists'] = false;
+                $db_file['exists'] = false;
             }
-            else
+            else // file does exist in the database
             {
-                unset($files[$search]);
-                $files_result['exists'] = true;
+                unset($fs_files[$key]); // remove it from fs_files
+                $db_file['exists'] = true;
             }
-            $return_files[] = $files_result;
+            $return_files[] = $db_file;
         }
+        // fs_files now contains only files that do not exist in the database
+        // and exist only on disk
+        $fs_files = array_values($fs_files);
 
-        var_dump($return_files);
-
-        // Reset indices
-        $files = array_values($files);
-        $files_count = count($files);
-        for ($i = 0; $i < $files_count; $i++)
+        // add files that exist on the disk but not in the database
+        foreach ($fs_files as $file_path)
         {
             $return_files[] = [
                 'id'         => false,
                 'addon_id'   => false,
                 'addon_type' => false,
                 'file_type'  => false,
-                'file_path'  => $files[$i],
+                'file_path'  => $file_path,
                 'exists'     => true
             ];
         }
