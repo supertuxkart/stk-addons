@@ -5,14 +5,16 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <h1>{t}Account Registration{/t}</h1>
-            {include file=#feedback_errors#}
+            {include file="feedback/errors.tpl"}
+            {include file="feedback/warnings.tpl"}
+            {include file="feedback/success.tpl"}
             {if $register.display_form==true}
                 <form id="register" action="register.php?action=register" method="POST" class="form-horizontal">
                     <table>
                         <tbody>
                         <tr>
                             <td>
-                                <label for="reg_user">{t}Username:{/t}</label><br>
+                                <label for="reg_user">{t}Username{/t}</label><br>
                                 <span class="subtext">
                                     ({t 1=$register.form.username.min}Must be at least %1 characters long.{/t})
                                 </span>
@@ -23,7 +25,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <label for="reg_pass">{t}Password:{/t}</label><br>
+                                <label for="reg_pass">{t}Password{/t}</label><br>
                                 <span class="subtext">
                                     ({t 1=$register.form.password.min}Must be at least %1 characters long.{/t})
                                 </span>
@@ -34,7 +36,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <label for="reg_pass2">{t}Password (confirm):{/t}</label>
+                                <label for="reg_pass2">{t}Password (confirm){/t}</label>
                             </td>
                             <td>
                                 <input type="password" class="form-control" name="pass2" id="reg_pass2">
@@ -42,7 +44,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <label for="reg_name">{t}Name:{/t}</label
+                                <label for="reg_name">{t}Name{/t}</label
                             </td>
                             <td>
                                 <input type="text" class="form-control" name="name" id="reg_name" value="{$register.form.name.value}">
@@ -92,6 +94,10 @@
                             </td>
                         </tr>
                         <tr>
+                            <td><label>{t}Verify that you are not a bot{/t}</label></td>
+                            <td>{$register.captcha}<hr></td>
+                        </tr>
+                        <tr>
                             <td></td>
                             <td>
                                 <input type="submit" class="btn btn-primary" value="{t}Register!{/t}">
@@ -101,7 +107,6 @@
                     </table>
                 </form>
             {/if}
-            {$confirmation|default:''}
         </div>
     </div>
 </div>

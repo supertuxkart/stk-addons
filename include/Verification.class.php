@@ -41,10 +41,11 @@ class Verification
     	        WHERE `userid` = :userid
                 AND `code` = :code",
                 DBConnection::ROW_COUNT,
-                array(
+                [
                     ':userid' => $userid,
                     ':code'   => $ver_code
-                )
+                ],
+                [':userid' => DBConnection::PARAM_INT]
             );
         }
         catch(DBException $e)
@@ -71,16 +72,14 @@ class Verification
      */
     public static function delete($userid)
     {
-        $count = DBConnection::get()->query(
-            "DELETE
-            FROM `" . DB_PREFIX . "verification`
-    	    WHERE `userid` = :userid",
-            DBConnection::ROW_COUNT,
-            array(
-                ':userid' => $userid
-            )
+        $count = DBConnection::get()->delete(
+            "verification",
+            "`userid` = :userid",
+            [':userid' => $userid],
+            [':userid' => DBConnection::PARAM_INT]
         );
-        if ($count === 0)
+
+        if (!$count)
         {
             throw new DBException();
         }
@@ -102,10 +101,11 @@ class Verification
             VALUES(:userid, :code)
             ON DUPLICATE KEY UPDATE code = :code",
             DBConnection::ROW_COUNT,
-            array(
-                ':userid' => (int)$userid,
-                ':code'   => (string)$verification_code
-            )
+            [
+                ':userid' => $userid,
+                ':code'   => $verification_code
+            ],
+            [':userid' => DBConnection::PARAM_INT]
         );
         if ($count === 0)
         {

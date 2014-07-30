@@ -19,16 +19,22 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
+use Captcha\Captcha;
 
-$_POST['user'] = (empty($_POST['user'])) ? null : $_POST['user'];
-$_POST['name'] = (empty($_POST['name'])) ? null : $_POST['name'];
-$_POST['mail'] = (empty($_POST['mail'])) ? null : $_POST['mail'];
+$_POST['user'] = empty($_POST['user']) ? null : $_POST['user'];
+$_POST['name'] = empty($_POST['name']) ? null : $_POST['name'];
+$_POST['mail'] = empty($_POST['mail']) ? null : $_POST['mail'];
+$_GET['action'] = empty($_GET['action']) ? null : $_GET['action'];
 
-$tpl = new StkTemplate('register.tpl');
-$tpl->assign('title', h(_('STK Add-ons') . ' | ' . _('Register')));
+$tpl = StkTemplate::get('register.tpl')->assignTitle(_h('Register'));
+
+// CAPTCHA
+$captcha = new Captcha();
+$captcha->setPublicKey(CAPTCHA_PUB)->setPrivateKey(CAPTCHA_PRIV);
 
 $register = [
     'display_form' => false,
+    'captcha'      => $captcha->html(),
     'form'         => [
         'username' => ['min' => 4, 'value' => h($_POST['user'])],
         'password' => ['min' => 8],
@@ -38,7 +44,6 @@ $register = [
 ];
 
 // define possibly undefined variables
-$_GET['action'] = (isset($_GET['action'])) ? $_GET['action'] : null;
 
 switch ($_GET['action'])
 {
@@ -49,9 +54,14 @@ switch ($_GET['action'])
             $errors = Validate::ensureInput($_POST, ["user", "pass1", "pass2", "mail", "name", "terms"]);
             if ($errors)
             {
-                $tpl->assign('errors', implode("<br>", $errors));
-                $register['display_form'] = true;
-                break;
+                throw new UserException(implode("<br>", $errors));
+            }
+
+            // check captcha
+            $response = $captcha->check();
+            if (!$response->isValid())
+            {
+                throw new UserException("The reCAPTCHA wasn't entered correctly. Go back and try it again.");
             }
 
             User::register(
@@ -64,7 +74,7 @@ switch ($_GET['action'])
             );
 
             $tpl->assign(
-                'confirmation',
+                'success',
                 _h("Account creation was successful. Please activate your account using the link emailed to you.")
             );
         }
@@ -75,21 +85,24 @@ switch ($_GET['action'])
         }
         break;
 
-    case 'valid':
+    case 'valid': // activation link
         try
         {
+            if (empty($_GET["num"]))
+            {
+
+            }
+
             $username = h($_GET['user']);
             $verification_code = h($_GET['num']);
+
             User::activate($username, $verification_code);
-            $tpl->assign('confirmation', _h('Your account has been activated.'));
+
+            $tpl->assign('success', _h('Your account has been activated.'));
         }
         catch(UserException $e)
         {
-            $tpl->assign('errors', $e->getMessage());
-            $tpl->assign(
-                'confirmation',
-                _h('Could not validate your account. The link you followed is not valid.')
-            );
+            $tpl->assign('errors', $e->getMessage() . ". " . _h('Could not validate your account. The link you followed is not valid.'));
         }
         break;
 
