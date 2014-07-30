@@ -28,8 +28,8 @@
 
     function onPageLoad() {
         $(".table-no-sort").DataTable({"bSort": false, "iDisplayLength": 25});
+        $(".table-sort").DataTable({"iDisplayLength": 10});
     }
-
 
     function manageFormSubmit(form_identifier, callback_success) {
         onFormSubmit(form_identifier, callback_success, $manage_body, json_url);

@@ -31,10 +31,11 @@ class Log
             "CALL `" . DB_PREFIX . "log_event`
             (:userid, :message)",
             DBConnection::NOTHING,
-            array(
+            [
                 ':userid'  => User::getLoggedId(),
                 ':message' => h($message)
-            )
+            ],
+            [':userid' => DBConnection::PARAM_INT]
         );
     }
 
@@ -46,7 +47,7 @@ class Log
      * @return array
      * @throws LogException
      */
-    public static function getEvents($number = 25)
+    public static function getEvents($number = 100)
     {
         if (!is_int($number))
         {
@@ -72,8 +73,8 @@ class Log
                 ORDER BY `l`.`date` DESC
                 LIMIT :limit',
                 DBConnection::FETCH_ALL,
-                array(':limit' => (int)$number),
-                array(':limit' => DBConnection::PARAM_INT)
+                [':limit' => $number],
+                [':limit' => DBConnection::PARAM_INT]
             );
         }
         catch(DBException $e)
