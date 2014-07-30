@@ -15,7 +15,8 @@
     "flot.tooltip": "~0.7.1",
     "datatables": "~1.10.0",
     "datatables-bootstrap3": "*",
-    "bootstrap-multiselect": "~0.9.6"
+    "bootstrap-multiselect": "~0.9.6",
+    "bootstrap-select": "~1.5.4"
   },
   "resolutions": {
     "jquery": "1.11.*",

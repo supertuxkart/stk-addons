@@ -99,7 +99,7 @@ class Template
      * @param string $key
      * @param mixed  $value May be a string or an array
      *
-     * @return Template
+     * @return $this
      */
     public function assign($key, $value)
     {

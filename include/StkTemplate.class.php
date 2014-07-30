@@ -248,7 +248,7 @@ class StkTemplate extends Template
      *
      * @param string $title
      *
-     * @return StkTemplate
+     * @return $this
      */
     public function assignTitle($title)
     {
@@ -263,7 +263,7 @@ class StkTemplate extends Template
      * @param string $content the js source code
      * @param string $order   ORDER_BEFORE to display before the include script or ORDER_AFTER to display after
      *
-     * @return StkTemplate
+     * @return $this
      * @throws InvalidArgumentException on invalid order
      */
     public function addScriptInline($content, $order)
@@ -284,7 +284,7 @@ class StkTemplate extends Template
      * @param string $location the path to get the resource from
      * @param bool   $ie       see if this script is for IE only, add it as a conditional
      *
-     * @return StkTemplate
+     * @return $this
      */
     public function addScriptInclude($src, $location = JS_LOCATION, $ie = false)
     {
@@ -300,7 +300,7 @@ class StkTemplate extends Template
      * @param string $location default path to look to
      * @param string $media
      *
-     * @return StkTemplate
+     * @return $this
      */
     public function addCssInclude($href, $location = CSS_LOCATION, $media = "")
     {
@@ -317,7 +317,7 @@ class StkTemplate extends Template
      *
      * @param string $desc the page description content
      *
-     * @return StkTemplate
+     * @return $this
      */
     public function setMetaDesc($desc)
     {
@@ -332,7 +332,7 @@ class StkTemplate extends Template
      * @param string $target  an destination url
      * @param int    $timeout in seconds
      *
-     * @return StkTemplate
+     * @return $this
      */
     public function setMetaRefresh($target, $timeout = 5)
     {
@@ -347,7 +347,7 @@ class StkTemplate extends Template
      * @param string $key   the attribute key
      * @param string $value the attribute value
      *
-     * @return StkTemplate
+     * @return $this
      */
     public function setMetaTag($key, $value)
     {
@@ -374,7 +374,7 @@ class StkTemplate extends Template
      * @link http://davidstutz.github.io/bootstrap-multiselect/
      * @return $this
      */
-    public function addMultiSelectLibrary()
+    public function addBootstrapMultiSelectLibrary()
     {
         $this->addCssInclude("bootstrap-multiselect/css/bootstrap-multiselect.css", LIBS_LOCATION);
         $this->addScriptInclude("bootstrap-multiselect/js/bootstrap-multiselect.js", LIBS_LOCATION);
@@ -383,10 +383,24 @@ class StkTemplate extends Template
     }
 
     /**
+     * Add bootstrap select plugin
+     *
+     * @link http://silviomoreto.github.io/bootstrap-select/
+     * @return $this
+     */
+    public function addBootstrapSelectLibrary()
+    {
+        $this->addCssInclude("bootstrap-select/bootstrap-select.css", LIBS_LOCATION);
+        $this->addScriptInclude("bootstrap-select/bootstrap-select.js", LIBS_LOCATION);
+
+        return $this;
+    }
+
+    /**
      * Add twitter typehead library for autocompletion
      *
      * @link http://twitter.github.io/typeahead.js/
-     * @return $this
+     * @return StkTemplate
      */
     public function addTypeHeadLibrary()
     {
@@ -399,7 +413,7 @@ class StkTemplate extends Template
      * Add the editor library
      *
      * @link https://github.com/Waxolunist/bootstrap3-wysihtml5-bower
-     * @return $this
+     * @return StkTemplate
      */
     public function addWYSIWYGLibrary()
     {

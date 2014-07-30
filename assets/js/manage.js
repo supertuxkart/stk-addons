@@ -34,7 +34,9 @@
     $('a.manage-list').click(function() {
         History.pushState(null, '', this.href);
         var view = getUrlVars(this.href)['view'];
-        loadContent($manage_body, SITE_ROOT + 'manage-panel.php', {view: view});
+        loadContent($manage_body, SITE_ROOT + 'manage-panel.php', {view: view}, function() {
+
+        });
 
         return false;
     });

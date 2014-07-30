@@ -198,7 +198,12 @@ switch ($_GET['view'])
         $items = [];
         foreach ($files as $file)
         {
-            //var_dump($file);
+            if (!isset($file["file_type"]))
+            {
+                continue;
+            }
+            var_dump($file);
+
             switch ($file["file_type"])
             {
                 case false:
@@ -246,7 +251,7 @@ switch ($_GET['view'])
                     break;
             }
 
-            if ($file["exists"] == false)
+            if (!$file["exists"])
             {
                 $references .= ' <span class="error">File not found.</span>';
             }
@@ -256,7 +261,7 @@ switch ($_GET['view'])
         }
 
         $tplData["items"] = $items;
-        $tpl->assign("files", $tplData);
+        $tpl->assign("upload", $tplData);
         break;
 
     case 'logs':

@@ -733,16 +733,18 @@ class File
 
         // Look-up all existing files on the disk
         $files = [];
+        var_dump(UP_PATH);
         $folder = UP_PATH;
         $dir_handle = opendir($folder);
         while (false !== ($entry = readdir($dir_handle)))
         {
-            if (is_dir($folder . $entry))
+            if (is_dir($folder . $entry)) // ignore folders
             {
                 continue;
             }
             $files[] = $entry;
         }
+
         $folder = UP_PATH . 'images' . DS;
         $dir_handle = opendir($folder);
         while (false !== ($entry = readdir($dir_handle)))
@@ -754,23 +756,27 @@ class File
             $files[] = 'images' . DS . $entry;
         }
 
+        var_dump($files);
+
         // Loop through database records and remove those entries from the list
         // of files existing on the disk
         $return_files = [];
         foreach ($db_files as $db_file)
         {
             $search = array_search($db_file['file_path'], $files);
-            if ($search !== false)
+            if ($search === false)
+            {
+                $files_result['exists'] = false;
+            }
+            else
             {
                 unset($files[$search]);
                 $files_result['exists'] = true;
             }
-            else
-            {
-                $files_result['exists'] = false;
-            }
             $return_files[] = $files_result;
         }
+
+        var_dump($return_files);
 
         // Reset indices
         $files = array_values($files);

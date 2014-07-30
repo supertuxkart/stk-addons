@@ -169,7 +169,7 @@ $tpl = StkTemplate::get("addons.tpl")
     ->assign("title", $title)
     ->assign("is_name", $_GET['name'])
     ->addUtilLibrary()
-    ->addMultiSelectLibrary()
+    ->addBootstrapMultiSelectLibrary()
     ->addScriptInclude("addon.js");
 $tplData = [
     'menu'   => Util::ob_get_require_once(ROOT_PATH . "addons-menu.php"),
