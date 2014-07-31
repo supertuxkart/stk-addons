@@ -26,8 +26,6 @@
  */
 class Cache
 {
-
-
     /**
      * Empty the cache folder, leave certain files in place
      *
@@ -196,7 +194,7 @@ class Cache
         }
 
         // image does with tha id does not exist in the database
-        if (empty($file))
+        if (!$file)
         {
             return [
                 'url'      => IMG_LOCATION . 'notfound.png',

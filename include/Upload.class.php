@@ -583,7 +583,7 @@ class Upload
         }
 
         $file_id = static::generateUniqueFileName($this->destination, $file_ext);
-        $this->upload_name = $this->destination . $file_id . $file_ext;
+        $this->upload_name = $this->destination . $file_id . "." . $file_ext;
     }
 
     /**
