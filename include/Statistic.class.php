@@ -306,6 +306,11 @@ class Statistic
                 throw new StatisticException(_h("Tried to build a chart"));
             }
 
+            if (!$data)
+            {
+                return "<div class='alert alert-info'>No data available for chart</div>";
+            }
+
             $columns = array_keys($data[0]);
             $count_columns = count($columns);
 

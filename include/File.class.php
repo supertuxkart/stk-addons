@@ -571,7 +571,7 @@ class File
     /**
      * Recursively delete a directory. This does not touch the database.
      *
-     * @param string      $dir the directory to delete
+     * @param string      $dir          the directory to delete
      * @param string|null $exclude_regex
      *
      * @throws FileException only in debug mode
@@ -590,27 +590,33 @@ class File
         $oDir = dir($dir);
         while (($sFile = $oDir->read()) !== false)
         {
-            if ($sFile !== '.' && $sFile !== '..')
+            if ($sFile === '.' || $sFile === '..')
             {
-                if ($exclude_regex && preg_match($exclude_regex, $sFile))
-                {
-                    continue;
-                }
+                continue;
+            }
 
-                // delete file or directory
-                $file_path = $dir . DS . $sFile;
-                if (!is_link($file_path) && is_dir($file_path))
-                {
-                    File::deleteDir($file_path);
-                }
-                else
-                {
-                    unlink($file_path);
-                }
+            if ($exclude_regex && preg_match($exclude_regex, $sFile))
+            {
+                continue;
+            }
+
+            // delete file or directory
+            $file_path = $dir . DS . $sFile;
+            if (!is_link($file_path) && is_dir($file_path))
+            {
+                static::deleteDir($file_path);
+            }
+            else
+            {
+                unlink($file_path);
             }
         }
         $oDir->close();
-        rmdir($dir);
+
+        if(!$exclude_regex) // remove root directory only if no exclude regex was given
+        {
+            rmdir($dir);
+        }
     }
 
     /**

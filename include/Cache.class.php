@@ -35,10 +35,9 @@ class Cache
      *
      * @return bool
      */
-    public static function clear($exclude_regex = '/^(cache_graph_.*\.png)$/i')
+    public static function clear($exclude_regex = '/^^(cache_graph_.*\.json)|\.gitignore$/i')
     {
         File::deleteDir(CACHE_PATH, $exclude_regex);
-        mkdir(CACHE_PATH);
 
         try
         {
