@@ -1,7 +1,6 @@
 {config_load file="{$smarty.current_dir}/tpl.conf"}
 {include file=#header#}
 <div id="container" class="login-main">
-    {include file=#feedback_errors#}
     <div id="login-form">
         {include file="feedback/errors.tpl"}
         {include file="feedback/warnings.tpl"}

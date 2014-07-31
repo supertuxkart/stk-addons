@@ -456,7 +456,7 @@ class User extends Base
         catch(UserException $e)
         {
             static::logout();
-            throw new UserException($e->getMessage());
+            throw new UserException(_h("Username or password is invalid"));
         }
 
         $id = $user->getId();
