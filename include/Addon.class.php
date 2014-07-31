@@ -1483,7 +1483,7 @@ class Addon extends Base
                 // Make sure an icon file is set for kart
                 if ($addon->getImage(true) != 0)
                 {
-                    $im = Cache::getImage($addon->getImage(true), ['size' => 'small']);
+                    $im = Cache::getImage($addon->getImage(true), SImage::SIZE_SMALL);
                     if ($im['exists'] && $im['approved'])
                     {
                         $icon = $im['url'];

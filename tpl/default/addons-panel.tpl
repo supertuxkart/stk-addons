@@ -70,8 +70,7 @@
 
 {if $addon.dl}
     <br>
-    <br>
-    {t}Download this add-on in game!{/t}
+    <p>{t}Download this add-on in game!{/t}</p>
 {/if}
 
 <h3>{t}License{/t}</h3>

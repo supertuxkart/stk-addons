@@ -17,8 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
 
-$type = (isset($_GET['type'])) ? $_GET['type'] : null;
-Util::resizeImage($_GET['pic'], $type);
+$size = empty($_GET['size']) ? null : $_GET['size'];
+$file = empty($_GET['pic']) ? null : $_GET['pic'];
+Util::resizeImage($file, (int)$size);

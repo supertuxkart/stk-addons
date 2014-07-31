@@ -27,14 +27,16 @@
 class Cache
 {
 
+
     /**
      * Empty the cache folder, leave certain files in place
      *
+     * @param string $exclude_regex files to exclude regex
+     *
      * @return bool
      */
-    public static function clear()
+    public static function clear($exclude_regex = '/^(cache_graph_.*\.png)$/i')
     {
-        $exclude_regex = '/^(cache_graph_.*\.png)$/i';
         File::deleteDir(CACHE_PATH, $exclude_regex);
         mkdir(CACHE_PATH);
 
@@ -51,12 +53,8 @@ class Cache
                 {
                     continue;
                 }
-                DBConnection::get()->query(
-                    'DELETE FROM `' . DB_PREFIX . 'cache`
-                    WHERE `file` = :file',
-                    DBConnection::NOTHING,
-                    [':file' => $cache_item['file']]
-                );
+
+                DBConnection::get()->delete("cache", "`file` = :file", [':file' => $cache_item['file']]);
             }
         }
         catch(DBException $e)
@@ -70,7 +68,7 @@ class Cache
     /**
      * Clear the addon cache files
      *
-     * @param string $addon
+     * @param string $addon the addon id
      *
      * @return bool
      */
@@ -94,20 +92,16 @@ class Cache
             foreach ($cache_list AS $cache_item)
             {
                 unlink(CACHE_PATH . $cache_item['file']);
-                DBConnection::get()->query(
-                    'DELETE FROM `' . DB_PREFIX . 'cache`
-                    WHERE `file` = :file',
-                    DBConnection::NOTHING,
-                    [':file' => $cache_item['file']]
-                );
-            }
 
-            return true;
+                DBConnection::get()->delete("cache", "`file` = :file", [':file' => $cache_item['file']]);
+            }
         }
         catch(DBException $e)
         {
             return false;
         }
+
+        return true;
     }
 
     /**
@@ -177,22 +171,22 @@ class Cache
     /**
      * Get image properties for a cacheable image
      *
-     * @param integer $id
-     * @param array   $props
+     * @param int $id   the id of the file
+     * @param int $size image size, see SImage::SIZE_
      *
      * @return array
      * @throws CacheException
      */
-    public static function getImage($id, $props = [])
+    public static function getImage($id, $size = null)
     {
         try
         {
-            $result = DBConnection::get()->query(
+            $file = DBConnection::get()->query(
                 'SELECT `file_path`, `approved`
                 FROM `' . DB_PREFIX . 'files`
                 WHERE `id` = :id
                 LIMIT 1',
-                DBConnection::FETCH_ALL,
+                DBConnection::FETCH_FIRST,
                 [':id' => $id],
                 [':id' => DBConnection::PARAM_INT]
             );
@@ -202,7 +196,8 @@ class Cache
             throw new CacheException('Failed to look up image file.');
         }
 
-        if (empty($result))
+        // image does with tha id does not exist in the database
+        if (empty($file))
         {
             return [
                 'url'      => IMG_LOCATION . 'notfound.png',
@@ -212,22 +207,21 @@ class Cache
         }
 
         $return = [
-            'url'      => DOWNLOAD_LOCATION . $result[0]['file_path'],
-            'approved' => (bool)$result[0]['approved'],
+            'url'      => DOWNLOAD_LOCATION . $file['file_path'],
+            'approved' => (bool)$file['approved'],
             'exists'   => true
         ];
 
-        $cache_prefix = null;
-        if (array_key_exists('size', $props))
-        {
-            $cache_prefix = Cache::cachePrefix($props['size']);
+        $cache_prefix = $size ? Cache::cachePrefix($size) : "";
 
-            $return['url'] = SITE_ROOT . 'image.php?type=' . $props['size'] . '&amp;pic=' . $result[0]['file_path'];
+        // image exists in cache
+        if (Cache::fileExists($cache_prefix . basename($file['file_path'])))
+        {
+            $return['url'] = CACHE_LOCATION . $cache_prefix . basename($file['file_path']);
         }
-
-        if (Cache::fileExists($cache_prefix . basename($result[0]['file_path'])))
+        else // create new cache by resizing the image
         {
-            $return['url'] = CACHE_LOCATION . $cache_prefix . basename($result[0]['file_path']);
+            $return['url'] = SITE_ROOT . 'image.php?size=' . $size . '&amp;pic=' . $file['file_path'];
         }
 
         return $return;
@@ -236,27 +230,28 @@ class Cache
     /**
      * @param string $size
      *
-     * @return null|string
+     * @return string
      */
-    private static function cachePrefix($size)
+    public static function cachePrefix($size)
     {
-        if (empty($size))
+        if (!$size)
         {
-            return null;
+            return '';
         }
-        if ($size === 'big')
+
+        if ($size === SImage::SIZE_BIG)
         {
             return '300--';
         }
-        if ($size === 'medium')
+        if ($size === SImage::SIZE_MEDIUM)
         {
             return '75--';
         }
-        if ($size === 'small')
+        if ($size === SImage::SIZE_SMALL)
         {
             return '25--';
         }
 
-        return null;
+        return '100--';
     }
 }

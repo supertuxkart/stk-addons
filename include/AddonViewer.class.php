@@ -100,7 +100,7 @@ class AddonViewer
         }
 
         // Get image url
-        $image = Cache::getImage($this->addon->getImage(), ['size' => 'big']);
+        $image = Cache::getImage($this->addon->getImage(), SImage::SIZE_BIG);
         if ($this->addon->getImage() != 0 && $image['exists'] == true && $image['approved'] == true)
         {
             $tpl['image_url'] = $image['url'];
@@ -181,7 +181,7 @@ class AddonViewer
         $image_files_db = $this->addon->getImages();
         foreach ($image_files_db as $image)
         {
-            $imageCache = Cache::getImage($image['id'], ['size' => 'medium']);
+            $imageCache = Cache::getImage($image['id'], SImage::SIZE_MEDIUM);
             $image['thumb']['url'] = $imageCache['url'];
             $image['url'] = DOWNLOAD_LOCATION . $image['file_path'];
             $image['approved'] = (bool)$image['approved'];

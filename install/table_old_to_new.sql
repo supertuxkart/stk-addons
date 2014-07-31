@@ -90,7 +90,7 @@ CREATE PROCEDURE `convert_to_utf8`()
             ALTER TABLE `v2_cache` ENGINE = InnoDB;
             ALTER TABLE `v2_cache` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
-            ALTER TABLE `v2_cache` CHANGE `file` `file` VARCHAR( 30 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL ;
+            ALTER TABLE `v2_cache` CHANGE `file` `file` VARCHAR( 128 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL ;
             ALTER TABLE `v2_cache` CHANGE `addon` `addon` VARCHAR( 30 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL ;
             ALTER TABLE `v2_cache` CHANGE `props` `props` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL ;
 

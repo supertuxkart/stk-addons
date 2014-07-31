@@ -188,7 +188,7 @@ class Util
     /**
      * A time is old enough if the current time is greater than the user time + the max age
      *
-     * @param int $time current time in seconds
+     * @param int $time    current time in seconds
      * @param int $max_age max time in seconds
      *
      * @return bool
@@ -346,7 +346,7 @@ class Util
         foreach ($hashes as $hash)
         {
             $hash = explode("=", $hash);
-            // key => balue
+            // key => value
             $vars[$hash[0]] = $hash[1];
         }
 
@@ -609,46 +609,71 @@ class Util
     /**
      * Resize an image, and send the new resized image to the user with http headers
      *
-     * @param string      $file
-     * @param string|null the type of image
+     * @param string $file
+     * @param int    $orig_size the size of the image
      *
      * @return null
      */
-    public static function resizeImage($file, $type = null)
+    public static function resizeImage($file, $orig_size = null)
     {
-        // Determine image size
-        switch ($type)
+        // file is invalid
+        if (!$file)
         {
-            case 'small':
+            header('HTTP/1.1 404 Not Found');
+            if (DEBUG_MODE)
+            {
+                echo "file is empty";
+            }
+
+            return;
+        }
+
+        // Determine image size
+        switch ($orig_size)
+        {
+            case SImage::SIZE_SMALL:
                 $size = 25;
                 break;
-            case 'medium':
+
+            case SImage::SIZE_MEDIUM:
                 $size = 75;
                 break;
-            case 'big':
+
+            case SImage::SIZE_BIG:
                 $size = 300;
                 break;
+
             default:
                 $size = 100;
                 break;
         }
-        $cache_name = $size . '--' . basename($file);
-        $local_path = UP_PATH . $file;
 
-        // Check if image exists, and if it does, check its format
+        $cache_name = Cache::cachePrefix($orig_size) . basename($file);
+        $local_path = UP_PATH . $file; // all images should be in our upload directory
+
+        // Check if image exists in the database
         $orig_file = File::exists($file);
-        if ($orig_file)
+        if (!$orig_file)
         {
-            if (!file_exists(ROOT_PATH . $file))
+            header('HTTP/1.1 404 Not Found');
+            if (DEBUG_MODE)
             {
-                header('HTTP/1.1 404 Not Found');
+                echo sprintf("%s does not exist in the database", $file);
+            }
 
-                return;
-            }
-            else
+            return;
+        }
+
+        // file does not exist on disk
+        if (!file_exists($local_path))
+        {
+            header('HTTP/1.1 404 Not Found');
+            if (DEBUG_MODE)
             {
-                $local_path = ROOT_PATH . $file;
+                echo sprintf("%s does not exist on the disk", $file);
             }
+
+            return;
         }
 
         // Check if a cached version is available
@@ -661,20 +686,22 @@ class Util
         }
 
         // Start processing the original file
-        $image_info = @getimagesize($local_path);
+        $image_info = getimagesize($local_path);
         switch ($image_info[2])
         {
-            default:
-                $source = imagecreatefrompng(IMG_LOCATION . 'notfound.png');
-                $format = 'png';
-                break;
             case IMAGETYPE_PNG:
                 $source = imagecreatefrompng($local_path);
                 $format = 'png';
                 break;
+
             case IMAGETYPE_JPEG:
                 $source = imagecreatefromjpeg($local_path);
                 $format = 'jpg';
+                break;
+
+            default:
+                $source = imagecreatefrompng(IMG_LOCATION . 'notfound.png');
+                $format = 'png';
                 break;
         }
 

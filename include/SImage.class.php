@@ -26,6 +26,21 @@
 class SImage
 {
     /**
+     * @const int
+     */
+    const SIZE_SMALL = 1;
+
+    /**
+     * @const int
+     */
+    const SIZE_MEDIUM = 2;
+
+    /**
+     * @const int
+     */
+    const SIZE_BIG = 3;
+
+    /**
      * @var string
      */
     public $path;

@@ -113,7 +113,7 @@ class File
             return 0;
         }
 
-        if (empty($files))
+        if (empty($file))
         {
             return 0;
         }
@@ -771,9 +771,8 @@ class File
             }
             $return_files[] = $db_file;
         }
-        // fs_files now contains only files that do not exist in the database
-        // and exist only on disk
-        $fs_files = array_values($fs_files);
+        // fs_files now contains only files that do not exist in the database and exist only on disk
+        $fs_files = array_values($fs_files); // reset indices
 
         // add files that exist on the disk but not in the database
         foreach ($fs_files as $file_path)

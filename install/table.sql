@@ -141,7 +141,7 @@ CREATE TABLE IF NOT EXISTS `v2_arenas_revs` (
 --
 
 CREATE TABLE IF NOT EXISTS `v2_cache` (
-    `file`  VARCHAR(30) NOT NULL,
+    `file`  VARCHAR(128) NOT NULL,
     `addon` VARCHAR(30) DEFAULT NULL,
     `props` TEXT,
     UNIQUE KEY `file` (`file`)
