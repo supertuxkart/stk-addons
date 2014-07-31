@@ -24,32 +24,41 @@ class Log
      * Add an event to the event log
      *
      * @param string $message Event description
+     *
+     * @throws LogException
      */
     public static function newEvent($message)
     {
-        DBConnection::get()->query(
-            "CALL `" . DB_PREFIX . "log_event`
-            (:userid, :message)",
-            DBConnection::NOTHING,
-            [
-                ':userid'  => User::getLoggedId(),
-                ':message' => h($message)
-            ],
-            [':userid' => DBConnection::PARAM_INT]
-        );
+        try
+        {
+            DBConnection::get()->query(
+                "CALL `" . DB_PREFIX . "log_event`
+                (:userid, :message)",
+                DBConnection::NOTHING,
+                [
+                    ':userid'  => User::getLoggedId(),
+                    ':message' => h($message)
+                ],
+                [':userid' => DBConnection::PARAM_INT]
+            );
+        }
+        catch(DBException $e)
+        {
+            throw new LogException('Failed to log new event.');
+        }
     }
 
     /**
-     * Return an array of the $number latest events that were logged
+     * Return an array of the latest events that were logged
      *
-     * @param int $number
+     * @param int $limit
      *
      * @return array
      * @throws LogException
      */
-    public static function getEvents($number = 100)
+    public static function getEvents($limit = 100)
     {
-        if (!is_int($number))
+        if (!is_int($limit))
         {
             throw new LogException('$number must be an integer.');
         }
@@ -73,7 +82,7 @@ class Log
                 ORDER BY `l`.`date` DESC
                 LIMIT :limit',
                 DBConnection::FETCH_ALL,
-                [':limit' => $number],
+                [':limit' => $limit],
                 [':limit' => DBConnection::PARAM_INT]
             );
         }
@@ -115,6 +124,7 @@ class Log
 
     /**
      * Set the mailed flag on all log messages
+     *
      * @throws Exception
      */
     public static function setAllEventsMailed()
