@@ -1006,7 +1006,7 @@ class Addon extends Base
         {
             DBConnection::get()->query(
                 'UPDATE `' . DB_PREFIX . 'addons`
-                SET `license` = :license,
+                SET `license` = :license
                 WHERE `id` = :addon_id',
                 DBConnection::NOTHING,
                 [
@@ -1036,7 +1036,7 @@ class Addon extends Base
         {
             DBConnection::get()->query(
                 'UPDATE `' . DB_PREFIX . 'addons`
-                SET `name` = :name,
+                SET `name` = :name
                 WHERE `id` = :addon_id',
                 DBConnection::NOTHING,
                 [

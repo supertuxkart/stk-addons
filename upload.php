@@ -21,9 +21,9 @@ require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
 AccessControl::setLevel(AccessControl::PERM_ADD_ADDON);
 
 // Define possibly undefined variables
-$action = (isset($_GET['action'])) ? $_GET['action'] : null;
-$type = (isset($_GET['type'])) ? $_GET['type'] : null;
-$name = (isset($_GET['name'])) ? $_GET['name'] : null;
+$action = isset($_GET['action']) ? $_GET['action'] : null;
+$type = isset($_GET['type']) ? $_GET['type'] : null;
+$name = isset($_GET['name']) ? $_GET['name'] : null;
 
 $tpl = StkTemplate::get('upload.tpl')->addScriptInclude("upload.js");
 

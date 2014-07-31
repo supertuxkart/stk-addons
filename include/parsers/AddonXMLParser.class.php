@@ -75,6 +75,9 @@ class AddonXMLParser extends Parser
     }
 
     /**
+     * Get the attributes from the addon file.
+     * Attributes include: screenshot, version, name, etc
+     *
      * @return array
      */
     public function addonFileAttributes()
@@ -83,11 +86,11 @@ class AddonXMLParser extends Parser
         $attributes = [];
         foreach ($this->values as $val)
         {
-            if ($val['tag'] !== $this->file_type)
+            if ($val['tag'] !== $this->file_type) // tag is not a file type aka is not a track or kart
             {
                 continue;
             }
-            if (!isset($val['attributes']))
+            if (!isset($val['attributes'])) // tag does not have attributes
             {
                 continue;
             }
@@ -121,6 +124,8 @@ class AddonXMLParser extends Parser
     }
 
     /**
+     * Write new attributes back to the file
+     *
      * @throws XMLParserException
      */
     public function writeAttributes()
@@ -156,7 +161,7 @@ class AddonXMLParser extends Parser
                 foreach ($val['attributes'] as $attribute => $value)
                 {
                     // Add attributes to the root element
-                    if ($val['tag'] == $this->file_type)
+                    if ($val['tag'] === $this->file_type)
                     {
                         $attribute = mb_strtolower($attribute);
                         if (isset($this->attributes[$attribute]))
@@ -177,9 +182,9 @@ class AddonXMLParser extends Parser
                 }
 
                 // Write any remaining attributes that we wanted to set
-                if ($val['tag'] == $this->file_type)
+                if ($val['tag'] === $this->file_type)
                 {
-                    foreach ($this->attributes AS $attb => $attb_val)
+                    foreach ($this->attributes as $attb => $attb_val)
                     {
                         $writer->writeAttribute($attb, $attb_val);
                     }

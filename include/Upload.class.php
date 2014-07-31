@@ -249,7 +249,7 @@ class Upload
         }
 
         // Make sure the parser found a license file, and load it into the xml atributes
-        if (!isset($this->properties['license_file']))
+        if (empty($this->properties['license_file']))
         {
             throw new UploadException(_h(
                     'A valid License.txt file was not found. Please add a License.txt file to your archive and re-submit it.'
@@ -325,7 +325,11 @@ class Upload
 
             if (!file_exists($image_file))
             {
-                throw new UploadException(_h("A screenshot/icon file does not exist. Please upload one"));
+                if (DEBUG_MODE)
+                {
+                    var_dump($image_file);
+                }
+                throw new UploadException(_h("A screenshot/icon file does not exist in the archive(file name is case sensitive)"));
             }
 
             // Get image file extension
@@ -435,7 +439,7 @@ class Upload
         {
             unlink($this->upload_name);
 
-            if ($_POST['upload-type'] !== 'source')
+            if ($this->expected_file_type !== File::SOURCE)
             {
                 $this->properties['xml_attributes']['fileid'] = 0;
             }
@@ -459,12 +463,10 @@ class Upload
         }
 
 
-        if ($_POST['upload-type'] === 'source')
+        if ($this->expected_file_type === File::SOURCE)
         {
             $this->success[] = _h('Successfully uploaded source archive.');
-            $this->success[] = '<a href="' . File::rewrite(
-                    'addons.php?type=' . $this->upload_type . '&amp;name=' . $this->addon_id
-                ) . '">' . _h('Continue.') . '</a>';
+            $this->success[] = File::link('addons.php?type=' . $this->upload_type . '&amp;name=' . $this->addon_id, _h('Continue.'));
 
             return null;
         }
@@ -479,19 +481,10 @@ class Upload
         $this->properties['xml_attributes']['image'] = $this->properties['image_file'];
         $this->properties['xml_attributes']['missing_textures'] = $this->properties['missing_textures'];
 
+        // add addon to database
         try
         {
-            if (!Addon::exists($this->addon_id))
-            {
-                // Check if we were trying to add a new revision
-                if ($this->properties['addon_revision'] != 1)
-                {
-                    throw new UploadException(_h('You are trying to add a new revision of an add-on that does not exist.'));
-                }
-
-                Addon::create($this->upload_type, $this->properties['xml_attributes'], $file_id, $this->moderator_message);
-            }
-            else
+            if (Addon::exists($this->addon_id)) // new revision
             {
                 $addon = Addon::get($this->addon_id);
 
@@ -501,6 +494,16 @@ class Upload
                     throw new UploadException(_h('You do not have the necessary permissions to perform this action.'));
                 }
                 $addon->createRevision($this->properties['xml_attributes'], $file_id, $this->moderator_message);
+            }
+            else // new addon
+            {
+                // Check if we were trying to add a new revision
+                if ($this->properties['addon_revision'] != 1)
+                {
+                    throw new UploadException(_h('You are trying to add a new revision of an add-on that does not exist.'));
+                }
+
+                Addon::create($this->upload_type, $this->properties['xml_attributes'], $file_id, $this->moderator_message);
             }
         }
         catch(AddonException $e)
@@ -630,13 +633,13 @@ class Upload
                             continue;
                         }
 
-                        if ($this->properties['xml_attributes']['arena'] != 'Y')
+                        if ($this->properties['xml_attributes']['arena'] === 'Y')
                         {
-                            $this->upload_type = Addon::TRACK;
+                            $this->upload_type = Addon::ARENA;
                         }
                         else
                         {
-                            $this->upload_type = Addon::ARENA;
+                            $this->upload_type = Addon::TRACK;
                         }
                     }
                     else
@@ -645,6 +648,7 @@ class Upload
                         {
                             continue;
                         }
+
                         $this->upload_type = Addon::KART;
                     }
 
@@ -692,7 +696,7 @@ class Upload
     }
 
     /**
-     *
+     * Rewrite the addon file with the revision attribute
      */
     private function editInfoFile()
     {
