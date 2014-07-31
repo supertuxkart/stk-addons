@@ -25,9 +25,14 @@ $action = isset($_GET['action']) ? $_GET['action'] : null;
 $type = isset($_GET['type']) ? $_GET['type'] : null;
 $name = isset($_GET['name']) ? $_GET['name'] : null;
 
-$tpl = StkTemplate::get('upload.tpl')->addScriptInclude("upload.js");
+$tpl = StkTemplate::get('upload.tpl')
+    ->addBootstrapFileInputLibrary()
+    ->addScriptInclude("upload.js");
 
 $upload_form = [
+    "action"  => $action,
+    "type"    => $type,
+    "name"    => $name,
     "display" => true,
     "form"    => [
         // new addon revision

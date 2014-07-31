@@ -20,6 +20,8 @@
 (function($) {
     "use strict";
 
+    $("#file_addon").fileinput({showUpload: false});
+
     var $radio_author1 = $("#l_author1"),
         $radio_author2 = $("#l_author2"),
         $checkbox_license1 = $("#l_licensefile1"),

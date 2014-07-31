@@ -16,7 +16,8 @@
     "datatables": "~1.10.0",
     "datatables-bootstrap3": "*",
     "bootstrap-multiselect": "~0.9.6",
-    "bootstrap-select": "~1.5.4"
+    "bootstrap-select": "~1.5.4",
+    "bootstrap-fileinput": "~1.9.0"
   },
   "resolutions": {
     "jquery": "1.11.*",

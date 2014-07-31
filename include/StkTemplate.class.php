@@ -397,6 +397,20 @@ class StkTemplate extends Template
     }
 
     /**
+     * Add bootstrap file input plugin
+     *
+     * @link https://github.com/kartik-v/bootstrap-fileinput
+     * @return $this
+     */
+    public function addBootstrapFileInputLibrary()
+    {
+        $this->addCssInclude("bootstrap-fileinput/css/fileinput.css", LIBS_LOCATION);
+        $this->addScriptInclude("bootstrap-fileinput/js/fileinput.js", LIBS_LOCATION);
+
+        return $this;
+    }
+
+    /**
      * Add twitter typehead library for autocompletion
      *
      * @link http://twitter.github.io/typeahead.js/
