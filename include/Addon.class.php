@@ -166,6 +166,11 @@ class Addon extends Base
 
             $this->revisions[$rev['revision']] = $currentRev;
         }
+
+        if(!$this->latestRevision)
+        {
+            throw new AddonException(_h("Did not found latest revision (possibly wrong status) This should never happen"));
+        }
     }
 
     /**
@@ -1632,7 +1637,7 @@ class Addon extends Base
                   AND `r`.`status` & :latest_bit ';
         $db_params = [
             ':type'       => $type,
-            ':latest_bit' => F_LATEST
+            ':latest_bit' => F_LATEST // retrieve only the latest addons
         ];
         $db_types = [];
 
