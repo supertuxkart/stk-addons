@@ -477,12 +477,6 @@ div.image_thumb_container {
     text-align: center;
 }
 
-#addon-image {
-    display: block;
-    /*float: right;*/
-    text-align: center;
-}
-
 #addon_flags th {
     vertical-align: bottom;
 }

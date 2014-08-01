@@ -1,5 +1,5 @@
 {config_load file="{$smarty.current_dir}/tpl.conf"}
-{$form_action="upload.php?type={$addon.type}&amp;name={$addon.name}"}
+{$upload_location="upload.php?type={$addon.type}&amp;name={$addon.name}"}
 <div itemscope itemtype="http://www.schema.org/CreativeWork">
     <h1>
         <span itemprop="name">{$addon.name}</span>
@@ -18,7 +18,7 @@
     </h1>
 
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-6">
             {$addon.badges}
             <span id="addon-description" itemprop="description">{$addon.description}</span>
             <table class="table">
@@ -56,14 +56,13 @@
                 {/if}
             </table>
         </div>
-        <div class="col-md-2">
-            <div id="addon-image">
+        <div class="col-md-6">
+            <div class="text-center">
                 {if $addon.image_url}
-                    <img class="preview" src="{$addon.image_url}" itemprop="image" />
+                    <img class="preview" src="{$addon.image_url}" itemprop="image"><br>
                 {/if}
                 {if $can_edit}
-                    <br >
-                    <a href="{$form_action}&amp;action=file" class="btn btn-default">{t}Upload Image{/t}</a>
+                    <a href="{$upload_location}&amp;action=file" class="btn btn-default">{t}Upload Image{/t}</a>
                 {/if}
             </div>
         </div>
@@ -86,9 +85,7 @@
 <h3>{t}Revisions{/t}</h3>
 {if $can_edit}
     <div class="pull-right">
-        <form method="POST" action="{$form_action}">
-            <input type="submit" class="btn btn-default" value="{t}Upload Revision{/t}" />
-        </form>
+        <a href="{$upload_location}" class="btn btn-default">{t}Upload Revision{/t}</a>
     </div>
 {/if}
 {foreach $addon.view_revisions as $revision}
@@ -101,9 +98,7 @@
 <h3>{t}Images{/t}</h3>
 {if $can_edit}
     <div class="pull-right">
-        <form method="POST" action="{$form_action}&amp;action=file">
-            <input type="submit" class="btn btn-default" value="{t}Upload Image{/t}">
-        </form>
+        <a class="btn btn-default" href="{$upload_location}&amp;action=file">{t}Upload Image{/t}</a>
     </div>
 {/if}
 <div class="image_thumbs">
@@ -143,9 +138,7 @@
 <h3>{t}Source Files{/t}</h3>
 {if $can_edit}
     <div class="pull-right">
-        <form method="POST" action="{$form_action}&amp;action=file">
-            <input type="submit" class="btn btn-default" value="{t}Upload Source File{/t}">
-        </form>
+        <a href="{$upload_location}&amp;action=file" class="btn btn-default">{t}Upload Source File{/t}</a>
     </div>
 {/if}
 <table>
