@@ -17,53 +17,57 @@
         </div>
     </h1>
 
-    <div id="addon-image">
-        {if $addon.image_url}
-            <img class="preview" src="{$addon.image_url}" itemprop="image" />
-        {/if}
-        {if $can_edit}
-            <br >
-            <a href="{$form_action}&amp;action=file" class="btn btn-default">{t}Upload Image{/t}</a>
-        {/if}
+    <div class="row">
+        <div class="col-md-8">
+            {$addon.badges}
+            <span id="addon-description" itemprop="description">{$addon.description}</span>
+            <table class="table">
+                {if $addon.is_arena}
+                    <tr>
+                        <td><strong>{t}Type{/t}</strong></td>
+                        <td>{t}Arena{/t}</td>
+                    </tr>
+                {/if}
+                <tr>
+                    <td><strong>{t}Designer{/t}</strong></td>
+                    <td itemprop="author">{$addon.designer}</td>
+                </tr>
+                <tr>
+                    <td><strong>{t}Upload date:{/t}</strong></td>
+                    <td itemprop="dateModified">{$addon.info.upload_date}</td>
+                </tr>
+                <tr>
+                    <td><strong>{t}Submitted by{/t}</strong></td>
+                    <td><a href="users.php?user={$addon.info.submitter}">{$addon.info.submitter}</a></td>
+                </tr>
+                <tr>
+                    <td><strong>{t}Revision:{/t}</strong></td>
+                    <td itemprop="version">{$addon.info.revision}</td>
+                </tr>
+                <tr>
+                    <td><strong>{t}Compatible with{/t}</strong></td>
+                    <td>{$addon.info.compatibility}</td>
+                </tr>
+                {if $is_logged}
+                    <tr>
+                        <td><strong>{t}Your Rating{/t}</strong></td>
+                        <td>{$addon.vote}</td>
+                    </tr>
+                {/if}
+            </table>
+        </div>
+        <div class="col-md-2">
+            <div id="addon-image">
+                {if $addon.image_url}
+                    <img class="preview" src="{$addon.image_url}" itemprop="image" />
+                {/if}
+                {if $can_edit}
+                    <br >
+                    <a href="{$form_action}&amp;action=file" class="btn btn-default">{t}Upload Image{/t}</a>
+                {/if}
+            </div>
+        </div>
     </div>
-
-    {$addon.badges}
-    <br />
-    <span id="addon-description" itemprop="description">{$addon.description}</span>
-    <table class="info">
-        {if $addon.is_arena}
-            <tr>
-                <td><strong>{t}Type:{/t}</strong></td>
-                <td>{t}Arena{/t}</td>
-            </tr>
-        {/if}
-        <tr>
-            <td><strong>{t}Designer:{/t}</strong></td>
-            <td itemprop="author">{$addon.designer}</td>
-        </tr>
-        <tr>
-            <td><strong>{t}Upload date:{/t}</strong></td>
-            <td itemprop="dateModified">{$addon.info.upload_date}</td>
-        </tr>
-        <tr>
-            <td><strong>{t}Submitted by:{/t}</strong></td>
-            <td><a href="users.php?user={$addon.info.submitter}">{$addon.info.submitter}</a></td>
-        </tr>
-        <tr>
-            <td><strong>{t}Revision:{/t}</strong></td>
-            <td itemprop="version">{$addon.info.revision}</td>
-        </tr>
-        <tr>
-            <td><strong>{t}Compatible with:{/t}</strong></td>
-            <td>{$addon.info.compatibility}</td>
-        </tr>
-        {if $is_logged}
-            <tr>
-                <td><strong>{t}Your Rating:{/t}</strong></td>
-                <td>{$addon.vote}</td>
-            </tr>
-        {/if}
-    </table>
 </div>
 
 {include file="feedback/warnings.tpl"}
@@ -73,8 +77,8 @@
     <p>{t}Download this add-on in game!{/t}</p>
 {/if}
 
-<h3>{t}License{/t}</h3>
-<textarea name="license" rows="4" cols="60" readonly>{$addon.license}</textarea>
+<h1>{t}License{/t}</h1>
+<textarea class="form-control" id="license" name="license" rows="8" cols="60" readonly>{$addon.license}</textarea>
 
 <h3>{t}Permalink{/t}</h3>
 <a href="{$addon.info.link}">{$addon.info.link}</a>
@@ -174,32 +178,49 @@
 
 {*Configuration*}
 {if $can_edit}
-    <hr><br>
+    <h3>Actions</h3>
+    <input type="button" class="btn btn-danger" value="{t}Delete Addon{/t}" onClick="confirm_delete('{$addon.config.delete_link}')"><br>
+    <hr>
     <h3>{t}Configuration{/t}</h3>
-    <form name="changeProps" action="{$addon.config.change_props_action}" method="POST">
-        <label for="designer_field">{t}Designer:{/t}</label><br>
-        <input type="text" name="designer" id="designer_field" value="{$addon.designer}"><br>
-        <label for="desc_field">{t}Description:{/t} ({t 1=140}Max %1 characters{/t})</label><br>
-        <textarea name="description" id="desc_field" rows="4" cols="60">{$addon.description}</textarea><br>
+    <form name="changeProps" action="{$addon.config.change_props_action}" method="POST" class="form-horizontal">
+        <label for="designer_field">{t}Designer{/t}</label><br>
+        <input type="text" name="designer" class="form-control" id="designer_field" value="{$addon.designer}"><br>
+        <label for="desc_field">{t}Description{/t} ({t 1=140}Max %1 characters{/t})</label><br>
+        <textarea name="description" id="desc_field" class="form-control" rows="4" cols="60">{$addon.description}</textarea><br>
         <input type="submit" class="btn btn-default" value="{t}Save Properties{/t}">
     </form><br>
-
-    <input type="button" class="btn btn-default" value="{t}Delete Addon{/t}" onClick="confirm_delete('{$addon.config.delete_link}')"><br>
-
     {*Mark whether or not an add-on has ever been included in STK*}
     {if $has_permission}
-        <strong>{t}Included in Game Versions:{/t}</strong><br>
-        <form method="POST" action="{$addon.config.include_action}">
-            {t}Start:{/t}<input type="text" name="incl_start" size="6" value="{$addon.min}"><br>
-            {t}End:{/t}<input type="text" name="incl_end" size="6" value="{$addon.max}"><br>
-            <input type="submit" class="btn btn-default" value="{t}Save{/t}"><br>
+        <h4>{t}Included in Game Versions:{/t}</h4>
+        <form method="POST" action="{$addon.config.include_action}" class="form-horizontal">
+            <div class="form-group">
+                <label for="incl_start" class="col-md-1">
+                    {t}Start{/t}
+                </label>
+                <div class="col-md-3">
+                    <input type="text" class="form-control" id="incl_start" name="incl_start" size="6" value="{$addon.min}"><br>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="incl_end" class="col-md-1">
+                    {t}End{/t}
+                </label>
+                <div class="col-md-3">
+                    <input type="text" id="incl_end" name="incl_end" class="form-control" size="6" value="{$addon.max}"><br>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-1 col-md-3">
+                    <input type="submit" class="btn btn-success" value="{t}Save{/t}"><br>
+                </div>
+            </div>
         </form><br>
     {/if}
 
     {*Set status flags*}
-    <strong>{t}Status Flags:{/t}</strong><br>
+    <h4>{t}Status Flags:{/t}</h4>
     <form method="POST" action="{$addon.config.status.action}">
-        <table id="addon_flags" class="infp">
+        <table id="addon_flags" class="table table-striped">
             <thead>
                 <tr>
                     <th></th>
@@ -253,17 +274,19 @@
                     {$fields[] = "alpha-$rev_n"} {$fields[] = "beta-$rev_n"} {$fields[] = "rc-$rev_n"}
 
                     {*Delete revision button*}
-                    <td><input type="button" class="btn btn-default" value="{t 1=$rev_n}Delete revision %1{/t}" onclick="confirm_delete('{$revision.delete_link}')"></td>
+                    <td><input type="button" class="btn btn-danger" value="{t 1=$rev_n}Delete revision %1{/t}" onclick="confirm_delete('{$revision.delete_link}')"></td>
                 </tr>
             {/foreach}
             </tbody>
         </table>
         <input type="hidden" name="fields" value="{','|implode:$fields}">
-        <input type="submit" class="btn btn-default" value="{t}Save Changes{/t}">
+        <div class="col-md-offset-8">
+            <input type="submit" class="btn btn-success btn-block" value="{t}Save Changes{/t}">
+        </div>
     </form><br>
 
     {*Moderator notes*}
-    <strong>{t}Notes from Moderator to Submitter:{/t}</strong><br>
+    <h4>{t}Notes from Moderator to Submitter:{/t}</h4>
     {if $has_permission}
         <form method="POST" action="{$addon.config.moderator_action}">
     {/if}
@@ -271,12 +294,12 @@
     {foreach $addon.revisions as $revision}
         {$rev_n=$revision@key}
         {t 1=$rev_n}Rev %1:{/t}<br>
-        <textarea name="notes-{$rev_n}" rows="4" cols="60">{$revision.moderator_note}</textarea><br>
+        <textarea name="notes-{$rev_n}" class="form-control" rows="6" cols="60">{$revision.moderator_note}</textarea><br>
         {$fields[]="notes-$rev_n"}
     {/foreach}
     {if $has_permission}
          <input type="hidden" name="fields" value="{','|implode:$fields}">
-         <input type="submit" class="btn btn-default" value="{t}Save Notes{/t}">
+         <input type="submit" class="btn btn-success" value="{t}Save Notes{/t}">
          </form>
     {/if}
 {/if}

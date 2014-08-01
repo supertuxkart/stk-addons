@@ -479,7 +479,7 @@ div.image_thumb_container {
 
 #addon-image {
     display: block;
-    float: right;
+    /*float: right;*/
     text-align: center;
 }
 
