@@ -106,9 +106,18 @@ define('F_LATEST', 256);
 define('F_TEX_NOT_POWER_OF_2', 512);
 
 // set string encoding
-assert(mb_internal_encoding("UTF-8") === true);
-assert(mb_regex_encoding("UTF-8") === true);
-assert(mb_language("uni") === true);
+if(mb_internal_encoding("UTF-8") !== true)
+{
+    trigger_error("mb_internal_encoding failed");
+}
+if(mb_regex_encoding("UTF-8") !== true)
+{
+    trigger_error("mb_regex_encoding failed");
+}
+if(mb_language("uni") !== true)
+{
+    trigger_error("mb_language failed");
+}
 
 // add composer autoload
 require_once(ROOT_PATH . "vendor" . DS . "autoload.php");
