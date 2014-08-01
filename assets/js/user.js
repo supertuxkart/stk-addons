@@ -30,6 +30,8 @@
         onFormSubmit(form_identifier, callback_success, $user_body, json_url, {}, "POST");
     }
 
+    registerPagination($user_menu, "users-menu.php");
+
     // search form
     $("#user-search-val").keyup(function() {
         var query = this.value;

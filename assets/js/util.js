@@ -28,6 +28,34 @@ var MSECONDS_MINUTE = 60000,
 
 var SEARCH_URL = JSON_LOCATION + "search.php";
 
+
+// the url loaded on the container on page change
+function registerPagination($container, url) {
+    var $pagination = $container.find("ul.pagination");
+
+    // validate
+    if (!$pagination || !$pagination.length) {
+        console.log("the container does not have any pagination");
+        return;
+    }
+
+    $pagination.on("click", "a", function() {
+        var url_vars = getUrlVars(this.href),
+            page = url_vars["p"];
+
+        if (!parseInt(page)) { // is not a valid button
+            return false;
+        }
+
+        loadContent($container, url, {p: page}, function() {
+            registerPagination($container, url); // recursion for the next page load
+        }, "GET");
+
+        console.log(page);
+        return false;
+    });
+}
+
 function isInTimeInterval(time, past_time_limit) {
     var current_time = (new Date()).getTime(),
         elapsed = current_time - time;

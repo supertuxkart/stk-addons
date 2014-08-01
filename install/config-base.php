@@ -106,15 +106,15 @@ define('F_LATEST', 256);
 define('F_TEX_NOT_POWER_OF_2', 512);
 
 // set string encoding
-if(mb_internal_encoding("UTF-8") !== true)
+if (mb_internal_encoding("UTF-8") !== true)
 {
     trigger_error("mb_internal_encoding failed");
 }
-if(mb_regex_encoding("UTF-8") !== true)
+if (mb_regex_encoding("UTF-8") !== true)
 {
     trigger_error("mb_regex_encoding failed");
 }
-if(mb_language("uni") !== true)
+if (mb_language("uni") !== true)
 {
     trigger_error("mb_language failed");
 }
