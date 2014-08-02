@@ -81,7 +81,6 @@
 
         var json_file = $this.data("json");
         $.get(json_file, function(jsonData) {
-            console.log(jsonData);
             $.plot($this, jsonData, pie_options);
         });
     });
