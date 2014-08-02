@@ -88,6 +88,7 @@ switch ($_GET['action'])
         }
         catch(UserException $e)
         {
+            $login_form['display'] = true;
             $errors = $e->getMessage();
         }
 
@@ -100,6 +101,7 @@ switch ($_GET['action'])
         }
         else
         {
+            $login_form['display'] = true;
             $tpl->assign('errors', $errors);
         }
 
