@@ -5,7 +5,6 @@
         <small> {t}for addons{/t}</small>
     </h1>
     <br>
-
     <div class="row">
         <div class="col-md-10">
             <form class="form-inline center-block" role="form" id="bug-search-form">
@@ -14,13 +13,11 @@
                            placeholder="Enter bug title">
                 </div>
                 <div class="form-group">
-                    <label>
-                        <select class="form-control input-lg" name="search-filter">
-                            <option value="all" selected>{t}All{/t}</option>
-                            <option value="open">{t}Open{/t}</option>
-                            <option value="closed">{t}Closed{/t}</option>
-                        </select>
-                    </label>
+                    <select class="form-control input-lg" name="search-filter">
+                        <option value="all" selected>{t}All{/t}</option>
+                        <option value="open">{t}Open{/t}</option>
+                        <option value="closed">{t}Closed{/t}</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label class="checkbox-inline">
