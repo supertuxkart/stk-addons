@@ -32,7 +32,8 @@ $template_users = User::filterMenuTemplate($users);
 $pagination = PaginationTemplate::get()
     ->setItemsPerPage($limit)
     ->setTotalItems(User::count(!$has_permission))
-    ->setCurrentPage($current_page);
+    ->setCurrentPage($current_page)
+    ->setNumberButtons(3);
 
 $tpl = StkTemplate::get("user-menu.tpl")
     ->assign("img_location", IMG_LOCATION)

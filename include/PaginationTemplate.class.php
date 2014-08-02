@@ -43,7 +43,7 @@ class PaginationTemplate extends Template
      * Items on page ratio
      * @var int
      */
-    protected $itemsPerPage = 8;
+    protected $itemsPerPage = 10;
 
     /**
      * The number of button visible, expect the first and last button
@@ -99,7 +99,7 @@ class PaginationTemplate extends Template
      *
      * @return int
      */
-    public static function getLimitNumber($default_limit = 8)
+    public static function getLimitNumber($default_limit = 10)
     {
         if (!empty($_GET[static::LIMIT_ARGUMENT]))
         {
@@ -170,7 +170,9 @@ class PaginationTemplate extends Template
             "url"            => $this->pageUrl, // the base url to build each button
             "nr_buttons"     => $this->numberButtons, // the relative number of buttons present except the first and last
             "build_left"     => $buildLeft, // display '...' on the left
-            "build_right"    => $buildRight // display '...' on the right
+            "build_right"    => $buildRight, // display '...' on the right
+            "limit_options"  => [10 => 10, 20 => 20, 50 => 50],
+            "limit_selected" => $this->itemsPerPage
         ];
         $this->assign("pagination", $pagination);
     }

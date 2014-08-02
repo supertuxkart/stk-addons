@@ -31,25 +31,34 @@ var SEARCH_URL = JSON_LOCATION + "search.php";
 
 // the url loaded on the container on page change
 function registerPagination($container, url) {
-    var $pagination = $container.find("ul.pagination");
 
-    // validate
-    if (!$pagination || !$pagination.length) {
-        console.log("the container does not have any pagination");
-        return;
-    }
+    // limit changed
+    $container.on("change", ".stk-pagination .limit select", function() {
+        var limit = this.value,
+            page = getUrlVars()["p"];
 
-    $pagination.on("click", "a", function() {
+       if(!parseInt(page)) {
+           page = 1;
+       }
+
+        loadContent($container, url, {p: page, l: limit}, function() {}, "GET");
+    });
+
+    // page button clicked
+    $container.on("click", ".stk-pagination ul.pagination a", function() {
         var url_vars = getUrlVars(this.href),
-            page = url_vars["p"];
+            page = url_vars["p"],
+            limit = url_vars["l"];
 
         if (!parseInt(page)) { // is not a valid button
             return false;
         }
 
-        loadContent($container, url, {p: page}, function() {
-            registerPagination($container, url); // recursion for the next page load
-        }, "GET");
+        if(!limit || !parseInt(limit)) {
+            limit = 10;
+        }
+
+        loadContent($container, url, {p: page, l: limit}, function() {}, "GET");
 
         console.log(page);
         return false;
