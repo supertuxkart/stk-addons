@@ -49,10 +49,6 @@ a img {
     height: 100%;
 }
 
-footer {
-    margin-bottom: 10px;
-}
-
 #body-wrapper > header {
     z-index: 999999;
 }
@@ -61,6 +57,7 @@ footer {
     font-size: small;
     padding-top: 10px;
     text-align: center;
+    margin-bottom: 10px;
 }
 
 #content-wrapper {
