@@ -18,18 +18,14 @@
                 </p>
                 <ul class="nav navbar-nav">
                     <li>{$menu.home}</li>
-                    {if $is_kart}
-                        <li>{$menu.arenas}</li>
-                        <li>{$menu.tracks}</li>
-                    {/if}
-                    {if $is_track}
-                        <li>{$menu.arenas}</li>
-                        <li>{$menu.karts}</li>
-                    {/if}
-                    {if $is_arena}
-                        <li>{$menu.karts}</li>
-                        <li>{$menu.tracks}</li>
-                    {/if}
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">{t}Addons{/t} <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li>{$menu.arenas}</li>
+                            <li>{$menu.karts}</li>
+                            <li>{$menu.tracks}</li>
+                        </ul>
+                    </li>
                     {if $show_users==true}
                         <li>{$menu.users}</li>
                     {/if}

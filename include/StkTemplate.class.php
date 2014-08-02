@@ -184,19 +184,6 @@ class StkTemplate extends Template
         // if the user can edit addons then he can access the manage panel
         $this->smarty->assign('show_manage', User::hasPermission(AccessControl::PERM_EDIT_ADDONS));
 
-        if (Util::getScriptFilename() === 'addons.php')
-        {
-            $type = empty($_GET['type']) ? null : $_GET['type'];
-            $this->smarty->assign('is_kart', $type === Addon::KART);
-            $this->smarty->assign('is_track', $type === Addon::TRACK);
-            $this->smarty->assign('is_arena', $type === Addon::ARENA);
-        }
-        else
-        {
-            $this->smarty->assign('is_kart', false);
-            $this->smarty->assign('is_track', false);
-            $this->smarty->assign('is_arena', false);
-        }
         $this->smarty->assign('menu', $menu);
     }
 
