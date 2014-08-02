@@ -48,9 +48,13 @@
 
     // role clicked
     $manage_body.on("click", "#manage-roles-roles button", function() {
-        console.log("Role clicked");
-        var $this = $(this);
-        var $siblings = $this.siblings();
+        var $this = $(this),
+            $siblings = $this.siblings();
+
+        // can not press the same button twice
+        if ($this.hasClass("active")) {
+            return;
+        }
 
         // mark as active
         $this.addClass("active");

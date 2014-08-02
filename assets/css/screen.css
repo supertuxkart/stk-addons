@@ -421,14 +421,19 @@ li div.icon {
 }
 
 #addon-body {
-    margin-top: 65px;
+    margin-top: 20px;
+}
+
+#addon-top {
+    margin-top: 20px;
+}
+
+#addon-sort {
+    float: left;
 }
 
 #addon-search-form {
-    position: absolute;
-    right: 10px;
-    margin-top: 20px;
-    z-index: 1000;
+    float: right;
 }
 
 .icon {

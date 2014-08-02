@@ -29,6 +29,16 @@ class Addon extends Base
 
     const ARENA = "arenas";
 
+    const SORT_FEATURED = "featured";
+
+    const SORT_ALPHABETICAL = "alphabetical";
+
+    const SORT_DATE = "date";
+
+    const ORDER_ASC = "asc";
+
+    const ORDER_DESC = "desc";
+
     /**
      * @var string
      */
@@ -167,7 +177,7 @@ class Addon extends Base
             $this->revisions[$rev['revision']] = $currentRev;
         }
 
-        if(!$this->latestRevision)
+        if (!$this->latestRevision)
         {
             throw new AddonException(_h("Did not found latest revision (possibly wrong status) This should never happen"));
         }
@@ -1541,9 +1551,9 @@ class Addon extends Base
     /**
      * Search for an addon by its name or description
      *
-     * @param string $search_query  the search query
-     * @param string $type          the addon type
-     * @param array  $search_flags  an array of flags
+     * @param string $search_query the search query
+     * @param string $type         the addon type
+     * @param array  $search_flags an array of flags
      *
      * @throws AddonException
      * @return Addon[] array of addons
@@ -1613,42 +1623,66 @@ class Addon extends Base
     /**
      * Get all the addon's of a type
      *
-     * @param string $type          type of addon
-     * @param bool   $featuredFirst flag that indicates to show featured first addons
-     * @param int    $limit         the number of results
-     * @param int    $current_page  current page that the user is on
+     * @param string $addon_type   type of addon
+     * @param int    $limit        the number of results
+     * @param int    $current_page current page that the user is on
+     * @param string $sort_type    the sort type
+     * @param string $sort_order   the sort order, ASC or DESC
      *
      * @throws AddonException
      * @return Addon[] array of addons
      */
-    public static function getAll($type, $featuredFirst = false, $limit = -1, $current_page = 1)
+    public static function getAll($addon_type, $limit = -1, $current_page = 1, $sort_type = "", $sort_order = "")
     {
-        if (!static::isAllowedType($type))
+        if (!static::isAllowedType($addon_type))
         {
             throw new AddonException(_h("Invalid addon type"));
         }
 
         // build query
-        $query = 'SELECT `a`.`id`, (`r`.`status` & ' . F_FEATURED . ') AS `featured`
+        $query = 'SELECT `a`.`id`, (`r`.`status` & ' . F_FEATURED . ') AS `featured`, `r`.`creation_date` as `date`
                   FROM `' . DB_PREFIX . 'addons` `a`
-                  LEFT JOIN `' . DB_PREFIX . $type . '_revs` `r`
+                  LEFT JOIN `' . DB_PREFIX . $addon_type . '_revs` `r`
                   ON `a`.`id` = `r`.`addon_id`
                   WHERE `a`.`type` = :type
                   AND `r`.`status` & :latest_bit ';
         $db_params = [
-            ':type'       => $type,
+            ':type'       => $addon_type,
             ':latest_bit' => F_LATEST // retrieve only the latest addons
         ];
         $db_types = [];
 
-        // apply ordering
-        if ($featuredFirst)
+        // apply sorting
+        $sort_direction = "";
+        switch ($sort_order)
         {
-            $query .= 'ORDER BY `featured` DESC, `a`.`name` ASC, `a`.`id` ASC';
+            case static::ORDER_ASC:
+                $sort_direction = "ASC";
+                break;
+
+            case static::ORDER_DESC:
+                $sort_direction = "DESC";
+                break;
+
+            default: // default
+                $sort_direction = "ASC";
+                break;
+
         }
-        else
+        switch ($sort_type)
         {
-            $query .= 'ORDER BY `name` ASC, `id` ASC';
+            case static::SORT_FEATURED:
+                $query .= 'ORDER BY `featured` DESC, `a`.`name` ASC, `a`.`id` ASC';
+                break;
+
+            case static::SORT_DATE:
+                $query .= sprintf('ORDER BY `date` %s', $sort_direction);
+                break;
+
+            case static::SORT_ALPHABETICAL:
+            default: // sort by name by default
+                $query .= sprintf('ORDER BY `name` %s, `id` %s', $sort_direction, $sort_direction);
+                break;
         }
 
         // apply pagination

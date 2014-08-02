@@ -30,6 +30,7 @@ function confirm_delete(url) {
     var json_url = JSON_LOCATION + "rating.php",
         $addon_body = $("#addon-body"),
         $addon_menu = $("#addon-menu"),
+        $addon_sort = $("#addon-sort"),
         $search_by = $("#addon-search-by"),
         addon_type = getUrlVars()["type"],
         original_menu;
@@ -71,9 +72,6 @@ function confirm_delete(url) {
                     growlError(jData["error"]);
                 }
             });
-
-        console.log($search_by.val());
-        console.log(query);
     });
 
     // left panel user addon clicked
@@ -113,5 +111,54 @@ function confirm_delete(url) {
             }
         });
     });
+
+    // addon sorting clicked
+    $addon_sort.on("click", "button", function() {
+        var $this = $(this),
+            is_sortable = $this.hasClass("btn-sortable");
+
+        // cannot press the same non sortable button twice
+        if ($this.hasClass("active") && !is_sortable) {
+            return;
+        }
+
+        var $siblings = $this.siblings(),
+            sort_type = $this.data("type"),
+            sort_order = "";
+
+        // mark as active
+        $this.addClass("active");
+
+        // remove mark from others
+        $siblings.removeClass("active");
+
+        // button is sortable
+        if (is_sortable) {
+            var icon_asc = $this.data("asc"),
+                icon_desc = $this.data("desc"),
+                icon_add = "",
+                $span = $this.find("span");
+
+            // figure out what state we are in
+            if ($span.hasClass(icon_asc)) {
+                icon_add = icon_desc;
+                sort_order = "desc";
+            } else if ($span.hasClass(icon_desc)) {
+                icon_add = icon_asc;
+                sort_order = "asc";
+            } else { // first time pressed, icon is neutral
+                icon_add = icon_asc; // ascending by default
+                sort_order = "asc"
+            }
+
+            // add new icon class
+            $span.removeClass();
+            $span.addClass("glyphicon " + icon_add);
+        }
+
+        loadContent($addon_menu, "addons-menu.php", {type: addon_type, sort: sort_type, order: sort_order}, function() {}, "GET");
+
+        console.log(sort_type);
+    })
 
 })(jQuery);

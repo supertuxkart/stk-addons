@@ -21,11 +21,13 @@
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
 
 $_GET['type'] = isset($_GET['type']) ? $_GET['type'] : null;
+$_GET['sort'] = isset($_GET['sort']) ? $_GET['sort'] : Addon::SORT_FEATURED;
+$_GET['order'] = isset($_GET['order']) ? $_GET['order'] : null;
 
 $current_page = PaginationTemplate::getPageNumber();
 $limit = PaginationTemplate::getLimitNumber();
 
-$addons = Addon::getAll($_GET['type'], true, $limit, $current_page);
+$addons = Addon::getAll($_GET['type'], $limit, $current_page, $_GET['sort'], $_GET['order']);
 $template_addons = Addon::filterMenuTemplate($addons, $_GET['type']);
 
 $pagination = PaginationTemplate::get()
