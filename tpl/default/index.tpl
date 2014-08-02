@@ -1,7 +1,6 @@
 {config_load file="{$smarty.current_dir}/tpl.conf"}
 {include file=#header#}
-
-<div id="index-body">
+<div id="index-body" class="stk-image">
     <img id="index-logo" src="{$smarty.const.IMG_LOCATION}logo.png" alt="SuperTuxKart Logo" title="SuperTuxKart Logo" />
     
     <div id="index-menu">
@@ -14,7 +13,6 @@
 	    </div>
 	{/foreach}
     </div>{* #index-menu *}
-    <div id="index-news-shadow"></div>
     <div id="index-news">
 	<noscript><div style="display: none;"></noscript>
 	<ul id="news-messages">

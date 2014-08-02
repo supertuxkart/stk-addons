@@ -1,7 +1,6 @@
 {config_load file="{$smarty.current_dir}/tpl.conf"}
 {include file=#header#}
-
-<div id="content">
+<div>
     <h1>{t}About STK Add-Ons{/t}</h1>
     <h2>SuperTuxKart</h2>
     <p>{t}SuperTuxKart is a Free 3D kart racing game, with many tracks, characters and items for you to try.{/t}</p>
@@ -22,5 +21,4 @@
     <h2>{t}Credits{/t}</h2>
     <pre>{$about.credits.content}</pre>
 </div>
-
 {include file=#footer#}

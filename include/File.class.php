@@ -571,7 +571,7 @@ class File
     /**
      * Recursively delete a directory. This does not touch the database.
      *
-     * @param string      $dir          the directory to delete
+     * @param string      $dir the directory to delete
      * @param string|null $exclude_regex
      *
      * @throws FileException only in debug mode
@@ -613,7 +613,7 @@ class File
         }
         $oDir->close();
 
-        if(!$exclude_regex) // remove root directory only if no exclude regex was given
+        if (!$exclude_regex) // remove root directory only if no exclude regex was given
         {
             rmdir($dir);
         }
@@ -1145,11 +1145,14 @@ class File
      *
      * @param string $href
      * @param string $label
+     * @param bool   $rewrite
      *
      * @return string
      */
-    public static function link($href, $label)
+    public static function link($href, $label, $rewrite = true)
     {
-        return '<a href="' . File::rewrite($href) . '">' . $label . '</a>';
+        $href = $rewrite ? File::rewrite($href) : $href;
+
+        return '<a href="' . $href . '">' . $label . '</a>';
     }
 }

@@ -170,6 +170,7 @@ class StkTemplate extends Template
             'tracks'   => File::link('addons.php?type=tracks', _h('Tracks')),
             'arenas'   => File::link('addons.php?type=arenas', _h('Arenas')),
             'about'    => File::link('about.php', _h('About')),
+            'stats'    => File::link(STATS_LOCATION, _h("Stats"), false),
             'privacy'  => File::link('privacy.php', _h('Privacy')),
             'stk_home' => File::link('http://supertuxkart.sourceforge.net', _h('STK Homepage'))
         ];
@@ -185,15 +186,16 @@ class StkTemplate extends Template
 
         if (Util::getScriptFilename() === 'addons.php')
         {
-            $this->smarty->assign('show_karts', !($_GET['type'] === Addon::KART));
-            $this->smarty->assign('show_tracks', !($_GET['type'] === Addon::TRACK));
-            $this->smarty->assign('show_arenas', !($_GET['type'] === Addon::ARENA));
+            $type = empty($_GET['type']) ? null : $_GET['type'];
+            $this->smarty->assign('is_kart', $type === Addon::KART);
+            $this->smarty->assign('is_track', $type === Addon::TRACK);
+            $this->smarty->assign('is_arena', $type === Addon::ARENA);
         }
         else
         {
-            $this->smarty->assign('show_karts', false);
-            $this->smarty->assign('show_tracks', false);
-            $this->smarty->assign('show_arenas', false);
+            $this->smarty->assign('is_kart', false);
+            $this->smarty->assign('is_track', false);
+            $this->smarty->assign('is_arena', false);
         }
         $this->smarty->assign('menu', $menu);
     }

@@ -1,6 +1,6 @@
 {config_load file="{$smarty.current_dir}/tpl.conf"}
 {include file=#header#}
-<div class="container" id="addon-main">
+<div id="addon-main">
     <div class="row">
         <div class="col-md-12">
             <div id="addon-top">

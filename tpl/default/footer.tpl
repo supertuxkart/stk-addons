@@ -1,5 +1,7 @@
 </div>{* content-wrapper *}
-<div id="footer" itemscope itemtype="http://schema.org/WPFooter">{t}Site hosted by {/t}<a href="http://www.tuxfamily.org/">tuxfamily.org</a> | {$menu.about}</div>
+<footer itemscope itemtype="http://schema.org/WPFooter">
+    {t}Site hosted by {/t}<a href="http://www.tuxfamily.org/">tuxfamily.org</a> | {$menu.about}
+</footer>
 </div> {* #body-wrapper *}
 {foreach $script_inline.before as $script}
     <script type="{$script.type|default:'text/javascript'}">{$script.content}</script>

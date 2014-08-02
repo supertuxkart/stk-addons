@@ -45,68 +45,46 @@ a img {
 }
 
 #body-wrapper {
-    margin: auto;
-    width: 1170px;
+    width: 100%;
+    height: 100%;
+}
+
+#body-wrapper > header {
+    z-index: 999999;
+}
+
+#body-wrapper > footer {
+    font-size: small;
+    padding-top: 10px;
+    text-align: center;
+}
+
+#content-wrapper {
+    margin-top: 45px;
+    min-height: 500px;
 }
 
 #login-form {
     margin-top: 5%;
 }
 
-#footer {
-    color: #000000;
-    font-size: small;
-    text-align: center;
-}
-
-/* Top Bar */
-#top-menu {
-    background: #e1dbda; /* for non-css3 browsers */
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#e1dbda', endColorstr='#d1ccca'); /* for IE */
-    background: -webkit-gradient(linear, left top, left bottom, from(#e1dbda), to(#d1ccca)); /* for webkit browsers */
-    background: -moz-linear-gradient(top, #e1dbda, #d1ccca); /* for firefox 3.6+ */
-    border: 0;
-    color: #000000;
-    display: block;
-    min-height: 35px;
-    overflow: auto;
-}
-
 .left-menu {
     margin-top: 30px;
 }
 
-#top-menu-content {
-    padding-top: 8px;
-    margin: 0 20px 0 20px;
-    overflow: auto;
-}
-
-#top-menu .left {
-    float: left;
-}
-
-#top-menu .right {
-    float: right;
-}
-
-#top-menu a {
-    color: black;
-    font-size: 1.0em;
-    padding-left: 10px;
-    padding-right: 10px;
-}
-
-#top-menu a:hover {
-    color: grey;
-}
-
 /* Home Page */
+#index-body {
+    margin-top: -10px;
+    min-height: 600px;
+    position: relative;
+    background: url("../img/background.jpg") no-repeat;
+    background-size: 100%;
+}
+
 #index-logo {
     display: block;
     margin: 15px auto 0 auto;
-    width: 424px;
-    height: 325px;
+    padding-top: 10px;
 }
 
 #index-menu {
@@ -116,6 +94,7 @@ a img {
     text-align: center;
     height: 130px;
     width: auto;
+    padding-top: 15px;
 }
 
 #index-menu > div {
@@ -125,8 +104,7 @@ a img {
 }
 
 #index-menu a {
-    background-image: url('../img/index-icons.png');
-    background-repeat: no-repeat;
+    background: url('../img/index-icons.png') no-repeat;
     color: black;
     display: block;
     padding: 108px 0 0 0;
@@ -161,19 +139,15 @@ a img {
 
 /* News Bar */
 #index-news {
-    display: block;
-    background-image: url('../img/news-panel.png');
-    width: 1000px;
+    position: absolute;
+    width: 100%;
+    background: url('../img/news-panel.png') no-repeat;
+    background-size: 100%;
     height: 91px;
-}
-
-#index-news-shadow {
-    display: block;
-    background-image: url('../img/news-panel-shadow.png');
-    background-repeat: repeat-x;
-    width: 1000px;
-    height: 10px;
-    margin: 15px 0 0 0;
+    bottom: 0;
+    -webkit-box-shadow: 0 -5px 3px rgba(50, 50, 50, 1);
+    -moz-box-shadow:    0 -5px 3px rgba(50, 50, 50, 1);
+    box-shadow:         0 -5px 4px rgba(40, 40, 40, 1);
 }
 
 #news-messages {
@@ -199,17 +173,10 @@ a img {
 }
 
 /* Language Menu */
-#lang-menu {
-    display: inline;
-    font-size: 1.0em;
-}
 
-#lang-menu ul.menu_body {
-    border: 1px solid #4e4e4e;
-    background: #efefef; /* for non-css3 browsers */
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#efefef', endColorstr='#dddddd'); /* for IE */
-    background: -webkit-gradient(linear, left top, left bottom, from(#efefef), to(#dddddd)); /* for webkit browsers */
-    background: -moz-linear-gradient(top, #efefef, #dddddd); /* for firefox 3.6+ */
+#lang-menu ul.menu-body {
+    background-color: #F8F8F8;
+    border-color: #E7E7E7;
     display: none;
     list-style: none;
     position: absolute;
@@ -265,38 +232,6 @@ a img {
 #lang-menu li.flag a:hover {
     border: 1px solid #999999;
     color: #999999;
-}
-
-/* General content */
-#content {
-    border-radius: 2px;
-    margin: 5px;
-    padding: 5px;
-    clear: both;
-    overflow-y: auto;
-    -moz-border-radius: 2px;
-    -webkit-border-radius: 2px;
-}
-
-#content h1 {
-    border-bottom: 1px solid #CCCCCC;
-    font-family: Tahoma, Verdana, Geneva, sans-serif;
-    font-weight: normal;
-}
-
-#content h2 {
-    font-family: Tahoma, Verdana, Geneva, sans-serif;
-    font-weight: normal;
-}
-
-.stk-image {
-    background-image: url("../img/background.jpg");
-    background-repeat: no-repeat;
-}
-
-#content-wrapper {
-    overflow-x: hidden;
-    min-height: 500px;
 }
 
 /* Loading Message */

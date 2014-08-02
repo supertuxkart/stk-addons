@@ -1,6 +1,6 @@
 {config_load file="{$smarty.current_dir}/tpl.conf"}
 {include file=#header#}
-<div class="container" id="main-reset-password">
+<div id="main-reset-password">
     <h1>{t}Reset Password{/t}</h1>
     {include file="feedback/errors.tpl"}
     {include file="feedback/warnings.tpl"}

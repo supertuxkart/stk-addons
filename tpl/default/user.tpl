@@ -1,6 +1,6 @@
 {config_load file="{$smarty.current_dir}/tpl.conf"}
 {include file=#header#}
-<div class="container" id="user-main">
+<div id="user-main">
     <div class="row">
         <div class="col-md-12">
             <form class="form-inline" role="form" id="user-search-form">

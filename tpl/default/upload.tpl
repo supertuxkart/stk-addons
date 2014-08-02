@@ -1,6 +1,6 @@
 {config_load file="{$smarty.current_dir}/tpl.conf"}
 {include file=#header#}
-<div id="container">
+<div id="main-upload">
     <div class="row">
         <div class="col-md-12">
             <h1 class="text-center">Upload</h1><hr>
