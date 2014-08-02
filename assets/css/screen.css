@@ -49,6 +49,10 @@ a img {
     height: 100%;
 }
 
+footer {
+    margin-bottom: 10px;
+}
+
 #body-wrapper > header {
     z-index: 999999;
 }
