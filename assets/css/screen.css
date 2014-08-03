@@ -50,7 +50,7 @@ a img {
 }
 
 #body-wrapper > header {
-    z-index: 999999;
+    z-index: 10000;
 }
 
 #body-wrapper > footer {
@@ -386,7 +386,7 @@ li div.icon {
     position: absolute;
     left: 5px;
     top: 5px;
-    z-index: 9999;
+    z-index: 500;
 }
 
 #logo_center {
@@ -561,7 +561,7 @@ span.f_dfsg {
 /* ------------------------------ pagination  ------------------------------*/
 .stk-pagination {
     position: relative;
-    z-index: 99999;
+    z-index: 200;
 }
 
 .stk-pagination .limit, .stk-pagination .buttons {
