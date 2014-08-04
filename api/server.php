@@ -17,10 +17,11 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
+if (!defined("API"))
+{
 
-define('API', 1);
-require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
-
+    exit("Can not execute");
+}
 $action = isset($_POST['action']) ? $_POST['action'] : null;
 $output = new XMLOutput();
 $output->startDocument('1.0', 'UTF-8');
@@ -219,7 +220,7 @@ try
             break;
 
         default:
-            $output->addErrorElement('request', _('Invalid action.'));
+            $output->addErrorElement('request', _('Invalid action.') . ' Action = ' . h($_POST['action']));
             break;
     }
 }
