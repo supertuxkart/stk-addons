@@ -19,7 +19,6 @@
  */
 if (!defined("API"))
 {
-
     exit("Can not execute");
 }
 $action = isset($_POST['action']) ? $_POST['action'] : null;
