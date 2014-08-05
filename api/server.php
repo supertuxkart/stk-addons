@@ -29,38 +29,61 @@ try
 {
     switch ($action)
     {
+        case 'create': // create a server
+            try
+            {
+                $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
+                $token = isset($_POST['token']) ? $_POST['token'] : "";
+                $server_name = isset($_POST['name']) ? utf8_encode($_POST['name']) : "";
+                $max_players = isset($_POST['max_players']) ? (int)$_POST['max_players'] : 0;
+
+                $server = ClientSession::get($token, $userid)->createServer(0, 0, 0, $server_name, $max_players);
+
+                $output->startElement('create');
+                    $output->writeAttribute('success', 'yes');
+                    $output->writeAttribute('info', '');
+                    $output->insert($server->asXML());
+                $output->endElement();
+            }
+            catch(Exception $e)
+            {
+                $output->addErrorElement('create', $e->getMessage());
+            }
+            break;
+
         case 'set':
             try
             {
-                $id = isset($_POST['id']) ? utf8_encode($_POST['id']) : null;
+                $userid = isset($_POST['userid']) ? utf8_encode($_POST['userid']) : null;
                 $token = isset($_POST['token']) ? utf8_encode($_POST['token']) : null;
                 $address = isset($_POST['address']) ? utf8_encode($_POST['address']) : null;
                 $private_port = isset($_POST['private_port']) ? utf8_encode($_POST['private_port']) : null;
                 $port = isset($_POST['port']) ? utf8_encode($_POST['port']) : null;
-                ClientSession::setPublicAddress($id, $token, $address, $port, $private_port);
 
-                $output->startElement('address-management');
+                ClientSession::setPublicAddress($userid, $token, $address, $port, $private_port);
+
+                $output->startElement('set');
                     $output->writeAttribute('success', 'yes');
                     $output->writeAttribute('info', '');
                 $output->endElement();
             }
             catch(Exception $e)
             {
-                $output->addErrorElement('address-management', $e->getMessage());
+                $output->addErrorElement('set', $e->getMessage());
             }
             break;
 
-        case 'start-server':
+        case 'start': // start a server
             try
             {
-                $id = isset($_POST['id']) ? utf8_encode($_POST['id']) : null;
+                $userid = isset($_POST['userid']) ? (int)utf8_encode($_POST['userid']) : null;
                 $token = isset($_POST['token']) ? utf8_encode($_POST['token']) : null;
                 $address = isset($_POST['address']) ? utf8_encode($_POST['address']) : null;
                 $port = isset($_POST['port']) ? utf8_encode($_POST['port']) : null;
                 $private_port = isset($_POST['private_port']) ? utf8_encode($_POST['private_port']) : null;
                 $max_players = isset($_POST['max_players']) ? utf8_encode($_POST['max_players']) : null;
 
-                ClientSession::get($token, $id)->createServer(
+                ClientSession::get($token, $userid)->createServer(
                     $address,
                     $port,
                     $private_port,
@@ -68,68 +91,68 @@ try
                     $max_players
                 );
 
-                $output->startElement('start-server');
+                $output->startElement('start');
                     $output->writeAttribute('success', 'yes');
                     $output->writeAttribute('info', '');
                 $output->endElement();
             }
             catch(Exception $e)
             {
-                $output->addErrorElement('start-server', $e->getMessage());
+                $output->addErrorElement('start', $e->getMessage());
             }
             break;
 
-        case 'stop-server':
+        case 'stop': // stop a server
             try
             {
-                $id = isset($_POST['id']) ? utf8_encode($_POST['id']) : null;
+                $userid = isset($_POST['userid']) ? utf8_encode($_POST['userid']) : null;
                 $token = isset($_POST['token']) ? utf8_encode($_POST['token']) : null;
                 $address = isset($_POST['address']) ? utf8_encode($_POST['address']) : null;
                 $port = isset($_POST['port']) ? utf8_encode($_POST['port']) : null;
 
-                ClientSession::get($token, $id)->stopServer($address, $port);
+                ClientSession::get($token, $userid)->stopServer($address, $port);
 
-                $output->startElement('stop-server');
+                $output->startElement('stop');
                     $output->writeAttribute('success', 'yes');
                     $output->writeAttribute('info', '');
                 $output->endElement();
             }
             catch(Exception $e)
             {
-                $output->addErrorElement('stop-server', $e->getMessage());
+                $output->addErrorElement('stop', $e->getMessage());
             }
             break;
 
         case 'unset':
             try
             {
-                $id = isset($_POST['id']) ? utf8_encode($_POST['id']) : null;
+                $userid = isset($_POST['userid']) ? utf8_encode($_POST['userid']) : null;
                 $token = isset($_POST['token']) ? utf8_encode($_POST['token']) : null;
 
-                ClientSession::unsetPublicAddress($id, $token);
+                ClientSession::unsetPublicAddress($userid, $token);
 
-                $output->startElement('address-management');
+                $output->startElement('unset');
                     $output->writeAttribute('success', 'yes');
                     $output->writeAttribute('info', '');
                 $output->endElement();
             }
             catch(Exception $e)
             {
-                $output->addErrorElement('address-management', $e->getMessage());
+                $output->addErrorElement('unset', $e->getMessage());
             }
             break;
 
-        case 'get':
+        case 'get': // get the client info
             try
             {
-                $id = isset($_POST['id']) ? utf8_encode($_POST['id']) : null;
+                $userid = isset($_POST['userid']) ? utf8_encode($_POST['userid']) : null;
                 $token = isset($_POST['token']) ? utf8_encode($_POST['token']) : null;
                 $peer_id = isset($_POST['peer_id']) ? utf8_encode($_POST['peer_id']) : null;
 
-                $session = ClientSession::get($token, $id);
+                $session = ClientSession::get($token, $userid);
                 $result = $session->getPeerAddress($peer_id);
 
-                $output->startElement('get-public-ip');
+                $output->startElement('get');
                     $output->writeAttribute('success', 'yes');
                     $output->writeAttribute('info', '');
                     $output->writeAttribute('ip', $result['ip']);
@@ -139,17 +162,34 @@ try
             }
             catch(Exception $e)
             {
-                $output->addErrorElement('get-public-ip', $e->getMessage());
+                $output->addErrorElement('get', $e->getMessage());
+            }
+            break;
+
+        case 'get-all': // get all the servers list
+            try
+            {
+                $servers_xml = Server::getServersAsXML();
+
+                $output->startElement('get-all');
+                    $output->writeAttribute('success', 'yes');
+                    $output->writeAttribute('info', '');
+                    $output->insert($servers_xml);
+                $output->endElement();
+            }
+            catch(Exception $e)
+            {
+                $output->addErrorElement('get-all', $e->getMessage());
             }
             break;
 
         case 'quick-join':
             try
             {
-                $id = isset($_POST['id']) ? utf8_encode($_POST['id']) : null;
+                $userid = isset($_POST['userid']) ? (int)utf8_encode($_POST['userid']) : null;
                 $token = isset($_POST['token']) ? utf8_encode($_POST['token']) : null;
 
-                $result = ClientSession::get($token, $id)->quickJoin();
+                $result = ClientSession::get($token, $userid)->quickJoin();
 
                 $output->startElement('quick-join');
                     $output->writeAttribute('success', 'yes');
@@ -169,11 +209,11 @@ try
         case 'request-connection':
             try
             {
-                $id = isset($_POST['id']) ? utf8_encode($_POST['id']) : null;
+                $userid = isset($_POST['userid']) ? (int)utf8_encode($_POST['userid']) : null;
                 $token = isset($_POST['token']) ? utf8_encode($_POST['token']) : null;
-                $server_id = isset($_POST['server_id']) ? utf8_encode($_POST['server_id']) : null;
+                $server_id = isset($_POST['server_id']) ? (int)utf8_encode($_POST['server_id']) : null;
 
-                ClientSession::get($token, $id)->requestServerConnection($server_id);
+                ClientSession::get($token, $userid)->requestServerConnection($server_id);
 
                 $output->startElement('request-connection');
                     $output->writeAttribute('success', 'yes');
@@ -190,12 +230,12 @@ try
         case 'poll-connection-requests':
             try
             {
-                $id = isset($_POST['id']) ? utf8_encode($_POST['id']) : null;
+                $userid = isset($_POST['userid']) ? (int)utf8_encode($_POST['userid']) : null;
                 $token = isset($_POST['token']) ? utf8_encode($_POST['token']) : null;
                 $address = isset($_POST['address']) ? utf8_encode($_POST['address']) : null;
                 $port = isset($_POST['port']) ? utf8_encode($_POST['port']) : null;
 
-                $requests = ClientSession::get($token, $id)->getServerConnectionRequests($address, $port);
+                $requests = ClientSession::get($token, $userid)->getServerConnectionRequests($address, $port);
 
                 $output->startElement('poll-connection-requests');
                     $output->writeAttribute('success', 'yes');
@@ -218,6 +258,30 @@ try
             }
             break;
 
+        case 'vote': // vote on a server
+            try
+            {
+                $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
+                $token = isset($_POST['token']) ? $_POST['token'] : "";
+                $hostid = isset($_POST['hostid']) ? (int)$_POST['hostid'] : 0;
+                $vote = isset($_POST['vote']) ? (int)$_POST['vote'] : 0;
+
+                // TODO change hostVote because it returns void
+                $new_rating = ClientSession::get($token, $userid)->hostVote($hostid, $vote);
+
+                $output->startElement('vote');
+                    $output->writeAttribute('success', 'yes');
+                    $output->writeAttribute('new-rating', $new_rating);
+                    $output->writeAttribute('hostid', $hostid);
+                    $output->writeAttribute('info', '');
+                $output->endElement();
+            }
+            catch(Exception $e)
+            {
+                $output->addErrorElement('vote', $e->getMessage());
+            }
+            break;
+
         default:
             $output->addErrorElement('request', _('Invalid action.') . ' Action = ' . h($_POST['action']));
             break;
@@ -225,7 +289,7 @@ try
 }
 catch(Exception $e)
 {
-    $output->addErrorElement('request', _('An unexptected error occured.') . ' ' . _('Please contact a website administrator.'));
+    $output->addErrorElement('request', _('An unexpected error occurred.') . ' ' . _('Please contact a website administrator.'));
 }
 
 $output->endDocument();

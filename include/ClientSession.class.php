@@ -244,14 +244,14 @@ abstract class ClientSession
         try
         {
             // Query the database to add the request entry
-            $result = DBConnection::get()->query(
+            $server = DBConnection::get()->query(
                 "SELECT `id`, `hostid`, `ip`, `port`, `private_port`
                 FROM `" . DB_PREFIX . "servers`
                 LIMIT 1",
-                DBConnection::FETCH_ALL
+                DBConnection::FETCH_FIRST
             );
 
-            if (empty($result))
+            if (empty($server))
             {
                 throw new UserException(_h('No server found'));
             }
@@ -259,11 +259,11 @@ abstract class ClientSession
             DBConnection::get()->query(
                 "INSERT INTO `" . DB_PREFIX . "server_conn` (serverid, userid, request)
                 VALUES ( :serverid, :userid, 1)
-                ON DUPLICATE KEY UPDATE request='1'",
+                ON DUPLICATE KEY UPDATE request = '1'",
                 DBConnection::NOTHING,
                 [
                     ':userid'   => $this->user_id,
-                    ':serverid' => $result[0]['id']
+                    ':serverid' => $server['id']
                 ],
                 [':userid' => DBConnection::PARAM_INT, ':serverid' => DBConnection::PARAM_INT]
             );
@@ -276,7 +276,7 @@ abstract class ClientSession
             );
         }
 
-        return $result[0];
+        return $server;
     }
 
     /**

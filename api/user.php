@@ -100,23 +100,6 @@ try
             }
             break;
 
-        case 'get_server_list':
-            try
-            {
-                $servers_xml = Server::getServersAsXML();
-
-                $output->startElement('get_servers_list');
-                    $output->writeAttribute('success', 'yes');
-                    $output->writeAttribute('info', '');
-                    $output->insert($servers_xml);
-                $output->endElement();
-            }
-            catch(Exception $e)
-            {
-                $output->addErrorElement('get_servers_list', $e->getMessage());
-            }
-            break;
-
         case 'get-friends-list':
             try
             {
@@ -238,30 +221,6 @@ try
             catch(Exception $e)
             {
                 $output->addErrorElement('client-quit', $e->getMessage());
-            }
-            break;
-
-        case 'host-vote':
-            try
-            {
-                $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
-                $token = isset($_POST['token']) ? (int)$_POST['token'] : "";
-                $hostid = isset($_POST['hostid']) ? (int)$_POST['hostid'] : 0;
-                $vote = isset($_POST['vote']) ? $_POST['vote'] : 0;
-
-                // TODO change hostVote because it returns void
-                $new_rating = ClientSession::get($token, $userid)->hostVote($hostid, $vote);
-
-                $output->startElement('host-vote');
-                    $output->writeAttribute('success', 'yes');
-                    $output->writeAttribute('new-rating', $new_rating);
-                    $output->writeAttribute('hostid', $hostid);
-                    $output->writeAttribute('info', '');
-                $output->endElement();
-            }
-            catch(Exception $e)
-            {
-                $output->addErrorElement('host-vote', $e->getMessage());
             }
             break;
 
@@ -457,28 +416,6 @@ try
             }
             break;
 
-        case 'create_server':
-            try
-            {
-                $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
-                $token = isset($_POST['token']) ? $_POST['token'] : "";
-                $server_name = isset($_POST['name']) ? utf8_encode($_POST['name']) : "";
-                $max_players = isset($_POST['max_players']) ? (int)$_POST['max_players'] : 0;
-
-                $server = ClientSession::get($token, $userid)->createServer(0, 0, 0, $server_name, $max_players);
-
-                $output->startElement('server_creation');
-                    $output->writeAttribute('success', 'yes');
-                    $output->writeAttribute('info', '');
-                    $output->insert($server->asXML());
-                $output->endElement();
-            }
-            catch(Exception $e)
-            {
-                $output->addErrorElement('server_creation', $e->getMessage());
-            }
-            break;
-
         case 'register':
             try
             {
@@ -508,7 +445,7 @@ try
             }
             break;
 
-        case 'recovery':
+        case 'recover':
             try
             {
                 $username = isset($_POST['username']) ? utf8_encode($_POST['username']) : "";
@@ -516,18 +453,18 @@ try
 
                 User::recover($username, $email);
 
-                $output->startElement('recovery');
+                $output->startElement('recover');
                     $output->writeAttribute('success', 'yes');
                     $output->writeAttribute('info', '');
                 $output->endElement();
             }
             catch(Exception $e)
             {
-                $output->addErrorElement('recovery', $e->getMessage());
+                $output->addErrorElement('recover', $e->getMessage());
             }
             break;
 
-        case 'change_password':
+        case 'change-password':
             try
             {
                 $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
@@ -537,7 +474,7 @@ try
 
                 User::verifyAndChangePassword($current, $new1, $new2, $userid);
 
-                $output->startElement('change_password');
+                $output->startElement('change-password');
                     $output->writeAttribute('success', 'yes');
                     $output->writeAttribute('info', '');
                 $output->endElement();
@@ -545,7 +482,7 @@ try
             }
             catch(Exception $e)
             {
-                $output->addErrorElement('change_password', $e->getMessage());
+                $output->addErrorElement('change-password', $e->getMessage());
             }
             break;
 
