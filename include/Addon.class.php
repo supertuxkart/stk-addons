@@ -1185,8 +1185,16 @@ class Addon extends Base
      */
     public function setStatus($fields)
     {
-        $fields = explode(',', $fields);
+        $is_owner = $this->getUploaderId() === User::getLoggedId();
         $has_permission = User::hasPermission(AccessControl::PERM_EDIT_ADDONS);
+
+        // do not have permission
+        if (!$is_owner && !$has_permission)
+        {
+            throw new AddonException(_h("You do not have the permission to change this addon's status"));
+        }
+
+        $fields = explode(',', $fields);
 
         // Initialise the status field to its present values
         // (Remove any checkboxes that the user could have checked)
