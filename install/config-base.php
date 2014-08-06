@@ -105,6 +105,11 @@ define('F_FEATURED', 128);
 define('F_LATEST', 256);
 define('F_TEX_NOT_POWER_OF_2', 512);
 
+// API
+// this should be changed depending where you have the api, for api.stkaddons.net is should be empty string
+define("API_LOCATION", "stkaddons/api");
+define("API_VERSION", "v2");
+
 // set string encoding
 if (mb_internal_encoding("UTF-8") !== true)
 {

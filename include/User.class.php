@@ -916,6 +916,9 @@ class User extends Base
         $homepage = h($homepage);
         $real_name = h($real_name);
 
+        // update session
+        static::sessionSet("real_name", $real_name);
+
         try
         {
             DBConnection::get()->update(

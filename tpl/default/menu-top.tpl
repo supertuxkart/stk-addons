@@ -13,7 +13,7 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <p class="navbar-text navbar-left">
                     {if $show_welcome==true}
-                        {$menu.welcome}&nbsp;&nbsp;&nbsp;
+                        <span id="header-realname">{$menu.welcome}</span>&nbsp;&nbsp;&nbsp;
                     {/if}
                 </p>
                 <ul class="nav navbar-nav">
@@ -26,13 +26,13 @@
                             <li>{$menu.tracks}</li>
                         </ul>
                     </li>
-                    {if $show_users==true}
+                    {if $show_users}
                         <li>{$menu.users}</li>
                     {/if}
-                    {if $show_upload==true}
+                    {if $show_upload}
                         <li>{$menu.upload}</li>
                     {/if}
-                    {if $show_manage==true}
+                    {if $show_manage}
                         <li>{$menu.manage}</li>
                     {/if}
                     <li>{$menu.bugs}</li>
@@ -41,7 +41,7 @@
                 <ul class="nav navbar-nav navbar-right">
                     <li id="lang-menu">{include file=#lang_menu#}</li>
                     <li>{$menu.stk_home}</li>
-                    {if $show_login==true}
+                    {if $show_login}
                         <li>{$menu.login}</li>
                     {else}
                         <li>{$menu.logout}</li>

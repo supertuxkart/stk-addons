@@ -85,10 +85,6 @@ if ($addon_exists)
                 $status = _h('Saved properties.') . '<br>';
                 break;
 
-            case 'rev':
-                parseUpload($_FILES['file_addon'], true);
-                break;
-
             case 'status':
                 if (!isset($_GET['name']) || !isset($_POST['fields']))
                 {

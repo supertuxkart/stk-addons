@@ -10,14 +10,20 @@ $(document).ready(function() {
 
     if (link.length === 1) { // top link
         link.parent().addClass("active");
-    } else { // dropdown
-        link.closest("ul").parent().addClass("active");
+    } else { // multiple top links
+        var $closest_ul = link.first().closest("ul");
 
-        link.each(function() { // mark in dropdown
-            if (current_query === this.href.split("?")[1]) {
-                $(this).parent().addClass("active");
-            }
-        });
+        if ($closest_ul.hasClass("dropdown-menu")) { // dropdown
+            $closest_ul.parent().addClass("active");
+
+            link.each(function() { // mark in dropdown
+                if (current_query === this.href.split("?")[1]) {
+                    $(this).parent().addClass("active");
+                }
+            });
+        } else { // normal link, select first
+            link.first().parent().addClass("active");
+        }
     }
 
     $('#lang-menu > a').click(function() {
