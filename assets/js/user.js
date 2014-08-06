@@ -222,7 +222,10 @@
             growlSuccess(jData["success"]);
 
             // update view
-            $("#user-realname").text(getByID("user-profile-realname").value);
+            var new_real_name = getByID("user-profile-realname").value;
+            $("#user-realname").text(new_real_name);
+            $("#header-realname").text("Welcome, " + new_real_name);
+
             var homepage = getByID("user-profile-homepage").value;
             var $homepage_row = $("#user-homepage-row");
             if (_.isEmpty(homepage)) { // homepage is empty, hide the view
