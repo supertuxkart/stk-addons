@@ -420,7 +420,7 @@ function generateAssetXML2()
 
 function writeAssetXML()
 {
-    writeFile(generateAssetXML2(), ASSETS_XML_PATH);
+    writeFile(generateAssetXML2(), ASSETS2_XML_PATH);
 
     return writeFile(generateAssetXML(), ASSETS_XML_PATH);
 }
