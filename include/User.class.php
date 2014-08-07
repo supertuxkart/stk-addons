@@ -24,6 +24,15 @@
  */
 class User extends Base
 {
+    const MIN_PASSWORD = 8;
+    const MAX_PASSWORD = 60;
+
+    const MIN_USERNAME = 4;
+    const MAX_USERNAME = 30;
+
+    const MIN_REALNAME = 2;
+    const MAX_REALNAME = 60;
+
     /**
      * Flag to indicate if the a user is logged in
      * @var bool

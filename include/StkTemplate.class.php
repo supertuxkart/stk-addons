@@ -400,6 +400,20 @@ class StkTemplate extends Template
     }
 
     /**
+     * Add bootstrap validation plugin
+     *
+     * @link http://bootstrapvalidator.com/
+     * @return $this
+     */
+    public function addBootstrapValidatorLibrary()
+    {
+        $this->addCssInclude("bootstrapValidator/dist/css/bootstrapValidator.css", LIBS_LOCATION);
+        $this->addScriptInclude("bootstrapValidator/dist/js/bootstrapValidator.js", LIBS_LOCATION);
+
+        return $this;
+    }
+
+    /**
      * Add twitter typehead library for autocompletion
      *
      * @link http://twitter.github.io/typeahead.js/

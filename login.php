@@ -44,11 +44,15 @@ if (!Util::str_starts_with($return_to_url, SITE_ROOT))
     $return_to_url = $safe_url;
 }
 
-$tpl = StkTemplate::get('login.tpl')->assignTitle(_h("Login"));
+$tpl = StkTemplate::get('login.tpl')
+    ->assignTitle(_h("Login"))
+    ->addBootstrapValidatorLibrary();
 
 // Prepare forms
 $login_form = [
     'display'     => true,
+    'username'    => ['min' => User::MIN_USERNAME, 'max' => User::MAX_USERNAME],
+    'password'    => ['min' => User::MIN_PASSWORD, 'max' => User::MAX_PASSWORD],
     'return_to'   => $return_to_url,
     'form_action' => File::rewrite('login.php?action=submit'),
     'links'       => [
@@ -56,7 +60,6 @@ $login_form = [
         'reset_password' => File::link('password-reset.php', _h('(forgot password)'))
     ]
 ];
-
 
 switch ($_GET['action'])
 {

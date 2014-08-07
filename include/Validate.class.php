@@ -25,12 +25,6 @@
  */
 class Validate
 {
-    const MIN_PASSWORD_LENGTH = 8;
-
-    const MIN_USERNAME_LENGTH = 4;
-
-    const MIN_REAL_NAME = 2;
-
     // fake enumeration
     const PASSWORD_ID = 1;
 
@@ -132,13 +126,20 @@ class Validate
     public static function username($username)
     {
         $username = Util::str_strip_space($username);
-        if (mb_strlen($username) < static::MIN_USERNAME_LENGTH)
+        $length = strlen($username); // username is alpha numeric, use normal strlen
+
+        if ($length < User::MIN_USERNAME || $length > User::MAX_USERNAME)
         {
-            throw new UserException(_h('Your username must be at least 4 characters long(with no spaces)'));
+            throw new UserException(sprintf(
+                _h('The username must be between %s and %s characters long'),
+                User::MIN_USERNAME,
+                User::MAX_USERNAME
+            ));
         }
+
         if (!preg_match('/^[a-z0-9]+$/i', $username))
         {
-            throw new UserException(_h('Your username can only contain alphanumeric characters.'));
+            throw new UserException(_h('Your username can only contain alphanumeric characters'));
         }
 
         return h($username);
@@ -153,9 +154,15 @@ class Validate
     public static function realName($name)
     {
         $name = trim($name);
-        if (mb_strlen($name) < static::MIN_REAL_NAME)
+        $length = mb_strlen($name);
+
+        if ($length < User::MIN_REALNAME || $length > User::MAX_REALNAME)
         {
-            throw new UserException(_h('You must enter a name at least with 2 characters long'));
+            throw new UserException(sprintf(
+                _h('The username must be between %s and %s characters long'),
+                User::MIN_REALNAME,
+                User::MAX_REALNAME
+            ));
         }
 
         return h($name);
@@ -170,9 +177,15 @@ class Validate
      */
     protected static function checkPasswordLength($password)
     {
-        if (mb_strlen($password) < static::MIN_PASSWORD_LENGTH)
+        $length = mb_strlen($password);
+
+        if ($length < User::MIN_PASSWORD || $length > User::MAX_PASSWORD)
         {
-            throw new UserException(sprintf(_h('Your password must be at least %d characters long.'), static::MIN_PASSWORD_LENGTH));
+            throw new UserException(sprintf(
+                _h('The password must be between %1 and %2 characters long'),
+                User::MIN_PASSWORD,
+                User::MAX_PASSWORD
+            ));
         }
     }
 

@@ -273,7 +273,7 @@ CREATE PROCEDURE `convert_to_utf8`()
             ALTER TABLE `v2_users` CHANGE `name` `name` TINYTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL ;
             ALTER TABLE `v2_users` CHANGE `role` `role` TINYTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL ;
             ALTER TABLE `v2_users` CHANGE `email` `email` TINYTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL ;
-            ALTER TABLE `v2_users` CHANGE `homepage` `homepage` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL ;
+            ALTER TABLE `v2_users` CHANGE `homepage` `homepage` VARCHAR( 64 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL ;
             ALTER TABLE `v2_users` CHANGE `avatar` `avatar` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL ;
 
             REPAIR TABLE `v2_users`;
