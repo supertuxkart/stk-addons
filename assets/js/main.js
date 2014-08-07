@@ -45,9 +45,13 @@ $(document).ready(function() {
         }
     }
 
+    // language menu
     $('#lang-menu > a').click(function() {
         $('ul.menu-body').slideToggle('fast'); // language menu
     });
 
-    $('.auto-validation').bootstrapValidator();
+    // auto validation
+    if($.fn.bootstrapValidator) {
+        $('.auto-validation').bootstrapValidator();
+    }
 });
