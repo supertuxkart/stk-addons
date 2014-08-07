@@ -282,6 +282,18 @@ class Validate
     }
 
     /**
+     * Validator singleton
+     *
+     * @param array $data
+     *
+     * @return \Valitron\Validator
+     */
+    public static function get($data)
+    {
+        return new Valitron\Validator($data);
+    }
+
+    /**
      * Check if an array has multiple keys, return the error messages
      *
      * @param array $pool   the array to check agains

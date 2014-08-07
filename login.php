@@ -57,6 +57,7 @@ $login_form = [
     ]
 ];
 
+
 switch ($_GET['action'])
 {
     case 'logout':
