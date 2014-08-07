@@ -21,8 +21,10 @@ Dependencies include:
 * PHP's gd module
 * PHP's PDO module
 * PHP's gettext module
-* Smarty Template Engine (managed by composer)
-* Smarty [gettext plugin](https://github.com/smarty-gettext/smarty-gettext) (managed by composer)
+
+Other dependencies:
+* `composer install` to download the php dependencies
+* `bower install` to download the javascript and css dependencies
 
 You can generate the database tables, procedures, and relations by using a tool such as
 PHPMyAdmin to import the table.sql file found in the repository(in the `install` directory).
@@ -33,11 +35,8 @@ On your web server, you must edit the provided `install/config-base.php` to matc
 and system configuration. Save this file as `config.php` in the website root. Enable the debugging mode in
 the configuration file to assist with resolving any errors.
 
-Install dependencies:
-* `composer install` to download the php dependencies
-* `bower install` to download the javascript and css dependencies
-
 The cache folder is local, if you get permission errors on `assets/cache` just run `chmod 777 assets/cache`
+The same can be said about the `dl/` directory.
 
 Register a new user using the web interface. Don't worry about configuring your SMTP
 server. After creating your user from the web interface, use a tool such as PHPMyAdmin
@@ -47,7 +46,7 @@ the relevant row in the 'verifications' table.
 The source tree contains an 'api' folder. On the production STK Addons server,
 these files exist in a separate sub-domain. For testing on a local machine, you
 may wish to copy these files to the parent folder if you intend to test API
-functionality.
+functionality. (change the API constants in config.php)
 
 As an optional step you could use the `install/htaccess.example` file to rewrite url's. To do this
 move it the website root and rename it to `.htaccess` (be sure that you have installed `mod_rewrite` in apache)
@@ -58,12 +57,6 @@ About the Code
 
 The STKAddons source code tree has grown somewhat organically over the years. There
 are many places where the source could be cleaned up.
-
-There are a number of ongoing refactoring projects within the code-base:
-* Making use of a template engine for all UI code. The first version of STKAddons had
-  html baked right into the PHP code, and this is generally considered bad practice.
-  I (Stephen) have been trying to slowly weed that out and move to template files for
-  everything, so that we might offer customizable themes or a mobile UI for example.
 
 There are also a number of particularly ugly sections of code which need major
 refactoring:

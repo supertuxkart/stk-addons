@@ -762,10 +762,10 @@ ADD CONSTRAINT `v2_votes_ibfk_2` FOREIGN KEY (`addon_id`) REFERENCES `v2_addons`
 ALTER TABLE `v2_bugs`
 ADD CONSTRAINT `v2_bugs_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `v2_users` (`id`)
     ON DELETE CASCADE
-    ON UPDATE NO ACTION,
-ADD CONSTRAINT `v2_bugs_ibfk_2` FOREIGN KEY (`addon_id`) REFERENCES `v2_addons` (`id`)
-    ON DELETE CASCADE
     ON UPDATE NO ACTION;
+# ADD CONSTRAINT `v2_bugs_ibfk_2` FOREIGN KEY (`addon_id`) REFERENCES `v2_addons` (`id`)
+#     ON DELETE CASCADE
+#     ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `v2_bugs_comments`

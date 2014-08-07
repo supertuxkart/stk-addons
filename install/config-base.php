@@ -53,6 +53,7 @@ else
 
 define("NEWS_XML_PATH", UP_PATH . "xml" . DS . "news.xml");
 define("ASSETS_XML_PATH", UP_PATH . "xml" . DS . "assets.xml");
+define("ASSETS2_XML_PATH", UP_PATH . "xml" . DS . "assets2.xml");
 
 // make sure that this ends with a trailing slash, otherwise it would break a few things (like the activation email)
 define("SITE_ROOT", "http://stkaddons.net/");
@@ -62,6 +63,7 @@ define("BUGS_LOCATION", SITE_ROOT . "bugs/");
 define("STATS_LOCATION", SITE_ROOT . "stats/");
 define("NEWS_XM_LOCATION", DOWNLOAD_LOCATION . "xml/news.xml");
 define("ASSETS_XML_LOCATION", DOWNLOAD_LOCATION . "xml/assets.xml");
+define("ASSETS2_XML_LOCATION", DOWNLOAD_LOCATION . "xml/assets.xml");
 define("ASSETS_LOCATION", SITE_ROOT . "assets/");
 define("CACHE_LOCATION", ASSETS_LOCATION . "cache/");
 define("LIBS_LOCATION", ASSETS_LOCATION . "libs/");

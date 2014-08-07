@@ -68,17 +68,6 @@ else
     echo '<strong>ZipArchive Not Available.</strong><br />';
 }
 
-// Check for File_Archive
-@ include_once('File/Archive.php');
-if (class_exists('File_Archive'))
-{
-    echo 'PEAR File_Archive Available.<br />';
-}
-else
-{
-    echo '<strong>PEAR File_Archive Not Available.</strong><br />';
-}
-
 // Check for PEAR::Mail
 @ include_once('Mail.php');
 if (class_exists('Mail'))
