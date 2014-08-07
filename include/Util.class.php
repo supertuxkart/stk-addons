@@ -771,8 +771,8 @@ class Util
      */
     public static function getImageLabel($text)
     {
-        $write_dir = UP_PATH . 'images' . DS;
-        $read_dir = DOWNLOAD_LOCATION . 'images/';
+        $write_dir = CACHE_PATH;
+        $read_dir = CACHE_LOCATION;
 
         $text_no_accent = preg_replace('/\W/s', '_', $text); // remove some accents
         $image_name = 'im_' . $text_no_accent . '.png';
