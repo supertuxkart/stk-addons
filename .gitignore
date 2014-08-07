@@ -1,5 +1,4 @@
 config.php
 .htaccess
-assets/xml/*
 .idea/
 vendor/

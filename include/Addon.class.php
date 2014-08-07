@@ -1217,6 +1217,7 @@ class Addon extends Base
             {
                 $_POST[$field] = null;
             }
+
             if ($field === 'latest')
             {
                 $field_info = ['', (int)$_POST['latest']];
