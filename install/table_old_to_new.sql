@@ -64,35 +64,13 @@ CREATE PROCEDURE `convert_to_utf8`()
             OPTIMIZE TABLE `v2_arenas_revs`;
         END IF;
 
-        IF table_exists('v2_bugs') THEN
-            #ALTER TABLE `v2_bugs` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-            ALTER TABLE `v2_bugs` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-            ALTER TABLE `v2_bugs` CHANGE `close_reason` `close_reason` VARCHAR( 512 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT 'The reason it was closed';
-            ALTER TABLE `v2_bugs` CHANGE `title` `title` VARCHAR( 256 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Bug title';
-            ALTER TABLE `v2_bugs` CHANGE `description` `description` VARCHAR( 2048 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Bug description';
-
-            REPAIR TABLE `v2_bugs`;
-            OPTIMIZE TABLE `v2_bugs`;
-        END IF;
-
-        IF table_exists('v2_bugs_comments') THEN
-            ALTER TABLE `v2_bugs_comments` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-            ALTER TABLE `v2_bugs_comments` CHANGE `description` `description` VARCHAR( 2048 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT 'The comment description';
-
-            REPAIR TABLE `v2_bugs_comments`;
-            OPTIMIZE TABLE `v2_bugs_comments`;
-        END IF;
-
-
         IF table_exists('v2_cache') THEN
             ALTER TABLE `v2_cache` ENGINE = InnoDB;
             ALTER TABLE `v2_cache` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
             ALTER TABLE `v2_cache` CHANGE `file` `file` VARCHAR( 128 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL ;
             ALTER TABLE `v2_cache` CHANGE `addon` `addon` VARCHAR( 30 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL ;
-            ALTER TABLE `v2_cache` CHANGE `props` `props` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL ;
+            ALTER TABLE `v2_cache` CHANGE `props` `props` TINYTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL ;
 
             REPAIR TABLE `v2_cache`;
             OPTIMIZE TABLE `v2_cache`;
@@ -125,7 +103,7 @@ CREATE PROCEDURE `convert_to_utf8`()
 
             ALTER TABLE `v2_files` CHANGE `addon_type` `addon_type` ENUM( 'karts', 'tracks', 'arenas' ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL ;
             ALTER TABLE `v2_files` CHANGE `file_type` `file_type` ENUM( 'source', 'image', 'addon' ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL ;
-            ALTER TABLE `v2_files` CHANGE `file_path` `file_path` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL ;
+            ALTER TABLE `v2_files` CHANGE `file_path` `file_path` VARCHAR( 256 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL ;
 
             REPAIR TABLE `v2_files`;
             OPTIMIZE TABLE `v2_files`;
@@ -211,24 +189,6 @@ CREATE PROCEDURE `convert_to_utf8`()
             OPTIMIZE TABLE `v2_notifications`;
         END IF;
 
-        IF table_exists('v2_roles') THEN
-            ALTER TABLE `v2_roles` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-            ALTER TABLE `v2_roles` CHANGE `name` `name` VARCHAR( 256 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'The name identifier';
-
-            REPAIR TABLE `v2_roles`;
-            OPTIMIZE TABLE `v2_roles`;
-        END IF;
-
-        IF table_exists('v2_role_permissions') THEN
-            ALTER TABLE `v2_role_permissions` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-            ALTER TABLE `v2_role_permissions` CHANGE `permission` `permission` VARCHAR( 256 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'The actual permission';
-
-            REPAIR TABLE `v2_role_permissions`;
-            OPTIMIZE TABLE `v2_role_permissions`;
-        END IF;
-
         IF table_exists('v2_servers') THEN
             ALTER TABLE `v2_servers` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -268,13 +228,13 @@ CREATE PROCEDURE `convert_to_utf8`()
         IF table_exists('v2_users') THEN
             ALTER TABLE `v2_users` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
-            ALTER TABLE `v2_users` CHANGE `user` `user` TINYTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL ;
+            ALTER TABLE `v2_users` CHANGE `user` `user` VARCHAR( 30 ) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL ;
             ALTER TABLE `v2_users` CHANGE `pass` `pass` CHAR( 96 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL ;
-            ALTER TABLE `v2_users` CHANGE `name` `name` TINYTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL ;
-            ALTER TABLE `v2_users` CHANGE `role` `role` TINYTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL ;
-            ALTER TABLE `v2_users` CHANGE `email` `email` TINYTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL ;
+            ALTER TABLE `v2_users` CHANGE `name` `name` VARCHAR( 128 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL ;
+            ALTER TABLE `v2_users` CHANGE `role` `role` VARCHAR( 128 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL ;
+            ALTER TABLE `v2_users` CHANGE `email` `email` VARCHAR( 128 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL ;
             ALTER TABLE `v2_users` CHANGE `homepage` `homepage` VARCHAR( 64 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL ;
-            ALTER TABLE `v2_users` CHANGE `avatar` `avatar` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL ;
+            ALTER TABLE `v2_users` CHANGE `avatar` `avatar` VARCHAR ( 64 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL ;
 
             REPAIR TABLE `v2_users`;
             OPTIMIZE TABLE `v2_users`;
@@ -283,7 +243,7 @@ CREATE PROCEDURE `convert_to_utf8`()
         IF table_exists('v2_verification') THEN
             ALTER TABLE `v2_verification` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
-            ALTER TABLE `v2_verification` CHANGE `code` `code` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'The verification code';
+            ALTER TABLE `v2_verification` CHANGE `code` `code` VARCHAR( 32 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'The verification code';
 
             REPAIR TABLE `v2_verification`;
             OPTIMIZE TABLE `v2_verification`;

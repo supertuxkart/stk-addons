@@ -51,7 +51,7 @@ $(document).ready(function() {
     });
 
     // auto validation
-    if($.fn.bootstrapValidator) {
+    if ($.fn.bootstrapValidator) {
         $('.auto-validation').bootstrapValidator();
     }
 });

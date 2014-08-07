@@ -141,13 +141,17 @@ CREATE TABLE IF NOT EXISTS `v2_arenas_revs` (
 --
 
 CREATE TABLE IF NOT EXISTS `v2_cache` (
-    `file`  VARCHAR(128) NOT NULL,
-    `addon` VARCHAR(30) DEFAULT NULL,
-    `props` TEXT,
+    `file`  VARCHAR(128)
+            COLLATE utf8mb4_unicode_ci NOT NULL,
+    `addon` VARCHAR(30)
+            COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+    `props` TINYTEXT
+            COLLATE utf8mb4_unicode_ci,
     UNIQUE KEY `file` (`file`)
 )
     ENGINE =InnoDB
-    DEFAULT CHARSET =utf8mb4;
+    DEFAULT CHARSET =utf8mb4
+    COLLATE =utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -213,22 +217,26 @@ INSERT INTO `v2_config` (`name`, `value`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `v2_files` (
-    `id`          INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-    `addon_id`    VARCHAR(30)      NOT NULL,
-    `addon_type`  ENUM('karts', 'tracks', 'arenas') DEFAULT NULL,
-    `file_type`   ENUM('source', 'image', 'addon') DEFAULT NULL,
-    `file_path`   TEXT             NOT NULL,
-    `date_added`  TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP
-    COMMENT 'Field added Jul 7 2011',
-    `approved`    INT(1)           NOT NULL DEFAULT '0',
-    `downloads`   INT(10) UNSIGNED NOT NULL DEFAULT '0',
-    `delete_date` DATE             NOT NULL DEFAULT '0000-00-00',
+    `id`          INT(11) UNSIGNED           NOT NULL AUTO_INCREMENT,
+    `addon_id`    VARCHAR(30)
+                  COLLATE utf8mb4_unicode_ci NOT NULL,
+    `addon_type`  ENUM('karts', 'tracks', 'arenas')
+                  COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+    `file_type`   ENUM('source', 'image', 'addon')
+                  COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+    `file_path`   VARCHAR(256)
+                  COLLATE utf8mb4_unicode_ci NOT NULL,
+    `date_added`  TIMESTAMP                  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `approved`    INT(1)                     NOT NULL DEFAULT '0',
+    `downloads`   INT(10) UNSIGNED           NOT NULL DEFAULT '0',
+    `delete_date` DATE                       NOT NULL DEFAULT '0000-00-00',
     PRIMARY KEY (`id`),
     KEY `delete_date` (`delete_date`),
     KEY `addon_id` (`addon_id`)
 )
     ENGINE =InnoDB
-    DEFAULT CHARSET =utf8mb4;
+    DEFAULT CHARSET =utf8mb4
+    COLLATE =utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -452,22 +460,30 @@ CREATE TABLE IF NOT EXISTS `v2_tracks_revs` (
 --
 
 CREATE TABLE IF NOT EXISTS `v2_users` (
-    `id`         INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-    `user`       TINYTEXT         NOT NULL,
-    `pass`       CHAR(96)         NOT NULL,
-    `name`       TINYTEXT         NOT NULL,
-    `role`       TINYTEXT         NOT NULL,
-    `email`      TINYTEXT         NOT NULL,
-    `active`     TINYINT(1)       NOT NULL,
-    `last_login` TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `reg_date`   DATE             NOT NULL,
-    `homepage`   TEXT,
-    `avatar`     TEXT,
+    `id`         INT(11) UNSIGNED           NOT NULL AUTO_INCREMENT,
+    `user`       VARCHAR(30)
+                 CHARACTER SET ascii        NOT NULL,
+    `pass`       CHAR(96)
+                 COLLATE utf8mb4_unicode_ci NOT NULL,
+    `name`       VARCHAR(128)
+                 COLLATE utf8mb4_unicode_ci NOT NULL,
+    `role`       VARCHAR(128)
+                 COLLATE utf8mb4_unicode_ci NOT NULL,
+    `email`      VARCHAR(128)
+                 COLLATE utf8mb4_unicode_ci NOT NULL,
+    `active`     TINYINT(1)                 NOT NULL,
+    `last_login` TIMESTAMP                  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `reg_date`   DATE                       NOT NULL,
+    `homepage`   VARCHAR(64)
+                 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+    `avatar`     VARCHAR(64)
+                 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
     PRIMARY KEY (`id`),
-    UNIQUE KEY `user` (`user`(30))
+    UNIQUE KEY `user` (`user`)
 )
     ENGINE =InnoDB
-    DEFAULT CHARSET =utf8mb4;
+    DEFAULT CHARSET =utf8mb4
+    COLLATE =utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -476,14 +492,18 @@ CREATE TABLE IF NOT EXISTS `v2_users` (
 --
 
 CREATE TABLE IF NOT EXISTS `v2_verification` (
-    `userid` INT(11) UNSIGNED NOT NULL DEFAULT '0',
-    `code`   TEXT             NOT NULL
+    `userid` INT(10) UNSIGNED           NOT NULL DEFAULT '0',
+    `code`   VARCHAR(32)
+             COLLATE utf8mb4_unicode_ci NOT NULL
     COMMENT 'The verification code',
-    PRIMARY KEY (`userid`)
+    PRIMARY KEY (`userid`),
+    UNIQUE KEY `userid` (`userid`)
 )
     ENGINE =InnoDB
     DEFAULT CHARSET =utf8mb4
+    COLLATE =utf8mb4_unicode_ci
     COMMENT ='Used for account activation and recovery';
+
 
 -- --------------------------------------------------------
 
@@ -522,9 +542,9 @@ CREATE TABLE IF NOT EXISTS `v2_bugs` (
     `date_edit`    TIMESTAMP        NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Last edit date',
     `date_close`   TIMESTAMP        NULL DEFAULT NULL
     COMMENT 'Close date',
-    `title`        VARCHAR(256)     NOT NULL
+    `title`        VARCHAR(128)     NOT NULL
     COMMENT 'Bug title',
-    `description`  VARCHAR(2048)    NOT NULL
+    `description`  VARCHAR(1024)    NOT NULL
     COMMENT 'Bug description',
     `is_report`    TINYINT(1)       NOT NULL DEFAULT '0'
     COMMENT 'Flag to indicate if the bug is a feedback',
@@ -551,7 +571,7 @@ CREATE TABLE IF NOT EXISTS `v2_bugs_comments` (
     COMMENT 'The user who commented',
     `date`        TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP
     COMMENT 'The date it was reported',
-    `description` VARCHAR(2048)
+    `description` VARCHAR(1024)
                   CHARACTER SET utf8mb4 DEFAULT NULL
     COMMENT 'The comment description',
     PRIMARY KEY (`id`),
@@ -570,7 +590,7 @@ CREATE TABLE IF NOT EXISTS `v2_bugs_comments` (
 
 CREATE TABLE IF NOT EXISTS `v2_roles` (
     `id`   INT(4)                     NOT NULL AUTO_INCREMENT COMMENT 'The role unique identifier',
-    `name` VARCHAR(256)
+    `name` VARCHAR(128)
            COLLATE utf8mb4_unicode_ci NOT NULL
     COMMENT 'The name identifier',
     PRIMARY KEY (`id`)
@@ -598,7 +618,7 @@ INSERT INTO `v2_roles` (`id`, `name`) VALUES
 CREATE TABLE IF NOT EXISTS `v2_role_permissions` (
     `role_id`    INT(4)                     NOT NULL
     COMMENT 'The id from the roles table',
-    `permission` VARCHAR(256)
+    `permission` VARCHAR(128)
                  COLLATE utf8mb4_unicode_ci NOT NULL
     COMMENT 'The actual permission',
     KEY `role_id` (`role_id`)
