@@ -34,7 +34,7 @@ define("ROOT_PATH", __DIR__ . DS);
 define("INCLUDE_PATH", ROOT_PATH . "include" . DS);
 define("TPL_PATH", ROOT_PATH . "tpl" . DS . "default" . DS); // Template properties
 define("TMP_PATH", sys_get_temp_dir() . DS); // define temporary directory path
-define("UPLOAD_PATH", ROOT_PATH . "uploads" . DS);
+define("UPLOAD_PATH", ROOT_PATH . "dl" . DS);
 define("UPLOAD_CRON_PATH", UPLOAD_PATH);
 define("BUGS_PATH", ROOT_PATH . "bugs" . DS);
 define("STATS_PATH", ROOT_PATH . "stats" . DS);
@@ -57,7 +57,7 @@ define("ASSETS_XML_PATH", UP_PATH . "xml" . DS . "assets.xml");
 // make sure that this ends with a trailing slash, otherwise it would break a few things (like the activation email)
 define("SITE_ROOT", "http://stkaddons.net/");
 
-define("DOWNLOAD_LOCATION", SITE_ROOT . "uploads/");
+define("DOWNLOAD_LOCATION", SITE_ROOT . "dl/");
 define("BUGS_LOCATION", SITE_ROOT . "bugs/");
 define("STATS_LOCATION", SITE_ROOT . "stats/");
 define("NEWS_XM_LOCATION", DOWNLOAD_LOCATION . "xml/news.xml");
