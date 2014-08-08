@@ -12,39 +12,44 @@
 
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <p class="navbar-text navbar-left">
-                    {if $show_welcome==true}
+                    {if $is_logged}
                         <span id="header-realname">{$menu.welcome}</span>&nbsp;&nbsp;&nbsp;
                     {/if}
                 </p>
                 <ul class="nav navbar-nav">
-                    <li>{$menu.home}</li>
+                    <li><a href="{$menu.home}">{t}Home{/t}</a></li>
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">{t}Addons{/t} <span class="caret"></span></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="500">
+                            {t}Addons{/t} <span class="caret"></span>
+                        </a>
                         <ul class="dropdown-menu" role="menu">
-                            <li>{$menu.arenas}</li>
-                            <li>{$menu.karts}</li>
-                            <li>{$menu.tracks}</li>
+                            {if $is_logged}
+                                <li>
+                                    <a href="{$menu.upload}"><span class="glyphicon glyphicon-upload"></span> {t}Upload{/t}</a>
+                                </li>
+                            {/if}
+                            <li><a href="{$menu.bugs}">{t}Bugs{/t}</a></li>
+                            <li class="divider"></li>
+                            <li><a href="{$menu.arenas}">{t}Arenas{/t}</a></li>
+                            <li><a href="{$menu.karts}">{t}Karts{/t}</a></li>
+                            <li><a href="{$menu.tracks}">{t}Tracks{/t}</a></li>
                         </ul>
                     </li>
-                    {if $show_users}
-                        <li>{$menu.users}</li>
+                    {if $is_logged}
+                        <li><a href="{$menu.users}">{t}Users{/t}</a></li>
                     {/if}
-                    {if $show_upload}
-                        <li>{$menu.upload}</li>
+                    {if $can_edit_addons}
+                        <li><a href="{$menu.manage}">{t}Manage{/t}</a></li>
                     {/if}
-                    {if $show_manage}
-                        <li>{$menu.manage}</li>
-                    {/if}
-                    <li>{$menu.bugs}</li>
-                    <li>{$menu.stats}</li>
+                    <li><a href="{$menu.stats}">{t}Stats{/t}</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li id="lang-menu">{include file=#lang_menu#}</li>
-                    <li>{$menu.stk_home}</li>
-                    {if $show_login}
-                        <li>{$menu.login}</li>
+                    <li><a href="http://supertuxkart.sourceforge.net">{t}STK Homepage{/t}</a></li>
+                    {if !$is_logged}
+                        <li><a href="{$menu.login}">{t}Login{/t}</a></li>
                     {else}
-                        <li>{$menu.logout}</li>
+                        <li><a href="{$menu.logout}">{t}Logout{/t}</a></li>
                     {/if}
                 </ul>
             </div><!-- /.navbar-collapse -->

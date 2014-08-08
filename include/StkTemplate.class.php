@@ -143,6 +143,7 @@ class StkTemplate extends Template
             ['src' => LIBS_LOCATION . "underscore/underscore.js"],
             ['src' => LIBS_LOCATION . "bootstrap/dist/js/bootstrap.js"],
             ['src' => LIBS_LOCATION . "history.js/scripts/bundled-uncompressed/html4+html5/jquery.history.js"],
+            ['src' => LIBS_LOCATION . "bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js"],
             ['src' => LIBS_LOCATION . "bootstrap.growl/bootstrap-growl.js"],
             ['src' => LIBS_LOCATION . "bootbox/bootbox.js"],
             ['src' => JS_LOCATION . 'main.js']
@@ -159,30 +160,24 @@ class StkTemplate extends Template
         // TODO make top menu more dynamic
         $menu = [
             'welcome'  => sprintf(_h('Welcome, %s'), User::getLoggedRealName()),
-            'home'     => File::link('index.php', _h("Home")),
-            'login'    => File::link('login.php', _h('Login')),
-            'logout'   => File::link('login.php?action=logout', _h('Log out')),
-            'users'    => File::link('users.php', _h('Users')),
-            'upload'   => File::link('upload.php', _h('Upload')),
-            'manage'   => File::link('manage.php', _h('Manage')),
-            'bugs'     => File::link("bugs/", _h("Bugs")),
-            'karts'    => File::link('addons.php?type=karts', _h('Karts')),
-            'tracks'   => File::link('addons.php?type=tracks', _h('Tracks')),
-            'arenas'   => File::link('addons.php?type=arenas', _h('Arenas')),
-            'about'    => File::link('about.php', _h('About')),
-            'stats'    => File::link(STATS_LOCATION, _h("Stats"), false),
-            'privacy'  => File::link('privacy.php', _h('Privacy')),
-            'stk_home' => File::link('http://supertuxkart.sourceforge.net', _h('STK Homepage'))
+            'home'     => File::rewrite('index.php'),
+            'login'    => File::rewrite('login.php'),
+            'logout'   => File::rewrite('login.php?action=logout'),
+            'users'    => File::rewrite('users.php'),
+            'upload'   => File::rewrite('upload.php'),
+            'manage'   => File::rewrite('manage.php'),
+            'bugs'     => BUGS_LOCATION,
+            'karts'    => File::rewrite('addons.php?type=karts'),
+            'tracks'   => File::rewrite('addons.php?type=tracks'),
+            'arenas'   => File::rewrite('addons.php?type=arenas'),
+            'about'    => File::rewrite('about.php'),
+            'stats'    => STATS_LOCATION,
+            'privacy'  => File::rewrite('privacy.php'),
         ];
 
-        $logged_in = User::isLoggedIn();
-        $this->smarty->assign('show_welcome', $logged_in);
-        $this->smarty->assign('show_login', !$logged_in);
-        $this->smarty->assign('show_users', $logged_in);
-        $this->smarty->assign('show_upload', $logged_in);
-
         // if the user can edit addons then he can access the manage panel
-        $this->smarty->assign('show_manage', User::hasPermission(AccessControl::PERM_EDIT_ADDONS));
+        $this->smarty->assign('is_logged', User::isLoggedIn());
+        $this->smarty->assign('can_edit_addons', User::hasPermission(AccessControl::PERM_EDIT_ADDONS));
 
         $this->smarty->assign('menu', $menu);
     }

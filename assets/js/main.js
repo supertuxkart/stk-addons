@@ -25,23 +25,24 @@ $(document).ready(function() {
     var page_parts = window.location.href.split("?"),
         current_page = page_parts[0],
         current_query = page_parts[1],
-        link = $(".navbar-nav a[href^='" + current_page + "']");
+        $link = $(".navbar-nav a[href^='" + current_page + "']"),
+        $closest_ul = $link.first().closest("ul"),
+        has_dropdown = $closest_ul.hasClass("dropdown-menu");
 
-    if (link.length === 1) { // top link
-        link.parent().addClass("active");
+    if ($link.length === 1 && !has_dropdown) { // top link
+        $link.parent().addClass("active");
     } else { // multiple top links
-        var $closest_ul = link.first().closest("ul");
 
-        if ($closest_ul.hasClass("dropdown-menu")) { // dropdown
+        if (has_dropdown) { // dropdown
             $closest_ul.parent().addClass("active");
 
-            link.each(function() { // mark in dropdown
+            $link.each(function() { // mark in dropdown
                 if (current_query === this.href.split("?")[1]) {
                     $(this).parent().addClass("active");
                 }
             });
         } else { // normal link, select first
-            link.first().parent().addClass("active");
+            $link.first().parent().addClass("active");
         }
     }
 
