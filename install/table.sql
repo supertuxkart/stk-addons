@@ -42,13 +42,6 @@ CREATE PROCEDURE `v2_log_event`(IN in_user INT(10) UNSIGNED, IN in_message TEXT)
     VALUES
         (in_user, in_message)$$
 
-CREATE PROCEDURE `v2_register_user`(IN in_user    TEXT, IN in_pass CHAR(96), IN in_name TEXT, IN in_email TEXT, IN in_vercode TEXT,
-                                    IN in_regdate DATE)
-    INSERT INTO `v2_users`
-    (`user`, `pass`, `name`, `role`, `email`, `active`, `verify`, `reg_date`)
-    VALUES
-        (in_user, in_pass, in_name, 'basicUser', in_email, 0, in_vercode, in_regdate)$$
-
 CREATE PROCEDURE `v2_set_logintime`(IN userid INT(11), IN logintime TIMESTAMP)
     UPDATE `v2_users`
     SET `last_login` = logintime
@@ -63,14 +56,15 @@ DELIMITER ;
 --
 
 CREATE TABLE IF NOT EXISTS `v2_achieved` (
-    `userid`        INT(11) UNSIGNED NOT NULL,
+    `userid`        INT(10) UNSIGNED NOT NULL,
     `achievementid` INT(10) UNSIGNED NOT NULL,
     PRIMARY KEY (`userid`, `achievementid`),
     KEY `userid` (`userid`),
     KEY `achievementid` (`achievementid`)
 )
     ENGINE =InnoDB
-    DEFAULT CHARSET =utf8mb4;
+    DEFAULT CHARSET =utf8mb4
+    COLLATE =utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -79,12 +73,14 @@ CREATE TABLE IF NOT EXISTS `v2_achieved` (
 --
 
 CREATE TABLE IF NOT EXISTS `v2_achievements` (
-    `id`   INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-    `name` VARCHAR(128)     NOT NULL,
+    `id`   INT(10) UNSIGNED           NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(128)
+           COLLATE utf8mb4_unicode_ci NOT NULL,
     PRIMARY KEY (`id`)
 )
     ENGINE =InnoDB
-    DEFAULT CHARSET =utf8mb4;
+    DEFAULT CHARSET =utf8mb4
+    COLLATE =utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -93,23 +89,37 @@ CREATE TABLE IF NOT EXISTS `v2_achievements` (
 --
 
 CREATE TABLE IF NOT EXISTS `v2_addons` (
-    `id`              VARCHAR(30)                       NOT NULL,
-    `type`            ENUM('karts', 'tracks', 'arenas') NOT NULL,
-    `name`            TINYTEXT                          NOT NULL,
+    `id`              VARCHAR(30)                NOT NULL,
+    `type`            ENUM('karts', 'tracks', 'arenas')
+                      CHARACTER SET utf8mb4
+                      COLLATE utf8mb4_unicode_ci NOT NULL,
+    `name`            TINYTEXT
+                      CHARACTER SET utf8mb4
+                      COLLATE utf8mb4_unicode_ci NOT NULL,
     `uploader`        INT(11) UNSIGNED DEFAULT NULL,
-    `creation_date`   TIMESTAMP                         NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `designer`        TINYTEXT                          NOT NULL,
-    `props`           INT(10) UNSIGNED                  NOT NULL DEFAULT '0',
-    `description`     VARCHAR(140)                      NOT NULL,
-    `license`         MEDIUMTEXT,
-    `min_include_ver` VARCHAR(16) DEFAULT NULL,
-    `max_include_ver` VARCHAR(16) DEFAULT NULL,
+    `creation_date`   TIMESTAMP                  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `designer`        TINYTEXT
+                      CHARACTER SET utf8mb4
+                      COLLATE utf8mb4_unicode_ci NOT NULL,
+    `props`           INT(10) UNSIGNED           NOT NULL DEFAULT '0',
+    `description`     VARCHAR(140)
+                      CHARACTER SET utf8mb4
+                      COLLATE utf8mb4_unicode_ci NOT NULL,
+    `license`         MEDIUMTEXT
+                      CHARACTER SET utf8mb4
+                      COLLATE utf8mb4_unicode_ci,
+    `min_include_ver` VARCHAR(16)
+                      CHARACTER SET utf8mb4
+                      COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+    `max_include_ver` VARCHAR(16)
+                      CHARACTER SET utf8mb4
+                      COLLATE utf8mb4_unicode_ci DEFAULT NULL,
     PRIMARY KEY (`id`),
     KEY `type` (`type`),
     KEY `uploader` (`uploader`)
 )
     ENGINE =InnoDB
-    DEFAULT CHARSET =utf8mb4;
+    DEFAULT CHARSET =utf8;
 
 -- --------------------------------------------------------
 
@@ -118,21 +128,80 @@ CREATE TABLE IF NOT EXISTS `v2_addons` (
 --
 
 CREATE TABLE IF NOT EXISTS `v2_arenas_revs` (
-    `id`             VARCHAR(23)           NOT NULL,
-    `addon_id`       VARCHAR(30)           NOT NULL,
-    `fileid`         INT(10) UNSIGNED      NOT NULL DEFAULT '0',
-    `creation_date`  TIMESTAMP             NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `revision`       TINYINT(4)            NOT NULL DEFAULT '1',
-    `format`         TINYINT(4)            NOT NULL,
-    `image`          INT(10) UNSIGNED      NOT NULL DEFAULT '0',
-    `status`         MEDIUMINT(9) UNSIGNED NOT NULL DEFAULT '0',
-    `moderator_note` VARCHAR(4096) DEFAULT NULL,
+    `id`             VARCHAR(23)
+                     COLLATE utf8mb4_unicode_ci NOT NULL,
+    `addon_id`       VARCHAR(30)
+                     CHARACTER SET utf8         NOT NULL,
+    `fileid`         INT(10) UNSIGNED           NOT NULL DEFAULT '0',
+    `creation_date`  TIMESTAMP                  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `revision`       TINYINT(4)                 NOT NULL DEFAULT '1',
+    `format`         TINYINT(4)                 NOT NULL,
+    `image`          INT(10) UNSIGNED           NOT NULL DEFAULT '0',
+    `status`         MEDIUMINT(9) UNSIGNED      NOT NULL DEFAULT '0',
+    `moderator_note` VARCHAR(4096)
+                     COLLATE utf8mb4_unicode_ci DEFAULT NULL,
     PRIMARY KEY (`addon_id`, `revision`),
     UNIQUE KEY `id` (`id`),
     KEY `status` (`status`)
 )
     ENGINE =InnoDB
-    DEFAULT CHARSET =utf8mb4;
+    DEFAULT CHARSET =utf8mb4
+    COLLATE =utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `v2_tracks_revs`
+--
+
+CREATE TABLE IF NOT EXISTS `v2_tracks_revs` (
+    `id`             VARCHAR(23)
+                     COLLATE utf8mb4_unicode_ci NOT NULL,
+    `addon_id`       VARCHAR(30)
+                     CHARACTER SET utf8         NOT NULL,
+    `fileid`         INT(10) UNSIGNED           NOT NULL DEFAULT '0',
+    `creation_date`  TIMESTAMP                  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `revision`       TINYINT(4)                 NOT NULL DEFAULT '1',
+    `format`         TINYINT(4)                 NOT NULL,
+    `image`          INT(10) UNSIGNED DEFAULT NULL,
+    `status`         MEDIUMINT(9) UNSIGNED      NOT NULL DEFAULT '0',
+    `moderator_note` VARCHAR(4096)
+                     COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+    PRIMARY KEY (`addon_id`, `revision`),
+    KEY `status` (`status`),
+    KEY `image` (`image`)
+)
+    ENGINE =InnoDB
+    DEFAULT CHARSET =utf8mb4
+    COLLATE =utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `v2_karts_revs`
+--
+
+CREATE TABLE IF NOT EXISTS `v2_karts_revs` (
+    `id`             VARCHAR(23)
+                     COLLATE utf8mb4_unicode_ci NOT NULL,
+    `addon_id`       VARCHAR(30)
+                     CHARACTER SET utf8         NOT NULL,
+    `fileid`         INT(10) UNSIGNED           NOT NULL DEFAULT '0',
+    `creation_date`  TIMESTAMP                  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `revision`       TINYINT(4)                 NOT NULL DEFAULT '1',
+    `format`         TINYINT(4)                 NOT NULL,
+    `image`          INT(10) UNSIGNED           NOT NULL DEFAULT '0',
+    `icon`           INT(10) UNSIGNED           NOT NULL DEFAULT '0',
+    `status`         MEDIUMINT(9) UNSIGNED      NOT NULL DEFAULT '0',
+    `moderator_note` VARCHAR(4096)
+                     COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+    PRIMARY KEY (`addon_id`, `revision`),
+    KEY `track_id` (`addon_id`),
+    KEY `status` (`status`)
+)
+    ENGINE =InnoDB
+    DEFAULT CHARSET =utf8mb4
+    COLLATE =utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -160,13 +229,16 @@ CREATE TABLE IF NOT EXISTS `v2_cache` (
 --
 
 CREATE TABLE IF NOT EXISTS `v2_clients` (
-    `agent_string` VARCHAR(256) NOT NULL,
-    `stk_version`  VARCHAR(64)  NOT NULL DEFAULT 'latest',
-    `disabled`     INT(1)       NOT NULL DEFAULT '0',
+    `agent_string` VARCHAR(255)
+                   COLLATE utf8mb4_unicode_ci NOT NULL,
+    `stk_version`  VARCHAR(64)
+                   COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'latest',
+    `disabled`     INT(1)                     NOT NULL DEFAULT '0',
     PRIMARY KEY (`agent_string`(32))
 )
     ENGINE =InnoDB
-    DEFAULT CHARSET =utf8mb4;
+    DEFAULT CHARSET =utf8mb4
+    COLLATE =utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -175,19 +247,21 @@ CREATE TABLE IF NOT EXISTS `v2_clients` (
 --
 
 CREATE TABLE IF NOT EXISTS `v2_client_sessions` (
-    `uid`          INT(11) UNSIGNED     NOT NULL,
-    `cid`          CHAR(24)             NOT NULL,
-    `online`       TINYINT(1)           NOT NULL DEFAULT '1',
-    `save`         TINYINT(1)           NOT NULL DEFAULT '0',
-    `ip`           INT(10) UNSIGNED     NOT NULL DEFAULT '0',
-    `private_port` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
-    `port`         SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
-    `last-online`  TIMESTAMP            NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `uid`          INT(10) UNSIGNED           NOT NULL,
+    `cid`          CHAR(24)
+                   COLLATE utf8mb4_unicode_ci NOT NULL,
+    `online`       TINYINT(1)                 NOT NULL DEFAULT '1',
+    `save`         TINYINT(1)                 NOT NULL DEFAULT '0',
+    `ip`           INT(10) UNSIGNED           NOT NULL DEFAULT '0',
+    `private_port` SMALLINT(5) UNSIGNED       NOT NULL DEFAULT '0',
+    `port`         SMALLINT(5) UNSIGNED       NOT NULL DEFAULT '0',
+    `last-online`  TIMESTAMP                  NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`uid`),
     UNIQUE KEY `session` (`uid`, `cid`)
 )
     ENGINE = MEMORY
-    DEFAULT CHARSET =utf8mb4;
+    DEFAULT CHARSET =utf8mb4
+    COLLATE =utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -196,12 +270,17 @@ CREATE TABLE IF NOT EXISTS `v2_client_sessions` (
 --
 
 CREATE TABLE IF NOT EXISTS `v2_config` (
-    `name`  VARCHAR(128) NOT NULL,
-    `value` VARCHAR(512) NOT NULL,
+    `name`  VARCHAR(128)
+            CHARACTER SET utf8mb4
+            COLLATE utf8mb4_unicode_ci NOT NULL,
+    `value` VARCHAR(512)
+            CHARACTER SET utf8mb4
+            COLLATE utf8mb4_unicode_ci NOT NULL,
     UNIQUE KEY `name` (`name`)
 )
     ENGINE =InnoDB
-    DEFAULT CHARSET =utf8mb4;
+    DEFAULT CHARSET =utf8mb4
+    COLLATE =utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `v2_config`
@@ -263,38 +342,15 @@ CREATE TABLE IF NOT EXISTS `v2_friends` (
 --
 
 CREATE TABLE IF NOT EXISTS `v2_host_votes` (
-    `userid` INT(11) UNSIGNED NOT NULL,
+    `userid` INT(10) UNSIGNED NOT NULL,
     `hostid` INT(10) UNSIGNED NOT NULL,
     `vote`   INT(11)          NOT NULL,
     PRIMARY KEY (`userid`, `hostid`),
     KEY `hostid` (`hostid`)
 )
     ENGINE =InnoDB
-    DEFAULT CHARSET =utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `v2_karts_revs`
---
-
-CREATE TABLE IF NOT EXISTS `v2_karts_revs` (
-    `id`             VARCHAR(23)           NOT NULL,
-    `addon_id`       VARCHAR(30)           NOT NULL,
-    `fileid`         INT(10) UNSIGNED      NOT NULL DEFAULT '0',
-    `creation_date`  TIMESTAMP             NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `revision`       TINYINT(4)            NOT NULL DEFAULT '1',
-    `format`         TINYINT(4)            NOT NULL,
-    `image`          INT(10) UNSIGNED      NOT NULL DEFAULT '0',
-    `icon`           INT(10) UNSIGNED      NOT NULL DEFAULT '0',
-    `status`         MEDIUMINT(9) UNSIGNED NOT NULL DEFAULT '0',
-    `moderator_note` VARCHAR(4096) DEFAULT NULL,
-    PRIMARY KEY (`addon_id`, `revision`),
-    KEY `track_id` (`addon_id`),
-    KEY `status` (`status`)
-)
-    ENGINE =InnoDB
-    DEFAULT CHARSET =utf8mb4;
+    DEFAULT CHARSET =utf8mb4
+    COLLATE =utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -303,15 +359,17 @@ CREATE TABLE IF NOT EXISTS `v2_karts_revs` (
 --
 
 CREATE TABLE IF NOT EXISTS `v2_logs` (
-    `id`      INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-    `date`    TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `user`    INT(11) UNSIGNED NOT NULL,
-    `message` TEXT             NOT NULL,
-    `emailed` INT(1) UNSIGNED  NOT NULL DEFAULT '0',
+    `id`      INT(10) UNSIGNED           NOT NULL AUTO_INCREMENT,
+    `date`    TIMESTAMP                  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `user`    INT(10) UNSIGNED           NOT NULL,
+    `message` TEXT
+              COLLATE utf8mb4_unicode_ci NOT NULL,
+    `emailed` INT(1) UNSIGNED            NOT NULL DEFAULT '0',
     PRIMARY KEY (`id`)
 )
     ENGINE =InnoDB
-    DEFAULT CHARSET =utf8mb4;
+    DEFAULT CHARSET =utf8mb4
+    COLLATE =utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -320,21 +378,28 @@ CREATE TABLE IF NOT EXISTS `v2_logs` (
 --
 
 CREATE TABLE IF NOT EXISTS `v2_music` (
-    `id`           INT(11)       NOT NULL AUTO_INCREMENT,
-    `title`        VARCHAR(256)  NOT NULL,
-    `artist`       VARCHAR(256)  NOT NULL,
-    `license`      VARCHAR(1024) NOT NULL,
-    `gain`         FLOAT         NOT NULL DEFAULT '1',
-    `length`       INT(11)       NOT NULL DEFAULT '0',
-    `file`         VARCHAR(191)  NOT NULL,
-    `file_md5`     CHAR(32)      NOT NULL,
-    `xml_filename` VARCHAR(191)  NOT NULL,
+    `id`           INT(11)                    NOT NULL AUTO_INCREMENT,
+    `title`        VARCHAR(256)
+                   COLLATE utf8mb4_unicode_ci NOT NULL,
+    `artist`       VARCHAR(256)
+                   COLLATE utf8mb4_unicode_ci NOT NULL,
+    `license`      VARCHAR(1024)
+                   COLLATE utf8mb4_unicode_ci NOT NULL,
+    `gain`         FLOAT                      NOT NULL DEFAULT '1',
+    `length`       INT(11)                    NOT NULL DEFAULT '0',
+    `file`         VARCHAR(191)
+                   COLLATE utf8mb4_unicode_ci NOT NULL,
+    `file_md5`     CHAR(32)
+                   COLLATE utf8mb4_unicode_ci NOT NULL,
+    `xml_filename` VARCHAR(191)
+                   COLLATE utf8mb4_unicode_ci NOT NULL,
     PRIMARY KEY (`id`),
     UNIQUE KEY `file` (`file`),
     UNIQUE KEY `xml_filename` (`xml_filename`)
 )
     ENGINE =InnoDB
-    DEFAULT CHARSET =utf8mb4;
+    DEFAULT CHARSET =utf8mb4
+    COLLATE =utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -346,8 +411,10 @@ CREATE TABLE IF NOT EXISTS `v2_news` (
     `id`          INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
     `date`        TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `author_id`   INT(11) UNSIGNED DEFAULT NULL,
-    `content`     VARCHAR(256) DEFAULT NULL,
-    `condition`   VARCHAR(256) DEFAULT NULL,
+    `content`     VARCHAR(256)
+                  COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+    `condition`   VARCHAR(256)
+                  COLLATE utf8mb4_unicode_ci DEFAULT NULL,
     `important`   TINYINT(1)       NOT NULL DEFAULT '0',
     `web_display` TINYINT(1)       NOT NULL DEFAULT '1',
     `active`      TINYINT(1)       NOT NULL DEFAULT '1',
@@ -358,7 +425,8 @@ CREATE TABLE IF NOT EXISTS `v2_news` (
     KEY `author_id` (`author_id`)
 )
     ENGINE =InnoDB
-    DEFAULT CHARSET =utf8mb4;
+    DEFAULT CHARSET =utf8mb4
+    COLLATE =utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -367,14 +435,16 @@ CREATE TABLE IF NOT EXISTS `v2_news` (
 --
 
 CREATE TABLE IF NOT EXISTS `v2_notifications` (
-    `to`   INT(11) UNSIGNED NOT NULL,
-    `from` INT(11) UNSIGNED NOT NULL,
-    `type` VARCHAR(16)      NOT NULL,
+    `to`   INT(10) UNSIGNED           NOT NULL,
+    `from` INT(10) UNSIGNED           NOT NULL,
+    `type` VARCHAR(16)
+           COLLATE utf8mb4_unicode_ci NOT NULL,
     UNIQUE KEY `to_2` (`to`, `type`),
     KEY `to` (`to`)
 )
     ENGINE =InnoDB
-    DEFAULT CHARSET =utf8mb4;
+    DEFAULT CHARSET =utf8mb4
+    COLLATE =utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -383,20 +453,22 @@ CREATE TABLE IF NOT EXISTS `v2_notifications` (
 --
 
 CREATE TABLE IF NOT EXISTS `v2_servers` (
-    `id`              INT(10) UNSIGNED     NOT NULL AUTO_INCREMENT,
-    `hostid`          INT(10) UNSIGNED     NOT NULL,
-    `name`            TINYTEXT             NOT NULL,
-    `ip`              INT(10) UNSIGNED     NOT NULL DEFAULT '0',
-    `port`            SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
-    `private_port`    SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
-    `max_players`     TINYINT(3) UNSIGNED  NOT NULL DEFAULT '0',
-    `current_players` TINYINT(4) UNSIGNED  NOT NULL DEFAULT '0'
+    `id`              INT(10) UNSIGNED           NOT NULL AUTO_INCREMENT,
+    `hostid`          INT(10) UNSIGNED           NOT NULL,
+    `name`            TINYTEXT
+                      COLLATE utf8mb4_unicode_ci NOT NULL,
+    `ip`              INT(10) UNSIGNED           NOT NULL DEFAULT '0',
+    `port`            SMALLINT(5) UNSIGNED       NOT NULL DEFAULT '0',
+    `private_port`    SMALLINT(5) UNSIGNED       NOT NULL DEFAULT '0',
+    `max_players`     TINYINT(3) UNSIGNED        NOT NULL DEFAULT '0',
+    `current_players` TINYINT(4) UNSIGNED        NOT NULL DEFAULT '0'
     COMMENT 'Isn''t exact. Just to show in the server-list, where it doens''t need to be exact.',
     PRIMARY KEY (`id`),
     KEY `hostid` (`hostid`)
 )
     ENGINE =InnoDB
-    DEFAULT CHARSET =utf8mb4;
+    DEFAULT CHARSET =utf8mb4
+    COLLATE =utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -412,7 +484,8 @@ CREATE TABLE IF NOT EXISTS `v2_server_conn` (
     KEY `serverid` (`serverid`)
 )
     ENGINE =InnoDB
-    DEFAULT CHARSET =utf8mb4;
+    DEFAULT CHARSET =utf8mb4
+    COLLATE =utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -421,37 +494,16 @@ CREATE TABLE IF NOT EXISTS `v2_server_conn` (
 --
 
 CREATE TABLE IF NOT EXISTS `v2_stats` (
-    `type`  TEXT             NOT NULL,
-    `date`  DATE             NOT NULL,
-    `value` INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    `type`  TEXT
+            COLLATE utf8mb4_unicode_ci NOT NULL,
+    `date`  DATE                       NOT NULL,
+    `value` INT(10) UNSIGNED           NOT NULL DEFAULT '0',
     PRIMARY KEY (`date`, `type`(40)),
     KEY `date` (`date`)
 )
     ENGINE =InnoDB
-    DEFAULT CHARSET =utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `v2_tracks_revs`
---
-
-CREATE TABLE IF NOT EXISTS `v2_tracks_revs` (
-    `id`             VARCHAR(23)           NOT NULL,
-    `addon_id`       VARCHAR(30)           NOT NULL,
-    `fileid`         INT(10) UNSIGNED      NOT NULL DEFAULT '0',
-    `creation_date`  TIMESTAMP             NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `revision`       TINYINT(4)            NOT NULL DEFAULT '1',
-    `format`         TINYINT(4)            NOT NULL,
-    `image`          INT(10) UNSIGNED DEFAULT NULL,
-    `status`         MEDIUMINT(9) UNSIGNED NOT NULL DEFAULT '0',
-    `moderator_note` VARCHAR(4096) DEFAULT NULL,
-    PRIMARY KEY (`addon_id`, `revision`),
-    KEY `status` (`status`),
-    KEY `image` (`image`)
-)
-    ENGINE =InnoDB
-    DEFAULT CHARSET =utf8mb4;
+    DEFAULT CHARSET =utf8mb4
+    COLLATE =utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -512,14 +564,16 @@ CREATE TABLE IF NOT EXISTS `v2_verification` (
 --
 
 CREATE TABLE IF NOT EXISTS `v2_votes` (
-    `user_id`  INT(11) UNSIGNED NOT NULL,
-    `addon_id` VARCHAR(30)      NOT NULL,
-    `vote`     FLOAT UNSIGNED   NOT NULL,
+    `user_id`  INT(11) UNSIGNED   NOT NULL,
+    `addon_id` VARCHAR(30)
+               CHARACTER SET utf8 NOT NULL,
+    `vote`     FLOAT UNSIGNED     NOT NULL,
     PRIMARY KEY (`user_id`, `addon_id`),
     KEY `addon_id` (`addon_id`)
 )
     ENGINE =InnoDB
-    DEFAULT CHARSET =utf8mb4;
+    DEFAULT CHARSET =utf8mb4
+    COLLATE =utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -528,25 +582,29 @@ CREATE TABLE IF NOT EXISTS `v2_votes` (
 --
 
 CREATE TABLE IF NOT EXISTS `v2_bugs` (
-    `id`           INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-    `user_id`      INT(11) UNSIGNED NOT NULL
+    `id`           INT(11) UNSIGNED           NOT NULL AUTO_INCREMENT,
+    `user_id`      INT(11) UNSIGNED           NOT NULL
     COMMENT 'User who filed the bug report',
-    `addon_id`     VARCHAR(30) DEFAULT NULL
+    `addon_id`     VARCHAR(30)
+                   CHARACTER SET utf8 DEFAULT NULL
     COMMENT 'The bug culprit',
     `close_id`     INT(11) UNSIGNED DEFAULT NULL
     COMMENT 'The user who closed the bug',
-    `close_reason` VARCHAR(512) DEFAULT NULL
+    `close_reason` VARCHAR(512)
+                   COLLATE utf8mb4_unicode_ci DEFAULT NULL
     COMMENT 'The reason it was closed',
-    `date_report`  TIMESTAMP        NULL DEFAULT NULL
+    `date_report`  TIMESTAMP                  NULL DEFAULT NULL
     COMMENT 'Report date',
-    `date_edit`    TIMESTAMP        NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Last edit date',
-    `date_close`   TIMESTAMP        NULL DEFAULT NULL
+    `date_edit`    TIMESTAMP                  NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Last edit date',
+    `date_close`   TIMESTAMP                  NULL DEFAULT NULL
     COMMENT 'Close date',
-    `title`        VARCHAR(128)     NOT NULL
+    `title`        VARCHAR(128)
+                   COLLATE utf8mb4_unicode_ci NOT NULL
     COMMENT 'Bug title',
-    `description`  VARCHAR(1024)    NOT NULL
+    `description`  VARCHAR(1024)
+                   COLLATE utf8mb4_unicode_ci NOT NULL
     COMMENT 'Bug description',
-    `is_report`    TINYINT(1)       NOT NULL DEFAULT '0'
+    `is_report`    TINYINT(1)                 NOT NULL DEFAULT '0'
     COMMENT 'Flag to indicate if the bug is a feedback',
     PRIMARY KEY (`id`),
     KEY `user_id` (`user_id`),
@@ -554,8 +612,7 @@ CREATE TABLE IF NOT EXISTS `v2_bugs` (
 )
     ENGINE =InnoDB
     DEFAULT CHARSET =utf8mb4
-    COLLATE =utf8mb4_unicode_ci
-    AUTO_INCREMENT =1;
+    COLLATE =utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -572,7 +629,7 @@ CREATE TABLE IF NOT EXISTS `v2_bugs_comments` (
     `date`        TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP
     COMMENT 'The date it was reported',
     `description` VARCHAR(1024)
-                  CHARACTER SET utf8mb4 DEFAULT NULL
+                  COLLATE utf8mb4_unicode_ci DEFAULT NULL
     COMMENT 'The comment description',
     PRIMARY KEY (`id`),
     KEY `user_id` (`user_id`),
@@ -580,7 +637,7 @@ CREATE TABLE IF NOT EXISTS `v2_bugs_comments` (
 )
     ENGINE =InnoDB
     DEFAULT CHARSET =utf8mb4
-    AUTO_INCREMENT =1;
+    COLLATE =utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -703,6 +760,14 @@ ADD CONSTRAINT `v2_karts_revs_ibfk_1` FOREIGN KEY (`addon_id`) REFERENCES `v2_ad
     ON UPDATE NO ACTION;
 
 --
+-- Constraints for table `v2_tracks_revs`
+--
+ALTER TABLE `v2_tracks_revs`
+ADD CONSTRAINT `v2_tracks_revs_ibfk_1` FOREIGN KEY (`addon_id`) REFERENCES `v2_addons` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION;
+
+--
 -- Constraints for table `v2_news`
 --
 ALTER TABLE `v2_news`
@@ -726,14 +791,6 @@ ADD CONSTRAINT `v2_server_conn_ibfk_1` FOREIGN KEY (`serverid`) REFERENCES `v2_s
     ON DELETE CASCADE
     ON UPDATE NO ACTION,
 ADD CONSTRAINT `v2_server_conn_ibfk_2` FOREIGN KEY (`userid`) REFERENCES `v2_users` (`id`)
-    ON DELETE CASCADE
-    ON UPDATE NO ACTION;
-
---
--- Constraints for table `v2_tracks_revs`
---
-ALTER TABLE `v2_tracks_revs`
-ADD CONSTRAINT `v2_tracks_revs_ibfk_1` FOREIGN KEY (`addon_id`) REFERENCES `v2_addons` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION;
 
@@ -762,10 +819,10 @@ ADD CONSTRAINT `v2_votes_ibfk_2` FOREIGN KEY (`addon_id`) REFERENCES `v2_addons`
 ALTER TABLE `v2_bugs`
 ADD CONSTRAINT `v2_bugs_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `v2_users` (`id`)
     ON DELETE CASCADE
+    ON UPDATE NO ACTION,
+ADD CONSTRAINT `v2_bugs_ibfk_2` FOREIGN KEY (`addon_id`) REFERENCES `v2_addons` (`id`)
+    ON DELETE CASCADE
     ON UPDATE NO ACTION;
-# ADD CONSTRAINT `v2_bugs_ibfk_2` FOREIGN KEY (`addon_id`) REFERENCES `v2_addons` (`id`)
-#     ON DELETE CASCADE
-#     ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `v2_bugs_comments`
