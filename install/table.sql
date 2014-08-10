@@ -598,7 +598,7 @@ CREATE TABLE IF NOT EXISTS `v2_bugs` (
     `date_edit`    TIMESTAMP                  NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Last edit date',
     `date_close`   TIMESTAMP                  NULL DEFAULT NULL
     COMMENT 'Close date',
-    `title`        VARCHAR(128)
+    `title`        VARCHAR(64)
                    COLLATE utf8mb4_unicode_ci NOT NULL
     COMMENT 'Bug title',
     `description`  VARCHAR(1024)
@@ -628,7 +628,7 @@ CREATE TABLE IF NOT EXISTS `v2_bugs_comments` (
     COMMENT 'The user who commented',
     `date`        TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP
     COMMENT 'The date it was reported',
-    `description` VARCHAR(1024)
+    `description` VARCHAR(512)
                   COLLATE utf8mb4_unicode_ci DEFAULT NULL
     COMMENT 'The comment description',
     PRIMARY KEY (`id`),

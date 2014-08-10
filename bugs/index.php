@@ -23,6 +23,7 @@ $tpl = StkTemplate::get('bugs-index.tpl')
     ->addDataTablesLibrary()
     ->addWYSIWYGLibrary()
     ->addTypeHeadLibrary()
+    ->addBootstrapValidatorLibrary()
     ->addUtilLibrary()
     ->addScriptInclude("bugs.js");
 $tpl_data = ["show_btn_file" => true];

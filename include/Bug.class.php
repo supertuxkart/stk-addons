@@ -23,6 +23,18 @@
  */
 class Bug extends Base
 {
+    const MIN_TITLE = 5;
+    const MAX_TITLE = 64;
+
+    const MIN_DESCRIPTION = 5;
+    const MAX_DESCRIPTION = 1024;
+
+    const MIN_COMMENT_DESCRIPTION = 10;
+    const MAX_COMMENT_DESCRIPTION = 512;
+
+    const MIN_CLOSE_REASON = 5;
+    const MAX_CLOSE_REASON = 512;
+
     /**
      * Hold the bug id
      * @var int
@@ -385,6 +397,8 @@ class Bug extends Base
     public static function add($user_id, $addon_id, $bug_title, $bug_description)
     {
         // validate
+        static::validateTitle($bug_title);
+        static::validateDescription($bug_description);
         if (!Addon::exists($addon_id))
         {
             throw new BugException(_h("The addon name does not exist"));
@@ -432,6 +446,7 @@ class Bug extends Base
     public static function addComment($user_id, $bug_id, $comment_description)
     {
         // validate
+        static::validateCommentDescription($comment_description);
         if (!static::exists($bug_id))
         {
             throw new BugException(_h("The bug does not exist"));
@@ -475,6 +490,9 @@ class Bug extends Base
      */
     public static function update($bug_id, $bug_title, $bug_description)
     {
+        static::validateTitle($bug_title);
+        static::validateDescription($bug_description);
+
         // get bug and also verify if it exists
         $bug = static::get($bug_id, false);
 
@@ -521,13 +539,13 @@ class Bug extends Base
      */
     public static function updateComment($comment_id, $comment_description)
     {
-        // validate comment
+        // validate
+        static::validateCommentDescription($comment_description);
         if (!static::commentExists($comment_id))
         {
             throw new BugException(_h("The bug comment does not exist"));
         }
 
-        //$isOwner = (User::getLoggedId() === $comment["user_id"]);
         $can_edit = User::hasPermission(AccessControl::PERM_EDIT_BUGS);
 
         // check permission
@@ -567,6 +585,8 @@ class Bug extends Base
      */
     public static function close($bug_id, $close_reason)
     {
+        static::validateCloseReason($close_reason);
+
         // get bug and also verify if it exists
         $bug = static::get($bug_id, false);
 
@@ -688,4 +708,87 @@ class Bug extends Base
         }
     }
 
+    /**
+     * Validate a title description
+     *
+     * @param string $title
+     *
+     * @throws BugException
+     */
+    public static function validateTitle($title)
+    {
+        $length = mb_strlen($title);
+
+        if ($length < static::MIN_TITLE || $length > static::MAX_TITLE)
+        {
+            throw new BugException(sprintf(
+                _h('The title must be between %s and %s characters long'),
+                static::MIN_TITLE,
+                static::MAX_TITLE
+            ));
+        }
+    }
+
+    /**
+     * Validate a bug description
+     *
+     * @param string $description
+     *
+     * @throws BugException
+     */
+    public static function validateDescription($description)
+    {
+        $length = mb_strlen($description);
+
+        if ($length < static::MIN_DESCRIPTION || $length > static::MAX_DESCRIPTION)
+        {
+            throw new BugException(sprintf(
+                _h('The description must be between %s and %s characters long'),
+                static::MIN_DESCRIPTION,
+                static::MAX_DESCRIPTION
+            ));
+        }
+    }
+
+    /**
+     * Validate a comment description
+     *
+     * @param string $comment_description
+     *
+     * @throws BugException
+     */
+    public static function validateCommentDescription($comment_description)
+    {
+        $length = mb_strlen($comment_description);
+
+        if ($length < static::MIN_COMMENT_DESCRIPTION || $length > static::MAX_COMMENT_DESCRIPTION)
+        {
+            throw new BugException(sprintf(
+                _h('The comment description must be between %s and %s characters long'),
+                static::MIN_COMMENT_DESCRIPTION,
+                static::MAX_COMMENT_DESCRIPTION
+            ));
+        }
+    }
+
+    /**
+     * Validate a bug close reason
+     *
+     * @param string $close_reason
+     *
+     * @throws BugException
+     */
+    public static function validateCloseReason($close_reason)
+    {
+        $length = mb_strlen($close_reason);
+
+        if ($length < static::MIN_CLOSE_REASON || $length > static::MAX_CLOSE_REASON)
+        {
+            throw new BugException(sprintf(
+                _h('The close reason must be between %s and %s characters long'),
+                static::MIN_CLOSE_REASON,
+                static::MAX_CLOSE_REASON
+            ));
+        }
+    }
 }

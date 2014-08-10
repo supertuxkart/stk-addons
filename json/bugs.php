@@ -56,7 +56,7 @@ switch ($_POST["action"])
         $comment_id = -1;
         try
         {
-            $comment_id = Bug::addComment(User::getLoggedId(), $_POST["bug-id"], $_POST["bug-comment-description"]);
+            $comment_id = Bug::addComment(User::getLoggedId(), (int)$_POST["bug-id"], $_POST["bug-comment-description"]);
         }
         catch(BugException $e)
         {
@@ -88,7 +88,7 @@ switch ($_POST["action"])
 
         try
         {
-            Bug::update($_POST["bug-id"], $_POST["bug-title-edit"], $_POST["bug-description-edit"]);
+            Bug::update((int)$_POST["bug-id"], $_POST["bug-title-edit"], $_POST["bug-description-edit"]);
         }
         catch(BugException $e)
         {
@@ -107,7 +107,7 @@ switch ($_POST["action"])
 
         try
         {
-            Bug::updateComment($_POST["comment-id"], $_POST["bug-comment-edit-description"]);
+            Bug::updateComment((int)$_POST["comment-id"], $_POST["bug-comment-edit-description"]);
         }
         catch(BugException $e)
         {
@@ -126,7 +126,7 @@ switch ($_POST["action"])
 
         try
         {
-            Bug::close($_POST["bug-id"], $_POST["modal-close-reason"]);
+            Bug::close((int)$_POST["bug-id"], $_POST["modal-close-reason"]);
         }
         catch(BugException $e)
         {
@@ -145,7 +145,7 @@ switch ($_POST["action"])
 
         try
         {
-            Bug::delete($_POST["bug-id"]);
+            Bug::delete((int)$_POST["bug-id"]);
         }
         catch(DBException $e)
         {
@@ -164,7 +164,7 @@ switch ($_POST["action"])
 
         try
         {
-            Bug::deleteComment($_POST["comment-id"]);
+            Bug::deleteComment((int)$_POST["comment-id"]);
         }
         catch(BugException $e)
         {

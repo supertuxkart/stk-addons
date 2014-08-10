@@ -30,7 +30,6 @@
                 "font-styles": false
             }
         },
-        search_url = JSON_LOCATION + "search.php",
         json_url = JSON_LOCATION + "bugs.php",
         tableOptions = {
             searching  : false,
@@ -76,7 +75,7 @@
                     var matches = [];
 
                     // search
-                    $.get(search_url, {"data-type": "addon", "addon-type": "all", "query": query, "flags": ["name"]}, function(data) {
+                    $.get(SEARCH_URL, {"data-type": "addon", "addon-type": "all", "query": query, "flags": ["name"]}, function(data) {
                         var jData = parseJSON(data);
                         if (jData.hasOwnProperty("error")) {
                             console.error(jData["error"]);
@@ -164,7 +163,7 @@
                 btnToggle();
             }
         }
-    }, $main_bugs, search_url, {"data-type": "bug"}, "GET");
+    }, $main_bugs, SEARCH_URL, {"data-type": "bug"}, "GET");
 
     // add bug form
     bugFormSubmit("#bug-add-form", function(data) {

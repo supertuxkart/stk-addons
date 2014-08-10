@@ -187,7 +187,7 @@ class Validate
         if ($length < User::MIN_PASSWORD || $length > User::MAX_PASSWORD)
         {
             throw new UserException(sprintf(
-                _h('The password must be between %1 and %2 characters long'),
+                _h('The password must be between %s and %s characters long'),
                 User::MIN_PASSWORD,
                 User::MAX_PASSWORD
             ));
