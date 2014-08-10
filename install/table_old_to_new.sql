@@ -230,9 +230,9 @@ CREATE PROCEDURE `convert_to_utf8`()
 
             ALTER TABLE `v2_users` CHANGE `user` `user` VARCHAR( 30 ) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL ;
             ALTER TABLE `v2_users` CHANGE `pass` `pass` CHAR( 96 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL ;
-            ALTER TABLE `v2_users` CHANGE `name` `name` VARCHAR( 128 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL ;
-            ALTER TABLE `v2_users` CHANGE `role` `role` VARCHAR( 128 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL ;
-            ALTER TABLE `v2_users` CHANGE `email` `email` VARCHAR( 128 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL ;
+            ALTER TABLE `v2_users` CHANGE `name` `name` VARCHAR( 64 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL ;
+            ALTER TABLE `v2_users` CHANGE `role` `role` VARCHAR( 64 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL ;
+            ALTER TABLE `v2_users` CHANGE `email` `email` VARCHAR( 64 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL ;
             ALTER TABLE `v2_users` CHANGE `homepage` `homepage` VARCHAR( 64 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL ;
             ALTER TABLE `v2_users` CHANGE `avatar` `avatar` VARCHAR ( 64 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL ;
 

@@ -517,11 +517,11 @@ CREATE TABLE IF NOT EXISTS `v2_users` (
                  CHARACTER SET ascii        NOT NULL,
     `pass`       CHAR(96)
                  COLLATE utf8mb4_unicode_ci NOT NULL,
-    `name`       VARCHAR(128)
+    `name`       VARCHAR(64)
                  COLLATE utf8mb4_unicode_ci NOT NULL,
-    `role`       VARCHAR(128)
+    `role`       VARCHAR(64)
                  COLLATE utf8mb4_unicode_ci NOT NULL,
-    `email`      VARCHAR(128)
+    `email`      VARCHAR(64)
                  COLLATE utf8mb4_unicode_ci NOT NULL,
     `active`     TINYINT(1)                 NOT NULL,
     `last_login` TIMESTAMP                  NOT NULL DEFAULT CURRENT_TIMESTAMP,

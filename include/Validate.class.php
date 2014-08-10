@@ -112,6 +112,11 @@ class Validate
             throw new UserException(h(sprintf(_('"%s" is not a valid email address.'), h($email))));
         }
 
+        if (mb_strlen($email) > User::MAX_EMAIL)
+        {
+            throw new UserException(_h("Email is to long."));
+        }
+
         return h($email);
     }
 
@@ -159,7 +164,7 @@ class Validate
         if ($length < User::MIN_REALNAME || $length > User::MAX_REALNAME)
         {
             throw new UserException(sprintf(
-                _h('The username must be between %s and %s characters long'),
+                _h('The nam must be between %s and %s characters long'),
                 User::MIN_REALNAME,
                 User::MAX_REALNAME
             ));
