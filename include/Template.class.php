@@ -204,6 +204,13 @@ class Template
         try
         {
             $this->setup();
+
+            // minify html
+            if (!DEBUG_MODE)
+            {
+                $this->smarty->registerFilter("output", "minify_html");
+            }
+
             ob_start();
             $this->smarty->display($this->file, $this->directory);
 

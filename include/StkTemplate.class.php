@@ -113,7 +113,7 @@ class StkTemplate extends Template
         // fill css
         array_push(
             $this->css_includes,
-            ["href" => LIBS_LOCATION . "bootstrap/dist/css/bootstrap.css"],
+            ["href" => LIBS_LOCATION . "bootstrap/dist/css/bootstrap.min.css"],
             ["href" => CSS_LOCATION . "screen.css", "media" => "screen"],
             ["href" => CSS_LOCATION . "print.css", "media" => "print"]
         );
@@ -128,7 +128,7 @@ class StkTemplate extends Template
         // Fill script tags
         $this->script_inline["before"][] = [
             'content' => sprintf(
-                "var SITE_ROOT = '%s', BUGS_LOCATION = '%s', JSON_LOCATION = '%s';",
+                "/* wth happend*/;var SITE_ROOT = '%s', BUGS_LOCATION = '%s', JSON_LOCATION = '%s';",
                 SITE_ROOT,
                 BUGS_LOCATION,
                 SITE_ROOT . "json/"
@@ -139,12 +139,12 @@ class StkTemplate extends Template
 
         array_push(
             $this->script_includes,
-            ['src' => LIBS_LOCATION . "jquery/dist/jquery.js"],
+            ['src' => LIBS_LOCATION . "jquery/dist/jquery.min.js"],
             ['src' => LIBS_LOCATION . "underscore/underscore.js"],
-            ['src' => LIBS_LOCATION . "bootstrap/dist/js/bootstrap.js"],
-            ['src' => LIBS_LOCATION . "history.js/scripts/bundled-uncompressed/html4+html5/jquery.history.js"],
+            ['src' => LIBS_LOCATION . "bootstrap/dist/js/bootstrap.min.js"],
+            ['src' => LIBS_LOCATION . "history.js/scripts/bundled/html4+html5/jquery.history.js"],
             ['src' => LIBS_LOCATION . "bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js"],
-            ['src' => LIBS_LOCATION . "bootstrap.growl/bootstrap-growl.js"],
+            ['src' => LIBS_LOCATION . "bootstrap.growl/bootstrap-growl.min.js"],
             ['src' => LIBS_LOCATION . "bootbox/bootbox.js"],
             ['src' => JS_LOCATION . 'main.js']
         );
@@ -374,8 +374,8 @@ class StkTemplate extends Template
      */
     public function addBootstrapSelectLibrary()
     {
-        $this->addCssInclude("bootstrap-select/bootstrap-select.css", LIBS_LOCATION);
-        $this->addScriptInclude("bootstrap-select/bootstrap-select.js", LIBS_LOCATION);
+        $this->addCssInclude("bootstrap-select/bootstrap-select.min.css", LIBS_LOCATION);
+        $this->addScriptInclude("bootstrap-select/bootstrap-select.min.js", LIBS_LOCATION);
 
         return $this;
     }
@@ -388,8 +388,8 @@ class StkTemplate extends Template
      */
     public function addBootstrapFileInputLibrary()
     {
-        $this->addCssInclude("bootstrap-fileinput/css/fileinput.css", LIBS_LOCATION);
-        $this->addScriptInclude("bootstrap-fileinput/js/fileinput.js", LIBS_LOCATION);
+        $this->addCssInclude("bootstrap-fileinput/css/fileinput.min.css", LIBS_LOCATION);
+        $this->addScriptInclude("bootstrap-fileinput/js/fileinput.min.js", LIBS_LOCATION);
 
         return $this;
     }
@@ -402,8 +402,8 @@ class StkTemplate extends Template
      */
     public function addBootstrapValidatorLibrary()
     {
-        $this->addCssInclude("bootstrapValidator/dist/css/bootstrapValidator.css", LIBS_LOCATION);
-        $this->addScriptInclude("bootstrapValidator/dist/js/bootstrapValidator.js", LIBS_LOCATION);
+        $this->addCssInclude("bootstrapValidator/dist/css/bootstrapValidator.min.css", LIBS_LOCATION);
+        $this->addScriptInclude("bootstrapValidator/dist/js/bootstrapValidator.min.js", LIBS_LOCATION);
 
         return $this;
     }
@@ -416,7 +416,7 @@ class StkTemplate extends Template
      */
     public function addTypeHeadLibrary()
     {
-        $this->addScriptInclude("typeahead.js/dist/typeahead.bundle.js", LIBS_LOCATION);
+        $this->addScriptInclude("typeahead.js/dist/typeahead.jquery.min.js", LIBS_LOCATION);
 
         return $this;
     }
@@ -430,7 +430,9 @@ class StkTemplate extends Template
     public function addWYSIWYGLibrary()
     {
         $this->addCssInclude("bootstrap3-wysihtml5-bower/dist/bootstrap3-wysihtml5.min.css", LIBS_LOCATION);
-        $this->addScriptInclude("bootstrap3-wysihtml5-bower/dist/bootstrap3-wysihtml5.all.js", LIBS_LOCATION);
+
+        // includes handlebars runtime and editor library
+        $this->addScriptInclude("bootstrap3-wysihtml5-bower/dist/bootstrap3-wysihtml5.all.min.js", LIBS_LOCATION);
 
         return $this;
     }
@@ -443,9 +445,9 @@ class StkTemplate extends Template
      */
     public function addDataTablesLibrary()
     {
-        $this->addCssInclude("datatables/media/css/jquery.dataTables.css", LIBS_LOCATION);
+        $this->addCssInclude("datatables/media/css/jquery.dataTables.min.css", LIBS_LOCATION);
         $this->addCssInclude("datatables-bootstrap3/BS3/assets/css/datatables.css", LIBS_LOCATION);
-        $this->addScriptInclude("datatables/media/js/jquery.dataTables.js", LIBS_LOCATION);
+        $this->addScriptInclude("datatables/media/js/jquery.dataTables.min.js", LIBS_LOCATION);
         $this->addScriptInclude("datatables-bootstrap3/BS3/assets/js/datatables.js", LIBS_LOCATION);
 
         return $this;
@@ -463,7 +465,7 @@ class StkTemplate extends Template
         $this->addScriptInclude("flot/jquery.flot.js", LIBS_LOCATION);
         $this->addScriptInclude("flot/jquery.flot.pie.js", LIBS_LOCATION);
         $this->addScriptInclude("flot/jquery.flot.time.js", LIBS_LOCATION);
-        $this->addScriptInclude("flot.tooltip/js/jquery.flot.tooltip.js", LIBS_LOCATION);
+        $this->addScriptInclude("flot.tooltip/js/jquery.flot.tooltip.min.js", LIBS_LOCATION);
 
         return $this;
     }

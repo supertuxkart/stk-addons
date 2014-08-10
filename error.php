@@ -22,13 +22,13 @@ $error_code = (empty($_GET['e'])) ? null : $_GET['e'];
 // Send appropriate error header
 switch ($error_code)
 {
-    default:
-        break;
     case '403':
         header('HTTP/1.1 403 Forbidden');
         break;
     case '404':
         header('HTTP/1.1 404 Not Found');
+        break;
+    default:
         break;
 }
 

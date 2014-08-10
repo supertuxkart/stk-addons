@@ -65,6 +65,22 @@ function exit_json_success($message, array $other_values = [])
 }
 
 /**
+ * Minify html
+ *
+ * @param string                   $tpl_output the html to minify
+ * @param Smarty_Internal_Template $template
+ *
+ * @return mixed
+ */
+function minify_html($tpl_output, Smarty_Internal_Template $template)
+{
+    $tpl_output = preg_replace('![\t ]*[\r\n]+[\t ]*!', '', $tpl_output);
+    $tpl_output = preg_replace('#<!--[^>]+-->#', '', $tpl_output);
+
+    return $tpl_output;
+}
+
+/**
  * @param string $subject
  * @param string $message_html
  *
