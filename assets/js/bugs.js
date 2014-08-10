@@ -21,8 +21,8 @@
     "use strict";
 
     // load essential elements and options
-    var $main_bugs = $("#bugs-main"), // the top container wrapper for the bugs
-        $content_bugs = $("#bugs-content"), // the content that always changes via ajax
+    var $bugs_main = $("#bugs-main"), // the top container wrapper for the bugs
+        $bugs_body = $("#bugs-body"), // the content that always changes via ajax
         $btn_back = $("#btn-bugs-back"),
         $btn_add = $("#btn-bugs-add"),
         editorOptions = {
@@ -32,7 +32,7 @@
         },
         json_url = JSON_LOCATION + "bugs.php",
         tableOptions = {
-            searching  : false,
+            searching  : false, // disable default table sorting
             "aaSorting": [] // Disable initial sort
         },
         index_data_table, // hold the data table object
@@ -47,19 +47,22 @@
     }
 
     function bugFormSubmit(form_identifier, callback_success) {
-        onFormSubmit(form_identifier, callback_success, $content_bugs, json_url, {}, "POST");
+        onFormSubmit(form_identifier, callback_success, $bugs_body, json_url, {}, "POST");
     }
 
-    function registerEditors() {
-        $view_comment_description = $("#bug-comment-description");
-        $view_comment_description.wysihtml5(editorOptions);
-
-        // init table
+    // load page index
+    function onPageIndex() {
         $index_bugs_table = $("#bugs-table");
         index_data_table = $index_bugs_table.DataTable(tableOptions);
     }
 
-    function registerAddPage() {
+    function onPageView() {
+        $view_comment_description = $("#bug-comment-description");
+        $view_comment_description.wysihtml5(editorOptions);
+    }
+
+    // load page add
+    function onPageAdd() {
         $("#bug-description").wysihtml5(editorOptions);
 
         // add bug page,
@@ -99,24 +102,23 @@
     var NavigateTo = {
         index: function() {
             History.back();
-            loadContent($content_bugs, BUGS_LOCATION + 'all.php', {}, function() {
+            loadContent($bugs_body, BUGS_LOCATION + 'all.php', {}, function() {
                 btnToggle();
-                registerEditors();
+                onPageIndex();
             });
         },
         add  : function() {
             History.pushState({state: "add"}, '', "?add");
-            loadContent($content_bugs, BUGS_LOCATION + 'add.php', {}, function() {
+            loadContent($bugs_body, BUGS_LOCATION + 'add.php', {}, function() {
                 btnToggle();
-                registerEditors();
-                registerAddPage();
+                onPageAdd();
             });
         },
         view : function(bug_id) {
             History.pushState({state: "view"}, '', "?bug_id=" + bug_id);
-            loadContent($content_bugs, BUGS_LOCATION + 'view.php', {bug_id: bug_id}, function() {
+            loadContent($bugs_body, BUGS_LOCATION + 'view.php', {bug_id: bug_id}, function() {
                 btnToggle();
-                registerEditors();
+                onPageView();
             });
         }
     };
@@ -149,7 +151,7 @@
             index_data_table.destroy(true);
 
             // replace html
-            $content_bugs.html(jData["bugs-all"]);
+            $bugs_body.html(jData["bugs-all"]);
             $index_bugs_table = $("#bugs-table"); // reinstate data
 
             // FIXME possible delay may cause datatable not to initialize
@@ -163,7 +165,7 @@
                 btnToggle();
             }
         }
-    }, $main_bugs, SEARCH_URL, {"data-type": "bug"}, "GET");
+    }, $bugs_main, SEARCH_URL, {"data-type": "bug"}, "GET");
 
     // add bug form
     bugFormSubmit("#bug-add-form", function(data) {
@@ -192,7 +194,7 @@
     });
 
     // delete bug clicked
-    $main_bugs.on("click", "#btn-bugs-delete", function() {
+    $bugs_main.on("click", "#btn-bugs-delete", function() {
         var id = $("#bug-id").val();
 
         console.log("Delete bug clicked", id);
@@ -216,7 +218,7 @@
     });
 
     // close bug clicked
-    $main_bugs.on("click", "#btn-bugs-close", function() {
+    $bugs_main.on("click", "#btn-bugs-close", function() {
         var $modal = $("#modal-close"),
             $modal_description = $("#modal-close-reason");
 
@@ -240,11 +242,13 @@
                 // refresh page by redirect
                 redirectTo();
             }
-        })
+        });
+
+        return false;
     });
 
     // edit bug clicked
-    $main_bugs.on("click", "#btn-bugs-edit", function() {
+    $bugs_main.on("click", "#btn-bugs-edit", function() {
         var $modal = $("#modal-edit"),
             el_modal_title = getByID("bug-title-edit"),
             $modal_description = $("#bug-description-edit"),
@@ -273,10 +277,12 @@
                 $modal.modal('hide');
             }
         });
+
+        return false;
     });
 
     // delete bug comment clicked
-    $main_bugs.on("click", ".btn-bugs-comments-delete", function() {
+    $bugs_main.on("click", ".btn-bugs-comments-delete", function() {
         var $this = $(this);
         var id = $this.data("id");
 
@@ -302,7 +308,7 @@
     });
 
     // edit bug comment clicked
-    $main_bugs.on("click", ".btn-bugs-comments-edit", function() {
+    $bugs_main.on("click", ".btn-bugs-comments-edit", function() {
         var $this = $(this),
             $modal = $("#modal-comment-edit"),
             id = $this.data("id"),
@@ -339,7 +345,7 @@
     });
 
     // clicked on a bug in the table
-    $main_bugs.on("click", "table .bugs", function() {
+    $bugs_main.on("click", "table .bugs", function() {
         NavigateTo.view($(this).parent().data("id"));
 
         return false;
@@ -352,7 +358,8 @@
         console.log(state);
     });
 
-    registerEditors();
-    registerAddPage();
+    onPageAdd();
+    onPageIndex();
+    onPageView();
 
 })(jQuery, document);

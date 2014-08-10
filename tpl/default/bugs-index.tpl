@@ -45,7 +45,7 @@
         </div>
     </div>
     <br><br>
-    <div id="bugs-content">
+    <div id="bugs-body">
         {$bugs.content}
     </div>
 </div>
