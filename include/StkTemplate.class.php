@@ -114,8 +114,7 @@ class StkTemplate extends Template
         array_push(
             $this->css_includes,
             ["href" => LIBS_LOCATION . "bootstrap/dist/css/bootstrap.min.css"],
-            ["href" => CSS_LOCATION . "screen.css", "media" => "screen"],
-            ["href" => CSS_LOCATION . "print.css", "media" => "print"]
+            ["href" => CSS_LOCATION . "screen.css", "media" => "screen"]
         );
         $this->smarty->assign("css_includes", array_merge($this->css_includes, $this->user_css_includes));
     }
