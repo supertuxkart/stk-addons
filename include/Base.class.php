@@ -36,7 +36,7 @@ abstract class Base
     }
 
     /**
-     * Get an instance from a field
+     * Get an object data from a field
      *
      * @param string $table         the table name
      * @param string $field         the from field
@@ -88,10 +88,10 @@ abstract class Base
     /**
      * Verify if a value exists in the table
      *
-     * @param string $table
-     * @param string $field
-     * @param mixed  $value
-     * @param int    $value_type
+     * @param string $table      the table name
+     * @param string $field      the table field
+     * @param mixed  $value      field value
+     * @param int    $value_type type of the value
      *
      * @return bool
      */

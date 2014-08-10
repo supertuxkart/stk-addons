@@ -249,11 +249,11 @@
         },
         {
             "name": "smarty/smarty",
-            "version": "v3.1.18",
+            "version": "v3.1.19",
             "source": {
                 "type": "svn",
                 "url": "http://smarty-php.googlecode.com/svn",
-                "reference": "/tags/v3.1.18/@4839"
+                "reference": "/tags/v3.1.19/@4867"
             },
             "require": {
                 "php": ">=5.2"
@@ -289,7 +289,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2014-05-08 18:38:30"
+            "time": "2014-08-07 20:42:11"
         },
         {
             "name": "vlucas/valitron",

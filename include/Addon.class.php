@@ -859,13 +859,14 @@ class Addon extends Base
      *
      * @param string $description
      *
+     * @return static
      * @throws AddonException
      */
     public function setDescription($description)
     {
         if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS) && $this->uploaderId !== User::getLoggedId())
         {
-            throw new AddonException(_h('You do not have the neccessary permissions to perform this action.'));
+            throw new AddonException(_h('You do not have the necessary permissions to perform this action.'));
         }
 
         try
@@ -886,9 +887,12 @@ class Addon extends Base
             throw new AddonException(_h('Failed to update the description record for this add-on.'));
         }
 
+        $this->description = $description;
+
         writeAssetXML();
         writeNewsXML();
-        $this->description = $description;
+
+        return $this;
     }
 
     /**
@@ -896,6 +900,7 @@ class Addon extends Base
      *
      * @param string $designer
      *
+     * @return static
      * @throws AddonException
      */
     public function setDesigner($designer)
@@ -923,9 +928,12 @@ class Addon extends Base
             throw new AddonException(_h('Failed to update the designer record for this add-on.'));
         }
 
+        $this->designer = $designer;
+
         writeAssetXML();
         writeNewsXML();
-        $this->designer = $designer;
+
+        return $this;
     }
 
     /**
@@ -934,6 +942,7 @@ class Addon extends Base
      * @param integer $image_id
      * @param string  $field
      *
+     * @return static
      * @throws AddonException
      */
     public function setImage($image_id, $field = 'image')
@@ -961,19 +970,24 @@ class Addon extends Base
         {
             throw new AddonException(_h('Failed to update the image record for this add-on.'));
         }
+
+        return $this;
     }
 
     /**
+     * Set the addon include versions
+     *
      * @param $start_ver
      * @param $end_ver
      *
+     * @return static
      * @throws AddonException
      */
     public function setIncludeVersions($start_ver, $end_ver)
     {
         if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
         {
-            throw new AddonException(_h('You do not have the neccessary permissions to perform this action.'));
+            throw new AddonException(_h('You do not have the necessary permissions to perform this action.'));
         }
 
         try
@@ -997,10 +1011,13 @@ class Addon extends Base
             throw new AddonException(_h('An error occurred while setting the min/max include versions.'));
         }
 
-        writeAssetXML();
-        writeNewsXML();
         $this->minInclude = $start_ver;
         $this->maxInclude = $end_ver;
+
+        writeAssetXML();
+        writeNewsXML();
+
+        return $this;
     }
 
     /**
@@ -1008,6 +1025,7 @@ class Addon extends Base
      *
      * @param string $license
      *
+     * @return static
      * @throws AddonException
      */
     public function setLicense($license)
@@ -1031,6 +1049,8 @@ class Addon extends Base
         }
 
         $this->license = $license;
+
+        return $this;
     }
 
     /**
@@ -1038,6 +1058,7 @@ class Addon extends Base
      *
      * @param string $name
      *
+     * @return static
      * @throws AddonException
      */
     public function setName($name)
@@ -1061,6 +1082,8 @@ class Addon extends Base
         }
 
         $this->name = $name;
+
+        return $this;
     }
 
     /**
@@ -1068,6 +1091,7 @@ class Addon extends Base
      *
      * @param string $fields
      *
+     * @return static
      * @throws AddonException
      */
     public function setNotes($fields)
@@ -1156,6 +1180,8 @@ class Addon extends Base
         }
 
         Log::newEvent("Added notes to '{$this->name}'");
+
+        return $this;
     }
 
     /**
@@ -1181,6 +1207,7 @@ class Addon extends Base
      *
      * @param string $fields
      *
+     * @return static
      * @throws AddonException
      */
     public function setStatus($fields)
@@ -1194,8 +1221,6 @@ class Addon extends Base
             throw new AddonException(_h("You do not have the permission to change this addon's status"));
         }
 
-        $fields = explode(',', $fields);
-
         // Initialise the status field to its present values
         // (Remove any checkboxes that the user could have checked)
         $status = [];
@@ -1207,93 +1232,110 @@ class Addon extends Base
                 $mask = $mask + F_APPROVED + F_INVISIBLE + F_DFSG + F_FEATURED;
             }
 
-            $status[$rev_n] = ($rev['status'] & ~$mask);
+            $status[$rev_n] = ($rev['status'] & ~$mask); // reset all bits that the user has access on
         }
 
         // Iterate through each field
+        $fields = explode(',', $fields);
         foreach ($fields as $field)
         {
-            if (!isset($_POST[$field]))
+            $revision = 0;
+            $flag = "";
+            $is_checked = $is_latest = false;
+
+            if (isset($_POST[$field])) // field is on most likely
             {
-                $_POST[$field] = null;
+                if ($_POST[$field] === 'on')
+                {
+                    $is_checked = true;
+                }
+
+                if ($field === 'latest') // latest field
+                {
+                    $revision = (int)$_POST['latest'];
+                    $is_latest = true;
+                }
+                else // normal field
+                {
+                    // flag-rev_n
+                    $temp_field = explode('-', $field);
+                    $flag = $temp_field[0];
+                    $revision = (int)$temp_field[1];
+                }
             }
 
-            if ($field === 'latest')
+            // valid revision, not 0
+            if ($revision)
             {
-                $field_info = ['', (int)$_POST['latest']];
-            }
-            else
-            {
-                $field_info = explode('-', $field);
+                // Initialize the status of the current revision if it has not been created yet.
+                if (!isset($status[$revision]))
+                {
+                    $status[$revision] = 0;
+                }
+
+                // Mark the "latest" revision, we treat it specially, because only a revision can be latest
+                if ($is_latest)
+                {
+                    $status[$revision] += F_LATEST;
+                    continue;
+                }
             }
 
-            // Initialize the status of the current revision if it has
-            // not been created yet.
-            if (!isset($status[$field_info[1]]))
+            // is not checked
+            if (!$is_checked)
             {
-                $status[$field_info[1]] = 0;
-            }
-
-            // Mark the "latest" revision
-            if ($field === 'latest')
-            {
-                $status[(int)$_POST['latest']] += F_LATEST;
                 continue;
             }
 
             // Update status values for all flags
-            if ($_POST[$field] === 'on')
+            switch ($flag)
             {
-                $revision = (int)$field_info[1];
-                switch ($field_info[0])
-                {
-                    case 'approved':
-                        if (!$has_permission)
-                        {
-                            break;
-                        }
-                        $status[$revision] += F_APPROVED;
+                case 'approved':
+                    if (!$has_permission)
+                    {
                         break;
+                    }
+                    $status[$revision] += F_APPROVED;
+                    break;
 
-                    case 'invisible':
-                        if (!$has_permission)
-                        {
-                            break;
-                        }
-                        $status[$revision] += F_INVISIBLE;
+                case 'invisible':
+                    if (!$has_permission)
+                    {
                         break;
+                    }
+                    $status[$revision] += F_INVISIBLE;
+                    break;
 
-                    case 'alpha':
-                        $status[$revision] += F_ALPHA;
+                case 'dfsg':
+                    if (!$has_permission)
+                    {
                         break;
+                    }
+                    $status[$revision] += F_DFSG;
+                    break;
 
-                    case 'beta':
-                        $status[$revision] += F_BETA;
+                case 'featured':
+                    if (!$has_permission)
+                    {
                         break;
+                    }
+                    $status[$revision] += F_FEATURED;
+                    break;
 
-                    case 'rc':
-                        $status[$revision] += F_RC;
-                        break;
+                case 'alpha':
+                    $status[$revision] += F_ALPHA;
+                    break;
 
-                    case 'dfsg':
-                        if (!$has_permission)
-                        {
-                            break;
-                        }
-                        $status[$revision] += F_DFSG;
-                        break;
+                case 'beta':
+                    $status[$revision] += F_BETA;
+                    break;
 
-                    case 'featured':
-                        if (!$has_permission)
-                        {
-                            break;
-                        }
-                        $status[$revision] += F_FEATURED;
-                        break;
+                case 'rc':
+                    $status[$revision] += F_RC;
+                    break;
 
-                    default:
-                        break;
-                }
+                default:
+                    break;
             }
         }
 
@@ -1313,6 +1355,10 @@ class Addon extends Base
                         ':status'   => $value,
                         ':addon_id' => $this->id,
                         ':revision' => $revision
+                    ],
+                    [
+                        ':status'   => DBConnection::PARAM_INT,
+                        ':revision' => DBConnection::PARAM_INT
                     ]
                 );
             }
@@ -1325,6 +1371,8 @@ class Addon extends Base
         writeAssetXML();
         writeNewsXML();
         Log::newEvent("Set status for add-on '{$this->name}'");
+
+        return $this;
     }
 
     /**
@@ -1498,6 +1546,7 @@ class Addon extends Base
     {
         $has_permission = User::hasPermission(AccessControl::PERM_EDIT_ADDONS);
         $template_addons = [];
+        $user_id = User::getLoggedId();
 
         foreach ($addons as $addon)
         {
@@ -1532,7 +1581,7 @@ class Addon extends Base
             {
                 $class = '';
             }
-            elseif ($has_permission || User::getLoggedId() == $addon->getUploaderId())
+            elseif ($has_permission || $user_id == $addon->getUploaderId())
             {
                 // not approved, see of we are logged in and we have permission
                 $class = ' unavailable';
@@ -1662,7 +1711,6 @@ class Addon extends Base
         $db_types = [];
 
         // apply sorting
-        $sort_direction = "";
         switch ($sort_order)
         {
             case static::ORDER_ASC:

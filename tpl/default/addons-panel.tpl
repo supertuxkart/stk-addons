@@ -262,7 +262,7 @@
                     <td><input type="checkbox" name="alpha-{$rev_n}"{$alpha}></td>
                     <td><input type="checkbox" name="beta-{$rev_n}"{$beta}></td>
                     <td><input type="checkbox" name="rc-{$rev_n}"{$rc}></td>
-                    <td><input type="radio" name="latest"{$latest}></td>
+                    <td><input type="radio" value="{$rev_n}" name="latest"{$latest}></td>
                     <td><input type="checkbox" disabled name="texpower-{$rev_n}"{$invalid}></td>
                     {$fields[] = "alpha-$rev_n"} {$fields[] = "beta-$rev_n"} {$fields[] = "rc-$rev_n"}
 
