@@ -52,7 +52,7 @@
                             <button type="submit" class="btn btn-success btn-block">{t}Login{/t}</button>
                         </div>
                         <hr>
-                        {t}Don't have an account!{/t} {$login.links.register}
+                        {t}Don't have an account?{/t} {$login.links.register}
                     </form>
                 </div>
             </div>

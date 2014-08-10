@@ -28,7 +28,8 @@ $_GET['action'] = empty($_GET['action']) ? null : $_GET['action'];
 
 $tpl = StkTemplate::get('register.tpl')
     ->assignTitle(_h('Register'))
-    ->addBootstrapValidatorLibrary();
+    ->addBootstrapValidatorLibrary()
+    ->setMinify(false);
 
 // CAPTCHA
 $captcha = new Captcha();

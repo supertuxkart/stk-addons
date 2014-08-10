@@ -70,15 +70,13 @@ function exit_json_success($message, array $other_values = [])
  * @param string                   $tpl_output the html to minify
  * @param Smarty_Internal_Template $template
  *
- * @return mixed
+ * @return string
  */
 function minify_html($tpl_output, Smarty_Internal_Template $template)
 {
-    $tpl_output = preg_replace('![\t ]*[\r\n]+[\t ]*!', '', $tpl_output);
-    $tpl_output = preg_replace('#<!--[^>]+-->#', '', $tpl_output);
-
-    return $tpl_output;
+    return preg_replace(['/\>[^\S ]+/s', '/[^\S ]+\</s', '/(\s)+/s'], ['>', '<', '\\1'], $tpl_output);
 }
+
 
 /**
  * @param string $subject
