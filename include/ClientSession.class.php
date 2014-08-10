@@ -290,7 +290,7 @@ abstract class ClientSession
     {
         try
         {
-            $serverid = DBConnection::get()->query(
+            $server_id = DBConnection::get()->query(
                 "SELECT `id` FROM `" . DB_PREFIX . "servers`
                 WHERE `hostid` = :hostid AND `ip` = :ip AND `port` = :port LIMIT 1",
                 DBConnection::FETCH_ALL,
@@ -310,7 +310,7 @@ abstract class ClientSession
                 FROM `" . DB_PREFIX . "server_conn`
                 WHERE `serverid` = :server_id AND `request` = '1'",
                 DBConnection::FETCH_ALL,
-                [':server_id' => $serverid[0]['id']],
+                [':server_id' => $server_id[0]['id']],
                 [':serverid' => DBConnection::PARAM_INT]
             );
 

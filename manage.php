@@ -30,7 +30,7 @@ $tpl = StkTemplate::get("manage.tpl")
     ->addScriptInclude("manage.js")
     ->assign("can_edit_settings", User::hasPermission(AccessControl::PERM_EDIT_SETTINGS))
     ->assign("can_edit_roles", User::hasPermission(AccessControl::PERM_EDIT_PERMISSIONS));
-$tplData = ["status" => "", "body" => ""];
+$tpl_data = ["status" => "", "body" => ""];
 
 // status message
 $status_content = "";
@@ -134,11 +134,11 @@ catch(Exception $e)
 {
     $status_content = '<span class="error">' . $e->getMessage() . '</span><br />';
 }
-$tplData["status"] = $status_content;
+$tpl_data["status"] = $status_content;
 
 // right panel
-$tplData["body"] = Util::ob_get_require_once(ROOT_PATH . "manage-panel.php");
+$tpl_data["body"] = Util::ob_get_require_once(ROOT_PATH . "manage-panel.php");
 
 // output the view
-$tpl->assign("manage", $tplData);
+$tpl->assign("manage", $tpl_data);
 echo $tpl;

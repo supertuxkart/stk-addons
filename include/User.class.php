@@ -53,7 +53,7 @@ class User extends Base
      * Required session vars to be a valid session. All user vars are under the "user" key
      * @var array
      */
-    protected static $sessionRequired = ["id", "user_name", "real_name", "date_last_login", "role", "permissions"];
+    protected static $session_required = ["id", "user_name", "real_name", "date_last_login", "role", "permissions"];
 
     /**
      * @param string $message
@@ -134,28 +134,28 @@ class User extends Base
     /**
      * The user constructor
      *
-     * @param array $userData    retrieved from the database
+     * @param array $data    retrieved from the database
      * @param bool  $from_friend flag that indicates this constructor was called from the friend class
      */
-    public function __construct(array $userData = [], $from_friend = false)
+    public function __construct(array $data = [], $from_friend = false)
     {
-        $this->id = (int)$userData["id"];
-        $this->username = $userData["user"];
+        $this->id = (int)$data["id"];
+        $this->username = $data["user"];
 
         if ($from_friend) // we called the constructor from the friend class
         {
             return;
         }
 
-        $this->realname = $userData["name"];
-        $this->password = $userData["pass"];
-        $this->email = $userData["email"];
-        $this->role = $userData["role"];
-        $this->active = (bool)$userData["active"];
-        $this->date_login = $userData["last_login"];
-        $this->date_registration = $userData["reg_date"];
-        $this->homepage = $userData["homepage"];
-        $this->avatar = $userData["avatar"];
+        $this->realname = $data["name"];
+        $this->password = $data["pass"];
+        $this->email = $data["email"];
+        $this->role = $data["role"];
+        $this->active = (bool)$data["active"];
+        $this->date_login = $data["last_login"];
+        $this->date_registration = $data["reg_date"];
+        $this->homepage = $data["homepage"];
+        $this->avatar = $data["avatar"];
     }
 
     /**
@@ -401,7 +401,7 @@ class User extends Base
         static::sessionStart();
 
         // Check if any session variables are not set
-        foreach (static::$sessionRequired as $key)
+        foreach (static::$session_required as $key)
         {
             // One or more of the session variables was not set - this may be an issue, so force logout
             if (!static::sessionExists($key))
@@ -724,23 +724,23 @@ class User extends Base
     /**
      * Convert old role system to new
      *
-     * @param string $oldRole
+     * @param string $old_role
      *
      * @return string
      */
-    public static function oldRoleToNew($oldRole)
+    public static function oldRoleToNew($old_role)
     {
         // TODO maybe make a script that does this in production
-        if ($oldRole === "basicUser")
+        if ($old_role === "basicUser")
         {
             return "user";
         }
-        elseif ($oldRole === "root" || $oldRole === "administrator")
+        elseif ($old_role === "root" || $old_role === "administrator")
         {
             return "admin";
         }
 
-        return $oldRole;
+        return $old_role;
     }
 
     /**
@@ -918,9 +918,9 @@ class User extends Base
         $user = static::getFromID($user_id);
 
         // verify permissions
-        $isOwner = (User::getLoggedId() === $user->getId());
-        $canEdit = static::hasPermissionOnRole($user->getRole());
-        if (!$isOwner && !$canEdit)
+        $is_owner = (User::getLoggedId() === $user->getId());
+        $can_edit = static::hasPermissionOnRole($user->getRole());
+        if (!$is_owner && !$can_edit)
         {
             throw new UserException(_h("You do not have the permission to update the profile"));
         }
@@ -1040,6 +1040,7 @@ class User extends Base
                 DBConnection::NOTHING,
                 [':userid' => $user_id]
             );
+
             $user = DBConnection::get()->query(
                 "SELECT `last_login`
                 FROM `" . DB_PREFIX . "users`
@@ -1078,7 +1079,10 @@ class User extends Base
                 SET `pass`   = :pass
     	        WHERE `id` = :userid",
                 DBConnection::ROW_COUNT,
-                [':userid' => $user_id, ':pass' => $hash_new_password],
+                [
+                    ':userid' => $user_id,
+                    ':pass' => $hash_new_password
+                ],
                 [":userid" => DBConnection::PARAM_INT]
             );
         }
@@ -1157,10 +1161,12 @@ class User extends Base
                 [":userid" => $userid],
                 [":userid" => DBConnection::PARAM_INT]
             );
+
             if ($count === 0)
             {
                 throw new DBException();
             }
+
             Verification::delete($userid);
         }
         catch(DBException $e)
@@ -1170,6 +1176,7 @@ class User extends Base
                 _('Please contact a website administrator.')
             ));
         }
+
         Log::newEvent("User with ID '{$userid}' activated.");
     }
 
@@ -1184,6 +1191,7 @@ class User extends Base
         // Check all form input
         $username = Validate::username($username);
         $email = Validate::email($email);
+
         try
         {
             $userid = Validate::account($username, $email);
@@ -1202,7 +1210,6 @@ class User extends Base
             }
 
             Log::newEvent("Password reset request for user '$username'");
-
         }
         catch(DBException $e)
         {
@@ -1316,8 +1323,6 @@ class User extends Base
                 Log::newEvent("Registration email for user '$username' with id '$userid' failed.");
                 throw new UserException($e->getMessage() . ' ' . _h('Please contact a website administrator.'));
             }
-
-            Log::newEvent("Registration submitted for user '$username' with id '$userid'.");
         }
         catch(DBException $e)
         {
@@ -1326,6 +1331,8 @@ class User extends Base
                 _('Please contact a website administrator.')
             ));
         }
+
+        Log::newEvent("Registration submitted for user '$username' with id '$userid'.");
     }
 }
 

@@ -42,12 +42,12 @@ $uaTime1y_query = "SELECT CASE WHEN `label` = '' THEN 'Unknown' ELSE `label` END
     GROUP BY `t`.`date`,`t`.`label`
     ORDER BY `t`.`date` DESC, `t`.`label` DESC";
 
-$tplData = [
+$tpl_data = [
     "sections" => [
         Statistic::getChart($uaVer1y_query, Statistic::CHART_TIME, "File Downloads per Version in the Last Year", "downloads_version_year"),
         Statistic::getChart($uaTime1y_query, Statistic::CHART_TIME, "File Downloads per OS in the Last Year", "downloads_os_year")
     ]
 ];
 
-$tpl->assign("clients", $tplData);
+$tpl->assign("clients", $tpl_data);
 echo $tpl;

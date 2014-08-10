@@ -275,14 +275,14 @@ class News
             return false;
         }
 
-        $xmlContents = file($feed_url, FILE_IGNORE_NEW_LINES);
-        if (!$xmlContents)
+        $xml_content = file($feed_url, FILE_IGNORE_NEW_LINES);
+        if (!$xml_content)
         {
             return false;
         }
 
         $reader = xml_parser_create();
-        if (!xml_parse_into_struct($reader, implode('', $xmlContents), $vals, $index))
+        if (!xml_parse_into_struct($reader, implode('', $xml_content), $vals, $index))
         {
             echo 'XML Error: ' . xml_error_string(xml_get_error_code($reader)) . '<br />';
 
@@ -290,38 +290,38 @@ class News
         }
 
         // TODO maybe use a more sane way to parse
-        $startSearch = -1;
+        $start_search = -1;
         $vals_count = count($vals);
         for ($i = 0; $i < $vals_count; $i++)
         {
             if ($vals[$i]['tag'] === 'ITEM')
             {
-                $startSearch = $i;
+                $start_search = $i;
                 break;
             }
         }
 
-        if ($startSearch === -1)
+        if ($start_search === -1)
         {
             return false;
         }
 
-        $articleTitle = null;
-        for ($i = $startSearch; $i < $vals_count; $i++)
+        $article_title = null;
+        for ($i = $start_search; $i < $vals_count; $i++)
         {
             if ($vals[$i]['tag'] === 'TITLE')
             {
-                $articleTitle = $vals[$i]['value'];
+                $article_title = $vals[$i]['value'];
                 break;
             }
         }
 
-        if ($articleTitle === null)
+        if ($article_title === null)
         {
             return false;
         }
 
-        return h($articleTitle);
+        return h($article_title);
     }
 
     /**

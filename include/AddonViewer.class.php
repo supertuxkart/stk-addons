@@ -76,8 +76,8 @@ class AddonViewer
             'is_arena'       => $this->addon->getType() === Addon::ARENA,
             'designer'       => h($this->addon->getDesigner()),
             'license'        => h($this->addon->getLicense()),
-            'min'            => h($this->addon->getMinInclude()),
-            'max'            => h($this->addon->getMaxInclude()),
+            'min'            => h($this->addon->getIncludeMin()),
+            'max'            => h($this->addon->getIncludeMax()),
             'revisions'      => $this->addon->getAllRevisions(),
             'rating'         => [
                 'label'      => $this->rating->getRatingString(),

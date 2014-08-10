@@ -440,6 +440,39 @@ class File
     }
 
     /**
+     * Write to a file in the filesystem, safely. Create the file if it does not exist
+     *
+     * @param string $file the filename in the system
+     * @param string $content the content to write
+     *
+     * @return bool return true on success, false otherwise
+     */
+    public static function write($file, $content)
+    {
+        // If file doesn't exist, create it
+        if (!file_exists($file))
+        {
+            if (!touch($file))
+            {
+                return false;
+            }
+        }
+
+        $fhandle = fopen($file, 'w');
+        if (!$fhandle)
+        {
+            return false;
+        }
+        if (!fwrite($fhandle, $content))
+        {
+            return false;
+        }
+        fclose($fhandle);
+
+        return true;
+    }
+
+    /**
      * Delete a file and its corresponding database record
      *
      * @param int $file_id
@@ -841,8 +874,8 @@ class File
 
         // Scan image validity with GD
         $image_path = UP_PATH . 'images' . DS . basename($file_name);
-        $gdImageInfo = getimagesize($image_path);
-        if (!$gdImageInfo)
+        $image_info = getimagesize($image_path);
+        if (!$image_info)
         {
             // Image is not read-able - must be corrupt or otherwise invalid
             unlink($image_path);
@@ -850,8 +883,8 @@ class File
         }
 
         // Validate image size
-        if ($gdImageInfo[0] > ConfigManager::getConfig('max_image_dimension')
-            || $gdImageInfo[1] > ConfigManager::getConfig('max_image_dimension')
+        if ($image_info[0] > ConfigManager::getConfig('max_image_dimension')
+            || $image_info[1] > ConfigManager::getConfig('max_image_dimension')
         )
         {
             // Image is too large. Scale it.
@@ -905,9 +938,9 @@ class File
         $reader = xml_parser_create();
 
         // Remove whitespace at beginning and end of file
-        $xmlContents = trim(file_get_contents($quad_file));
+        $xml_content = trim(file_get_contents($quad_file));
 
-        if (!xml_parse_into_struct($reader, $xmlContents, $vals, $index))
+        if (!xml_parse_into_struct($reader, $xml_content, $vals, $index))
         {
             throw new FileException('XML Error: ' . xml_error_string(xml_get_error_code($reader)));
         }
@@ -1091,7 +1124,7 @@ class File
     }
 
     /**
-     * Modify an the internal link
+     * Modify an the internal link using the apache_rewrites config from the database
      *
      * @param string $link
      *
@@ -1124,6 +1157,7 @@ class File
             {
                 continue;
             }
+
             $matches_count = count($matches);
             for ($i = 1; $i < $matches_count; $i++)
             {

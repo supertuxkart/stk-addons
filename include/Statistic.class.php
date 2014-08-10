@@ -60,7 +60,7 @@ class Statistic
         }
 
         $tpl = StkTemplate::get("stats-section.tpl");
-        $tplData = [
+        $tpl_data = [
             "title"       => $section_title,
             "data"        => [],
             "columns"     => [],
@@ -79,11 +79,11 @@ class Statistic
 
         if ($data) // not empty
         {
-            $tplData["columns"] = array_keys($data[0]);
-            $tplData["data"] = $data;
+            $tpl_data["columns"] = array_keys($data[0]);
+            $tpl_data["data"] = $data;
         }
 
-        $tpl->assign("section", $tplData);
+        $tpl->assign("section", $tpl_data);
 
         return $tpl->toString();
     }
@@ -208,7 +208,9 @@ class Statistic
         foreach ($data as $point)
         {
             $label = $point[$label_index];
-            $x = strtotime($point[$x_index]) * 1000; // javascript uses milliseconds for unix timestamp instead of seconds(reason for 1000)
+
+            // javascript uses milliseconds for unix timestamp instead of seconds(reason for 1000)
+            $x = strtotime($point[$x_index]) * 1000;
             $y = (int)$point[$y_index];
 
             // check if in "other"
@@ -275,7 +277,7 @@ class Statistic
 
         // init
         $tpl = StkTemplate::get("stats-chart.tpl");
-        $tplData = [
+        $tpl_data = [
             "title"        => $chart_title,
             "class"        => ($chart_type === static::CHART_PIE) ? "stats-pie-chart" : "stats-time-chart-wide",
             "json"         => static::getCacheLocation($graph_id),
@@ -337,7 +339,7 @@ class Statistic
             }
         }
 
-        $tpl->assign("chart", $tplData);
+        $tpl->assign("chart", $tpl_data);
 
         return $tpl->toString();
     }
@@ -345,15 +347,15 @@ class Statistic
     /**
      * Return the most downloaded addon of a given type
      *
-     * @param string $addonType the type of addon eg: kart, track, arena etc
-     * @param string $fileType
+     * @param string $addon_type the type of addon eg: kart, track, arena etc
+     * @param string $file_type
      *
      * @return null|string the id of the addon or null on empty selection
      * @throws StatisticException
      */
-    public static function mostDownloadedAddon($addonType, $fileType = 'addon')
+    public static function mostDownloadedAddon($addon_type, $file_type = 'addon')
     {
-        if (!Addon::isAllowedType($addonType))
+        if (!Addon::isAllowedType($addon_type))
         {
             throw new StatisticException(_h('Invalid addon type.'));
         }
@@ -369,8 +371,8 @@ class Statistic
                 ORDER BY SUM(`downloads`) DESC',
                 DBConnection::FETCH_FIRST,
                 [
-                    ':addon_type' => $addonType,
-                    ':file_type'  => $fileType
+                    ':addon_type' => $addon_type,
+                    ':file_type'  => $file_type
                 ]
             );
         }
@@ -393,14 +395,14 @@ class Statistic
     /**
      * Return the newest addon of a given type
      *
-     * @param string $addonType
+     * @param string $addon_type
      *
      * @return null|string the id of the addon or null on empty selection
      * @throws StatisticException
      */
-    public static function newestAddon($addonType)
+    public static function newestAddon($addon_type)
     {
-        if (!Addon::isAllowedType($addonType))
+        if (!Addon::isAllowedType($addon_type))
         {
             throw new StatisticException(_h('Invalid addon type.'));
         }
@@ -410,7 +412,7 @@ class Statistic
             $newest_addon = DBConnection::get()->query(
                 'SELECT `a`.`id`
                 FROM `' . DB_PREFIX . 'addons` `a`
-                LEFT JOIN `' . DB_PREFIX . $addonType . '_revs` `r`
+                LEFT JOIN `' . DB_PREFIX . $addon_type . '_revs` `r`
                 ON `a`.`id` = `r`.`addon_id`
                 WHERE `r`.`status` & ' . F_APPROVED . '
                 ORDER BY `a`.`creation_date` DESC

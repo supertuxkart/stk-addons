@@ -25,25 +25,25 @@ $tpl = StkTemplate::get('bugs-index.tpl')
     ->addTypeHeadLibrary()
     ->addUtilLibrary()
     ->addScriptInclude("bugs.js");
-$tplData = ["show_btn_file" => true];
+$tpl_data = ["show_btn_file" => true];
 
 if (isset($_GET["bug_id"]))
 {
     $tpl->assignTitle(_h("View Bug"));
-    $tplData["show_btn_file"] = false;
-    $tplData["content"] = Util::ob_get_require_once(BUGS_PATH . "view.php");
+    $tpl_data["show_btn_file"] = false;
+    $tpl_data["content"] = Util::ob_get_require_once(BUGS_PATH . "view.php");
 }
 elseif (isset($_GET["add"]))
 {
     $tpl->assignTitle(_h("Add Bug"));
-    $tplData["show_btn_file"] = false;
-    $tplData["content"] = Util::ob_get_require_once(BUGS_PATH . "add.php");
+    $tpl_data["show_btn_file"] = false;
+    $tpl_data["content"] = Util::ob_get_require_once(BUGS_PATH . "add.php");
 }
 else
 {
     $tpl->assignTitle(_h("All bugs"));
-    $tplData["content"] = Util::ob_get_require_once(BUGS_PATH . "all.php");
+    $tpl_data["content"] = Util::ob_get_require_once(BUGS_PATH . "all.php");
 }
 
-$tpl->assign("bugs", $tplData);
+$tpl->assign("bugs", $tpl_data);
 echo $tpl;

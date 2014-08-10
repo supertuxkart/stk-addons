@@ -159,7 +159,7 @@ $tpl = StkTemplate::get("addons.tpl")
     ->addUtilLibrary()
     ->addBootstrapMultiSelectLibrary()
     ->addScriptInclude("addon.js");
-$tplData = [
+$tpl_data = [
     'menu'   => Util::ob_get_require_once(ROOT_PATH . "addons-menu.php"),
     'body'   => '',
     'status' => $status
@@ -168,9 +168,9 @@ $tplData = [
 // right panel
 if ($addon_exists)
 {
-    $tplData['body'] = Util::ob_get_require_once(ROOT_PATH . 'addons-panel.php');
+    $tpl_data['body'] = Util::ob_get_require_once(ROOT_PATH . 'addons-panel.php');
 }
 
 // output the view
-$tpl->assign('addon', $tplData);
+$tpl->assign('addon', $tpl_data);
 echo $tpl;

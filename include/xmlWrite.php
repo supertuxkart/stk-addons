@@ -80,11 +80,6 @@ function generateNewsXML()
     return $return;
 }
 
-function writeNewsXML()
-{
-    return writeFile(generateNewsXML(), NEWS_XML_PATH);
-}
-
 function generateAssetXML()
 {
     // Define addon types
@@ -418,36 +413,13 @@ function generateAssetXML2()
     return $return;
 }
 
-function writeAssetXML()
+function writeNewsXML()
 {
-    writeFile(generateAssetXML2(), ASSETS2_XML_PATH);
-
-    return writeFile(generateAssetXML(), ASSETS_XML_PATH);
+    File::write(NEWS_XML_PATH, generateNewsXML());
 }
 
-function writeFile($content, $file)
+function writeAssetXML()
 {
-    // If file doesn't exist, create it
-    if (!file_exists($file))
-    {
-        if (!touch($file))
-        {
-            return false;
-        }
-    }
-
-    $fhandle = fopen($file, 'w');
-    if (!$fhandle)
-    {
-        trigger_error('Could not open xml file for writing!', E_USER_WARNING);
-
-        return false;
-    }
-    if (!fwrite($fhandle, $content))
-    {
-        return false;
-    }
-    fclose($fhandle);
-
-    return true;
+    File::write(ASSETS2_XML_PATH, generateAssetXML2());
+    File::write(ASSETS_XML_PATH, generateAssetXML());
 }

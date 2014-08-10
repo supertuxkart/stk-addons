@@ -31,31 +31,31 @@ class PaginationTemplate extends Template
      * The total entries present
      * @var int
      */
-    protected $totalItems = 0;
+    protected $total_items = 0;
 
     /**
      * The current page
      * @var int
      */
-    protected $currentPage = 1;
+    protected $current_page = 1;
 
     /**
      * Items on page ratio
      * @var int
      */
-    protected $itemsPerPage = 10;
+    protected $items_per_page = 10;
 
     /**
      * The number of button visible, expect the first and last button
      * @var int
      */
-    protected $numberButtons = 4;
+    protected $nr_buttons = 4;
 
     /**
      * The base url to build each button href/url
      * @var string
      */
-    protected $pageUrl;
+    protected $page_url;
 
     /**
      * @param null $template_dir
@@ -112,15 +112,15 @@ class PaginationTemplate extends Template
     /**
      * Test the template by outputting consecutive
      *
-     * @param int $totalItems
+     * @param int $total_items
      */
-    public static function testTemplate($totalItems = 30)
+    public static function testTemplate($total_items = 30)
     {
-        for ($perPage = 1; $perPage < $totalItems / 2; $perPage++)
+        for ($per_page = 1; $per_page < $total_items / 2; $per_page++)
         {
-            for ($i = 1; $i <= ceil($totalItems / $perPage); $i++)
+            for ($i = 1; $i <= ceil($total_items / $per_page); $i++)
             {
-                echo PaginationTemplate::get()->setCurrentPage($i)->setTotalItems($totalItems)->setItemsPerPage($perPage);
+                echo PaginationTemplate::get()->setCurrentPage($i)->setTotalItems($total_items)->setItemsPerPage($per_page);
                 echo "<br>";
             }
         }
@@ -131,29 +131,29 @@ class PaginationTemplate extends Template
      */
     protected function setup()
     {
-        $totalPages = (int)ceil($this->totalItems / $this->itemsPerPage);
-        $hasPagination = ($this->totalItems > $this->itemsPerPage); // do not paginate
+        $totalPages = (int)ceil($this->total_items / $this->items_per_page);
+        $hasPagination = ($this->total_items > $this->items_per_page); // do not paginate
 
         // check to not go over the limit
-        if ($this->currentPage > $totalPages)
+        if ($this->current_page > $totalPages)
         {
-            $this->currentPage = $totalPages;
+            $this->current_page = $totalPages;
         }
 
         // 0 means disabled
-        $prevPage = ($this->currentPage === 1) ? 0 : $this->currentPage - 1;
-        $nextPage = ($this->currentPage === $totalPages) ? 0 : $this->currentPage + 1;
+        $prevPage = ($this->current_page === 1) ? 0 : $this->current_page - 1;
+        $nextPage = ($this->current_page === $totalPages) ? 0 : $this->current_page + 1;
 
         // set default page, if not set already
-        if (!$this->pageUrl)
+        if (!$this->page_url)
         {
-            $this->pageUrl = Util::removeQueryArguments([static::PAGE_ARGUMENT], Util::getCurrentUrl());
+            $this->page_url = Util::removeQueryArguments([static::PAGE_ARGUMENT], Util::getCurrentUrl());
         }
 
         // see if we build the ... on one direction or the other
-        $buildLeft = ($this->currentPage - 1) > $this->numberButtons;
+        $buildLeft = ($this->current_page - 1) > $this->nr_buttons;
 
-        $rightOffset = $this->currentPage - 1 + $this->numberButtons;
+        $rightOffset = $this->current_page - 1 + $this->nr_buttons;
         $buildRight = ($rightOffset !== $totalPages) && ($rightOffset < $totalPages);
 
         if (!$buildLeft && !$buildRight) // both are false, should not happen, build right by default
@@ -163,16 +163,16 @@ class PaginationTemplate extends Template
 
         $pagination = [
             "has_pagination" => $hasPagination, // pagination is present
-            "current_page"   => $this->currentPage,
+            "current_page"   => $this->current_page,
             "prev_page"      => $prevPage,
             "next_page"      => $nextPage,
             "total_pages"    => $totalPages,
-            "url"            => $this->pageUrl, // the base url to build each button
-            "nr_buttons"     => $this->numberButtons, // the relative number of buttons present except the first and last
+            "url"            => $this->page_url, // the base url to build each button
+            "nr_buttons"     => $this->nr_buttons, // the relative number of buttons present except the first and last
             "build_left"     => $buildLeft, // display '...' on the left
             "build_right"    => $buildRight, // display '...' on the right
             "limit_options"  => [10 => 10, 20 => 20, 50 => 50],
-            "limit_selected" => $this->itemsPerPage
+            "limit_selected" => $this->items_per_page
         ];
         $this->assign("pagination", $pagination);
     }
@@ -184,7 +184,7 @@ class PaginationTemplate extends Template
      */
     public function setCurrentPage($page)
     {
-        $this->currentPage = $page;
+        $this->current_page = $page;
 
         return $this;
     }
@@ -196,7 +196,7 @@ class PaginationTemplate extends Template
      */
     public function setTotalItems($items)
     {
-        $this->totalItems = $items;
+        $this->total_items = $items;
 
         return $this;
     }
@@ -208,7 +208,7 @@ class PaginationTemplate extends Template
      */
     public function setPageUrl($url)
     {
-        $this->pageUrl = $url;
+        $this->page_url = $url;
 
         return $this;
     }
@@ -220,7 +220,7 @@ class PaginationTemplate extends Template
      */
     public function setNumberButtons($nr)
     {
-        $this->numberButtons = $nr;
+        $this->nr_buttons = $nr;
 
         return $this;
     }
@@ -232,7 +232,7 @@ class PaginationTemplate extends Template
      */
     public function setItemsPerPage($perPage)
     {
-        $this->itemsPerPage = $perPage;
+        $this->items_per_page = $perPage;
 
         return $this;
     }
