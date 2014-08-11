@@ -415,11 +415,13 @@ function generateAssetXML2()
 
 function writeNewsXML()
 {
-    File::write(NEWS_XML_PATH, generateNewsXML());
+    return File::write(NEWS_XML_PATH, generateNewsXML());
 }
 
 function writeAssetXML()
 {
-    File::write(ASSETS2_XML_PATH, generateAssetXML2());
-    File::write(ASSETS_XML_PATH, generateAssetXML());
+    $count = File::write(ASSETS2_XML_PATH, generateAssetXML2());
+    $count += File::write(ASSETS_XML_PATH, generateAssetXML());
+
+    return $count;
 }
