@@ -46,7 +46,7 @@ abstract class ClientSession
     protected function __construct($session_id, $user_id, $user_name)
     {
         $this->session_id = $session_id;
-        $this->user_id = $user_id;
+        $this->user_id = (int)$user_id;
         $this->user_name = $user_name;
     }
 
@@ -438,10 +438,10 @@ abstract class ClientSession
 
             // Valid session found, get more user info
             $user_info = DBConnection::get()->query(
-                "SELECT `user`,`role`
+                "SELECT `user`, `role`
                 FROM `" . DB_PREFIX . "users`
                 WHERE `id` = :userid",
-                DBConnection::FETCH_ALL,
+                DBConnection::FETCH_FIRST,
                 [':userid' => $user_id],
                 [':userid' => DBConnection::PARAM_INT]
             );
@@ -450,7 +450,7 @@ abstract class ClientSession
             return new RegisteredClientSession(
                 $session_info[0]["cid"],
                 $session_info[0]["uid"],
-                $user_info[0]["user"]
+                $user_info["user"]
             );
 
         }
