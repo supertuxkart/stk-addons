@@ -86,8 +86,7 @@ define("DB_HOST", "localhost");
 
 // Mail proprieties
 define("IS_SMTP", true); // true for "smtp" and false for "sendmail"
-define("SENDMAIL_PATH", null); // Path to sendmail
-define("SENDMAIL_ARGS", null); // Sendmail arguments
+define("SENDMAIL_PATH", null); // Path to sendmail if your sendmail path is not standard
 define("SMTP_HOST", null); // SMTP server host
 define("SMTP_PORT", null); // SMTP server port (usually 25)
 define("SMTP_PREFIX", "ssl"); // usually ssl or tls

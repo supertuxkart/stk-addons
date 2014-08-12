@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright 2009 Lucas Baudin <xapantu@gmail.com>
- *                2014 Daniel Butum <danibutum at gmail dot com>
+ *           2014 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -80,7 +80,7 @@ class SMail
      */
     public function __construct()
     {
-        $this->mail = new PHPMailer(false);
+        $this->mail = new PHPMailer(true);
 
         // use SMTP
         if (IS_SMTP)
@@ -112,12 +112,13 @@ class SMail
         try
         {
             $this->mail->setFrom(ConfigManager::getConfig("admin_email"), "STK-Addons Administrator");
+            $this->mail->addReplyTo(ConfigManager::getConfig("admin_email"), "STK-Addons Administrator");
         }
         catch(phpmailerException $e)
         {
             throw new SMailException($e->getMessage());
         }
-        //        $this->mail->addReplyTo(ConfigManager::getConfig("admin_email"), "STK-Addons Administrator");
+
         $this->mail->CharSet = "UTF-8";
         $this->mail->Encoding = "8bit";
     }
