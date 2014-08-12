@@ -260,7 +260,7 @@ class DBConnection
                 return $sth->fetchColumn();
             }
         }
-        catch(PDOException $e)
+        catch (PDOException $e)
         {
             if ($this->in_transaction)
             {

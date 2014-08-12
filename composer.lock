@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "7b56cf625a3f288b9d88c05241017d23",
+    "hash": "fae7a72d4a796d59b19e25cb9ff9a30d",
     "packages": [
         {
             "name": "ezyang/htmlpurifier",
@@ -156,6 +156,59 @@
             "time": "2013-02-09 11:44:32"
         },
         {
+            "name": "phpmailer/phpmailer",
+            "version": "v5.2.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PHPMailer/PHPMailer.git",
+                "reference": "d3802c597bff8f6c2ccfa3eab2a511aa01b8d68f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/d3802c597bff8f6c2ccfa3eab2a511aa01b8d68f",
+                "reference": "d3802c597bff8f6c2ccfa3eab2a511aa01b8d68f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.0.0"
+            },
+            "require-dev": {
+                "phpdocumentor/phpdocumentor": "*",
+                "phpunit/phpunit": "4.0.*"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "class.phpmailer.php",
+                    "class.pop3.php",
+                    "class.smtp.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-2.1"
+            ],
+            "authors": [
+                {
+                    "name": "Jim Jagielski",
+                    "email": "jimjag@gmail.com"
+                },
+                {
+                    "name": "Marcus Bointon",
+                    "email": "phpmailer@synchromedia.co.uk"
+                },
+                {
+                    "name": "Andy Prevost",
+                    "email": "codeworxtech@users.sourceforge.net"
+                },
+                {
+                    "name": "Brent R. Matzelle"
+                }
+            ],
+            "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
+            "time": "2014-05-14 07:04:18"
+        },
+        {
             "name": "recaptcha/php5",
             "version": "v1.0.0",
             "source": {
@@ -297,12 +350,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/vlucas/valitron.git",
-                "reference": "d855c53f947ae6e21e506c3b20ebfe5abced07db"
+                "reference": "517c8e3007e8d18bf5d4a560ef9006c134643363"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vlucas/valitron/zipball/d855c53f947ae6e21e506c3b20ebfe5abced07db",
-                "reference": "d855c53f947ae6e21e506c3b20ebfe5abced07db",
+                "url": "https://api.github.com/repos/vlucas/valitron/zipball/517c8e3007e8d18bf5d4a560ef9006c134643363",
+                "reference": "517c8e3007e8d18bf5d4a560ef9006c134643363",
                 "shasum": ""
             },
             "require": {
@@ -335,7 +388,7 @@
                 "validation",
                 "validator"
             ],
-            "time": "2014-08-01 14:34:28"
+            "time": "2014-08-12 13:28:33"
         }
     ],
     "packages-dev": [

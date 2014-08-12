@@ -35,6 +35,7 @@ class StatisticException extends Exception {}
 class AchievementException extends Exception {}
 class FriendException extends Exception {}
 class AccessControlException extends Exception {}
+class SMailException extends Exception {}
 
 class ParserException extends Exception {}
 class XMLParserException extends ParserException {}

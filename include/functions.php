@@ -76,36 +76,3 @@ function minify_html($tpl_output, Smarty_Internal_Template $template)
 {
     return preg_replace(['/\>[^\S ]+/s', '/[^\S ]+\</s', '/(\s)+/s'], ['>', '<', '\\1'], $tpl_output);
 }
-
-
-/**
- * @param string $subject
- * @param string $message_html
- *
- * @return null
- */
-function moderator_email($subject, $message_html)
-{
-    $mail_address = ConfigManager::getConfig('list_email');
-    if (empty($mail_address))
-    {
-        echo '<span class="warning">' .
-            _h('No moderator mailing-list email is set.')
-            . '</span><br />';
-
-        return null;
-    }
-
-    $boundary = "-----=" . md5(rand());
-    $header = "From: \"STK-Addons Administrator\" <" . ConfigManager::getConfig('admin_email') . ">\n"
-        . "Reply-to: \"STK-Addons Administrator\" <" . ConfigManager::getConfig('admin_email') . ">\n"
-        . "MIME-Version: 1.0\n"
-        . "Content-Type: multipart/alternative;\n boundary=\"$boundary\"\n";
-    $message = "\n--" . $boundary . "\n"
-        . "Content-Type: text/html; charset=\"ISO-8859-1\"\n"
-        . "Content-Transfer-Encoding: 8bit\n"
-        . "\n" . $message_html . "\n"
-        . "\n--" . $boundary . "--\n"
-        . "\n--" . $boundary . "--\n";
-    mail($mail_address, $subject, $message, $header);
-}

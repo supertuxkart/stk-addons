@@ -1181,6 +1181,8 @@ class User extends Base
     }
 
     /**
+     * Recover an account
+     *
      * @param string $username
      * @param string $email
      *
@@ -1200,10 +1202,9 @@ class User extends Base
             // Send verification email
             try
             {
-                $mail = new SMail;
-                $mail->passwordResetNotification($email, $userid, $username, $verification_code, 'password-reset.php');
+                SMail::get()->passwordResetNotification($email, $userid, $username, $verification_code, 'password-reset.php');
             }
-            catch(Exception $e)
+            catch(SMailException $e)
             {
                 Log::newEvent('Password reset email for "' . $username . '" could not be sent.');
                 throw new UserException($e->getMessage() . ' ' . _h('Please contact a website administrator.'));
@@ -1315,10 +1316,9 @@ class User extends Base
             // Send verification email
             try
             {
-                $mail = new SMail;
-                $mail->newAccountNotification($email, $userid, $username, $verification_code, 'register.php');
+                SMail::get()->newAccountNotification($email, $userid, $username, $verification_code, 'register.php');
             }
-            catch(Exception $e)
+            catch(SMailException $e)
             {
                 Log::newEvent("Registration email for user '$username' with id '$userid' failed.");
                 throw new UserException($e->getMessage() . ' ' . _h('Please contact a website administrator.'));

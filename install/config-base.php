@@ -85,11 +85,12 @@ define("DB_PREFIX", "v2_");
 define("DB_HOST", "localhost");
 
 // Mail proprieties
-define("MAIL_METHOD", "sendmail"); // "smtp" or "sendmail" supported
-define("SENDMAIL_PATH", "/usr/bin/sendmail"); // Path to sendmail
-define("SENDMAIL_ARGS", "-i"); // Sendmail arguments
+define("IS_SMTP", true); // true for "smtp" and false for "sendmail"
+define("SENDMAIL_PATH", null); // Path to sendmail
+define("SENDMAIL_ARGS", null); // Sendmail arguments
 define("SMTP_HOST", null); // SMTP server host
 define("SMTP_PORT", null); // SMTP server port (usually 25)
+define("SMTP_PREFIX", "ssl"); // usually ssl or tls
 define("SMTP_AUTH", null); // Whether or not to use SMTP authentication, true/false
 define("SMTP_USER", null); // SMTP username
 define("SMTP_PASS", null); // SMTP password

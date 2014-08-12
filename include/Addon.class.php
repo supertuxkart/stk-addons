@@ -334,7 +334,7 @@ class Addon extends Base
         }
 
         // Send mail to moderators
-        moderator_email(
+        SMail::get()->moderatorNotification(
             'New Addon Upload',
             sprintf(
                 "%s has uploaded a new revision for %s '%s' %s",
@@ -1165,10 +1165,9 @@ class Addon extends Base
 
         try
         {
-            $mail = new SMail;
-            $mail->addonNoteNotification($user['email'], $this->id, $email_body);
+            SMail::get()->addonNoteNotification($user['email'], $this->id, $email_body);
         }
-        catch(Exception $e)
+        catch(SMailException $e)
         {
             throw new AddonException('Failed to send email to user. ' . $e->getMessage());
         }
@@ -1935,7 +1934,7 @@ class Addon extends Base
         }
 
         // Send mail to moderators
-        moderator_email(
+        SMail::get()->moderatorNotification(
             'New Addon Upload',
             sprintf(
                 "%s has uploaded a new %s '%s' %s",

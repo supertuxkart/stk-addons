@@ -23,7 +23,7 @@ Dependencies include:
 * PHP's gettext module
 
 Other dependencies:
-* `composer install` to download the php dependencies
+* `composer install` to download the php dependencies (for production use `composer install --no-dev --optimize-autoloader`)
 * `bower install` to download the javascript and css dependencies
 
 You can generate the database tables, procedures, and relations by using a tool such as
@@ -35,7 +35,7 @@ On your web server, you must edit the provided `install/config-base.php` to matc
 and system configuration. Save this file as `config.php` in the website root. Enable the debugging mode in
 the configuration file to assist with resolving any errors.
 
-The cache folder is local, if you get permission errors on `assets/cache` just run `chmod 777 assets/cache`
+The cache folder is local, if you get permission errors on `assets/cache` just run `chmod 777 assets/cache`.
 The same can be said about the `dl/` directory.
 
 Register a new user using the web interface. Don't worry about configuring your SMTP
