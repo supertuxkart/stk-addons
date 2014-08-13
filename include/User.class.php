@@ -227,7 +227,7 @@ class User extends Base
      */
     public function isActive()
     {
-        return $this->active;
+        return (bool)$this->active === true;
     }
 
     /**
@@ -469,7 +469,7 @@ class User extends Base
         catch(UserException $e)
         {
             static::logout();
-            throw new UserException(_h("Username or password is invalid"));
+            throw new UserException($e->getMessage());
         }
 
         $id = $user->getId();

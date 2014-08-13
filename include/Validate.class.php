@@ -94,6 +94,11 @@ class Validate
             throw new InvalidArgumentException("credential type is invalid");
         }
 
+        if (!$user->isActive())
+        {
+            throw new UserException(_h("Your account is not active"));
+        }
+
         return $user;
     }
 
@@ -252,14 +257,14 @@ class Validate
 
             if (Util::getPasswordHash($password, $salt) !== $db_password_hash)
             {
-                throw new UserException(_h("Invalid password"));
+                throw new UserException(_h("Username or password is invalid"));
             }
         }
         else // not salted
         {
             if ($db_password_hash !== hash("sha256", $password))
             {
-                throw new UserException(_h("Invalid password"));
+                throw new UserException(_h("Username or password is invalid"));
             }
         }
 

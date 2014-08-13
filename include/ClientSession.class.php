@@ -398,7 +398,6 @@ abstract class ClientSession
         elseif (empty($password))
         {
             throw new InvalidArgumentException(_h('Password required'));
-            //return ClientSessionAnonymous::create($username);
         }
 
         return RegisteredClientSession::create($username, $password, $save_session);
