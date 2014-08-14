@@ -896,7 +896,7 @@ class File
                 $image->scale($image_max_dimension, $image_max_dimension);
                 $image->save($image_path);
             }
-            catch(ImageException $e)
+            catch(SImageException $e)
             {
                 throw new FileException($e->getMessage());
             }
