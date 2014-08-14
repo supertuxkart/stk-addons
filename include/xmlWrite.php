@@ -41,7 +41,7 @@ function generateNewsXML()
     $writer->writeAttribute('mtime', time());
 
     // Time between updates
-    $writer->writeAttribute('frequency', ConfigManager::getConfig('xml_frequency'));
+    $writer->writeAttribute('frequency', Config::get(Config::XML_UPDATE_TIME));
 
     // Reference assets.xml
     $writer->startElement('include');
@@ -84,6 +84,9 @@ function generateAssetXML()
 {
     // Define addon types
     $addon_types = ['kart', 'track', 'arena'];
+    $image_list_path_format = Config::get(Config::PATH_IMAGE_JSON);
+    $license_path_format = Config::get(Config::PATH_LICENSE_JSON);
+    $show_invisible = (int)Config::get(Config::SHOW_INVISIBLE_ADDONS);
     $writer = new XMLWriter();
 
     // Output to memory
@@ -105,7 +108,7 @@ function generateAssetXML()
     $writer->writeAttribute('mtime', time());
 
     // Time between updates
-    $writer->writeAttribute('frequency', ConfigManager::getConfig('xml_frequency'));
+    $writer->writeAttribute('frequency', Config::get(Config::XML_UPDATE_TIME));
 
     foreach ($addon_types as $type)
     {
@@ -132,14 +135,11 @@ function generateAssetXML()
             // Loop through each addon record
             foreach ($addons as $addon)
             {
-                if (ConfigManager::getConfig('list_invisible') == 0)
+                if (!$show_invisible && Addon::isInvisible($addon['status']))
                 {
-                    if (Addon::isInvisible($addon['status']))
-                    {
-                        trigger_error('Hiding invisible addon ' . $addon['name'], E_USER_WARNING);
-                        continue;
-                    }
+                    continue;
                 }
+
                 $file_path = File::getPath($addon['fileid']);
                 if ($file_path === false)
                 {
@@ -171,6 +171,7 @@ function generateAssetXML()
                         $writer->writeAttribute('image', DOWNLOAD_LOCATION . $image_path);
                     }
                 }
+
                 if ($type == "kart")
                 {
                     $icon_path = File::getPath($addon['icon']);
@@ -182,6 +183,7 @@ function generateAssetXML()
                         }
                     }
                 }
+
                 $writer->writeAttribute('format', $addon['format']);
                 $writer->writeAttribute('revision', $addon['revision']);
                 $writer->writeAttribute('status', $addon['status']);
@@ -190,16 +192,19 @@ function generateAssetXML()
                 $writer->writeAttribute('max-include-version', $addon['max_include_ver']);
 
                 // Write license path
-                $license_path_format = ConfigManager::getConfig('license_json_path');
                 $license_path = str_replace(
                     ['$aid', '$atype'],
                     [$addon['id'], $addon['type']],
                     $license_path_format
                 );
                 $writer->writeAttribute('license', $license_path);
-                $image_list_path = ConfigManager::getConfig('image_json_path');
-                $image_list_path = str_replace('$aid', $addon['id'], $image_list_path);
-                $image_list_path = str_replace('$atype', $addon['type'], $image_list_path);
+
+                // Write image list path
+                $image_list_path = str_replace(
+                    ['$aid', '$atype'],
+                    [$addon['id'], $addon['type']],
+                    $image_list_path_format
+                );
                 $writer->writeAttribute('image-list', $image_list_path);
 
                 // Get add-on rating
@@ -228,8 +233,9 @@ function generateAssetXML2()
 {
     // Define addon types
     $addon_types = ['kart', 'track', 'arena'];
-    $image_list_path_format = ConfigManager::getConfig('image_json_path');
-    $license_path_format = ConfigManager::getConfig('license_json_path');
+    $image_list_path_format = Config::get(Config::PATH_IMAGE_JSON);
+    $license_path_format = Config::get(Config::PATH_LICENSE_JSON);
+    $show_invisible = (int)Config::get(Config::SHOW_INVISIBLE_ADDONS);
 
     $writer = new XMLWriter();
 
@@ -252,7 +258,7 @@ function generateAssetXML2()
     $writer->writeAttribute('mtime', time());
 
     // Time between updates
-    $writer->writeAttribute('frequency', ConfigManager::getConfig('xml_frequency'));
+    $writer->writeAttribute('frequency', Config::get(Config::XML_UPDATE_TIME));
 
     foreach ($addon_types as $type)
     {
@@ -315,7 +321,7 @@ function generateAssetXML2()
                     foreach ($addon_revs as $addon_rev)
                     {
                         // Skip invisible entries
-                        if (ConfigManager::getConfig('list_invisible') === 0 && Addon::isInvisible($addon_rev['status']))
+                        if (!$show_invisible && Addon::isInvisible($addon_rev['status']))
                         {
                             continue;
                         }

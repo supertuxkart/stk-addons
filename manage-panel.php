@@ -118,21 +118,21 @@ switch ($_GET['view'])
         }
         $tpl = new StkTemplate("manage-general.tpl");
         $tpl_data = [
-            "xml_frequency"       => ConfigManager::getConfig("xml_frequency"),
-            "allowed_addon_exts"  => ConfigManager::getConfig("allowed_addon_exts"),
-            "allowed_source_exts" => ConfigManager::getConfig("allowed_source_exts"),
-            "admin_email"         => ConfigManager::getConfig("admin_email"),
-            "list_email"          => ConfigManager::getConfig("list_email"),
+            "xml_frequency"       => Config::get(Config::XML_UPDATE_TIME),
+            "allowed_addon_exts"  => Config::get(Config::ALLOWED_ADDON_EXTENSIONS),
+            "allowed_source_exts" => Config::get(Config::ALLOWED_SOURCE_EXTENSIONS),
+            "admin_email"         => Config::get(Config::EMAIL_ADMIN),
+            "list_email"          => Config::get(Config::EMAIL_LIST),
             "list_invisible"      => [
                 "options"  => [
                     0 => _h("False"),
                     1 => _h("True"),
                 ],
-                "selected" => (ConfigManager::getConfig('list_invisible') == 1) ? 1 : 0
+                "selected" => (Config::get(Config::SHOW_INVISIBLE_ADDONS) == 1) ? 1 : 0
             ],
-            "blog_feed"           => ConfigManager::getConfig("blog_feed"),
-            "max_image_dimension" => ConfigManager::getConfig("max_image_dimension"),
-            "apache_rewrites"     => ConfigManager::getConfig("apache_rewrites"),
+            "blog_feed"           => Config::get(Config::FEED_BLOG),
+            "max_image_dimension" => Config::get(Config::IMAGE_MAX_DIMENSION),
+            "apache_rewrites"     => Config::get(Config::APACHE_REWRITES),
         ];
 
         $tpl->assign("general", $tpl_data);

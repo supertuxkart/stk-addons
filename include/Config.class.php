@@ -21,8 +21,65 @@
 /**
  * Contains static methods to manage configuration values in database
  */
-class ConfigManager
+class Config
 {
+    /**
+     * The admin email address
+     */
+    const EMAIL_ADMIN = "admin_email";
+
+    /**
+     * The list email address
+     */
+    const EMAIL_LIST = "list_email";
+
+    /**
+     * An int describing the maximum image size
+     */
+    const IMAGE_MAX_DIMENSION = "max_image_dimension";
+
+    /**
+     * The rss blog feed url
+     */
+    const FEED_BLOG = "blog_feed";
+
+    /**
+     * The apache rewrites rules
+     */
+    const APACHE_REWRITES = "apache_rewrites";
+
+    /**
+     * Bool flag, whether so show or not invisible addons in the xml files
+     */
+    const SHOW_INVISIBLE_ADDONS = "list_invisible";
+
+    /**
+     * Time in seconds between xml updates
+     */
+    const XML_UPDATE_TIME = "xml_frequency";
+
+    /**
+     * A coma separated string of allowed addon extensions
+     */
+    const ALLOWED_ADDON_EXTENSIONS = "allowed_addon_exts";
+
+    /**
+     * A coma separated string of allowed source extensions
+     */
+    const ALLOWED_SOURCE_EXTENSIONS = "allowed_source_exts";
+
+    /**
+     * The path to the image json, use in conjunction with the apache rewrites.
+     * String must include $aid and $atype, that will be replaced with the actual id or type
+     */
+    const PATH_LICENSE_JSON = "license_json_path";
+
+    /**
+     * The path to the image json, use in conjunction with the apache rewrites.
+     * String must include $aid and $atype, that will be replaced with the actual id or type
+     */
+    const PATH_IMAGE_JSON = "image_json_path";
+
     /**
      * Cache the results
      * @var array
@@ -37,7 +94,7 @@ class ConfigManager
      * @throws InvalidArgumentException when config_name is not a string
      * @return null|string
      */
-    public static function getConfig($config_name)
+    public static function get($config_name)
     {
         // Validate parameters
         if (!is_string($config_name))
@@ -97,7 +154,7 @@ class ConfigManager
      *
      * @return bool true on success, false otherwise
      */
-    public static function setConfig($config_name, $config_value)
+    public static function set($config_name, $config_value)
     {
         // Validate parameters
         if (!is_string($config_name))
@@ -132,9 +189,21 @@ class ConfigManager
         }
 
         // Update cache - first, make sure the cache exists
-        static::getConfig($config_name); // TODO check if we really need to update cache
+        static::get($config_name); // TODO check if we really need to update cache
         static::$cache[$config_name] = $config_value;
 
         return true;
+    }
+
+    /**
+     * Parse a comma string list to an array
+     *
+     * @param string $string
+     *
+     * @return array
+     */
+    public static function commaStringToArray($string)
+    {
+        return array_map("trim", explode(',', $string));
     }
 }

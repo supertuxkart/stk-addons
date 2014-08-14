@@ -111,8 +111,10 @@ class SMail
 
         try
         {
-            $this->mail->setFrom(ConfigManager::getConfig("admin_email"), "STK-Addons Administrator");
-            $this->mail->addReplyTo(ConfigManager::getConfig("admin_email"), "STK-Addons Administrator");
+            $admin_email = Config::get(Config::EMAIL_ADMIN);
+
+            $this->mail->setFrom($admin_email, "STK-Addons Administrator");
+            $this->mail->addReplyTo($admin_email, "STK-Addons Administrator");
         }
         catch(phpmailerException $e)
         {
@@ -202,7 +204,7 @@ class SMail
      */
     public function moderatorNotification($subject, $message_html)
     {
-        $mail_address = ConfigManager::getConfig('list_email');
+        $mail_address = Config::get(Config::EMAIL_LIST);
         if (empty($mail_address))
         {
             trigger_error(_h('No moderator mailing-list email is set.'));

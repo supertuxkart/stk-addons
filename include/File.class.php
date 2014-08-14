@@ -383,13 +383,13 @@ class File
         // Make a list of approved file types
         if ($source === false)
         {
-            $approved_types = ConfigManager::getConfig('allowed_addon_exts');
+            $approved_types = Config::get(Config::ALLOWED_ADDON_EXTENSIONS);
         }
         else
         {
-            $approved_types = ConfigManager::getConfig('allowed_source_exts');
+            $approved_types = Config::get(Config::ALLOWED_SOURCE_EXTENSIONS);
         }
-        $approved_types = array_map("trim", explode(',', $approved_types));
+        $approved_types = Config::commaStringToArray($approved_types);
 
         $removed_files = [];
         foreach (scandir($path) as $file)
@@ -882,19 +882,18 @@ class File
             throw new FileException(_h('The uploaded image file is invalid.'));
         }
 
+        $image_max_dimension = Config::get(Config::IMAGE_MAX_DIMENSION);
+        $image_width = $image_info[0];
+        $image_height = $image_info[1];
+
         // Validate image size
-        if ($image_info[0] > ConfigManager::getConfig('max_image_dimension')
-            || $image_info[1] > ConfigManager::getConfig('max_image_dimension')
-        )
+        if ($image_width > $image_max_dimension || $image_height > $image_max_dimension)
         {
             // Image is too large. Scale it.
             try
             {
                 $image = new SImage($image_path);
-                $image->scale(
-                    ConfigManager::getConfig('max_image_dimension'),
-                    ConfigManager::getConfig('max_image_dimension')
-                );
+                $image->scale($image_max_dimension, $image_max_dimension);
                 $image->save($image_path);
             }
             catch(ImageException $e)
@@ -1100,7 +1099,7 @@ class File
      */
     public static function queueDelete($file_id)
     {
-        $del_date = date('Y-m-d', time() + ConfigManager::getConfig('xml_frequency') + Util::SECONDS_IN_A_DAY);
+        $del_date = date('Y-m-d', time() + Config::get(Config::XML_UPDATE_TIME) + Util::SECONDS_IN_A_DAY);
         try
         {
             DBConnection::get()->query(
@@ -1139,7 +1138,7 @@ class File
         }
 
         $link = str_replace(SITE_ROOT, null, $link);
-        $rules = ConfigManager::getConfig('apache_rewrites');
+        $rules = Config::get(Config::APACHE_REWRITES);
         $rules = preg_split('/(\\r)?\\n/', $rules);
 
         foreach ($rules as $rule)

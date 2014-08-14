@@ -269,7 +269,7 @@ class News
      */
     private static function getLatestBlogPost()
     {
-        $feed_url = ConfigManager::getConfig('blog_feed');
+        $feed_url = Config::get(Config::FEED_BLOG);
         if (empty($feed_url))
         {
             return false;
