@@ -194,16 +194,4 @@ class Config
 
         return true;
     }
-
-    /**
-     * Parse a comma string list to an array
-     *
-     * @param string $string
-     *
-     * @return array
-     */
-    public static function commaStringToArray($string)
-    {
-        return array_map("trim", explode(',', $string));
-    }
 }

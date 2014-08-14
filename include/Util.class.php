@@ -853,5 +853,17 @@ class Util
                 return _h('Unknown');
         }
     }
+
+    /**
+     * Parse a comma string list to an array
+     *
+     * @param string $string a comma string like 1, 2, 3, 4
+     *
+     * @return array [1, 2, 3, 4]
+     */
+    public static function commaStringToArray($string)
+    {
+        return array_map("trim", explode(',', $string));
+    }
 }
  

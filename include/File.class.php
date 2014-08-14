@@ -389,7 +389,7 @@ class File
         {
             $approved_types = Config::get(Config::ALLOWED_SOURCE_EXTENSIONS);
         }
-        $approved_types = Config::commaStringToArray($approved_types);
+        $approved_types = Util::commaStringToArray($approved_types);
 
         $removed_files = [];
         foreach (scandir($path) as $file)
