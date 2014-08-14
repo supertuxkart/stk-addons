@@ -1,5 +1,5 @@
 <h1>{t}Manage Roles{/t}</h1>
-<div class="container" id="manage-roles-body">
+<div id="manage-roles-body">
     <div class="row">
         <div class="col-md-4">
             <h3>Roles</h3>
