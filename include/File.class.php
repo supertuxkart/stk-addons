@@ -506,7 +506,7 @@ class File
             }
         }
 
-        // delete file from databse
+        // delete file from database
         try
         {
             DBConnection::get()->query(

@@ -24,7 +24,6 @@ $_GET['action'] = (isset($_GET['action'])) ? $_GET['action'] : null;
 
 switch ($_GET['view'])
 {
-
     case 'overview':
         $tpl = new StkTemplate("manage-overview.tpl");
         $tpl_data = [
