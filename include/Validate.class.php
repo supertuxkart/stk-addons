@@ -203,7 +203,7 @@ class Validate
     /**
      * Check if an array has multiple keys, return the error messages
      *
-     * @param array $pool   the array to check agains
+     * @param array $pool   the array to check
      * @param array $params the keys to check
      *
      * @return array the error array

@@ -110,7 +110,7 @@ switch ($_GET['action'])
             Verification::delete($userid);
 
             $pw_res['reset_form']['display'] = false;
-            $tpl->assign("success", _h('Changed password was successful.') . '<a href="login.php">' . _h('Click here to login') . '</a>');
+            $tpl->assign("success", _h('Changed password was successful.') . '<a href="login.php"> ' . _h('Click here to login') . '</a>');
         }
         catch(UserException $e)
         {

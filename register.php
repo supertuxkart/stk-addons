@@ -101,6 +101,7 @@ switch ($_GET['action'])
             User::activate($username, $verification_code);
 
             $tpl->assign('success', _h('Your account has been activated.'));
+            $tpl->setMetaRefresh("login.php", 10);
         }
         catch(UserException $e)
         {

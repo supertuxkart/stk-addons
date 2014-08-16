@@ -1407,7 +1407,7 @@ class User extends Base
     }
 
     /**
-     * Validate th real name
+     * Validate the real name
      *
      * @param string $name
      *

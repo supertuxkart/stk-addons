@@ -163,7 +163,7 @@ class SMail
     public function passwordResetNotification($email, $userid, $username, $ver_code, $ver_page)
     {
         $message = "You have requested to reset your password on the SuperTuxKart Add-Ons Manager.\n" .
-            "Please go to http://{$_SERVER["SERVER_NAME"]}/$ver_page?action=valid&num=$ver_code&user=$userid to reset your password.\n\n" .
+            "Please go to " . SITE_ROOT . "$ver_page?action=valid&num=$ver_code&user=$userid to reset your password.\n\n" .
             "Username: $username";
 
         $this->addAddress($email);
