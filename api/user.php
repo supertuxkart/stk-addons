@@ -433,7 +433,7 @@ try
                     $password,
                     $password_confirm,
                     $email,
-                    $username,
+                    $username, // real name, TODO use real name field
                     $terms
                 );
 

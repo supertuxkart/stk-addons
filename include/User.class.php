@@ -25,16 +25,21 @@
 class User extends Base
 {
     const MIN_PASSWORD = 8;
+
     const MAX_PASSWORD = 60;
 
     const MIN_USERNAME = 4;
+
     const MAX_USERNAME = 30;
 
     const MIN_REALNAME = 2;
+
     const MAX_REALNAME = 64;
 
     const MAX_EMAIL = 64;
+
     const MAX_HOMEPAGE = 64;
+
     const MAX_AVATAR = 64;
 
     /**
@@ -134,7 +139,7 @@ class User extends Base
     /**
      * The user constructor
      *
-     * @param array $data    retrieved from the database
+     * @param array $data        retrieved from the database
      * @param bool  $from_friend flag that indicates this constructor was called from the friend class
      */
     public function __construct(array $data = [], $from_friend = false)
@@ -453,7 +458,7 @@ class User extends Base
     }
 
     /**
-     * Try to log in a user
+     * Log in a user
      *
      * @param string $username
      * @param string $password
@@ -488,7 +493,6 @@ class User extends Base
         // backwards compatibility. Convert unsalted password to a salted one
         if (!Util::isPasswordSalted($user->getPassword())) // TODO check server because the master repo had this implemented wrong
         {
-            $password = Util::getPasswordHash($password);
             static::changePassword($id, $password);
             Log::newEvent("Converted the password of '$username' to use a password salting algorithm");
         }
@@ -642,7 +646,7 @@ class User extends Base
     /**
      * Search a user
      *
-     * @param string $search_string   the string can pe space or comma separated to search multiple users
+     * @param string $search_string the string can pe space or comma separated to search multiple users
      *
      * @throws UserException
      * @return User[]
@@ -1066,11 +1070,11 @@ class User extends Base
      * Use with care
      *
      * @param int    $user_id
-     * @param string $hash_new_password the new password hash
+     * @param string $new_password the new password hash
      *
      * @throws UserException
      */
-    public static function changePassword($user_id, $hash_new_password)
+    public static function changePassword($user_id, $new_password)
     {
         try
         {
@@ -1081,7 +1085,7 @@ class User extends Base
                 DBConnection::ROW_COUNT,
                 [
                     ':userid' => $user_id,
-                    ':pass' => $hash_new_password
+                    ':pass'   => Util::getPasswordHash($new_password)
                 ],
                 [":userid" => DBConnection::PARAM_INT]
             );
@@ -1112,8 +1116,7 @@ class User extends Base
      */
     public static function verifyAndChangePassword($current_password, $new_password, $new_password_verify, $user_id)
     {
-        // verify it they added their password correctly, throws exception
-        $new_password_hash = Validate::newPassword($new_password, $new_password_verify);
+        static::validateNewPassword($new_password, $new_password_verify);
 
         try
         {
@@ -1127,7 +1130,8 @@ class User extends Base
                 throw new UserException(_h('You do not have the permission to change the password'));
             }
 
-            static::changePassword($user_id, $new_password_hash);
+            static::changePassword($user_id, $new_password);
+
             DBConnection::get()->commit();
         }
         catch(DBException $e)
@@ -1190,9 +1194,13 @@ class User extends Base
      */
     public static function recover($username, $email)
     {
-        // Check all form input
-        $username = Validate::username($username);
-        $email = Validate::email($email);
+        // validate
+        static::validateUserName($username);
+        static::validateEmail($email);
+
+        // clean
+        $username = h($username);
+        $email = h($email);
 
         try
         {
@@ -1235,14 +1243,19 @@ class User extends Base
      */
     public static function register($username, $password, $password_conf, $email, $name, $terms)
     {
-        // Sanitize inputs
-        $username = Validate::username($username);
-        $password_hash = Validate::newPassword($password, $password_conf);
-        $email = Validate::email($email);
-        $name = Validate::realName($name);
+        // validate
+        static::validateUserName($username);
+        static::validateNewPassword($password, $password_conf);
+        static::validateEmail($email);
+        static::validateRealName($name);
         Validate::checkbox($terms, _h('You must agree to the terms to register.'));
-        DBConnection::get()->beginTransaction();
 
+        // clean
+        $username = h($username);
+        $email = h($email);
+        $name = h($name);
+
+        DBConnection::get()->beginTransaction();
         // Make sure requested username is not taken
         try
         {
@@ -1296,7 +1309,7 @@ class User extends Base
                 "users",
                 [
                     ":user"    => $username,
-                    ":pass"    => $password_hash,
+                    ":pass"    => Util::getPasswordHash($password),
                     ":name"    => $name,
                     ":email"   => $email,
                     "role"     => "'user'",
@@ -1333,6 +1346,96 @@ class User extends Base
         }
 
         Log::newEvent("Registration submitted for user '$username' with id '$userid'.");
+    }
+
+    /**
+     * Check if the input is a valid alphanumeric username
+     *
+     * @param string $username Alphanumeric username
+     *
+     * @throws UserException
+     */
+    public static function validateUserName($username)
+    {
+        $username = Util::str_strip_space($username);
+
+        static::validateFieldLength(
+            _h("username"),
+            $username,
+            static::MIN_USERNAME,
+            static::MAX_USERNAME,
+            false, // whitespace is already gone from our call to str_strip_space
+            true // username is alpha numeric, use normal ascii
+        );
+
+        // check if alphanumeric
+        if (!preg_match('/^[a-z0-9]+$/i', $username))
+        {
+            throw new UserException(_h('Your username can only contain alphanumeric characters'));
+        }
+    }
+
+    /**
+     * Validate if the password is the correct length
+     *
+     * @param string $password
+     *
+     * @throws UserException
+     */
+    public static function validatePassword($password)
+    {
+        static::validateFieldLength(_h("password"), $password, static::MIN_PASSWORD, static::MAX_PASSWORD);
+    }
+
+    /**
+     * Validate if the 2 passwords match and are the correct length
+     *
+     * @param string $new_password
+     * @param string $new_password_verify
+     *
+     * @throws UserException
+     */
+    public static function validateNewPassword($new_password, $new_password_verify)
+    {
+        static::validatePassword($new_password);
+
+        // check if they match
+        if ($new_password !== $new_password_verify)
+        {
+            throw new UserException(_h('Passwords do not match'));
+        }
+    }
+
+    /**
+     * Validate th real name
+     *
+     * @param string $name
+     *
+     * @throws UserException
+     */
+    public static function validateRealName($name)
+    {
+        static::validateFieldLength(_h("name"), $name, static::MIN_REALNAME, static::MAX_REALNAME);
+    }
+
+    /**
+     * Check if the input is a valid email address
+     *
+     * @param string $email Email address
+     *
+     * @throws UserException
+     */
+    public static function validateEmail($email)
+    {
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL))
+        {
+            throw new UserException(h(sprintf(_('"%s" is not a valid email address.'), h($email))));
+        }
+
+        if (mb_strlen($email) > static::MAX_EMAIL)
+        {
+            throw new UserException(_h("Email is to long."));
+        }
     }
 }
 

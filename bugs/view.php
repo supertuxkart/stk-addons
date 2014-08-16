@@ -37,6 +37,7 @@ $bug = Bug::get($_GET["bug_id"]);
 $comments = [];
 foreach ($bug->getCommentsData() as $comment)
 {
+    // TODO optimize sql query
     $comments[] = [
         "id"          => $comment["id"],
         "user_name"   => User::getFromID($comment["user_id"])->getUserName(),

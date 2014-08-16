@@ -82,12 +82,14 @@ class Validate
         // validate
         if ($credential_type === static::CREDENTIAL_ID)
         {
-            $user = static::password($password, $field_value, static::PASSWORD_ID);
+            $user = static::checkPassword($password, $field_value, static::PASSWORD_ID);
         }
         elseif ($credential_type === static::CREDENTIAL_USERNAME)
         {
-            $field_value = static::username($field_value);
-            $user = static::password($password, $field_value, static::PASSWORD_USERNAME);
+            User::validateUserName($field_value);
+            $field_value = h($field_value);
+
+            $user = static::checkPassword($password, $field_value, static::PASSWORD_USERNAME);
         }
         else
         {
@@ -103,125 +105,8 @@ class Validate
     }
 
     /**
-     * Check if the input is a valid email address, and return the email html escaped
+     * Check the password length and check it against the database
      *
-     * @param string $email Email address
-     *
-     * @throws UserException
-     * @return string Email address
-     */
-    public static function email($email)
-    {
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL))
-        {
-            throw new UserException(h(sprintf(_('"%s" is not a valid email address.'), h($email))));
-        }
-
-        if (mb_strlen($email) > User::MAX_EMAIL)
-        {
-            throw new UserException(_h("Email is to long."));
-        }
-
-        return h($email);
-    }
-
-    /**
-     * Check if the input is a valid alphanumeric username, and return the username html escaped
-     *
-     * @param string $username Alphanumeric username
-     *
-     * @throws UserException
-     * @return string Username
-     */
-    public static function username($username)
-    {
-        $username = Util::str_strip_space($username);
-        $length = strlen($username); // username is alpha numeric, use normal strlen
-
-        if ($length < User::MIN_USERNAME || $length > User::MAX_USERNAME)
-        {
-            throw new UserException(sprintf(
-                _h('The username must be between %s and %s characters long'),
-                User::MIN_USERNAME,
-                User::MAX_USERNAME
-            ));
-        }
-
-        if (!preg_match('/^[a-z0-9]+$/i', $username))
-        {
-            throw new UserException(_h('Your username can only contain alphanumeric characters'));
-        }
-
-        return h($username);
-    }
-
-    /**
-     * @param string $name
-     *
-     * @return string
-     * @throws UserException
-     */
-    public static function realName($name)
-    {
-        $name = trim($name);
-        $length = mb_strlen($name);
-
-        if ($length < User::MIN_REALNAME || $length > User::MAX_REALNAME)
-        {
-            throw new UserException(sprintf(
-                _h('The nam must be between %s and %s characters long'),
-                User::MIN_REALNAME,
-                User::MAX_REALNAME
-            ));
-        }
-
-        return h($name);
-    }
-
-    /**
-     * Validate if the password is the correct length
-     *
-     * @param string $password
-     *
-     * @throws UserException
-     */
-    protected static function checkPasswordLength($password)
-    {
-        $length = mb_strlen($password);
-
-        if ($length < User::MIN_PASSWORD || $length > User::MAX_PASSWORD)
-        {
-            throw new UserException(sprintf(
-                _h('The password must be between %s and %s characters long'),
-                User::MIN_PASSWORD,
-                User::MAX_PASSWORD
-            ));
-        }
-    }
-
-    /**
-     * Validate if the 2 passwords match and are the correct legnth
-     *
-     * @param string $new_password
-     * @param string $new_password_verify
-     *
-     * @return string the password hash
-     * @throws UserException
-     */
-    public static function newPassword($new_password, $new_password_verify)
-    {
-        static::checkPasswordLength($new_password);
-
-        // check if they match
-        if ($new_password !== $new_password_verify)
-        {
-            throw new UserException(_h('Passwords do not match'));
-        }
-
-        return Util::getPasswordHash($new_password);
-    }
-
-    /**
      * @param string $password
      * @param string $field_value
      * @param int    $field_type
@@ -229,10 +114,10 @@ class Validate
      * @return User
      * @throws UserException
      */
-    public static function password($password, $field_value, $field_type)
+    protected static function checkPassword($password, $field_value, $field_type)
     {
         // Check password properties
-        static::checkPasswordLength($password);
+        User::validatePassword($password);
 
         if ($field_type === static::PASSWORD_ID) // get by id
         {
@@ -289,19 +174,18 @@ class Validate
     }
 
     /**
+     * Validate the version string
+     *
      * @param string $string
      *
-     * @return bool
-     * @throws Exception
+     * @throws ValidateException
      */
     public static function versionString($string)
     {
         if (!preg_match('/^(svn|[\d]+\.[\d]+\.[\d](-rc[\d])?)$/i', $string))
         {
-            throw new UserException(_h('Invalid version string! Format should be: W.X.Y[-rcZ]'));
+            throw new ValidateException(_h('Invalid version string! Format should be: W.X.Y[-rcZ]'));
         }
-
-        return true;
     }
 
     /**

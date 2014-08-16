@@ -103,10 +103,10 @@ switch ($_GET['action'])
 
             // validate
             Verification::verify($userid, $verification_code);
-            $password_hash = Validate::newPassword($pass1, $pass2);
+            User::validateNewPassword($pass1, $pass2);
 
             // change password and clean up
-            User::changePassword($userid, $password_hash);
+            User::changePassword($userid, $pass1);
             Verification::delete($userid);
 
             $pw_res['reset_form']['display'] = false;

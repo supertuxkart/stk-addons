@@ -984,10 +984,11 @@ class Addon extends Base
             throw new AddonException(_h('You do not have the necessary permissions to perform this action.'));
         }
 
+        Validate::versionString($start_ver);
+        Validate::versionString($end_ver);
+
         try
         {
-            Validate::versionString($start_ver);
-            Validate::versionString($end_ver);
             DBConnection::get()->query(
                 'UPDATE `' . DB_PREFIX . 'addons`
                 SET `min_include_ver` = :start_ver, `max_include_ver` = :end_ver

@@ -24,15 +24,19 @@
 class Bug extends Base
 {
     const MIN_TITLE = 5;
+
     const MAX_TITLE = 64;
 
     const MIN_DESCRIPTION = 5;
+
     const MAX_DESCRIPTION = 1024;
 
     const MIN_COMMENT_DESCRIPTION = 10;
+
     const MAX_COMMENT_DESCRIPTION = 512;
 
     const MIN_CLOSE_REASON = 5;
+
     const MAX_CLOSE_REASON = 512;
 
     /**
@@ -96,16 +100,6 @@ class Bug extends Base
         {
             $this->loadComments();
         }
-    }
-
-    /**
-     * @param string $message
-     *
-     * @throws BugException
-     */
-    protected static function throwException($message)
-    {
-        throw new BugException($message);
     }
 
     /**
@@ -709,6 +703,16 @@ class Bug extends Base
     }
 
     /**
+     * @param string $message
+     *
+     * @throws BugException
+     */
+    protected static function throwException($message)
+    {
+        throw new BugException($message);
+    }
+
+    /**
      * Validate a title description
      *
      * @param string $title
@@ -717,16 +721,7 @@ class Bug extends Base
      */
     public static function validateTitle($title)
     {
-        $length = mb_strlen($title);
-
-        if ($length < static::MIN_TITLE || $length > static::MAX_TITLE)
-        {
-            throw new BugException(sprintf(
-                _h('The title must be between %s and %s characters long'),
-                static::MIN_TITLE,
-                static::MAX_TITLE
-            ));
-        }
+        static::validateFieldLength(_h("title"), $title, static::MIN_TITLE, static::MAX_TITLE);
     }
 
     /**
@@ -738,16 +733,7 @@ class Bug extends Base
      */
     public static function validateDescription($description)
     {
-        $length = mb_strlen($description);
-
-        if ($length < static::MIN_DESCRIPTION || $length > static::MAX_DESCRIPTION)
-        {
-            throw new BugException(sprintf(
-                _h('The description must be between %s and %s characters long'),
-                static::MIN_DESCRIPTION,
-                static::MAX_DESCRIPTION
-            ));
-        }
+        static::validateFieldLength(_h("description"), $description, static::MIN_DESCRIPTION, static::MAX_DESCRIPTION);
     }
 
     /**
@@ -759,16 +745,7 @@ class Bug extends Base
      */
     public static function validateCommentDescription($comment_description)
     {
-        $length = mb_strlen($comment_description);
-
-        if ($length < static::MIN_COMMENT_DESCRIPTION || $length > static::MAX_COMMENT_DESCRIPTION)
-        {
-            throw new BugException(sprintf(
-                _h('The comment description must be between %s and %s characters long'),
-                static::MIN_COMMENT_DESCRIPTION,
-                static::MAX_COMMENT_DESCRIPTION
-            ));
-        }
+        static::validateFieldLength(_h("comment description"), $comment_description, static::MIN_COMMENT_DESCRIPTION, static::MAX_COMMENT_DESCRIPTION);
     }
 
     /**
@@ -780,15 +757,6 @@ class Bug extends Base
      */
     public static function validateCloseReason($close_reason)
     {
-        $length = mb_strlen($close_reason);
-
-        if ($length < static::MIN_CLOSE_REASON || $length > static::MAX_CLOSE_REASON)
-        {
-            throw new BugException(sprintf(
-                _h('The close reason must be between %s and %s characters long'),
-                static::MIN_CLOSE_REASON,
-                static::MAX_CLOSE_REASON
-            ));
-        }
+        static::validateFieldLength(_h("close reason"), $close_reason, static::MIN_CLOSE_REASON, static::MAX_CLOSE_REASON);
     }
 }
