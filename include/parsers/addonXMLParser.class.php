@@ -32,17 +32,23 @@ class addonXMLParser extends Parser {
     private $attributes = array();
     
     protected function _loadFile() {
-	$this->file_contents = fread($this->file,$this->file_size);
+        if ($this->file_size == 0) {
+            throw new XMLParserException("XML Error: File is empty - file: {$this->file_name}");
+        }
+	$this->file_contents = fread($this->file, $this->file_size);
 	// Fix common XML errors
 	$this->file_contents = trim($this->file_contents);
-	$this->file_contents = str_replace('& ','&amp; ',$this->file_contents);
+	$this->file_contents = str_replace('& ', '&amp; ', $this->file_contents);
 
 	// Get type of xml file
 	$reader = xml_parser_create();
+        $values = $index = array();
 	if (!xml_parse_into_struct($reader,
-		$this->file_contents,$values,$index))
-	    throw new XMLParserException('XML Error: '.xml_error_string(xml_get_error_code($reader)).' - file: '.$this->file_name);
-	
+		$this->file_contents, $values, $index)) {
+	    throw new XMLParserException(sprintf('XML Error: %s - file: %s',
+                    xml_error_string(xml_get_error_code($reader)), $this->file_name));
+        }
+        
 	$this->file_type = $values[0]['tag'];
 	$this->values = $values;
 	$this->index = $index;
