@@ -1,3 +1,7 @@
+Build Status
+--------------
+[![Build Status](https://travis-ci.org/leyyin/stkaddons.svg?branch=master)](https://travis-ci.org/leyyin/stkaddons)
+
 STK Addons Website
 ==================
 
