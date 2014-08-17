@@ -1,15 +1,16 @@
-Build Status
---------------
-[![Build Status](https://travis-ci.org/leyyin/stkaddons.svg?branch=master)](https://travis-ci.org/leyyin/stkaddons)
-
 STK Addons Website
 ==================
 
 This is the source code for the SuperTuxKart asset sharing and distribution
 platform. The official location of the operating website is http://www.stkaddons.net/.
 
+Build Status
+--------------
+[![Build Status](https://travis-ci.org/leyyin/stkaddons.svg?branch=master)](https://travis-ci.org/leyyin/stkaddons)
+
+
 Installing Locally
-------------------
+--------------
 
 This software has no automated installation mechanism as it is not intended for wide
 usage. However, you can manually generate all of the necessary database tables and
