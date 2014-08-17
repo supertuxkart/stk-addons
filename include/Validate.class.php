@@ -210,13 +210,12 @@ class Validate
      */
     public static function ensureInput(array $pool, array $params)
     {
-        $errors = array();
+        $errors = [];
 
         foreach ($params as $param)
         {
             if (empty($pool[$param]))
             {
-
                 $errors[] = sprintf("%s is empty", ucfirst($param));
             }
         }

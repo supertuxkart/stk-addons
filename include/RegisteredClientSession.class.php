@@ -296,7 +296,6 @@ class RegisteredClientSession extends ClientSession
 
         try
         {
-
             $session_id = Util::getClientSessionId();
             $user_id = $user->getId();
             $username = $user->getUserName();
@@ -319,7 +318,6 @@ class RegisteredClientSession extends ClientSession
             User::updateLoginTime($user_id);
 
             return new RegisteredClientSession($session_id, $user_id, $username);
-
         }
         catch(DBException $e)
         {
