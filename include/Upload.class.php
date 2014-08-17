@@ -44,10 +44,8 @@ class Upload {
         Upload::readError($file_record['error']);
         $this->file_ext = Upload::checkType();
 
-        $this->temp = TMP . 'uploads/' . time() . '-' . $this->file_name . '/';
-
         // Clean up old temp files to make room for new upload
-        File::deleteOldSubdirectories(TMP.'uploads', 3600);
+        File::deleteOldSubdirectories(UPLOAD_SCRATCH, 3600);
         
         $this->doUpload();
     }
@@ -56,13 +54,13 @@ class Upload {
         File::deleteRecursive($this->temp);
     }
     
-    private function doUpload() {
-        if (@!mkdir($this->temp, /* Directory */ 0755, /* Permissions */ true /* Recursive create */)) {
-            throw new UploadException('Failed to create temporary directory for upload: ' . htmlspecialchars($this->temp));
+    private function doUpload()
+    {
+        if (!is_uploaded_file($this->file_tmp)) {
+            throw new UploadException('Uploaded file is invalid. Please contact a website administrator.');
         }
-        // Copy file to temp folder
-        if ((move_uploaded_file($this->file_tmp, $this->temp . $this->file_name) === false) && !file_exists($this->temp . $this->file_name))
-            throw new UploadException(htmlspecialchars(_('Failed to move uploaded file.')));
+        
+        $this->temp = $this->prepareUploadedFiles();
 
         if ($this->expected_type == 'image') {
             $this->doImageUpload();
@@ -70,8 +68,6 @@ class Upload {
         }
 
         try {
-            File::extractArchive($this->temp . $this->file_name, $this->temp, $this->file_ext);
-            File::flattenDirectory($this->temp, $this->temp);
             Upload::removeInvalidFiles();
             Upload::parseFiles();
         } catch (FileException $e) {
@@ -240,6 +236,47 @@ class Upload {
         echo '<a href="upload.php?type=' . $this->upload_type . '&amp;name=' . $this->addon_id . '&amp;action=file">' . htmlspecialchars(_('Click here to upload the sources to your add-on now.')) . '</a><br />';
         echo htmlspecialchars(_('(Uploading the sources to your add-on enables others to improve your work and also ensure your add-on will not be lost in the future if new SuperTuxKart versions are not compatible with the current format.)')) . '<br /><br />';
         echo '<a href="' . File::rewrite('addons.php?type=' . $this->upload_type . '&amp;name=' . $this->addon_id) . '">' . htmlspecialchars(_('Click here to view your add-on.')) . '</a><br />';
+    }
+
+    /**
+     * Relocate uploaded files to a 'scratch' directory. If the uploaded
+     * file is compressed, decompress it.
+     * @return string Directory containing uploaded files
+     * @throws UploadException
+     */
+    private function prepareUploadedFiles()
+    {
+        $target_directory = UPLOAD_SCRATCH . time() . '-' . $this->file_name . '/';
+        if (!file_exists($target_directory)) {
+            mkdir($target_directory, 0600, true);
+        }
+        if ($this->expected_type == 'image') {
+            $this->moveUploadedFiles($this->file_tmp, $target_directory . $this->file_name);
+        } else {
+            try {
+                File::extractArchive($this->file_tmp, $target_directory, $this->file_ext);
+                File::flattenDirectory($target_directory, $target_directory);
+            } catch (FileException $ex) {
+                throw new UploadException($ex->getMessage());
+            }
+        }
+        return $target_directory;
+    }
+
+    /**
+     * Wrap php's move_uploaded_files
+     * @param string $upload_tmp
+     * @param string $target
+     * @throws UploadException
+     */
+    private function moveUploadedFiles($upload_tmp, $target)
+    {
+        if (!move_uploaded_file($upload_tmp, $target)) {
+            throw new UploadException('Failed to move uploaded file.');
+        }
+        if (!file_exists($target)) {
+            throw new UploadException('Uploaded file not found.');
+        }
     }
 
     private function doImageUpload() {
