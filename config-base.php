@@ -45,6 +45,7 @@ define('TPL_PATH', 'tpl/default/');
 
 // define temporary directory path
 define("TMP", "/tmp/");
+define("TPL_CACHE", "/tmp/tpl_c/");
 
 define("DB_USER", 'root');
 define("DB_PASSWORD", 'pass');

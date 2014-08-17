@@ -75,11 +75,23 @@ class Template {
      * Create an instance of Smarty to use
      * @throws TemplateException
      */
-    private function createSmartyInstance() {
+    private function createSmartyInstance()
+    {
         if ($this->smarty !== NULL)
             throw new TemplateException('Smarty was already configured.');
         $this->smarty = new Smarty;
-        $this->smarty->compile_dir = TMP.'tpl_c/';
+        $this->smarty->compile_dir = TPL_CACHE;
+        $this->createCacheDir();
+    }
+
+    /**
+     * Create smarty cache directory
+     */
+    private function createCacheDir()
+    {
+        if (!file_exists(TPL_CACHE)) {
+            mkdir(TPL_CACHE, 0600, true);
+        }
     }
 
     /**
