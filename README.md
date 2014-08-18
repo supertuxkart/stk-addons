@@ -86,12 +86,17 @@ of the website. (e.g. your project may be in the `localhost/stkaddons` directory
 
 ## Common Problems
 
+#### Permissions
 A common problem on Linux is permissions for the `assets/cache` or `dl` directories.
 To solve this problem there are several solutions:
 * Change the permission of the directories with `chmod 775` (not recommended)
 * Add yourself to the the group of these directories and give the group read&write access, or change the owner of those directories
-to be your user or the user under which Apache is running (usually www-data)
+to be your user or the user under which Apache is running (usually www-data). The latter can be achieved using:
+`sudo chown -R www-data:www-data <directory>`
 
+#### Missing extension after install
+Sometimes even after you install `mcrypt` extension for PHP it tells you that it is disabled or not available.
+The solution is to enable it: `sudo php5enmod mcrypt && sudo service apache2 restart`
 
 ## Testing
 The project uses [PHPUnit](http://phpunit.de/) for unit testing (it's installed automatically by composer if you have enabled developer dependencies)
