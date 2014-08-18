@@ -81,8 +81,8 @@ define("CAPTCHA_PRIV", ""); // reCAPTCHA private key
 define("DB_USER", "root");
 define("DB_PASSWORD", "");
 define("DB_NAME", "stkbase");
-define("DB_PREFIX", "v2_");
 define("DB_HOST", "localhost");
+define("DB_PREFIX", "v2_"); // should not be modified
 
 // Mail proprieties
 define("IS_SMTP", true); // true for "smtp" and false for "sendmail"
