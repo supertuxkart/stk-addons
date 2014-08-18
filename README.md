@@ -12,12 +12,13 @@ usage. However, you can manually install all of the necessary dependencies, data
 configure settings manually.
 
 ### Dependencies
-Before you attempt to set up a local installation, you should go to the `install/` directory.
-This will check to make sure that several dependencies can be found.
+Before you attempt to set up a local installation, you should point your web browser to the `install/` directory.
+The script file located there (index.php) will check that the required dependencies are installed.
 
 PHP dependencies are handled by [composer](https://getcomposer.org/) (install it if you do not have it already).
 If you try to run `composer install` and you have unmet PHP extension dependencies
-(the script from the install directory should give a overview of all missing PHP extensions), then composer will fail.
+(the script from the install directory should give an overview of all missing PHP extensions), then composer will fail.
+All the steps below take place in the root of the project.
 
 If you want to install all the dependencies including the developer ones (testing framework):
 
