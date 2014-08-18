@@ -121,8 +121,8 @@ else
 ```
 
 For JavaScript, CSS, and SQL you should use 4 spaces, not tabs.
-The JavaScript coding standard is based on http://javascript.crockford.com/code.html
-The CSS coding standard is based on http://make.wordpress.org/core/handbook/coding-standards/css/
+The JavaScript coding standard is based on http://javascript.crockford.com/code.html and the
+CSS coding standard is based on http://make.wordpress.org/core/handbook/coding-standards/css/.
 
 The JavaScript and CSS coding standards are modified to use the same line limit as PHP.
 
