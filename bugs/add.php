@@ -20,13 +20,21 @@
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
 $tpl = StkTemplate::get("bugs-add.tpl")->assign("current_url", urlencode(Util::getCurrentUrl(false, false)));
-$tplData = [""]; // keep string empty for the template to work
 
 // check permission
-if(!User::hasPermission(AccessControl::PERM_ADD_BUG))
+if (!User::hasPermission(AccessControl::PERM_ADD_BUG))
 {
+    $tpl->assign("bug", []);
     exit($tpl);
+
 }
 
-$tpl->assign("bug", $tplData);
+$tpl->assign(
+    "bug",
+    [
+        "title"        => ["min" => Bug::MIN_TITLE,        "max" => Bug::MAX_TITLE],
+        "description"  => ["min" => Bug::MIN_DESCRIPTION,  "max" => Bug::MAX_DESCRIPTION],
+        "close_reason" => ["min" => Bug::MIN_CLOSE_REASON, "max" => Bug::MAX_CLOSE_REASON]
+    ]
+);
 echo $tpl;

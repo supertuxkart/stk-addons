@@ -1,6 +1,7 @@
 </div>{* content-wrapper *}
 <footer itemscope itemtype="http://schema.org/WPFooter">
-    {t}Site hosted by {/t}<a href="http://www.tuxfamily.org/">tuxfamily.org</a> | {$menu.about}
+    {t}Site hosted by {/t}<a href="http://www.tuxfamily.org/">tuxfamily.org</a> |
+    <a href="{$menu.about}">{t}About{/t}</a> | <a href="{$menu.privacy}">{t}Privacy{/t}</a>
 </footer>
 </div> {* #body-wrapper *}
 {foreach $script_inline.before as $script}

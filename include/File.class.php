@@ -383,13 +383,13 @@ class File
         // Make a list of approved file types
         if ($source === false)
         {
-            $approved_types = ConfigManager::getConfig('allowed_addon_exts');
+            $approved_types = Config::get(Config::ALLOWED_ADDON_EXTENSIONS);
         }
         else
         {
-            $approved_types = ConfigManager::getConfig('allowed_source_exts');
+            $approved_types = Config::get(Config::ALLOWED_SOURCE_EXTENSIONS);
         }
-        $approved_types = array_map("trim", explode(',', $approved_types));
+        $approved_types = Util::commaStringToArray($approved_types);
 
         $removed_files = [];
         foreach (scandir($path) as $file)
@@ -440,6 +440,39 @@ class File
     }
 
     /**
+     * Write to a file in the filesystem, safely. Create the file if it does not exist
+     *
+     * @param string $file the filename in the system
+     * @param string $content the content to write
+     *
+     * @return bool return true on success, false otherwise
+     */
+    public static function write($file, $content)
+    {
+        // If file doesn't exist, create it
+        if (!file_exists($file))
+        {
+            if (!touch($file))
+            {
+                return false;
+            }
+        }
+
+        $fhandle = fopen($file, 'w');
+        if (!$fhandle)
+        {
+            return false;
+        }
+        if (!fwrite($fhandle, $content))
+        {
+            return false;
+        }
+        fclose($fhandle);
+
+        return true;
+    }
+
+    /**
      * Delete a file and its corresponding database record
      *
      * @param int $file_id
@@ -473,7 +506,7 @@ class File
             }
         }
 
-        // delete file from databse
+        // delete file from database
         try
         {
             DBConnection::get()->query(
@@ -841,30 +874,29 @@ class File
 
         // Scan image validity with GD
         $image_path = UP_PATH . 'images' . DS . basename($file_name);
-        $gdImageInfo = getimagesize($image_path);
-        if (!$gdImageInfo)
+        $image_info = getimagesize($image_path);
+        if (!$image_info)
         {
             // Image is not read-able - must be corrupt or otherwise invalid
             unlink($image_path);
             throw new FileException(_h('The uploaded image file is invalid.'));
         }
 
+        $image_max_dimension = Config::get(Config::IMAGE_MAX_DIMENSION);
+        $image_width = $image_info[0];
+        $image_height = $image_info[1];
+
         // Validate image size
-        if ($gdImageInfo[0] > ConfigManager::getConfig('max_image_dimension')
-            || $gdImageInfo[1] > ConfigManager::getConfig('max_image_dimension')
-        )
+        if ($image_width > $image_max_dimension || $image_height > $image_max_dimension)
         {
             // Image is too large. Scale it.
             try
             {
                 $image = new SImage($image_path);
-                $image->scale(
-                    ConfigManager::getConfig('max_image_dimension'),
-                    ConfigManager::getConfig('max_image_dimension')
-                );
+                $image->scale($image_max_dimension, $image_max_dimension);
                 $image->save($image_path);
             }
-            catch(ImageException $e)
+            catch(SImageException $e)
             {
                 throw new FileException($e->getMessage());
             }
@@ -905,9 +937,9 @@ class File
         $reader = xml_parser_create();
 
         // Remove whitespace at beginning and end of file
-        $xmlContents = trim(file_get_contents($quad_file));
+        $xml_content = trim(file_get_contents($quad_file));
 
-        if (!xml_parse_into_struct($reader, $xmlContents, $vals, $index))
+        if (!xml_parse_into_struct($reader, $xml_content, $vals, $index))
         {
             throw new FileException('XML Error: ' . xml_error_string(xml_get_error_code($reader)));
         }
@@ -1067,7 +1099,7 @@ class File
      */
     public static function queueDelete($file_id)
     {
-        $del_date = date('Y-m-d', time() + ConfigManager::getConfig('xml_frequency') + Util::SECONDS_IN_A_DAY);
+        $del_date = date('Y-m-d', time() + Config::get(Config::XML_UPDATE_TIME) + Util::SECONDS_IN_A_DAY);
         try
         {
             DBConnection::get()->query(
@@ -1091,7 +1123,7 @@ class File
     }
 
     /**
-     * Modify an the internal link
+     * Modify an the internal link using the apache_rewrites config from the database
      *
      * @param string $link
      *
@@ -1106,7 +1138,7 @@ class File
         }
 
         $link = str_replace(SITE_ROOT, null, $link);
-        $rules = ConfigManager::getConfig('apache_rewrites');
+        $rules = Config::get(Config::APACHE_REWRITES);
         $rules = preg_split('/(\\r)?\\n/', $rules);
 
         foreach ($rules as $rule)
@@ -1124,6 +1156,7 @@ class File
             {
                 continue;
             }
+
             $matches_count = count($matches);
             for ($i = 1; $i < $matches_count; $i++)
             {

@@ -154,12 +154,12 @@ class Friend
     /**
      * Get a space separated string of friend id's
      *
-     * @param $userid
+     * @param $user_id
      *
      * @return int[] array of friend id's
      * @throws FriendException
      */
-    public static function getOnlineFriendsOf($userid)
+    public static function getOnlineFriendsOf($user_id)
     {
         try
         {
@@ -178,7 +178,7 @@ class Friend
                         AND " . DB_PREFIX . "client_sessions.uid = " . DB_PREFIX . "friends.receiver_id
                         AND " . DB_PREFIX . "client_sessions.online = 1",
                 DBConnection::FETCH_ALL,
-                [":userid" => $userid],
+                [":userid" => $user_id],
                 [":userid" => DBConnection::PARAM_INT]
             );
         }
@@ -203,14 +203,14 @@ class Friend
     /**
      * Return all the friends of a user
      *
-     * @param int  $userid
+     * @param int  $user_id
      * @param bool $is_self
      * @param bool $return_instance
      *
      * @throws FriendException
      * @return Friend[]|array an array of friends
      */
-    public static function getFriendsOf($userid, $is_self = false, $return_instance = true)
+    public static function getFriendsOf($user_id, $is_self = false, $return_instance = true)
     {
         try
         {
@@ -234,7 +234,7 @@ class Friend
                             AND " . DB_PREFIX . "users.id = " . DB_PREFIX . "friends.receiver_id
                         ORDER BY date ASC",
                     DBConnection::FETCH_ALL,
-                    [":userid" => $userid],
+                    [":userid" => $user_id],
                     [":userid" => DBConnection::PARAM_INT]
                 );
             }
@@ -258,7 +258,7 @@ class Friend
                             AND " . DB_PREFIX . "friends.request = 0
                         ORDER BY date ASC",
                     DBConnection::FETCH_ALL,
-                    [":userid" => $userid],
+                    [":userid" => $user_id],
                     [":userid" => DBConnection::PARAM_INT]
                 );
             }
@@ -292,15 +292,15 @@ class Friend
     /**
      * Returns XML string of all friends
      *
-     * @param int  $userid
+     * @param int  $user_id
      * @param bool $is_self
      *
      * @throws FriendException
      * @return string
      */
-    public static function getFriendsAsXML($userid, $is_self = false)
+    public static function getFriendsAsXML($user_id, $is_self = false)
     {
-        $friends = static::getFriendsOf($userid, $is_self);
+        $friends = static::getFriendsOf($user_id, $is_self);
 
         $partial_output = new XMLOutput();
         $partial_output->startElement('friends');

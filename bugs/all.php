@@ -21,7 +21,7 @@ require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
 $tpl = StkTemplate::get('bugs-all.tpl');
 
-$tplData = ["items" => Bug::getAll()];
+$tpl_data = ["items" => Bug::getAll()];
 
-$tpl->assign("bugs", $tplData);
+$tpl->assign("bugs", $tpl_data);
 echo $tpl;

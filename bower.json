@@ -8,8 +8,6 @@
     "history.js": "1.8.*",
     "bootstrap3-wysihtml5-bower": "0.3.2",
     "bootstrap.growl": "1.0.6",
-    "parsleyjs": "~2.0.0",
-    "handlebars": "1.3.0",
     "bootbox": "~4.2.0",
     "flot": "~0.8.3",
     "flot.tooltip": "~0.7.1",
@@ -17,7 +15,9 @@
     "datatables-bootstrap3": "*",
     "bootstrap-multiselect": "~0.9.6",
     "bootstrap-select": "~1.5.4",
-    "bootstrap-fileinput": "~1.9.0"
+    "bootstrap-fileinput": "~1.9.0",
+    "bootstrapValidator": "~0.5.0",
+    "bootstrap-hover-dropdown": "~2.0.11"
   },
   "resolutions": {
     "jquery": "1.11.*",

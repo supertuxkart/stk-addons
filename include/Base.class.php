@@ -36,7 +36,48 @@ abstract class Base
     }
 
     /**
-     * Get an instance from a field
+     * Validate a field length
+     *
+     * @param string $field_name  the name of the field
+     * @param mixed  $field_value the field value
+     * @param int    $min_field   minimum allowed field length
+     * @param int    $max_field   maximum allowed field length
+     * @param bool   $allow_space flag that indicates whether to trim or not the field value
+     * @param bool   $is_unicode  flag that indicates whether the field value is an utf-8 string or ascii
+     *
+     * @throws BaseException change it in throwException
+     */
+    protected static function validateFieldLength(
+        $field_name,
+        $field_value,
+        $min_field,
+        $max_field,
+        $allow_space = false,
+        $is_unicode = true
+    ) {
+        if (!$allow_space)
+        {
+            $field_value = trim($field_value);
+        }
+
+        if ($is_unicode)
+        {
+            $length = mb_strlen($field_value);
+        }
+        else
+        {
+            $length = strlen($field_value);
+        }
+
+        if ($length < $min_field || $length > $max_field)
+        {
+            $message = sprintf(_h("The %s must be between %s and %s characters long"), $field_name, $min_field, $max_field);
+            static::throwException($message);
+        }
+    }
+
+    /**
+     * Get an object data from a field
      *
      * @param string $table         the table name
      * @param string $field         the from field
@@ -68,12 +109,9 @@ abstract class Base
         }
         catch(DBException $e)
         {
-            static::throwException(
-                h(
-                    sprintf(_('An error occurred while retrieving the %s'), $table) . ' .' .
-                    _('Please contact a website administrator.')
-                )
-            );
+            $message =
+                h(sprintf(_('An error occurred while retrieving the %s'), $table) . ' .' . _('Please contact a website administrator.'));
+            static::throwException($message);
         }
 
         // empty result
@@ -88,10 +126,10 @@ abstract class Base
     /**
      * Verify if a value exists in the table
      *
-     * @param string $table
-     * @param string $field
-     * @param mixed  $value
-     * @param int    $value_type
+     * @param string $table      the table name
+     * @param string $field      the table field
+     * @param mixed  $value      field value
+     * @param int    $value_type type of the value
      *
      * @return bool
      */
@@ -109,11 +147,8 @@ abstract class Base
         }
         catch(DBException $e)
         {
-            static::throwException(
-                h(
-                    sprintf(_("Tried to see if a %s exists."), $table) . '. ' . _("Please contact a website administrator.")
-                )
-            );
+            $message = h(sprintf(_("Tried to see if a %s exists."), $table) . '. ' . _("Please contact a website administrator."));
+            static::throwException($message);
         }
 
         return $count !== 0;

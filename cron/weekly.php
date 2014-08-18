@@ -44,7 +44,7 @@ function log_email()
 
     $content = 'The following events have occurred in the last 7 days:<br />' . $table;
 
-    moderator_email('Weekly log update', $content);
+    SMail::get()->moderatorNotification('Weekly log update', $content);
 
     Log::setAllEventsMailed();
 

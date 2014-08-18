@@ -22,11 +22,12 @@ class BaseException extends Exception {}
 class BugException extends BaseException {}
 class UserException extends BaseException {}
 class AddonException extends BaseException {}
+
+class ValidateException extends Exception {}
 class FileException extends Exception {}
 class UploadException extends Exception {}
 class NewsException extends  Exception {}
 class RatingsException extends Exception {}
-class ImageException extends Exception {}
 class TemplateException extends Exception {}
 class ServerException extends Exception {}
 class LogException extends Exception {}
@@ -35,6 +36,8 @@ class StatisticException extends Exception {}
 class AchievementException extends Exception {}
 class FriendException extends Exception {}
 class AccessControlException extends Exception {}
+class SImageException extends Exception {}
+class SMailException extends Exception {}
 
 class ParserException extends Exception {}
 class XMLParserException extends ParserException {}

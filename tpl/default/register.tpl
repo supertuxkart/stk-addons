@@ -1,70 +1,119 @@
 {config_load file="{$smarty.current_dir}/tpl.conf"}
 {include file=#header#}
+<div class="row">
+    <div class="col-md-offset-2">
+        <h1>{t}Account Registration{/t}</h1>
+        {include file="feedback/errors.tpl"}
+        {include file="feedback/warnings.tpl"}
+        {include file="feedback/success.tpl"}
+        {if $register.display}
+            <form id="register" action="register.php?action=register" method="POST" class="form-horizontal auto-validation"
+                  data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+                  data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+                  data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <label for="reg_user">{t}Username{/t}</label><br>
+                        <span class="subtext">
+                            ({t 1=$register.username.min}Must be at least %1 characters long.{/t})
+                        </span>
+                    </div>
+                    <div class="col-md-7">
+                        <input type="text" class="form-control" name="username" id="reg_user"
+                               value="{$register.username.value}"
+                               data-bv-notempty="true"
+                               data-bv-notempty-message="{t}The username is required{/t}"
 
-<div id="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <h1>{t}Account Registration{/t}</h1>
-            {include file="feedback/errors.tpl"}
-            {include file="feedback/warnings.tpl"}
-            {include file="feedback/success.tpl"}
-            {if $register.display_form==true}
-                <form id="register" action="register.php?action=register" method="POST" class="form-horizontal">
-                    <table>
-                        <tbody>
-                        <tr>
-                            <td>
-                                <label for="reg_user">{t}Username{/t}</label><br>
-                                <span class="subtext">
-                                    ({t 1=$register.form.username.min}Must be at least %1 characters long.{/t})
-                                </span>
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" name="user" id="reg_user" value="{$register.form.username.value}">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label for="reg_pass">{t}Password{/t}</label><br>
-                                <span class="subtext">
-                                    ({t 1=$register.form.password.min}Must be at least %1 characters long.{/t})
-                                </span>
-                            </td>
-                            <td>
-                                <input type="password" class="form-control" name="pass1" id="reg_pass">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label for="reg_pass2">{t}Password (confirm){/t}</label>
-                            </td>
-                            <td>
-                                <input type="password" class="form-control" name="pass2" id="reg_pass2">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label for="reg_name">{t}Name{/t}</label
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" name="name" id="reg_name" value="{$register.form.name.value}">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label for="reg_email">{t}Email Address:{/t}</label><br>
+                               data-bv-stringlength="true"
+                               data-bv-stringlength-min="{$register.username.min}"
+                               data-bv-stringlength-max="{$register.username.max}"
+                               data-bv-stringlength-message="{t 1=$register.username.min 2=$register.username.max}The username must be between %1 and %2 characters long{/t}"
+
+                               data-bv-regexp="true"
+                               data-bv-regexp-regexp="^[a-zA-Z0-9]+$"
+                               data-bv-regexp-message="{t}Your username can only contain alphanumeric characters{/t}"
+
+                               data-bv-different="true"
+                               data-bv-different-field="password"
+                               data-bv-different-message="{t}The username and password cannot be the same as each other{/t}">
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <label for="reg_pass">{t}Password{/t}</label><br>
+                        <span class="subtext">
+                            ({t 1=$register.password.min}Must be at least %1 characters long.{/t})
+                        </span>
+                    </div>
+                    <div class="col-md-7">
+                        <input type="password" class="form-control" name="password" id="reg_pass"
+                               data-bv-notempty="true"
+                               data-bv-notempty-message="{t}The password is required{/t}"
+
+                               data-bv-stringlength="true"
+                               data-bv-stringlength-min="{$register.password.min}"
+                               data-bv-stringlength-max="{$register.password.max}"
+                               data-bv-stringlength-message="{t 1=$register.password.min 2=$register.password.max}The password must be between %1 and %2 characters long{/t}"
+
+                               data-bv-different="true"
+                               data-bv-different-field="username"
+                               data-bv-different-message="{t}The password cannot be the same as username{/t}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <label for="reg_pass2">{t}Password (confirm){/t}</label>
+                    </div>
+                    <div class="col-md-7">
+                        <input type="password" class="form-control" name="password_confirm" id="reg_pass2"
+                               data-bv-notempty="true"
+                               data-bv-notempty-message="{t}The confirm password is required{/t}"
+
+                               data-bv-identical="true"
+                               data-bv-identical-field="password"
+                               data-bv-identical-message="{t}The passwords do not match{/t}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <label for="reg_name">{t}Name{/t}</label>
+                    </div>
+                    <div class="col-md-7">
+                        <input type="text" class="form-control" name="name" id="reg_name"
+                               value="{$register.name.value}"
+                               data-bv-notempty="true"
+                               data-bv-notempty-message="{t}The name is required{/t}"
+
+                               data-bv-stringlength="true"
+                               data-bv-stringlength-min="{$register.name.min}"
+                               data-bv-stringlength-max="{$register.name.max}"
+                               data-bv-stringlength-message="{t 1=$register.name.min 2=$register.name.max}The nam must be between %1 and %2 characters long{/t}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <label for="reg_email">{t}Email Address{/t}</label><br>
                         <span class="subtext">
                             ({t}Email address used to activate your account.{/t})
                         </span>
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" name="mail" id="reg_email" value="{$register.form.email.value}">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">
-                                <label for="reg_terms">{t}Terms:{/t}</label><br />
-                                <textarea rows="20" cols="90" readonly id="reg_terms">
+                    </div>
+                    <div class="col-md-7">
+                        <input type="text" class="form-control" name="mail" id="reg_email"
+                               value="{$register.email.value}"
+                               data-bv-notempty="true"
+                               data-bv-notempty-message="{t}The registration email is required{/t}"
+
+                               data-bv-emailaddress="true"
+                               data-bv-emailaddress-message="{t}The email address is not a valid{/t}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <label for="reg_terms">{t}Terms:{/t}</label>
+                    </div>
+                    <div class="col-md-7">
+                        <textarea rows="20" cols="70" readonly id="reg_terms">
 === {t}STK Addons Terms and Conditions{/t} ===
 
 {t}You must agree to these terms in order to upload content to the STK Addons site.{/t}
@@ -81,34 +130,34 @@
 {t}If any of your uploads are found to contain any of the above, your upload will be removed, your account may be removed, and any other content you uploaded may be removed.{/t}
 
 {t}By checking the box below, you are confirming that you understand these terms. If you have any questions or comments regarding these terms, one of the members of the development team would gladly assist you.{/t}
-                                </textarea>
-                            </td>
-
-                        </tr>
-                        <tr>
-                            <td>
-                                <label for="reg_check">{t}I agree to the above terms{/t}</label>
-                            </td>
-                            <td>
-                                <input type="checkbox" class="input-lg" name="terms" id="reg_check">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><label>{t}Verify that you are not a bot{/t}</label></td>
-                            <td>{$register.captcha}<hr></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td>
-                                <input type="submit" class="btn btn-primary" value="{t}Register!{/t}">
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </form>
-            {/if}
-        </div>
+                        </textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <label for="reg_check">{t}I agree to the above terms{/t}</label>
+                    </div>
+                    <div class="col-md-7">
+                        <input type="checkbox" class="input-lg" name="terms" id="reg_check"
+                               data-bv-notempty="true"
+                               data-bv-notempty-message="{t}You must agree to the above terms{/t}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <label>{t}Verify that you are not a bot{/t}</label>
+                    </div>
+                    <div class="col-md-7">
+                        {$register.captcha}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-3 col-md-3">
+                        <input type="submit" class="btn btn-success btn-block" value="{t}Register!{/t}">
+                    </div>
+                </div>
+            </form>
+        {/if}
     </div>
 </div>
-
 {include file=#footer#}

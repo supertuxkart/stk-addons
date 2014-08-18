@@ -44,6 +44,12 @@ class Template
     private $directory;
 
     /**
+     * Flag that indicates to minify the html
+     * @var bool
+     */
+    private $minify = true;
+
+    /**
      * @param string      $template_file
      * @param string|null $template_dir
      */
@@ -137,6 +143,20 @@ class Template
     }
 
     /**
+     * Enable or disable minify
+     *
+     * @param $minify
+     *
+     * @return $this
+     */
+    public function setMinify($minify)
+    {
+        $this->minify = $minify;
+
+        return $this;
+    }
+
+    /**
      * Setup function for children to override
      */
     protected function setup() { throw new TemplateException("Not Implemented"); }
@@ -204,6 +224,13 @@ class Template
         try
         {
             $this->setup();
+
+            // minify html
+            if (!DEBUG_MODE && $this->minify)
+            {
+                $this->smarty->registerFilter("output", "minify_html");
+            }
+
             ob_start();
             $this->smarty->display($this->file, $this->directory);
 

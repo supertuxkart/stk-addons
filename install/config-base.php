@@ -34,7 +34,7 @@ define("ROOT_PATH", __DIR__ . DS);
 define("INCLUDE_PATH", ROOT_PATH . "include" . DS);
 define("TPL_PATH", ROOT_PATH . "tpl" . DS . "default" . DS); // Template properties
 define("TMP_PATH", sys_get_temp_dir() . DS); // define temporary directory path
-define("UPLOAD_PATH", ROOT_PATH . "uploads" . DS);
+define("UPLOAD_PATH", ROOT_PATH . "dl" . DS);
 define("UPLOAD_CRON_PATH", UPLOAD_PATH);
 define("BUGS_PATH", ROOT_PATH . "bugs" . DS);
 define("STATS_PATH", ROOT_PATH . "stats" . DS);
@@ -53,15 +53,19 @@ else
 
 define("NEWS_XML_PATH", UP_PATH . "xml" . DS . "news.xml");
 define("ASSETS_XML_PATH", UP_PATH . "xml" . DS . "assets.xml");
+define("ASSETS2_XML_PATH", UP_PATH . "xml" . DS . "assets2.xml");
 
 // make sure that this ends with a trailing slash, otherwise it would break a few things (like the activation email)
 define("SITE_ROOT", "http://stkaddons.net/");
 
-define("DOWNLOAD_LOCATION", SITE_ROOT . "uploads/");
+define("DOWNLOAD_LOCATION", SITE_ROOT . "dl/");
+define("DOWNLOAD_XML_LOCATION", DOWNLOAD_LOCATION . "xml/");
+define("DOWNLOAD_ASSETS_LOCATION", DOWNLOAD_LOCATION);
+define("NEWS_XM_LOCATION", DOWNLOAD_XML_LOCATION . "news.xml");
+define("ASSETS_XML_LOCATION", DOWNLOAD_XML_LOCATION . "assets.xml");
+define("ASSETS2_XML_LOCATION", DOWNLOAD_XML_LOCATION . "assets.xml");
 define("BUGS_LOCATION", SITE_ROOT . "bugs/");
 define("STATS_LOCATION", SITE_ROOT . "stats/");
-define("NEWS_XM_LOCATION", DOWNLOAD_LOCATION . "xml/news.xml");
-define("ASSETS_XML_LOCATION", DOWNLOAD_LOCATION . "xml/assets.xml");
 define("ASSETS_LOCATION", SITE_ROOT . "assets/");
 define("CACHE_LOCATION", ASSETS_LOCATION . "cache/");
 define("LIBS_LOCATION", ASSETS_LOCATION . "libs/");
@@ -77,15 +81,15 @@ define("CAPTCHA_PRIV", ""); // reCAPTCHA private key
 define("DB_USER", "root");
 define("DB_PASSWORD", "");
 define("DB_NAME", "stkbase");
-define("DB_PREFIX", "v2_");
 define("DB_HOST", "localhost");
+define("DB_PREFIX", "v2_"); // should not be modified
 
 // Mail proprieties
-define("MAIL_METHOD", "sendmail"); // "smtp" or "sendmail" supported
-define("SENDMAIL_PATH", "/usr/bin/sendmail"); // Path to sendmail
-define("SENDMAIL_ARGS", "-i"); // Sendmail arguments
+define("IS_SMTP", true); // true for "smtp" and false for "sendmail"
+define("SENDMAIL_PATH", null); // Path to sendmail if your sendmail path is not standard
 define("SMTP_HOST", null); // SMTP server host
 define("SMTP_PORT", null); // SMTP server port (usually 25)
+define("SMTP_PREFIX", "ssl"); // usually ssl or tls
 define("SMTP_AUTH", null); // Whether or not to use SMTP authentication, true/false
 define("SMTP_USER", null); // SMTP username
 define("SMTP_PASS", null); // SMTP password
@@ -107,7 +111,7 @@ define('F_TEX_NOT_POWER_OF_2', 512);
 
 // API
 // this should be changed depending where you have the api, for api.stkaddons.net is should be empty string
-define("API_LOCATION", "stkaddons/api");
+define("API_LOCATION", "/stkaddons/api");
 define("API_VERSION", "v2");
 
 // set string encoding

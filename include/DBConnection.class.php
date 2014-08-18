@@ -260,7 +260,7 @@ class DBConnection
                 return $sth->fetchColumn();
             }
         }
-        catch(PDOException $e)
+        catch (PDOException $e)
         {
             if ($this->in_transaction)
             {
@@ -411,7 +411,7 @@ class DBConnection
     /**
      * Perform an sql count on the database, much faster than PDO::rowCount(). Helper method
      *
-     * @param string $table
+     * @param string $table           the table name
      * @param string $where_statement the sql where part
      * @param array  $fields_data     associative array that maps column to value
      *                                If you do not want to prepare a column do not put ":" in front of the key

@@ -31,11 +31,11 @@ $tpl = StkTemplate::get('user.tpl')
     ->addUtilLibrary()
     ->addScriptInclude("user.js");
 
-$tplData = [
+$tpl_data = [
     "body" => Util::ob_get_require_once(ROOT_PATH . "users-panel.php"),
     "menu" => Util::ob_get_require_once(ROOT_PATH . "users-menu.php")
 ];
 
 // output the view
-$tpl->assign("user", $tplData);
+$tpl->assign("user", $tpl_data);
 echo $tpl;

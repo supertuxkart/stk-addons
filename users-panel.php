@@ -45,7 +45,7 @@ $tpl = StkTemplate::get("user-panel.tpl")
     ->assign("can_see_email", $is_owner || $is_admin);
 
 $friends = Friend::getFriendsOf($user->getId(), $is_owner);
-$tplData = [
+$tpl_data = [
     "username"          => $user->getUserName(),
     "user_id"           => $user->getId(),
     "date_registration" => $user->getDateRegistration(),
@@ -117,7 +117,7 @@ foreach (Addon::getAllowedTypes() as $type)
     $addons = $user->getAddonsData($type);
     if (empty($addons)) // no addons for you
     {
-        $tplData["addon_types"][] = $addon_type;
+        $tpl_data["addon_types"][] = $addon_type;
         continue;
     }
 
@@ -148,7 +148,7 @@ foreach (Addon::getAllowedTypes() as $type)
 
     // add to user template data
     $addon_type["items"] = $addonList;
-    $tplData["addon_types"][] = $addon_type;
+    $tpl_data["addon_types"][] = $addon_type;
 }
 
 // can change the users role and activation field
@@ -176,14 +176,14 @@ if ($can_elevate_user && !$is_owner)
             }
         }
     }
-    $tplData["settings"]["elevate"] = $role;
+    $tpl_data["settings"]["elevate"] = $role;
 
     // activated
     if ($user->isActive())
     {
-        $tplData["settings"]["elevate"]["activated"] = "checked";
+        $tpl_data["settings"]["elevate"]["activated"] = "checked";
     }
 }
 
-$tpl->assign("user", $tplData);
+$tpl->assign("user", $tpl_data);
 echo $tpl;

@@ -6,11 +6,11 @@
         <div class="col-md-9">
             <table class="table table-striped table-hover table-no-sort">
                 <thead>
-                <tr>
-                    <th>{t}Name{/t}</th>
-                    <th>{t}Type{/t}</th>
-                    <th>{t}References{/t}</th>
-                </tr>
+                    <tr>
+                        <th>{t}Name{/t}</th>
+                        <th>{t}Type{/t}</th>
+                        <th>{t}References{/t}</th>
+                    </tr>
                 </thead>
                 <tbody>
                 {$last_id=null}

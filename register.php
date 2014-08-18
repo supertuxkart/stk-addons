@@ -26,21 +26,23 @@ $_POST['name'] = empty($_POST['name']) ? null : $_POST['name'];
 $_POST['mail'] = empty($_POST['mail']) ? null : $_POST['mail'];
 $_GET['action'] = empty($_GET['action']) ? null : $_GET['action'];
 
-$tpl = StkTemplate::get('register.tpl')->assignTitle(_h('Register'));
+$tpl = StkTemplate::get('register.tpl')
+    ->assignTitle(_h('Register'))
+    ->addBootstrapValidatorLibrary()
+    ->setMinify(false);
 
 // CAPTCHA
 $captcha = new Captcha();
 $captcha->setPublicKey(CAPTCHA_PUB)->setPrivateKey(CAPTCHA_PRIV);
 
 $register = [
-    'display_form' => false,
-    'captcha'      => $captcha->html(),
-    'form'         => [
-        'username' => ['min' => 4, 'value' => h($_POST['user'])],
-        'password' => ['min' => 8],
-        'name'     => ['value' => h($_POST['name'])],
-        'email'    => ['value' => h($_POST['mail'])]
-    ]
+    'display' => false,
+    'captcha'  => $captcha->html(),
+    'username' => ['min' => User::MIN_USERNAME, 'max' => User::MAX_USERNAME, 'value' => h($_POST['user'])],
+    'password' => ['min' => User::MIN_PASSWORD, 'max' => User::MAX_PASSWORD],
+    'name'     => ['min' => User::MIN_REALNAME, 'max' => User::MAX_USERNAME, 'value' => h($_POST['name'])],
+    'email'    => ['max' => User::MAX_EMAIL, 'value' => h($_POST['mail'])]
+
 ];
 
 // define possibly undefined variables
@@ -51,7 +53,7 @@ switch ($_GET['action'])
         try
         {
             // validate
-            $errors = Validate::ensureInput($_POST, ["user", "pass1", "pass2", "mail", "name", "terms"]);
+            $errors = Validate::ensureInput($_POST, ["username", "password", "password_confirm", "mail", "name", "terms"]);
             if ($errors)
             {
                 throw new UserException(implode("<br>", $errors));
@@ -65,9 +67,9 @@ switch ($_GET['action'])
             }
 
             User::register(
-                $_POST['user'],
-                $_POST['pass1'],
-                $_POST['pass2'],
+                $_POST['username'],
+                $_POST['password'],
+                $_POST['password_confirm'],
                 $_POST['mail'],
                 $_POST['name'],
                 $_POST['terms']
@@ -81,7 +83,7 @@ switch ($_GET['action'])
         catch(UserException $e)
         {
             $tpl->assign('errors', $e->getMessage());
-            $register['display_form'] = true;
+            $register['display'] = true;
         }
         break;
 
@@ -99,6 +101,7 @@ switch ($_GET['action'])
             User::activate($username, $verification_code);
 
             $tpl->assign('success', _h('Your account has been activated.'));
+            $tpl->setMetaRefresh("login.php", 10);
         }
         catch(UserException $e)
         {
@@ -107,7 +110,7 @@ switch ($_GET['action'])
         break;
 
     default:
-        $register['display_form'] = true;
+        $register['display'] = true;
         break;
 }
 

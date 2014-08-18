@@ -29,7 +29,12 @@ var MSECONDS_MINUTE = 60000,
 var SEARCH_URL = JSON_LOCATION + "search.php";
 
 
-// the url loaded on the container on page change
+/**
+ * Register the default pagination on a page
+ *
+ * @param $container jQuery object
+ * @param url the php page that handles pagination
+ */
 function registerPagination($container, url) {
 
     // limit changed
@@ -37,9 +42,9 @@ function registerPagination($container, url) {
         var limit = this.value,
             page = getUrlVars()["p"];
 
-       if(!parseInt(page)) {
-           page = 1;
-       }
+        if (!parseInt(page)) {
+            page = 1;
+        }
 
         loadContent($container, url, {p: page, l: limit}, function() {}, "GET");
     });
@@ -54,7 +59,7 @@ function registerPagination($container, url) {
             return false;
         }
 
-        if(!limit || !parseInt(limit)) {
+        if (!limit || !parseInt(limit)) {
             limit = 10;
         }
 
@@ -65,14 +70,30 @@ function registerPagination($container, url) {
     });
 }
 
-function isInTimeInterval(time, past_time_limit) {
+/**
+ * Check if time is in certain time interval
+ *
+ * @param time the time to check in milliseconds
+ * @param elapsed_time the interval
+ *
+ * @return bool
+ */
+function isInTimeInterval(time, elapsed_time) {
     var current_time = (new Date()).getTime(),
         elapsed = current_time - time;
 
-    return elapsed < past_time_limit;
+    return elapsed < elapsed_time;
 }
 
-// TODO add history calls
+/**
+ * Load the content of the url into an element
+ *
+ * @param $content jQuery object that will contain the page result
+ * @param url the url to get
+ * @param params object containing GET or POST params
+ * @param callback function that is called after the content was loaded
+ * @param request_type the type of request, GET or POST, default is GET
+ */
 function loadContent($content, url, params, callback, request_type) {
     request_type = request_type || "GET";
     callback = callback || function() {};
@@ -98,6 +119,16 @@ function loadContent($content, url, params, callback, request_type) {
     }
 }
 
+/**
+ * Handle event when there is form submit
+ *
+ * @param form_identifier string representing the form unique identifier, usually id, eg: #main-bugs
+ * @param callback_success function that is called on form submit success
+ * @param $container a jQuery object representing a parent of the form
+ * @param url the url to submit to
+ * @param data_type additional parameters to add to the request
+ * @param request_method POST or GET, default is GET
+ */
 function onFormSubmit(form_identifier, callback_success, $container, url, data_type, request_method) {
     if (!_.isFunction(callback_success)) {
         throw "callback parameter is not a function";
@@ -136,10 +167,24 @@ function onFormSubmit(form_identifier, callback_success, $container, url, data_t
     });
 }
 
+/**
+ * Alias for getElementById
+ *
+ * @param id the element id
+ *
+ * @return {Element} html element
+ */
 function getByID(id) {
     return document.getElementById(id);
 }
 
+/**
+ * Parse a json string
+ *
+ * @param raw_string the json string
+ *
+ * @return the parsed json data, or empty object if there was an error, and message written to the console
+ */
 function parseJSON(raw_string) {
     var jData = {}; // silently fail on the client side
 
@@ -153,6 +198,11 @@ function parseJSON(raw_string) {
     return jData;
 }
 
+/**
+ * Display a error message popup
+ *
+ * @param message the message to the user
+ */
 function growlError(message) {
     $.growl({
         title   : "Error",
@@ -166,7 +216,13 @@ function growlError(message) {
         message : message
     });
 }
-function growlSuccess(messsage) {
+
+/**
+ * Display a success message popup
+ *
+ * @param message the message to the user
+ */
+function growlSuccess(message) {
     $.growl({
         title   : "Success",
         icon    : "glyphicon glyphicon-ok-sign",
@@ -176,10 +232,17 @@ function growlSuccess(messsage) {
         },
         z_index : 9999,
         type    : "success",
-        message : messsage
+        message : message
     });
 }
 
+/**
+ * Display a modal with delete button and confirmation message
+ *
+ * @param message the message to the user
+ * @param yes_callback function that is called when the user answer yes to the modal
+ * @param no_callback function that is called when the user answers no to the modal
+ */
 function modalDelete(message, yes_callback, no_callback) {
     yes_callback = yes_callback || function() {};
     no_callback = no_callback || function() {};
@@ -202,6 +265,12 @@ function modalDelete(message, yes_callback, no_callback) {
     });
 }
 
+/**
+ * Redirect the current page with delay
+ *
+ * @param url the destination, default is to refresh the current page
+ * @param seconds delay in redirection, default is 0
+ */
 function redirectTo(url, seconds) {
     url = url || window.location.href;
     seconds = seconds || 0;
@@ -212,17 +281,32 @@ function redirectTo(url, seconds) {
     }, seconds * 1000);
 }
 
-// check if it is a wysiwyg5 editor
+/**
+ * Check if it is a wysiwyg5 editor
+ *
+ * @param $editor_container jQuery object that should contain the editor
+ *
+ * @return wysiwyg5 editor or null if not an editor
+ */
 function isEditor($editor_container) {
     return $editor_container.data("wysihtml5");
 }
 
-// update the value of a wysiwyg5 editor
+/**
+ * Update the value of a wysiwyg5 editor
+ */
 function editorUpdate($editor_container, value) {
     $editor_container.data("wysihtml5").editor.setValue(value);
 }
 
-// init a wysiwyg5 editor only once
+/**
+ * Init a wysiwyg5 editor only once
+ *
+ * @param $editor_container jQuery object representing the container
+ * @param editor_options options for the wysiwyg5
+ *
+ * @return null if editor already exists, the wysiwyg5 editor otherwise
+ */
 function editorInit($editor_container, editor_options) {
     if (!isEditor($editor_container)) { // editor does not exist
         return $editor_container.wysihtml5(editor_options);
@@ -231,7 +315,13 @@ function editorInit($editor_container, editor_options) {
     return null;
 }
 
-// Read a page's GET URL variables and return them as an associative array.
+/**
+ * Read a page's GET URL variables and return them as an hash map
+ *
+ * @param url default is the current page
+ *
+ * @return object hash map of all vars
+ */
 function getUrlVars(url) {
     url = url || window.location.href;
 

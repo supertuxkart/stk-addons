@@ -30,7 +30,7 @@ $tpl = StkTemplate::get("manage.tpl")
     ->addScriptInclude("manage.js")
     ->assign("can_edit_settings", User::hasPermission(AccessControl::PERM_EDIT_SETTINGS))
     ->assign("can_edit_roles", User::hasPermission(AccessControl::PERM_EDIT_PERMISSIONS));
-$tplData = ["status" => "", "body" => ""];
+$tpl_data = ["status" => "", "body" => ""];
 
 // status message
 $status_content = "";
@@ -52,15 +52,15 @@ try
                 throw new Exception(_h('XML Download Frequency value is invalid.'));
             }
 
-            ConfigManager::setConfig('xml_frequency', (int)$_POST['xml_frequency']);
-            ConfigManager::setConfig('allowed_addon_exts', $_POST['allowed_addon_exts']);
-            ConfigManager::setConfig('allowed_source_exts', $_POST['allowed_source_exts']);
-            ConfigManager::setConfig('admin_email', $_POST['admin_email']);
-            ConfigManager::setConfig('list_email', $_POST['list_email']);
-            ConfigManager::setConfig('list_invisible', (int)$_POST['list_invisible']);
-            ConfigManager::setConfig('blog_feed', $_POST['blog_feed']);
-            ConfigManager::setConfig('max_image_dimension', (int)$_POST['max_image_dimension']);
-            ConfigManager::setConfig('apache_rewrites', $_POST['apache_rewrites']);
+            Config::set(Config::XML_UPDATE_TIME, (int)$_POST['xml_frequency']);
+            Config::set(Config::ALLOWED_ADDON_EXTENSIONS, $_POST['allowed_addon_exts']);
+            Config::set(Config::ALLOWED_SOURCE_EXTENSIONS, $_POST['allowed_source_exts']);
+            Config::set(Config::EMAIL_ADMIN, $_POST['admin_email']);
+            Config::set(Config::EMAIL_LIST, $_POST['list_email']);
+            Config::set(Config::SHOW_INVISIBLE_ADDONS, (int)$_POST['list_invisible']);
+            Config::set(Config::FEED_BLOG, $_POST['blog_feed']);
+            Config::set(Config::IMAGE_MAX_DIMENSION, (int)$_POST['max_image_dimension']);
+            Config::set(Config::APACHE_REWRITES, $_POST['apache_rewrites']);
 
             $status_content = _h('Saved settings.') . '<br>';
             break;
@@ -134,11 +134,11 @@ catch(Exception $e)
 {
     $status_content = '<span class="error">' . $e->getMessage() . '</span><br />';
 }
-$tplData["status"] = $status_content;
+$tpl_data["status"] = $status_content;
 
 // right panel
-$tplData["body"] = Util::ob_get_require_once(ROOT_PATH . "manage-panel.php");
+$tpl_data["body"] = Util::ob_get_require_once(ROOT_PATH . "manage-panel.php");
 
 // output the view
-$tpl->assign("manage", $tplData);
+$tpl->assign("manage", $tpl_data);
 echo $tpl;

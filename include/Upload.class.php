@@ -134,10 +134,10 @@ class Upload
         static::checkUploadError($file_record['error']);
         $this->file_ext = static::checkUploadExtension($this->file_name, $this->expected_file_type);
 
-        $this->temp_dir = TMP_PATH . 'uploads' . DS . time() . '-' . $this->file_name . DS;
+        $this->temp_dir = TMP_PATH . 'stk-uploads' . DS . time() . '-' . $this->file_name . DS;
 
         // Clean up old temp files to make room for new upload
-        File::deleteOldSubdirectories(TMP_PATH . 'uploads', Util::SECONDS_IN_A_HOUR);
+        File::deleteOldSubdirectories(TMP_PATH . 'stk-uploads', Util::SECONDS_IN_A_HOUR);
 
         $this->doUpload();
     }

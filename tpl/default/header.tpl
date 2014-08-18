@@ -7,6 +7,7 @@
         <meta http-equiv="{$meta_field}" content="{$meta_content}">
     {/foreach}
     <meta http-equiv="X-UA-Compatible" content="IE=9" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     {foreach $css_includes as $css}
         {if empty($css.media)}
             <link rel="stylesheet" href="{$css.href}">

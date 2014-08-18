@@ -4,47 +4,89 @@
 
 class ValidateTest extends \PHPUnit_Framework_TestCase
 {
-    public function providerTestEmailThrowsException()
+    public function providerTestCheckboxThrowsException()
     {
-        return array(
-            array(1),
-            array(null),
-            array(''),
-            array(true),
-            array(false),
-            array(""),
-            array("email"),
-            array("email@"),
-            array("@example.com"),
-            array("valid@"),
-            array("me@mytld"),
-        );
-    }
-
-    public function providerTestEmailNoThrowsException()
-    {
-        return array(
-            array("email@example.com"),
-            array("email.test@example.com"),
-            array("xx@xx.xx")
-        );
+        return [
+            [1],
+            [" "],
+            ["example"],
+            ["off"]
+        ];
     }
 
     /**
-     * @dataProvider providerTestEmailThrowsException
+     * @dataProvider providerTestCheckboxThrowsException
      * @expectedException UserException
      */
-    public function testEmailThrowsException($email)
+    public function testCheckboxThrowsException($box)
     {
-        Validate::email($email);
+        Validate::checkbox($box, "");
+    }
+
+    public function testCheckboxNoThrowsException()
+    {
+        $this->assertEquals(Validate::checkbox("on", ""), "on");
+    }
+
+    public function providerTestEnsureInput()
+    {
+        return [
+            [true, ["a" => 1, "b" => 2], ["a", "b"]],
+            [false, ["a" => 1, "b" => 2], ["c"]],
+            [false, [42, 54, 65], [5, 6]],
+            [true, [42, 54, 65], [0, 1]],
+            [true, [42, 54, 65], [0, 1, 2]]
+        ];
     }
 
     /**
-     * @dataProvider providerTestEmailNoThrowsException
+     * @dataProvider providerTestEnsureInput
      */
-    public function testEmailNoThrowsException($email)
+    public function testEnsureInput($is_empty, $pool, $params)
     {
-        Validate::email($email);
+        $errors = Validate::ensureInput($pool, $params);
+        $this->assertEquals($is_empty, empty($errors));
     }
 
+    public function providerTestVersionStringThrowsException()
+    {
+        return [
+            [""],
+            ["0.8 "],
+            ["gibberish"],
+            ["a.b.c"],
+            ["0.8.2-rc"],
+        ];
+    }
+
+    public function providerTestVersionStringNoThrowsException()
+    {
+        return [
+            ["svn"],
+            ["SVN"],
+            ["sVn"],
+            ["0.8.2"],
+            ["100.8.2"],
+            ["100.8.2-rc0"],
+            ["100.8.2-rc1"],
+            ["0.8.2-rc1"],
+        ];
+    }
+
+    /**
+     * @dataProvider providerTestVersionStringThrowsException
+     * @expectedException ValidateException
+     */
+    public function testVersionStringThrowsException($version)
+    {
+        Validate::versionString($version);
+    }
+
+    /**
+     * @dataProvider providerTestVersionStringNoThrowsException
+     */
+    public function testVersionStringNoThrowsException($version)
+    {
+        Validate::versionString($version);
+    }
 }

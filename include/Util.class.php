@@ -771,8 +771,8 @@ class Util
      */
     public static function getImageLabel($text)
     {
-        $write_dir = UP_PATH . 'images' . DS;
-        $read_dir = DOWNLOAD_LOCATION . 'images/';
+        $write_dir = CACHE_PATH;
+        $read_dir = CACHE_LOCATION;
 
         $text_no_accent = preg_replace('/\W/s', '_', $text); // remove some accents
         $image_name = 'im_' . $text_no_accent . '.png';
@@ -852,6 +852,18 @@ class Util
             default:
                 return _h('Unknown');
         }
+    }
+
+    /**
+     * Parse a comma string list to an array
+     *
+     * @param string $string a comma string like 1, 2, 3, 4
+     *
+     * @return array [1, 2, 3, 4]
+     */
+    public static function commaStringToArray($string)
+    {
+        return array_map("trim", explode(',', $string));
     }
 }
  

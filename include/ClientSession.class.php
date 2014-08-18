@@ -46,7 +46,7 @@ abstract class ClientSession
     protected function __construct($session_id, $user_id, $user_name)
     {
         $this->session_id = $session_id;
-        $this->user_id = $user_id;
+        $this->user_id = (int)$user_id;
         $this->user_name = $user_name;
     }
 
@@ -290,7 +290,7 @@ abstract class ClientSession
     {
         try
         {
-            $serverid = DBConnection::get()->query(
+            $server_id = DBConnection::get()->query(
                 "SELECT `id` FROM `" . DB_PREFIX . "servers`
                 WHERE `hostid` = :hostid AND `ip` = :ip AND `port` = :port LIMIT 1",
                 DBConnection::FETCH_ALL,
@@ -310,7 +310,7 @@ abstract class ClientSession
                 FROM `" . DB_PREFIX . "server_conn`
                 WHERE `serverid` = :server_id AND `request` = '1'",
                 DBConnection::FETCH_ALL,
-                [':server_id' => $serverid[0]['id']],
+                [':server_id' => $server_id[0]['id']],
                 [':serverid' => DBConnection::PARAM_INT]
             );
 
@@ -398,7 +398,6 @@ abstract class ClientSession
         elseif (empty($password))
         {
             throw new InvalidArgumentException(_h('Password required'));
-            //return ClientSessionAnonymous::create($username);
         }
 
         return RegisteredClientSession::create($username, $password, $save_session);
@@ -438,10 +437,10 @@ abstract class ClientSession
 
             // Valid session found, get more user info
             $user_info = DBConnection::get()->query(
-                "SELECT `user`,`role`
+                "SELECT `user`, `role`
                 FROM `" . DB_PREFIX . "users`
                 WHERE `id` = :userid",
-                DBConnection::FETCH_ALL,
+                DBConnection::FETCH_FIRST,
                 [':userid' => $user_id],
                 [':userid' => DBConnection::PARAM_INT]
             );
@@ -450,7 +449,7 @@ abstract class ClientSession
             return new RegisteredClientSession(
                 $session_info[0]["cid"],
                 $session_info[0]["uid"],
-                $user_info[0]["user"]
+                $user_info["user"]
             );
 
         }

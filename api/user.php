@@ -229,9 +229,12 @@ try
             {
                 $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
                 $token = isset($_POST['token']) ? $_POST['token'] : "";
-                $achievementid = isset($_POST['achievementid']) ? $_POST['achievementid'] : 0;
+                $achievement_ids = isset($_POST['achievementid']) ? Util::commaStringToArray($_POST['achievementid']) : [];
 
-                ClientSession::get($token, $userid)->onAchieving($achievementid);
+                foreach ($achievement_ids as $id)
+                {
+                    ClientSession::get($token, $userid)->onAchieving((int)$id);
+                }
             }
             catch(Exception $e)
             {
@@ -430,7 +433,7 @@ try
                     $password,
                     $password_confirm,
                     $email,
-                    $username,
+                    $username, // real name, TODO use real name field
                     $terms
                 );
 

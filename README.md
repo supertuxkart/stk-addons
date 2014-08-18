@@ -1,74 +1,135 @@
-STK Addons Website
-==================
-
+# STK Addons Website
 This is the source code for the SuperTuxKart asset sharing and distribution
-platform. The official location of the operating website is http://www.stkaddons.net/.
+platform. The official location of the live website is http://www.stkaddons.net.
 
-Installing Locally
-------------------
+## Build Status
+[![Build Status](https://travis-ci.org/leyyin/stkaddons.svg?branch=master)](https://travis-ci.org/leyyin/stkaddons)
 
+
+## Installation
 This software has no automated installation mechanism as it is not intended for wide
-usage. However, you can manually generate all of the necessary database tables and
-configuration settings manually.
+usage. However, you can manually install all of the necessary dependencies, database tables and
+configure settings manually.
 
-Before you attempt to set up a local installation, you should run `install/check_server_deps.php`
-on your web server. This will check to make sure that several dependencies can be found.
-There may be other dependencies not tested by that script, but that should be enough to
-get started.
+### Dependencies
+Before you attempt to set up a local installation, you should go to the `install/` directory.
+This will check to make sure that several dependencies can be found.
 
-Dependencies include:
-* PEAR::Mail (run `pear install Mail`)
-* PHP's gd module
-* PHP's PDO module
-* PHP's gettext module
-* Smarty Template Engine (managed by composer)
-* Smarty [gettext plugin](https://github.com/smarty-gettext/smarty-gettext) (managed by composer)
+PHP dependencies are handled by [composer](https://getcomposer.org/) (install it if you do not have it already).
+If you try to run `composer install` and you have unmet PHP extension dependencies
+(the script from the install directory should give a overview of all missing PHP extensions), then composer will fail.
 
-You can generate the database tables, procedures, and relations by using a tool such as
-PHPMyAdmin to import the table.sql file found in the repository(in the `install` directory).
-You may need to edit the provided SQL file, as it assumes a table prefix of 'v2_' and a
-database username of 'stkuser'.
+If you want to install all the dependencies including the developer ones (testing framework):
 
-On your web server, you must edit the provided `install/config-base.php` to match your database
-and system configuration. Save this file as `config.php` in the website root. Enable the debugging mode in
-the configuration file to assist with resolving any errors.
+    composer install
 
-Install dependencies:
-* `composer install` to download the php dependencies
-* `bower install` to download the javascript and css dependencies
+To update dependencies afterwards:
 
-The cache folder is local, if you get permission errors on `assets/cache` just run `chmod 777 assets/cache`
+    composer update
 
-Register a new user using the web interface. Don't worry about configuring your SMTP
-server. After creating your user from the web interface, use a tool such as PHPMyAdmin
-to change that user's role to 'root', and set their 'active' value to 1. You can delete
-the relevant row in the 'verifications' table.
 
-The source tree contains an 'api' folder. On the production STK Addons server,
-these files exist in a separate sub-domain. For testing on a local machine, you
-may wish to copy these files to the parent folder if you intend to test API
-functionality.
+If you want to install it in a production environment (no developer dependencies),
+just append the `--no-dev --optimize-autoloader` options:
 
-As an optional step you could use the `install/htaccess.example` file to rewrite url's. To do this
-move it the website root and rename it to `.htaccess` (be sure that you have installed `mod_rewrite` in apache)
+    composer install --no-dev --optimize-autoloader
+    or
+    composer update --no-dev --optimize-autoloader
 
-Run tests with `./vendor/bin/phpunit`.
-About the Code
---------------
 
-The STKAddons source code tree has grown somewhat organically over the years. There
-are many places where the source could be cleaned up.
+JavaScript/CSS dependencies are managed by [bower](http://bower.io/) (install it if you do not have it already).
 
-There are a number of ongoing refactoring projects within the code-base:
-* Making use of a template engine for all UI code. The first version of STKAddons had
-  html baked right into the PHP code, and this is generally considered bad practice.
-  I (Stephen) have been trying to slowly weed that out and move to template files for
-  everything, so that we might offer customizable themes or a mobile UI for example.
+To install dependencies with bower:
 
-There are also a number of particularly ugly sections of code which need major
-refactoring:
-* Addon Upload: This is probably the most convoluted process in the entire system.
-  There is a lot of validation that is performed, and many many code paths lumped
-  into one hastily written class. I have not yet had the courage to wade through
-  this code and fix it. The Upload class could very likely be refactored into several
-  smaller classes based on the type of operation being performed.
+    bower install
+
+To update the dependencies:
+
+    bower update
+
+If you are running in a production environment, just append the `--production` option:
+
+    bower install --production
+    or
+    bower update --production
+
+
+### Database
+Currently we only support MySQL for the database backend. A newer version `v5.5.3+` is required, to have proper unicode support.
+
+You can generate the database (name it as you wish) using a tool like [phpMyAdmin](http://www.phpmyadmin.net/home_page/index.php).
+Use phpMyAdmin to import the [table.sql](install/table.sql) file found in the repository (in the `install` directory).
+
+Copy the `install/config-base.php` to the root of the project and rename it to `config.php`.
+
+Change the `SITE_ROOT` constant to match the location of your website.(JavaScript and CSS will not work if this is not correct)
+
+To enable debug mode just set `DEBUG_MODE` to `true`. (may assist in error debugging).
+
+Fill the database properties with the proper info then go the project root and see that it works.
+
+Register a new user using the web interface. Don't worry about configuring your email settings.
+After creating your user from the web interface (phpMyAdmin), you can change that user's role to 'admin', and set their 'active' value to 1.
+You can delete the relevant row in the 'verifications' table. You can login now with your new user.
+
+### API (optional)
+The source tree contains an 'api' folder. On the production STK Addons server, these files exist in a separate sub-domain.
+The default config is setup so that the website API will reside in a directory in localhost (`localhost/stkaddons/api`).
+For the API to work, URL rewriting must be enabled (see below).
+
+### URL Rewriting (optional)
+We make heavy use of URL rewriting (the download statistics, the API, nice URL paths). Make sure that `mod_rewrite` is installed and enabled.
+
+If you want to enable download statistics and nice URL paths just copy `install/htaccess.example` file to the root of the project
+and rename it to `.htaccess`. You may have to change some paths around to make everything work, the rewrite file assumes the project is in root
+of the website. (e.g. your project may be in the `localhost/stkaddons` directory, then the rewrite file will not work)
+
+## Common Problems
+
+A common problem on Linux is permissions for the `assets/cache` or `dl` directories.
+To solve this problem there are several solutions:
+* Change the permission of the directories with `chmod 775` (not recommended)
+* Add yourself to the the group of these directories and give the group read&write access, or change the owner of those directories
+to be your user or the user under which Apache is running (usually www-data)
+
+
+## Testing
+The project uses [PHPUnit](http://phpunit.de/) for unit testing (it's installed automatically by composer if you have enabled developer dependencies)
+
+Run tests from the root of the project with (it will use the default `phpunit.xml` found in the root directory):
+
+    ./vendor/bin/phpunit
+
+If you want to give it a custom configuration use the `--configuration` flag, like this:
+
+    ./vendor/bin/phpunit --configuration custom.xml
+
+## Contributing
+All contributions are welcome: ideas, patches, documentation, bug reports, complaints, etc!
+
+The PHP coding standard is heavily based on [PSR-2](http://www.php-fig.org/psr/psr-2/), with some additional modifications:
+* The line limit is 140 characters long.
+* Opening braces for control structures MUST go on the next line, and closing braces MUST go on the next line after the body.
+```php
+if ($a === 42)
+{
+    bar();
+}
+else
+{
+    foo();
+}
+```
+
+For JavaScript, CSS, and SQL you should use 4 spaces, not tabs.
+The JavaScript coding standard is based on http://javascript.crockford.com/code.html and the
+CSS coding standard is based on http://make.wordpress.org/core/handbook/coding-standards/css/.
+
+The JavaScript and CSS coding standards are modified to use the same line limit as PHP.
+
+## License
+STK Addons Website is licensed under GPL version 3. See [COPYING](COPYING) for full license text.
+
+## Contact
+* Email list: [supertuxkart-devel at SourceForge](http://sourceforge.net/p/supertuxkart/mailman/supertuxkart-devel/)
+* Twitter: [@supertuxkart](https://twitter.com/supertuxkart)
+* IRC: [#stk on Freenode](https://webchat.freenode.net/?channels=#stk)

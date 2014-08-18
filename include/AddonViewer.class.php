@@ -44,10 +44,19 @@ class AddonViewer
      * Constructor
      *
      * @param string $id Add-On ID
+     *
+     * @throws AddonException if the addon has no approved revision
      */
     public function __construct($id)
     {
         $this->addon = Addon::get($id);
+
+        // can view addon
+        if(!$this->addon->hasApprovedRevision() && User::getLoggedId() != $this->addon->getUploaderId())
+        {
+            throw new AddonException(_h("Addon is not approved"));
+        }
+
         $this->latestRev = $this->addon->getLatestRevision();
         $this->rating = new Rating($id);
     }
@@ -67,8 +76,8 @@ class AddonViewer
             'is_arena'       => $this->addon->getType() === Addon::ARENA,
             'designer'       => h($this->addon->getDesigner()),
             'license'        => h($this->addon->getLicense()),
-            'min'            => h($this->addon->getMinInclude()),
-            'max'            => h($this->addon->getMaxInclude()),
+            'min'            => h($this->addon->getIncludeMin()),
+            'max'            => h($this->addon->getIncludeMax()),
             'revisions'      => $this->addon->getAllRevisions(),
             'rating'         => [
                 'label'      => $this->rating->getRatingString(),

@@ -113,9 +113,8 @@ class StkTemplate extends Template
         // fill css
         array_push(
             $this->css_includes,
-            ["href" => LIBS_LOCATION . "bootstrap/dist/css/bootstrap.css"],
-            ["href" => CSS_LOCATION . "screen.css", "media" => "screen"],
-            ["href" => CSS_LOCATION . "print.css", "media" => "print"]
+            ["href" => LIBS_LOCATION . "bootstrap/dist/css/bootstrap.min.css"],
+            ["href" => CSS_LOCATION . "screen.css", "media" => "screen"]
         );
         $this->smarty->assign("css_includes", array_merge($this->css_includes, $this->user_css_includes));
     }
@@ -128,7 +127,7 @@ class StkTemplate extends Template
         // Fill script tags
         $this->script_inline["before"][] = [
             'content' => sprintf(
-                "var SITE_ROOT = '%s', BUGS_LOCATION = '%s', JSON_LOCATION = '%s';",
+                "/* wth happend*/;var SITE_ROOT = '%s', BUGS_LOCATION = '%s', JSON_LOCATION = '%s';",
                 SITE_ROOT,
                 BUGS_LOCATION,
                 SITE_ROOT . "json/"
@@ -139,11 +138,12 @@ class StkTemplate extends Template
 
         array_push(
             $this->script_includes,
-            ['src' => LIBS_LOCATION . "jquery/dist/jquery.js"],
+            ['src' => LIBS_LOCATION . "jquery/dist/jquery.min.js"],
             ['src' => LIBS_LOCATION . "underscore/underscore.js"],
-            ['src' => LIBS_LOCATION . "bootstrap/dist/js/bootstrap.js"],
-            ['src' => LIBS_LOCATION . "history.js/scripts/bundled-uncompressed/html4+html5/jquery.history.js"],
-            ['src' => LIBS_LOCATION . "bootstrap.growl/bootstrap-growl.js"],
+            ['src' => LIBS_LOCATION . "bootstrap/dist/js/bootstrap.min.js"],
+            ['src' => LIBS_LOCATION . "history.js/scripts/bundled/html4+html5/jquery.history.js"],
+            ['src' => LIBS_LOCATION . "bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js"],
+            ['src' => LIBS_LOCATION . "bootstrap.growl/bootstrap-growl.min.js"],
             ['src' => LIBS_LOCATION . "bootbox/bootbox.js"],
             ['src' => JS_LOCATION . 'main.js']
         );
@@ -159,30 +159,24 @@ class StkTemplate extends Template
         // TODO make top menu more dynamic
         $menu = [
             'welcome'  => sprintf(_h('Welcome, %s'), User::getLoggedRealName()),
-            'home'     => File::link('index.php', _h("Home")),
-            'login'    => File::link('login.php', _h('Login')),
-            'logout'   => File::link('login.php?action=logout', _h('Log out')),
-            'users'    => File::link('users.php', _h('Users')),
-            'upload'   => File::link('upload.php', _h('Upload')),
-            'manage'   => File::link('manage.php', _h('Manage')),
-            'bugs'     => File::link("bugs/", _h("Bugs")),
-            'karts'    => File::link('addons.php?type=karts', _h('Karts')),
-            'tracks'   => File::link('addons.php?type=tracks', _h('Tracks')),
-            'arenas'   => File::link('addons.php?type=arenas', _h('Arenas')),
-            'about'    => File::link('about.php', _h('About')),
-            'stats'    => File::link(STATS_LOCATION, _h("Stats"), false),
-            'privacy'  => File::link('privacy.php', _h('Privacy')),
-            'stk_home' => File::link('http://supertuxkart.sourceforge.net', _h('STK Homepage'))
+            'home'     => File::rewrite('index.php'),
+            'login'    => File::rewrite('login.php'),
+            'logout'   => File::rewrite('login.php?action=logout'),
+            'users'    => File::rewrite('users.php'),
+            'upload'   => File::rewrite('upload.php'),
+            'manage'   => File::rewrite('manage.php'),
+            'bugs'     => BUGS_LOCATION,
+            'karts'    => File::rewrite('addons.php?type=karts'),
+            'tracks'   => File::rewrite('addons.php?type=tracks'),
+            'arenas'   => File::rewrite('addons.php?type=arenas'),
+            'about'    => File::rewrite('about.php'),
+            'stats'    => STATS_LOCATION,
+            'privacy'  => File::rewrite('privacy.php'),
         ];
 
-        $logged_in = User::isLoggedIn();
-        $this->smarty->assign('show_welcome', $logged_in);
-        $this->smarty->assign('show_login', !$logged_in);
-        $this->smarty->assign('show_users', $logged_in);
-        $this->smarty->assign('show_upload', $logged_in);
-
         // if the user can edit addons then he can access the manage panel
-        $this->smarty->assign('show_manage', User::hasPermission(AccessControl::PERM_EDIT_ADDONS));
+        $this->smarty->assign('is_logged', User::isLoggedIn());
+        $this->smarty->assign('can_edit_addons', User::hasPermission(AccessControl::PERM_EDIT_ADDONS));
 
         $this->smarty->assign('menu', $menu);
     }
@@ -379,8 +373,8 @@ class StkTemplate extends Template
      */
     public function addBootstrapSelectLibrary()
     {
-        $this->addCssInclude("bootstrap-select/bootstrap-select.css", LIBS_LOCATION);
-        $this->addScriptInclude("bootstrap-select/bootstrap-select.js", LIBS_LOCATION);
+        $this->addCssInclude("bootstrap-select/bootstrap-select.min.css", LIBS_LOCATION);
+        $this->addScriptInclude("bootstrap-select/bootstrap-select.min.js", LIBS_LOCATION);
 
         return $this;
     }
@@ -393,8 +387,22 @@ class StkTemplate extends Template
      */
     public function addBootstrapFileInputLibrary()
     {
-        $this->addCssInclude("bootstrap-fileinput/css/fileinput.css", LIBS_LOCATION);
-        $this->addScriptInclude("bootstrap-fileinput/js/fileinput.js", LIBS_LOCATION);
+        $this->addCssInclude("bootstrap-fileinput/css/fileinput.min.css", LIBS_LOCATION);
+        $this->addScriptInclude("bootstrap-fileinput/js/fileinput.min.js", LIBS_LOCATION);
+
+        return $this;
+    }
+
+    /**
+     * Add bootstrap validation plugin
+     *
+     * @link http://bootstrapvalidator.com/
+     * @return $this
+     */
+    public function addBootstrapValidatorLibrary()
+    {
+        $this->addCssInclude("bootstrapValidator/dist/css/bootstrapValidator.min.css", LIBS_LOCATION);
+        $this->addScriptInclude("bootstrapValidator/dist/js/bootstrapValidator.min.js", LIBS_LOCATION);
 
         return $this;
     }
@@ -407,7 +415,7 @@ class StkTemplate extends Template
      */
     public function addTypeHeadLibrary()
     {
-        $this->addScriptInclude("typeahead.js/dist/typeahead.bundle.js", LIBS_LOCATION);
+        $this->addScriptInclude("typeahead.js/dist/typeahead.jquery.min.js", LIBS_LOCATION);
 
         return $this;
     }
@@ -421,7 +429,9 @@ class StkTemplate extends Template
     public function addWYSIWYGLibrary()
     {
         $this->addCssInclude("bootstrap3-wysihtml5-bower/dist/bootstrap3-wysihtml5.min.css", LIBS_LOCATION);
-        $this->addScriptInclude("bootstrap3-wysihtml5-bower/dist/bootstrap3-wysihtml5.all.js", LIBS_LOCATION);
+
+        // includes handlebars runtime and editor library
+        $this->addScriptInclude("bootstrap3-wysihtml5-bower/dist/bootstrap3-wysihtml5.all.min.js", LIBS_LOCATION);
 
         return $this;
     }
@@ -434,9 +444,9 @@ class StkTemplate extends Template
      */
     public function addDataTablesLibrary()
     {
-        $this->addCssInclude("datatables/media/css/jquery.dataTables.css", LIBS_LOCATION);
+        $this->addCssInclude("datatables/media/css/jquery.dataTables.min.css", LIBS_LOCATION);
         $this->addCssInclude("datatables-bootstrap3/BS3/assets/css/datatables.css", LIBS_LOCATION);
-        $this->addScriptInclude("datatables/media/js/jquery.dataTables.js", LIBS_LOCATION);
+        $this->addScriptInclude("datatables/media/js/jquery.dataTables.min.js", LIBS_LOCATION);
         $this->addScriptInclude("datatables-bootstrap3/BS3/assets/js/datatables.js", LIBS_LOCATION);
 
         return $this;
@@ -454,7 +464,7 @@ class StkTemplate extends Template
         $this->addScriptInclude("flot/jquery.flot.js", LIBS_LOCATION);
         $this->addScriptInclude("flot/jquery.flot.pie.js", LIBS_LOCATION);
         $this->addScriptInclude("flot/jquery.flot.time.js", LIBS_LOCATION);
-        $this->addScriptInclude("flot.tooltip/js/jquery.flot.tooltip.js", LIBS_LOCATION);
+        $this->addScriptInclude("flot.tooltip/js/jquery.flot.tooltip.min.js", LIBS_LOCATION);
 
         return $this;
     }

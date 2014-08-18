@@ -25,12 +25,6 @@
  */
 class Validate
 {
-    const MIN_PASSWORD_LENGTH = 8;
-
-    const MIN_USERNAME_LENGTH = 4;
-
-    const MIN_REAL_NAME = 2;
-
     // fake enumeration
     const PASSWORD_ID = 1;
 
@@ -88,117 +82,31 @@ class Validate
         // validate
         if ($credential_type === static::CREDENTIAL_ID)
         {
-            $user = static::password($password, $field_value, static::PASSWORD_ID);
+            $user = static::checkPassword($password, $field_value, static::PASSWORD_ID);
         }
         elseif ($credential_type === static::CREDENTIAL_USERNAME)
         {
-            $field_value = static::username($field_value);
-            $user = static::password($password, $field_value, static::PASSWORD_USERNAME);
+            User::validateUserName($field_value);
+            $field_value = h($field_value);
+
+            $user = static::checkPassword($password, $field_value, static::PASSWORD_USERNAME);
         }
         else
         {
             throw new InvalidArgumentException("credential type is invalid");
         }
 
+        if (!$user->isActive())
+        {
+            throw new UserException(_h("Your account is not active"));
+        }
+
         return $user;
     }
 
     /**
-     * Check if the input is a valid email address, and return the email html escaped
+     * Check the password length and check it against the database
      *
-     * @param string $email Email address
-     *
-     * @throws UserException
-     * @return string Email address
-     */
-    public static function email($email)
-    {
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL))
-        {
-            throw new UserException(h(sprintf(_('"%s" is not a valid email address.'), h($email))));
-        }
-
-        return h($email);
-    }
-
-    /**
-     * Check if the input is a valid alphanumeric username, and return the username html escaped
-     *
-     * @param string $username Alphanumeric username
-     *
-     * @throws UserException
-     * @return string Username
-     */
-    public static function username($username)
-    {
-        $username = Util::str_strip_space($username);
-        if (mb_strlen($username) < static::MIN_USERNAME_LENGTH)
-        {
-            throw new UserException(_h('Your username must be at least 4 characters long(with no spaces)'));
-        }
-        if (!preg_match('/^[a-z0-9]+$/i', $username))
-        {
-            throw new UserException(_h('Your username can only contain alphanumeric characters.'));
-        }
-
-        return h($username);
-    }
-
-    /**
-     * @param string $name
-     *
-     * @return string
-     * @throws UserException
-     */
-    public static function realName($name)
-    {
-        $name = trim($name);
-        if (mb_strlen($name) < static::MIN_REAL_NAME)
-        {
-            throw new UserException(_h('You must enter a name at least with 2 characters long'));
-        }
-
-        return h($name);
-    }
-
-    /**
-     * Validate if the password is the correct length
-     *
-     * @param string $password
-     *
-     * @throws UserException
-     */
-    protected static function checkPasswordLength($password)
-    {
-        if (mb_strlen($password) < static::MIN_PASSWORD_LENGTH)
-        {
-            throw new UserException(sprintf(_h('Your password must be at least %d characters long.'), static::MIN_PASSWORD_LENGTH));
-        }
-    }
-
-    /**
-     * Validate if the 2 passwords match and are the correct legnth
-     *
-     * @param string $new_password
-     * @param string $new_password_verify
-     *
-     * @return string the password hash
-     * @throws UserException
-     */
-    public static function newPassword($new_password, $new_password_verify)
-    {
-        static::checkPasswordLength($new_password);
-
-        // check if they match
-        if ($new_password !== $new_password_verify)
-        {
-            throw new UserException(_h('Passwords do not match'));
-        }
-
-        return Util::getPasswordHash($new_password);
-    }
-
-    /**
      * @param string $password
      * @param string $field_value
      * @param int    $field_type
@@ -206,10 +114,10 @@ class Validate
      * @return User
      * @throws UserException
      */
-    public static function password($password, $field_value, $field_type)
+    protected static function checkPassword($password, $field_value, $field_type)
     {
         // Check password properties
-        static::checkPasswordLength($password);
+        User::validatePassword($password);
 
         if ($field_type === static::PASSWORD_ID) // get by id
         {
@@ -234,14 +142,14 @@ class Validate
 
             if (Util::getPasswordHash($password, $salt) !== $db_password_hash)
             {
-                throw new UserException(_h("Invalid password"));
+                throw new UserException(_h("Username or password is invalid"));
             }
         }
         else // not salted
         {
             if ($db_password_hash !== hash("sha256", $password))
             {
-                throw new UserException(_h("Invalid password"));
+                throw new UserException(_h("Username or password is invalid"));
             }
         }
 
@@ -266,38 +174,48 @@ class Validate
     }
 
     /**
+     * Validate the version string
+     *
      * @param string $string
      *
-     * @return bool
-     * @throws Exception
+     * @throws ValidateException
      */
     public static function versionString($string)
     {
         if (!preg_match('/^(svn|[\d]+\.[\d]+\.[\d](-rc[\d])?)$/i', $string))
         {
-            throw new UserException(_h('Invalid version string! Format should be: W.X.Y[-rcZ]'));
+            throw new ValidateException(_h('Invalid version string! Format should be: W.X.Y[-rcZ]'));
         }
+    }
 
-        return true;
+    /**
+     * Validator singleton
+     *
+     * @param array $data
+     *
+     * @return \Valitron\Validator
+     */
+    public static function get($data)
+    {
+        return new Valitron\Validator($data);
     }
 
     /**
      * Check if an array has multiple keys, return the error messages
      *
-     * @param array $pool   the array to check agains
+     * @param array $pool   the array to check
      * @param array $params the keys to check
      *
      * @return array the error array
      */
     public static function ensureInput(array $pool, array $params)
     {
-        $errors = array();
+        $errors = [];
 
         foreach ($params as $param)
         {
             if (empty($pool[$param]))
             {
-
                 $errors[] = sprintf("%s is empty", ucfirst($param));
             }
         }

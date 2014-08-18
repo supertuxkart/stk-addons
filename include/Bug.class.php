@@ -23,6 +23,22 @@
  */
 class Bug extends Base
 {
+    const MIN_TITLE = 5;
+
+    const MAX_TITLE = 64;
+
+    const MIN_DESCRIPTION = 5;
+
+    const MAX_DESCRIPTION = 1024;
+
+    const MIN_COMMENT_DESCRIPTION = 10;
+
+    const MAX_COMMENT_DESCRIPTION = 512;
+
+    const MIN_CLOSE_REASON = 5;
+
+    const MAX_CLOSE_REASON = 512;
+
     /**
      * Hold the bug id
      * @var int
@@ -84,16 +100,6 @@ class Bug extends Base
         {
             $this->loadComments();
         }
-    }
-
-    /**
-     * @param string $message
-     *
-     * @throws BugException
-     */
-    protected static function throwException($message)
-    {
-        throw new BugException($message);
     }
 
     /**
@@ -257,28 +263,28 @@ class Bug extends Base
     /**
      * Factory method to build a Bug by id
      *
-     * @param int  $bugId
-     * @param bool $loadComments flag that indicates to load the comments
+     * @param int  $bug_id
+     * @param bool $load_comments flag that indicates to load the comments
      *
      * @return Bug
      * @throws BugException
      */
-    public static function get($bugId, $loadComments = true)
+    public static function get($bug_id, $load_comments = true)
     {
-        $data = static::getFromField("bugs", "id", $bugId, DBConnection::PARAM_INT, sprintf(_h("There is no bug with id %d"), $bugId));
+        $data = static::getFromField("bugs", "id", $bug_id, DBConnection::PARAM_INT, sprintf(_h("There is no bug with id %d"), $bug_id));
 
-        return new Bug($data['id'], $data, $loadComments);
+        return new Bug($data['id'], $data, $load_comments);
     }
 
     /**
      * Get the data of a comment by id
      *
-     * @param $commentId
+     * @param $comment_id
      *
      * @return array
      * @throws BugException
      */
-    public static function getCommentData($commentId)
+    public static function getCommentData($comment_id)
     {
         try
         {
@@ -286,7 +292,7 @@ class Bug extends Base
                 "SELECt * FROM " . DB_PREFIX . "bugs_comments
                 WHERE `id` = :id LIMIT 1",
                 DBConnection::FETCH_FIRST,
-                [":id" => $commentId],
+                [":id" => $comment_id],
                 [":id" => DBConnection::PARAM_INT]
             );
         }
@@ -374,18 +380,20 @@ class Bug extends Base
     /**
      * Add a bug into the database
      *
-     * @param int    $userId
-     * @param string $addonId
-     * @param string $bugTitle
-     * @param string $bugDescription
+     * @param int    $user_id         the user who created the bug
+     * @param string $addon_id        the addon that has the bug
+     * @param string $bug_title       the title of the bug
+     * @param string $bug_description the description of the bug
      *
      * @return int bug id
      * @throws BugException the error
      */
-    public static function add($userId, $addonId, $bugTitle, $bugDescription)
+    public static function add($user_id, $addon_id, $bug_title, $bug_description)
     {
         // validate
-        if (!Addon::exists($addonId))
+        static::validateTitle($bug_title);
+        static::validateDescription($bug_description);
+        if (!Addon::exists($addon_id))
         {
             throw new BugException(_h("The addon name does not exist"));
         }
@@ -395,18 +403,18 @@ class Bug extends Base
         }
 
         // clean
-        $bugTitle = h($bugTitle);
-        $bugDescription = Util::htmlPurify($bugDescription);
+        $bug_title = h($bug_title);
+        $bug_description = Util::htmlPurify($bug_description);
 
         try
         {
             DBConnection::get()->insert(
                 "bugs",
                 [
-                    ":user_id"     => $userId,
-                    ":addon_id"    => $addonId,
-                    ":title"       => $bugTitle,
-                    ":description" => $bugDescription,
+                    ":user_id"     => $user_id,
+                    ":addon_id"    => $addon_id,
+                    ":title"       => $bug_title,
+                    ":description" => $bug_description,
                     "date_report"  => "NOW()"
                 ]
             );
@@ -422,17 +430,18 @@ class Bug extends Base
     /**
      * Add a bug comment to the database
      *
-     * @param int    $userId
-     * @param int    $bugId
-     * @param string $commentDescription
+     * @param int    $user_id
+     * @param int    $bug_id
+     * @param string $comment_description
      *
      * @return int comment id
      * @throws BugException
      */
-    public static function addComment($userId, $bugId, $commentDescription)
+    public static function addComment($user_id, $bug_id, $comment_description)
     {
         // validate
-        if (!static::exists($bugId))
+        static::validateCommentDescription($comment_description);
+        if (!static::exists($bug_id))
         {
             throw new BugException(_h("The bug does not exist"));
         }
@@ -442,16 +451,16 @@ class Bug extends Base
         }
 
         // clean
-        $commentDescription = Util::htmlPurify($commentDescription);
+        $comment_description = Util::htmlPurify($comment_description);
 
         try
         {
             DBConnection::get()->insert(
                 "bugs_comments",
                 [
-                    ":user_id"     => $userId,
-                    ":bug_id"      => $bugId,
-                    ":description" => $commentDescription,
+                    ":user_id"     => $user_id,
+                    ":bug_id"      => $bug_id,
+                    ":description" => $comment_description,
                     "date"         => "NOW()"
                 ]
             );
@@ -467,30 +476,33 @@ class Bug extends Base
     /**
      * Update a bug title and description
      *
-     * @param int    $bugId
-     * @param string $bugTitle
-     * @param string $bugDescription
+     * @param int    $bug_id
+     * @param string $bug_title
+     * @param string $bug_description
      *
      * @throws BugException
      */
-    public static function update($bugId, $bugTitle, $bugDescription)
+    public static function update($bug_id, $bug_title, $bug_description)
     {
+        static::validateTitle($bug_title);
+        static::validateDescription($bug_description);
+
         // get bug and also verify if it exists
-        $bug = static::get($bugId, false);
+        $bug = static::get($bug_id, false);
 
         // TODO check if we can update bug after it is closed
-        $isOwner = (User::getLoggedId() === $bug->getUserId());
-        $canEdit = User::hasPermission(AccessControl::PERM_EDIT_BUGS);
+        $is_owner = (User::getLoggedId() === $bug->getUserId());
+        $can_edit = User::hasPermission(AccessControl::PERM_EDIT_BUGS);
 
         // check permission
-        if (!$isOwner && !$canEdit)
+        if (!$is_owner && !$can_edit)
         {
             throw new BugException(_h("You do not have the necessary permission to update this bug"));
         }
 
         // clean
-        $bugTitle = h($bugTitle);
-        $bugDescription = Util::htmlPurify($bugDescription);
+        $bug_title = h($bug_title);
+        $bug_description = Util::htmlPurify($bug_description);
 
         try
         {
@@ -498,9 +510,9 @@ class Bug extends Base
                 "bugs",
                 "`id` = :id",
                 [
-                    ":id"          => $bugId,
-                    ":title"       => $bugTitle,
-                    ":description" => $bugDescription
+                    ":id"          => $bug_id,
+                    ":title"       => $bug_title,
+                    ":description" => $bug_description
                 ],
                 [":id" => DBConnection::PARAM_INT]
             );
@@ -514,37 +526,40 @@ class Bug extends Base
     /**
      * Update a bug comment description
      *
-     * @param int    $commentId
-     * @param string $commentDescription
+     * @param int    $comment_id
+     * @param string $comment_description
      *
      * @throws BugException
      */
-    public static function updateComment($commentId, $commentDescription)
+    public static function updateComment($comment_id, $comment_description)
     {
-        // validate comment
-        if (!static::commentExists($commentId))
+        // validate
+        static::validateCommentDescription($comment_description);
+        if (!static::commentExists($comment_id))
         {
             throw new BugException(_h("The bug comment does not exist"));
         }
 
-        //$isOwner = (User::getLoggedId() === $comment["user_id"]);
-        $canEdit = User::hasPermission(AccessControl::PERM_EDIT_BUGS);
+        $can_edit = User::hasPermission(AccessControl::PERM_EDIT_BUGS);
 
         // check permission
-        if (!$canEdit)
+        if (!$can_edit)
         {
             throw new BugException(_h("You do not have the necessary permission to update this bug comment"));
         }
 
         // clean
-        $commentDescription = Util::htmlPurify($commentDescription);
+        $comment_description = Util::htmlPurify($comment_description);
 
         try
         {
             DBConnection::get()->update(
                 "bugs_comments",
                 "`id` = :id",
-                [":id" => $commentId, ":description" => $commentDescription],
+                [
+                    ":id"          => $comment_id,
+                    ":description" => $comment_description
+                ],
                 [":id" => DBConnection::PARAM_INT]
             );
         }
@@ -557,15 +572,17 @@ class Bug extends Base
     /**
      * Close a bug
      *
-     * @param int    $bugId       the bug id to close
-     * @param string $closeReason the closing reason
+     * @param int    $bug_id       the bug id to close
+     * @param string $close_reason the closing reason
      *
      * @throws BugException
      */
-    public static function close($bugId, $closeReason)
+    public static function close($bug_id, $close_reason)
     {
+        static::validateCloseReason($close_reason);
+
         // get bug and also verify if it exists
-        $bug = static::get($bugId, false);
+        $bug = static::get($bug_id, false);
 
         // is already closed
         if ($bug->isClosed())
@@ -573,17 +590,17 @@ class Bug extends Base
             throw new BugException(_h("The bug is already closed"));
         }
 
-        $isOwner = (User::getLoggedId() === $bug->getUserId());
-        $canEdit = User::hasPermission(AccessControl::PERM_EDIT_BUGS);
+        $is_owner = (User::getLoggedId() === $bug->getUserId());
+        $can_edit = User::hasPermission(AccessControl::PERM_EDIT_BUGS);
 
         // check permission
-        if (!$isOwner && !$canEdit)
+        if (!$is_owner && !$can_edit)
         {
             throw new BugException(_h("You do not have the necessary permission to close this bug"));
         }
 
         // clean
-        $closeReason = Util::htmlPurify($closeReason);
+        $close_reason = Util::htmlPurify($close_reason);
 
         try
         {
@@ -591,12 +608,15 @@ class Bug extends Base
                 "bugs",
                 "`id` = :id",
                 [
-                    ":id"           => $bugId,
+                    ":id"           => $bug_id,
                     ":close_id"     => User::getLoggedId(),
-                    ":close_reason" => $closeReason,
+                    ":close_reason" => $close_reason,
                     "date_close"    => "NOW()"
                 ],
-                [":id" => DBConnection::PARAM_INT, ":close_id" => DBConnection::PARAM_INT]
+                [
+                    ":id"       => DBConnection::PARAM_INT,
+                    ":close_id" => DBConnection::PARAM_INT
+                ]
             );
         }
         catch(DBException $e)
@@ -608,22 +628,22 @@ class Bug extends Base
     /**
      * Delete a bug
      *
-     * @param int $bugId the comment to delete
+     * @param int $bug_id the comment to delete
      *
      * @throws BugException
      */
-    public static function delete($bugId)
+    public static function delete($bug_id)
     {
         // validate
-        if (!static::exists($bugId))
+        if (!static::exists($bug_id))
         {
             throw new BugException(_h("The bug does not exist"));
         }
 
-        $canDelete = User::hasPermission(AccessControl::PERM_EDIT_BUGS);
+        $can_delete = User::hasPermission(AccessControl::PERM_EDIT_BUGS);
 
         // check permission
-        if (!$canDelete)
+        if (!$can_delete)
         {
             throw new BugException(_h("You do not have the necessary permission to delete this bug"));
         }
@@ -633,7 +653,7 @@ class Bug extends Base
             DBConnection::get()->delete(
                 "bugs",
                 "`id` = :id",
-                [":id" => $bugId],
+                [":id" => $bug_id],
                 [":id" => DBConnection::PARAM_INT]
             );
         }
@@ -646,23 +666,23 @@ class Bug extends Base
     /**
      * Delete a bug comment
      *
-     * @param int $commentId the comment to delete
+     * @param int $comment_id the comment to delete
      *
      * @throws BugException
      */
-    public static function deleteComment($commentId)
+    public static function deleteComment($comment_id)
     {
         // validate
-        if (!static::commentExists($commentId))
+        if (!static::commentExists($comment_id))
         {
             throw new BugException(_h("The bug comment does not exist"));
         }
 
         //$isOwner = (User::getLoggedId() === $comment["user_id"]);
-        $canEdit = User::hasPermission(AccessControl::PERM_EDIT_BUGS);
+        $can_edit = User::hasPermission(AccessControl::PERM_EDIT_BUGS);
 
         // check permission
-        if (!$canEdit)
+        if (!$can_edit)
         {
             throw new BugException(_h("You do not have the necessary permission to delete this bug comment"));
         }
@@ -672,7 +692,7 @@ class Bug extends Base
             DBConnection::get()->delete(
                 "bugs_comments",
                 "`id` = :id",
-                [":id" => $commentId],
+                [":id" => $comment_id],
                 [":id" => DBConnection::PARAM_INT]
             );
         }
@@ -682,4 +702,61 @@ class Bug extends Base
         }
     }
 
+    /**
+     * @param string $message
+     *
+     * @throws BugException
+     */
+    protected static function throwException($message)
+    {
+        throw new BugException($message);
+    }
+
+    /**
+     * Validate a title description
+     *
+     * @param string $title
+     *
+     * @throws BugException
+     */
+    public static function validateTitle($title)
+    {
+        static::validateFieldLength(_h("title"), $title, static::MIN_TITLE, static::MAX_TITLE);
+    }
+
+    /**
+     * Validate a bug description
+     *
+     * @param string $description
+     *
+     * @throws BugException
+     */
+    public static function validateDescription($description)
+    {
+        static::validateFieldLength(_h("description"), $description, static::MIN_DESCRIPTION, static::MAX_DESCRIPTION);
+    }
+
+    /**
+     * Validate a comment description
+     *
+     * @param string $comment_description
+     *
+     * @throws BugException
+     */
+    public static function validateCommentDescription($comment_description)
+    {
+        static::validateFieldLength(_h("comment description"), $comment_description, static::MIN_COMMENT_DESCRIPTION, static::MAX_COMMENT_DESCRIPTION);
+    }
+
+    /**
+     * Validate a bug close reason
+     *
+     * @param string $close_reason
+     *
+     * @throws BugException
+     */
+    public static function validateCloseReason($close_reason)
+    {
+        static::validateFieldLength(_h("close reason"), $close_reason, static::MIN_CLOSE_REASON, static::MAX_CLOSE_REASON);
+    }
 }

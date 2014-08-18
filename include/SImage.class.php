@@ -63,13 +63,13 @@ class SImage
     /**
      * @param string $file
      *
-     * @throws ImageException
+     * @throws SImageException
      */
     public function __construct($file)
     {
         if (!file_exists($file))
         {
-            throw new ImageException('Image file not found.');
+            throw new SImageException('Image file not found.');
         }
 
         $this->path = $file;
@@ -88,7 +88,7 @@ class SImage
                 break;
 
             default:
-                throw new ImageException('Unsupported image format.');
+                throw new SImageException('Unsupported image format.');
         }
 
         $this->info = $image_info;
@@ -118,16 +118,16 @@ class SImage
      *
      * @param int $max_x Max width, or 0 to ignore
      * @param int $max_y Max height, or 0 to ignore
-     * @param int $min_x &gt; 1
-     * @param int $min_y &gt; 1
+     * @param int $min_x > 1
+     * @param int $min_y > 1
      *
-     * @throws ImageException
+     * @throws SImageException
      */
     public function scale($max_x, $max_y, $min_x = 1, $min_y = 1)
     {
         if (($max_x < $min_x && $max_x !== 0) || $max_y < $min_y && $max_y !== 0)
         {
-            throw new ImageException('Maximum dimension is less than minimum dimension. Cannot scale image.');
+            throw new SImageException('Maximum dimension is less than minimum dimension. Cannot scale image.');
         }
 
         $old_x = $this->info[0];
@@ -135,7 +135,7 @@ class SImage
 
         if ($old_y == 0 || $old_x == 0)
         {
-            throw new ImageException('Image dimensions cannot be 0. Failed to scale image.');
+            throw new SImageException('Image dimensions cannot be 0. Failed to scale image.');
         }
 
         if ($max_x === 0)
