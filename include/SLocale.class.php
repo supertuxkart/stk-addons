@@ -31,21 +31,21 @@ class SLocale
      * @var array
      */
     private static $languages = [
-        ['en_US', 0, 0, 'EN'],
-        ['ca_ES', 0, -40, 'CA'],
-        ['de_DE', 0, -80, 'DE'],
-        ['es_ES', 0, -120, 'ES'],
-        ['eu_ES', 0, -160, 'EU'],
-        ['fr_FR', 0, -200, 'FR'],
-        ['ga_IE', 0, -240, 'GA'],
-        ['gd_GB', 0, -280, 'GD'],
-        ['gl_ES', 0, -320, 'GL'],
-        ['id_ID', 0, -360, 'ID'],
-        ['it_IT', 0, -400, 'IT'],
-        ['nl_NL', 0, -440, 'NL'],
-        ['pt_BR', 0, -480, 'PT'],
-        ['ru_RU', 0, -520, 'RU'],
-        ['zh_TW', 0, -560, 'ZH (T)']
+        ['eu_ES', 0, -0, 'EU'],
+        ['pt_BR', 0, -40, 'PT'],
+        ['ca_ES', 0, -80, 'CA'],
+        ['zh_TW', 0, -120, 'ZH (T)'],
+        ['fr_FR', 0, -160, 'FR'],
+        ['gl_ES', 0, -200, 'GL'],
+        ['de_DE', 0, -240, 'DE'],
+        ['id_ID', 0, -280, 'ID'],
+        ['ga_IE', 0, -320, 'GA'],
+        ['it_IT', 0, -360, 'IT'],
+        ['nl_NL', 0, -400, 'NL'],
+        ['pt_PT', 0, -440, 'PT'],
+        ['ru_RU', 0, -480, 'RU'],
+        ['es_ES', 0, -520, 'ES'],
+        ['gd_GB', 0, -560, 'GD']
     ];
 
     /**
@@ -100,6 +100,11 @@ class SLocale
      */
     public static function isValid($locale)
     {
+        if ($locale === "en_US")
+        {
+            return true;
+        }
+
         foreach (SLocale::$languages as $lang)
         {
             if ($locale === $lang[0])
