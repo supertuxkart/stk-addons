@@ -55,4 +55,11 @@ $(document).ready(function() {
     if ($.fn.bootstrapValidator) {
         $('.auto-validation').bootstrapValidator();
     }
+
+    // svg with png fallback
+    if (!supportsSVG()) {
+        $('img[src*="svg"]').attr('src', function() {
+            return $(this).attr('src').replace('.svg', '.png');
+        });
+    }
 });
