@@ -45,7 +45,7 @@ class SLocale
         ['pt_PT', -440, 'PT'],
         ['ru_RU', -480, 'RU'],
         ['es_ES', -520, 'ES'],
-        ['en_GB', -560, 'GD']
+        ['en_US', -560, 'GD']
     ];
 
     /**
@@ -71,7 +71,7 @@ class SLocale
 
         if (!SLocale::isValid($locale))
         {
-            $locale = "en_GB";
+            $locale = "en_US";
         }
 
         SLocale::setLocale($locale);
