@@ -194,7 +194,8 @@ a img {
 #lang-menu li {
     display: block;
     float: left;
-    margin: 4px;
+    margin-left: 4px;
+    margin-right: 4px;
     padding: 0;
 }
 
@@ -218,12 +219,12 @@ a img {
     color: #4e4e4e;
     font-size: xx-small;
     font-weight: bold;
-    width: 48px;
     height: 40px;
     padding: 0;
     text-align: right;
     text-decoration: none;
     text-shadow: #efefef 0 1px 0;
+    width: 48px;
     behavior: url('PIE.htc');
 }
 
