@@ -21,6 +21,13 @@
 $(document).ready(function() {
     "use strict";
 
+    /*
+     * Tests if there is SVG support. Maybe move it to util.js if we need it?
+     */
+    function isSVGSupported() {
+        return !!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg','svg').createSVGRect;
+    }
+
     // mark link as active
     var page_parts = window.location.href.split("?"),
         current_page = page_parts[0],
@@ -57,7 +64,7 @@ $(document).ready(function() {
     }
 
     // svg with png fallback
-    if (!supportsSVG()) {
+    if (!isSVGSupported()) {
         $('img[src*="svg"]').attr('src', function() {
             return $(this).attr('src').replace('.svg', '.png');
         });

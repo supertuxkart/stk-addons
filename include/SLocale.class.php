@@ -24,10 +24,15 @@
  */
 class SLocale
 {
+    /**
+     * Cookie lifetime in seconds representing a year
+     * @var int
+     */
+    const COOKIE_LIFETIME = 31536000;
 
     /**
      * Array of supported languages, format is:
-     * language code, flag image x-offset, flag image y-offset, flag label
+     * language code, flag image y-offset, flag label
      * @var array
      */
     private static $languages = [
@@ -49,27 +54,25 @@ class SLocale
     ];
 
     /**
-     * @var int
-     */
-    const COOKIE_LIFETIME = 31536000; // One year
-
-    /**
      * Create the locale object
      *
      * @param string $locale optional
      */
     public function __construct($locale = null)
     {
+        // default locale
+        $locale = "en_US";
+
         if (!$locale && !empty($_GET['lang']))
         {
             $locale = $_GET['lang'];
         }
-        elseif (isset($_COOKIE['lang']))
+        elseif (!empty($_COOKIE['lang']))
         {
             $locale = $_COOKIE['lang'];
         }
 
-        if (!SLocale::isValid($locale))
+        if (!SLocale::isLocale($locale))
         {
             $locale = "en_US";
         }
@@ -94,7 +97,7 @@ class SLocale
      *
      * @return bool
      */
-    public static function isValid($locale)
+    public static function isLocale($locale)
     {
         foreach (SLocale::$languages as $lang)
         {
