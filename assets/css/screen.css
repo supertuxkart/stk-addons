@@ -183,7 +183,7 @@ a img {
     position: absolute;
     padding: 0;
     margin: 0;
-    width: 163px;
+    width: 168px;
     z-index: 9999;
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
@@ -194,10 +194,8 @@ a img {
 #lang-menu li {
     display: block;
     float: left;
-    margin: 0;
+    margin: 4px;
     padding: 0;
-    width: 54px;
-    height: 38px;
 }
 
 #lang-menu li.label {
@@ -215,23 +213,21 @@ a img {
 }
 
 #lang-menu li.flag a {
-    background-image: url('../img/flags.png');
-    border: 1px solid #4e4e4e;
+    background-image: url('../img/flags.svg');
+    background-size: 48px 600px;
     color: #4e4e4e;
     font-size: xx-small;
     font-weight: bold;
-    height: 33px;
-    margin: 2px;
+    width: 48px;
+    height: 40px;
     padding: 0;
     text-align: right;
     text-decoration: none;
     text-shadow: #efefef 0 1px 0;
-    width: 46px;
     behavior: url('PIE.htc');
 }
 
 #lang-menu li.flag a:hover {
-    border: 1px solid #999999;
     color: #999999;
 }
 
