@@ -31,21 +31,21 @@ class SLocale
      * @var array
      */
     private static $languages = [
-        ['eu_ES', 0, -0, 'EU'],
-        ['pt_BR', 0, -40, 'PT'],
-        ['ca_ES', 0, -80, 'CA'],
-        ['zh_TW', 0, -120, 'ZH (T)'],
-        ['fr_FR', 0, -160, 'FR'],
-        ['gl_ES', 0, -200, 'GL'],
-        ['de_DE', 0, -240, 'DE'],
-        ['id_ID', 0, -280, 'ID'],
-        ['ga_IE', 0, -320, 'GA'],
-        ['it_IT', 0, -360, 'IT'],
-        ['nl_NL', 0, -400, 'NL'],
-        ['pt_PT', 0, -440, 'PT'],
-        ['ru_RU', 0, -480, 'RU'],
-        ['es_ES', 0, -520, 'ES'],
-        ['gd_GB', 0, -560, 'GD']
+        ['eu_ES', -0,   'EU'],
+        ['pt_BR', -40,  'PT'],
+        ['ca_ES', -80,  'CA'],
+        ['zh_TW', -120, 'ZH'],
+        ['fr_FR', -160, 'FR'],
+        ['gl_ES', -200, 'GL'],
+        ['de_DE', -240, 'DE'],
+        ['id_ID', -280, 'ID'],
+        ['ga_IE', -320, 'GA'],
+        ['it_IT', -360, 'IT'],
+        ['nl_NL', -400, 'NL'],
+        ['pt_PT', -440, 'PT'],
+        ['ru_RU', -480, 'RU'],
+        ['es_ES', -520, 'ES'],
+        ['gd_GB', -560, 'GD']
     ];
 
     /**
