@@ -31,21 +31,21 @@ class SLocale
      * @var array
      */
     private static $languages = [
-        ['en_US', 0, 0, 'EN'],
-        ['ca_ES', -96, -99, 'CA'],
-        ['de_DE', 0, -33, 'DE'],
-        ['es_ES', -96, -66, 'ES'],
-        ['eu_ES', -144, -66, 'EU'],
-        ['fr_FR', 0, -66, 'FR'],
-        ['ga_IE', 0, -99, 'GA'],
-        ['gd_GB', -144, -33, 'GD'],
-        ['gl_ES', -48, 0, 'GL'],
-        ['id_ID', -48, -33, 'ID'],
-        ['it_IT', -96, -33, 'IT'],
-        ['nl_NL', -48, -66, 'NL'],
-        ['pt_BR', -144, 0, 'PT'],
-        ['ru_RU', -48, -99, 'RU'],
-        ['zh_TW', -96, 0, 'ZH (T)']
+        ['eu_ES', -0,   'EU'],
+        ['pt_BR', -40,  'PT'],
+        ['ca_ES', -80,  'CA'],
+        ['zh_TW', -120, 'ZH'],
+        ['fr_FR', -160, 'FR'],
+        ['gl_ES', -200, 'GL'],
+        ['de_DE', -240, 'DE'],
+        ['id_ID', -280, 'ID'],
+        ['ga_IE', -320, 'GA'],
+        ['it_IT', -360, 'IT'],
+        ['nl_NL', -400, 'NL'],
+        ['pt_PT', -440, 'PT'],
+        ['ru_RU', -480, 'RU'],
+        ['es_ES', -520, 'ES'],
+        ['en_US', -560, 'GD']
     ];
 
     /**
@@ -68,14 +68,10 @@ class SLocale
         {
             $locale = $_COOKIE['lang'];
         }
-        else
-        {
-            $locale = "en_US";
-        }
 
         if (!SLocale::isValid($locale))
         {
-            exit("Invalid locale");
+            $locale = "en_US";
         }
 
         SLocale::setLocale($locale);

@@ -341,6 +341,11 @@ function getUrlVars(url) {
     return vars;
 }
 
+function supportsSVG() {
+    return !! document.createElementNS &&
+           !! document.createElementNS('http://www.w3.org/2000/svg','svg').createSVGRect;
+}
+
 // Extend string. Eg "{0} is {1}".format("JS", "nice") will output "JS is nice"
 if (!String.prototype.format) {
     String.prototype.format = function() {
