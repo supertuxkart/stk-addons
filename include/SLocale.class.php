@@ -45,7 +45,7 @@ class SLocale
         ['pt_PT', -440, 'PT'],
         ['ru_RU', -480, 'RU'],
         ['es_ES', -520, 'ES'],
-        ['gd_GB', -560, 'GD']
+        ['en_GB', -560, 'GD']
     ];
 
     /**
@@ -68,14 +68,10 @@ class SLocale
         {
             $locale = $_COOKIE['lang'];
         }
-        else
-        {
-            $locale = "en_US";
-        }
 
         if (!SLocale::isValid($locale))
         {
-            exit("Invalid locale");
+            $locale = "en_GB";
         }
 
         SLocale::setLocale($locale);
@@ -100,11 +96,6 @@ class SLocale
      */
     public static function isValid($locale)
     {
-        if ($locale === "en_US")
-        {
-            return true;
-        }
-
         foreach (SLocale::$languages as $lang)
         {
             if ($locale === $lang[0])
