@@ -36,21 +36,21 @@ class SLocale
      * @var array
      */
     private static $languages = [
-        ['eu_ES', -0,   'EU'],
-        ['pt_BR', -40,  'PT'],
-        ['ca_ES', -80,  'CA'],
-        ['zh_TW', -120, 'ZH'],
+        ['en_US', -560, 'GD'],
         ['fr_FR', -160, 'FR'],
-        ['gl_ES', -200, 'GL'],
         ['de_DE', -240, 'DE'],
-        ['id_ID', -280, 'ID'],
-        ['ga_IE', -320, 'GA'],
+        ['es_ES', -520, 'ES'],
         ['it_IT', -360, 'IT'],
         ['nl_NL', -400, 'NL'],
-        ['pt_PT', -440, 'PT'],
         ['ru_RU', -480, 'RU'],
-        ['es_ES', -520, 'ES'],
-        ['en_US', -560, 'GD']
+        ['zh_TW', -120, 'ZH'],
+        ['pt_PT', -440, 'PT'],
+        ['pt_BR', -40,  'PT'],
+        ['ga_IE', -320, 'GA'],
+        ['gl_ES', -200, 'GL'],
+        ['id_ID', -280, 'ID'],
+        ['eu_ES', -0,   'EU'],
+        ['ca_ES', -80,  'CA'],
     ];
 
     /**
@@ -60,9 +60,6 @@ class SLocale
      */
     public function __construct($locale = null)
     {
-        // default locale
-        $locale = "en_US";
-
         if (!$locale && !empty($_GET['lang']))
         {
             $locale = $_GET['lang'];
@@ -70,6 +67,10 @@ class SLocale
         elseif (!empty($_COOKIE['lang']))
         {
             $locale = $_COOKIE['lang'];
+        }
+        else
+        {
+            $locale = "en_US"; // default locale
         }
 
         if (!SLocale::isLocale($locale))
