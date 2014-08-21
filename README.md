@@ -60,11 +60,11 @@ If you are running in a production environment, just append the `--production` o
 ### Database
 Currently we only support MySQL as database backend. A newer version `v5.5.3+` is required to have proper unicode support.
 
-You can generate the database (name it as you wish) using a tool like [PHPMyAdmin](http://www.phpmyadmin.net/home_page/index.php) or with the mysql shell.
-With PHPMyAdmin, import the [table.sql](install/table.sql) file found in the repository (in the `install` directory).
+You can generate the database (name it as you wish) using a tool like [phpMyAdmin](http://www.phpmyadmin.net/home_page/index.php) or with the mysql shell.
+With phpMyAdmin, import the [table.sql](install/table.sql) file found in the repository (in the `install` directory).
 
 Register a new user using the web interface. Don't worry about configuring your email settings.
-After creating your user from the web interface (PHPMyAdmin), you can change that user's role to 'admin', and set their 'active' value to 1.
+After creating your user from the web interface (phpMyAdmin), you can change that user's role to 'admin', and set their 'active' value to 1.
 You can delete the relevant row in the 'verifications' table. You can login now with your new user.
 
 Alternatively, open a MySQL shell and create a database for STK Addons.
