@@ -80,8 +80,8 @@ class Validate {
      * @return string Username
      */
     public static function username($username) {
-        if (strlen($username) < 4) {
-            throw new UserException(htmlspecialchars(_('Your username must be at least 4 characters long.')));
+        if (strlen($username) < 3) {
+            throw new UserException(htmlspecialchars(sprintf(_('Your username must be at least %d characters long.'), 3)));
         }
         if (!preg_match('/^[a-z0-9]+$/i',$username)) {
             throw new UserException(htmlspecialchars(_('Your username can only contain alphanumeric characters.')));

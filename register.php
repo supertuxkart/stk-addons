@@ -65,7 +65,7 @@ $register = array(
         'end' => '</form>',
         'username' => array(
             'label' => '<label for="reg_user">'.htmlspecialchars(_('Username:')).'</label>',
-            'requirement' => htmlspecialchars(sprintf(_('Must be at least %d characters long.'),'4')),
+            'requirement' => htmlspecialchars(sprintf(_('Must be at least %d characters long.'),'3')),
             'field' => '<input type="text" name="user" id="reg_user" value="'.htmlspecialchars($_POST['user']).'" />'
         ),
         'password' => array(
