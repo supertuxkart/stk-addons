@@ -201,14 +201,14 @@ class Validate
     }
 
     /**
-     * Check if an array has multiple keys, return the error messages
+     * Check if an array has the keys in $params and must be not empty
      *
      * @param array $pool   the array to check
      * @param array $params the keys to check
      *
      * @return array the error array
      */
-    public static function ensureInput(array $pool, array $params)
+    public static function ensureNotEmpty(array $pool, array $params)
     {
         $errors = [];
 
@@ -217,6 +217,29 @@ class Validate
             if (empty($pool[$param]))
             {
                 $errors[] = sprintf("%s is empty", ucfirst($param));
+            }
+        }
+
+        return $errors;
+    }
+
+    /**
+     * Check if an array has the keys in $params
+     *
+     * @param array $pool   the array to check
+     * @param array $params the keys to check
+     *
+     * @return array the error array
+     */
+    public static function ensureIsSet(array $pool, array $params)
+    {
+        $errors = [];
+
+        foreach ($params as $param)
+        {
+            if (!isset($pool[$param]))
+            {
+                $errors[] = sprintf("%s is not set", ucfirst($param));
             }
         }
 

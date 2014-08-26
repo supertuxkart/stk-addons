@@ -1,8 +1,8 @@
 <h1>{t}General Settings{/t}</h1><hr>
-<form method="POST" class="form-horizontal" id="manage-general-form" action="manage.php?view=general&amp;action=save_config">
+<form method="POST" class="form-horizontal" id="form-general-settings">
     <div class="form-group">
         <label for="xml_frequency" class="col-md-3">
-            {t}XML Download Frequency{/t}
+            {t}XML Download Frequency (seconds){/t}
         </label>
         <div class="col-md-6">
             <input type="text" class="form-control" id="xml_frequency" name="xml_frequency" value="{$general.xml_frequency}" maxlength="8">
@@ -76,6 +76,7 @@
     </div>
     <div class="form-group">
         <div class="col-md-offset-3 col-md-2">
+            <input type="hidden" name="action" value="edit-general-settings">
             <input type="submit" class="btn btn-success" value="{t}Save Settings{/t}">
         </div>
     </div>

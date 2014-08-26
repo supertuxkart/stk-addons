@@ -83,7 +83,7 @@ class News
         }
 
         // Add new entry
-        if (!$existing_id  && $new_kart)
+        if (!$existing_id && $new_kart)
         {
             try
             {
@@ -411,21 +411,44 @@ class News
     /**
      * Create a news entry
      *
-     * @param string  $message
-     * @param string  $condition
-     * @param boolean $important
-     * @param boolean $web_display
+     * @param string $message     the message to display
+     * @param string $condition   display only on certain stk versions, TODO better document
+     * @param bool   $important   create a notification while creating the news
+     * @param bool   $web_display display on the website
      *
      * @throws NewsException
      */
     public static function create($message, $condition, $important, $web_display)
     {
+        // check permission
+        if (!User::hasPermission(AccessControl::PERM_EDIT_SETTINGS))
+        {
+            throw new NewsException("You do not have the necessary permission to add a news entry");
+        }
+
+        // Make sure no invalid version number sneaks in
+        if (Util::str_icontains($condition, "stkversion"))
+        {
+            $condition_check = explode(" ", $condition);
+            $count_condition_check = count($condition_check);
+
+            if ($count_condition_check !== 3)
+            {
+                throw new NewsException('Version comparison should contain three tokens, only found: ' . $count_condition_check);
+            }
+
+            try
+            {
+                Validate::versionString($condition_check[2]);
+            }
+            catch(ValidateException $e)
+            {
+                throw new NewsException($e->getMessage());
+            }
+        }
+
         try
         {
-            if (!User::isLoggedIn())
-            {
-                throw new Exception();
-            }
             DBConnection::get()->insert(
                 'news',
                 [
@@ -447,10 +470,6 @@ class News
         {
             throw new NewsException('Database error while creating message.');
         }
-        catch(Exception $e)
-        {
-            throw new NewsException('Error while creating message.');
-        }
 
         writeNewsXML();
     }
@@ -460,21 +479,24 @@ class News
      *
      * @param int $id
      *
-     * @return bool
+     * @throws NewsException
      */
     public static function delete($id)
     {
+        if (!User::hasPermission(AccessControl::PERM_EDIT_SETTINGS))
+        {
+            throw new NewsException("You do not have the necessary permission to delete a news");
+        }
+
         try
         {
             DBConnection::get()->delete("news", "`id` = :id", [":id" => $id], [":id" => DBConnection::PARAM_INT]);
         }
         catch(DBException $e)
         {
-            return false;
+            throw new NewsException("Database error while trying to delete a news article");
         }
 
         writeNewsXML();
-
-        return true;
     }
 }

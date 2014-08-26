@@ -27,7 +27,7 @@ if (!isset($_POST["action"]) || empty($_POST["action"]))
 switch ($_POST["action"])
 {
     case "add-role":
-        $errors = Validate::ensureInput($_POST, ["role"]);
+        $errors = Validate::ensureNotEmpty($_POST, ["role"]);
         if ($errors)
         {
             exit_json_error(implode("<br>", $errors));
@@ -46,7 +46,7 @@ switch ($_POST["action"])
         break;
 
     case "delete-role":
-        $errors = Validate::ensureInput($_POST, ["role"]);
+        $errors = Validate::ensureNotEmpty($_POST, ["role"]);
         if ($errors)
         {
             exit_json_error(implode("<br>", $errors));
@@ -65,7 +65,7 @@ switch ($_POST["action"])
         break;
 
     case "edit-role": // edit a role permissions or maybe the role name in the future
-        $errors = Validate::ensureInput($_POST, ["role", "permissions"]);
+        $errors = Validate::ensureNotEmpty($_POST, ["role", "permissions"]);
         if ($errors)
         {
             exit_json_error(implode("<br>", $errors));
@@ -88,7 +88,7 @@ switch ($_POST["action"])
         break;
 
     case "get-role": // get the permission of a role
-        $errors = Validate::ensureInput($_POST, ["role"]);
+        $errors = Validate::ensureNotEmpty($_POST, ["role"]);
         if ($errors)
         {
             exit_json_error(implode("<br>", $errors));
@@ -104,6 +104,100 @@ switch ($_POST["action"])
         }
 
         exit_json_success("", ["permissions" => AccessControl::getPermissions($_POST["role"])]);
+        break;
+
+    case "add-news": // add a new news entry
+        $errors = array_merge(Validate::ensureNotEmpty($_POST, ["message"], Validate::ensureIsSet($_POST, ["condition"])));
+        if ($errors)
+        {
+            exit_json_error(implode("<br>", $errors));
+        }
+
+        $message = $_POST["message"];
+        $condition = $_POST["condition"];
+        $important = Util::isCheckboxChecked($_POST, "important");
+        $web_display = Util::isCheckboxChecked($_POST, "web-display");
+
+        try
+        {
+            News::create($message, $condition, $important, $web_display);
+        }
+        catch(NewsException $e)
+        {
+            exit_json_error($e->getMessage());
+        }
+
+        exit_json_success("News message created");
+        break;
+
+    case "delete-news": // delete a news entry
+        $errors = Validate::ensureNotEmpty($_POST, ["news-id"]);
+        if ($errors)
+        {
+            exit_json_error(implode("<br>", $errors));
+        }
+
+        try
+        {
+            News::delete((int)$_POST["news-id"]);
+        }
+        catch(NewsException $e)
+        {
+            exit_json_error($e->getMessage());
+        }
+
+        exit_json_success("News entry deleted");
+        break;
+
+    case "edit-general-settings": // general settings update
+        $errors = Validate::ensureIsSet(
+            $_POST,
+            [
+                "xml_frequency",
+                "allowed_addon_exts",
+                "allowed_source_exts",
+                "admin_email",
+                "list_email",
+                "list_invisible",
+                "blog_feed",
+                "max_image_dimension",
+                "apache_rewrites"
+            ]
+        );
+        if ($errors)
+        {
+            exit_json_error(implode("<br>", $errors));
+        }
+
+        if (!User::hasPermission(AccessControl::PERM_EDIT_SETTINGS))
+        {
+            exit_json_error("You do not have the necessary permission to edit general settings");
+        }
+
+        Config::set(Config::XML_UPDATE_TIME, (int)$_POST['xml_frequency']);
+        Config::set(Config::ALLOWED_ADDON_EXTENSIONS, $_POST['allowed_addon_exts']);
+        Config::set(Config::ALLOWED_SOURCE_EXTENSIONS, $_POST['allowed_source_exts']);
+        Config::set(Config::EMAIL_ADMIN, $_POST['admin_email']);
+        Config::set(Config::EMAIL_LIST, $_POST['list_email']);
+        Config::set(Config::SHOW_INVISIBLE_ADDONS, (int)$_POST['list_invisible']);
+        Config::set(Config::FEED_BLOG, $_POST['blog_feed']);
+        Config::set(Config::IMAGE_MAX_DIMENSION, (int)$_POST['max_image_dimension']);
+        Config::set(Config::APACHE_REWRITES, $_POST['apache_rewrites']);
+
+        exit_json_success("Settings saved");
+        break;
+
+    case "clear-cache": // delete all the cache
+        try
+        {
+            Cache::clear();
+        }
+        catch(CacheException $e)
+        {
+            exit_json_error($e->getMessage());
+        }
+
+        exit_json_success("Cache emptied");
         break;
 
     default:

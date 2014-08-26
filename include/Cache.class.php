@@ -31,10 +31,15 @@ class Cache
      *
      * @param string $exclude_regex files to exclude regex
      *
-     * @return bool
+     * @throws CacheException
      */
     public static function clear($exclude_regex = '/^^(cache_graph_.*\.json)|\.gitignore$/i')
     {
+        if (!User::hasPermission(AccessControl::PERM_EDIT_SETTINGS))
+        {
+            throw new CacheException("You do not have the necessary permission to empty the cache");
+        }
+
         File::deleteDir(CACHE_PATH, $exclude_regex);
 
         try
@@ -56,10 +61,8 @@ class Cache
         }
         catch(DBException $e)
         {
-            return false;
+            throw new CacheException("Failed to empty cache");
         }
-
-        return true;
     }
 
     /**

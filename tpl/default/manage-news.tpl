@@ -1,6 +1,6 @@
 <h1>{t}News Messages{/t}</h1><hr>
 <div class="row">
-    <form method="POST" class="form-horizontal" action="manage.php?view=news&amp;action=new_news">
+    <form method="POST" class="form-horizontal" id="form-add-news">
         <div class="form-group">
             <label for="news_message" class="col-md-3">
                 {t}Message{/t}
@@ -18,11 +18,11 @@
             </div>
         </div>
         <div class="form-group">
-            <label for="web_display" class="col-md-3">
+            <label for="web-display" class="col-md-3">
                 {t}Display on Website:{/t}
             </label>
             <div class="col-md-5">
-                <input type="checkbox" name="web_display" id="web_display" checked>
+                <input type="checkbox" name="web-display" id="web-display" checked>
             </div>
         </div>
         <div class="form-group">
@@ -35,6 +35,7 @@
         </div>
         <div class="form-group">
             <div class="col-md-offset-3 col-md-2">
+                <input type="hidden" name="action" value="add-news">
                 <input type="submit" class="btn btn-success" value="{t}Create Message{/t}">
             </div>
         </div>
@@ -64,10 +65,7 @@
                         <td>{$item.web_display}</td>
                         <td>{$item.important}</td>
                         <td>
-                            <form method="POST" action="manage.php?view=news&amp;action=del_news">
-                                <input type="hidden" name="news_id" value="{$item.id}">
-                                <input type="submit" class="btn btn-danger" value="{t}Delete{/t}">
-                            </form>
+                            <input type="button" data-id="{$item.id}" class="news-delete-btn btn btn-danger" value="{t}Delete{/t}">
                         </td>
                     </tr>
                 {/foreach}

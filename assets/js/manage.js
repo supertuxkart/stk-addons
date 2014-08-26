@@ -35,15 +35,25 @@
         onFormSubmit(form_identifier, callback_success, $manage_body, json_url);
     }
 
-    // left panel item clicked
-    $('a.manage-list').click(function() {
-        History.pushState(null, '', this.href);
-        var view = getUrlVars(this.href)['view'];
+    function loadManageMainContent(href) {
+        var view = getUrlVars(href)['view'];
         loadContent($manage_body, SITE_ROOT + 'manage-panel.php', {view: view}, function() {
             onPageLoad();
         });
+    }
+
+    // left panel item clicked
+    $('a.manage-list').click(function() {
+        History.pushState(null, '', this.href);
+
+        loadManageMainContent(this.href);
 
         return false;
+    });
+
+    // general settings form submitted
+    manageFormSubmit("#form-general-settings", function(data) {
+        jsonGrowlResponse(data);
     });
 
     // role clicked
@@ -100,7 +110,6 @@
 
     // role add clicked
     $manage_body.on("click", "#manage-roles-add-btn", function() {
-        console.log("Add role clicked");
         var role = $("#manage-roles-add-value").val();
 
         $.post(json_url, {role: role, action: "add-role"}, function(data) {
@@ -117,13 +126,11 @@
 
     // role edit clicked
     $manage_body.on("click", "#manage-roles-edit-btn", function() {
-        console.log("Role edit clicked");
         growlError("Role edit not yet implemented.");
     });
 
     // role delete clicked
     $manage_body.on("click", "#manage-roles-delete-btn", function() {
-        console.log("Delete role clicked");
         var role = $("#manage-roles-edit-value").val(); // use the value from edit
 
         $.post(json_url, {role: role, action: "delete-role"}, function(data) {
@@ -140,15 +147,35 @@
         })
     });
 
-    // role permission submitted
+    // update role permission submitted,
     manageFormSubmit("#manage-roles-permission-form", function(data) {
-        var jData = parseJSON(data);
-        if (jData.hasOwnProperty("error")) {
-            growlError(jData["error"]);
-        }
-        if (jData.hasOwnProperty("success")) {
-            growlSuccess(jData["success"]);
-        }
+        jsonGrowlResponse(data);
+    });
+
+    // add news submitted
+    manageFormSubmit("#form-add-news", function(data) {
+        jsonGrowlResponse(data, function() {
+            loadManageMainContent("?view=news"); // cheat the load content page
+        });
+    });
+
+    // delete news submitted
+    $manage_body.on("click", ".news-delete-btn", function() {
+        var $this = $(this),
+            id = $this.data("id");
+
+        $.post(json_url, {"action": "delete-news", "news-id": id}, function(data) {
+            jsonGrowlResponse(data, function() {
+                $this.closest("tr").remove();
+            });
+        })
+    });
+
+    // empty cache clicked
+    $manage_body.on("click", "#btn-empty-cache", function() {
+        $.post(json_url, {"action": "clear-cache"}, function(data) {
+            jsonGrowlResponse(data);
+        });
     });
 
     onPageLoad();

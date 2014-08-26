@@ -270,12 +270,7 @@ class Util
      */
     public static function isHTTPS()
     {
-        if (isset($_SERVER["HTTPS"]) && $_SERVER['HTTPS'] === "on")
-        {
-            return true;
-        }
-
-        return false;
+        return isset($_SERVER["HTTPS"]) && $_SERVER['HTTPS'] === "on";
     }
 
     /**
@@ -470,20 +465,16 @@ class Util
     }
 
     /**
-     * Convert a POST form checkbox to an integer
+     * See if an checkbox is checked
      *
-     * @param string $checkbox
+     * @param array  $pool         array to search for
+     * @param string $checkbox_key the key of the checkbox
      *
-     * @return int
+     * @return bool
      */
-    public static function getCheckboxInt($checkbox)
+    public static function isCheckboxChecked(array $pool, $checkbox_key)
     {
-        if ($checkbox === "on")
-        {
-            return 1;
-        }
-
-        return 0;
+        return empty($pool[$checkbox_key]) ? false : $pool[$checkbox_key] === "on";
     }
 
     /**

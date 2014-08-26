@@ -29,7 +29,7 @@ if (empty($_GET["data-type"]))
 switch ($_GET["data-type"])
 {
     case "addon";
-        $errors = Validate::ensureInput($_GET, ["addon-type", "query", "flags"]);
+        $errors = Validate::ensureNotEmpty($_GET, ["addon-type", "query", "flags"]);
         if ($errors)
         {
             exit_json_error(_h("One or more fields are empty. This should never happen"));
@@ -68,7 +68,7 @@ switch ($_GET["data-type"])
         break;
 
     case "bug":
-        $errors = Validate::ensureInput($_GET, ["search-filter"]);
+        $errors = Validate::ensureNotEmpty($_GET, ["search-filter"]);
         if ($errors)
         {
             exit_json_error(_h("One or more fields are empty. This should never happen"));
@@ -80,11 +80,7 @@ switch ($_GET["data-type"])
         }
 
         // search also the description
-        $search_description = false;
-        if (isset($_GET["search-description"]) && Util::getCheckboxInt($_GET["search-description"]))
-        {
-            $search_description = true;
-        }
+        $search_description = Util::isCheckboxChecked($_GET, "search-description");
 
         $bugs = [];
         try
@@ -100,7 +96,7 @@ switch ($_GET["data-type"])
         break;
 
     case "user":
-        $errors = Validate::ensureInput($_GET, ["query"]);
+        $errors = Validate::ensureNotEmpty($_GET, ["query"]);
         if ($errors)
         {
             exit_json_error(_h("One or more fields are empty. This should never happen"));

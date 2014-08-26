@@ -964,7 +964,7 @@ class User extends Base
      *
      * @param int    $user_id
      * @param string $role
-     * @param string $available
+     * @param bool $available
      *
      * @throws UserException
      */
@@ -984,7 +984,6 @@ class User extends Base
 
         // also does validation
         $user = static::getFromID($user_id);
-        $available = Util::getCheckboxInt($available);
 
         // can not edit your own role
         if ($user->getId() === User::getLoggedId())

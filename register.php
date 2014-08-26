@@ -53,7 +53,7 @@ switch ($_GET['action'])
         try
         {
             // validate
-            $errors = Validate::ensureInput($_POST, ["username", "password", "password_confirm", "mail", "name", "terms"]);
+            $errors = Validate::ensureNotEmpty($_POST, ["username", "password", "password_confirm", "mail", "name", "terms"]);
             if ($errors)
             {
                 throw new UserException(implode("<br>", $errors));

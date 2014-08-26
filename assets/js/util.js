@@ -167,6 +167,24 @@ function onFormSubmit(form_identifier, callback_success, $container, url, data_t
     });
 }
 
+function jsonGrowlResponse(data, $callback_success, $callback_error) {
+    var jData = parseJSON(data);
+    if (jData.hasOwnProperty("success")) {
+        growlSuccess(jData["success"]);
+
+        if ($callback_success) {
+            $callback_success(jData);
+        }
+    }
+    if (jData.hasOwnProperty("error")) {
+        growlError(jData["error"]);
+
+        if ($callback_error) {
+            $callback_error(jData);
+        }
+    }
+}
+
 /**
  * Alias for getElementById
  *

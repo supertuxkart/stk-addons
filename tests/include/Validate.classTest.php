@@ -44,7 +44,7 @@ class ValidateTest extends \PHPUnit_Framework_TestCase
      */
     public function testEnsureInput($is_empty, $pool, $params)
     {
-        $errors = Validate::ensureInput($pool, $params);
+        $errors = Validate::ensureNotEmpty($pool, $params);
         $this->assertEquals($is_empty, empty($errors));
     }
 
