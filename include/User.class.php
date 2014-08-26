@@ -28,7 +28,7 @@ class User extends Base
 
     const MAX_PASSWORD = 60;
 
-    const MIN_USERNAME = 4;
+    const MIN_USERNAME = 3;
 
     const MAX_USERNAME = 30;
 
