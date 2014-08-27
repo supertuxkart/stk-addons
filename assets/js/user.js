@@ -17,7 +17,7 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-(function($) {
+(function($, SITE_ROOT, JSON_LOCATION) {
     "use strict";
 
     var $user_body = $("#user-body"),
@@ -55,6 +55,8 @@
                 return false;
             });
         });
+
+        return null;
     });
 
     // left panel user clicked
@@ -216,4 +218,4 @@
         });
     });
 
-})(jQuery);
+})(jQuery, SITE_ROOT, JSON_LOCATION);

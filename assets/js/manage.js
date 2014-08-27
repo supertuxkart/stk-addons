@@ -17,7 +17,7 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-(function($) {
+(function($, SITE_ROOT) {
     "use strict";
 
     var $manage_body = $("#manage-body"),
@@ -166,4 +166,4 @@
 
     onPageLoad();
 
-})(jQuery);
+})(jQuery, SITE_ROOT);

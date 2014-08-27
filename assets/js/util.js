@@ -32,8 +32,8 @@ var SEARCH_URL = JSON_LOCATION + "search.php";
 /**
  * Register the default pagination on a page
  *
- * @param $container jQuery object
- * @param url the php page that handles pagination
+ * @param {jQuery} $container jQuery object
+ * @param {string} url the php page that handles pagination
  */
 function registerPagination($container, url) {
 
@@ -73,10 +73,10 @@ function registerPagination($container, url) {
 /**
  * Check if time is in certain time interval
  *
- * @param time the time to check in milliseconds
- * @param elapsed_time the interval
+ * @param {number} time the time to check in milliseconds
+ * @param {number} elapsed_time the interval
  *
- * @return bool
+ * @return {bool}
  */
 function isInTimeInterval(time, elapsed_time) {
     var current_time = (new Date()).getTime(),
@@ -88,11 +88,11 @@ function isInTimeInterval(time, elapsed_time) {
 /**
  * Load the content of the url into an element
  *
- * @param $content jQuery object that will contain the page result
- * @param url the url to get
- * @param params object containing GET or POST params
- * @param callback function that is called after the content was loaded
- * @param request_type the type of request, GET or POST, default is GET
+ * @param {jQuery} $content jQuery object that will contain the page result
+ * @param {string} url the url to get
+ * @param {object} params containing GET or POST params
+ * @param {function} [callback] function that is called after the content was loaded
+ * @param {string} [request_type] the type of request, GET or POST, default is GET
  */
 function loadContent($content, url, params, callback, request_type) {
     request_type = request_type || "GET";
@@ -122,12 +122,12 @@ function loadContent($content, url, params, callback, request_type) {
 /**
  * Handle event when there is form submit
  *
- * @param form_identifier string representing the form unique identifier, usually id, eg: #main-bugs
- * @param callback_success function that is called on form submit success
- * @param $container a jQuery object representing a parent of the form
- * @param url the url to submit to
- * @param data_type additional parameters to add to the request
- * @param request_method POST or GET, default is GET
+ * @param {string} form_identifier string representing the form unique identifier, usually id, eg: #main-bugs
+ * @param {function} callback_success function that is called on form submit success
+ * @param {jQuery} $container a jQuery object representing a parent of the form
+ * @param {string} url the url to submit to
+ * @param {object} [data_type] additional parameters to add to the request
+ * @param {string} [request_method] POST or GET, default is GET
  */
 function onFormSubmit(form_identifier, callback_success, $container, url, data_type, request_method) {
     if (!_.isFunction(callback_success)) {
@@ -173,8 +173,8 @@ function onFormSubmit(form_identifier, callback_success, $container, url, data_t
  * If the return of any of the callback functions is false then that message will not be displayed (aka growl)
  *
  * @param {string} data
- * @param {function} success_callback
- * @param {function} error_callback
+ * @param {function} [success_callback]
+ * @param {function} [error_callback]
  */
 function jsonCallback(data, success_callback, error_callback) {
     var jData = parseJSON(data), growl_success = true, growl_error = true;
@@ -210,9 +210,9 @@ function getByID(id) {
 /**
  * Parse a json string
  *
- * @param raw_string the json string
+ * @param {string} raw_string the json string
  *
- * @return the parsed json data, or empty object if there was an error, and message written to the console
+ * @return {object} the parsed json data, or empty object if there was an error, and message written to the console
  */
 function parseJSON(raw_string) {
     var jData = {}; // silently fail on the client side
@@ -230,7 +230,7 @@ function parseJSON(raw_string) {
 /**
  * Display a error message popup
  *
- * @param message the message to the user
+ * @param {string} message the message to the user
  */
 function growlError(message) {
     $.growl({
@@ -249,7 +249,7 @@ function growlError(message) {
 /**
  * Display a success message popup
  *
- * @param message the message to the user
+ * @param {string} message the message to the user
  */
 function growlSuccess(message) {
     $.growl({
@@ -268,9 +268,9 @@ function growlSuccess(message) {
 /**
  * Display a modal with delete button and confirmation message
  *
- * @param message the message to the user
- * @param yes_callback function that is called when the user answer yes to the modal
- * @param no_callback function that is called when the user answers no to the modal
+ * @param {string} message the message to the user
+ * @param {function} [yes_callback]  that is called when the user answer yes to the modal
+ * @param {function} [no_callback]  that is called when the user answers no to the modal
  */
 function modalDelete(message, yes_callback, no_callback) {
     yes_callback = yes_callback || function() {};
@@ -297,8 +297,8 @@ function modalDelete(message, yes_callback, no_callback) {
 /**
  * Redirect the current page with delay
  *
- * @param url the destination
- * @param seconds delay in redirection, default is 0
+ * @param {string} url the destination
+ * @param {float|int} [seconds] delay in redirection, default is 0
  */
 function redirectTo(url, seconds) {
     seconds = seconds || 0;
@@ -319,7 +319,7 @@ function refreshPage() {
 /**
  * Check if it is a wysiwyg5 editor
  *
- * @param $editor_container jQuery object that should contain the editor
+ * @param {jQuery} $editor_container should contain the editor
  *
  * @return wysiwyg5 editor or null if not an editor
  */
@@ -329,6 +329,9 @@ function isEditor($editor_container) {
 
 /**
  * Update the value of a wysiwyg5 editor
+ *
+ * @param {jQuery} $editor_container
+ * @param {string} value
  */
 function editorUpdate($editor_container, value) {
     $editor_container.data("wysihtml5").editor.setValue(value);
@@ -337,10 +340,10 @@ function editorUpdate($editor_container, value) {
 /**
  * Init a wysiwyg5 editor only once
  *
- * @param $editor_container jQuery object representing the container
- * @param editor_options options for the wysiwyg5
+ * @param {jQuery} $editor_container jQuery object representing the container
+ * @param {object} editor_options options for the wysiwyg5
  *
- * @return null if editor already exists, the wysiwyg5 editor otherwise
+ * @return {null|wysihtml5} if editor already exists, the wysiwyg5 editor otherwise
  */
 function editorInit($editor_container, editor_options) {
     if (!isEditor($editor_container)) { // editor does not exist
@@ -353,9 +356,9 @@ function editorInit($editor_container, editor_options) {
 /**
  * Read a page's GET URL variables and return them as an hash map
  *
- * @param url default is the current page
+ * @param {string} [url] default is the current page
  *
- * @return object hash map of all vars
+ * @return {object} hash map of all vars
  */
 function getUrlVars(url) {
     url = url || window.location.href;

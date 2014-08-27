@@ -24,7 +24,7 @@ function confirm_delete(url) {
     }
 }
 
-(function($) {
+(function($, SITE_ROOT, JSON_LOCATION) {
     "use strict";
 
     var json_url = JSON_LOCATION + "rating.php",
@@ -35,9 +35,7 @@ function confirm_delete(url) {
         addon_type = getUrlVars()["type"],
         original_menu;
 
-    $('.multiselect').multiselect({
-
-    });
+    $('.multiselect').multiselect({});
 
     // search form
     $("#addon-search-val").keyup(function() {
@@ -161,4 +159,4 @@ function confirm_delete(url) {
         console.log(sort_type);
     })
 
-})(jQuery);
+})(jQuery, SITE_ROOT, JSON_LOCATION);

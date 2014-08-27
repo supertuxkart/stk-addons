@@ -17,7 +17,7 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-(function($) {
+(function($, BUGS_LOCATION, JSON_LOCATION) {
     "use strict";
 
     // load essential elements and options
@@ -312,4 +312,4 @@
     onPageIndex();
     onPageView();
 
-})(jQuery);
+})(jQuery, BUGS_LOCATION, JSON_LOCATION);
