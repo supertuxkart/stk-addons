@@ -53,7 +53,7 @@
 
     // general settings form submitted
     manageFormSubmit("#form-general-settings", function(data) {
-        jsonGrowlResponse(data);
+        jsonCallback(data);
     });
 
     // role clicked
@@ -87,11 +87,7 @@
 
         // update role checkboxes
         $.post(json_url, {action: "get-role", role: selected_role}, function(data) {
-            var jData = parseJSON(data);
-            if (jData.hasOwnProperty("error")) {
-                growlError(jData["error"]);
-            }
-            if (jData.hasOwnProperty("success")) {
+            jsonCallback(data, function(jData) {
                 var permissions = jData["permissions"];
                 var $checkboxes = $(".manage-roles-permission-checkbox");
 
@@ -104,7 +100,9 @@
                         this.checked = true;
                     }
                 });
-            }
+
+                return false;
+            });
         });
     });
 
@@ -113,14 +111,9 @@
         var role = $("#manage-roles-add-value").val();
 
         $.post(json_url, {role: role, action: "add-role"}, function(data) {
-            var jData = parseJSON(data);
-            if (jData.hasOwnProperty("error")) {
-                growlError(jData["error"]);
-            }
-            if (jData.hasOwnProperty("success")) {
-                growlSuccess(jData["success"]);
+            jsonCallback(data, function() {
                 $("#manage-roles-roles").append('<button type="button" class="btn btn-default">{0}</button>'.format(role))
-            }
+            })
         });
     });
 
@@ -134,27 +127,20 @@
         var role = $("#manage-roles-edit-value").val(); // use the value from edit
 
         $.post(json_url, {role: role, action: "delete-role"}, function(data) {
-            var jData = parseJSON(data);
-            if (jData.hasOwnProperty("error")) {
-                growlError(jData["error"]);
-            }
-            if (jData.hasOwnProperty("success")) {
-                growlSuccess(jData["success"]);
-
-                // update view
+            jsonCallback(data, function() {
                 $("#manage-roles-roles button:contains('{0}')".format(role)).remove();
-            }
+            });
         })
     });
 
     // update role permission submitted,
     manageFormSubmit("#manage-roles-permission-form", function(data) {
-        jsonGrowlResponse(data);
+        jsonCallback(data);
     });
 
     // add news submitted
     manageFormSubmit("#form-add-news", function(data) {
-        jsonGrowlResponse(data, function() {
+        jsonCallback(data, function() {
             loadManageMainContent("?view=news"); // cheat the load content page
         });
     });
@@ -165,7 +151,7 @@
             id = $this.data("id");
 
         $.post(json_url, {"action": "delete-news", "news-id": id}, function(data) {
-            jsonGrowlResponse(data, function() {
+            jsonCallback(data, function() {
                 $this.closest("tr").remove();
             });
         })
@@ -174,7 +160,7 @@
     // empty cache clicked
     $manage_body.on("click", "#btn-empty-cache", function() {
         $.post(json_url, {"action": "clear-cache"}, function(data) {
-            jsonGrowlResponse(data);
+            jsonCallback(data);
         });
     });
 

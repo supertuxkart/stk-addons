@@ -21,14 +21,16 @@
 $(document).ready(function() {
     "use strict";
 
-    /*
+    /**
      * Tests if there is SVG support. Maybe move it to util.js if we need it?
+     *
+     * @return {bool}
      */
     function isSVGSupported() {
         return !!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg','svg').createSVGRect;
     }
 
-    // mark link as active
+    // mark link as active in the top nav
     var page_parts = window.location.href.split("?"),
         current_page = page_parts[0],
         current_query = page_parts[1],

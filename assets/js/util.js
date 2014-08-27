@@ -99,7 +99,7 @@ function loadContent($content, url, params, callback, request_type) {
     callback = callback || function() {};
 
     // define callback
-    function onComplete(response, status, xhr) {
+    function onCompleteCallback(response, status, xhr) {
         if (status === "error") {
             console.error("Error on loadContent");
             console.error(response, status, xhr);
@@ -110,9 +110,9 @@ function loadContent($content, url, params, callback, request_type) {
     }
 
     if (request_type === "GET") {
-        $content.load(url + "?" + $.param(params), onComplete);
+        $content.load(url + "?" + $.param(params), onCompleteCallback);
     } else if (request_type === "POST") {
-        $content.load(url, params, onComplete);
+        $content.load(url, params, onCompleteCallback);
     } else {
         console.error("request_type: ", request_type);
         console.error("request type is invalid")
@@ -167,20 +167,31 @@ function onFormSubmit(form_identifier, callback_success, $container, url, data_t
     });
 }
 
-function jsonGrowlResponse(data, $callback_success, $callback_error) {
-    var jData = parseJSON(data);
+/**
+ * Handle the response from the json/ part of the website,
+ * On success/error growl (displays) the message to the user page via a popup.
+ * If the return of any of the callback functions is false then that message will not be displayed (aka growl)
+ *
+ * @param {string} data
+ * @param {function} success_callback
+ * @param {function} error_callback
+ */
+function jsonCallback(data, success_callback, error_callback) {
+    var jData = parseJSON(data), growl_success = true, growl_error = true;
     if (jData.hasOwnProperty("success")) {
-        growlSuccess(jData["success"]);
-
-        if ($callback_success) {
-            $callback_success(jData);
+        if (success_callback) {
+            growl_success = (success_callback(jData) !== false);
+        }
+        if (growl_success) {
+            growlSuccess(jData["success"]);
         }
     }
     if (jData.hasOwnProperty("error")) {
-        growlError(jData["error"]);
-
-        if ($callback_error) {
-            $callback_error(jData);
+        if (error_callback) {
+            growl_error = (error_callback(jData) !== false);
+        }
+        if (growl_error) {
+            growlError(jData["error"]);
         }
     }
 }
@@ -188,7 +199,7 @@ function jsonGrowlResponse(data, $callback_success, $callback_error) {
 /**
  * Alias for getElementById
  *
- * @param id the element id
+ * @param {string} id the element id
  *
  * @return {Element} html element
  */
@@ -286,17 +297,23 @@ function modalDelete(message, yes_callback, no_callback) {
 /**
  * Redirect the current page with delay
  *
- * @param url the destination, default is to refresh the current page
+ * @param url the destination
  * @param seconds delay in redirection, default is 0
  */
 function redirectTo(url, seconds) {
-    url = url || window.location.href;
     seconds = seconds || 0;
 
     var timeout = setTimeout(function() {
         window.location = url;
         clearTimeout(timeout);
     }, seconds * 1000);
+}
+
+/**
+ * Refresh the current page
+ */
+function refreshPage() {
+    redirectTo(window.location.href, 0);
 }
 
 /**
@@ -362,9 +379,8 @@ function getUrlVars(url) {
 // Extend string. Eg "{0} is {1}".format("JS", "nice") will output "JS is nice"
 if (!String.prototype.format) {
     String.prototype.format = function() {
-        var args = arguments;
         return this.replace(/{(\d+)}/g, function(match, number) {
-            return typeof args[number] != 'undefined' ? args[number] : match;
+            return typeof arguments[number] != 'undefined' ? arguments[number] : match;
         });
     };
 }

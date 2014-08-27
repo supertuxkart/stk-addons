@@ -61,16 +61,14 @@ function confirm_delete(url) {
         // search
         $.get(SEARCH_URL, {"data-type": "addon", "addon-type": addon_type, "query": query, "flags": $search_by.val(), "return-html": true},
             function(data) {
-                var jData = parseJSON(data);
-                if (jData.hasOwnProperty("success")) {
+                jsonCallback(data, function(jData) {
                     if (_.isEmpty(original_menu)) { // keep original menu
                         original_menu = $addon_menu.html();
                     }
                     $addon_menu.html(jData["addons-html"]);
-                }
-                if (jData.hasOwnProperty("error")) {
-                    growlError(jData["error"]);
-                }
+
+                    return false;
+                });
             });
     });
 
@@ -98,17 +96,19 @@ function confirm_delete(url) {
 
         // set new rating
         $.get(json_url, {"action": "set", "addon-id": addon_id, "rating": rating}, function(data) {
-            var jData = parseJSON(data);
-            if (jData.hasOwnProperty("error")) {
-                console.log(jData["error"]);
-            }
-            if (jData.hasOwnProperty("success")) {
+            jsonCallback(data, function(jData) {
                 console.log(jData["success"]);
 
                 // update view
                 $ratings_container.find(".fullstars").width(jData["width"] + "%");
                 $ratings_container.find("p").html(jData["num-ratings"]);
-            }
+
+                return false;
+            }, function(jData) {
+                console.log(jData["error"]);
+
+                return false;
+            });
         });
     });
 

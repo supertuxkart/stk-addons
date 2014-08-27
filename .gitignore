@@ -1,4 +1,6 @@
 config.php
+*.patch
+.directory
 .htaccess
 .idea/
 vendor/

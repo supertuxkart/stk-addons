@@ -46,19 +46,15 @@
         }
 
         $.get(SEARCH_URL, {"data-type": "user", "query": query, "return-html": true}, function(data) {
-            var jData = parseJSON(data);
-            if (jData.hasOwnProperty("success")) {
+            jsonCallback(data, function(jData) {
                 if (_.isEmpty(original_menu)) { // keep original menu
                     original_menu = $user_menu.html();
                 }
                 $user_menu.html(jData["users-html"]);
-            }
-            if (jData.hasOwnProperty("error")) {
-                growlError(jData["error"]);
-            }
-        });
 
-        console.log(query);
+                return false;
+            });
+        });
     });
 
     // left panel user clicked
@@ -77,15 +73,8 @@
             id = $parent.data("id"),
             tab = $parent.data("tab");
 
-        console.log("Send friend clicked", id);
         $.post(json_url, {action: "send-friend", "friend-id": id}, function(data) {
-            var jData = parseJSON(data);
-            if (jData.hasOwnProperty("error")) {
-                growlError(jData["error"]);
-            }
-            if (jData.hasOwnProperty("success")) {
-                growlSuccess(jData["success"]);
-
+            jsonCallback(data, function() {
                 // update view
                 if (tab === "friends") {
                     console.log("not handled");
@@ -93,7 +82,7 @@
                     $this.addClass("hide");
                     $("#profile .btn-cancel-friend").removeClass("hide");
                 }
-            }
+            });
         });
     });
 
@@ -104,23 +93,16 @@
             id = $parent.data("id"),
             tab = $parent.data("tab");
 
-        console.log("Remove friend clicked", id);
         modalDelete("Are you sure you want to remove this friend?", function() {
             $.post(json_url, {action: "remove-friend", "friend-id": id}, function(data) {
-                var jData = parseJSON(data);
-                if (jData.hasOwnProperty("error")) {
-                    growlError(jData["error"]);
-                }
-                if (jData.hasOwnProperty("success")) {
-                    growlSuccess(jData["success"]);
-
+                jsonCallback(data, function() {
                     // update view
                     if (tab === "friends") {
                         $parent.closest("tr").remove();
                     } else if (tab === "profile") {
                         console.log("not handled");
                     }
-                }
+                });
             });
         });
     });
@@ -132,15 +114,8 @@
             id = $parent.data("id"),
             tab = $parent.data("tab");
 
-        console.log("Accept friend clicked", id);
         $.post(json_url, {action: "accept-friend", "friend-id": id}, function(data) {
-            var jData = parseJSON(data);
-            if (jData.hasOwnProperty("error")) {
-                growlError(jData["error"]);
-            }
-            if (jData.hasOwnProperty("success")) {
-                growlSuccess(jData["success"]);
-
+            jsonCallback(data, function() {
                 // update view
                 if (tab === "friends") {
                     $this.addClass("hide");
@@ -153,7 +128,7 @@
                     $("#profile .btn-decline-friend").addClass("hide");
                     $("#profile .btn-already-friend").removeClass("hide");
                 }
-            }
+            });
         });
     });
 
@@ -164,15 +139,8 @@
             id = $parent.data("id"),
             tab = $parent.data("tab");
 
-        console.log("Decline friend clicked", id);
         $.post(json_url, {action: "decline-friend", "friend-id": id}, function(data) {
-            var jData = parseJSON(data);
-            if (jData.hasOwnProperty("error")) {
-                growlError(jData["error"]);
-            }
-            if (jData.hasOwnProperty("success")) {
-                growlSuccess(jData["success"]);
-
+            jsonCallback(data, function() {
                 // update view
                 if (tab === "friends") {
                     $parent.closest("tr").remove();
@@ -181,7 +149,7 @@
                     $("#profile .btn-accept-friend").addClass("hide");
                     $("#profile .btn-send-friend").removeClass("hide");
                 }
-            }
+            });
         });
     });
 
@@ -192,15 +160,8 @@
             id = $parent.data("id"),
             tab = $parent.data("tab");
 
-        console.log("Cancel friend clicked", id);
         $.post(json_url, {action: "cancel-friend", "friend-id": id}, function(data) {
-            var jData = parseJSON(data);
-            if (jData.hasOwnProperty("error")) {
-                growlError(jData["error"]);
-            }
-            if (jData.hasOwnProperty("success")) {
-                growlSuccess(jData["success"]);
-
+            jsonCallback(data, function() {
                 // update view
                 if (tab === "friends") {
                     $parent.closest("tr").remove();
@@ -208,19 +169,13 @@
                     $this.addClass("hide");
                     $("#profile .btn-send-friend").removeClass("hide");
                 }
-            }
+            });
         });
     });
 
     // edit profile
     userFormSubmit("#user-edit-profile", function(data) {
-        var jData = parseJSON(data);
-        if (jData.hasOwnProperty("error")) {
-            growlError(jData["error"]);
-        }
-        if (jData.hasOwnProperty("success")) {
-            growlSuccess(jData["success"]);
-
+        jsonCallback(data, function() {
             // update view
             var new_real_name = getByID("user-profile-realname").value;
             $("#user-realname").text(new_real_name);
@@ -234,42 +189,31 @@
                 $homepage_row.removeClass("hide");
                 $("#user-homepage").text(homepage);
             }
-        }
+        });
     });
 
     // edit user role and activation status
     userFormSubmit("#user-edit-role", function(data) {
-        var jData = parseJSON(data);
-        if (jData.hasOwnProperty("error")) {
-            growlError(jData["error"]);
-        }
-        if (jData.hasOwnProperty("success")) {
-            growlSuccess(jData["success"]);
-
+        jsonCallback(data, function() {
             // update view
             $("#user-role").text(getByID("user-settings-role").value);
             var username = $("#user-username").text();
             var $side_user = $("span:contains({0})".format(username));
+
             if (getByID("user-settings-available").checked) { // user is active
                 $side_user.removeClass("unavailable");
             } else { // user is not active
                 $side_user.addClass("unavailable");
             }
-        }
+        });
     });
 
     // change password form
     userFormSubmit("#user-change-password", function(data) {
-        var jData = parseJSON(data);
-        if (jData.hasOwnProperty("error")) {
-            growlError(jData["error"]);
-        }
-        if (jData.hasOwnProperty("success")) {
-            growlSuccess(jData["success"]);
-
+        jsonCallback(data, function() {
             // clear password field
             $("#user-change-password").find("input[type=password]").val("");
-        }
+        });
     });
 
 })(jQuery);

@@ -17,7 +17,7 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-(function($, document) {
+(function($) {
     "use strict";
 
     // load essential elements and options
@@ -79,12 +79,7 @@
 
                     // search
                     $.get(SEARCH_URL, {"data-type": "addon", "addon-type": "all", "query": query, "flags": ["name"]}, function(data) {
-                        var jData = parseJSON(data);
-                        if (jData.hasOwnProperty("error")) {
-                            console.error(jData["error"]);
-                            return;
-                        }
-                        if (jData.hasOwnProperty("success")) {
+                        jsonCallback(data, function(jData) {
                             // fill display popup
                             var addons = jData["addons"];
                             for (var i = 0; i < addons.length; i++) {
@@ -92,7 +87,13 @@
                             }
 
                             cb(matches);
-                        }
+
+                            return false;
+                        }, function(jData) {
+                            console.error(jData["error"]);
+
+                            return false;
+                        });
                     });
                 }
             }
@@ -142,11 +143,7 @@
     onFormSubmit("#bug-search-form", function(data) {
         History.pushState({state: "search"}, '', "?search");
 
-        var jData = parseJSON(data);
-        if (jData.hasOwnProperty("error")) {
-            growlError(jData["error"]);
-        }
-        if (jData.hasOwnProperty("success")) {
+        jsonCallback(data, function(jData) {
             // update view
             index_data_table.destroy(true);
 
@@ -161,56 +158,38 @@
 
             // toggle buttons only when on main page, if we are already on another page
             // the back button is already shown
-            if($btn_back.hasClass("hide")) {
+            if ($btn_back.hasClass("hide")) {
                 btnToggle();
             }
-        }
+        });
     }, $bugs_main, SEARCH_URL, {"data-type": "bug"}, "GET");
 
     // add bug form
     bugFormSubmit("#bug-add-form", function(data) {
-        var jData = parseJSON(data);
-        if (jData.hasOwnProperty("error")) {
-            growlError(jData["error"]);
-        }
-        if (jData.hasOwnProperty("success")) {
-            growlSuccess(jData["success"]);
+        jsonCallback(data, function() {
             NavigateTo.index();
-        }
+        });
     });
 
     // add bug comment form
     bugFormSubmit("#bug-add-comment-form", function(data) {
-        var jData = parseJSON(data);
-        if (jData.hasOwnProperty("error")) {
-            growlError(jData["error"]);
-        }
-        if (jData.hasOwnProperty("success")) {
-            growlSuccess(jData["success"]);
-
+        jsonCallback(data, function(jData) {
             $("#bug-comments").prepend(jData["comment"]);
             editorUpdate($view_comment_description, "");
-        }
+        });
     });
 
     // delete bug clicked
     $bugs_main.on("click", "#btn-bugs-delete", function() {
         var id = $("#bug-id").val();
 
-        console.log("Delete bug clicked", id);
         modalDelete("Are you sure you want to delete this bug?", function() {
             $.post(json_url, {action: "delete", "bug-id": id}, function(data) {
-                var jData = parseJSON(data);
-                if (jData.hasOwnProperty("error")) {
-                    growlError(jData["error"]);
-                }
-                if (jData.hasOwnProperty("success")) {
-                    growlSuccess(jData["success"]);
-
+                jsonCallback(data, function() {
                     bootbox.hideAll();
 
                     NavigateTo.index();
-                }
+                });
             });
         });
 
@@ -222,7 +201,6 @@
         var $modal = $("#modal-close"),
             $modal_description = $("#modal-close-reason");
 
-        console.info("Close bug clicked");
         $modal.modal();
 
         $modal.on("shown.bs.modal", function() {
@@ -230,18 +208,11 @@
         });
 
         bugFormSubmit("#modal-close-form", function(data) {
-            var jData = parseJSON(data);
-            if (jData.hasOwnProperty("error")) {
-                growlError(jData["error"]);
-            }
-            if (jData.hasOwnProperty("success")) {
-                growlSuccess(jData["success"]);
-
+            jsonCallback(data, function() {
                 $modal.modal("hide");
 
-                // refresh page by redirect
-                redirectTo();
-            }
+                refreshPage();
+            });
         });
 
         return false;
@@ -255,7 +226,6 @@
             el_view_title = getByID("bug-view-title"),
             el_view_description = getByID("bug-view-description");
 
-        console.info("Edit bug clicked");
         $modal.modal();
 
         $modal.on("shown.bs.modal", function() {
@@ -263,19 +233,13 @@
         });
 
         bugFormSubmit("#modal-edit-form", function(data) {
-            var jData = parseJSON(data);
-            if (jData.hasOwnProperty("error")) {
-                growlError(jData["error"]);
-            }
-            if (jData.hasOwnProperty("success")) {
-                growlSuccess(jData["success"]);
-
+            jsonCallback(data, function() {
                 // update view
                 el_view_title.innerHTML = el_modal_title.value;
                 el_view_description.innerHTML = $modal_description.val();
 
                 $modal.modal('hide');
-            }
+            });
         });
 
         return false;
@@ -286,21 +250,14 @@
         var $this = $(this);
         var id = $this.data("id");
 
-        console.info("Delete comment clicked", id);
         modalDelete("Are you sure you want to delete this comment?", function() {
             $.post(json_url, {action: "delete-comment", "comment-id": id}, function(data) {
-                var jData = parseJSON(data);
-                if (jData.hasOwnProperty("error")) {
-                    growlError(jData["error"]);
-                }
-                if (jData.hasOwnProperty("success")) {
-                    growlSuccess(jData["success"]);
-
+                jsonCallback(data, function() {
                     // delete comment from view
                     $("#c" + id).remove();
 
                     bootbox.hideAll();
-                }
+                });
             });
         });
 
@@ -315,10 +272,9 @@
             $modal_description = $("#bug-comment-edit-description"),
             $view_description = $("#c" + id + " .panel-body");
 
-        console.info("Edit comment clicked", id);
         $modal.modal();
 
-        $modal.on("shown.bs.modal", function(e) {
+        $modal.on("shown.bs.modal", function() {
             editorInit($modal_description, editorOptions);
 
             // update view
@@ -327,18 +283,12 @@
         });
 
         bugFormSubmit("#modal-comment-edit-form", function(data) {
-            var jData = parseJSON(data);
-            if (jData.hasOwnProperty("error")) {
-                growlError(jData["error"]);
-            }
-            if (jData.hasOwnProperty("success")) {
-                growlSuccess(jData["success"]);
-
+            jsonCallback(data, function() {
                 // update view
                 $view_description.html($modal_description.val());
 
                 $modal.modal("hide");
-            }
+            });
         });
 
         return false;
@@ -362,4 +312,4 @@
     onPageIndex();
     onPageView();
 
-})(jQuery, document);
+})(jQuery);
