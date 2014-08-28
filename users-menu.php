@@ -38,6 +38,7 @@ $pagination = PaginationTemplate::get()
 $tpl = StkTemplate::get("user-menu.tpl")
     ->assign("img_location", IMG_LOCATION)
     ->assign("users", $template_users)
+    ->assign("current_user", !empty($_GET["user"]) ? $_GET["user"] : User::getLoggedUserName())
     ->assign("pagination", $pagination->toString());
 
 echo $tpl;

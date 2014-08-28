@@ -71,6 +71,15 @@ function registerPagination($container, url) {
 }
 
 /**
+ * Mark a left menu item as active
+ * @param {jQuery} $item
+ */
+function markMenuItemAsActive($item) {
+    $item.siblings().removeClass("active");
+    $item.addClass("active");
+}
+
+/**
  * Check if time is in certain time interval
  *
  * @param {number} time the time to check in milliseconds

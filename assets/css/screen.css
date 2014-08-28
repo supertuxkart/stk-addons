@@ -24,8 +24,8 @@
     src: local('Open Sans'), local('OpenSans'), url(../fonts/OpenSans.woff) format('woff');
 }
 
-/* Remove outline from tabs */
-.nav-tabs > .active > a, .nav-tabs > .active > a:hover {
+/* Remove outline from links */
+.nav-tabs > .active > a, a:focus, a:active {
     outline: none;
 }
 

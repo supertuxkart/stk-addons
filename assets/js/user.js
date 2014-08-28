@@ -65,6 +65,8 @@
         var user = getUrlVars(this.href)['user'];
         loadContent($user_body, SITE_ROOT + 'users-panel.php', {user: user});
 
+        markMenuItemAsActive($(this));
+
         return false;
     });
 

@@ -28,7 +28,7 @@
             {/if}
         </h1>
     </div>
-    <div class="container">
+    <div>
         <div class="row form-group">
             <div class="col-md-3">{t}Username:{/t}</div>
             <div class="col-md-3" id="user-username">{$user.username|escape}</div>
