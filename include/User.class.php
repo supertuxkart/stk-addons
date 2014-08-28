@@ -681,7 +681,7 @@ class User extends Base
             $users = DBConnection::get()->query(
                 "SELECT *
                 FROM `" . DB_PREFIX . "users`
-                WHERE " . implode(" OR ", $query_parts),
+                WHERE " . implode(" OR ", $query_parts) . " LIMIT 50",
                 DBConnection::FETCH_ALL,
                 $parameters
             );

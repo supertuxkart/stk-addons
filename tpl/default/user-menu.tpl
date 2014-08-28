@@ -1,6 +1,9 @@
 {if empty($users)}
     <p class="text-info">{t}No users match your search{/t}</p>
 {else}
+    {if !isset($current_user)}
+        {$current_user=""}
+    {/if}
     <div class="list-group">
         {foreach $users as $user}
             {$disabled=""} {$active=""}
