@@ -24,6 +24,11 @@
     src: local('Open Sans'), local('OpenSans'), url(../fonts/OpenSans.woff) format('woff');
 }
 
+/* Remove outline from tabs */
+.nav-tabs > .active > a, .nav-tabs > .active > a:hover {
+    outline: none;
+}
+
 body {
     font-family: 'Open Sans', Verdana, Geneva, sans-serif;
     font-size: 14px;
