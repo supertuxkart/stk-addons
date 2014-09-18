@@ -201,13 +201,13 @@
         jsonCallback(data, function() {
             // update view
             $("#user-role").text(getByID("user-settings-role").value);
-            var username = $("#user-username").text();
-            var $side_user = $("span:contains({0})".format(username));
+            var $side_user = $("#user-menu .list-group .active").first();
 
+            console.log($side_user);
             if (getByID("user-settings-available").checked) { // user is active
-                $side_user.removeClass("unavailable");
+                $side_user.removeClass("disabled");
             } else { // user is not active
-                $side_user.addClass("unavailable");
+                $side_user.addClass("disabled");
             }
         });
     });
