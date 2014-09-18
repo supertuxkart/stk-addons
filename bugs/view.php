@@ -33,18 +33,7 @@ if (!Bug::exists($bug_id))
 }
 
 $tpl = StkTemplate::get("bugs-view.tpl");
-$bug = Bug::get($_GET["bug_id"]);
-$comments = [];
-foreach ($bug->getCommentsData() as $comment)
-{
-    // TODO optimize sql query
-    $comments[] = [
-        "id"          => $comment["id"],
-        "user_name"   => User::getFromID($comment["user_id"])->getUserName(),
-        "date"        => $comment["date"],
-        "description" => $comment["description"]
-    ];
-}
+$bug = Bug::get($bug_id);
 
 $tpl_data = [
     "id"           => $bug->getId(),
@@ -63,7 +52,7 @@ $tpl_data = [
     "is_closed"    => $bug->isClosed(),
 
     "description"  => $bug->getDescription(),
-    "comments"     => $comments
+    "comments"     => $bug->getCommentsData()
 ];
 
 $tpl->assign("bug", $tpl_data)

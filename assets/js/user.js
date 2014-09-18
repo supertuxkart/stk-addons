@@ -203,7 +203,6 @@
             $("#user-role").text(getByID("user-settings-role").value);
             var $side_user = $("#user-menu .list-group .active").first();
 
-            console.log($side_user);
             if (getByID("user-settings-available").checked) { // user is active
                 $side_user.removeClass("disabled");
             } else { // user is not active

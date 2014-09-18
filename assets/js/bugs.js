@@ -174,7 +174,7 @@
     // add bug comment form
     bugFormSubmit("#bug-add-comment-form", function(data) {
         jsonCallback(data, function(jData) {
-            $("#bug-comments").prepend(jData["comment"]);
+            $("#bug-comments").append(jData["comment"]);
             editorUpdate($view_comment_description, "");
         });
     });

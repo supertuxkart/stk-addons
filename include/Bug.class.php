@@ -68,9 +68,11 @@ class Bug extends Base
         try
         {
             $comments = DBConnection::get()->query(
-                "SELECt * FROM " . DB_PREFIX . "bugs_comments
-                WHERE `bug_id` = :bug_id
-                ORDER BY date ASC",
+                "SELECT c.*, u.user AS user_name
+                FROM `" . DB_PREFIX . "bugs_comments` c
+                LEFT JOIN `" . DB_PREFIX . "users` u ON c.user_id = u.id
+                WHERE c.bug_id = :bug_id
+                ORDER BY c.date ASC",
                 DBConnection::FETCH_ALL,
                 [":bug_id" => $this->id]
             );
