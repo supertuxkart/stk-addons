@@ -114,7 +114,7 @@ class StkTemplate extends Template
         array_push(
             $this->css_includes,
             ["href" => LIBS_LOCATION . "bootstrap/dist/css/bootstrap.min.css"],
-            ["href" => CSS_LOCATION . "screen.css", "media" => "screen"]
+            ["href" => CSS_LOCATION . "main.css", "media" => "screen"]
         );
         $this->smarty->assign("css_includes", array_merge($this->css_includes, $this->user_css_includes));
     }
@@ -127,7 +127,7 @@ class StkTemplate extends Template
         // Fill script tags
         $this->script_inline["before"][] = [
             'content' => sprintf(
-                "/* wth happend*/;var SITE_ROOT = '%s', BUGS_LOCATION = '%s', JSON_LOCATION = '%s';",
+                "var SITE_ROOT = '%s', BUGS_LOCATION = '%s', JSON_LOCATION = '%s';",
                 SITE_ROOT,
                 BUGS_LOCATION,
                 SITE_ROOT . "json/"

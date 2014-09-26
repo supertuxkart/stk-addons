@@ -395,13 +395,7 @@ class AccessControl
     {
         assert(static::isPermission($permission) === true);
 
-        $allow = false;
-        if (User::hasPermission($permission))
-        {
-            $allow = true;
-        }
-
-        if (!$allow)
+        if (!User::hasPermission($permission))
         {
             AccessControl::showAccessDeniedPage();
         }
@@ -412,12 +406,6 @@ class AccessControl
      */
     public static function showAccessDeniedPage()
     {
-        header('HTTP/1.0 401 Unauthorized');
-        $tpl = new StkTemplate('access-denied.tpl');
-        $tpl->assign('ad_reason', _h('You do not have permission to access this page.'));
-        $tpl->assign('ad_action', _h('You will be redirected to the home page.'));
-        $tpl->assign('ad_redirect_url', File::rewrite('index.php'));
-
-        exit($tpl);
+        Util::redirectTo(SITE_ROOT . "error.php?e=401");
     }
 }

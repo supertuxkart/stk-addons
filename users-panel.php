@@ -121,7 +121,7 @@ foreach (Addon::getAllowedTypes() as $type)
         continue;
     }
 
-    $addonList = [];
+    $addons_tpl = [];
     foreach ($addons as $addon)
     {
         // Only list the latest revision of the add-on
@@ -143,11 +143,11 @@ foreach (Addon::getAllowedTypes() as $type)
             $addon["css_class"] = "unavailable";
         }
 
-        $addonList[] = $addon;
+        $addons_tpl[] = $addon;
     }
 
     // add to user template data
-    $addon_type["items"] = $addonList;
+    $addon_type["items"] = $addons_tpl;
     $tpl_data["addon_types"][] = $addon_type;
 }
 
@@ -156,21 +156,19 @@ foreach (Addon::getAllowedTypes() as $type)
 if ($can_elevate_user && !$is_owner)
 {
     // role
-    $role = [
-        "options" => []
-    ];
+    $role = ["options" => []];
 
     // check if current user can edit that role, if not we can not change to that role
     foreach (AccessControl::getRoles() as $db_role)
     {
         // has permission
-        $canEdit = User::hasPermissionOnRole($db_role);
-        $isOwner = ($user_role === $db_role);
+        $can_edit = User::hasPermissionOnRole($db_role);
+        $is_owner = ($user_role === $db_role);
 
-        if ($canEdit || $isOwner)
+        if ($can_edit || $is_owner)
         {
             $role["options"][$db_role] = $db_role;
-            if ($isOwner)
+            if ($is_owner)
             {
                 $role["selected"] = $db_role;
             }

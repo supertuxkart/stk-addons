@@ -1,6 +1,10 @@
 config.php
 *.patch
+*.diff
 .directory
+*~
+*.swp
+*.swo
 .htaccess
 .idea/
 vendor/

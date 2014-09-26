@@ -274,12 +274,7 @@ span.warning {
 
 /* Error Pages */
 #error-container {
-    background: rgba(255, 255, 255, 0.75);
-    margin: 2em 10em 2em 10em;
-    padding: 1.5em;
-    border-radius: 10px;
-    -moz-border-radius: 6px;
-    -webkit-border-radius: 6px;
+    padding-top: 10em;
 }
 
 #error-container h1 {
@@ -287,16 +282,10 @@ span.warning {
     font-size: 3em;
     font-weight: bold;
     text-align: center;
-    clear: none;
 }
 
 #error-container p {
     font-size: 1.5em;
-    clear: none;
-}
-
-#error-container img {
-    float: left;
 }
 
 .subtext {

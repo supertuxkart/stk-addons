@@ -274,6 +274,19 @@ class Util
     }
 
     /**
+     * Do a HTTP redirect.
+     * This functions exits after the redirect. Use with care.
+     *
+     * @param string $url       the url to redirect
+     * @param bool   $permanent is the request permanent or not.
+     */
+    public static function redirectTo($url, $permanent = false)
+    {
+        header("Location: " . $url, true, $permanent ? 301 : 302);
+        exit;
+    }
+
+    /**
      * Get url address
      *
      * @param bool $request_params      retrieve the url tih the GET params

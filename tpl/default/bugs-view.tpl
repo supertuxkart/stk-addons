@@ -137,8 +137,7 @@
         </form>
     {else}
         <p>
-            {t}You do not have permission to add a comment please{/t}
-            <a href="{$smarty.const.SITE_ROOT}login.php?return_to={$current_url}"> {t}login{/t}</a>{t} as another user{/t}
+            <a href="{$smarty.const.SITE_ROOT}login.php?return_to={$current_url}"> {t}Login{/t}</a>{t} to add a comment{/t}
         </p>
     {/if}
 
