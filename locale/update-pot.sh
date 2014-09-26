@@ -1,4 +1,6 @@
 #!/bin/bash
+
+echo "Creating php files index (file-list.txt)"
 rm -f file-list.txt
 ls ../*.php >> ./file-list.txt
 ls ../include/*.php >> ./file-list.txt

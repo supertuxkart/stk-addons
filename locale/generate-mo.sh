@@ -1,4 +1,6 @@
 #!/bin/bash
+echo "Generating .mo files"
+
 msgfmt translations-ca.po -o ca_ES/LC_MESSAGES/translations.mo
 msgfmt translations-es.po -o es_ES/LC_MESSAGES/translations.mo
 msgfmt translations-eu.po -o eu_ES/LC_MESSAGES/translations.mo
@@ -14,3 +16,5 @@ msgfmt translations-pt_BR.po -o pt_BR/LC_MESSAGES/translations.mo
 msgfmt translations-ru.po -o ru_RU/LC_MESSAGES/translations.mo
 msgfmt translations-id.po -o id_ID/LC_MESSAGES/translations.mo
 msgfmt translations-zh_TW.po -o zh_TW/LC_MESSAGES/translations.mo
+
+echo "DONE"
