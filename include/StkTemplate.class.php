@@ -18,7 +18,6 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// TODO compress assets and html
 /**
  * Customization of generic template class for main stkaddons pages
  *
@@ -359,8 +358,8 @@ class StkTemplate extends Template
      */
     public function addBootstrapMultiSelectLibrary()
     {
-        $this->addCssInclude("bootstrap-multiselect/css/bootstrap-multiselect.css", LIBS_LOCATION);
-        $this->addScriptInclude("bootstrap-multiselect/js/bootstrap-multiselect.js", LIBS_LOCATION);
+        $this->addCssInclude("bootstrap-multiselect/dist/css/bootstrap-multiselect.css", LIBS_LOCATION);
+        $this->addScriptInclude("bootstrap-multiselect/dist/js/bootstrap-multiselect.js", LIBS_LOCATION);
 
         return $this;
     }
@@ -373,8 +372,8 @@ class StkTemplate extends Template
      */
     public function addBootstrapSelectLibrary()
     {
-        $this->addCssInclude("bootstrap-select/bootstrap-select.min.css", LIBS_LOCATION);
-        $this->addScriptInclude("bootstrap-select/bootstrap-select.min.js", LIBS_LOCATION);
+        $this->addCssInclude("bootstrap-select/dist/css/bootstrap-select.min.css", LIBS_LOCATION);
+        $this->addScriptInclude("bootstrap-select/dist/js/bootstrap-select.min.js", LIBS_LOCATION);
 
         return $this;
     }

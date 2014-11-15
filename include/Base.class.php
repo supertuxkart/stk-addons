@@ -168,7 +168,7 @@ abstract class Base
     protected static function getAllFromTable($table, $order_by, $where = "", $limit = -1, $current_page = 1)
     {
         // build query
-        $query = "SELECt * FROM `" . DB_PREFIX . $table . "`";
+        $query = "SELECT * FROM `" . DB_PREFIX . $table . "`";
         if ($where)
         {
             $query .= sprintf(" WHERE %s", $where);

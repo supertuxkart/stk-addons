@@ -335,7 +335,7 @@ class DBConnection
         );
         // TODO add on duplicate key
 
-        Log::newEvent($query);
+        if (DEBUG_MODE) Log::newEvent($query);
 
         return $this->query($query, static::ROW_COUNT, $prepared_pairs, $data_types);
     }
@@ -373,7 +373,7 @@ class DBConnection
 
         $query = sprintf("UPDATE %s SET %s WHERE %s", DB_PREFIX . $table, $set_string, $where_statement);
 
-        Log::newEvent($query);
+        if (DEBUG_MODE) Log::newEvent($query);
 
         return $this->query($query, static::ROW_COUNT, $prepared_pairs, $data_types);
     }
@@ -403,7 +403,7 @@ class DBConnection
 
         $query = sprintf("DELETE FROM %s WHERE %s", DB_PREFIX . $table, $where_statement);
 
-        Log::newEvent($query);
+        if (DEBUG_MODE) Log::newEvent($query);
 
         return $this->query($query, static::ROW_COUNT, $prepared_pairs, $data_types);
     }

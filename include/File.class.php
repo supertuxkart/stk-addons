@@ -1179,13 +1179,15 @@ class File
      * @param string $href
      * @param string $label
      * @param bool   $rewrite
+     * @param bool   $tab_index flag to add it to tab index
      *
      * @return string
      */
-    public static function link($href, $label, $rewrite = true)
+    public static function link($href, $label, $rewrite = true, $tab_index = true)
     {
         $href = $rewrite ? File::rewrite($href) : $href;
+        $tab_string = $tab_index ? "" : " tabindex=\"-1\"";
 
-        return '<a href="' . $href . '">' . $label . '</a>';
+        return  sprintf('<a href="%s"%s>%s</a>', $href, $tab_string, $label);
     }
 }

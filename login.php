@@ -57,7 +57,7 @@ $login_form = [
     'form_action' => File::rewrite('login.php?action=submit'),
     'links'       => [
         'register'       => File::link('register.php', _h('Sign up here.')),
-        'reset_password' => File::link('password-reset.php', _h('(forgot password)'))
+        'reset_password' => File::link('password-reset.php', _h('(forgot password)'), true, false)
     ]
 ];
 
