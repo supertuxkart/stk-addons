@@ -37,6 +37,7 @@ $pagination = PaginationTemplate::get()
 
 $tpl = StkTemplate::get("addons-menu.tpl")
     ->assign("addons", $template_addons)
+    ->assign("current_id", isset($_GET['name']) ? $_GET['name'] : "")
     ->assign("pagination", $pagination->toString());
 
 echo $tpl;

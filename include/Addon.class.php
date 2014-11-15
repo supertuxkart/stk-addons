@@ -1588,6 +1588,7 @@ class Addon extends Base
 
             $real_url = sprintf("addons.php?type=%s&amp;name=%s", $type, $addon->getId());
             $template_addons[] = [
+                "id"          => $addon->getId(),
                 "class"       => $class,
                 "is_featured" => Addon::isFeatured($addon->getStatus()),
                 "name"        => $addon->getName(),
