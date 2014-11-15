@@ -55,11 +55,12 @@ $tpl_data = [
     "comments"     => $bug->getCommentsData()
 ];
 
+$can_edit =  User::hasPermission(AccessControl::PERM_EDIT_BUGS);
 $tpl->assign("bug", $tpl_data)
     ->assign("current_url", urlencode(Util::getCurrentUrl(false, false)))
     ->assign("can_add_comment", User::hasPermission(AccessControl::PERM_ADD_BUG_COMMENT))
-    ->assign("can_edit_bug", (User::getLoggedId() === $tpl_data["id"]) || User::hasPermission(AccessControl::PERM_EDIT_BUGS))
-    ->assign("can_delete_bug", User::hasPermission(AccessControl::PERM_EDIT_BUGS))
-    ->assign("can_edit_comment", User::hasPermission(AccessControl::PERM_EDIT_BUGS));
+    ->assign("can_edit_bug", (User::getLoggedId() === $tpl_data["id"]) || $can_edit)
+    ->assign("can_delete_bug", $can_edit)
+    ->assign("can_edit_comment", $can_edit);
 
 echo $tpl;

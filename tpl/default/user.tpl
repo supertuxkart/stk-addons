@@ -12,10 +12,10 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-2 col-md-2 left-menu" id="user-menu">
+        <div class="col-sm-3 col-md-3 left-menu" id="user-menu">
             {$user.menu}
         </div>
-        <div class="col-sm-10 col-md-10">
+        <div class="col-sm-9 col-md-9">
             <div id="user-body">
                 {$user.body}
             </div>

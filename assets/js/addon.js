@@ -71,7 +71,7 @@ function confirm_delete(url) {
     });
 
     // left panel user addon clicked
-    $('a.addon-list').click(function() {
+    $addon_menu.on("click", "a.addon-list", function() {
         History.pushState(null, '', this.href);
         var url = this.href;
         var addonType = getUrlVars(url)['type'];
@@ -82,6 +82,7 @@ function confirm_delete(url) {
 
         var addonId = getUrlVars(url)['name']; // we use the id as a varchar in the database
         loadContent($addon_body, SITE_ROOT + 'addons-panel.php', {name: addonId, type: addonType});
+        markMenuItemAsActive($(this));
 
         return false;
     });
@@ -155,8 +156,6 @@ function confirm_delete(url) {
         }
 
         loadContent($addon_menu, "addons-menu.php", {type: addon_type, sort: sort_type, order: sort_order}, function() {}, "GET");
-
-        console.log(sort_type);
     })
 
 })(jQuery, SITE_ROOT, JSON_LOCATION);

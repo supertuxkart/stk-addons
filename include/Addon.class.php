@@ -1578,7 +1578,7 @@ class Addon extends Base
             elseif ($has_permission || $user_id == $addon->getUploaderId())
             {
                 // not approved, see of we are logged in and we have permission
-                $class = ' unavailable';
+                $class = ' disabled';
             }
             else
             {
