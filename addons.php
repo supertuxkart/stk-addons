@@ -153,7 +153,7 @@ if ($addon_exists)
 }
 
 // build template
-$tpl = StkTemplate::get("addons.tpl")
+$tpl = StkTemplate::get("addons/index.tpl")
     ->assign("title", $title)
     ->assign("is_name", $_GET['name'])
     ->addUtilLibrary()

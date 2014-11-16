@@ -19,7 +19,7 @@
  */
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
-$tpl = StkTemplate::get("stats-files.tpl");
+$tpl = StkTemplate::get("stats/page/files.tpl");
 
 $query_images = "SELECT `addon_id`, `addon_type`, `file_path`, `date_added`, `approved`, `downloads`
     FROM `" . DB_PREFIX . "files`

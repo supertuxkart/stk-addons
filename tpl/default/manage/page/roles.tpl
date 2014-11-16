@@ -3,7 +3,6 @@
     <div class="row">
         <div class="col-md-4">
             <h3>Roles</h3>
-
             <div id="manage-roles-roles" class="btn-group-vertical">
                 {foreach $roles.roles as $role}
                     <button type="button" class="btn btn-default">{$role}</button>
@@ -26,7 +25,6 @@
         </div>
         <div class="col-md-8">
             <h3>Permissions</h3>
-
             <div id="manage-roles-permissions">
                 <form class="form-horizontal" id="manage-roles-permission-form">
                     {foreach $roles.permissions as $permission}

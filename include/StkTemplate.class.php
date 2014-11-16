@@ -215,6 +215,20 @@ class StkTemplate extends Template
     }
 
     /**
+     * Setup the necessary config files variable template paths and others
+     */
+    private function setupConfigVars()
+    {
+        $directory = $this->getTemplateDirectory();
+        $config = [
+            "directory" => $directory,
+            "header"    => $directory . "header.tpl",
+            "footer"    => $directory . "footer.tpl"
+        ];
+        $this->assign("tpl_config", $config);
+    }
+
+    /**
      * Setup the header meta tags and js includes, the top menu and the language menu
      */
     protected function setup()
@@ -223,6 +237,7 @@ class StkTemplate extends Template
         $this->setupTopMenu();
         $this->setupLanguageMenu();
         $this->setupFooter();
+        $this->setupConfigVars();
     }
 
     /**

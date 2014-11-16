@@ -55,7 +55,7 @@ switch ($_GET["data-type"])
 
         if ($return_html)
         {
-            $addons_html = StkTemplate::get("addons-menu.tpl")
+            $addons_html = StkTemplate::get("addons/menu.tpl")
                 ->assign("addons", $template_addons)
                 ->assign("pagination", "")
                 ->toString();
@@ -92,7 +92,7 @@ switch ($_GET["data-type"])
             exit_json_error($e->getMessage());
         }
 
-        exit_json_success("", ["bugs-all" => StkTemplate::get('bugs-all.tpl')->assign("bugs", ["items" => $bugs])->toString()]);
+        exit_json_success("", ["bugs-all" => StkTemplate::get('bugs/all.tpl')->assign("bugs", ["items" => $bugs])->toString()]);
         break;
 
     case "user":
@@ -117,7 +117,7 @@ switch ($_GET["data-type"])
 
         if ($return_html)
         {
-            $users_html = StkTemplate::get("user-menu.tpl")
+            $users_html = StkTemplate::get("users/menu.tpl")
                 ->assign("img_location", IMG_LOCATION)
                 ->assign("users", $template_users)
                 ->assign("pagination", "")

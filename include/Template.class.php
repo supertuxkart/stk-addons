@@ -61,7 +61,7 @@ class Template
         }
 
         $this->createSmartyInstance();
-        $this->setTemplateDir($template_dir);
+        $this->setTemplateDirectory($template_dir);
         $this->setTemplateFile($template_file);
     }
 
@@ -115,14 +115,14 @@ class Template
     }
 
     /**
-     * Get the path to the template file directory, based on the template name
+     * Get the path to the template file directory, based on the template directory
      *
-     * @param string $template_dir
+     * @param string|null $template_dir if null return the default template version
      *
      * @return string
      * @throws TemplateException
      */
-    public static function getTemplateDir($template_dir)
+    public static function getTemplateDirectoryVersion($template_dir = null)
     {
         if (is_null($template_dir))
         {
@@ -168,13 +168,13 @@ class Template
      *
      * @throws TemplateException
      */
-    private function setTemplateDir($template_name)
+    private function setTemplateDirectory($template_name)
     {
         if ($this->file !== null)
         {
             throw new TemplateException('You cannot change the template after a template file is selected.');
         }
-        $this->directory = static::getTemplateDir($template_name);
+        $this->directory = static::getTemplateDirectoryVersion($template_name);
         $this->smarty->setTemplateDir($this->directory);
     }
 
@@ -197,6 +197,22 @@ class Template
         }
 
         $this->file = $this->directory . $file_name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTemplateDirectory()
+    {
+        return $this->directory;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTemplateFile()
+    {
+        return $this->file;
     }
 
     /**

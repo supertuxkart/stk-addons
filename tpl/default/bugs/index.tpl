@@ -1,5 +1,4 @@
-{config_load file="{$smarty.current_dir}/tpl.conf"}
-{include file=#header#}
+{include file=$tpl_config.header}
 <div id="bugs-main">
     <h1 class="text-center">{t}Bug Tracker{/t}
         <small> {t}for addons{/t}</small>
@@ -49,4 +48,4 @@
         {$bugs.content}
     </div>
 </div>
-{include file=#footer#}
+{include file=$tpl_config.footer}

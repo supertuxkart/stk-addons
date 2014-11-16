@@ -1,9 +1,8 @@
-{config_load file="{$smarty.current_dir}/tpl.conf"}
-{include file=#header#}
+{include file=$tpl_config.header}
 <div id="stats-main">
     <h1 class="text-center">{t}Statistics{/t}</h1>
     <div id="stats-body">
         {$stats.body}
     </div>
 </div>
-{include file=#footer#}
+{include file=$tpl_config.footer}

@@ -3,9 +3,7 @@
 <div class="row">
     <div class="col-md-offset-2">
         <h1>{t}Account Registration{/t}</h1>
-        {include file="feedback/errors.tpl"}
-        {include file="feedback/warnings.tpl"}
-        {include file="feedback/success.tpl"}
+        {include file="feedback/all.tpl"}
         {if $register.display}
             <form id="register" action="register.php?action=register" method="POST" class="form-horizontal auto-validation"
                   data-bv-feedbackicons-valid="glyphicon glyphicon-ok"

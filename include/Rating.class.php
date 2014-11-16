@@ -214,7 +214,7 @@ class Rating
     {
         $current_rating = $this->getUserVote();
 
-        return StkTemplate::get("user-rating.tpl")
+        return StkTemplate::get("addons/rating.tpl")
             ->assign("addon_id", $this->addon_id)
             ->assign("rating_1", $current_rating === 1)
             ->assign("rating_2", $current_rating === 2)

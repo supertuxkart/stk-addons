@@ -19,7 +19,7 @@
  */
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
-$tpl = StkTemplate::get('bugs-index.tpl')
+$tpl = StkTemplate::get('bugs/index.tpl')
     ->addDataTablesLibrary()
     ->addWYSIWYGLibrary()
     ->addTypeHeadLibrary()

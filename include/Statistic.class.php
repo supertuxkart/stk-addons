@@ -59,7 +59,7 @@ class Statistic
             throw new StatisticException(_h("The query is empty"));
         }
 
-        $tpl = StkTemplate::get("stats-section.tpl");
+        $tpl = StkTemplate::get("stats/section.tpl");
         $tpl_data = [
             "title"       => $section_title,
             "data"        => [],
@@ -276,7 +276,7 @@ class Statistic
         }
 
         // init
-        $tpl = StkTemplate::get("stats-chart.tpl");
+        $tpl = StkTemplate::get("stats/chart.tpl");
         $tpl_data = [
             "title"        => $chart_title,
             "class"        => ($chart_type === static::CHART_PIE) ? "stats-pie-chart" : "stats-time-chart-wide",

@@ -44,7 +44,7 @@
                     <li><a href="{$menu.stats}">{t}Stats{/t}</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li id="lang-menu">{include file=#lang_menu#}</li>
+                    <li id="lang-menu">{include file="./menu-lang.tpl"}</li>
                     <li><a href="http://supertuxkart.sourceforge.net">{t}STK Homepage{/t}</a></li>
                     {if !$is_logged}
                         <li><a href="{$menu.login}">{t}Login{/t}</a></li>

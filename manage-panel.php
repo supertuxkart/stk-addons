@@ -25,7 +25,7 @@ $_GET['action'] = (isset($_GET['action'])) ? $_GET['action'] : null;
 switch ($_GET['view'])
 {
     case 'overview':
-        $tpl = new StkTemplate("manage-overview.tpl");
+        $tpl = new StkTemplate("manage/page/overview.tpl");
         $tpl_data = [
             "addons"   => [],
             "images"   => [],
@@ -115,7 +115,7 @@ switch ($_GET['view'])
         {
             exit("You do not have the necessary permission");
         }
-        $tpl = new StkTemplate("manage-general.tpl");
+        $tpl = new StkTemplate("manage/page/general.tpl");
         $tpl_data = [
             "xml_frequency"       => Config::get(Config::XML_UPDATE_TIME),
             "allowed_addon_exts"  => Config::get(Config::ALLOWED_ADDON_EXTENSIONS),
@@ -147,7 +147,7 @@ switch ($_GET['view'])
         {
             exit("You do not have the necessary permission");
         }
-        $tpl = new StkTemplate("manage-news.tpl");
+        $tpl = new StkTemplate("manage/page/news.tpl");
         $tpl_data = ["items" => News::getAll()];
 
         $tpl->assign("news", $tpl_data);
@@ -164,7 +164,7 @@ switch ($_GET['view'])
         {
             exit("You do not have the necessary permission");
         }
-        $tpl = new StkTemplate("manage-clients.tpl");
+        $tpl = new StkTemplate("manage/page/clients.tpl");
         $tpl_data = [
             "items" => DBConnection::get()->query(
                     'SELECT * FROM ' . DB_PREFIX . 'clients
@@ -182,14 +182,14 @@ switch ($_GET['view'])
         {
             exit("You do not have the necessary permission");
         }
-        $tpl = new StkTemplate("manage-cache.tpl");
+        $tpl = new StkTemplate("manage/page/cache.tpl");
         $tpl_data = [];
 
         $tpl->assign("cache", $tpl_data);
         break;
 
     case 'files':
-        $tpl = new StkTemplate("manage-files.tpl");
+        $tpl = new StkTemplate("manage/page/files.tpl");
         $tpl_data = [];
 
         $files = File::getAllFiles();
@@ -252,7 +252,7 @@ switch ($_GET['view'])
         break;
 
     case 'logs':
-        $tpl = new StkTemplate("manage-logs.tpl");
+        $tpl = new StkTemplate("manage/page/logs.tpl");
         $tpl_data = ["items" => Log::getEvents()];
 
         $tpl->assign("logs", $tpl_data);
@@ -263,7 +263,7 @@ switch ($_GET['view'])
         {
             exit("You do not have the necessary permission");
         }
-        $tpl = new StkTemplate("manage-roles.tpl");
+        $tpl = new StkTemplate("manage/page/roles.tpl");
         $tpl_data = [
             "roles"       => AccessControl::getRoles(),
             "permissions" => AccessControl::getPermissionsChecked()

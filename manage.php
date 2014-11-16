@@ -23,7 +23,7 @@ AccessControl::setLevel(AccessControl::PERM_EDIT_ADDONS);
 $_GET['action'] = (isset($_GET['action'])) ? $_GET['action'] : null;
 $_GET['view'] = (isset($_GET['view'])) ? $_GET['view'] : 'overview';
 
-$tpl = StkTemplate::get("manage.tpl")
+$tpl = StkTemplate::get("manage/index.tpl")
     ->assignTitle(_h("Manage"))
     ->addUtilLibrary()
     ->addDataTablesLibrary()

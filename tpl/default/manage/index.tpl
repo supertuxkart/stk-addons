@@ -1,5 +1,4 @@
-{config_load file="{$smarty.current_dir}/tpl.conf"}
-{include file=#header#}
+{include file=$tpl_config.header}
 <div class="row affix-row">
     <div class="col-sm-3 col-md-3 affix-sidebar left-menu">
         <div class="sidebar-nav">
@@ -72,4 +71,4 @@
         </div>
     </div>
 </div>
-{include file=#footer#}
+{include file=$tpl_config.footer}

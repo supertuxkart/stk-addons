@@ -38,7 +38,7 @@ $can_elevate_user = (User::hasPermissionOnRole($user_role));
 $is_owner = ($user->getId() === User::getLoggedId());
 $is_admin = User::isAdmin();
 
-$tpl = StkTemplate::get("user-panel.tpl")
+$tpl = StkTemplate::get("users/panel.tpl")
     ->assign("is_owner", $is_owner)
     ->assign("can_edit_role", $can_elevate_user && !$is_owner) // change role and activated status
     ->assign("can_see_settings", $can_elevate_user || $is_owner)

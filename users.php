@@ -24,7 +24,7 @@ AccessControl::setLevel(AccessControl::PERM_VIEW_BASIC_PAGE);
 // set current user if not defined
 $_GET['user'] = (isset($_GET['user'])) ? $_GET['user'] : User::getLoggedUserName();
 
-$tpl = StkTemplate::get('user.tpl')
+$tpl = StkTemplate::get('users/index.tpl')
     ->assignTitle(_h('Users'))
     ->addUtilLibrary()
     ->addScriptInclude("user.js");

@@ -18,5 +18,5 @@
 </head>
 <body>
 <div id="body-wrapper">
-{include file=#top_menu#}
+{include file="./menu-top.tpl"}
 <div id="content-wrapper" class="container">

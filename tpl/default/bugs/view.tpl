@@ -174,7 +174,7 @@
 
     <div id="bug-comments">
         {foreach $bug.comments as $comment}
-            {include file="bugs-view-comment.tpl" scope="parent"}
+            {include file="./view-comment.tpl" scope="parent"}
         {/foreach}
     </div>
 </div>

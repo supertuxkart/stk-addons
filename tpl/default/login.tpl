@@ -1,9 +1,7 @@
 {config_load file="{$smarty.current_dir}/tpl.conf"}
 {include file=#header#}
 <div id="login-main">
-    {include file="feedback/errors.tpl"}
-    {include file="feedback/warnings.tpl"}
-    {include file="feedback/success.tpl"}
+    {include file="feedback/all.tpl"}
     {if $login.display}
         <div class="col-md-4 col-md-offset-4">
             <div class="panel panel-default">

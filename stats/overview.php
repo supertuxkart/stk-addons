@@ -19,7 +19,7 @@
  */
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
-$tpl = StkTemplate::get("stats-overview.tpl");
+$tpl = StkTemplate::get("stats/page/overview.tpl");
 $tpl_data = [
     "json" => [
         "addons"  => Statistic::getCacheLocation("addon_type_pie"),

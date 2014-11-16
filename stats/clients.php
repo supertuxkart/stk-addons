@@ -19,7 +19,7 @@
  */
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
-$tpl = StkTemplate::get("stats-clients.tpl");
+$tpl = StkTemplate::get("stats/page/clients.tpl");
 
 $uaVer1y_query = "SELECT `label`, `date`, SUM(`value`) FROM (
         SELECT SUBSTRING_INDEX(SUBSTRING(`type`, 21), ' ', 1) AS `label`, `date`, `value`

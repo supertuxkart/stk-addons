@@ -19,14 +19,13 @@
  */
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
-$tpl = StkTemplate::get("bugs-add.tpl")->assign("current_url", urlencode(Util::getCurrentUrl(false, false)));
+$tpl = StkTemplate::get("bugs/add.tpl")->assign("current_url", urlencode(Util::getCurrentUrl(false, false)));
 
 // check permission
 if (!User::hasPermission(AccessControl::PERM_ADD_BUG))
 {
     $tpl->assign("bug", []);
     exit($tpl);
-
 }
 
 $tpl->assign(

@@ -2,7 +2,7 @@
     <h2>{t}File a bug{/t}</h2>
     <hr>
     <form class="form-horizontal auto-validation" id="bug-add-form"
-          ata-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+          data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
           data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
           data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
         <div class="form-group">

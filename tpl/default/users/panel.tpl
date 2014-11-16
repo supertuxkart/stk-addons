@@ -7,10 +7,10 @@
     {/if}
 </ul>
 <div class="tab-content">
-    {include file="user-tab-profile.tpl" scope="parent"}
-    {include file="user-tab-friends.tpl" scope="parent"}
-    {include file="user-tab-achievements.tpl" scope="parent"}
+    {include file="./tab/profile.tpl" scope="parent"}
+    {include file="./tab/friends.tpl" scope="parent"}
+    {include file="./tab/achievements.tpl" scope="parent"}
     {if $can_see_settings}
-        {include file="user-tab-settings.tpl" scope="parent"}
+        {include file="./tab/settings.tpl" scope="parent"}
     {/if}
 </div>

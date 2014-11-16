@@ -32,7 +32,7 @@ if (!Bug::exists($bug_id))
     exit("Bug $bug_id does not exist");
 }
 
-$tpl = StkTemplate::get("bugs-view.tpl");
+$tpl = StkTemplate::get("bugs/view.tpl");
 $bug = Bug::get($bug_id);
 
 $tpl_data = [

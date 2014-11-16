@@ -19,7 +19,7 @@
  */
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
-$tpl = StkTemplate::get("stats-servers.tpl");
+$tpl = StkTemplate::get("stats/page/servers.tpl");
 $tpl_data = [
     "sections" => []
 ];

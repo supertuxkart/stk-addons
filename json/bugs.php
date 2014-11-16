@@ -65,7 +65,7 @@ switch ($_POST["action"])
 
         // send back to comment to the user
         $comment_data = Bug::getCommentData($comment_id);
-        $tpl_comment = StkTemplate::get("bugs-view-comment.tpl")->assign(
+        $tpl_comment = StkTemplate::get("bugs/view-comment.tpl")->assign(
             "comment",
             [
                 "id"          => $comment_data["id"],

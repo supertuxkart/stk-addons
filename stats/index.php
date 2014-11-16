@@ -19,7 +19,7 @@
  */
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
-$tpl = StkTemplate::get("stats-index.tpl")
+$tpl = StkTemplate::get("stats/index.tpl")
     ->addDataTablesLibrary()
     ->addFlotLibrary()
     ->addUtilLibrary()

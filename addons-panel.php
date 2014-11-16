@@ -22,7 +22,7 @@
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
 
 $id = isset($_GET['name']) ? $_GET['name'] : "";
-$a_tpl = new StkTemplate('addons-panel.tpl');
+$a_tpl = new StkTemplate('addons/panel.tpl');
 
 try
 {
