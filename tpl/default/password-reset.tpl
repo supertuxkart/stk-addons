@@ -1,11 +1,7 @@
-{config_load file="{$smarty.current_dir}/tpl.conf"}
-{include file=#header#}
+{include file=$tpl_config.header}
 <div id="main-reset-password">
     <h1>{t}Reset Password{/t}</h1>
-    {include file="feedback/errors.tpl"}
-    {include file="feedback/warnings.tpl"}
-    {include file="feedback/success.tpl"}
-
+    {include file="feedback/all.tpl"}
     {if $pass_reset.reset_form.display == true}
         <form id="reset_pw" action="?action=reset" class="form-horizontal" method="POST">
             <div class="form-group col-md-12">
@@ -67,4 +63,4 @@
         </form>
     {/if}
 </div>
-{include file=#footer#}
+{include file=$tpl_config.footer}

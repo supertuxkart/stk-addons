@@ -1,6 +1,4 @@
-{config_load file="{$smarty.current_dir}/tpl.conf"}
-{include file=#header#}
-
+{include file=$tpl_config.header}
 <div id="error-container">
     <div class="row">
         <div class="col-md-2">
@@ -13,4 +11,4 @@
         </div>
     </div>
 </div>{* #error-container *}
-{include file=#footer#}
+{include file=$tpl_config.footer}

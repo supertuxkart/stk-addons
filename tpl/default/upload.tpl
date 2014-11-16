@@ -1,14 +1,11 @@
-{config_load file="{$smarty.current_dir}/tpl.conf"}
-{include file=#header#}
+{include file=$tpl_config.header}
 <div id="main-upload">
     <div class="row">
         <div class="col-md-12">
             <h1 class="text-center">Upload</h1><hr>
         </div>
     </div>
-    {include file="feedback/errors.tpl"}
-    {include file="feedback/warnings.tpl"}
-    {include file="feedback/success.tpl"}
+    {include file="feedback/all.tpl"}
     {if $upload.display}
         {if $upload.form.update}
             <form id="formKart" enctype="multipart/form-data" class="form-horizontal" action="upload.php?type={$upload.type}&amp;name={$upload.name}&amp;action=submit" method="POST">
@@ -148,4 +145,4 @@
         </form>
     {/if}
 </div>
-{include file=#footer#}
+{include file=$tpl_config.footer}

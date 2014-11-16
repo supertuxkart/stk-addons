@@ -1,5 +1,4 @@
-{config_load file="{$smarty.current_dir}/tpl.conf"}
-{include file=#header#}
+{include file=$tpl_config.header}
 <div>
     <h1>Privacy Policy</h1>
     <address>Last updated: February 1, 2014</address>
@@ -134,4 +133,4 @@
         <li>Stephen Just &lt;stephenjust@users.sf.net&gt;</li>
     </ul>
 </div>
-{include file=#footer#}
+{include file=$tpl_config.footer}

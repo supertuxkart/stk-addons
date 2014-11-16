@@ -1,5 +1,4 @@
-{config_load file="{$smarty.current_dir}/tpl.conf"}
-{include file=#header#}
+{include file=$tpl_config.header}
 <div>
     <h1>{t}About STK Add-Ons{/t}</h1>
     <h2>SuperTuxKart</h2>
@@ -21,4 +20,4 @@
     <h2>{t}Credits{/t}</h2>
     <pre>{$about.credits.content}</pre>
 </div>
-{include file=#footer#}
+{include file=$tpl_config.footer}

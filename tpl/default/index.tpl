@@ -1,5 +1,4 @@
-{config_load file="{$smarty.current_dir}/tpl.conf"}
-{include file=#header#}
+{include file=$tpl_config.header}
 <div id="index-body" class="stk-image">
     <img id="index-logo" src="{$smarty.const.IMG_LOCATION}logo.png" alt="SuperTuxKart Logo" title="SuperTuxKart Logo" />
     
@@ -23,4 +22,4 @@
 	<noscript></div></noscript>
     </div>
 </div>{* #index-body *}
-{include file=#footer#}
+{include file=$tpl_config.footer}

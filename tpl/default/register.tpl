@@ -1,5 +1,4 @@
-{config_load file="{$smarty.current_dir}/tpl.conf"}
-{include file=#header#}
+{include file=$tpl_config.header}
 <div class="row">
     <div class="col-md-offset-2">
         <h1>{t}Account Registration{/t}</h1>
@@ -158,4 +157,4 @@
         {/if}
     </div>
 </div>
-{include file=#footer#}
+{include file=$tpl_config.footer}

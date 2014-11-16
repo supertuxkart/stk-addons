@@ -1,4 +1,3 @@
-{config_load file="{$smarty.current_dir}/../tpl.conf"}
 {$upload_location="upload.php?type={$addon.type}&amp;name={$addon.name}"}
 <div itemscope itemtype="http://www.schema.org/CreativeWork">
     <h1>
