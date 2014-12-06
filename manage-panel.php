@@ -117,7 +117,7 @@ switch ($_GET['view'])
         }
         $tpl = new StkTemplate("manage/page/general.tpl");
         $tpl_data = [
-            "xml_frequency"       => Config::get(Config::XML_UPDATE_TIME),
+            "xml_frequency"       => (int)Config::get(Config::XML_UPDATE_TIME),
             "allowed_addon_exts"  => Config::get(Config::ALLOWED_ADDON_EXTENSIONS),
             "allowed_source_exts" => Config::get(Config::ALLOWED_SOURCE_EXTENSIONS),
             "admin_email"         => Config::get(Config::EMAIL_ADMIN),
@@ -130,7 +130,7 @@ switch ($_GET['view'])
                 "selected" => (Config::get(Config::SHOW_INVISIBLE_ADDONS) == 1) ? 1 : 0
             ],
             "blog_feed"           => Config::get(Config::FEED_BLOG),
-            "max_image_dimension" => Config::get(Config::IMAGE_MAX_DIMENSION),
+            "max_image_dimension" => (int)Config::get(Config::IMAGE_MAX_DIMENSION),
             "apache_rewrites"     => Config::get(Config::APACHE_REWRITES),
         ];
 

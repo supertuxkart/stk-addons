@@ -70,6 +70,7 @@ class AddonViewer
     {
         // build template
         $tpl = [
+            'id'             => $this->addon->getId(),
             'name'           => h($this->addon->getName()),
             'description'    => h($this->addon->getDescription()),
             'type'           => $this->addon->getType(),
@@ -136,7 +137,7 @@ class AddonViewer
 
         // Download button, TODO use this in some way
         $file_path = $this->addon->getFile((int)$this->latestRev['revision']);
-        if ($file_path !== false && File::exists($file_path))
+        if ($file_path !== false && File::existsDB($file_path))
         {
             $button_text = h(sprintf(_('Download %s'), $this->addon->getName()));
             $shrink = (mb_strlen($button_text) > 20) ? 'style="font-size: 1.1em !important;"' : null;
@@ -244,7 +245,7 @@ class AddonViewer
         foreach ($source_files_db as $source)
         {
             $source['label'] = sprintf(_h('Source File %u'), $source_number + 1);
-            $source['approved'] = (bool)$source;
+            $source['approved'] = (bool)$source['approved'];
 
             // do not compute anything
             if (!$can_edit && !$source['approved'])

@@ -33,7 +33,7 @@
     {/if}
     {if $pass_reset.pass_form.display == true}
         <form id="change_pw" action="?action=change" method="POST" class="form-horizontal">
-            <div class="form-group col-md-12"">
+            <div class="form-group col-md-12">
                 {t}Please enter a new password for your account.{/t}
             </div>
             <div class="form-group">

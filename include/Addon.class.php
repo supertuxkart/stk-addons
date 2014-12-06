@@ -110,7 +110,7 @@ class Addon extends Base
     protected $revisions = [];
 
     /**
-     * @var
+     * @var int
      */
     protected $latest_revision;
 
@@ -169,7 +169,7 @@ class Addon extends Base
             // revision is latest
             if (Addon::isLatest($current_rev['status']))
             {
-                $this->latest_revision = $rev['revision'];
+                $this->latest_revision = (int)$rev['revision'];
                 $this->image = $rev['image'];
                 $this->icon = (isset($rev['icon'])) ? $rev['icon'] : 0;
             }
@@ -179,7 +179,7 @@ class Addon extends Base
 
         if (!$this->latest_revision)
         {
-            throw new AddonException(_h("Did not found latest revision (possibly wrong status) This should never happen"));
+            throw new AddonException(_h("Did not found latest revision (possibly wrong status). This should never happen"));
         }
     }
 
@@ -292,7 +292,7 @@ class Addon extends Base
 
             if ($new_hash === $images[$i]['hash'])
             {
-                File::delete($attributes['image']);
+                File::deleteFile($attributes['image']);
                 $attributes['image'] = $images[$i]['id'];
                 break;
             }
@@ -387,7 +387,11 @@ class Addon extends Base
 
         foreach ($files as $file)
         {
-            if (file_exists(UP_PATH . $file['file_path']) && !unlink(UP_PATH . $file['file_path']))
+            try
+            {
+                File::deleteFileFS(UP_PATH . $file['file_path']);
+            }
+            catch (FileException $e)
             {
                 echo '<span class="error">' . _h('Failed to delete file:') . ' ' . $file['file_path'] . '</span><br>';
             }
@@ -435,7 +439,7 @@ class Addon extends Base
             throw new AddonException(_h('You do not have the necessary permissions to perform this action.'));
         }
 
-        if (!File::delete($file_id))
+        if (!File::deleteFile($file_id))
         {
             throw new AddonException(_h('Failed to delete file.'));
         }
@@ -598,11 +602,21 @@ class Addon extends Base
     /**
      * Get the last revision
      *
-     * @return string
+     * @return array
      */
     public function getLatestRevision()
     {
         return $this->revisions[$this->latest_revision];
+    }
+
+    /**
+     * Get the last revision  id number
+     *
+     * @return int
+     */
+    public function getLatestRevisionID()
+    {
+        return $this->latest_revision;
     }
 
     /**
@@ -1471,17 +1485,15 @@ class Addon extends Base
      * Check if the type is allowed
      *
      * @param string $type
-     *
      * @return bool true if allowed and false otherwise
      */
     public static function isAllowedType($type)
     {
-        return in_array($type, static::getAllowedTypes());
+        return in_array($type, static::getAllowedTypes(), true);
     }
 
     /**
      * Get an array of allowed types
-     *
      * @return array
      */
     public static function getAllowedTypes()
@@ -1493,7 +1505,6 @@ class Addon extends Base
      * Perform a cleaning operation on the id
      *
      * @param string $id what we want to clean
-     *
      * @return string|bool
      */
     public static function cleanId($id)

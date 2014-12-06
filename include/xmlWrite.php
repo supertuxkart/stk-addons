@@ -41,7 +41,7 @@ function generateNewsXML()
     $writer->writeAttribute('mtime', time());
 
     // Time between updates
-    $writer->writeAttribute('frequency', Config::get(Config::XML_UPDATE_TIME));
+    $writer->writeAttribute('frequency', (int)Config::get(Config::XML_UPDATE_TIME));
 
     // Reference assets.xml
     $writer->startElement('include');
@@ -108,7 +108,7 @@ function generateAssetXML()
     $writer->writeAttribute('mtime', time());
 
     // Time between updates
-    $writer->writeAttribute('frequency', Config::get(Config::XML_UPDATE_TIME));
+    $writer->writeAttribute('frequency', (int)Config::get(Config::XML_UPDATE_TIME));
 
     foreach ($addon_types as $type)
     {
@@ -258,7 +258,7 @@ function generateAssetXML2()
     $writer->writeAttribute('mtime', time());
 
     // Time between updates
-    $writer->writeAttribute('frequency', Config::get(Config::XML_UPDATE_TIME));
+    $writer->writeAttribute('frequency', (int)Config::get(Config::XML_UPDATE_TIME));
 
     foreach ($addon_types as $type)
     {

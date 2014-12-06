@@ -41,19 +41,21 @@ class SImage
     const SIZE_BIG = 3;
 
     /**
+     * The full path to the image
      * @var string
      */
-    public $path;
+    private $path;
 
     /**
-     * @var string
+     * The image formatL jpeg, png
+     * @var int
      */
-    public $format;
+    private $format;
 
     /**
      * @var array
      */
-    public $info;
+    private $info;
 
     /**
      * @var resource
@@ -61,30 +63,26 @@ class SImage
     private $imageData;
 
     /**
-     * @param string $file
+     * @param string $image_path
      *
      * @throws SImageException
      */
-    public function __construct($file)
+    public function __construct($image_path)
     {
-        if (!file_exists($file))
-        {
-            throw new SImageException('Image file not found.');
-        }
+        $this->setPath($image_path);
 
-        $this->path = $file;
-
+        // TODO make this code into function
         $image_info = getimagesize($this->path);
         switch ($image_info[2])
         {
             case IMAGETYPE_PNG:
                 $source = imagecreatefrompng($this->path);
-                $format = 'png';
+                $this->format = IMAGETYPE_PNG;
                 break;
 
             case IMAGETYPE_JPEG:
                 $source = imagecreatefromjpeg($this->path);
-                $format = 'jpg';
+                $this->format = IMAGETYPE_JPEG;
                 break;
 
             default:
@@ -92,8 +90,25 @@ class SImage
         }
 
         $this->info = $image_info;
-        $this->$imageData = $source;
-        $this->format = $format;
+        $this->imageData = $source;
+    }
+
+    /**
+     * @param string $path to the image file
+     * @throws SImageException if file does not exist or is not a file
+     */
+    public function setPath($path)
+    {
+        if (!file_exists($path))
+        {
+            throw new SImageException(_h('Path does not exist on the filesystem'));
+        }
+        if (!is_file($path))
+        {
+            throw new SImageException(_h('Path does not point to a file.'));
+        }
+
+        $this->path = $path;
     }
 
     /**
@@ -103,11 +118,11 @@ class SImage
      */
     public function save($file_path)
     {
-        if ($this->format === 'png')
+        if ($this->format === IMAGETYPE_PNG)
         {
             imagepng($this->imageData, $file_path);
         }
-        elseif ($this->format === 'jpg')
+        elseif ($this->format === IMAGETYPE_JPEG)
         {
             imagejpeg($this->imageData, $file_path);
         }

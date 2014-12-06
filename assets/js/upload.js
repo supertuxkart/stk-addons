@@ -36,8 +36,7 @@
             $checkbox_license2.attr("disabled", true);
             $label_license1.css("color", '#000000');
             $label_license2.css("color", '#999999');
-        }
-        else {
+        } else {
             $checkbox_license1.attr("disabled", true);
             $checkbox_license2.attr("disabled", false);
             $label_license1.css("color", '#999999');
@@ -49,7 +48,7 @@
         agreementToggle();
 
         if ($select_file_type) {
-            if ($select_file_type.val() === "image") {
+            if ($select_file_type.val() == "1") {
                 $checkbox_license1.attr("disabled", true);
                 $checkbox_license2.attr("disabled", true);
                 $label_license1.css("color", '#999999');

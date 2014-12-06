@@ -20,95 +20,95 @@
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
 AccessControl::setLevel(AccessControl::PERM_ADD_ADDON);
 
-// Define possibly undefined variables
-$action = isset($_GET['action']) ? $_GET['action'] : null;
-$type = isset($_GET['type']) ? $_GET['type'] : null;
-$name = isset($_GET['name']) ? $_GET['name'] : null;
+// used to set the post field with the same name
+$upload_type = !empty($_GET['upload-type']) ? Upload::stringToType($_GET['upload-type']) : null;
+$type = !empty($_GET['type']) ? $_GET['type'] : null; // addon type
+$name = !empty($_GET['name']) ? $_GET['name'] : null; // addon name
 
 $tpl = StkTemplate::get('upload.tpl')
     ->addBootstrapFileInputLibrary()
     ->addScriptInclude("upload.js");
 
 $upload_form = [
-    "action"  => $action,
-    "type"    => $type,
-    "name"    => $name,
-    "display" => true,
-    "form"    => [
-        // new addon revision
-        "update" => false, // update addon or insert addon
-    ]
+    // add new things for this addon
+    "is_update"   => Addon::isAllowedType($type) && $name,
+    "addon"       => [
+        "type" => $type,
+        "name" => $name,
+    ],
+    "upload_type" => [
+        "options"  => [
+            Upload::SOURCE   => _h('Source Archive'),
+            Upload::IMAGE    => _h('Image File') . ' (.png, .jpg, .jpeg)',
+            Upload::REVISION => _h('Addon Revision')
+        ],
+        "selected" => $upload_type,
+        "default"  => Upload::ADDON // default value when the upload type is not defined
+    ],
+    "display"     => true,
 ];
 
-if ($action === "submit") // form submitted
+if (isset($_GET["submit"])) // form submitted
 {
     if (empty($_POST))
     {
         $upload_form["display"] = false;
         $tpl->assign("upload", $upload_form);
-        $tpl->assign("errors", _h("Maximum POST size exceeded. Your file is too large!"));
+        $tpl->assign("errors", _h("You did not submit anything/Maximum POST size exceeded(your file is too large!)"));
 
         exit($tpl);
     }
 
-    // Check to make sure all form license boxes are good
-    $agreement_form = 1;
-    while ($agreement_form == 1)
+    $l_author = !empty($_POST["l_author"]) ? (int)$_POST["l_author"] : null;
+    $expected_type = !empty($_POST['upload-type']) ? (int)$_POST['upload-type'] : null;
+    function getAgreement($l_author, $expected_type)
     {
-        if (!isset($_POST['license_gpl'])
-            && !isset($_POST['license_cc-by'])
-            && !isset($_POST['license_cc-by-sa'])
-            && !isset($_POST['license_pd'])
-            && !isset($_POST['license_bsd'])
-            && !isset($_POST['license_other'])
-        )
+        // Check to make sure all form boxes are good
+        $required_fields_license = [
+            'license_gpl',
+            'license_cc-by',
+            'license_cc-by-sa',
+            'license_pd',
+            'license_bsd',
+            'license_other',
+        ];
+        // at least one of the checkboxes must be checked
+        if (count($required_fields_license) === count(Validate::ensureIsSet($_POST, $required_fields_license)))
         {
-            $agreement_form = 0;
+            return false;
+        }
+        if (!isset($_POST['l_agreement']) || !$l_author)
+        {
+            return false;
         }
 
-        if (!isset($_POST['l_agreement']) || !isset($_POST['l_clean']))
+        if ($expected_type === Upload::IMAGE) // do not require License.txt file
         {
-            $agreement_form = 0;
-        }
-
-        if (!isset($_POST['l_author']))
-        {
-            $agreement_form = 0;
-        }
-
-        if (isset($_POST['upload-type']) && $_POST['upload-type'] == 'image')
-        {
-            if ($_POST['l_author'] != 1 && $_POST['l_author'] != 2)
+            if ($l_author !== 1 && $l_author !== 2)
             {
-                $agreement_form = 0;
+                return false;
             }
         }
         else
         {
-            if ($_POST['l_author'] == 1 && !isset($_POST['l_licensefile1']))
+            // the 2 big radios with checkboxes
+            if ($l_author === 1 && !isset($_POST['l_licensefile1']))
             {
-                $agreement_form = 0;
+                return false;
             }
-            if ($_POST['l_author'] == 2 && !isset($_POST['l_licensefile2']))
+            if ($l_author === 2 && !isset($_POST['l_licensefile2']))
             {
-                $agreement_form = 0;
+                return false;
             }
         }
-        break;
+
+        return true;
     }
 
-    if ($agreement_form === 0)
+    if (getAgreement($l_author, $expected_type) === true) // upload process
     {
         $upload_form["display"] = false;
-        $tpl->assign(
-            "errors",
-            _h(
-                'Your response to the agreement was unacceptable. You may not upload this content to the STK Addons website.'
-            )
-        );
-    }
-    else // upload process
-    {
+
         // Generate a note to moderators for license verification
         $moderator_message = '';
         if (isset($_POST['license_other']))
@@ -116,65 +116,43 @@ if ($action === "submit") // form submitted
             $moderator_message .= 'Auto-message: Moderator: Please verify that license is "free"' . "\n";
         }
 
-        if ($_POST['l_author'] == 1)
+        if ($l_author == 1)
         {
             $moderator_message .= 'Auto-message: Content is solely created by uploader.' . "\n";
         }
-        else
+        else // 2
         {
             $moderator_message .= 'Auto-message: Content contains third-party open content.' . "\n";
         }
 
         try
         {
-            // TODO fix upload type field
-            if (!isset($_POST['upload-type']))
-            {
-                $_POST['upload-type'] = null;
-            }
-
-            switch ($_POST['upload-type'])
-            {
-                case 'image':
-                    $expected_type = File::IMAGE;
-                    break;
-
-                case 'source':
-                    $expected_type = File::SOURCE;
-                    break;
-
-                default:
-                    $expected_type = File::ADDON;
-                    break;
-            }
-
-            $upload = new Upload($_FILES['file_addon'], $expected_type, $moderator_message);
+            $upload = new Upload($_FILES['file_addon'], $name, $type, $expected_type, $moderator_message);
             $tpl->assign("warnings", $upload->getWarningMessage());
             $tpl->assign("success", $upload->getSuccessMessage());
+
         }
         catch(UploadException $e)
         {
-            $upload_form["display"] = false;
             $tpl->assign("errors", $e->getMessage());
         }
         catch(Exception $e)
         {
-            $upload_form["display"] = false;
             $tpl->assign(
                 "errors",
                 'Unexpected exception: ' . $e->getMessage() . '<strong>If this is ever visible, that\'s a bug!</strong>'
             );
         }
     }
+    else
+    {
+        $upload_form["display"] = false;
+        $tpl->assign(
+            "errors",
+            _h('Your response to the agreement was unacceptable. You may not upload this content to the STK Addons website.')
+        );
+    }
 }
 
-// Working with an already existing addon
-if (Addon::isAllowedType($type) && $name)
-{
-    $upload_form["form"]["update"] = true;
-}
-
-// standard page
 $tpl->assign("upload", $upload_form);
-
 echo $tpl;

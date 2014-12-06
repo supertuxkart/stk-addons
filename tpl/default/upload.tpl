@@ -2,32 +2,37 @@
 <div id="main-upload">
     <div class="row">
         <div class="col-md-12">
-            <h1 class="text-center">Upload</h1><hr>
+            <h1 class="text-center">
+                {t}Upload{/t}
+                {if $upload.is_update}
+                    <small>{t}for addon{/t} {$upload.addon.name}</small>
+                {/if}
+            </h1><hr>
         </div>
     </div>
     {include file="feedback/all.tpl"}
     {if $upload.display}
-        {if $upload.form.update}
-            <form id="formKart" enctype="multipart/form-data" class="form-horizontal" action="upload.php?type={$upload.type}&amp;name={$upload.name}&amp;action=submit" method="POST">
-            {if $upload.action != 'file'}
-                <p class="alert-info alert">{t}Please upload a new revision of your kart or track.{/t}</p>
-            {else}
-                <div class="form-group">
-                    <label class="col-md-2">
-                        {t}What type of file are you uploading?{/t}
-                    </label>
-                    <div class="col-md-10">
-                        <select name="upload-type" id="upload-type">
-                            <option value="source">{t}Source Archive{/t}</option>
-                            <option value="image">{t}Image File{/t} (.png, .jpg, .jpeg)</option>
-                        </select>
-                    </div>
+        {if $upload.is_update}
+            <form id="upload-form"
+                  enctype="multipart/form-data"
+                  class="form-horizontal"
+                  action="?type={$upload.addon.type}&amp;name={$upload.addon.name}&amp;submit"
+                  method="POST">
+            <div class="form-group">
+                <label class="col-md-2" for="upload-type">
+                    {t}What type of file are you uploading?{/t}
+                </label>
+                <div class="col-md-10">
+                    <select name="upload-type" id="upload-type">
+                        {html_options options=$upload.upload_type.options selected=$upload.upload_type.selected}
+                    </select>
                 </div>
-            {/if}
+            </div>
         {else}
             <p class="alert alert-warning">{t}Do not use this form if you are updating an existing add-on.{/t}</p>
             <p class="alert alert-info">{t}Please upload a kart or track(arena).{/t}</p>
-            <form id="formKart" enctype="multipart/form-data" class="form-horizontal" action="upload.php?action=submit" method="POST">
+            <form id="upload-form" enctype="multipart/form-data" class="form-horizontal" action="?submit" method="POST">
+            <input type="hidden" name="upload-type" value="{$upload.upload_type.default}">
         {/if}
 
         <div class="form-group">
@@ -118,13 +123,10 @@
                 <div class="checkbox">
                     <label>
                         <input type="checkbox" name="l_agreement">
-                        {t}I recognize that if my file does not meet the above rules, it may be removed at any time without prior notice; I also assume the entire responsibility for any copyright violation that may result from not following the above rules.{/t}
-                        <strong>{t}Required{/t}</strong>
-                    </label>
-                </div>
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox" name="l_clean">
+                        <p>
+                            {t}I recognize that if my file does not meet the above rules, it may be removed at any time without prior notice; I also assume the entire responsibility for any copyright violation that may result from not following the above rules.{/t}
+                        </p>
+
                         {t}My package does not include:{/t} <strong>{t}Required{/t}</strong>
                         <ol>
                             <li>{t}Profanity{/t}</li>
@@ -132,6 +134,7 @@
                             <li>{t}Hateful messages and/or images{/t}</li>
                             <li>{t}Any other content that may be unsuitable for children{/t}</li>
                         </ol>
+
                     </label>
                 </div>
             </div>

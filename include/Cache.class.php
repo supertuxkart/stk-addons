@@ -40,7 +40,14 @@ class Cache
             throw new CacheException("You do not have the necessary permission to empty the cache");
         }
 
-        File::deleteDir(CACHE_PATH, $exclude_regex);
+        try
+        {
+            File::deleteDir(CACHE_PATH, $exclude_regex);
+        }
+        catch (FileException $e)
+        {
+            throw new CacheException($e->getMessage());
+        }
 
         try
         {
@@ -91,7 +98,15 @@ class Cache
             );
             foreach ($cache_list AS $cache_item)
             {
-                unlink(CACHE_PATH . $cache_item['file']);
+                try
+                {
+                    File::deleteFileFS(CACHE_PATH . $cache_item['file']);
+                }
+                catch (FileException $e)
+                {
+                    Log::newEvent($e->getMessage());
+                    return false;
+                }
 
                 DBConnection::get()->delete("cache", "`file` = :file", [':file' => $cache_item['file']]);
             }
@@ -115,7 +130,7 @@ class Cache
      */
     public static function createFile($path, $addon = null, $props = null)
     {
-        $addon = (Addon::exists($addon)) ? Addon::cleanId($addon) : null;
+        $addon = Addon::exists($addon) ? Addon::cleanId($addon) : null;
 
         try
         {
@@ -179,6 +194,7 @@ class Cache
      */
     public static function getImage($id, $size = null)
     {
+        // TODO call File class
         try
         {
             $file = DBConnection::get()->query(
@@ -215,9 +231,10 @@ class Cache
         $cache_prefix = $size ? Cache::cachePrefix($size) : "";
 
         // image exists in cache
-        if (Cache::fileExists($cache_prefix . basename($file['file_path'])))
+        $basename = basename($file['file_path']);
+        if (static::fileExists($cache_prefix . $basename))
         {
-            $return['url'] = CACHE_LOCATION . $cache_prefix . basename($file['file_path']);
+            $return['url'] = CACHE_LOCATION . $cache_prefix . $basename;
         }
         else // create new cache by resizing the image
         {

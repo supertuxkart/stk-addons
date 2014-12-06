@@ -26,21 +26,6 @@
 class File
 {
     /**
-     * @const int
-     */
-    const IMAGE = 1;
-
-    /**
-     * @const int
-     */
-    const SOURCE = 2;
-
-    /**
-     * @const int
-     */
-    const ADDON = 3;
-
-    /**
      * Approve a file
      *
      * @param int  $file_id
@@ -95,7 +80,7 @@ class File
      *
      * @return int File id, or 0 if file record does not exist
      */
-    public static function exists($path)
+    public static function existsDB($path)
     {
         try
         {
@@ -126,20 +111,15 @@ class File
      *
      * @param string $file        the file to extract
      * @param string $destination the directory where to extract
-     * @param string $file_ext
+     * @param string $file_ext    the archive extension
      *
      * @throws FileException
      */
-    public static function extractArchive($file, $destination, $file_ext = null)
+    public static function extractArchive($file, $destination, $file_ext)
     {
         if (!file_exists($file))
         {
             throw new FileException(_h('The file to extract does not exist.'));
-        }
-
-        if (!$file_ext)
-        {
-            $file_ext = pathinfo($file, PATHINFO_EXTENSION);
         }
 
         // Extract archive
@@ -159,7 +139,7 @@ class File
                 }
 
                 $archive->close();
-                unlink($file); // delete file archive from inside folder
+                static::deleteFileFS($file); // delete file archive from inside folder
                 break;
 
             // Handle archives using Archive_Tar class
@@ -189,7 +169,7 @@ class File
                 {
                     throw new FileException(_h('Failed to extract archive file.') . ' (' . $compression . ')');
                 }
-                unlink($file); // delete file archive from inside folder
+                static::deleteFileFS($file); // delete file archive from inside folder
                 break;
 
             default:
@@ -201,18 +181,18 @@ class File
      * Add a directory to a zip archive
      *
      * @param string $directory
-     * @param string $out_file
+     * @param string $filename
      *
      * @throws FileException
      */
-    public static function compress($directory, $out_file)
+    public static function compress($directory, $filename)
     {
         $zip = new ZipArchive();
-        $filename = $out_file;
+
 
         if (file_exists($filename))
         {
-            unlink($filename);
+            static::deleteFileFS($filename, false);
         }
 
         if ($zip->open($filename, ZIPARCHIVE::CREATE) !== true)
@@ -268,20 +248,20 @@ class File
 
             if (is_dir($current_dir . $file))
             {
-                File::flattenDirectory($current_dir . $file . DS, $destination_dir);
-                File::deleteDir($current_dir . $file);
+                static::flattenDirectory($current_dir . $file . DS, $destination_dir);
+                static::deleteDir($current_dir . $file);
                 continue;
             }
 
             if ($current_dir !== $destination_dir)
             {
-                rename($current_dir . $file, $destination_dir . $file);
+                static::move($current_dir . $file, $destination_dir . $file);
             }
         }
     }
 
     /**
-     * Check that all image sizes are power of 2 and
+     * Check that all image sizes are power of 2 and that they have the correct MIME type
      *
      * @param string $path the path to an image
      *
@@ -407,42 +387,49 @@ class File
             if (!preg_match('/\.(' . implode('|', $approved_types) . ')$/i', $file))
             {
                 $removed_files[] = basename($file);
-                unlink($file);
+                static::deleteFileFS($file);
             }
-        }
-
-        if (empty($removed_files))
-        {
-            return [];
         }
 
         return $removed_files;
     }
 
     /**
-     * Move an uploaded file to a new destination
+     * Move a file or directory
      *
-     * @param string $from
-     * @param string $to
+     * @param string $old_name
+     * @param string $new_name
+     * @param bool   $overwrite flat that indicates to overwrite $new_name if it exists
      *
      * @throws FileException
      */
-    public static function moveUploadFile($from, $to)
+    public static function move($old_name, $new_name, $overwrite = true)
     {
-        if (move_uploaded_file($from, $to) === false)
+        // validate
+        if ($old_name === $new_name)
         {
-            throw new FileException(_h('Failed to move uploaded file.'));
+            throw new FileException("Old name is the same as new name");
         }
-        if (!file_exists($to))
+        if (!$overwrite && file_exists($new_name))
         {
-            throw new FileException('The file was not moved. This should never happen');
+            throw new FileException(sprintf(
+                "Failed to move file '%s 'to new location('%s') because it already exists",
+                $old_name,
+                $new_name
+            ));
+        }
+
+        if (rename($old_name, $new_name) === false)
+        {
+            throw new FileException(sprintf("Failed to move file '%s' to '%s'.", $old_name, $new_name));
         }
     }
+
 
     /**
      * Write to a file in the filesystem, safely. Create the file if it does not exist
      *
-     * @param string $file the filename in the system
+     * @param string $file    the filename in the system
      * @param string $content the content to write
      *
      * @return bool return true on success, false otherwise
@@ -473,15 +460,15 @@ class File
     }
 
     /**
-     * Delete a file and its corresponding database record
+     * Delete a file from the filesystem and the database
      *
      * @param int $file_id
      *
      * @return boolean true on success, false otherwise
      */
-    public static function delete($file_id)
+    public static function deleteFile($file_id)
     {
-        // delete from filesystem
+        // delete file from database
         try
         {
             $file = DBConnection::get()->query(
@@ -498,15 +485,7 @@ class File
         {
             return false;
         }
-        if ($file)
-        {
-            if (file_exists(UP_PATH . $file['file_path']))
-            {
-                unlink(UP_PATH . $file['file_path']);
-            }
-        }
 
-        // delete file from database
         try
         {
             DBConnection::get()->query(
@@ -522,10 +501,40 @@ class File
             return false;
         }
 
+        // delete from filesystem
+        if ($file)
+        {
+            if (file_exists(UP_PATH . $file['file_path']))
+            {
+                static::deleteFileFS(UP_PATH . $file['file_path'], false);
+            }
+        }
+
         writeAssetXML();
         writeNewsXML();
 
         return true;
+    }
+
+    /**
+     * Delete a file from the filesystem
+     *
+     * @param string $file_name  the file to delete
+     * @param bool   $check_file flag that indicates to check the file before trying to remove it
+     *
+     * @throws FileException
+     */
+    public static function deleteFileFS($file_name, $check_file = true)
+    {
+        if ($check_file && !is_file($file_name) && !is_link($file_name))
+        {
+            throw new FileException(sprintf("'%s' is not a file/link", $file_name));
+        }
+
+        if (unlink($file_name) === false)
+        {
+            throw new FileException(sprintf("Failed to delete file '%s'", $file_name));
+        }
     }
 
     /**
@@ -556,7 +565,7 @@ class File
         // delete from the filesystem
         foreach ($queued_files as $file)
         {
-            if (File::delete($file["id"]))
+            if (static::deleteFile($file["id"]))
             {
                 print 'Deleted file ' . $file["id"] . "<br />\n";
                 Log::newEvent('Processed queued deletion of file ' . $file["id"]);
@@ -587,15 +596,20 @@ class File
         $files = scandir($dir);
         foreach ($files as $file)
         {
+            if ($file === "." || $file === "..")
+            {
+                continue;
+            }
+
             // Check if our item is a subfolder
-            if ($file !== '.' && $file !== '..' && is_dir($dir . DS . $file))
+            if (is_dir($dir . DS . $file))
             {
                 $last_mod = filemtime($dir . DS . $file . DS . '.');
 
                 // Check if our folder is old enough to delete
                 if (Util::isOldEnough($last_mod, $max_age))
                 {
-                    File::deleteDir($dir . DS . $file);
+                    static::deleteDir($dir . DS . $file);
                 }
             }
         }
@@ -604,10 +618,11 @@ class File
     /**
      * Recursively delete a directory. This does not touch the database.
      *
-     * @param string      $dir the directory to delete
-     * @param string|null $exclude_regex
+     * @param string      $dir           the directory to delete
+     * @param string|null $exclude_regex files that match this regex are excluded and if this is not
+     *                                   null
      *
-     * @throws FileException only in debug mode
+     * @throws FileException
      */
     public static function deleteDir($dir, $exclude_regex = null)
     {
@@ -615,40 +630,41 @@ class File
         $dir = rtrim($dir, DS);
         if (!is_dir($dir))
         {
-            trigger_error(sprintf("%s is not a directory", $dir));
-
-            return;
+            throw new FileException(sprintf("'%s' is not a directory", $dir));
         }
 
-        $oDir = dir($dir);
-        while (($sFile = $oDir->read()) !== false)
+        $directory = dir($dir);
+        while (($file = $directory->read()) !== false)
         {
-            if ($sFile === '.' || $sFile === '..')
+            if ($file === '.' || $file === '..')
             {
                 continue;
             }
 
-            if ($exclude_regex && preg_match($exclude_regex, $sFile))
+            if ($exclude_regex && preg_match($exclude_regex, $file))
             {
                 continue;
             }
 
             // delete file or directory
-            $file_path = $dir . DS . $sFile;
-            if (!is_link($file_path) && is_dir($file_path))
+            $file_path = $dir . DS . $file;
+            if (is_dir($file_path))
             {
                 static::deleteDir($file_path);
             }
             else
             {
-                unlink($file_path);
+                static::deleteFileFS($file_path);
             }
         }
-        $oDir->close();
+        $directory->close();
 
         if (!$exclude_regex) // remove root directory only if no exclude regex was given
         {
-            rmdir($dir);
+            if (rmdir($dir) === false)
+            {
+                throw new FileException(sprintf("Failed to remove '%s' directory", $dir));
+            }
         }
     }
 
@@ -832,57 +848,47 @@ class File
     /**
      * Create a new image
      *
-     * @param resource $upload_handle
-     * @param string   $file_name
-     * @param int      $addon_id
-     * @param string   $addon_type
+     * @param string $file_name  the name of the image
+     * @param int    $addon_id   the addon_id that this image belongs tp
+     * @param string $addon_type the addon type
      *
      * @throws FileException
      */
-    public static function newImage($upload_handle, $file_name, $addon_id, $addon_type)
+    public static function createNewImage($file_name, $addon_id, $addon_type)
     {
-        if ($upload_handle !== null)
+        // Delete the existing image by this name
+        $file_name = basename($file_name);
+        if (file_exists(UP_PATH . 'images' . DS . $file_name))
         {
-            if (!move_uploaded_file($upload_handle['tmp_name'], UP_PATH . 'images' . DS . $file_name))
+            try
             {
-                throw new FileException(_h('Failed to move uploaded file.'));
+                DBConnection::get()->query(
+                    'DELETE FROM `' . DB_PREFIX . 'files`
+                    WHERE `file_path` = :file_name',
+                    DBConnection::NOTHING,
+                    [":file_name" => 'images/' . $file_name]
+                );
             }
-        }
-        else
-        {
-            // Delete the existing image by this name
-            if (file_exists(UP_PATH . 'images' . DS . basename($file_name)))
+            catch(DBException $e)
             {
-                try
-                {
-                    DBConnection::get()->query(
-                        'DELETE FROM `' . DB_PREFIX . 'files`
-                        WHERE `file_path` = :file_name',
-                        DBConnection::NOTHING,
-                        [":file_name" => 'images/' . basename($file_name)]
-                    );
-                }
-                catch(DBException $e)
-                {
-                    throw new FileException("Failed to delete an existing image");
-                }
+                throw new FileException("Failed to delete an existing image");
+            }
 
-                // Clean image cache
-                Cache::clearAddon($addon_id);
-            }
+            // Clean image cache
+            Cache::clearAddon($addon_id);
         }
 
         // Scan image validity with GD
-        $image_path = UP_PATH . 'images' . DS . basename($file_name);
+        $image_path = UP_PATH . 'images' . DS . $file_name;
         $image_info = getimagesize($image_path);
         if (!$image_info)
         {
             // Image is not read-able - must be corrupt or otherwise invalid
-            unlink($image_path);
+            static::deleteFileFS($image_path);
             throw new FileException(_h('The uploaded image file is invalid.'));
         }
 
-        $image_max_dimension = Config::get(Config::IMAGE_MAX_DIMENSION);
+        $image_max_dimension = (int)Config::get(Config::IMAGE_MAX_DIMENSION);
         $image_width = $image_info[0];
         $image_height = $image_info[1];
 
@@ -912,13 +918,13 @@ class File
                 [
                     ":addon_id"    => $addon_id,
                     ":upload_type" => $addon_type,
-                    ":file"        => 'images/' . basename($file_name)
+                    ":file"        => 'images/' . $file_name
                 ]
             );
         }
         catch(DBException $e)
         {
-            unlink($image_path);
+            static::deleteFileFS($image_path);
             throw new FileException(_h('Failed to associate image file with addon.'));
         }
     }
@@ -1065,8 +1071,8 @@ class File
         {
             $color_index = (int)(($quads[$i][0][1] + $quads[$i][1][1] + $quads[$i][2][1] + $quads[$i][3][1]) / 4);
             imagefilledpolygon(
-                $image, // image
-                [ // points
+                $image,             // image
+                [                   // points
                   $quads[$i][0][0],
                   $quads[$i][0][2],
                   $quads[$i][1][0],
@@ -1076,7 +1082,7 @@ class File
                   $quads[$i][3][0],
                   $quads[$i][3][2]
                 ],
-                4, // num_points
+                4,                   // num_points
                 $color[$color_index] // color
             );
         }
@@ -1086,7 +1092,7 @@ class File
         imagepng($image, $out_file);
 
         // Add image record to add-on
-        File::newImage(null, basename($out_file), $addon_id, $addon_type);
+        static::createNewImage($out_file, $addon_id, $addon_type);
     }
 
     /**
@@ -1099,7 +1105,7 @@ class File
      */
     public static function queueDelete($file_id)
     {
-        $del_date = date('Y-m-d', time() + Config::get(Config::XML_UPDATE_TIME) + Util::SECONDS_IN_A_DAY);
+        $del_date = date('Y-m-d', time() + (int)Config::get(Config::XML_UPDATE_TIME) + Util::SECONDS_IN_A_DAY);
         try
         {
             DBConnection::get()->query(
@@ -1185,9 +1191,27 @@ class File
      */
     public static function link($href, $label, $rewrite = true, $tab_index = true)
     {
-        $href = $rewrite ? File::rewrite($href) : $href;
+        $href = $rewrite ? static::rewrite($href) : $href;
         $tab_string = $tab_index ? "" : " tabindex=\"-1\"";
 
-        return  sprintf('<a href="%s"%s>%s</a>', $href, $tab_string, $label);
+        return sprintf('<a href="%s"%s>%s</a>', $href, $tab_string, $label);
+    }
+
+    /**
+     * Generate a unique file name for a file in directory
+     *
+     * @param string $directory the directory where the file resides
+     * @param string $extension the extension of the file
+     *
+     * @return string the unique file name in directory
+     */
+    public static function generateUniqueFileName($directory, $extension)
+    {
+        do
+        {
+            $filename = uniqid(mt_rand());
+        } while (file_exists($directory . $filename . '.' . $extension));
+
+        return $filename;
     }
 }

@@ -1,4 +1,4 @@
-{$upload_location="upload.php?type={$addon.type}&amp;name={$addon.name}"}
+{$upload_location="upload.php?type={$addon.type}&amp;name={$addon.id}"}
 <div itemscope itemtype="http://www.schema.org/CreativeWork">
     <h1>
         <span itemprop="name">{$addon.name}</span>
@@ -61,7 +61,7 @@
                     <img class="preview" src="{$addon.image_url}" itemprop="image"><br>
                 {/if}
                 {if $can_edit}
-                    <a href="{$upload_location}&amp;action=file" class="btn btn-default">{t}Upload Image{/t}</a>
+                    <a href="{$upload_location}&amp;upload-type=image" class="btn btn-default">{t}Upload Image{/t}</a>
                 {/if}
             </div>
         </div>
@@ -84,7 +84,7 @@
 <h3>{t}Revisions{/t}</h3>
 {if $can_edit}
     <div class="pull-right">
-        <a href="{$upload_location}" class="btn btn-default">{t}Upload Revision{/t}</a>
+        <a href="{$upload_location}&amp;upload-type=revision" class="btn btn-default">{t}Upload Revision{/t}</a>
     </div>
 {/if}
 {foreach $addon.view_revisions as $revision}
@@ -97,7 +97,7 @@
 <h3>{t}Images{/t}</h3>
 {if $can_edit}
     <div class="pull-right">
-        <a class="btn btn-default" href="{$upload_location}&amp;action=file">{t}Upload Image{/t}</a>
+        <a class="btn btn-default" href="{$upload_location}&amp;upload-type=image">{t}Upload Image{/t}</a>
     </div>
 {/if}
 <div class="image_thumbs">
@@ -137,7 +137,7 @@
 <h3>{t}Source Files{/t}</h3>
 {if $can_edit}
     <div class="pull-right">
-        <a href="{$upload_location}&amp;action=file" class="btn btn-default">{t}Upload Source File{/t}</a>
+        <a href="{$upload_location}&amp;upload-type=source" class="btn btn-default">{t}Upload Source File{/t}</a>
     </div>
 {/if}
 <table>

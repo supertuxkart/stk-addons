@@ -656,7 +656,7 @@ class Util
         $local_path = UP_PATH . $file; // all images should be in our upload directory
 
         // Check if image exists in the database
-        $orig_file = File::exists($file);
+        $orig_file = File::existsDB($file);
         if (!$orig_file)
         {
             header('HTTP/1.1 404 Not Found');
@@ -762,7 +762,7 @@ class Util
         }
 
         // Create a record of the cached file
-        $orig_file_addon = File::getAddon($orig_file);
+        $orig_file_addon = File::getAddon($orig_file); // TODO fix cache table addons
         Cache::createFile($cache_name, $orig_file_addon, sprintf('w=%d,h=%d', $width_destination, $height_destination));
     }
 
@@ -771,13 +771,14 @@ class Util
      *
      * @param string $text the label text
      *
-     * @return string the img tag  that points
+     * @return string the img tag that points to our image text
      */
     public static function getImageLabel($text)
     {
         $write_dir = CACHE_PATH;
         $read_dir = CACHE_LOCATION;
 
+        $text = h($text);
         $text_no_accent = preg_replace('/\W/s', '_', $text); // remove some accents
         $image_name = 'im_' . $text_no_accent . '.png';
 
@@ -811,7 +812,7 @@ class Util
             imagedestroy($image);
         }
 
-        return '<img src="' . $read_dir . $image_name . '" alt="' . h($text) . '" />';
+        return '<img src="' . $read_dir . $image_name . '" alt="' . $text . '" />';
     }
 
     /**
