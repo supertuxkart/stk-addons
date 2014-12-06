@@ -491,7 +491,7 @@ class User extends Base
         static::setFriends(Friend::getFriendsOf($id, true));
 
         // backwards compatibility. Convert unsalted password to a salted one
-        if (!Util::isPasswordSalted($user->getPassword())) // TODO check server because the master repo had this implemented wrong
+        if (!Util::isPasswordSalted($user->getPassword()))
         {
             static::changePassword($id, $password);
             Log::newEvent("Converted the password of '$username' to use a password salting algorithm");

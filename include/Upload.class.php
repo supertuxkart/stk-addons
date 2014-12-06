@@ -156,7 +156,7 @@ class Upload
         $this->moderator_message = $moderator_message;
 
         // both should be null for when upload a new addon
-        $this->addon_id = is_string($addon_name) ? Addon::cleanId($addon_name) : $addon_name;
+        $this->addon_id = $addon_name;
         $this->addon_type = $addon_type;
 
         // validate
@@ -267,7 +267,7 @@ class Upload
                     File::deleteFileFS($this->temp_file_fullpath);
                     throw new UploadException("File Exception: " . $e->getMessage());
                 }
-                catch (FileException $e)
+                catch(FileException $e)
                 {
                     throw new UploadException("File Exception: " . $e->getMessage());
                 }
@@ -280,7 +280,7 @@ class Upload
     }
 
     /**
-     * Perform the upload of an image to the server
+     * Perform the upload of an image
      * @throws UploadException
      */
     private function doImageUpload()
@@ -290,7 +290,7 @@ class Upload
         try
         {
             File::move($this->temp_file_fullpath, $this->upload_file_dir . $this->upload_file_name);
-            File::createNewImage($this->upload_file_dir . $this->upload_file_name, $this->addon_id, $this->addon_type);
+            File::createImage($this->upload_file_dir . $this->upload_file_name, $this->addon_id, $this->addon_type);
         }
         catch(FileException $e)
         {
@@ -303,7 +303,7 @@ class Upload
     }
 
     /**
-     * Perform an upload to an archive to the server
+     * Perform the upload of an archive
      * @throws UploadException
      */
     private function doArchiveUpload()
@@ -358,7 +358,7 @@ class Upload
                 $addon = Addon::get($this->addon_id);
                 $this->properties['addon_revision'] = $addon->getLatestRevisionID() + 1;
             }
-            catch (AddonException $e)
+            catch(AddonException $e)
             {
                 throw new UploadException(
                     sprintf(_h("Can not upload revision because the addon with name = '%s' does not exist"), h($this->addon_id))
@@ -408,7 +408,7 @@ class Upload
 
         $this->success[] =
             _h('Your add-on was uploaded successfully. It will be reviewed by our moderators before becoming publicly available.');
-        $this->success[] = '<a href="?type=' . $this->addon_type . '&amp;name=' . $this->addon_id . '&amp;action=file">' .
+        $this->success[] = '<a href="?type=' . $this->addon_type . '&amp;name=' . $this->addon_id . '&amp;upload-type=source">' .
             _h('Click here to upload the sources to your add-on now.')
             . '</a>';
         $this->success[] = _h(
@@ -457,35 +457,13 @@ class Upload
         // Record image file in database
         try
         {
-            DBConnection::get()->query(
-                "CALL `" . DB_PREFIX . "create_file_record`
-                (:addon_id, :addon_type, 'image', :file, @result_id)",
-                DBConnection::NOTHING,
-                [
-                    ":addon_id"    => $this->addon_id,
-                    ":addon_type"  => $this->addon_type,
-                    ":file"        => $image_path
-                ]
-            );
+            $this->properties['image_file'] =
+                File::createFileDB($this->addon_id, $this->addon_type, 'image', $image_path);
         }
-        catch(DBException $e)
+        catch(FileException $e)
         {
             File::deleteFileFS($this->properties['image_path']);
-            throw new UploadException(_h('Failed to associate image file with addon.'));
-        }
-
-        try
-        {
-            $id = DBConnection::get()->query(
-                'SELECT @result_id',
-                DBConnection::FETCH_FIRST
-            );
-
-            $this->properties['image_file'] = $id["@result_id"];
-        }
-        catch(DBException $e)
-        {
-            throw new UploadException(_h("Could not find file id! Please contact a website administrator."));
+            throw new UploadException($e->getMessage());
         }
     }
 
@@ -531,35 +509,13 @@ class Upload
         // Record addon's file in database
         try
         {
-            DBConnection::get()->query(
-                "CALL `" . DB_PREFIX . "create_file_record`
-                (:addon_id, :addon_type, :file_type, :file, @result_id)",
-                DBConnection::NOTHING,
-                [
-                    ":addon_id"    => $this->addon_id,
-                    ":addon_type"  => $this->addon_type,
-                    ":file_type"   => $filetype,
-                    ":file"        => $this->upload_file_name
-                ]
-            );
+            $this->properties['xml_attributes']['fileid'] =
+                File::createFileDB($this->addon_id, $this->addon_type, $filetype, $this->upload_file_name);
         }
-        catch(DBException $e)
+        catch(FileException $e)
         {
             File::deleteFileFS($this->upload_file_dir . $this->upload_file_name);
-            throw new UploadException(_h('Failed to associate archive file with addon.'));
-        }
-
-        try
-        {
-            $id = DBConnection::get()->query(
-                'SELECT @result_id',
-                DBConnection::FETCH_FIRST
-            );
-            $this->properties['xml_attributes']['fileid'] = $id["@result_id"];
-        }
-        catch(DBException $e)
-        {
-            throw new UploadException(_h("Could not find file id! Please contact a website administrator."));
+            throw new UploadException($e->getMessage());
         }
     }
 
@@ -738,7 +694,7 @@ class Upload
      *
      * @throws UploadException
      */
-    public  static function checkUploadError($error_code)
+    public static function checkUploadError($error_code)
     {
         switch ($error_code)
         {

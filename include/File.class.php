@@ -846,7 +846,57 @@ class File
     }
 
     /**
-     * Create a new image
+     * Create a new file in the database table
+     *
+     * @param int    $addon_id
+     * @param string $addon_type
+     * @param string $file_type
+     * @param string $file_path
+     *
+     * @return int the id of the inserted file
+     * @throws FileException
+     */
+    public static function createFileDB($addon_id, $addon_type, $file_type, $file_path)
+    {
+        // Record image file in database
+        try
+        {
+            DBConnection::get()->query(
+                "CALL `" . DB_PREFIX . "create_file_record`
+                (:addon_id, :addon_type, :file_type, :file_path, @result_id)",
+                DBConnection::NOTHING,
+                [
+                    ":addon_id"   => $addon_id,
+                    ":addon_type" => $addon_type,
+                    ":file_type"  => $file_type,
+                    ":file_path"  => $file_path
+                ]
+            );
+        }
+        catch(DBException $e)
+        {
+            throw new FileException(_h('Failed to create file'));
+        }
+
+        try
+        {
+            $id = DBConnection::get()->query(
+                'SELECT @result_id',
+                DBConnection::FETCH_FIRST
+            );
+        }
+        catch(DBException $e)
+        {
+            throw new FileException(_h("Could not find file id! Please contact a website administrator."));
+        }
+
+        return (int)$id["@result_id"];
+    }
+
+    /**
+     * Create a new image in the database and modify it on the filesystem if necessary
+     * If an image with a similar name exists it will be deleted
+     * If the image is to large it will be scaled down
      *
      * @param string $file_name  the name of the image
      * @param int    $addon_id   the addon_id that this image belongs tp
@@ -854,7 +904,7 @@ class File
      *
      * @throws FileException
      */
-    public static function createNewImage($file_name, $addon_id, $addon_type)
+    public static function createImage($file_name, $addon_id, $addon_type)
     {
         // Delete the existing image by this name
         $file_name = basename($file_name);
@@ -911,21 +961,12 @@ class File
         // Add database record for image
         try
         {
-            DBConnection::get()->query(
-                "CALL `" . DB_PREFIX . "create_file_record`
-                (:addon_id, :upload_type, 'image', :file, @result_id)",
-                DBConnection::NOTHING,
-                [
-                    ":addon_id"    => $addon_id,
-                    ":upload_type" => $addon_type,
-                    ":file"        => 'images/' . $file_name
-                ]
-            );
+            static::createFileDB($addon_id, $addon_type, 'image', 'images/' . $file_name);
         }
-        catch(DBException $e)
+        catch(FileException $e)
         {
             static::deleteFileFS($image_path);
-            throw new FileException(_h('Failed to associate image file with addon.'));
+            throw new FileException($e->getMessage());
         }
     }
 
@@ -1071,8 +1112,8 @@ class File
         {
             $color_index = (int)(($quads[$i][0][1] + $quads[$i][1][1] + $quads[$i][2][1] + $quads[$i][3][1]) / 4);
             imagefilledpolygon(
-                $image,             // image
-                [                   // points
+                $image, // image
+                [ // points
                   $quads[$i][0][0],
                   $quads[$i][0][2],
                   $quads[$i][1][0],
@@ -1082,7 +1123,7 @@ class File
                   $quads[$i][3][0],
                   $quads[$i][3][2]
                 ],
-                4,                   // num_points
+                4, // num_points
                 $color[$color_index] // color
             );
         }
@@ -1092,7 +1133,7 @@ class File
         imagepng($image, $out_file);
 
         // Add image record to add-on
-        static::createNewImage($out_file, $addon_id, $addon_type);
+        static::createImage($out_file, $addon_id, $addon_type);
     }
 
     /**

@@ -825,14 +825,15 @@ class Util
      */
     public static function getVersionFormat($format, $file_type)
     {
+        $format = (int)$format;
         switch ($file_type)
         {
             case Addon::KART:
-                if ($format == 1)
+                if ($format === 1)
                 {
                     return 'Pre-0.7';
                 }
-                if ($format == 2)
+                if ($format === 2)
                 {
                     return '0.7.0 - 0.8.1';
                 }
@@ -842,13 +843,17 @@ class Util
 
             case Addon::TRACK:
             case Addon::ARENA:
-                if ($format == 1 || $format == 2)
+                if ($format === 1 || $format === 2)
                 {
                     return 'Pre-0.7';
                 }
                 if ($format >= 3 && $format <= 5)
                 {
                     return '0.7.0 - 0.8.1';
+                }
+                if ($format === 6)
+                {
+                    return _h("Latest development version");
                 }
 
                 return _h('Unknown');
