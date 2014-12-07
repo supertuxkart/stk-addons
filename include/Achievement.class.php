@@ -24,14 +24,14 @@
 class Achievement
 {
     /**
-     * Get all the achievements of a user
+     * Get all the achievements ids of a user
      *
      * @param int $user_id
      *
      * @return array of achievement id's
      * @throws AchievementException
      */
-    public static function getAchievementsOf($user_id)
+    public static function getAchievementsIdsOf($user_id)
     {
         try
         {
@@ -59,6 +59,40 @@ class Achievement
         }
 
         return $return_achievements;
+    }
+
+    /**
+     * Get all the achievements of a user
+     *
+     * @param int $user_id
+     *
+     * @return array of achievement id's and name
+     * @throws AchievementException
+     */
+    public static function getAchievementsOf($user_id)
+    {
+        try
+        {
+            $achievements = DBConnection::get()->query(
+                "SELECT A.id, A.name
+                FROM " . DB_PREFIX . "achieved AS AC
+                INNER JOIN " . DB_PREFIX . "achievements AS A
+                    ON AC.achievementid = A.id
+                WHERE `userid` = :userid",
+                DBConnection::FETCH_ALL,
+                [':userid' => $user_id],
+                [':userid' => DBConnection::PARAM_INT]
+            );
+        }
+        catch(DBException $e)
+        {
+            throw new AchievementException(h(
+                _('An unexpected error occured while fetching the achieved achievements.') . ' ' .
+                _('Please contact a website administrator.')
+            ));
+        }
+
+        return $achievements;
     }
 
     /**

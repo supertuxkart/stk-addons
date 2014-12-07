@@ -858,7 +858,6 @@ class File
      */
     public static function createFileDB($addon_id, $addon_type, $file_type, $file_path)
     {
-        // Record image file in database
         try
         {
             DBConnection::get()->query(

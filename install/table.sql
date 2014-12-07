@@ -82,6 +82,22 @@ CREATE TABLE IF NOT EXISTS `v2_achievements` (
     DEFAULT CHARSET =utf8mb4
     COLLATE =utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `v2_achievements`
+--
+
+INSERT INTO `v2_achievements` (`id`, `name`) VALUES
+    (1, 'Christoffel Columbus'),
+    (2, 'Strike!'),
+    (3, 'Arch Enemy'),
+    (4, 'Marathoner'),
+    (5, 'Skid-row'),
+    (6, 'Gold driver'),
+    (7, 'Powerup Love'),
+    (8, 'Unstoppable'),
+    (9, 'Banana Lover'),
+    (10, 'It''s secret');
+
 -- --------------------------------------------------------
 
 --
