@@ -50,6 +50,6 @@
     </form>
 {else}
     <div class="alert alert-warning">
-        <strong>{t}Warning!{/t}</strong> {t}You must be {/t}<a href="{$smarty.const.SITE_ROOT}login.php?return_to={$current_url}">{t}logged in{/t}</a>
+        <strong>{t}Warning!{/t}</strong> {t}You must be {/t}<a href="{$root_location}login.php?return_to={$current_url}">{t}logged in{/t}</a>
     </div>
 {/if}

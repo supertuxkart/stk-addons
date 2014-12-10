@@ -202,7 +202,7 @@ class Addon extends Base
         $this->designer = $data['designer'];
         $this->description = $data['description'];
         $this->license = $data['license'];
-        $this->permalink = SITE_ROOT . 'addons.php?type=' . $this->type . '&amp;name=' . $this->id;
+        $this->permalink = ROOT_LOCATION . 'addons.php?type=' . $this->type . '&amp;name=' . $this->id;
         $this->include_min = $data['min_include_ver'];
         $this->include_max = $data['max_include_ver'];
 

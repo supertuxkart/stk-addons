@@ -26,7 +26,7 @@ $_POST['password'] = isset($_POST['password']) ? $_POST['password'] : null;
 $_GET['action'] = isset($_GET['action']) ? $_GET['action'] : null;
 
 // set default redirect url from where the user was
-$return_to_url = $safe_url = SITE_ROOT . "index.php";
+$return_to_url = $safe_url = ROOT_LOCATION;
 if (isset($_POST["return_to"]))
 {
     $return_to_url = $_POST["return_to"];
@@ -38,7 +38,7 @@ elseif (isset($_GET["return_to"]))
 }
 
 // prevent foreign domain
-if (!Util::str_starts_with($return_to_url, SITE_ROOT))
+if (!Util::str_starts_with($return_to_url, ROOT_LOCATION))
 {
     // silently fall back to safe url
     $return_to_url = $safe_url;

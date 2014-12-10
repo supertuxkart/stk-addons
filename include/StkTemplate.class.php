@@ -126,10 +126,10 @@ class StkTemplate extends Template
         // Fill script tags
         $this->script_inline["before"][] = [
             'content' => sprintf(
-                "var SITE_ROOT = '%s', BUGS_LOCATION = '%s', JSON_LOCATION = '%s';",
-                SITE_ROOT,
+                "var ROOT_LOCATION = '%s', BUGS_LOCATION = '%s', JSON_LOCATION = '%s';",
+                ROOT_LOCATION,
                 BUGS_LOCATION,
-                SITE_ROOT . "json/"
+                ROOT_LOCATION . "json/"
             )
         ];
 
@@ -226,6 +226,8 @@ class StkTemplate extends Template
             "footer"    => $directory . "footer.tpl"
         ];
         $this->assign("tpl_config", $config);
+
+        $this->assign("root_location", ROOT_LOCATION);
     }
 
     /**

@@ -36,7 +36,7 @@ switch ($_POST["action"])
 
         try
         {
-            Bug::add(User::getLoggedId(), $_POST["addon-name"], $_POST["bug-title"], $_POST["bug-description"]);
+            Bug::add(User::getLoggedId(), Addon::cleanId($_POST["addon-name"]), $_POST["bug-title"], $_POST["bug-description"]);
         }
         catch(BugException $e)
         {

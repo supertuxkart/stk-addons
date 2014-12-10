@@ -74,7 +74,7 @@ or with ```mysql -u root -p -h DATABASE_HOST DATABASE_NAME < install/table.sql``
 ### Finish
 Copy the `install/config-base.php` to the root of the project and rename it to `config.php`.
 
-Change the `SITE_ROOT` constant to match the location of your website. Otherwise, JavaScript and CSS will not work.
+Change the `ROOT_LOCATION` constant to match the location of your website. Otherwise, JavaScript and CSS will not work.
 
 Setting `DEBUG_MODE` to `true` can help you debugging by showing additional information. You should disable it in productive use.
 

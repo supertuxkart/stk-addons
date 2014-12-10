@@ -1178,12 +1178,12 @@ class File
     public static function rewrite($link)
     {
         // Don't rewrite external links
-        if (mb_substr($link, 0, 7) === 'http://' && mb_substr($link, 0, mb_strlen(SITE_ROOT)) !== SITE_ROOT)
+        if (mb_substr($link, 0, 7) === 'http://' && mb_substr($link, 0, mb_strlen(ROOT_LOCATION)) !== ROOT_LOCATION)
         {
             return $link;
         }
 
-        $link = str_replace(SITE_ROOT, null, $link);
+        $link = str_replace(ROOT_LOCATION, null, $link);
         $rules = Config::get(Config::APACHE_REWRITES);
         $rules = preg_split('/(\\r)?\\n/', $rules);
 
@@ -1216,7 +1216,7 @@ class File
             }
         }
 
-        return SITE_ROOT . $link;
+        return ROOT_LOCATION . $link;
     }
 
     /**

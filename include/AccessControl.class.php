@@ -406,6 +406,6 @@ class AccessControl
      */
     public static function showAccessDeniedPage()
     {
-        Util::redirectTo(SITE_ROOT . "error.php?e=401");
+        Util::redirectTo(ROOT_LOCATION . "error.php?e=401");
     }
 }

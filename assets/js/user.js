@@ -17,7 +17,7 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-(function($, SITE_ROOT, JSON_LOCATION) {
+(function($, ROOT_LOCATION, JSON_LOCATION) {
     "use strict";
 
     var $user_body = $("#user-body"),
@@ -63,7 +63,7 @@
     $user_main.on("click", 'a.user-list', function() {
         History.pushState(null, '', this.href);
         var user = getUrlVars(this.href)['user'];
-        loadContent($user_body, SITE_ROOT + 'users-panel.php', {user: user});
+        loadContent($user_body, ROOT_LOCATION + 'users-panel.php', {user: user});
 
         markMenuItemAsActive($(this));
 
@@ -219,4 +219,4 @@
         });
     });
 
-})(jQuery, SITE_ROOT, JSON_LOCATION);
+})(jQuery, ROOT_LOCATION, JSON_LOCATION);

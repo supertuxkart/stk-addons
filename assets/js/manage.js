@@ -17,11 +17,11 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-(function($, SITE_ROOT) {
+(function($, ROOT_LOCATION) {
     "use strict";
 
     var $manage_body = $("#manage-body"),
-        json_url = SITE_ROOT + "json/manage.php";
+        json_url = ROOT_LOCATION + "json/manage.php";
 
     // role variables
     var $role_edit_value, $role_edit_btn, $role_delete_btn, selected_role;
@@ -37,7 +37,7 @@
 
     function loadManageMainContent(href) {
         var view = getUrlVars(href)['view'];
-        loadContent($manage_body, SITE_ROOT + 'manage-panel.php', {view: view}, function() {
+        loadContent($manage_body, ROOT_LOCATION + 'manage-panel.php', {view: view}, function() {
             onPageLoad();
         });
     }
@@ -166,4 +166,4 @@
 
     onPageLoad();
 
-})(jQuery, SITE_ROOT);
+})(jQuery, ROOT_LOCATION);

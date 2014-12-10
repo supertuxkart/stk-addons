@@ -43,20 +43,19 @@ class Bug extends Base
      * Hold the bug id
      * @var int
      */
-    protected $id;
+    private $id;
 
     /**
      * Hold all the bug fields
      * @var array
      */
-    protected $bugData = [];
-
+    private $bugData = [];
 
     /**
      * Hold all the comments for this bug
      * @var array
      */
-    protected $commentsData = [];
+    private $commentsData = [];
 
     /**
      * Load the comments from the database into the current bug instance

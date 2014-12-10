@@ -24,7 +24,7 @@ function confirm_delete(url) {
     }
 }
 
-(function($, SITE_ROOT, JSON_LOCATION) {
+(function($, ROOT_LOCATION, JSON_LOCATION) {
     "use strict";
 
     var json_url = JSON_LOCATION + "rating.php",
@@ -76,12 +76,12 @@ function confirm_delete(url) {
         var url = this.href;
         var addonType = getUrlVars(url)['type'];
         if (addonType === undefined) {
-            url = SITE_ROOT + $(this).children('meta').attr("content").replace('&amp;', '&');
+            url = ROOT_LOCATION + $(this).children('meta').attr("content").replace('&amp;', '&');
             addonType = getUrlVars(url)['type'];
         }
 
         var addonId = getUrlVars(url)['name']; // we use the id as a varchar in the database
-        loadContent($addon_body, SITE_ROOT + 'addons-panel.php', {name: addonId, type: addonType});
+        loadContent($addon_body, ROOT_LOCATION + 'addons-panel.php', {name: addonId, type: addonType});
         markMenuItemAsActive($(this));
 
         return false;
@@ -158,4 +158,4 @@ function confirm_delete(url) {
         loadContent($addon_menu, "addons-menu.php", {type: addon_type, sort: sort_type, order: sort_order}, function() {}, "GET");
     })
 
-})(jQuery, SITE_ROOT, JSON_LOCATION);
+})(jQuery, ROOT_LOCATION, JSON_LOCATION);

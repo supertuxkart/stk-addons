@@ -56,17 +56,17 @@ define("ASSETS_XML_PATH", UP_PATH . "xml" . DS . "assets.xml");
 define("ASSETS2_XML_PATH", UP_PATH . "xml" . DS . "assets2.xml");
 
 // make sure that this ends with a trailing slash, otherwise it would break a few things (like the activation email)
-define("SITE_ROOT", "http://stkaddons.net/");
+define("ROOT_LOCATION", "http://stkaddons.net/");
 
-define("DOWNLOAD_LOCATION", SITE_ROOT . "dl/");
+define("DOWNLOAD_LOCATION", ROOT_LOCATION . "dl/");
 define("DOWNLOAD_XML_LOCATION", DOWNLOAD_LOCATION . "xml/");
 define("DOWNLOAD_ASSETS_LOCATION", DOWNLOAD_LOCATION);
 define("NEWS_XM_LOCATION", DOWNLOAD_XML_LOCATION . "news.xml");
 define("ASSETS_XML_LOCATION", DOWNLOAD_XML_LOCATION . "assets.xml");
 define("ASSETS2_XML_LOCATION", DOWNLOAD_XML_LOCATION . "assets.xml");
-define("BUGS_LOCATION", SITE_ROOT . "bugs/");
-define("STATS_LOCATION", SITE_ROOT . "stats/");
-define("ASSETS_LOCATION", SITE_ROOT . "assets/");
+define("BUGS_LOCATION", ROOT_LOCATION . "bugs/");
+define("STATS_LOCATION", ROOT_LOCATION . "stats/");
+define("ASSETS_LOCATION", ROOT_LOCATION . "assets/");
 define("CACHE_LOCATION", ASSETS_LOCATION . "cache/");
 define("LIBS_LOCATION", ASSETS_LOCATION . "libs/");
 define("IMG_LOCATION", ASSETS_LOCATION . "img/");

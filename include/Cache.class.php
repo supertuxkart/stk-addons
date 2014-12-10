@@ -238,7 +238,7 @@ class Cache
         }
         else // create new cache by resizing the image
         {
-            $return['url'] = SITE_ROOT . 'image.php?size=' . $size . '&amp;pic=' . $file['file_path'];
+            $return['url'] = ROOT_LOCATION . 'image.php?size=' . $size . '&amp;pic=' . $file['file_path'];
         }
 
         return $return;

@@ -82,11 +82,11 @@
 <table class="table">
     <tr>
         <td class="col-md-2">{t}Reported by{/t}:</td>
-        <td class="col-md-10"><a href="{$smarty.const.SITE_ROOT}users.php?user={$bug.user_name}">{$bug.user_name}</a>  {t}on{/t} {$bug.date_report}</td>
+        <td class="col-md-10"><a href="{$root_location}users.php?user={$bug.user_name}">{$bug.user_name}</a>  {t}on{/t} {$bug.date_report}</td>
     </tr>
     <tr>
         <td class="col-md-2">{t}Addon{/t}:</td>
-        <td class="col-md-10"><a href="{$smarty.const.SITE_ROOT}addons.php?name={$bug.addon}">{$bug.addon}</a></td>
+        <td class="col-md-10"><a href="{$root_location}addons.php?name={$bug.addon}">{$bug.addon}</a></td>
     </tr>
     <tr>
         <td class="col-md-2">{t}Date edit{/t}:</td>
@@ -95,7 +95,7 @@
     {if $bug.is_closed}
         <tr>
             <td class="col-md-2">{t}Closed by{/t}:</td>
-            <td class="col-md-10"><a href="{$smarty.const.SITE_ROOT}users.php?user={$bug.user_name}">{$bug.user_name}</a> {t}on{/t} {$bug.date_close}</td>
+            <td class="col-md-10"><a href="{$root_location}users.php?user={$bug.user_name}">{$bug.user_name}</a> {t}on{/t} {$bug.date_close}</td>
         </tr>
         <tr>
             <td class="col-md-2">{t}Close reason{/t}:</td>
@@ -137,7 +137,7 @@
         </form>
     {else}
         <p>
-            <a href="{$smarty.const.SITE_ROOT}login.php?return_to={$current_url}"> {t}Login{/t}</a>{t} to add a comment{/t}
+            <a href="{$root_location}login.php?return_to={$current_url}"> {t}Login{/t}</a>{t} to add a comment{/t}
         </p>
     {/if}
 

@@ -74,7 +74,7 @@ switch ($_GET['view'])
             {
                 if ($image["approved"] == 0)
                 {
-                    $unapproved[] = '<img src="' . SITE_ROOT . 'image.php?size=' . SImage::SIZE_MEDIUM . '&pic=' . $image['file_path'] . '" />';
+                    $unapproved[] = '<img src="' . ROOT_LOCATION . 'image.php?size=' . SImage::SIZE_MEDIUM . '&pic=' . $image['file_path'] . '" />';
                 }
             }
             // add to view
