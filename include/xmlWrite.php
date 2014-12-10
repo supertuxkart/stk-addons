@@ -31,7 +31,7 @@ function generateNewsXML()
     $writer->setIndentString('    ');
 
     // Use news DTD
-    $writer->writeDtd('news', null, '../docs/news.dtd');
+    $writer->writeDtd('news', null, '../assets/dtd/news.dtd');
 
     // Open document tag
     $writer->startElement('news');
@@ -98,7 +98,7 @@ function generateAssetXML()
     $writer->setIndentString('    ');
 
     // Use news DTD
-    $writer->writeDtd('assets', null, '../docs/assets.dtd');
+    $writer->writeDtd('assets', null, '../assets/dtd/assets.dtd');
 
     // Open document tag
     $writer->startElement('assets');
@@ -248,7 +248,7 @@ function generateAssetXML2()
     $writer->setIndentString('    ');
 
     // Use news DTD
-    $writer->writeDtd('assets', null, '../docs/assets2.dtd');
+    $writer->writeDtd('assets', null, '../assets/dtd/assets2.dtd');
 
     // Open document tag
     $writer->startElement('assets');
