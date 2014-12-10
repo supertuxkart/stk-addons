@@ -1,6 +1,6 @@
 # STK Addons Website
 This is the source code for the SuperTuxKart asset sharing and distribution
-platform. The official location of the production website is http://www.stkaddons.net.
+platform. The official location of the production website is http://addons.supertuxkart.net/.
 
 ## Build Status
 [![Build Status](https://travis-ci.org/leyyin/stkaddons.svg?branch=master)](https://travis-ci.org/leyyin/stkaddons)
@@ -74,7 +74,7 @@ or with ```mysql -u root -p -h DATABASE_HOST DATABASE_NAME < install/table.sql``
 ### Finish
 Copy the `install/config-base.php` to the root of the project and rename it to `config.php`.
 
-Change the `ROOT_LOCATION` constant to match the location of your website. Otherwise, JavaScript and CSS will not work.
+Change the `$ROOT_LOCATION` variable to match the location of your website. Otherwise, JavaScript and CSS will not work.
 
 Setting `DEBUG_MODE` to `true` can help you debugging by showing additional information. You should disable it in productive use.
 

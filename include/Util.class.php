@@ -505,7 +505,7 @@ class Util
     /**
      * Get the salt part of a password
      *
-     * @param string $hash_password the hash value of a passowrd
+     * @param string $hash_password the hash value of a password
      *
      * @return string
      */

@@ -47,7 +47,7 @@ $tpl->assign(
             'type'  => Addon::ARENA
         ],
         [
-            'href'  => 'http://trac.stkaddons.net',
+            'href'  => 'https://github.com/supertuxkart/stkaddons/wiki',
             'label' => 'Help',
             'type'  => 'help'
         ]

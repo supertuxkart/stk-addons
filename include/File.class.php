@@ -1178,7 +1178,9 @@ class File
     public static function rewrite($link)
     {
         // Don't rewrite external links
-        if (mb_substr($link, 0, 7) === 'http://' && mb_substr($link, 0, mb_strlen(ROOT_LOCATION)) !== ROOT_LOCATION)
+        $has_prefix = Util::isHTTPS() ? (mb_substr($link, 0, 8) === 'https://') : (mb_substr($link, 0, 7) === 'http://');
+
+        if ($has_prefix && mb_substr($link, 0, mb_strlen(ROOT_LOCATION)) !== ROOT_LOCATION)
         {
             return $link;
         }
