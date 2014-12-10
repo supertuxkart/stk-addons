@@ -136,21 +136,10 @@ class Validate
         $db_password_hash = $user->getPassword();
 
         // verify if password is correct
-        if (Util::isPasswordSalted($db_password_hash)) // password is salted
+        $salt = Util::getSaltFromPassword($db_password_hash);
+        if (Util::getPasswordHash($password, $salt) !== $db_password_hash)
         {
-            $salt = Util::getSaltFromPassword($db_password_hash);
-
-            if (Util::getPasswordHash($password, $salt) !== $db_password_hash)
-            {
-                throw new UserException(_h("Username or password is invalid"));
-            }
-        }
-        else // not salted
-        {
-            if ($db_password_hash !== hash("sha256", $password))
-            {
-                throw new UserException(_h("Username or password is invalid"));
-            }
+            throw new UserException(_h("Username or password is invalid"));
         }
 
         return $user;

@@ -89,14 +89,14 @@ class AccessControl
      *
      * @var array
      */
-    protected static $roles = [];
+    private static $roles = [];
 
     /**
      * Cache for the role permissions, with the key the role name and the value an array of permissions
      *
      * @var array
      */
-    protected static $permissions = [];
+    private static $permissions = [];
 
     /**
      * @return array
@@ -167,7 +167,7 @@ class AccessControl
             throw new AccessControlException("The role does not exist");
         }
 
-        // find out if there are any users with that role, TODO check production server because of old roles
+        // find out if there are any users with that role,
         try
         {
             $count = DBConnection::get()->count("users", "`role` = :role", [":role" => $role]);

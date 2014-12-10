@@ -184,7 +184,7 @@ class User extends Base
      */
     public function getRole()
     {
-        return static::oldRoleToNew($this->role);
+        return $this->role;
     }
 
     /**
@@ -489,13 +489,6 @@ class User extends Base
         static::sessionSet("role", $role);
         static::setPermissions($role);
         static::setFriends(Friend::getFriendsOf($id, true));
-
-        // backwards compatibility. Convert unsalted password to a salted one
-        if (!Util::isPasswordSalted($user->getPassword()))
-        {
-            static::changePassword($id, $password);
-            Log::newEvent("Converted the password of '$username' to use a password salting algorithm");
-        }
     }
 
     /**
@@ -554,7 +547,7 @@ class User extends Base
      */
     public static function getLoggedRole()
     {
-        return static::isLoggedIn() ? static::oldRoleToNew(static::sessionGet("role")) : "unregistered";
+        return static::isLoggedIn() ? static::sessionGet("role") : "unregistered";
     }
 
     /**
@@ -726,28 +719,6 @@ class User extends Base
     }
 
     /**
-     * Convert old role system to new
-     *
-     * @param string $old_role
-     *
-     * @return string
-     */
-    public static function oldRoleToNew($old_role)
-    {
-        // TODO maybe make a script that does this in production
-        if ($old_role === "basicUser")
-        {
-            return "user";
-        }
-        elseif ($old_role === "root" || $old_role === "administrator")
-        {
-            return "admin";
-        }
-
-        return $old_role;
-    }
-
-    /**
      * Cache the friends into the session
      *
      * @param Friend[] $friends
@@ -803,7 +774,7 @@ class User extends Base
      */
     protected static function setPermissions($role)
     {
-        static::sessionSet("permissions", AccessControl::getPermissions(static::oldRoleToNew($role)));
+        static::sessionSet("permissions", AccessControl::getPermissions($role));
     }
 
     /**
@@ -852,7 +823,6 @@ class User extends Base
             return false;
         }
 
-        $role = static::oldRoleToNew($role);
         $can_edit_users = static::hasPermission(AccessControl::PERM_EDIT_USERS);
         $can_edit_admins = static::isAdmin();
 
