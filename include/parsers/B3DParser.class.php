@@ -20,6 +20,7 @@
 
 /**
  * Helper class to parse B3D model files
+ * @link http://www.blitzbasic.com/sdkspecs/sdkspecs/b3dfile_specs.txt
  */
 class B3DParser extends Parser
 {

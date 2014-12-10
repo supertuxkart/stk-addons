@@ -42,77 +42,77 @@ class Addon extends Base
     /**
      * @var string
      */
-    protected $id;
+    private $id;
 
     /**
      * @var string
      */
-    protected $type;
+    private $type;
 
     /**
      * @var string
      */
-    protected $name;
+    private $name;
 
     /**
      * @var int
      */
-    protected $uploader_id;
+    private $uploader_id;
 
     /** The addon creation date
      * @var string
      */
-    protected $date_creation;
+    private $date_creation;
 
     /**
      * @var string
      */
-    protected $designer;
+    private $designer;
 
     /**
      * @var string
      */
-    protected $description;
+    private $description;
 
     /**
      * @var string
      */
-    protected $license;
+    private $license;
 
     /**
      * @var int
      */
-    protected $include_min;
+    private $include_min;
 
     /**
      * @var int
      */
-    protected $include_max;
+    private $include_max;
 
     /**
      * @var int
      */
-    protected $image = 0;
+    private $image = 0;
 
     /**
      * @var int
      */
-    protected $icon = 0;
+    private $icon = 0;
 
     /**
      * @var string
      */
-    protected $permalink;
+    private $permalink;
 
     /**
      * @var array
      */
-    protected $revisions = [];
+    private $revisions = [];
 
     /**
      * @var int
      */
-    protected $latest_revision;
+    private $latest_revision;
 
 
     /**
@@ -130,7 +130,7 @@ class Addon extends Base
      *
      * @throws AddonException
      */
-    protected function loadRevisions()
+    private function loadRevisions()
     {
         try
         {
@@ -192,7 +192,7 @@ class Addon extends Base
      *
      * @throws AddonException
      */
-    protected function __construct($id, $data, $load_revisions = true)
+    private function __construct($id, $data, $load_revisions = true)
     {
         $this->id = (string)static::cleanId($id);
         $this->type = $data['type'];
@@ -214,16 +214,6 @@ class Addon extends Base
     }
 
     /**
-     * See if thee current logged in user is the owner of this addon(aka the uploader, creator)
-     *
-     * @return bool
-     */
-    public function isOwner()
-    {
-        return $this->uploader_id === User::getLoggedId();
-    }
-
-    /**
      * Create an add-on revision
      *
      * @param array  $attributes
@@ -234,11 +224,7 @@ class Addon extends Base
      */
     public function createRevision($attributes, $file_id, $moderator_message = "")
     {
-        // Check if logged in
-        if (!User::isLoggedIn())
-        {
-            throw new AddonException(_h('You must be logged in to create an add-on revision.'));
-        }
+        $this->checkUserEditPermissions();
 
         foreach ($attributes['missing_textures'] as $tex)
         {
@@ -246,27 +232,9 @@ class Addon extends Base
         }
 
         // Make sure an add-on file with this id does not exist
-        try
-        {
-            $rows = DBConnection::get()->query(
-                'SELECT * FROM ' . DB_PREFIX . $this->type . '_revs WHERE `id` = :id',
-                DBConnection::ROW_COUNT,
-                [':id' => $file_id]
-            );
-        }
-        catch(DBException $e)
-        {
-            throw new AddonException(sprintf('Failed to acces the %s_revs table.', $this->type));
-        }
-        if ($rows)
+        if (static::existsRevision($file_id, $this->type))
         {
             throw new AddonException(_h('The file you are trying to create already exists.'));
-        }
-
-        // Make sure user has permission to upload a new revision for this add-on
-        if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS) && !$this->isOwner())
-        {
-            throw new AddonException(_h('You do not have the necessary permissions to perform this action.'));
         }
 
         // Update the addon name
@@ -299,8 +267,7 @@ class Addon extends Base
         }
 
         // Calculate the next revision number
-        $highest_rev = max(array_keys($this->revisions));
-        $rev = $highest_rev + 1;
+        $rev = max(array_keys($this->revisions)) + 1;
 
         // Add revision entry
         $fields_data = [
@@ -356,15 +323,7 @@ class Addon extends Base
      */
     public function delete()
     {
-        if (!User::isLoggedIn())
-        {
-            throw new AddonException(_h('You must be logged in to perform this action.'));
-        }
-
-        if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS) && !$this->isOwner())
-        {
-            throw new AddonException(_h('You do not have the necessary permissions to perform this action.'));
-        }
+        $this->checkUserEditPermissions();
 
         // Remove cache files for this add-on
         Cache::clearAddon($this->id);
@@ -391,9 +350,9 @@ class Addon extends Base
             {
                 File::deleteFileFS(UP_PATH . $file['file_path']);
             }
-            catch (FileException $e)
+            catch(FileException $e)
             {
-                echo '<span class="error">' . _h('Failed to delete file:') . ' ' . $file['file_path'] . '</span><br>';
+                throw new AddonException(_h('Failed to delete file:') . ' ' . h($file['file_path']));
             }
         }
 
@@ -404,7 +363,7 @@ class Addon extends Base
         }
         catch(DBException $e)
         {
-            echo '<span class="error">' . _h('Failed to remove file records for this addon.') . '</span><br>';
+            throw new AddonException(_h('Failed to remove file records for this addon.'));
         }
 
         // Remove addon entry
@@ -434,10 +393,7 @@ class Addon extends Base
      */
     public function deleteFile($file_id)
     {
-        if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS) && !$this->isOwner())
-        {
-            throw new AddonException(_h('You do not have the necessary permissions to perform this action.'));
-        }
+        $this->checkUserEditPermissions();
 
         if (!File::deleteFile($file_id))
         {
@@ -454,10 +410,7 @@ class Addon extends Base
      */
     public function deleteRevision($rev)
     {
-        if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS) && !$this->isOwner())
-        {
-            throw new AddonException(_h('You do not have the necessary permissions to perform this action.'));
-        }
+        $this->checkUserEditPermissions();
 
         $rev = (int)$rev;
         if ($rev < 1 || !isset($this->revisions[$rev]))
@@ -872,10 +825,7 @@ class Addon extends Base
      */
     public function setDescription($description)
     {
-        if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS) && !$this->isOwner())
-        {
-            throw new AddonException(_h('You do not have the necessary permissions to perform this action.'));
-        }
+        $this->checkUserEditPermissions();
 
         try
         {
@@ -913,10 +863,7 @@ class Addon extends Base
      */
     public function setDesigner($designer)
     {
-        if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS) && !$this->isOwner())
-        {
-            throw new AddonException(_h('You do not have the necessary permissions to perform this action.'));
-        }
+        $this->checkUserEditPermissions();
 
         try
         {
@@ -955,10 +902,7 @@ class Addon extends Base
      */
     public function setImage($image_id, $field = 'image')
     {
-        if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS) && !$this->isOwner())
-        {
-            throw new AddonException(_h('You do not have the neccessary permissions to perform this action.'));
-        }
+        $this->checkUserEditPermissions();
 
         try
         {
@@ -993,10 +937,7 @@ class Addon extends Base
      */
     public function setIncludeVersions($start_ver, $end_ver)
     {
-        if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
-        {
-            throw new AddonException(_h('You do not have the necessary permissions to perform this action.'));
-        }
+        $this->checkUserEditPermissions();
 
         Validate::versionString($start_ver);
         Validate::versionString($end_ver);
@@ -1105,15 +1046,13 @@ class Addon extends Base
      */
     public function setNotes($fields)
     {
-        if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
-        {
-            throw new AddonException(_h('You do not have the necessary permissions to perform this action.'));
-        }
+        $this->checkUserEditPermissions();
 
         $fields = explode(',', $fields);
         $notes = [];
         foreach ($fields as $field)
         {
+            // TODO remove post fields
             if (!isset($_POST[$field]))
             {
                 $_POST[$field] = null;
@@ -1220,11 +1159,10 @@ class Addon extends Base
      */
     public function setStatus($fields)
     {
-        $is_owner = $this->getUploaderId() === User::getLoggedId();
         $has_permission = User::hasPermission(AccessControl::PERM_EDIT_ADDONS);
 
         // do not have permission
-        if (!$is_owner && !$has_permission)
+        if (!$this->isUserOwner() && !$has_permission)
         {
             throw new AddonException(_h("You do not have the permission to change this addon's status"));
         }
@@ -1251,6 +1189,7 @@ class Addon extends Base
             $flag = "";
             $is_checked = $is_latest = false;
 
+            // TODO remove post fields
             if (isset($_POST[$field])) // field is on most likely
             {
                 if ($_POST[$field] === 'on')
@@ -1485,6 +1424,7 @@ class Addon extends Base
      * Check if the type is allowed
      *
      * @param string $type
+     *
      * @return bool true if allowed and false otherwise
      */
     public static function isAllowedType($type)
@@ -1505,6 +1445,7 @@ class Addon extends Base
      * Perform a cleaning operation on the id
      *
      * @param string $id what we want to clean
+     *
      * @return string|bool
      */
     public static function cleanId($id)
@@ -1551,7 +1492,6 @@ class Addon extends Base
     {
         $has_permission = User::hasPermission(AccessControl::PERM_EDIT_ADDONS);
         $template_addons = [];
-        $user_id = User::getLoggedId();
 
         foreach ($addons as $addon)
         {
@@ -1586,7 +1526,7 @@ class Addon extends Base
             {
                 $class = '';
             }
-            elseif ($has_permission || $user_id == $addon->getUploaderId())
+            elseif ($has_permission || $addon->isUserOwner())
             {
                 // not approved, see of we are logged in and we have permission
                 $class = ' disabled';
@@ -1774,6 +1714,7 @@ class Addon extends Base
         $return = [];
         foreach ($addons as $addon)
         {
+            // TODO select all users with one SQL query
             $return[] = static::get($addon['id']);
         }
 
@@ -1783,14 +1724,12 @@ class Addon extends Base
     /**
      * Generate a random id based on the name
      *
-     * @param string $type
      * @param string $name
      *
      * @return string the new id
      */
-    public static function generateId($type, $name)
+    public static function generateId($name)
     {
-        // TODO find usage for $type
         if (!is_string($name))
         {
             return false;
@@ -1824,60 +1763,47 @@ class Addon extends Base
 
     /**
      * Create a new add-on record and an initial revision
-     * @global string $moderator_message Initial revision status message
-     *                                   FIXME: put this in $attributes somewhere
      *
-     * @param string  $type              Add-on type
-     * @param array   $attributes        Contains properties of the add-on. Must have the
+     * @param string $type               Add-on type
+     * @param array  $attributes         Contains properties of the add-on. Must have the
      *                                   following elements: name, designer, license, image, fileid, status, (arena)
-     * @param string  $fileid            ID for revision file (see FIXME below)
-     * @param string  $moderator_message
+     * @param string $fileid             ID for revision file (see FIXME below)
+     * @param string $moderator_message
      *
      * @throws AddonException
      */
     public static function create($type, $attributes, $fileid, $moderator_message)
     {
-        foreach ($attributes['missing_textures'] as $tex)
-        {
-            $moderator_message .= "Texture not found: $tex\n";
-        }
-
-        // Check if logged in
+        // validate
         if (!User::isLoggedIn())
         {
             throw new AddonException(_h('You must be logged in to create an add-on.'));
         }
-
+        if (!User::hasPermission(AccessControl::PERM_ADD_ADDON))
+        {
+            throw new AddonException(_h('You do not have the necessary permissions to upload a addon'));
+        }
         if (!static::isAllowedType($type))
         {
             throw new AddonException(_h('An invalid add-on type was provided.'));
         }
 
-        $id = static::generateId($type, $attributes['name']);
+        foreach ($attributes['missing_textures'] as $tex)
+        {
+            $moderator_message .= "Texture not found: $tex\n";
+        }
+        $id = static::generateId($attributes['name']);
 
         // Make sure the add-on doesn't already exist
         if (static::exists($id))
         {
-            throw new AddonException(_h('An add-on with this ID already exists. Please try to upload your add-on again later.'));
+            throw new AddonException(_h('An add-on with this ID already exists.'));
         }
 
         // Make sure no revisions with this id exists
         // FIXME: Check if this id is redundant or not. Could just
         //        auto-increment this column if it is unused elsewhere.
-        try
-        {
-            $rows = DBConnection::get()->query(
-                'SELECT * FROM ' . DB_PREFIX . $type . '_revs WHERE `id` = :id',
-                DBConnection::ROW_COUNT,
-                [':id' => $fileid]
-            );
-        }
-        catch(DBException $e)
-        {
-            throw new AddonException(sprintf('Failed to access the %s_revs table.', $type));
-        }
-
-        if ($rows)
+        if (static::existsRevision($fileid, $type))
         {
             throw new AddonException(_h('The add-on you are trying to create already exists.'));
         }
@@ -1975,6 +1901,19 @@ class Addon extends Base
     }
 
     /**
+     * Check if an addon revision exists in the database
+     *
+     * @param string $id   Addon ID
+     * @param string $type addon type
+     *
+     * @return bool
+     */
+    public static function existsRevision($id, $type)
+    {
+        return static::existsField($type . "_revs", "id", $id, DBConnection::PARAM_STR);
+    }
+
+    /**
      * Get the total number of addons of a type
      *
      * @param string $type the addon type
@@ -1996,6 +1935,36 @@ class Addon extends Base
         }
 
         return $count;
+    }
+
+    /**
+     * Checks if the current logged in user can modify the addon
+     *
+     * @throw AddonException
+     */
+    public function checkUserEditPermissions()
+    {
+        // Check if logged in
+        if (!User::isLoggedIn())
+        {
+            throw new AddonException(_h('You must be logged in to perform this action.'));
+        }
+
+        // Make sure user has permission to upload a new revision for this add-on
+        if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS) && !$this->isUserOwner())
+        {
+            throw new AddonException(_h('You do not have the necessary permissions to perform this action.'));
+        }
+    }
+
+    /**
+     * See if thee current logged in user is the owner of this addon(aka the uploader, creator)
+     *
+     * @return bool
+     */
+    public function isUserOwner()
+    {
+        return $this->uploader_id === User::getLoggedId();
     }
 
     /**

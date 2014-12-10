@@ -314,11 +314,7 @@ class Upload
             throw new UploadException(_h('A valid License.txt file was not found. Please add it to your archive and re-submit.'));
         }
 
-        if (!$this->addon_type)
-        {
-            throw new UploadException(_h('No add-on information type was found.'));
-        }
-        if (!Addon::isAllowedType($this->addon_type))
+        if (!$this->addon_type || !Addon::isAllowedType($this->addon_type))
         {
             throw new UploadException(_h('Invalid add-on type.'));
         }
@@ -365,19 +361,30 @@ class Upload
                 );
             }
 
-            if (User::getLoggedId() != $addon->getUploaderId() && !User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
+            try
+            {
+                $addon->checkUserEditPermissions();
+            }
+            catch(AddonException $e)
             {
                 throw new UploadException(_h('You do not have the necessary permissions to upload a revision for this addon'));
+
             }
         }
         else // new addon
         {
+            if (!User::hasPermission(AccessControl::PERM_ADD_ADDON))
+            {
+                throw new UploadException(_h('You do not have the necessary permissions to upload a addon'));
+            }
+
             // Get addon id from XML if we still don't have it
-            $this->addon_id = Addon::generateId($this->addon_type, $this->properties['xml_attributes']['name']);
+            $this->addon_id = Addon::generateId($this->properties['xml_attributes']['name']);
             $this->properties['addon_revision'] = 1;
             $this->properties['status'] += F_LATEST;
         }
 
+        // TODO add undo methods for steps below
         $this->editInfoFile();
         $this->storeUploadImage();
         $this->storeUploadQuadFile();
@@ -551,7 +558,9 @@ class Upload
     }
 
     /**
-     * Parse the b3d files
+     * Parse the b3d, xml, license.txt file
+     * Will modify the following keys from the proprieties:
+     *  - xml_attributes, addon_file, license_file, quad_file, status, b3d_textures, missing_textures
      */
     private function parseFiles()
     {

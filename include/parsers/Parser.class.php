@@ -75,14 +75,14 @@ abstract class Parser
         {
             $read_flag .= 'b';
         }
-        $handle = fopen($file, $read_flag);
 
-        $this->file_name = basename($file);
+        $handle = fopen($file, $read_flag);
         if (!$handle)
         {
             throw new ParserException('Error opening file');
         }
 
+        $this->file_name = basename($file);
         $this->file = $handle;
         $this->file_size = filesize($file);
 
