@@ -41,6 +41,21 @@ class AddonViewer
     private $rating = false;
 
     /**
+     * @var bool
+     */
+    private $user_is_logged = false;
+
+    /**
+     * @var bool
+     */
+    private $user_is_owner = false;
+
+    /**
+     * @var bool
+     */
+    private $user_has_permission = false;
+
+    /**
      * Constructor
      *
      * @param string $id Add-On ID
@@ -51,10 +66,20 @@ class AddonViewer
     {
         $this->addon = Addon::get($id);
 
-        // can view addon
-        if(!$this->addon->hasApprovedRevision() && User::getLoggedId() != $this->addon->getUploaderId())
+        $this->user_is_logged = User::isLoggedIn();
+        if ($this->user_is_logged)
         {
-            throw new AddonException(_h("Addon is not approved"));
+            $this->user_is_owner = ($this->addon->getUploaderId() === User::getLoggedId());
+            $this->user_has_permission = User::hasPermission(AccessControl::PERM_EDIT_ADDONS);
+        }
+
+        // can view addon
+        if (!$this->addon->hasApprovedRevision())
+        {
+            if (!$this->user_is_owner && !$this->user_has_permission)
+            {
+                throw new AddonException(_h("Addon is not approved"));
+            }
         }
 
         $this->latestRev = $this->addon->getLatestRevision();
@@ -98,13 +123,10 @@ class AddonViewer
         ];
 
         // build permission variables
-        $is_logged = User::isLoggedIn();
-        $is_owner = $has_permission = $can_edit = false;
-        if ($is_logged) // not logged in, no reason to do checking
+        $can_edit = false;
+        if ($this->user_is_logged) // not logged in, no reason to do checking
         {
-            $is_owner = ($this->addon->getUploaderId() === User::getLoggedId());
-            $has_permission = User::hasPermission(AccessControl::PERM_EDIT_ADDONS);
-            $can_edit = ($is_owner || $has_permission);
+            $can_edit = ($this->user_is_owner || $this->user_has_permission);
 
             $tpl['vote'] = $this->rating->displayUserRating();
         }
@@ -203,10 +225,10 @@ class AddonViewer
             }
 
             $admin_links = null;
-            if ($is_logged)
+            if ($this->user_is_logged)
             {
                 // only users that can edit addons
-                if ($has_permission)
+                if ($this->user_has_permission)
                 {
                     if ($image['approved'])
                     {
@@ -254,9 +276,9 @@ class AddonViewer
             }
 
             $source['download_link'] = DOWNLOAD_LOCATION . $source['file_path'];
-            if ($is_logged)
+            if ($this->user_is_logged)
             {
-                if ($has_permission)
+                if ($this->user_has_permission)
                 {
                     if ($source['approved'])
                     {
@@ -296,7 +318,7 @@ class AddonViewer
                 ]
             ];
 
-            if ($has_permission)
+            if ($this->user_has_permission)
             {
                 $config["status"]["approve_img"] = Util::getImageLabel(_h('Approved'));
                 $config["status"]["invisible_img"] = Util::getImageLabel(_h('Invisible'));
@@ -308,9 +330,9 @@ class AddonViewer
         }
 
         $template->assign('addon', $tpl)
-            ->assign("has_permission", $has_permission)
+            ->assign("has_permission", $this->user_has_permission)
             ->assign("can_edit", $can_edit)
-            ->assign("is_logged", $is_logged);
+            ->assign("is_logged", $this->user_is_logged);
     }
 
     /**
