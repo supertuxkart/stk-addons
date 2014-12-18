@@ -19,34 +19,11 @@
  */
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
 
-$dir = isset($_GET['type']) ? $_GET['type'] : null;
 $file = isset($_GET['file']) ? $_GET['file'] : null;
 
-// Make sure directory is not unsafe
-if (!preg_match('/^[a-z]+$/i', $dir))
-{
-    // Directory is unsafe - throw a 404 error
-    header("HTTP/1.0 404 Not Found");
-    exit;
-}
+$assets_path = filter_var($file, FILTER_SANITIZE_URL);
 
-// Make sure file name is not unsafe
-if (!preg_match('/^[\w\-\ ]+\.[a-z0-9]+$/i', $file))
-{
-    // File is unsafe - throw a 404 error
-    header("HTTP/1.0 404 Not Found");
-    exit;
-}
-
-if ($dir !== 'assets')
-{
-    $assets_path = $dir . '/' . $file;
-}
-else
-{
-    $assets_path = $file;
-}
-
+// TODO probably the best solutions is not to redirect to the file, but instead output the file from here
 // Don't bother checking if the file exists - if it doesn't exist, you'll get
 // a 404 error anyways after redirecting. Yes, this may make the stats below
 // inaccurate, but the actual 404's that used to be thrown here were relatively
@@ -70,7 +47,7 @@ if (preg_match('#^(SuperTuxKart/[a-z0-9\\.\\-_]+)( \\(.*\\))?$#', $user_agent, $
     }
     catch(DBException $e)
     {
-        header("HTTP/1.0 404 Not Found");
+        http_response_code(404);
         exit;
     }
 
@@ -90,7 +67,7 @@ if (preg_match('#^(SuperTuxKart/[a-z0-9\\.\\-_]+)( \\(.*\\))?$#', $user_agent, $
     }
     catch(DBException $e)
     {
-        header("HTTP/1.0 404 Not Found");
+        http_response_code(404);
         exit('Failed to update statistics');
     }
 }
@@ -106,17 +83,10 @@ try
 }
 catch(DBException $e)
 {
-    header("HTTP/1.0 404 Not Found");
+    http_response_code(404);
     exit;
 }
 
-// Redirect to actual resource, FIXME
-//if ($dir === 'xml')
-//{
-//    header('Location: http://stkaddons.net/xml/' . $file);
-//}
-//else
-//{
-//    header('Location: http://downloads.tuxfamily.org/stkaddons/assets/' . $assetpath);
-//}
+// Redirect to actual resource,
+header('Location: ' . ROOT_LOCATION . 'downloads/' . $assets_path);
 exit;

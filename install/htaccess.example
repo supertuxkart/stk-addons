@@ -31,8 +31,7 @@ RewriteCond %{QUERY_STRING} ^type=(karts|tracks|arenas)&name=([a-z0-9\-_]+)$
 RewriteRule addons.php %1/%2? [L,NC,R=301]
 
 # Pass download links to the download script
-RewriteRule ^dl/([^/]+)/([^/]+) /download.php?type=$1&file=$2 [NC,L]
-RewriteRule ^dl/([^/]+) /download.php?type=assets&file=$1 [NC,L]
+RewriteRule ^dl/(.+) /download.php?file=$1 [NC,L]
 
 # cache images docs for 14 days
 <IfModule mod_headers.c>
