@@ -300,19 +300,27 @@ class Addon extends Base
             throw new AddonException(_h('Failed to create add-on revision.'));
         }
 
-        // Send mail to moderators
-        SMail::get()->moderatorNotification(
-            'New Addon Upload',
-            sprintf(
-                "%s has uploaded a new revision for %s '%s' %s",
-                User::getLoggedUserName(),
-                $this->type,
-                $attributes['name'],
-                (string)$this->id
-            )
-        );
         writeAssetXML();
         writeNewsXML();
+        try
+        {
+            // Send mail to moderators
+            SMail::get()->moderatorNotification(
+                'New Addon Upload',
+                sprintf(
+                    "%s has uploaded a new revision for %s '%s' %s",
+                    User::getLoggedUserName(),
+                    $this->type,
+                    $attributes['name'],
+                    (string)$this->id
+                )
+            );
+        }
+        catch(SMailException $e)
+        {
+            throw new AddonException($e->getMessage());
+        }
+
         Log::newEvent("New add-on revision for '{$attributes['name']}'");
     }
 
@@ -1872,19 +1880,28 @@ class Addon extends Base
             throw new AddonException($e->getMessage());
         }
 
-        // Send mail to moderators
-        SMail::get()->moderatorNotification(
-            'New Addon Upload',
-            sprintf(
-                "%s has uploaded a new %s '%s' %s",
-                User::getLoggedUserName(),
-                $type,
-                $attributes['name'],
-                (string)$id
-            )
-        );
+
         writeAssetXML();
         writeNewsXML();
+        try
+        {
+            // Send mail to moderators
+            SMail::get()->moderatorNotification(
+                'New Addon Upload',
+                sprintf(
+                    "%s has uploaded a new %s '%s' %s",
+                    User::getLoggedUserName(),
+                    $type,
+                    $attributes['name'],
+                    (string)$id
+                )
+            );
+        }
+        catch(SMailException $e)
+        {
+            throw new AddonException($e->getMessage());
+        }
+
         Log::newEvent("New add-on '{$attributes['name']}'");
     }
 

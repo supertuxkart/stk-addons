@@ -20,6 +20,9 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+// make sure that this does not end with a trailing slash, and does not have a prefix in front
+$ROOT_LOCATION = "addons.supertuxkart.net";
+
 define("DEBUG_MODE", true); // FIXME turn off on server.
 if (DEBUG_MODE)
 {
@@ -55,17 +58,15 @@ define("NEWS_XML_PATH", UP_PATH . "xml" . DS . "news.xml");
 define("ASSETS_XML_PATH", UP_PATH . "xml" . DS . "assets.xml");
 define("ASSETS2_XML_PATH", UP_PATH . "xml" . DS . "assets2.xml");
 
-// make sure that this ends with a trailing slash, and does not have a prefix in front
-$ROOT_LOCATION = "addons.supertuxkart.net/";
-
 if (isset($_SERVER["HTTPS"]) && $_SERVER['HTTPS'] === "on")
 {
-    define("ROOT_LOCATION", "https://" . $ROOT_LOCATION);
+    define("ROOT_LOCATION", "https://" . $ROOT_LOCATION . "/");
 }
 else
 {
-    define("ROOT_LOCATION", "http://" . $ROOT_LOCATION);
+    define("ROOT_LOCATION", "http://" . $ROOT_LOCATION . "/");
 }
+define("IS_SSL_CERTIFICATE_VALID", false); // tell if the certificate is signed by an authority
 
 define("DOWNLOAD_LOCATION", ROOT_LOCATION . "dl/");
 define("DOWNLOAD_XML_LOCATION", DOWNLOAD_LOCATION . "xml/");

@@ -28,14 +28,20 @@ class SMail
      *
      * @var PHPMailer
      */
-    protected $mail;
+    private $mail;
+
+    /**
+     * The base url for links in emails
+     * @var string
+     */
+    private $base_url;
 
     /**
      * PHPMailer send method wrapper, that handles errors and exceptions
      *
      * @throws SMailException
      */
-    protected function send()
+    private function send()
     {
         try
         {
@@ -58,7 +64,7 @@ class SMail
      *
      * @throws SMailException
      */
-    protected function addAddress($address, $name = "")
+    private function addAddress($address, $name = "")
     {
         try
         {
@@ -74,25 +80,57 @@ class SMail
     }
 
     /**
+     * Build the body of an action email
+     *
+     * @param array $tpl_data the template variables
+     */
+    private function buildBodyActionEmail(array $tpl_data)
+    {
+        $tpl = StkTemplate::get("email/action.tpl");
+        $tpl->assign("email", $tpl_data);
+        $this->mail->Body = $tpl->toString();
+
+        $username = $tpl_data["username"];
+        $message = $tpl_data["message"];
+        $url_href = $tpl_data["url_href"];
+        $warning = $tpl_data["warning"];
+        $this->mail->AltBody = <<<EMAIL
+Hello $username,
+
+$message
+$url_href
+
+$warning
+
+Best regards,
+Your SuperTuxKart Team
+
+EMAIL;
+    }
+
+    /**
      * The constructor
      *
      * @throws SMailException
      */
     public function __construct()
     {
-        $this->mail = new PHPMailer(true);
+        if (IS_SSL_CERTIFICATE_VALID)
+        {
+            $this->base_url = ROOT_LOCATION;
+        }
+        else // use normal http
+        {
+            $this->base_url = ROOT_LOCATION;
+            $this->base_url = str_replace("https", "http", $this->base_url);
+        }
 
-        // use SMTP
+        $this->mail = new PHPMailer(true);
         if (IS_SMTP)
         {
             $this->mail->isSMTP();
             $this->mail->SMTPAuth = SMTP_AUTH;
             $this->mail->SMTPSecure = SMTP_PREFIX;
-
-            //            if (DEBUG_MODE)
-            //            {
-            //                $this->mail->SMTPDebug = 3;
-            //            }
 
             $this->mail->Host = SMTP_HOST;
             $this->mail->Port = SMTP_PORT;
@@ -112,17 +150,36 @@ class SMail
         try
         {
             $admin_email = Config::get(Config::EMAIL_ADMIN);
+            if (!$admin_email)
+            {
+                throw new SMailException("The admin email is not set. Could not send email.");
+            }
 
             $this->mail->setFrom($admin_email, "STK-Addons Administrator");
-            $this->mail->addReplyTo($admin_email, "STK-Addons Administrator");
         }
         catch(phpmailerException $e)
         {
             throw new SMailException($e->getMessage());
         }
 
+        $this->mail->isHTML(true);
         $this->mail->CharSet = "UTF-8";
         $this->mail->Encoding = "8bit";
+    }
+
+    /**
+     * Set the Reply-To field in the email
+     *
+     * @param string $email
+     * @param string $name
+     *
+     * @return $this
+     */
+    public function setReplyTo($email, $name = "STK-Addons Administrator")
+    {
+        $this->mail->addReplyTo($email, $name);
+
+        return $this;
     }
 
     /**
@@ -138,13 +195,19 @@ class SMail
      */
     public function newAccountNotification($email, $userid, $username, $ver_code, $ver_page)
     {
-        $message = "Thank you for registering an account on the SuperTuxKart Add-Ons Manager.\n" .
-            "Please go to " . ROOT_LOCATION . "$ver_page?action=valid&num=$ver_code&user=$userid to activate your account.\n\n" .
-            "Username: $username";
+        $subject = "New SuperTuxKart Account";
+        $tpl_data = [
+            "username"  => $username,
+            "url_href"  => $this->base_url . "$ver_page?action=valid&num=$ver_code&user=$userid",
+            "url_label" => "Confirm email address",
+            "warning"   => "If you did not request an account for SuperTuxKart, please just ignore this email.",
+            "subject"   => $subject,
+            "message"   => "Thank you for registering an account on the SuperTuxKart server. Please click on the button/link below to confirm your email.",
+        ];
 
         $this->addAddress($email);
-        $this->mail->Subject = "New Account at " . $_SERVER["SERVER_NAME"];
-        $this->mail->Body = $this->mail->AltBody = $message;
+        $this->mail->Subject = $subject;
+        $this->buildBodyActionEmail($tpl_data);
 
         $this->send();
     }
@@ -163,12 +226,22 @@ class SMail
     public function passwordResetNotification($email, $userid, $username, $ver_code, $ver_page)
     {
         $message = "You have requested to reset your password on the SuperTuxKart Add-Ons Manager.\n" .
-            "Please go to " . ROOT_LOCATION . "$ver_page?action=valid&num=$ver_code&user=$userid to reset your password.\n\n" .
+            "Please go to " . $this->base_url . "$ver_page?action=valid&num=$ver_code&user=$userid to reset your password.\n\n" .
             "Username: $username";
 
+        $subject = "Reset Password for SuperTuxKart Account";
+        $tpl_data = [
+            "username"  => $username,
+            "url_href"  => $this->base_url . "$ver_page?action=valid&num=$ver_code&user=$userid",
+            "url_label" => "Reset your password",
+            "warning"   => "If you did not request a password reset, please just ignore this email.",
+            "subject"   => $subject,
+            "message"   => "You have requested to reset your password on the SuperTuxKart server. Please click on the button/link below to reset your password.",
+        ];
+
         $this->addAddress($email);
-        $this->mail->Subject = "Reset Password on " . $_SERVER["SERVER_NAME"];
-        $this->mail->Body = $this->mail->AltBody = $message;
+        $this->mail->Subject = $subject;
+        $this->buildBodyActionEmail($tpl_data);
 
         $this->send();
     }
@@ -201,20 +274,19 @@ class SMail
      *
      * @param string $subject
      * @param string $message_html
+     *
+     * @throws SMailException
      */
     public function moderatorNotification($subject, $message_html)
     {
         $mail_address = Config::get(Config::EMAIL_LIST);
-        if (empty($mail_address))
+        if (!$mail_address)
         {
-            trigger_error(_h('No moderator mailing-list email is set.'));
-
-            return;
+            throw new SMailException('No moderator mailing-list email is set.');
         }
 
         $this->addAddress($mail_address);
         $this->mail->Subject = $subject;
-        $this->mail->isHTML(true);
         $this->mail->Body = $this->mail->AltBody = $message_html;
 
         $this->send();
