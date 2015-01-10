@@ -287,6 +287,17 @@ class Util
     }
 
     /**
+     * Do a HTTP redirect to the STK error page
+     *
+     * @param int  $error     the http error
+     * @param bool $permanent is the request permanent or not.
+     */
+    public static function redirectError($error, $permanent = false)
+    {
+        static::redirectTo(ROOT_LOCATION . sprintf("error.php?e=%d", (int)$error), $permanent);
+    }
+
+    /**
      * Get url address
      *
      * @param bool $request_params      retrieve the url tih the GET params

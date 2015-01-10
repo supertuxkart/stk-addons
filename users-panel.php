@@ -33,10 +33,17 @@ catch(UserException $e)
     exit("Error: " . $e->getMessage());
 }
 
+
 // define permissions
-$can_elevate_user = (User::hasPermissionOnRole($user_role));
+$can_elevate_user = User::hasPermissionOnRole($user_role);
 $is_owner = ($user->getId() === User::getLoggedId());
 $is_admin = User::isAdmin();
+
+// user is not active yet, only allow high privilege users to see it
+if (!$user->isActive() && !$can_elevate_user)
+{
+    Util::redirectError(401);
+}
 
 $tpl = StkTemplate::get("users/panel.tpl")
     ->assign("is_owner", $is_owner)

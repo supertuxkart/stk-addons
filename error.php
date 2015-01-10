@@ -32,8 +32,7 @@ switch ($error["code"])
     case 401:
         header('HTTP/1.0 401 Unauthorized');
         $error["title"] = _h("401 Unauthorized");
-        $error["message"] = _h("You do not have permission to access this page. You will be redirected to the home page.");
-        $tpl->setMetaRefresh("index.php");
+        $error["message"] = _h("You do not have permission to access this page.");
         break;
 
     case 403:

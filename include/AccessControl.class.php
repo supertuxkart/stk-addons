@@ -397,15 +397,7 @@ class AccessControl
 
         if (!User::hasPermission($permission))
         {
-            AccessControl::showAccessDeniedPage();
+            Util::redirectError(401);
         }
-    }
-
-    /**
-     * Show a 401 page
-     */
-    public static function showAccessDeniedPage()
-    {
-        Util::redirectTo(ROOT_LOCATION . "error.php?e=401");
     }
 }
