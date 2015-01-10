@@ -44,7 +44,7 @@ class SLocale
         ['nl_NL', -400, 'NL'],
         ['ru_RU', -480, 'RU'],
         ['zh_TW', -120, 'ZH'],
-        ['pt_PT', -440, 'PT'],
+        //['pt_PT', -440, 'PT'],
         ['pt_BR', -40,  'PT'],
         ['ga_IE', -320, 'GA'],
         ['gl_ES', -200, 'GL'],
@@ -73,12 +73,12 @@ class SLocale
             $locale = "en_US"; // default locale
         }
 
-        if (!SLocale::isLocale($locale))
+        if (!static::isLocale($locale))
         {
             $locale = "en_US";
         }
 
-        SLocale::setLocale($locale);
+        static::setLocale($locale);
     }
 
     /**
@@ -100,7 +100,7 @@ class SLocale
      */
     public static function isLocale($locale)
     {
-        foreach (SLocale::$languages as $lang)
+        foreach (static::$languages as $lang)
         {
             if ($locale === $lang[0])
             {
@@ -126,7 +126,7 @@ class SLocale
         putenv("LC_ALL=$locale.UTF-8");
         if (setlocale(LC_ALL, $locale . ".UTF-8") === false)
         {
-            trigger_error("Set locale has failed. No localization is possible");
+            trigger_error(sprintf("Set locale has failed for '%s'. No localization is possible", $locale));
         }
         $_COOKIE['lang'] = $locale;
 
