@@ -225,10 +225,6 @@ EMAIL;
      */
     public function passwordResetNotification($email, $userid, $username, $ver_code, $ver_page)
     {
-        $message = "You have requested to reset your password on the SuperTuxKart Add-Ons Manager.\n" .
-            "Please go to " . $this->base_url . "$ver_page?action=valid&num=$ver_code&user=$userid to reset your password.\n\n" .
-            "Username: $username";
-
         $subject = "Reset Password for SuperTuxKart Account";
         $tpl_data = [
             "username"  => $username,
