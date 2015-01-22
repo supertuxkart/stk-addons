@@ -565,7 +565,6 @@ abstract class ClientSession
      * @param int $old_seconds how old should a long session be, before deleting and updating
      *
      * @throws ClientSessionException
-     * @return int the number of affected rows
      */
     public static function cron($seconds, $old_seconds)
     {
@@ -595,7 +594,7 @@ abstract class ClientSession
             throw new ClientSessionException($e->getMessage());
         }
 
-        // set offline all 'remember me' users older tha seconds
+        // set offline all 'remember me' users older than seconds
         try
         {
             DBConnection::get()->update(

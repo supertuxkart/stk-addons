@@ -233,8 +233,8 @@ try
                 ClientSession::get($token, $userid)->destroy();
 
                 $output->startElement('disconnect');
-                $output->writeAttribute('success', 'yes');
-                $output->writeAttribute('info', '');
+                    $output->writeAttribute('success', 'yes');
+                    $output->writeAttribute('info', '');
                 $output->endElement();
             }
             catch(Exception $e)
