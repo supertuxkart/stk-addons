@@ -397,7 +397,7 @@ class User extends Base
     public static function init()
     {
         // do not init session if we are in the api part area
-        if (defined('API'))
+        if (defined('API') || defined('CRON'))
         {
             return;
         }

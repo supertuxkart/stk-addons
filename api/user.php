@@ -224,6 +224,25 @@ try
             }
             break;
 
+        case 'disconnect':
+            try
+            {
+                $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
+                $token = isset($_POST['token']) ? $_POST['token'] : "";
+
+                ClientSession::get($token, $userid)->destroy();
+
+                $output->startElement('disconnect');
+                $output->writeAttribute('success', 'yes');
+                $output->writeAttribute('info', '');
+                $output->endElement();
+            }
+            catch(Exception $e)
+            {
+                $output->addErrorElement('disconnect', $e->getMessage());
+            }
+            break;
+
         case 'achieving':
             try
             {
@@ -397,25 +416,6 @@ try
             catch(Exception $e)
             {
                 $output->addErrorElement('user-search', $e->getMessage());
-            }
-            break;
-
-        case 'disconnect':
-            try
-            {
-                $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
-                $token = isset($_POST['token']) ? $_POST['token'] : "";
-
-                ClientSession::get($token, $userid)->destroy();
-
-                $output->startElement('disconnect');
-                    $output->writeAttribute('success', 'yes');
-                    $output->writeAttribute('info', '');
-                $output->endElement();
-            }
-            catch(Exception $e)
-            {
-                $output->addErrorElement('disconnect', $e->getMessage());
             }
             break;
 

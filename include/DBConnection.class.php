@@ -344,7 +344,8 @@ class DBConnection
      * Perform a update on the database. Helper method
      *
      * @param string $table           the table name
-     * @param string $where_statement the complete where statement
+     * @param string $where_statement the complete where statement, if any prepared columns are set here, they will not be included
+     *                                in the SET SQL
      * @param array  $fields_data     associative array that maps column to value
      *                                If you do not want to prepare a column do not put ":" in front of the key
      * @param array  $data_types      associative array that maps column to param_type
@@ -367,6 +368,12 @@ class DBConnection
         $set_string = "";
         foreach ($column_value_pairs as $column => $value)
         {
+            // ignore updating value from the where clause
+            if ($value[0] === ":"  && Util::str_contains($where_statement, $value))
+            {
+                continue;
+            }
+
             $set_string .= "`{$column}` = {$value}, ";
         }
         $set_string = rtrim($set_string, ", ");

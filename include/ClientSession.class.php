@@ -115,10 +115,10 @@ abstract class ClientSession
         {
             DBConnection::get()->beginTransaction();
 
-            $result = DBConnection::get()->query(
+            $client = DBConnection::get()->query(
                 "SELECT `save` FROM `" . DB_PREFIX . "client_sessions`
     	        WHERE `cid` = :session_id AND uid = :user_id",
-                DBConnection::FETCH_ALL,
+                DBConnection::FETCH_FIRST,
                 [
                     ':user_id'    => $this->user_id,
                     ':session_id' => $this->session_id
@@ -126,9 +126,9 @@ abstract class ClientSession
                 [':user_id' => DBConnection::PARAM_INT]
             );
 
-            if (count($result) === 1)
+            if ($client)
             {
-                if ($result[0]['save'] == 1)
+                if ($client['save'] == 1)
                 {
                     $this->setOnline(false);
                 }
@@ -137,6 +137,7 @@ abstract class ClientSession
                     $this->destroy();
                 }
             }
+
 
             DBConnection::get()->commit();
         }
@@ -155,7 +156,7 @@ abstract class ClientSession
      * @param int $peer_id id of the peer
      *
      * @return array the ip and port of the player
-     * @throws UserException if the request fails
+     * @throws ClientSessionException if the request fails
      */
     public function getPeerAddress($peer_id)
     {
@@ -175,7 +176,7 @@ abstract class ClientSession
         }
         catch(DBException $e)
         {
-            throw new UserException(
+            throw new ClientSessionException(
                 _h('An error occurred while getting a peer\'s ip:port.') . ' ' .
                 _h('Please contact a website administrator.')
             );
@@ -184,11 +185,11 @@ abstract class ClientSession
         $size = count($result);
         if ($size === 0)
         {
-            throw new UserException(_h('That user is not signed in.'));
+            throw new ClientSessionException(_h('That user is not signed in.'));
         }
         elseif ($size > 1)
         {
-            throw new UserException(_h('Too much users match the request'));
+            throw new ClientSessionException(_h('Too much users match the request'));
         }
 
         return $result[0];
@@ -198,7 +199,7 @@ abstract class ClientSession
      * @param $server_id
      *
      * @return array|int|null
-     * @throws UserException
+     * @throws ClientSessionConnectException
      */
     public function requestServerConnection($server_id)
     {
@@ -219,7 +220,7 @@ abstract class ClientSession
         }
         catch(DBException $e)
         {
-            throw new UserException(
+            throw new ClientSessionConnectException(
                 _h('An error occurred while requesting a server connection.') . ' ' .
                 _h('Please contact a website administrator.')
             );
@@ -227,7 +228,7 @@ abstract class ClientSession
 
         if ($count > 2 || $count < 0)
         {
-            throw new UserException(h("requestServerConnection: Unexpected error occurred"));
+            throw new ClientSessionConnectException(h("requestServerConnection: Unexpected error occurred"));
         }
 
         return $count;
@@ -237,7 +238,7 @@ abstract class ClientSession
      * Join a server
      *
      * @return mixed
-     * @throws UserException
+     * @throws ClientSessionConnectException
      */
     public function quickJoin()
     {
@@ -251,9 +252,9 @@ abstract class ClientSession
                 DBConnection::FETCH_FIRST
             );
 
-            if (empty($server))
+            if (!$server)
             {
-                throw new UserException(_h('No server found'));
+                throw new ClientSessionConnectException(_h('No server found'));
             }
 
             DBConnection::get()->query(
@@ -270,7 +271,7 @@ abstract class ClientSession
         }
         catch(DBException $e)
         {
-            throw new UserException(
+            throw new ClientSessionConnectException(
                 _h('An error occurred while quick joining.') . ' ' .
                 _h('Please contact a website administrator.')
             );
@@ -284,7 +285,7 @@ abstract class ClientSession
      * @param int    $port
      *
      * @return array|int|null
-     * @throws UserException
+     * @throws ClientSessionException
      */
     public function getServerConnectionRequests($ip, $port)
     {
@@ -340,7 +341,7 @@ abstract class ClientSession
         }
         catch(DBException $e)
         {
-            throw new UserException(
+            throw new ClientSessionException(
                 _h('An error occurred while fetching server connection requests.') . ' ' .
                 _h('Please contact a website administrator.')
             );
@@ -352,27 +353,32 @@ abstract class ClientSession
     /**
      * @param bool $online
      *
-     * @throws FriendException
+     * @throws ClientSessionException
      */
     public function setOnline($online = true)
     {
         try
         {
+            // sometimes the MYSQL 'ON UPDATE' does not fire because the online value is the same
             DBConnection::get()->query(
                 "UPDATE `" . DB_PREFIX . "client_sessions`
-                SET online = :online
-                WHERE uid = :id",
+                SET `online` = :online, `last-online` = NOW()
+                WHERE `uid` = :id",
                 DBConnection::ROW_COUNT,
                 [
                     ':id'     => $this->user_id,
-                    ':online' => ($online ? 1 : 0)
+                    ':online' => ($online ? 1 : 0),
+
                 ],
-                [':id' => DBConnection::PARAM_INT, ':online' => DBConnection::PARAM_INT]
+                [
+                    ':id'     => DBConnection::PARAM_INT,
+                    ':online' => DBConnection::PARAM_INT
+                ]
             );
         }
         catch(DBException $e)
         {
-            throw new FriendException(
+            throw new ClientSessionException(
                 _h('An unexpected error occured while updating your status.') . ' ' .
                 _h('Please contact a website administrator.')
             );
@@ -410,7 +416,7 @@ abstract class ClientSession
      * @param int    $user_id    user id
      *
      * @return RegisteredClientSession
-     * @throws ClientSessionExpiredException when session does not exist
+     * @throws ClientSessionExpiredException|ClientSessionException when session does not exist
      * @throws UserException on database error
      */
     public static function get($session_id, $user_id)
@@ -455,7 +461,7 @@ abstract class ClientSession
         }
         catch(DBException $e)
         {
-            throw new UserException(
+            throw new ClientSessionException(
                 _h('An error occurred while verifying session.') . ' ' .
                 _h('Please contact a website administrator.')
             );
@@ -517,8 +523,7 @@ abstract class ClientSession
      * @param int    $id    user id
      * @param string $token user token
      *
-     * @throws UserException if the request fails
-     * @throws ClientSessionException
+     * @throws ClientSessionException if the request fails
      */
     public static function unsetPublicAddress($id, $token)
     {
@@ -538,7 +543,9 @@ abstract class ClientSession
         }
         catch(DBException $e)
         {
-            throw new UserException(_h('An error occurred while unsetting ip:port') . ' .' . _h('Please contact a website administrator.'));
+            throw new ClientSessionException(_h('An error occurred while unsetting ip:port') . ' .' . _h(
+                    'Please contact a website administrator.'
+                ));
         }
 
         if ($count === 0)
@@ -548,6 +555,62 @@ abstract class ClientSession
         elseif ($count > 1)
         {
             throw new ClientSessionException(_h('Weird count of updates'));
+        }
+    }
+
+    /**
+     * Hourly cron job for client sessions
+     *
+     * @param int $seconds how old should a normal session be, before deleting
+     * @param int $old_seconds how old should a long session be, before deleting and updating
+     *
+     * @throws ClientSessionException
+     * @return int the number of affected rows
+     */
+    public static function cron($seconds, $old_seconds)
+    {
+        // delete old records
+        // all records that are older than old_seconds
+        // all records that are not 'remember me' and older than seconds
+        try
+        {
+            DBConnection::get()->delete(
+                "client_sessions",
+                "((UNIX_TIMESTAMP() - UNIX_TIMESTAMP(`last-online`)) > :old_seconds)
+                    OR
+                 ((UNIX_TIMESTAMP() - UNIX_TIMESTAMP(`last-online`)) > :seconds AND `save` = 0)
+                ",
+                [
+                    ":seconds"     => $seconds,
+                    ":old_seconds" => $old_seconds
+                ],
+                [
+                    ":seconds"     => DBConnection::PARAM_INT,
+                    ":old_seconds" => DBConnection::PARAM_INT
+                ]
+            );
+        }
+        catch(DBException $e)
+        {
+            throw new ClientSessionException($e->getMessage());
+        }
+
+        // set offline all 'remember me' users older tha seconds
+        try
+        {
+            DBConnection::get()->update(
+                "client_sessions",
+                "((UNIX_TIMESTAMP() - UNIX_TIMESTAMP(`last-online`)) > :seconds AND `save` = 1)",
+                [
+                    ":seconds" => $seconds,
+                    "online"   => 0
+                ],
+                [":seconds" => DBConnection::PARAM_INT]
+            );
+        }
+        catch(DBException $e)
+        {
+            throw new ClientSessionException($e->getMessage());
         }
     }
 }

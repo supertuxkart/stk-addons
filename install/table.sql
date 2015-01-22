@@ -262,7 +262,7 @@ CREATE TABLE IF NOT EXISTS `v2_client_sessions` (
     `ip`           INT(10) UNSIGNED           NOT NULL DEFAULT '0',
     `private_port` SMALLINT(5) UNSIGNED       NOT NULL DEFAULT '0',
     `port`         SMALLINT(5) UNSIGNED       NOT NULL DEFAULT '0',
-    `last-online`  TIMESTAMP                  NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `last-online`  TIMESTAMP                  NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`uid`),
     UNIQUE KEY `session` (`uid`, `cid`)
 )

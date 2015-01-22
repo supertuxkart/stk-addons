@@ -217,7 +217,7 @@ class RegisteredClientSession extends ClientSession
     public function hostVote($host_id, $vote)
     {
         $vote = (int)$vote;
-        if ($vote != 1 || $vote != -1)
+        if ($vote !== 1 || $vote !== -1)
         {
             throw new ClientSessionException(_h("Invalid vote. Your rating has to be either -1 or 1."));
         }
@@ -300,8 +300,8 @@ class RegisteredClientSession extends ClientSession
             $user_id = $user->getId();
             $username = $user->getUserName();
             $count = DBConnection::get()->query(
-                "INSERT INTO `" . DB_PREFIX . "client_sessions` (cid, uid, save)
-                VALUES (:session_id, :user_id, :save)
+                "INSERT INTO `" . DB_PREFIX . "client_sessions` (cid, uid, save, `last-online`)
+                VALUES (:session_id, :user_id, :save, NOW())
                 ON DUPLICATE KEY UPDATE cid = :session_id, online = 1",
                 DBConnection::ROW_COUNT,
                 [
