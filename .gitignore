@@ -8,3 +8,4 @@ config.php
 .htaccess
 .idea/
 vendor/
+node_modules/

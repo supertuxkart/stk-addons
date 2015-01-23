@@ -1,5 +1,5 @@
 /**
- * copyright 2014 Daniel Butum <danibutum at gmail dot com>
+ * copyright 2014-2015 Daniel Butum <danibutum at gmail dot com>
  *
  * This file is part of stkaddons
  *
@@ -51,7 +51,7 @@
         xaxis      : {
             show      : true,
             mode      : "time",
-            timeformat: "%b %y"
+            timeformat: "%d %b"
         },
         yaxis      : {
             show: true

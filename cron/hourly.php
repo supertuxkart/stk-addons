@@ -24,8 +24,8 @@ require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 echo "Executed at: " . date('d/m/Y H:i:s', time()) . "\n";
 try
 {
-    $rows = ClientSession::cron(5*60 /* 5 minutes */, 3600*24*30 /* 1 month */);
-    echo "SUCCESS: \n";
+    ClientSession::cron(5*60 /* 5 minutes */, 3600*24*30 /* 1 month */);
+    echo "SUCCESS \n";
 }
 catch (ClientSessionException $e)
 {
