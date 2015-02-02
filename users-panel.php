@@ -2,7 +2,7 @@
 /**
  * Copyright 2009      Lucas Baudin <xapantu@gmail.com>
  *           2012-2014 Stephen Just <stephenjust@users.sf.net>
- *           2014      Daniel Butum <danibutum at gmail dot com>
+ *           2014-2015 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -33,7 +33,6 @@ catch(UserException $e)
     exit("Error: " . $e->getMessage());
 }
 
-
 // define permissions
 $can_elevate_user = User::hasPermissionOnRole($user_role);
 $is_owner = ($user->getId() === User::getLoggedId());
@@ -53,13 +52,13 @@ $tpl = StkTemplate::get("users/panel.tpl")
 
 $friends = Friend::getFriendsOf($user->getId(), $is_owner);
 $tpl_data = [
-    "username"          => $user->getUserName(),
+    "username"          => h($user->getUserName()),
     "user_id"           => $user->getId(),
     "date_registration" => $user->getDateRegistration(),
-    "real_name"         => $user->getRealName(),
-    "email"             => $user->getEmail(),
+    "real_name"         => h($user->getRealName()),
+    "email"             => h($user->getEmail()),
     "role"              => $user_role,
-    "homepage"          => $user->getHomepage(),
+    "homepage"          => h($user->getHomepage()),
     "addon_types"       => [],
     "settings"          => [
         "profile"  => [],

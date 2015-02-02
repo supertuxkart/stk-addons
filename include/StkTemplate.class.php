@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright 2014 Stephen Just <stephenjust@gmail.com>
- *           2014 Daniel Butum <danibutum at gmail dot com>
+ * Copyright 2014      Stephen Just <stephenjust@gmail.com>
+ *           2014-2015 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -157,7 +157,7 @@ class StkTemplate extends Template
     {
         // TODO make top menu more dynamic
         $menu = [
-            'welcome'  => sprintf(_h('Welcome, %s'), User::getLoggedRealName()),
+            'welcome'  => h(sprintf(_h('Welcome, %s'), User::getLoggedRealName())),
             'home'     => File::rewrite('index.php'),
             'login'    => File::rewrite('login.php'),
             'logout'   => File::rewrite('login.php?action=logout'),

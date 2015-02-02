@@ -1,6 +1,6 @@
 <div class="clearfix">
     <h2 class="pull-left" id="bug-view-title">
-        {$bug.title|escape}
+        {$bug.title}
     </h2>
     <div class="pull-right">
     {if $can_edit_bug}
@@ -54,7 +54,7 @@
                                     {t}Title:{/t}
                                 </label>
                                 <div class="col-md-10">
-                                    <input type="text" value="{$bug.title|escape}" name="bug-title-edit" id="bug-title-edit" class="form-control">
+                                    <input type="text" value="{$bug.title}" name="bug-title-edit" id="bug-title-edit" class="form-control">
                                 </div>
                             </div>
                             <div class="form-group">

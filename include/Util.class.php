@@ -1,7 +1,7 @@
 <?php
 /**
- * copyright 2011 Stephen Just <stephenjust@users.sf.net>
- *           2014 Daniel Butum <danibutum at gmail dot com>
+ * copyright 2011      Stephen Just <stephenjust@users.sf.net>
+ *           2014-2015 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -288,7 +288,7 @@ class Util
 
     /**
      * Do a HTTP redirect to the STK error page
-     *
+     * TODO add message option
      * @param int  $error     the http error
      * @param bool $permanent is the request permanent or not.
      */
@@ -423,12 +423,11 @@ class Util
             'HTTP_FORWARDED'
         ];
 
-        $options = FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE;
         foreach ($ip_pool as $ip)
         {
             if (!empty($_SERVER[$ip]))
             {
-                if (filter_var($_SERVER[$ip], FILTER_VALIDATE_IP, $options))
+                if (static::isIP($_SERVER[$ip]))
                 {
                     return $_SERVER[$ip];
                 }
@@ -499,6 +498,40 @@ class Util
     public static function isCheckboxChecked(array $pool, $checkbox_key)
     {
         return empty($pool[$checkbox_key]) ? false : $pool[$checkbox_key] === "on";
+    }
+
+    /**
+     * Check if valid email
+     *
+     * @param string $email
+     * @return bool
+     */
+    public static function isEmail($email)
+    {
+        return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
+    }
+
+    /**
+     * Check if valid url
+     *
+     * @param string $url
+     * @return bool
+     */
+    public static function isURL($url)
+    {
+        return filter_var($url, FILTER_VALIDATE_URL) !== false;
+    }
+
+    /**
+     * Check if valid IPv4 or IPv6 address, except private ranges and reserved ranges
+     *
+     * @param string $ip
+     * @return bool
+     */
+    public static function isIP($ip)
+    {
+        $flags = FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE;
+        return filter_var($ip, FILTER_VALIDATE_IP, $flags) !== false;
     }
 
     /**

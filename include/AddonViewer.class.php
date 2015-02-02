@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright        2010 Lucas Baudin <xapantu@gmail.com>
- *           2011 - 2014 Stephen Just <stephenjust@gmail.com>
- *                  2014 Daniel Butum <danibutum at gmail dot com>
+ * Copyright      2010 Lucas Baudin <xapantu@gmail.com>
+ *           2011-2014 Stephen Just <stephenjust@gmail.com>
+ *           2014-2015 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify

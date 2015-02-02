@@ -1,7 +1,7 @@
 <?php
 /**
- * copyright 2011 Stephen Just <stephenjust@users.sourceforge.net>
- *           2014 Daniel Butum <danibutum at gmail dot com>
+ * copyright 2011      Stephen Just <stephenjust@users.sourceforge.net>
+ *           2014-2015 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -63,7 +63,7 @@ switch ($_GET['view'])
             {
                 $tpl_data["addons"][] = [
                     "href"       => $addon->getLink(),
-                    "name"       => $addon->getName(),
+                    "name"       => h($addon->getName()),
                     "unapproved" => implode(', ', $unapproved)
                 ];
             }
@@ -82,7 +82,7 @@ switch ($_GET['view'])
             {
                 $managePanelData["images"][] = [
                     "href"       => $addon->getLink(),
-                    "name"       => $addon->getName(),
+                    "name"       => h($addon->getName()),
                     "unapproved" => implode("<br>", $unapproved)
                 ];
             }
@@ -101,7 +101,7 @@ switch ($_GET['view'])
             {
                 $managePanelData["archives"][] = [
                     "href"       => $addon->getLink(),
-                    "name"       => $addon->getName(),
+                    "name"       => h($addon->getName()),
                     "unapproved" => $unapproved
                 ];
             }

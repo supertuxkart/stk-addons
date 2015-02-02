@@ -2,7 +2,7 @@
 /**
  * Copyright 2009      Lucas Baudin <xapantu@gmail.com>
  *           2011-2014 Stephen Just <stephenjust@users.sourceforge.net>
- *           2014      Daniel Butum <danibutum at gmail dot com>
+ *           2014-2015 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -99,7 +99,7 @@ switch ($_GET['action'])
         if (User::isLoggedIn())
         {
             $tpl->setMetaRefresh($return_to_url, 3);
-            $conf = sprintf(_h('Welcome, %s!'), User::getLoggedRealName());
+            $conf = h(sprintf(_h('Welcome, %s!'), User::getLoggedRealName()));
             $conf .= sprintf(_h('Click %shere%s if you do not automatically redirect.'), "<a href=\"{$return_to_url}\">", '</a>');
             $tpl->assign('success', $conf);
         }

@@ -13,9 +13,9 @@
             {if $user.username === $current_user}
                 {$active=" active"}
             {/if}
-            <a href="users.php?user={$user.username|escape}" class="list-group-item user-list{$disabled}{$active}">
+            <a href="users.php?user={$user.username}" class="list-group-item user-list{$disabled}{$active}">
                 <img class="icon" src="{$img_location}user.png">
-                <span>{$user.username|escape|truncate:28}</span>
+                <span>{$user.username|truncate:28}</span>
             </a>
         {/foreach}
     </div>

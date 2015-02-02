@@ -6,7 +6,7 @@
                 {t}Homepage{/t}
             </label>
             <div class="col-md-6">
-                <input type="text" name="homepage" id="user-profile-homepage" class="form-control" value="{$user.homepage|escape}">
+                <input type="text" name="homepage" id="user-profile-homepage" class="form-control" value="{$user.homepage}">
             </div>
         </div>
         <div class="form-group">
@@ -14,7 +14,7 @@
                 {t}Real name{/t}
             </label>
             <div class="col-md-6">
-                <input type="text" name="realname" id="user-profile-realname" class="form-control" value="{$user.real_name|escape}">
+                <input type="text" name="realname" id="user-profile-realname" class="form-control" value="{$user.real_name}">
             </div>
         </div>
         <div class="form-group">

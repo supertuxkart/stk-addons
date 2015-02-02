@@ -16,7 +16,7 @@
                     <div class="icon-featured"></div>
                 {/if}
                 <img class="icon" src="{$addon.image_src}" height="25" width="25">
-                <span>{$addon.name|escape|truncate:28}</span>
+                <span>{$addon.name|truncate:28}</span>
             </a>
         {/foreach}
     </div>

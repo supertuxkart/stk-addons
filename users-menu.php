@@ -2,7 +2,7 @@
 /**
  * Copyright 2009      Lucas Baudin <xapantu@gmail.com>
  *           2012-2014 Stephen Just <stephenjust@users.sf.net>
- *           2014      Daniel Butum <danibutum at gmail dot com>
+ *           2014-2015 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -38,7 +38,7 @@ $pagination = PaginationTemplate::get()
 $tpl = StkTemplate::get("users/menu.tpl")
     ->assign("img_location", IMG_LOCATION)
     ->assign("users", $template_users)
-    ->assign("current_user", !empty($_GET["user"]) ? $_GET["user"] : User::getLoggedUserName())
+    ->assign("current_user", !empty($_GET["user"]) ? h($_GET["user"]) : h(User::getLoggedUserName()))
     ->assign("pagination", $pagination->toString());
 
 echo $tpl;

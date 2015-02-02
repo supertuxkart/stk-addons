@@ -18,6 +18,7 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+// TODO find usage for this file or delete it
 /**
  * json/image_list.php
  * This file provides a json-formatted list of all available images for an
@@ -41,7 +42,7 @@ if (!Addon::exists($addon_id))
 
 // Addon exists, get images
 $addon = Addon::get($addon_id);
-$license = $addon->getLicense();
+$license = h($addon->getLicense());
 
 // This isn't really JSON, but no reason to wrap one value in braces
 echo $license;

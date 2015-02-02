@@ -1,6 +1,6 @@
 <?php
 /**
- * copyright 2014 Daniel Butum <danibutum at gmail dot com>
+ * copyright 2014-2015 Daniel Butum <danibutum at gmail dot com>
  *
  * This file is part of stkaddons
  *
@@ -21,15 +21,9 @@ require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
 $bug_id = isset($_GET["bug_id"]) ? $_GET["bug_id"] : "";
 
-// TODO redirect to a 404 page
-if (!$bug_id)
+if (!$bug_id || !Bug::exists($bug_id))
 {
-    exit("No bug id provided");
-}
-
-if (!Bug::exists($bug_id))
-{
-    exit("Bug $bug_id does not exist");
+    Util::redirectError(404);
 }
 
 $tpl = StkTemplate::get("bugs/view.tpl");
@@ -37,9 +31,9 @@ $bug = Bug::get($bug_id);
 
 $tpl_data = [
     "id"           => $bug->getId(),
-    "title"        => $bug->getTitle(),
+    "title"        => h($bug->getTitle()),
     "user_id"      => $bug->getUserId(),
-    "user_name"    => User::getFromID($bug->getUserId())->getUserName(),
+    "user_name"    => h(User::getFromID($bug->getUserId())->getUserName()), // TODO optimize
     "addon"        => $bug->getAddonId(),
     "date_report"  => $bug->getDateReport(),
     "date_edit"    => $bug->getDateEdit(),
@@ -48,7 +42,7 @@ $tpl_data = [
     "date_close"   => $bug->getDateClose(),
     "close_reason" => $bug->getCloseReason(),
     "close_id"     => $bug->getCloseId(),
-    "close_name"   => ($bug->isClosed() ? User::getFromID($bug->getCloseId())->getUserName() : ""),
+    "close_name"   => ($bug->isClosed() ? h(User::getFromID($bug->getCloseId())->getUserName()) : ""),
     "is_closed"    => $bug->isClosed(),
 
     "description"  => $bug->getDescription(),

@@ -1,7 +1,7 @@
 <div class="tab-pane active" id="profile">
     <div>
         <h1>
-            {$user.username|escape}
+            {$user.username}
             {if !$is_owner}
                 {*Friend buttons*}
                 <div class="btn-group pull-right" data-id="{$user.user_id}" data-tab="profile">
@@ -31,24 +31,24 @@
     <div>
         <div class="row form-group">
             <div class="col-md-3">{t}Username:{/t}</div>
-            <div class="col-md-3" id="user-username">{$user.username|escape}</div>
+            <div class="col-md-3" id="user-username">{$user.username}</div>
         </div>
         <div class="row form-group">
             <div class="col-md-3">{t}Registration Date:{/t}</div>
-            <div class="col-md-3">{$user.date_registration|escape}</div>
+            <div class="col-md-3">{$user.date_registration}</div>
         </div>
         <div class="row form-group">
             <div class="col-md-3">{t}Real Name:{/t}</div>
-            <div class="col-md-3" id="user-realname">{$user.real_name|escape}</div>
+            <div class="col-md-3" id="user-realname">{$user.real_name}</div>
         </div>
         <div class="row form-group">
             <div class="col-md-3">{t}Role:{/t}</div>
-            <div class="col-md-3" id="user-role">{$user.role|escape}</div>
+            <div class="col-md-3" id="user-role">{$user.role}</div>
         </div>
         {if $can_see_email}
             <div class="row form-group">
                 <div class="col-md-3">{t}Email:{/t}</div>
-                <div class="col-md-3">{$user.email|escape}</div>
+                <div class="col-md-3">{$user.email}</div>
             </div>
         {/if}
 
@@ -58,7 +58,7 @@
         {/if}
         <div class="row form-group{$homepage_class}" id="user-homepage-row">
             <div class="col-md-3">{t}Homepage:{/t}</div>
-            <div class="col-md-3" id="user-homepage"><a href="{$user.homepage|escape}">{$user.homepage|escape}</a></div>
+            <div class="col-md-3" id="user-homepage"><a href="{$user.homepage}" target="_blank">{$user.homepage}</a></div>
         </div>
     </div>
     <div>

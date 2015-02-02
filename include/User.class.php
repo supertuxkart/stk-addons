@@ -2,7 +2,7 @@
 /**
  * copyright 2011-2013 Stephen Just <stephenjust@users.sf.net>
  *                2013 Glenn De Jonghe
- *                2014 Daniel Butum <danibutum at gmail dot com>
+ *           2014-2015 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -200,6 +200,11 @@ class User extends Base
      */
     public function getHomepage()
     {
+        if ($this->homepage && !Util::isURL($this->homepage))
+        {
+            return "";
+        }
+
         return $this->homepage;
     }
 
@@ -298,7 +303,7 @@ class User extends Base
         $user_xml = new XMLOutput();
         $user_xml->startElement($tag);
         $user_xml->writeAttribute('id', $this->getId());
-        $user_xml->writeAttribute('user_name', $this->getUserName());
+        $user_xml->writeAttribute('user_name', h($this->getUserName()));
         $user_xml->endElement();
 
         return $user_xml->asString();
@@ -627,7 +632,7 @@ class User extends Base
             if ($user->isActive() || User::hasPermissionOnRole($user->getRole()))
             {
                 $template_users[] = [
-                    'username' => $user->getUserName(),
+                    'username' => h($user->getUserName()),
                     'active'   => $user->isActive()
                 ];
             }
@@ -888,6 +893,20 @@ class User extends Base
      */
     public static function updateProfile($user_id, $homepage, $real_name)
     {
+        if (!$homepage && !$real_name) // nothing to do
+        {
+            return;
+        }
+
+        if ($real_name)
+        {
+            static::validateRealName($real_name);
+        }
+        if ($homepage)
+        {
+            static::validateHomepage($homepage);
+        }
+
         // throw exception if something is wrong (the user does not exist, or a database error)
         $user = static::getFromID($user_id);
 
@@ -898,10 +917,6 @@ class User extends Base
         {
             throw new UserException(_h("You do not have the permission to update the profile"));
         }
-
-        // clean
-        $homepage = h($homepage);
-        $real_name = h($real_name);
 
         // update session
         static::sessionSet("real_name", $real_name);
@@ -1167,10 +1182,6 @@ class User extends Base
         static::validateUserName($username);
         static::validateEmail($email);
 
-        // clean
-        $username = h($username);
-        $email = h($email);
-
         try
         {
             $userid = Validate::account($username, $email);
@@ -1218,11 +1229,6 @@ class User extends Base
         static::validateEmail($email);
         static::validateRealName($name);
         Validate::checkbox($terms, _h('You must agree to the terms to register.'));
-
-        // clean
-        $username = h($username);
-        $email = h($email);
-        $name = h($name);
 
         DBConnection::get()->beginTransaction();
         // Make sure requested username is not taken
@@ -1396,7 +1402,7 @@ class User extends Base
      */
     public static function validateEmail($email)
     {
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL))
+        if (!Util::isEmail($email))
         {
             throw new UserException(h(sprintf(_('"%s" is not a valid email address.'), h($email))));
         }
@@ -1404,6 +1410,26 @@ class User extends Base
         if (mb_strlen($email) > static::MAX_EMAIL)
         {
             throw new UserException(_h("Email is to long."));
+        }
+    }
+
+    /**
+     * Check if homepage is valid
+     *
+     * @param string $homepage
+     *
+     * @throws UserException
+     */
+    public static function validateHomepage($homepage)
+    {
+        if (!Util::isURL($homepage))
+        {
+            throw new UserException("Homepage url is not valid");
+        }
+
+        if (mb_strlen($homepage) > static::MAX_HOMEPAGE)
+        {
+            throw new UserException(_h("Homepage is to long."));
         }
     }
 }

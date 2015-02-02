@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright 2011-2013 Stephen Just <stephenjust@users.sf.net>
- *                2014 Daniel Butum <danibutum at gmail dot com>
+ *           2014-2015 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -307,13 +307,13 @@ class Addon extends Base
             // Send mail to moderators
             SMail::get()->moderatorNotification(
                 'New Addon Upload',
-                sprintf(
+                h(sprintf(
                     "%s has uploaded a new revision for %s '%s' %s",
                     User::getLoggedUserName(),
                     $this->type,
                     $attributes['name'],
                     (string)$this->id
-                )
+                ))
             );
         }
         catch(SMailException $e)
@@ -542,7 +542,7 @@ class Addon extends Base
      */
     public function getDesigner()
     {
-        if ($this->designer === null)
+        if (!$this->designer)
         {
             return _h('Unknown');
         }
@@ -843,7 +843,7 @@ class Addon extends Base
                  WHERE `id` = :id',
                 DBConnection::NOTHING,
                 [
-                    ':description' => h($description),
+                    ':description' => $description,
                     ':id'          => $this->id
                 ]
             );
@@ -881,7 +881,7 @@ class Addon extends Base
                 WHERE `id` = :id',
                 DBConnection::NOTHING,
                 [
-                    ':designer' => h($designer),
+                    ':designer' => $designer,
                     ':id'       => $this->id
                 ]
             );
@@ -1550,7 +1550,7 @@ class Addon extends Base
                 "id"          => $addon->getId(),
                 "class"       => $class,
                 "is_featured" => Addon::isFeatured($addon->getStatus()),
-                "name"        => $addon->getName(),
+                "name"        => h($addon->getName()),
                 "real_url"    => $real_url,
                 "image_src"   => $icon,
                 "disp"        => File::rewrite($real_url)
@@ -1888,13 +1888,13 @@ class Addon extends Base
             // Send mail to moderators
             SMail::get()->moderatorNotification(
                 'New Addon Upload',
-                sprintf(
+                h(sprintf(
                     "%s has uploaded a new %s '%s' %s",
                     User::getLoggedUserName(),
                     $type,
                     $attributes['name'],
                     (string)$id
-                )
+                ))
             );
         }
         catch(SMailException $e)

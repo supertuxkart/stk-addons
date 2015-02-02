@@ -202,17 +202,6 @@ class Bug extends Base
     }
 
     /**
-     * Get the instance addon data
-     *
-     * @return array
-     */
-    public function getData()
-    {
-        return $this->bugData;
-    }
-
-
-    /**
      * The comments data of the bug
      * @return array
      */
@@ -280,7 +269,7 @@ class Bug extends Base
     /**
      * Get the data of a comment by id
      *
-     * @param $comment_id
+     * @param int $comment_id
      *
      * @return array
      * @throws BugException
