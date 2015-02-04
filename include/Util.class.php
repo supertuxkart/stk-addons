@@ -484,7 +484,27 @@ class Util
      */
     public static function htmlPurify($string)
     {
-        return HTMLPurifier::getInstance(static::getHTMLPurifierConfig())->purify($string);
+        static $instance;
+        if (!$instance)
+        {
+            $instance = HTMLPurifier::getInstance(static::getHTMLPurifierConfig());
+        }
+
+        return $instance->purify($string);
+    }
+
+    /**
+     * Apply the html purify on each key of a matrix
+     *
+     * @param array  $array
+     * @param string $apply_key the key to apply the purify
+     */
+    public static function htmlPurifyApply(array &$array, $apply_key)
+    {
+        foreach ($array as $index => $data)
+        {
+            $array[$index][$apply_key] = static::htmlPurify($array[$index][$apply_key]);
+        }
     }
 
     /**

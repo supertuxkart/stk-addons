@@ -1,6 +1,6 @@
 <div class="panel panel-default" id="c{$comment.id}">
     <div class="panel-heading">
-        <h4 class="panel-title clearfix">{$comment.user_name|escape}
+        <h4 class="panel-title clearfix">{$comment.user_name}
             <div class="pull-right">
                 {if isset($can_edit_comment) && $can_edit_comment}
                     <div class="btn-group">

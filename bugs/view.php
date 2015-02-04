@@ -29,6 +29,10 @@ if (!$bug_id || !Bug::exists($bug_id))
 $tpl = StkTemplate::get("bugs/view.tpl");
 $bug = Bug::get($bug_id);
 
+// clean comments
+$comments_data = $bug->getCommentsData();
+Util::htmlPurifyApply($comments_data, "description");
+
 $tpl_data = [
     "id"           => $bug->getId(),
     "title"        => h($bug->getTitle()),
@@ -39,14 +43,14 @@ $tpl_data = [
     "date_edit"    => $bug->getDateEdit(),
 
     // close data
-    "date_close"   => $bug->getDateClose(),
-    "close_reason" => $bug->getCloseReason(),
-    "close_id"     => $bug->getCloseId(),
+    "close_reason" => Util::htmlPurify($bug->getCloseReason()),
     "close_name"   => ($bug->isClosed() ? h(User::getFromID($bug->getCloseId())->getUserName()) : ""),
+    "date_close"   => $bug->getDateClose(),
+    "close_id"     => $bug->getCloseId(),
     "is_closed"    => $bug->isClosed(),
 
-    "description"  => $bug->getDescription(),
-    "comments"     => $bug->getCommentsData()
+    "description"  => Util::htmlPurify($bug->getDescription()),
+    "comments"     => $comments_data
 ];
 
 $can_edit =  User::hasPermission(AccessControl::PERM_EDIT_BUGS);

@@ -24,15 +24,19 @@
 class Bug extends Base
 {
     const MIN_TITLE = 5;
+
     const MAX_TITLE = 64;
 
     const MIN_DESCRIPTION = 5;
+
     const MAX_DESCRIPTION = 1024;
 
     const MIN_COMMENT_DESCRIPTION = 10;
+
     const MAX_COMMENT_DESCRIPTION = 512;
 
     const MIN_CLOSE_REASON = 5;
+
     const MAX_CLOSE_REASON = 512;
 
     /**
@@ -450,10 +454,6 @@ class Bug extends Base
             throw new BugException(_h("You do not have the necessary permission to add a bug"));
         }
 
-        // clean
-        $bug_title = h($bug_title);
-        $bug_description = Util::htmlPurify($bug_description);
-
         try
         {
             DBConnection::get()->insert(
@@ -497,9 +497,6 @@ class Bug extends Base
         {
             throw new BugException(_h("You do not have the necessary permission to add a comment"));
         }
-
-        // clean
-        $comment_description = Util::htmlPurify($comment_description);
 
         try
         {
@@ -548,10 +545,6 @@ class Bug extends Base
             throw new BugException(_h("You do not have the necessary permission to update this bug"));
         }
 
-        // clean
-        $bug_title = h($bug_title);
-        $bug_description = Util::htmlPurify($bug_description);
-
         try
         {
             DBConnection::get()->update(
@@ -595,9 +588,6 @@ class Bug extends Base
         {
             throw new BugException(_h("You do not have the necessary permission to update this bug comment"));
         }
-
-        // clean
-        $comment_description = Util::htmlPurify($comment_description);
 
         try
         {
@@ -646,9 +636,6 @@ class Bug extends Base
         {
             throw new BugException(_h("You do not have the necessary permission to close this bug"));
         }
-
-        // clean
-        $close_reason = Util::htmlPurify($close_reason);
 
         try
         {
@@ -793,7 +780,12 @@ class Bug extends Base
      */
     public static function validateCommentDescription($comment_description)
     {
-        static::validateFieldLength(_h("comment description"), $comment_description, static::MIN_COMMENT_DESCRIPTION, static::MAX_COMMENT_DESCRIPTION);
+        static::validateFieldLength(
+            _h("comment description"),
+            $comment_description,
+            static::MIN_COMMENT_DESCRIPTION,
+            static::MAX_COMMENT_DESCRIPTION
+        );
     }
 
     /**
