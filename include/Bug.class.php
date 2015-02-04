@@ -24,19 +24,15 @@
 class Bug extends Base
 {
     const MIN_TITLE = 5;
-
     const MAX_TITLE = 64;
 
     const MIN_DESCRIPTION = 5;
-
     const MAX_DESCRIPTION = 1024;
 
     const MIN_COMMENT_DESCRIPTION = 10;
-
     const MAX_COMMENT_DESCRIPTION = 512;
 
     const MIN_CLOSE_REASON = 5;
-
     const MAX_CLOSE_REASON = 512;
 
     /**
@@ -46,16 +42,69 @@ class Bug extends Base
     private $id;
 
     /**
-     * Hold all the bug fields
-     * @var array
+     * The user who reported the bug
+     * @var int
      */
-    private $bugData = [];
+    private $user_id;
+
+    /**
+     * The addon that has this bug
+     * @var int
+     */
+    private $addon_id;
+
+    /**
+     * The user who closed the bug report
+     * @var int
+     */
+    private $close_id;
+
+    /**
+     * The reason for it's closure
+     * @var string
+     */
+    private $close_reason;
+
+    /**
+     * The date it was reported
+     * @var string
+     */
+    private $date_report;
+
+    /**
+     * The date it was last edited
+     * @var string
+     */
+    private $date_edit;
+
+    /**
+     * @var string
+     */
+    private $date_close;
+
+    /**
+     * The bug title
+     * @var string
+     */
+    private $title;
+
+    /**
+     * The bug description
+     * @var string
+     */
+    private $description;
+
+    /**
+     * Flag that indicate if the bug is a feedback
+     * @var bool
+     */
+    private $is_report;
 
     /**
      * Hold all the comments for this bug
      * @var array
      */
-    private $commentsData = [];
+    private $comments_data = [];
 
     /**
      * Load the comments from the database into the current bug instance
@@ -81,23 +130,32 @@ class Bug extends Base
             throw new BugException(h(_("Tried to fetch comments.") . ' ' . _("Please contact a website administrator.")));
         }
 
-        $this->commentsData = $comments;
+        $this->comments_data = $comments;
     }
 
     /**
-     * @param int   $id
-     * @param array $bugData
-     * @param bool  $loadComments flag that indicates to load the comments
+     * @param array $bug_data
+     * @param bool  $load_comments flag that indicates to load the comments
      *
      * @throws BugException on database error
      */
-    protected function __construct($id, array $bugData = [], $loadComments = true)
+    protected function __construct(array $bug_data = [], $load_comments = true)
     {
-        $this->id = $id;
-        $this->bugData = $bugData;
+        $this->id = $bug_data["id"];
+        $this->user_id = $bug_data["user_id"];
+        $this->addon_id = $bug_data["addon_id"];
+        $this->close_id = $bug_data["close_id"];
+        $this->close_reason = $bug_data["close_reason"];
+        $this->date_report = $bug_data["date_report"];
+        $this->date_edit = $bug_data["date_edit"];
+        $this->date_close = $bug_data["date_close"];
+        $this->title = $bug_data["title"];
+        $this->description = $bug_data["description"];
+        $this->is_report = (bool)$bug_data["is_report"];
+
 
         // load comments
-        if ($loadComments)
+        if ($load_comments)
         {
             $this->loadComments();
         }
@@ -116,7 +174,7 @@ class Bug extends Base
      */
     public function getUserId()
     {
-        return $this->bugData["user_id"];
+        return $this->user_id;
     }
 
     /**
@@ -124,7 +182,7 @@ class Bug extends Base
      */
     public function getAddonId()
     {
-        return $this->bugData["addon_id"];
+        return $this->addon_id;
     }
 
     /**
@@ -132,7 +190,7 @@ class Bug extends Base
      */
     public function getCloseId()
     {
-        return $this->bugData["close_id"];
+        return $this->close_id;
     }
 
     /**
@@ -140,7 +198,7 @@ class Bug extends Base
      */
     public function getCloseReason()
     {
-        return $this->bugData["close_reason"];
+        return $this->close_reason;
     }
 
     /**
@@ -148,7 +206,7 @@ class Bug extends Base
      */
     public function getDateReport()
     {
-        return $this->bugData["date_report"];
+        return $this->date_report;
     }
 
     /**
@@ -156,7 +214,7 @@ class Bug extends Base
      */
     public function getDateEdit()
     {
-        return $this->bugData["date_edit"];
+        return $this->date_edit;
     }
 
     /**
@@ -164,7 +222,7 @@ class Bug extends Base
      */
     public function getDateClose()
     {
-        return $this->bugData["date_close"];
+        return $this->date_close;
     }
 
     /**
@@ -172,7 +230,7 @@ class Bug extends Base
      */
     public function getTitle()
     {
-        return $this->bugData["title"];
+        return $this->title;
     }
 
     /**
@@ -180,7 +238,7 @@ class Bug extends Base
      */
     public function getDescription()
     {
-        return $this->bugData["description"];
+        return $this->description;
     }
 
     /**
@@ -188,7 +246,7 @@ class Bug extends Base
      */
     public function isReport()
     {
-        return (int)$this->bugData["is_report"] === 1;
+        return $this->is_report;
     }
 
     /**
@@ -198,7 +256,7 @@ class Bug extends Base
      */
     public function isClosed()
     {
-        return $this->getCloseId();
+        return (bool)$this->getCloseId();
     }
 
     /**
@@ -207,7 +265,7 @@ class Bug extends Base
      */
     public function getCommentsData()
     {
-        return $this->commentsData;
+        return $this->comments_data;
     }
 
     /**
@@ -263,7 +321,7 @@ class Bug extends Base
     {
         $data = static::getFromField("bugs", "id", $bug_id, DBConnection::PARAM_INT, sprintf(_h("There is no bug with id %d"), $bug_id));
 
-        return new Bug($data['id'], $data, $load_comments);
+        return new Bug($data, $load_comments);
     }
 
     /**

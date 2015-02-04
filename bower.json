@@ -20,8 +20,6 @@
     "bootstrap-hover-dropdown": "~2.0"
   },
   "resolutions": {
-    "jquery": "~1.11",
-    "bootstrap": "~3.3",
-    "datatables": "~1.10"
+    "jquery": "~1.11"
   }
 }
