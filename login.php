@@ -36,7 +36,6 @@ elseif (isset($_GET["return_to"]))
     // decode the get
     $return_to_url = urldecode($_GET["return_to"]);
 }
-
 // prevent foreign domain
 if (!Util::str_starts_with($return_to_url, ROOT_LOCATION))
 {
@@ -74,10 +73,7 @@ switch ($_GET['action'])
         }
         else
         {
-            $tpl->setMetaRefresh($safe_url, 3);
-            $conf = _h('You have been logged out.');
-            $conf .= sprintf(_h('Click %shere%s if you do not automatically redirect.'), "<a href=\"{$safe_url}\">", '</a>');
-            $tpl->assign('success', $conf);
+            Util::redirectTo($safe_url);
         }
 
         break;
@@ -98,10 +94,7 @@ switch ($_GET['action'])
 
         if (User::isLoggedIn())
         {
-            $tpl->setMetaRefresh($return_to_url, 3);
-            $conf = h(sprintf(_h('Welcome, %s!'), User::getLoggedRealName()));
-            $conf .= sprintf(_h('Click %shere%s if you do not automatically redirect.'), "<a href=\"{$return_to_url}\">", '</a>');
-            $tpl->assign('success', $conf);
+            Util::redirectTo($return_to_url);
         }
         else
         {
@@ -115,10 +108,10 @@ switch ($_GET['action'])
         if (User::isLoggedIn())
         {
             $login_form['display'] = false;
-            $tpl->setMetaRefresh('index.php', 3);
+            $tpl->setMetaRefresh($safe_url, 5);
 
             $conf = _h('You are already logged in.');
-            $conf .= 'Click <a href="index.php">here</a> if you do not automatically redirect.';
+            $conf .= sprintf(' Click <a href="%s">here</a> if you do not automatically redirect.', $safe_url);
             $tpl->assign('success', $conf);
         }
         break;
