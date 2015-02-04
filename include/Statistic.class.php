@@ -435,4 +435,27 @@ class Statistic
 
         return $newest_addon['id'];
     }
+
+    /**
+     * The number of online users
+     *
+     * @return int
+     * @throws StatisticException
+     */
+    public static function onlineClientUsers()
+    {
+        try
+        {
+            $count = DBConnection::get()->count("client_sessions", '`online` = 1');
+        }
+        catch(DBException $e)
+        {
+            throw new StatisticException(h(
+                _('Failed to count number of online users') . ' ' .
+                _('Please contact a website administrator.')
+            ));
+        }
+
+        return $count;
+    }
 }

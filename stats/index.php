@@ -24,7 +24,9 @@ $tpl = StkTemplate::get("stats/index.tpl")
     ->addFlotLibrary()
     ->addUtilLibrary()
     ->addScriptInclude("stats.js");
-$tpl_data = [];
+$tpl_data = [
+    "online"  => Statistic::onlineClientUsers(),
+];
 
 if (isset($_GET["addons"]))
 {
