@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright 2012-2013 Stephen Just <stephenjust@users.sf.net>
- *
+ *           2015      Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -17,8 +17,15 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 define('CRON', 1);
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
-File::deleteQueuedFiles();
+echo "Executed at: " . date('d/m/Y H:i:s', time()) . "\n";
+try
+{
+    echo File::deleteQueuedFiles() . "\n";
+}
+catch (FileException $e)
+{
+    echo "ERROR: \n" . $e->getMessage();
+}

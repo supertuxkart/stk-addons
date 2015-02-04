@@ -563,16 +563,17 @@ class File
         }
 
         // delete from the filesystem
+        $message = "";
         foreach ($queued_files as $file)
         {
             if (static::deleteFile($file["id"]))
             {
-                print 'Deleted file ' . $file["id"] . "<br />\n";
+                $message .= 'Deleted file ' . $file["id"] . "<br />\n";
                 Log::newEvent('Processed queued deletion of file ' . $file["id"]);
             }
         }
 
-        return true;
+        return $message;
     }
 
     /**

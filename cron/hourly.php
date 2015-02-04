@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 define('CRON', 1);
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
