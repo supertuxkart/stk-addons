@@ -25,7 +25,7 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-8 col-md-offset-2">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h2 class="panel-title"><a href="?clients">{t}Clients{/t}</a></h2>
@@ -35,14 +35,14 @@
             </div>
         </div>
     </div>
-    <div class="col-md-6">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h2 class="panel-title"><a href="?servers">{t}Servers{/t}</a></h2>
-            </div>
-            <div class="panel-body">
-                <div class="stats-pie-time" data-json="{$overview.json.servers}"></div>
-            </div>
-        </div>
-    </div>
+    {*<div class="col-md-6">*}
+        {*<div class="panel panel-default">*}
+            {*<div class="panel-heading">*}
+                {*<h2 class="panel-title"><a href="?servers">{t}Servers{/t}</a></h2>*}
+            {*</div>*}
+            {*<div class="panel-body">*}
+                {*<div class="stats-pie-time" data-json="{$overview.json.servers}"></div>*}
+            {*</div>*}
+        {*</div>*}
+    {*</div>*}
 </div>

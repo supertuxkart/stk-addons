@@ -5,7 +5,7 @@ config.php
 *~
 *.swp
 *.swo
-.htaccess
+/.htaccess
 .idea/
 vendor/
 node_modules/
