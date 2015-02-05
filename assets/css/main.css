@@ -140,7 +140,6 @@ a img {
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     border-radius: 5px; /* This and line below for IE */
-    behavior: url('PIE.htc');
 }
 
 /* News Bar */
@@ -193,7 +192,6 @@ a img {
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
     border-radius: 4px; /* This and line below for IE */
-    behavior: url('PIE.htc');
 }
 
 #lang-menu li {
@@ -230,7 +228,6 @@ a img {
     text-decoration: none;
     text-shadow: #efefef 0 1px 0;
     width: 48px;
-    behavior: url('PIE.htc');
 }
 
 #lang-menu li.flag a:hover {
