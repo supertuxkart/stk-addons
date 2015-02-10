@@ -19,15 +19,25 @@
  */
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
-$bug_id = isset($_GET["bug_id"]) ? $_GET["bug_id"] : "";
+$bug_id = isset($_GET["bug_id"]) ? (int)$_GET["bug_id"] : 0;
+$bug = null;
 
-if (!$bug_id || !Bug::exists($bug_id))
+if (!$bug_id)
 {
     Util::redirectError(404);
 }
+try
+{
+    $bug = Bug::get($bug_id);
+
+}
+catch(BugException $e)
+{
+    Util::redirectError(404);
+
+}
 
 $tpl = StkTemplate::get("bugs/view.tpl");
-$bug = Bug::get($bug_id);
 
 // clean comments
 $comments_data = $bug->getCommentsData();
@@ -37,14 +47,14 @@ $tpl_data = [
     "id"           => $bug->getId(),
     "title"        => h($bug->getTitle()),
     "user_id"      => $bug->getUserId(),
-    "user_name"    => h(User::getFromID($bug->getUserId())->getUserName()), // TODO optimize
+    "user_name"    => h($bug->getUserName()),
     "addon"        => $bug->getAddonId(),
     "date_report"  => $bug->getDateReport(),
     "date_edit"    => $bug->getDateEdit(),
 
     // close data
     "close_reason" => Util::htmlPurify($bug->getCloseReason()),
-    "close_name"   => ($bug->isClosed() ? h(User::getFromID($bug->getCloseId())->getUserName()) : ""),
+    "close_name"   => h($bug->getCloseUserName()),
     "date_close"   => $bug->getDateClose(),
     "close_id"     => $bug->getCloseId(),
     "is_closed"    => $bug->isClosed(),

@@ -52,6 +52,12 @@ class Bug extends Base
     private $user_id;
 
     /**
+     * The username of the user who reported the bug
+     * @var string
+     */
+    private $user_username;
+
+    /**
      * The addon that has this bug
      * @var int
      */
@@ -62,6 +68,12 @@ class Bug extends Base
      * @var int
      */
     private $close_id;
+
+    /**
+     * The username who closed the bug
+     * @var string
+     */
+    private $close_username;
 
     /**
      * The reason for it's closure
@@ -82,6 +94,7 @@ class Bug extends Base
     private $date_edit;
 
     /**
+     * The date the bug was closed
      * @var string
      */
     private $date_close;
@@ -143,12 +156,14 @@ class Bug extends Base
      *
      * @throws BugException on database error
      */
-    protected function __construct(array $bug_data = [], $load_comments = true)
+    protected function __construct(array $bug_data, $load_comments = true)
     {
         $this->id = $bug_data["id"];
         $this->user_id = $bug_data["user_id"];
+        $this->user_username = $bug_data["user_username"];
         $this->addon_id = $bug_data["addon_id"];
         $this->close_id = $bug_data["close_id"];
+        $this->close_username = $bug_data["close_username"];
         $this->close_reason = $bug_data["close_reason"];
         $this->date_report = $bug_data["date_report"];
         $this->date_edit = $bug_data["date_edit"];
@@ -184,6 +199,14 @@ class Bug extends Base
     /**
      * @return string
      */
+    public function getUserName()
+    {
+        return $this->user_username;
+    }
+
+    /**
+     * @return string
+     */
     public function getAddonId()
     {
         return $this->addon_id;
@@ -195,6 +218,14 @@ class Bug extends Base
     public function getCloseId()
     {
         return $this->close_id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCloseUserName()
+    {
+        return $this->close_username;
     }
 
     /**
@@ -323,7 +354,30 @@ class Bug extends Base
      */
     public static function get($bug_id, $load_comments = true)
     {
-        $data = static::getFromField("bugs", "id", $bug_id, DBConnection::PARAM_INT, sprintf(_h("There is no bug with id %d"), $bug_id));
+        try
+        {
+            $data = DBConnection::get()->query(
+                "SELECT
+                    (SELECT `user` FROM " . DB_PREFIX . "users WHERE id = B.user_id) AS user_username,
+                    (SELECT `user` FROM " . DB_PREFIX . "users WHERE id = B.close_id) AS close_username,
+                    B.*
+                FROM " . DB_PREFIX . "bugs AS B
+                WHERE B.id = :id
+                ",
+                DBConnection::FETCH_FIRST,
+                [":id" => $bug_id],
+                [":id" => DBConnection::PARAM_INT]
+            );
+        }
+        catch(DBException $e)
+        {
+            throw new BugException(_h("An error occured while retrieving a bug record."));
+        }
+
+        if (!$data)
+        {
+            throw new BugException(sprintf(_h("There is no bug with id %d"), $bug_id));
+        }
 
         return new Bug($data, $load_comments);
     }
