@@ -1,7 +1,5 @@
 <?php
 
-//require_once("Validate.class.php");
-
 class ValidateTest extends \PHPUnit_Framework_TestCase
 {
     public function providerTestCheckboxThrowsException()
@@ -56,6 +54,7 @@ class ValidateTest extends \PHPUnit_Framework_TestCase
             ["gibberish"],
             ["a.b.c"],
             ["0.8.2-rc"],
+            ["0.9"],
         ];
     }
 
@@ -70,6 +69,9 @@ class ValidateTest extends \PHPUnit_Framework_TestCase
             ["100.8.2-rc0"],
             ["100.8.2-rc1"],
             ["0.8.2-rc1"],
+            ["0.9.0"],
+            ["0.9.1"],
+            ["0.9.1-rc0"]
         ];
     }
 

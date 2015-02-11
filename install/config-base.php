@@ -24,11 +24,15 @@
 $ROOT_LOCATION = "addons.supertuxkart.net";
 
 define("DEBUG_MODE", true); // FIXME turn off on server.
-if (DEBUG_MODE)
+if (DEBUG_MODE) // useful for debugging
 {
     error_reporting(E_ALL);
     ini_set("display_errors", "On");
     ini_set("html_errors", "On");
+}
+if (!defined("TEST_MODE")) // useful for phpunit testing
+{
+    define("TEST_MODE", false);
 }
 
 // Paths and locations
@@ -124,19 +128,22 @@ define('F_TEX_NOT_POWER_OF_2', 512);
 define("API_LOCATION", "/api");
 define("API_VERSION", "v2");
 
-// set string encoding
-if (mb_internal_encoding("UTF-8") !== true)
+if (!TEST_MODE)
 {
-    trigger_error("mb_internal_encoding failed");
-}
-if (mb_regex_encoding("UTF-8") !== true)
-{
-    trigger_error("mb_regex_encoding failed");
-}
-if (mb_language("uni") !== true)
-{
-    trigger_error("mb_language failed");
-}
+    // set string encoding
+    if (mb_internal_encoding("UTF-8") !== true)
+    {
+        trigger_error("mb_internal_encoding failed");
+    }
+    if (mb_regex_encoding("UTF-8") !== true)
+    {
+        trigger_error("mb_regex_encoding failed");
+    }
+    if (mb_language("uni") !== true)
+    {
+        trigger_error("mb_language failed");
+    }
 
-// add composer autoload
-require_once(ROOT_PATH . "vendor" . DS . "autoload.php");
+    // add composer autoload
+    require_once(ROOT_PATH . "vendor" . DS . "autoload.php");
+}

@@ -1988,107 +1988,98 @@ class Addon extends Base
      * If addon is approved
      *
      * @param int $status
-     *
      * @return bool
      */
     public static function isApproved($status)
     {
-        return $status & F_APPROVED;
+        return (bool)($status & F_APPROVED);
     }
 
     /**
      * If addon is in alpha
      *
      * @param int $status
-     *
      * @return bool
      */
     public static function isAlpha($status)
     {
-        return $status & F_ALPHA;
+        return (bool)($status & F_ALPHA);
     }
 
     /**
      * If addon is in beta
      *
      * @param int $status
-     *
      * @return bool
      */
     public static function isBeta($status)
     {
-        return $status & F_BETA;
+        return (bool)($status & F_BETA);
     }
 
     /**
      * If addon is in release candidate
      *
      * @param int $status
-     *
      * @return bool
      */
     public static function isReleaseCandidate($status)
     {
-        return $status & F_RC;
+        return (bool)($status & F_RC);
     }
 
     /**
      * If addon is invisible
      *
      * @param int $status
-     *
      * @return bool
      */
     public static function isInvisible($status)
     {
-        return $status & F_INVISIBLE;
+        return (bool)($status & F_INVISIBLE);
     }
 
     /**
      * If addon is Debian Free Software Guidelines compliant
      *
      * @param int $status
-     *
      * @return bool
      */
     public static function isDFSGCompliant($status)
     {
-        return $status & F_DFSG;
+        return (bool)($status & F_DFSG);
     }
 
     /**
      * If addon is featured
      *
      * @param int $status
-     *
      * @return bool
      */
     public static function isFeatured($status)
     {
-        return $status & F_FEATURED;
+        return (bool)($status & F_FEATURED);
     }
 
     /**
      * If addon is latest
      *
      * @param int $status
-     *
      * @return bool
      */
     public static function isLatest($status)
     {
-        return $status & F_LATEST;
+        return (bool)($status & F_LATEST);
     }
 
     /**
      * If texture is not a power of two, the the texture is invalid
      *
      * @param int $status
-     *
      * @return bool
      */
     public static function isTextureInvalid($status)
     {
-        return $status & F_TEX_NOT_POWER_OF_2;
+        return (bool)($status & F_TEX_NOT_POWER_OF_2);
     }
 }
