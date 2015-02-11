@@ -113,23 +113,31 @@ class Validate
      *
      * @return User
      * @throws UserException
+     * @throws InvalidArgumentException when the $field_type is invalid
      */
     protected static function checkPassword($password, $field_value, $field_type)
     {
         // Check password properties
         User::validatePassword($password);
 
-        if ($field_type === static::PASSWORD_ID) // get by id
+        try
         {
-            $user = User::getFromID($field_value);
+            if ($field_type === static::PASSWORD_ID) // get by id
+            {
+                $user = User::getFromID($field_value);
+            }
+            elseif ($field_type === static::PASSWORD_USERNAME) // get by username
+            {
+                $user = User::getFromUserName($field_value);
+            }
+            else
+            {
+                throw new InvalidArgumentException(_h("Invalid validation field type"));
+            }
         }
-        elseif ($field_type === static::PASSWORD_USERNAME) // get by username
+        catch (UserException $e)
         {
-            $user = User::getFromUserName($field_value);
-        }
-        else
-        {
-            throw new UserException(_h("Invalid validation field type"));
+            throw new UserException(_h("Username or password is invalid"));
         }
 
         // the field value exists, so something about the user is true

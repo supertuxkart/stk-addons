@@ -595,7 +595,7 @@ class User extends Base
      */
     public static function getFromID($user_id)
     {
-        $data = static::getFromField("users", "id", $user_id, DBConnection::PARAM_INT, "User does not exist");
+        $data = static::getFromField("users", "id", $user_id, DBConnection::PARAM_INT, _h("User ID does not exist"));
 
         return new User($data);
     }
@@ -610,7 +610,7 @@ class User extends Base
      */
     public static function getFromUserName($username)
     {
-        $data = static::getFromField("users", "user", $username, DBConnection::PARAM_STR, "User does not exist");
+        $data = static::getFromField("users", "user", $username, DBConnection::PARAM_STR, _h("Username does not exist"));
 
         return new User($data);
     }

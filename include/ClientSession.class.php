@@ -736,15 +736,8 @@ class ClientSession
                 throw new ClientSessionExpiredException(_h('Session not valid. Please sign in.'));
             }
 
-            // Valid session found, get more user info
-            $user_info = User::getFromID($user_id);
-
             // here an if statement will come for Guest and registered
-            return new static(
-                $session_info[0]["cid"],
-                $user_info
-            );
-
+            return new static($session_info[0]["cid"], User::getFromID($user_id));
         }
         catch(DBException $e)
         {
