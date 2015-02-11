@@ -121,7 +121,7 @@ class Rating
     {
         if ($session !== null)
         {
-            $userid = $session->getUserId();
+            $userid = $session->getUser()->getId();
         }
         else
         {
@@ -293,7 +293,7 @@ class Rating
     {
         if ($session !== null)
         {
-            $userid = $session->getUserId();
+            $userid = $session->getUser()->getId();
         }
         else
         {

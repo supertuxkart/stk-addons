@@ -1216,18 +1216,18 @@ class User extends Base
      * @param string $password
      * @param string $password_conf
      * @param string $email    Must be unique
-     * @param string $name
+     * @param string $realname
      * @param string $terms
      *
      * @throws UserException
      */
-    public static function register($username, $password, $password_conf, $email, $name, $terms)
+    public static function register($username, $password, $password_conf, $email, $realname, $terms)
     {
         // validate
         static::validateUserName($username);
         static::validateNewPassword($password, $password_conf);
         static::validateEmail($email);
-        static::validateRealName($name);
+        static::validateRealName($realname);
         Validate::checkbox($terms, _h('You must agree to the terms to register.'));
 
         DBConnection::get()->beginTransaction();
@@ -1285,7 +1285,7 @@ class User extends Base
                 [
                     ":user"    => $username,
                     ":pass"    => Util::getPasswordHash($password),
-                    ":name"    => $name,
+                    ":name"    => $realname,
                     ":email"   => $email,
                     "role"     => "'user'",
                     "reg_date" => "CURRENT_DATE()"

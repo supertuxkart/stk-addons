@@ -1,7 +1,8 @@
 <?php
+
 /**
- * copyright 2013 Glenn De Jonghe
- *           2014 Daniel Butum <danibutum at gmail dot com>
+ * copyright 2013        Glenn De Jonghe
+ *           2014 - 2015 Daniel Butum <danibutum at gmail dot com>
  * This file is part of SuperTuxKart
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -17,11 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-/**
- * Abstract base class for handling client sessions
- */
-abstract class ClientSession
+class ClientSession
 {
     /**
      * @var string
@@ -29,25 +26,26 @@ abstract class ClientSession
     protected $session_id;
 
     /**
-     * @var int
+     * @var User
      */
-    protected $user_id;
-
-    /**
-     * @var string
-     */
-    protected $user_name;
+    protected $user;
 
     /**
      * @param string $session_id
-     * @param int    $user_id
-     * @param string $user_name
+     * @param User   $user
      */
-    protected function __construct($session_id, $user_id, $user_name)
+    protected function __construct($session_id, User $user)
     {
         $this->session_id = $session_id;
-        $this->user_id = (int)$user_id;
-        $this->user_name = $user_name;
+        $this->user = $user;
+    }
+
+    /**
+     * @return \User
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 
     /**
@@ -60,94 +58,140 @@ abstract class ClientSession
     }
 
     /**
-     * Get user id for this session
-     * @return int user id
-     */
-    public function getUserID()
-    {
-        return $this->user_id;
-    }
-
-    /**
-     * Get user name for this session
-     * @return string user name
-     */
-    public function getUsername()
-    {
-        return $this->user_name;
-    }
-
-    /**
-     * Destroy session, you could also call it logout
+     * Get the friends as an xml string
      *
-     * @throws ClientSessionExpiredException when session does not exist
+     * @param int $visiting_id
+     * @return string and xml string
      */
-    public function destroy()
+    public function getFriendsOf($visiting_id)
+    {
+        return Friend::getFriendsAsXML($visiting_id, $this->user->getId() === $visiting_id);
+    }
+
+    /**
+     * Create a server instance
+     *
+     * @param int    $ip
+     * @param int    $port
+     * @param int    $private_port
+     * @param string $server_name
+     * @param int    $max_players
+     *
+     * @return Server
+     */
+    public function createServer($ip, $port, $private_port, $server_name, $max_players)
+    {
+        $this->setPublicAddress($ip, $port, $private_port);
+
+        return Server::create($ip, $port, $private_port, $this->user->getId(), $server_name, $max_players);
+    }
+
+    /**
+     * Stop a server by deleting it from the database
+     *
+     * @param int $ip   the server ip
+     * @param int $port the server port
+     *
+     * @throws UserException
+     */
+    public function stopServer($ip, $port)
     {
         try
         {
-            DBConnection::get()->query(
-                "DELETE FROM `" . DB_PREFIX . "client_sessions`
-    	        WHERE `cid` = :session_id AND uid = :user_id",
+            // empty the public ip:port
+            $this->setPublicAddress(0, 0, 0);
+
+            // now setup the serv info
+            $count = DBConnection::get()->query(
+                "DELETE FROM `" . DB_PREFIX . "servers`
+                WHERE `ip`= :ip AND `port`= :port AND `hostid`= :id",
                 DBConnection::ROW_COUNT,
                 [
-                    ':user_id'    => $this->user_id,
-                    ':session_id' => $this->session_id
+                    ':ip'   => $ip,
+                    ':port' => $port,
+                    ':id'   => $this->user->getId()
                 ],
-                [':user_id' => DBConnection::PARAM_INT]
+                [
+                    ':ip'   => DBConnection::PARAM_INT,
+                    ':port' => DBConnection::PARAM_INT,
+                    ':id'   => DBConnection::PARAM_INT
+                ]
             );
         }
         catch(DBException $e)
         {
-            throw new ClientSessionExpiredException(
-                _h('An error occurred while signing out.') . ' ' .
+            throw new UserException(
+                _h('An error occurred while ending a server.') . ' ' .
                 _h('Please contact a website administrator.')
             );
         }
+
+        if ($count !== 1)
+        {
+            throw new UserException(_h('Not the good number of servers deleted.'));
+        }
+    }
+
+
+    /**
+     * A space separated string of names
+     *
+     * @return string
+     */
+    public function getOnlineFriends()
+    {
+        return implode(" ", Friend::getOnlineFriendsOf($this->user->getId()));
     }
 
     /**
-     * @throws ClientSessionExpiredException
+     * Get all the user notifications
+     *
+     * @return array
+     * @throws FriendException
      */
-    public function clientQuit()
+    public function getNotifications()
     {
         try
         {
             DBConnection::get()->beginTransaction();
 
-            $client = DBConnection::get()->query(
-                "SELECT `save` FROM `" . DB_PREFIX . "client_sessions`
-    	        WHERE `cid` = :session_id AND uid = :user_id",
-                DBConnection::FETCH_FIRST,
-                [
-                    ':user_id'    => $this->user_id,
-                    ':session_id' => $this->session_id
-                ],
-                [':user_id' => DBConnection::PARAM_INT]
+            $result = DBConnection::get()->query(
+                "SELECT `from`, `type` FROM `" . DB_PREFIX . "notifications`
+                WHERE `to` = :to",
+                DBConnection::FETCH_ALL,
+                [':to' => $this->user->getId()],
+                [':to' => DBConnection::PARAM_INT]
             );
-
-            if ($client)
-            {
-                if ($client['save'] == 1)
-                {
-                    $this->setOnline(false);
-                }
-                else
-                {
-                    $this->destroy();
-                }
-            }
-
+            DBConnection::get()->query(
+                "DELETE FROM `" . DB_PREFIX . "notifications`
+                WHERE `to` = :to",
+                DBConnection::NOTHING,
+                [':to' => $this->user->getId()],
+                [':to' => DBConnection::PARAM_INT]
+            );
 
             DBConnection::get()->commit();
         }
         catch(DBException $e)
         {
-            throw new ClientSessionExpiredException(
-                _h('An error occurred while logging out.') . ' ' .
+            DBConnection::get()->rollback();
+            throw new FriendException(
+                _h('An unexpected error occured while fetching new notifications.') . ' ' .
                 _h('Please contact a website administrator.')
             );
         }
+
+        $result_array = [];
+        $result_array['f_request'] = [];
+        foreach ($result as $notification)
+        {
+            if ($notification['type'] == 'f_request')
+            {
+                $result_array['f_request'][] = $notification['from'];
+            }
+        }
+
+        return $result_array;
     }
 
     /**
@@ -189,95 +233,25 @@ abstract class ClientSession
         }
         elseif ($size > 1)
         {
-            throw new ClientSessionException(_h('Too much users match the request'));
+            throw new ClientSessionException(_h('Too many users match the request'));
         }
 
         return $result[0];
     }
 
     /**
-     * @param $server_id
+     * @param int $id
      *
-     * @return array|int|null
-     * @throws ClientSessionConnectException
+     * @return string
      */
-    public function requestServerConnection($server_id)
+    public function getAchievements($id = 0)
     {
-        try
+        if ($id == 0)
         {
-            $count = DBConnection::get()->query(
-                "INSERT INTO `" . DB_PREFIX . "server_conn` (serverid, userid, request)
-                VALUES ( :serverid, :userid, 1) 
-                ON DUPLICATE KEY 
-                UPDATE request = '1', serverid = :serverid",
-                DBConnection::ROW_COUNT,
-                [
-                    ':userid'   => $this->user_id,
-                    ':serverid' => $server_id
-                ],
-                [':userid' => DBConnection::PARAM_INT, ':serverid' => DBConnection::PARAM_INT]
-            );
-        }
-        catch(DBException $e)
-        {
-            throw new ClientSessionConnectException(
-                _h('An error occurred while requesting a server connection.') . ' ' .
-                _h('Please contact a website administrator.')
-            );
+            return implode(" ", Achievement::getAchievementsIdsOf($this->user->getId()));
         }
 
-        if ($count > 2 || $count < 0)
-        {
-            throw new ClientSessionConnectException(h("requestServerConnection: Unexpected error occurred"));
-        }
-
-        return $count;
-    }
-
-    /**
-     * Join a server
-     *
-     * @return mixed
-     * @throws ClientSessionConnectException
-     */
-    public function quickJoin()
-    {
-        try
-        {
-            // Query the database to add the request entry
-            $server = DBConnection::get()->query(
-                "SELECT `id`, `hostid`, `ip`, `port`, `private_port`
-                FROM `" . DB_PREFIX . "servers`
-                LIMIT 1",
-                DBConnection::FETCH_FIRST
-            );
-
-            if (!$server)
-            {
-                throw new ClientSessionConnectException(_h('No server found'));
-            }
-
-            DBConnection::get()->query(
-                "INSERT INTO `" . DB_PREFIX . "server_conn` (serverid, userid, request)
-                VALUES ( :serverid, :userid, 1)
-                ON DUPLICATE KEY UPDATE request = '1'",
-                DBConnection::NOTHING,
-                [
-                    ':userid'   => $this->user_id,
-                    ':serverid' => $server['id']
-                ],
-                [':userid' => DBConnection::PARAM_INT, ':serverid' => DBConnection::PARAM_INT]
-            );
-        }
-        catch(DBException $e)
-        {
-            throw new ClientSessionConnectException(
-                _h('An error occurred while quick joining.') . ' ' .
-                _h('Please contact a website administrator.')
-            );
-        }
-
-        return $server;
+        return implode(" ", Achievement::getAchievementsIdsOf($id));
     }
 
     /**
@@ -296,7 +270,7 @@ abstract class ClientSession
                 WHERE `hostid` = :hostid AND `ip` = :ip AND `port` = :port LIMIT 1",
                 DBConnection::FETCH_ALL,
                 [
-                    ':hostid' => $this->user_id,
+                    ':hostid' => $this->user->getId(),
                     ':ip'     => $ip,
                     ':port'   => $port
                 ],
@@ -351,9 +325,264 @@ abstract class ClientSession
     }
 
     /**
+     * Poll the server for friends and notifications
+     *
+     * @return string
+     */
+    public function poll()
+    {
+        $this->setOnline();
+        $online_friends = $this->getOnlineFriends();
+        $notifications = $this->getNotifications();
+
+        $partial_output = new XMLOutput();
+        $partial_output->startElement('poll');
+        $partial_output->writeAttribute('success', 'yes');
+        $partial_output->writeAttribute('info', '');
+
+        if ($online_friends)
+        {
+            $partial_output->writeAttribute('online', $online_friends);
+        }
+
+        if (!empty($notifications['f_request']))
+        {
+            foreach ($notifications['f_request'] as $requester_id)
+            {
+                $partial_output->insert(User::getFromID($requester_id)->asXML('new_friend_request'));
+            }
+        }
+        $partial_output->endElement();
+
+        return $partial_output->asString();
+    }
+
+
+
+    /**
+     * @param int $achievement_id
+     */
+    public function onAchieving($achievement_id)
+    {
+        Achievement::achieve($this->user->getId(), $achievement_id);
+    }
+
+
+    /**
+     * Destroy session, you could also call it logout
+     *
+     * @throws ClientSessionExpiredException when session does not exist
+     */
+    public function destroy()
+    {
+        try
+        {
+            DBConnection::get()->query(
+                "DELETE FROM `" . DB_PREFIX . "client_sessions`
+    	        WHERE `cid` = :session_id AND uid = :user_id",
+                DBConnection::ROW_COUNT,
+                [
+                    ':user_id'    => $this->user->getId(),
+                    ':session_id' => $this->session_id
+                ],
+                [':user_id' => DBConnection::PARAM_INT]
+            );
+        }
+        catch(DBException $e)
+        {
+            throw new ClientSessionExpiredException(
+                _h('An error occurred while signing out.') . ' ' .
+                _h('Please contact a website administrator.')
+            );
+        }
+    }
+
+    /**
+     * @throws ClientSessionExpiredException
+     */
+    public function clientQuit()
+    {
+        try
+        {
+            DBConnection::get()->beginTransaction();
+
+            $client = DBConnection::get()->query(
+                "SELECT `save` FROM `" . DB_PREFIX . "client_sessions`
+    	        WHERE `cid` = :session_id AND uid = :user_id",
+                DBConnection::FETCH_FIRST,
+                [
+                    ':user_id'    => $this->user->getId(),
+                    ':session_id' => $this->session_id
+                ],
+                [':user_id' => DBConnection::PARAM_INT]
+            );
+
+            if ($client)
+            {
+                if ($client['save'] == 1)
+                {
+                    $this->setOnline(false);
+                }
+                else
+                {
+                    $this->destroy();
+                }
+            }
+
+
+            DBConnection::get()->commit();
+        }
+        catch(DBException $e)
+        {
+            throw new ClientSessionExpiredException(
+                _h('An error occurred while logging out.') . ' ' .
+                _h('Please contact a website administrator.')
+            );
+        }
+    }
+
+
+    /**
+     * Create a server connection
+     *
+     * @param $server_id
+     *
+     * @return array|int|null
+     * @throws ClientSessionConnectException
+     */
+    public function requestServerConnection($server_id)
+    {
+        try
+        {
+            $count = DBConnection::get()->query(
+                "INSERT INTO `" . DB_PREFIX . "server_conn` (serverid, userid, request)
+                VALUES ( :serverid, :userid, 1) 
+                ON DUPLICATE KEY 
+                UPDATE request = '1', serverid = :serverid",
+                DBConnection::ROW_COUNT,
+                [
+                    ':userid'   => $this->user->getId(),
+                    ':serverid' => $server_id
+                ],
+                [':userid' => DBConnection::PARAM_INT, ':serverid' => DBConnection::PARAM_INT]
+            );
+        }
+        catch(DBException $e)
+        {
+            throw new ClientSessionConnectException(
+                _h('An error occurred while requesting a server connection.') . ' ' .
+                _h('Please contact a website administrator.')
+            );
+        }
+
+        if ($count > 2 || $count < 0)
+        {
+            throw new ClientSessionConnectException(h("requestServerConnection: Unexpected error occurred"));
+        }
+
+        return $count;
+    }
+
+    /**
+     * Join a server
+     *
+     * @return mixed
+     * @throws ClientSessionConnectException
+     */
+    public function quickJoin()
+    {
+        try
+        {
+            // Query the database to add the request entry
+            $server = DBConnection::get()->query(
+                "SELECT `id`, `hostid`, `ip`, `port`, `private_port`
+                FROM `" . DB_PREFIX . "servers`
+                LIMIT 1",
+                DBConnection::FETCH_FIRST
+            );
+
+            if (!$server)
+            {
+                throw new ClientSessionConnectException(_h('No server found'));
+            }
+
+            DBConnection::get()->query(
+                "INSERT INTO `" . DB_PREFIX . "server_conn` (serverid, userid, request)
+                VALUES ( :serverid, :userid, 1)
+                ON DUPLICATE KEY UPDATE request = '1'",
+                DBConnection::NOTHING,
+                [
+                    ':userid'   => $this->user->getId(),
+                    ':serverid' => $server['id']
+                ],
+                [':userid' => DBConnection::PARAM_INT, ':serverid' => DBConnection::PARAM_INT]
+            );
+        }
+        catch(DBException $e)
+        {
+            throw new ClientSessionConnectException(
+                _h('An error occurred while quick joining.') . ' ' .
+                _h('Please contact a website administrator.')
+            );
+        }
+
+        return $server;
+    }
+
+
+    /**
+     * Vote on a server, TODO fix server host votes
+     *
+     * @param int $host_id
+     * @param int $vote
+     *
+     * @return int
+     * @throws ClientSessionException
+     */
+    public function setHostVote($host_id, $vote)
+    {
+        $vote = (int)$vote;
+        if ($vote !== 1 || $vote !== -1)
+        {
+            throw new ClientSessionException(_h("Invalid vote. Your rating has to be either -1 or 1."));
+        }
+        try
+        {
+            DBConnection::get()->query(
+                "INSERT INTO `" . DB_PREFIX . "host_votes` (`userid`, `hostid`, `vote`)
+                VALUES (:userid, :hostid, :vote)
+                ON DUPLICATE KEY UPDATE `to` = :to",
+                DBConnection::ROW_COUNT,
+                [
+                    ':hostid' => $host_id,
+                    ':userid' => $this->user->getId(),
+                    ':vote'   => $vote
+                ],
+                [
+                    ':hostid' => DBConnection::PARAM_INT,
+                    ':userid' => DBConnection::PARAM_INT,
+                    ':vote'   => DBConnection::PARAM_INT
+                ]
+            );
+        }
+        catch(DBException $e)
+        {
+            throw new ClientSessionException(
+                _h('An unexpected error occured while casting your host vote.') . ' ' .
+                _h('Please contact a website administrator.')
+            );
+        }
+
+        return 0;
+    }
+
+    /**
+     * Set the current user online
+     *
      * @param bool $online
      *
      * @throws ClientSessionException
+     * @return ClientSession
      */
     public function setOnline($online = true)
     {
@@ -366,7 +595,7 @@ abstract class ClientSession
                 WHERE `uid` = :id",
                 DBConnection::ROW_COUNT,
                 [
-                    ':id'     => $this->user_id,
+                    ':id'     => $this->user->getId(),
                     ':online' => ($online ? 1 : 0),
 
                 ],
@@ -383,30 +612,96 @@ abstract class ClientSession
                 _h('Please contact a website administrator.')
             );
         }
+
+        return $this;
     }
 
     /**
-     * Create new session
+     * Sets the public address of a player
      *
-     * @param string $username user name (registered user or temporary nickname)
-     * @param string $password password of registered user (optional)
-     * @param bool   $save_session
+     * @param int $ip           user ip
+     * @param int $port         user port
+     * @param int $private_port the private port (for LANs and special NATs)
      *
-     * @return ClientSession|RegisteredClientSession object
-     * @throws InvalidArgumentException when username is not provided
+     * @throws UserException if the request fails
+     * @return ClientSession
      */
-    public static function create($username, $password, $save_session)
+    public function setPublicAddress($ip, $port, $private_port)
     {
-        if (empty($username))
+        try
         {
-            throw new InvalidArgumentException(_h('Username required'));
+            // Query the database to set the ip and port
+            $count = DBConnection::get()->query(
+                "UPDATE `" . DB_PREFIX . "client_sessions`
+                SET `ip` = :ip , `port` = :port, `private_port` = :private_port
+                WHERE `uid` = :userid AND `cid` = :token",
+                DBConnection::ROW_COUNT,
+                [
+                    ':ip'           => $ip,
+                    ':port'         => $port,
+                    ':private_port' => $private_port,
+                    ':userid'       => $this->user->getId(),
+                    ':token'        => $this->session_id
+                ],
+                [
+                    ':ip'           => DBConnection::PARAM_INT,
+                    ':port'         => DBConnection::PARAM_INT,
+                    ':private_port' => DBConnection::PARAM_INT,
+                    ':userid'       => DBConnection::PARAM_INT,
+                ]
+
+            );
         }
-        elseif (empty($password))
+        catch(DBException $e)
         {
-            throw new InvalidArgumentException(_h('Password required'));
+            throw new UserException(_h('An error occurred while setting ip:port') . ' .' . _h('Please contact a website administrator.'));
         }
 
-        return RegisteredClientSession::create($username, $password, $save_session);
+        // if count = 0 that may be a re-update of an existing key
+        if ($count > 1)
+        {
+            throw new UserException(_h('Could not set the ip:port'));
+        }
+
+        return $this;
+    }
+
+    /**
+     * Unset the public address of a user
+     *
+     * @throws ClientSessionException if the request fails
+     */
+    public function unsetPublicAddress()
+    {
+        try
+        {
+            $count = DBConnection::get()->query(
+                "UPDATE `" . DB_PREFIX . "client_sessions`
+                SET `ip` = '0' , `port` = '0'
+                WHERE `uid` = :userid AND `cid` = :token",
+                DBConnection::ROW_COUNT,
+                [
+                    ':userid' => $this->user->getId(),
+                    ':token'  => $this->session_id
+                ],
+                [':userid' => DBConnection::PARAM_INT]
+            );
+        }
+        catch(DBException $e)
+        {
+            throw new ClientSessionException(_h('An error occurred while unsetting ip:port') . ' .' . _h(
+                    'Please contact a website administrator.'
+                ));
+        }
+
+        if ($count === 0)
+        {
+            throw new ClientSessionException(_h('ID:Token must be wrong.'));
+        }
+        elseif ($count > 1)
+        {
+            throw new ClientSessionException(_h('Weird count of updates'));
+        }
     }
 
     /**
@@ -415,7 +710,7 @@ abstract class ClientSession
      * @param string $session_id session id
      * @param int    $user_id    user id
      *
-     * @return RegisteredClientSession
+     * @return ClientSession
      * @throws ClientSessionExpiredException|ClientSessionException when session does not exist
      * @throws UserException on database error
      */
@@ -442,20 +737,12 @@ abstract class ClientSession
             }
 
             // Valid session found, get more user info
-            $user_info = DBConnection::get()->query(
-                "SELECT `user`, `role`
-                FROM `" . DB_PREFIX . "users`
-                WHERE `id` = :userid",
-                DBConnection::FETCH_FIRST,
-                [':userid' => $user_id],
-                [':userid' => DBConnection::PARAM_INT]
-            );
+            $user_info = User::getFromID($user_id);
 
             // here an if statement will come for Guest and registered
-            return new RegisteredClientSession(
+            return new static(
                 $session_info[0]["cid"],
-                $session_info[0]["uid"],
-                $user_info["user"]
+                $user_info
             );
 
         }
@@ -469,99 +756,74 @@ abstract class ClientSession
     }
 
     /**
-     * Sets the public address of a player
+     * Create session for registered user
      *
-     * @param int    $id           user id
-     * @param string $token        user token
-     * @param int    $ip           user ip
-     * @param int    $port         user port
-     * @param int    $private_port the private port (for LANs and special NATs)
+     * @param string $username username
+     * @param string $password password (plain)
+     * @param bool   $save_session
      *
-     * @throws UserException if the request fails
+     * @return ClientSession
+     * @throws InvalidArgumentException when username is not provided
+     * @throws ClientSessionConnectException when credentials are wrong
      */
-    public static function setPublicAddress($id, $token, $ip, $port, $private_port)
+    public static function create($username, $password, $save_session)
     {
+        if (!$username)
+        {
+            throw new InvalidArgumentException(_h('Username required'));
+        }
+        if (!$password)
+        {
+            throw new InvalidArgumentException(_h('Password required'));
+        }
+
+        // check if username/password is correct, throws exception
         try
         {
-            // Query the database to set the ip and port
+            $user = Validate::credentials($password, $username, Validate::CREDENTIAL_USERNAME);
+        }
+        catch(UserException $e)
+        {
+            throw new ClientSessionConnectException($e->getMessage());
+        }
+
+        try
+        {
+            $session_id = Util::getClientSessionId();
+            $user_id = $user->getId();
             $count = DBConnection::get()->query(
-                "UPDATE `" . DB_PREFIX . "client_sessions`
-                SET `ip` = :ip , `port` = :port, `private_port` = :private_port
-                WHERE `uid` = :userid AND `cid` = :token",
+                "INSERT INTO `" . DB_PREFIX . "client_sessions` (cid, uid, save, `last-online`)
+                VALUES (:session_id, :user_id, :save, NOW())
+                ON DUPLICATE KEY UPDATE cid = :session_id, online = 1",
                 DBConnection::ROW_COUNT,
                 [
-                    ':ip'           => $ip,
-                    ':port'         => $port,
-                    ':private_port' => $private_port,
-                    ':userid'       => $id,
-                    ':token'        => $token
+                    ':session_id' => $session_id,
+                    ':user_id'    => $user_id,
+                    ':save'       => ($save_session ? 1 : 0),
                 ],
-                [
-                    ':ip'           => DBConnection::PARAM_INT,
-                    ':port'         => DBConnection::PARAM_INT,
-                    ':private_port' => DBConnection::PARAM_INT,
-                    ':userid'       => DBConnection::PARAM_INT,
-                ]
-
+                [':user_id' => DBConnection::PARAM_INT, ':save' => DBConnection::PARAM_INT]
             );
+            if ($count > 2 || $count < 0)
+            {
+                throw new DBException();
+            }
+            User::updateLoginTime($user_id);
+
+            return new static($session_id, $user);
         }
         catch(DBException $e)
         {
-            throw new UserException(_h('An error occurred while setting ip:port') . ' .' . _h('Please contact a website administrator.'));
-        }
-
-        // if count = 0 that may be a re-update of an existing key
-        if ($count > 1)
-        {
-            throw new UserException(_h('Could not set the ip:port'));
-        }
-    }
-
-    /**
-     * Unset the public address of a user
-     *
-     * @param int    $id    user id
-     * @param string $token user token
-     *
-     * @throws ClientSessionException if the request fails
-     */
-    public static function unsetPublicAddress($id, $token)
-    {
-        try
-        {
-            $count = DBConnection::get()->query(
-                "UPDATE `" . DB_PREFIX . "client_sessions`
-                SET `ip` = '0' , `port` = '0'
-                WHERE `uid` = :userid AND `cid` = :token",
-                DBConnection::ROW_COUNT,
-                [
-                    ':userid' => $id,
-                    ':token'  => $token
-                ],
-                [':userid' => DBConnection::PARAM_INT]
+            throw new ClientSessionConnectException(
+                _h('An unexpected error occured while creating your session.') . ' ' .
+                _h('Please contact a website administrator.')
             );
-        }
-        catch(DBException $e)
-        {
-            throw new ClientSessionException(_h('An error occurred while unsetting ip:port') . ' .' . _h(
-                    'Please contact a website administrator.'
-                ));
-        }
-
-        if ($count === 0)
-        {
-            throw new ClientSessionException(_h('ID:Token must be wrong.'));
-        }
-        elseif ($count > 1)
-        {
-            throw new ClientSessionException(_h('Weird count of updates'));
         }
     }
 
     /**
      * Hourly cron job for client sessions
      *
-     * @param int $seconds how old should a normal session be, before deleting
+     * @param int $seconds     how old should a normal session be, before deleting
      * @param int $old_seconds how old should a long session be, before deleting and updating
      *
      * @throws ClientSessionException

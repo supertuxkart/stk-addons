@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
-if (!defined("API"))
+if (!API_MODE)
 {
     exit("Can not execute");
 }
@@ -59,8 +59,9 @@ try
                 $output->startElement('connect');
                     $output->writeAttribute('success', 'yes');
                     $output->writeAttribute('token', $session->getSessionID());
-                    $output->writeAttribute('username', h($session->getUsername()));
-                    $output->writeAttribute('userid', $session->getUserID());
+                    $output->writeAttribute('username', $session->getUser()->getUserName());
+                    $output->writeAttribute('realname', $session->getUser()->getRealName());
+                    $output->writeAttribute('userid', $session->getUser()->getId());
                     if ($achievements_string)
                     {
                         $output->writeAttribute('achieved', $achievements_string);
@@ -83,13 +84,14 @@ try
 
                 $session = ClientSession::get($token, $userid);
                 $session->setOnline();
-                User::updateLoginTime($session->getUserID());
+                User::updateLoginTime($session->getUser()->getId());
 
                 $output->startElement('saved-session');
                     $output->writeAttribute('success', 'yes');
                     $output->writeAttribute('token', $session->getSessionID());
-                    $output->writeAttribute('username', h($session->getUsername()));
-                    $output->writeAttribute('userid', $session->getUserID());
+                    $output->writeAttribute('username', $session->getUser()->getUserName());
+                    $output->writeAttribute('realname', $session->getUser()->getRealName());
+                    $output->writeAttribute('userid', $session->getUser()->getId());
                     $output->writeAttribute('info', '');
                 $output->endElement();
 
@@ -426,6 +428,7 @@ try
                 $password = isset($_POST['password']) ? utf8_encode($_POST['password']) : "";
                 $password_confirm = isset($_POST['password_confirm']) ? utf8_encode($_POST['password_confirm']) : "p";
                 $email = isset($_POST['email']) ? utf8_encode($_POST['email']) : "";
+                $realname = isset($_POST['realname']) ? utf8_encode($_POST['realname']) : "";
                 $terms = isset($_POST['terms']) ? utf8_encode($_POST['terms']) : "";
 
                 User::register(
@@ -433,7 +436,7 @@ try
                     $password,
                     $password_confirm,
                     $email,
-                    $username, // real name, TODO use real name field
+                    $terms, // real name,
                     $terms
                 );
 

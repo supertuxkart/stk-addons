@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
-if (!defined("API"))
+if (!API_MODE)
 {
     exit("Can not execute");
 }
@@ -60,7 +60,7 @@ try
                 $private_port = isset($_POST['private_port']) ? utf8_encode($_POST['private_port']) : null;
                 $port = isset($_POST['port']) ? utf8_encode($_POST['port']) : null;
 
-                ClientSession::setPublicAddress($userid, $token, $address, $port, $private_port);
+                ClientSession::get($token, $userid)->setPublicAddress($address, $port, $private_port);
 
                 $output->startElement('set');
                     $output->writeAttribute('success', 'yes');
@@ -129,7 +129,7 @@ try
                 $userid = isset($_POST['userid']) ? utf8_encode($_POST['userid']) : null;
                 $token = isset($_POST['token']) ? utf8_encode($_POST['token']) : null;
 
-                ClientSession::unsetPublicAddress($userid, $token);
+                ClientSession::get($token, $userid)->unsetPublicAddress();
 
                 $output->startElement('unset');
                     $output->writeAttribute('success', 'yes');
@@ -266,8 +266,7 @@ try
                 $hostid = isset($_POST['hostid']) ? (int)$_POST['hostid'] : 0;
                 $vote = isset($_POST['vote']) ? (int)$_POST['vote'] : 0;
 
-                // TODO change hostVote because it returns void
-                $new_rating = ClientSession::get($token, $userid)->hostVote($hostid, $vote);
+                $new_rating = ClientSession::get($token, $userid)->setHostVote($hostid, $vote);
 
                 $output->startElement('vote');
                     $output->writeAttribute('success', 'yes');
