@@ -34,6 +34,14 @@ if (!defined("TEST_MODE")) // useful for phpunit testing
 {
     define("TEST_MODE", false);
 }
+if (!defined("CRON_MODE")) // useful for cron jobs
+{
+    define("CRON_MODE", false);
+}
+if (!defined("API_MODE")) // useful for the API
+{
+    define("API_MODE", false);
+}
 
 // Paths and locations
 define("DS", DIRECTORY_SEPARATOR);
@@ -42,21 +50,12 @@ define("INCLUDE_PATH", ROOT_PATH . "include" . DS);
 define("TPL_PATH", ROOT_PATH . "tpl" . DS . "default" . DS); // Template properties
 define("TMP_PATH", sys_get_temp_dir() . DS); // define temporary directory path
 define("UPLOAD_PATH", ROOT_PATH . "dl" . DS);
-define("UPLOAD_CRON_PATH", UPLOAD_PATH);
+define("UP_PATH", UPLOAD_PATH);
 define("BUGS_PATH", ROOT_PATH . "bugs" . DS);
 define("STATS_PATH", ROOT_PATH . "stats" . DS);
 define("ASSETS_PATH", ROOT_PATH . "assets" . DS);
 define("CACHE_PATH", ASSETS_PATH . "cache" . DS); // cache for images/html/template
 define("FONTS_PATH", ASSETS_PATH . "fonts" . DS);
-
-if (defined("CRON")) // this is a cron job
-{
-    define("UP_PATH", UPLOAD_CRON_PATH);
-}
-else
-{
-    define("UP_PATH", UPLOAD_PATH);
-}
 
 define("NEWS_XML_PATH", UP_PATH . "xml" . DS . "news.xml");
 define("ASSETS_XML_PATH", UP_PATH . "xml" . DS . "assets.xml");

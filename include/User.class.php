@@ -402,7 +402,7 @@ class User extends Base
     public static function init()
     {
         // do not init session if we are in the api part area
-        if (defined('API') || defined('CRON'))
+        if (API_MODE || CRON_MODE)
         {
             return;
         }
