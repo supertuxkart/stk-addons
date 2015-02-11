@@ -436,7 +436,7 @@ try
                     $password,
                     $password_confirm,
                     $email,
-                    $terms, // real name,
+                    $realname,
                     $terms
                 );
 
