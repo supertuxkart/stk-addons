@@ -205,7 +205,7 @@ class Validate
         {
             if (empty($pool[$param]))
             {
-                $errors[] = sprintf("%s is empty", ucfirst($param));
+                $errors[] = sprintf(_h("%s field is empty"), ucfirst($param));
             }
         }
 
@@ -228,7 +228,7 @@ class Validate
         {
             if (!isset($pool[$param]))
             {
-                $errors[] = sprintf("%s is not set", ucfirst($param));
+                $errors[] = sprintf(_h("%s field is not set"), ucfirst($param));
             }
         }
 

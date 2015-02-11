@@ -1,7 +1,7 @@
 {include file=$tpl_config.header}
 <div class="row">
     <div class="col-md-offset-2">
-        <h1>{t}Account Registration{/t}</h1>
+        <h1 class="text-center">{t}Account Registration{/t}</h1><hr>
         {include file="feedback/all.tpl"}
         {if $register.display}
             <form id="register" action="register.php?action=register" method="POST" class="form-horizontal auto-validation"
@@ -74,35 +74,36 @@
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        <label for="reg_name">{t}Name{/t}</label>
-                    </div>
-                    <div class="col-md-7">
-                        <input type="text" class="form-control" name="name" id="reg_name"
-                               value="{$register.name.value}"
-                               data-bv-notempty="true"
-                               data-bv-notempty-message="{t}The name is required{/t}"
-
-                               data-bv-stringlength="true"
-                               data-bv-stringlength-min="{$register.name.min}"
-                               data-bv-stringlength-max="{$register.name.max}"
-                               data-bv-stringlength-message="{t 1=$register.name.min 2=$register.name.max}The nam must be between %1 and %2 characters long{/t}">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-3">
                         <label for="reg_email">{t}Email Address{/t}</label><br>
                         <span class="subtext">
                             ({t}Email address used to activate your account.{/t})
                         </span>
                     </div>
                     <div class="col-md-7">
-                        <input type="text" class="form-control" name="mail" id="reg_email"
+                        <input type="text" class="form-control" name="email" id="reg_email"
                                value="{$register.email.value}"
                                data-bv-notempty="true"
                                data-bv-notempty-message="{t}The registration email is required{/t}"
 
                                data-bv-emailaddress="true"
                                data-bv-emailaddress-message="{t}The email address is not a valid{/t}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <label for="reg_name">{t}Name{/t}</label><br>
+                        <span class="subtext">
+                            ({t}Optional{/t})
+                        </span>
+                    </div>
+                    <div class="col-md-7">
+                        <input type="text" class="form-control" name="realname" id="reg_name"
+                               value="{$register.realname.value}"
+
+                               data-bv-stringlength="true"
+                               data-bv-stringlength-min="{$register.realname.min}"
+                               data-bv-stringlength-max="{$register.realname.max}"
+                               data-bv-stringlength-message="{t 1=$register.realname.min 2=$register.realname.max}The nam must be between %1 and %2 characters long{/t}">
                     </div>
                 </div>
                 <div class="form-group">

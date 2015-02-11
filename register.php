@@ -21,10 +21,10 @@
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
 use Captcha\Captcha;
 
-$_POST['user'] = empty($_POST['user']) ? null : $_POST['user'];
-$_POST['name'] = empty($_POST['name']) ? null : $_POST['name'];
-$_POST['mail'] = empty($_POST['mail']) ? null : $_POST['mail'];
-$_GET['action'] = empty($_GET['action']) ? null : $_GET['action'];
+$username = empty($_POST['username']) ? null : $_POST['username'];
+$realname = empty($_POST['realname']) ? null : $_POST['realname'];
+$email = empty($_POST['email']) ? null : $_POST['email'];
+$action = empty($_GET['action']) ? null : $_GET['action'];
 
 $tpl = StkTemplate::get('register.tpl')
     ->assignTitle(_h('Register'))
@@ -38,22 +38,22 @@ $captcha->setPublicKey(CAPTCHA_PUB)->setPrivateKey(CAPTCHA_PRIV);
 $register = [
     'display' => false,
     'captcha'  => $captcha->html(),
-    'username' => ['min' => User::MIN_USERNAME, 'max' => User::MAX_USERNAME, 'value' => h($_POST['user'])],
+    'username' => ['min' => User::MIN_USERNAME, 'max' => User::MAX_USERNAME, 'value' => h($username)],
     'password' => ['min' => User::MIN_PASSWORD, 'max' => User::MAX_PASSWORD],
-    'name'     => ['min' => User::MIN_REALNAME, 'max' => User::MAX_USERNAME, 'value' => h($_POST['name'])],
-    'email'    => ['max' => User::MAX_EMAIL, 'value' => h($_POST['mail'])]
+    'realname' => ['min' => User::MIN_REALNAME, 'max' => User::MAX_USERNAME, 'value' => h($realname)],
+    'email'    => ['max' => User::MAX_EMAIL, 'value' => h($email)]
 
 ];
 
 // define possibly undefined variables
 
-switch ($_GET['action'])
+switch ($action)
 {
-    case 'register': // Register new account
+    case 'register': // register new account
         try
         {
             // validate
-            $errors = Validate::ensureNotEmpty($_POST, ["username", "password", "password_confirm", "mail", "name", "terms"]);
+            $errors = Validate::ensureNotEmpty($_POST, ["username", "password", "password_confirm", "email", "terms"]);
             if ($errors)
             {
                 throw new UserException(implode("<br>", $errors));
@@ -67,11 +67,11 @@ switch ($_GET['action'])
             }
 
             User::register(
-                $_POST['username'],
+                $username,
                 $_POST['password'],
                 $_POST['password_confirm'],
-                $_POST['mail'],
-                $_POST['name'],
+                $email,
+                $realname,
                 $_POST['terms']
             );
 
@@ -90,15 +90,14 @@ switch ($_GET['action'])
     case 'valid': // activation link
         try
         {
-            if (empty($_GET["num"]))
+            // validate
+            $errors = Validate::ensureNotEmpty($_GET, ["num", "user"]);
+            if ($errors)
             {
-                throw new UserException(_h("Activation code is empty"));
+                throw new UserException(implode("<br>", $errors));
             }
 
-            $username = h($_GET['user']);
-            $verification_code = h($_GET['num']);
-
-            User::activate($username, $verification_code);
+            User::activate($_GET['user'] /* userid */, $_GET["num"] /* verification code */);
 
             $tpl->assign('success', _h('Your account has been activated.'));
             $tpl->setMetaRefresh("login.php", 10);

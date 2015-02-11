@@ -1160,7 +1160,7 @@ class User extends Base
         catch(DBException $e)
         {
             throw new UserException(h(
-                _('An error occurred trying to activate your useraccount.') . ' ' .
+                _('An error occurred trying to activate your user account.') . ' ' .
                 _('Please contact a website administrator.')
             ));
         }
