@@ -21,9 +21,9 @@
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
 
 // define possibly undefined variables
-$_POST['username'] = isset($_POST['username']) ? $_POST['username'] : null;
-$_POST['password'] = isset($_POST['password']) ? $_POST['password'] : null;
-$_GET['action'] = isset($_GET['action']) ? $_GET['action'] : null;
+$username = isset($_POST['username']) ? $_POST['username'] : null;
+$password = isset($_POST['password']) ? $_POST['password'] : null;
+$action = isset($_GET['action']) ? $_GET['action'] : null;
 
 // set default redirect url from where the user was
 $return_to_url = $safe_url = ROOT_LOCATION;
@@ -50,7 +50,7 @@ $tpl = StkTemplate::get('login.tpl')
 // Prepare forms
 $login_form = [
     'display'     => true,
-    'username'    => ['min' => User::MIN_USERNAME, 'max' => User::MAX_USERNAME],
+    'username'    => ['min' => User::MIN_USERNAME, 'max' => User::MAX_USERNAME, 'value' => h($username)],
     'password'    => ['min' => User::MIN_PASSWORD, 'max' => User::MAX_PASSWORD],
     'return_to'   => $return_to_url,
     'form_action' => File::rewrite('login.php?action=submit'),
@@ -60,7 +60,7 @@ $login_form = [
     ]
 ];
 
-switch ($_GET['action'])
+switch ($action)
 {
     case 'logout':
         $login_form['display'] = false;
@@ -84,7 +84,7 @@ switch ($_GET['action'])
         $errors = "";
         try
         {
-            User::login($_POST['username'], $_POST['password']);
+            User::login($username, $password);
         }
         catch(UserException $e)
         {

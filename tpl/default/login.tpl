@@ -13,6 +13,7 @@
                         <div class="form-group">
                             <label for="login-username">{t}Username{/t}</label>
                             <input type="text" id="login-username" name="username" class="form-control" placeholder="{t}Enter username{/t}"
+                                   value="{$login.username.value}"
                                    data-bv-notempty="true"
                                    data-bv-notempty-message="{t}The username is required{/t}"
 

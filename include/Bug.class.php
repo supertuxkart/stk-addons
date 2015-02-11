@@ -362,8 +362,7 @@ class Bug extends Base
                     (SELECT `user` FROM " . DB_PREFIX . "users WHERE id = B.close_id) AS close_username,
                     B.*
                 FROM " . DB_PREFIX . "bugs AS B
-                WHERE B.id = :id
-                ",
+                WHERE B.id = :id",
                 DBConnection::FETCH_FIRST,
                 [":id" => $bug_id],
                 [":id" => DBConnection::PARAM_INT]
