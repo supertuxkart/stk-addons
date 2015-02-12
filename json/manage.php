@@ -1,6 +1,6 @@
 <?php
 /**
- * copyright 2014 Daniel Butum <danibutum at gmail dot com>
+ * copyright 2014-2015 Daniel Butum <danibutum at gmail dot com>
  *
  * This file is part of stkaddons
  *
@@ -183,6 +183,8 @@ switch ($_POST["action"])
         Config::set(Config::FEED_BLOG, $_POST['blog_feed']);
         Config::set(Config::IMAGE_MAX_DIMENSION, (int)$_POST['max_image_dimension']);
         Config::set(Config::APACHE_REWRITES, $_POST['apache_rewrites']);
+
+        writeXML();
 
         exit_json_success("Settings saved");
         break;

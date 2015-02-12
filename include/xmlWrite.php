@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright 2011-2012 Stephen Just <stephenjust@users.sourceforge.net>
- *
+ *           2014-2015 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -208,8 +208,7 @@ function generateAssetXML()
                 $writer->writeAttribute('image-list', $image_list_path);
 
                 // Get add-on rating
-                $rating = new Rating($addon['id']);
-                $writer->writeAttribute('rating', sprintf('%.3F', $rating->getAvgRating()));
+                $writer->writeAttribute('rating', sprintf('%.3F', Rating::get($addon['id'])->getAvgRating()));
                 $writer->endElement(); // close <$type>
             }
         }
@@ -306,8 +305,7 @@ function generateAssetXML2()
                 $writer->writeAttribute('license', $license_path);
 
                 // Get add-on rating
-                $rating = new Rating($addon['id']);
-                $writer->writeAttribute('rating', sprintf('%.3F', $rating->getAvgRating()));
+                $writer->writeAttribute('rating', sprintf('%.3F', Rating::get($addon['id'])->getAvgRating()));
 
                 // Search for revisions
                 try
@@ -430,4 +428,10 @@ function writeAssetXML()
     $count += File::write(ASSETS_XML_PATH, generateAssetXML());
 
     return $count;
+}
+
+function writeXML()
+{
+    writeAssetXML();
+    writeNewsXML();
 }

@@ -36,7 +36,7 @@ if (!Addon::exists($_GET['addon-id']))
     exit_json_error('The addon does not exist ' . h($_GET['addon-id']));
 }
 
-$rating = new Rating($_GET['addon-id']);
+$rating = Rating::get($_GET['addon-id']);
 switch ($_GET['action'])
 {
     case "set": // set rating and get the overall rating
@@ -48,7 +48,7 @@ switch ($_GET['action'])
         // set rating
         try
         {
-            $rating->setUserVote($_GET['rating']);
+            $rating->setUserVote(User::getLoggedId(), $_GET['rating']);
         }
         catch(RatingsException $e)
         {

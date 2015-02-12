@@ -158,8 +158,8 @@ try
                 $token = isset($_POST['token']) ? $_POST['token'] : "";
                 $addonid = isset($_POST['addonid']) ? $_POST['addonid'] : "";
 
-                $rating_object = new Rating($addonid, false);
-                $rating = $rating_object->getUserVote(ClientSession::get($token, $userid));
+                $session = ClientSession::get($token, $userid);
+                $rating = Rating::get($addonid)->getUserVote($session->getUser()->getId());
 
                 $output->startElement('get-addon-vote');
                     $output->writeAttribute('success', 'yes');
@@ -188,10 +188,11 @@ try
                 $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
                 $token = isset($_POST['token']) ? $_POST['token'] : "";
                 $addonid = isset($_POST['addonid']) ? $_POST['addonid'] : "";
-                $rating = isset($_POST['rating']) ? (int)$_POST['rating'] : -1.0;
+                $rating = isset($_POST['rating']) ? (float)$_POST['rating'] : -1.0;
 
-                $rating_object = new Rating($addonid, false);
-                $rating_object->setUserVote($rating, ClientSession::get($token, $userid));
+                $session = ClientSession::get($token, $userid);
+                $rating_object = Rating::get($addonid);
+                $rating_object->setUserVote($session->getUser()->getId(), $rating);
 
                 $output->startElement('set-addon-vote');
                     $output->writeAttribute('success', 'yes');

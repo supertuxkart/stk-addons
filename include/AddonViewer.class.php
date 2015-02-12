@@ -83,7 +83,7 @@ class AddonViewer
         }
 
         $this->latestRev = $this->addon->getLatestRevision();
-        $this->rating = new Rating($id);
+        $this->rating = Rating::get($id);
     }
 
     /**
@@ -128,7 +128,7 @@ class AddonViewer
         {
             $can_edit = ($this->user_is_owner || $this->user_has_permission);
 
-            $tpl['vote'] = $this->rating->displayUserRating();
+            $tpl['vote'] = $this->rating->displayUserRating(User::getLoggedId());
         }
 
         // Get image url

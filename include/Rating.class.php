@@ -2,7 +2,7 @@
 /**
  * copyright 2011-2013 Stephen Just <stephenjust@users.sf.net>
  *           2013      Glenn De Jonghe
- *           2014      Daniel Butum <danibutum at gmail dot com>
+ *           2014-2015 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -41,14 +41,22 @@ class Rating
     private $addon_id;
 
     /**
-     * @var int
+     * The average rating for this addon
+     * @var float
      */
-    private $avg_rating = 0;
+    private $avg_rating = 0.0;
 
     /**
+     * The number of ratings for this addon
      * @var int
      */
     private $count_ratings = 0;
+
+    /**
+     * Indicates if we fetched the ratings count and average for this addon
+     * @var bool
+     */
+    private $fetched_ratings = false;
 
     /**
      * The user's current vote (or false if not logged in or haven't voted)
@@ -58,47 +66,29 @@ class Rating
 
     /**
      * Calculate the average rating
+     *
+     * @param bool $force_fetch
      */
-    private function fetchAvgRating()
+    private function fetchRatings($force_fetch = false)
     {
+        // cache results
+        if ($this->fetched_ratings && !$force_fetch)
+        {
+            return;
+        }
+
         try
         {
             $result = DBConnection::get()->query(
-                'SELECT AVG(vote) as avg_vote
+                'SELECT AVG(vote) as avg_vote, COUNT(*) as count_vote
                 FROM `' . DB_PREFIX . 'votes`
                 WHERE `addon_id` = :addon_id',
-                DBConnection::FETCH_ALL,
+                DBConnection::FETCH_FIRST,
                 [':addon_id' => $this->addon_id]
             );
 
-            $this->avg_rating = $result[0]['avg_vote'];
-        }
-        catch(DBException $e)
-        {
-            if (DEBUG_MODE)
-            {
-                echo $e->getMessage();
-            }
-
-            $this->avg_rating = 0.0;
-        }
-    }
-
-    /**
-     * Get the number of ratings in the database
-     */
-    private function fetchNumRatings()
-    {
-        try
-        {
-            $result = DBConnection::get()->query(
-                'SELECT count(vote)
-                FROM `' . DB_PREFIX . 'votes`
-                WHERE `addon_id` = :addon_id',
-                DBConnection::FETCH_ALL,
-                [':addon_id' => $this->addon_id]
-            );
-            $this->count_ratings = intval($result[0]['count(vote)']);
+            $this->avg_rating = (float)$result['avg_vote'];
+            $this->count_ratings = (int)$result['count_vote'];
         }
         catch(DBException $e)
         {
@@ -106,30 +96,27 @@ class Rating
             {
                 trigger_error($e->getMessage());
             }
+
+            $this->avg_rating = 0.0;
             $this->count_ratings = 0;
         }
+
+        $this->fetched_ratings = true;
     }
 
     /**
      * Get the user's vote from the database
      *
-     * @param ClientSession|null $session
+     * @param int $user_id
      *
      * @throws RatingsException
      */
-    private function fetchUserVote($session = null)
+    private function fetchUserVote($user_id)
     {
-        if ($session !== null)
+        // cache result
+        if ($this->user_vote !== false)
         {
-            $userid = $session->getUser()->getId();
-        }
-        else
-        {
-            if (!User::isLoggedIn())
-            {
-                return;
-            }
-            $userid = User::getLoggedId();
+            return;
         }
 
         try
@@ -139,10 +126,10 @@ class Rating
                 FROM `" . DB_PREFIX . "votes`
                 WHERE `user_id` = :user_id
                 AND `addon_id` = :addon_id",
-                DBConnection::FETCH_ALL,
+                DBConnection::FETCH_FIRST,
                 [
-                    ':addon_id' => (string)$this->addon_id,
-                    ':user_id'  => $userid
+                    ':addon_id' => $this->addon_id,
+                    ':user_id'  => $user_id
                 ],
                 [':user_id' => DBConnection::PARAM_INT]
             );
@@ -156,29 +143,33 @@ class Rating
             );
         }
 
-        if (empty($result))
+        if (!$result)
         {
             return;
         }
-        $this->user_vote = (int)$result[0]['vote'];
+        $this->user_vote = (int)$result['vote'];
     }
 
     /**
      * Constructor
      *
      * @param string $addon_id ID of addon to use
-     * @param bool   $fetch_everything
      */
-    public function __construct($addon_id, $fetch_everything = true)
+    private function __construct($addon_id)
     {
-        $this->addon_id = (string)$addon_id;
+        $this->addon_id = $addon_id;
+    }
 
-        if ($fetch_everything)
-        {
-            $this->fetchAvgRating();
-            $this->fetchNumRatings();
-            $this->fetchUserVote();
-        }
+    /**
+     * Factory for Rating object
+     *
+     * @param string $addon_id
+     *
+     * @return Rating
+     */
+    public static function get($addon_id)
+    {
+        return new Rating($addon_id);
     }
 
     /**
@@ -208,11 +199,15 @@ class Rating
     }
 
     /**
+     * GEt the rating template string
+     *
+     * @param int $user_id
+     *
      * @return string
      */
-    public function displayUserRating()
+    public function displayUserRating($user_id)
     {
-        $current_rating = $this->getUserVote();
+        $current_rating = $this->getUserVote($user_id);
 
         return StkTemplate::get("addons/rating.tpl")
             ->assign("addon_id", $this->addon_id)
@@ -224,28 +219,40 @@ class Rating
 
     /**
      * Get the average rating
+     *
+     * @param bool $force_fetch force the fetch of the average rating
      * @return int Average rating
      */
-    public function getAvgRating()
+    public function getAvgRating($force_fetch = false)
     {
+        $this->fetchRatings($force_fetch);
+
         return $this->avg_rating;
     }
 
     /**
      * Gets the percentage of total possible rating value
+     *
+     * @param bool $force_fetch force the fetch of the average rating
      * @return int percent value
      */
-    public function getAvgRatingPercent()
+    public function getAvgRatingPercent($force_fetch = false)
     {
+        $this->fetchRatings($force_fetch);
+
         return (int)($this->avg_rating / static::MAX_RATING * 100);
     }
 
     /**
      * Get the number of ratings
+     *
+     * @param bool $force_fetch force the fetch of the average rating
      * @return integer Number of ratings
      */
-    public function getNumRatings()
+    public function getNumRatings($force_fetch = false)
     {
+        $this->fetchRatings($force_fetch);
+
         return $this->count_ratings;
     }
 
@@ -267,49 +274,31 @@ class Rating
     /**
      * Get the user's vote - a number if there is a vote, false if not
      *
-     * @param null|ClientSession $session
+     * @param int $user_id
      *
      * @return mixed A number or false
      */
-    public function getUserVote($session = null)
+    public function getUserVote($user_id)
     {
-        if ($session !== null)
-        {
-            $this->fetchUserVote($session);
-        }
+        $this->fetchUserVote($user_id);
 
         return $this->user_vote;
     }
 
     /**
+     * Add a vote for a user
      *
-     * @param float         $vote
-     * @param ClientSession $session
+     * @param float  $vote
+     * @param int    $user_id
      *
      * @throws RatingsException
      * @return boolean new vote or not
      */
-    public function setUserVote($vote, $session = null)
+    public function setUserVote($user_id, $vote)
     {
-        if ($session !== null)
-        {
-            $userid = $session->getUser()->getId();
-        }
-        else
-        {
-            if (!User::isLoggedIn())
-            {
-                throw new RatingsException();
-            }
-            $userid = User::getLoggedId();
-        }
-
         if ($vote < static::MIN_RATING || $vote > static::MAX_RATING)
         {
-            throw new RatingsException(
-                _h('The rating is out of allowed boundaries.') . ' ' .
-                _h('Please contact a website administrator if this problem persists.')
-            );
+            throw new RatingsException(_h('The rating is out of allowed boundaries.'));
         }
 
         try
@@ -322,7 +311,7 @@ class Rating
                 DBConnection::NOTHING,
                 [
                     ':addon_id' => $this->addon_id,
-                    ':user_id'  => $userid,
+                    ':user_id'  => $user_id,
                     ':rating'   => (float)$vote
                 ],
                 [':user_id' => DBConnection::PARAM_INT]
@@ -336,10 +325,8 @@ class Rating
             );
         }
 
-
-        $this->fetchAvgRating();
-        $this->fetchNumRatings();
-        $this->fetchUserVote($session); // FIXME
+        // reset
+        $this->fetched_ratings = false;
 
         // Regenerate the XML files after voting
         writeAssetXML();
@@ -347,7 +334,7 @@ class Rating
     }
 
     /**
-     * Gets the percentage of total possible rating value
+     * Gets the percentage of total possible rating value. TODO find usage
      *
      * @return int percent value
      */
