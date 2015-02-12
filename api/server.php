@@ -1,7 +1,7 @@
 <?php
 /**
- * copyright 2013 Glenn De Jonghe
- *           2014 Daniel Butum <danibutum at gmail dot com>
+ * copyright 2013        Glenn De Jonghe
+ *           2014 - 2015 Daniel Butum <danibutum at gmail dot com>
  * This file is part of SuperTuxKart
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -17,9 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 if (!API_MODE)
 {
-    exit("Can not execute");
+    XMLOutput::exitXML("Can not execute server API");
 }
 $action = isset($_POST['action']) ? $_POST['action'] : null;
 $output = new XMLOutput();
@@ -282,13 +283,13 @@ try
             break;
 
         default:
-            $output->addErrorElement('request', _('Invalid action.') . ' Action = ' . h($_POST['action']));
+            $output->addErrorElement('request', 'Invalid action. Action = ' . h($_POST['action']));
             break;
     }
 }
 catch(Exception $e)
 {
-    $output->addErrorElement('request', _('An unexpected error occurred.') . ' ' . _('Please contact a website administrator.'));
+    $output->addErrorElement('request', 'An unexpected error occurred. Please contact a website administrator.');
 }
 
 $output->endDocument();

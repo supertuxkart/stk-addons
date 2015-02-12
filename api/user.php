@@ -1,7 +1,7 @@
 <?php
 /**
- * copyright 2013 Glenn De Jonghe
- *           2014 Daniel Butum <danibutum at gmail dot com>
+ * copyright 2013        Glenn De Jonghe
+ *           2014 - 2015 Daniel Butum <danibutum at gmail dot com>
  * This file is part of SuperTuxKart
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -17,11 +17,11 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 if (!API_MODE)
 {
-    exit("Can not execute");
+    XMLOutput::exitXML("Can not execute user API");
 }
-
 $action = isset($_POST['action']) ? $_POST['action'] : "";
 $output = new XMLOutput();
 $output->startDocument('1.0', 'UTF-8');
@@ -59,8 +59,8 @@ try
                 $output->startElement('connect');
                     $output->writeAttribute('success', 'yes');
                     $output->writeAttribute('token', $session->getSessionID());
-                    $output->writeAttribute('username', $session->getUser()->getUserName());
-                    $output->writeAttribute('realname', $session->getUser()->getRealName());
+                    $output->writeAttribute('username', h($session->getUser()->getUserName()));
+                    $output->writeAttribute('realname', h($session->getUser()->getRealName()));
                     $output->writeAttribute('userid', $session->getUser()->getId());
                     if ($achievements_string)
                     {
@@ -89,8 +89,8 @@ try
                 $output->startElement('saved-session');
                     $output->writeAttribute('success', 'yes');
                     $output->writeAttribute('token', $session->getSessionID());
-                    $output->writeAttribute('username', $session->getUser()->getUserName());
-                    $output->writeAttribute('realname', $session->getUser()->getRealName());
+                    $output->writeAttribute('username', h($session->getUser()->getUserName()));
+                    $output->writeAttribute('realname', h($session->getUser()->getRealName()));
                     $output->writeAttribute('userid', $session->getUser()->getId());
                     $output->writeAttribute('info', '');
                 $output->endElement();
@@ -493,13 +493,13 @@ try
             break;
 
         default:
-            $output->addErrorElement('request', _('Invalid action.') . ' Action = ' . h($_POST['action']));
+            $output->addErrorElement('request', 'Invalid action. Action = ' . h($_POST['action']));
             break;
     }
 }
 catch(Exception $e)
 {
-    $output->addErrorElement('request', _('An unexpected error occurred.') . ' ' . _('Please contact a website administrator.'));
+    $output->addErrorElement('request','An unexpected error occurred. Please contact a website administrator.');
 }
 
 $output->endDocument();

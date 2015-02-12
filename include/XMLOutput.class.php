@@ -1,7 +1,7 @@
 <?php
 /**
- * copyright 2013 Glenn De Jonghe
- *
+ * copyright 2013        Glenn De Jonghe
+ *           2014 - 2015 Daniel Butum <danibutum at gmail dot com>
  * This file is part of SuperTuxKart
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -57,7 +57,7 @@ class XMLOutput extends XMLWriter
     }
 
     /**
-     * Add an error element that is sent to the server, with attribute success no
+     * Helper method. Add an error element that is sent to the server, with attribute success no
      *
      * @param string $element_name
      * @param string $info
@@ -76,5 +76,22 @@ class XMLOutput extends XMLWriter
     public function asString()
     {
         return $this->outputMemory();
+    }
+
+    /**
+     * Helper function that exits with an xml error.
+     *
+     * @param string $message
+     */
+    public static function exitXML($message)
+    {
+        $output = new XMLOutput();
+        $output->startDocument('1.0', 'UTF-8');
+
+        $output->addErrorElement("request", $message);
+        $output->endDocument();
+
+        $output->printToScreen();
+        exit();
     }
 }
