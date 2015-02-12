@@ -143,6 +143,9 @@ if (!TEST_MODE)
         trigger_error("mb_language failed");
     }
 
+    // disable external entity loading
+    libxml_disable_entity_loader(true);
+
     // add composer autoload
     require_once(ROOT_PATH . "vendor" . DS . "autoload.php");
 }
