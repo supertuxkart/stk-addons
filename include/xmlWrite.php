@@ -58,7 +58,7 @@ function generateNewsXML()
         $writer->writeAttribute('id', $result['id']);
         $writer->writeAttribute('date', $result['date']);
         $writer->writeAttribute('author', $result['author']);
-        $writer->writeAttribute('content', h($result['content']));
+        $writer->writeAttribute('content', $result['content']);
         if (mb_strlen($result['condition']) > 0)
         {
             $writer->writeAttribute('condition', $result['condition']);

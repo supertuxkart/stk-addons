@@ -49,19 +49,20 @@ class News
             throw new NewsException("Failed to fetch dynamic news entries");
         }
 
+        $newest_addons = Statistic::newestAddons();
         $dynamic_news = [
             [
-                "new"     => Addon::getNameByID(Statistic::newestAddon(Addon::KART)),
+                "new"     => $newest_addons[Addon::KART],
                 "exists"  => false,
                 "message" => "Newest add-on kart: "
             ],
             [
-                "new"     => Addon::getNameByID(Statistic::newestAddon(Addon::TRACK)),
+                "new"     => $newest_addons[Addon::TRACK],
                 "exists"  => false,
                 "message" => "Newest add-on track: "
             ],
             [
-                "new"     => Addon::getNameByID(Statistic::newestAddon(Addon::ARENA)),
+                "new"     => $newest_addons[Addon::ARENA],
                 "exists"  => false,
                 "message" => "Newest add-on arena: "
             ],

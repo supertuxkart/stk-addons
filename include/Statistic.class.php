@@ -393,31 +393,31 @@ class Statistic
     }
 
     /**
-     * Return the newest addon of a given type
+     * Return the newest addon of all types
      *
-     * @param string $addon_type
-     *
-     * @return null|string the id of the addon or null on empty selection
+     * @return array with the key the addon type and the value is addon name
      * @throws StatisticException
      */
-    public static function newestAddon($addon_type)
+    public static function newestAddons()
     {
-        if (!Addon::isAllowedType($addon_type))
-        {
-            throw new StatisticException(_h('Invalid addon type.'));
-        }
-
         try
         {
-            $newest_addon = DBConnection::get()->query(
-                'SELECT `a`.`id`
+            $query = '(SELECT `a`.`name`, `a`.type
                 FROM `' . DB_PREFIX . 'addons` `a`
-                LEFT JOIN `' . DB_PREFIX . $addon_type . '_revs` `r`
+                LEFT JOIN `' . DB_PREFIX . '%s_revs` `r`
                 ON `a`.`id` = `r`.`addon_id`
                 WHERE `r`.`status` & ' . F_APPROVED . '
                 ORDER BY `a`.`creation_date` DESC
-                LIMIT 1',
-                DBConnection::FETCH_FIRST
+                LIMIT 1)';
+
+            $addons = DBConnection::get()->query(
+                sprintf(
+                    "%s UNION %s UNION %s",
+                    sprintf($query, Addon::TRACK),
+                    sprintf($query, Addon::KART),
+                    sprintf($query, Addon::ARENA)
+                ),
+                DBConnection::FETCH_ALL
             );
         }
         catch(DBException $e)
@@ -428,12 +428,17 @@ class Statistic
             ));
         }
 
-        if (empty($newest_addon))
+        $return = [
+            Addon::TRACK => "",
+            Addon::ARENA => "",
+            Addon::KART  => ""
+        ];
+        foreach ($addons as $addon)
         {
-            return null;
+            $return[$addon["type"]] = $addon["name"];
         }
 
-        return $newest_addon['id'];
+        return $return;
     }
 
     /**
