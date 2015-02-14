@@ -124,10 +124,10 @@ function generateAssetXML()
                 `r`.`revision`, `r`.`format`, `r`.`image`,
                 ' . $iconQuery . ' `r`.`status`, `u`.`user`
                 FROM ' . DB_PREFIX . 'addons k
-                LEFT JOIN ' . DB_PREFIX . $type . 's_revs r
-                ON (`k`.`id` = `r`.`addon_id`)
-                LEFT JOIN ' . DB_PREFIX . 'users u
-                ON (`k`.`uploader` = `u`.`id`)
+                    LEFT JOIN ' . DB_PREFIX . $type . 's_revs r
+                        ON (`k`.`id` = `r`.`addon_id`)
+                    LEFT JOIN ' . DB_PREFIX . 'users u
+                        ON (`k`.`uploader` = `u`.`id`)
                 WHERE `k`.`type` = \'' . $type . 's\'',
                 DBConnection::FETCH_ALL
             );

@@ -300,8 +300,7 @@ class Addon extends Base
             throw new AddonException(_h('Failed to create add-on revision.'));
         }
 
-        writeAssetXML();
-        writeNewsXML();
+        writeXML();
         try
         {
             // Send mail to moderators
@@ -387,8 +386,7 @@ class Addon extends Base
             throw new AddonException(_h('Failed to remove addon.'));
         }
 
-        writeAssetXML();
-        writeNewsXML();
+        writeXML();
         Log::newEvent("Deleted add-on '{$this->name}'");
     }
 
@@ -462,8 +460,7 @@ class Addon extends Base
         }
 
         Log::newEvent('Deleted revision ' . $rev . ' of \'' . $this->name . '\'');
-        writeAssetXML();
-        writeNewsXML();
+        writeXML();
     }
 
     /**
@@ -855,8 +852,7 @@ class Addon extends Base
 
         $this->description = $description;
 
-        writeAssetXML();
-        writeNewsXML();
+        writeXML();
 
         return $this;
     }
@@ -893,9 +889,7 @@ class Addon extends Base
 
         $this->designer = $designer;
 
-        writeAssetXML();
-        writeNewsXML();
-
+        writeXML();
         return $this;
     }
 
@@ -972,8 +966,7 @@ class Addon extends Base
         $this->include_min = $start_ver;
         $this->include_max = $end_ver;
 
-        writeAssetXML();
-        writeNewsXML();
+        writeXML();
 
         return $this;
     }
@@ -1127,7 +1120,7 @@ class Addon extends Base
 
         try
         {
-            SMail::get()->addonNoteNotification($user['email'], $this->id, $email_body);
+            SMail::get()->addonNoteNotification($user['email'], $this->name, $email_body);
         }
         catch(SMailException $e)
         {
@@ -1323,8 +1316,7 @@ class Addon extends Base
             }
         }
 
-        writeAssetXML();
-        writeNewsXML();
+        writeXML();
         Log::newEvent("Set status for add-on '{$this->name}'");
 
         return $this;
@@ -1347,7 +1339,7 @@ class Addon extends Base
     }
 
     /**
-     * Get the addon name
+     * Get the addon name, TODO refactor
      *
      * @param string $id the addon id
      *
@@ -1881,8 +1873,7 @@ class Addon extends Base
         }
 
 
-        writeAssetXML();
-        writeNewsXML();
+        writeXML();
         try
         {
             // Send mail to moderators

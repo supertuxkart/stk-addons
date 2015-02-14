@@ -69,8 +69,7 @@ class File
             throw new FileException(_h('Failed to change file approval status.'));
         }
 
-        writeAssetXML();
-        writeNewsXML();
+        writeXML();
     }
 
     /**
@@ -510,8 +509,7 @@ class File
             }
         }
 
-        writeAssetXML();
-        writeNewsXML();
+        writeXML();
 
         return true;
     }

@@ -246,14 +246,13 @@ EMAIL;
      * Send email when a new addon note is created/updated
      *
      * @param string $email
-     * @param string $addon_id
+     * @param string $addon_name
      * @param string $notes
      *
      * @throws SMailException
      */
-    public function addonNoteNotification($email, $addon_id, $notes)
+    public function addonNoteNotification($email, $addon_name, $notes)
     {
-        $addon_name = Addon::getNameByID($addon_id);
         $message =
             "A moderator has left a note concerning your add-on, '$addon_name.' The notes saved for each revision of this add-on are shown below.\n\n";
         $message .= $notes;

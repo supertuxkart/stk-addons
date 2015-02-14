@@ -329,8 +329,7 @@ class Rating
         $this->fetched_ratings = false;
 
         // Regenerate the XML files after voting
-        writeAssetXML();
-        writeNewsXML();
+        writeXML();
     }
 
     /**
