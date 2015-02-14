@@ -258,7 +258,7 @@ class ClientSession
      * @param string $ip
      * @param int    $port
      *
-     * @return array|int|null
+     * @return array
      * @throws ClientSessionException
      */
     public function getServerConnectionRequests($ip, $port)
@@ -268,7 +268,7 @@ class ClientSession
             $server_id = DBConnection::get()->query(
                 "SELECT `id` FROM `" . DB_PREFIX . "servers`
                 WHERE `hostid` = :hostid AND `ip` = :ip AND `port` = :port LIMIT 1",
-                DBConnection::FETCH_ALL,
+                DBConnection::FETCH_FIRST,
                 [
                     ':hostid' => $this->user->getId(),
                     ':ip'     => $ip,
@@ -280,12 +280,17 @@ class ClientSession
                     ':port'   => DBConnection::PARAM_INT
                 ]
             );
+            if (!$server_id)
+            {
+                return [];
+            }
+
             $connection_requests = DBConnection::get()->query(
                 "SELECT `userid`
                 FROM `" . DB_PREFIX . "server_conn`
                 WHERE `serverid` = :server_id AND `request` = '1'",
                 DBConnection::FETCH_ALL,
-                [':server_id' => $server_id[0]['id']],
+                [':server_id' => $server_id['id']],
                 [':serverid' => DBConnection::PARAM_INT]
             );
 
