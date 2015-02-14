@@ -93,7 +93,6 @@ switch ($_POST["action"])
         {
             exit_json_error(implode("<br>", $errors));
         }
-
         if (!User::hasPermission(AccessControl::PERM_EDIT_PERMISSIONS))
         {
             exit_json_error("You do not have the necessary permission to get a role");
@@ -112,6 +111,10 @@ switch ($_POST["action"])
         {
             exit_json_error(implode("<br>", $errors));
         }
+        if (!User::hasPermission(AccessControl::PERM_EDIT_SETTINGS))
+        {
+            exit_json_error("You do not have the necessary permission to add a news entry");
+        }
 
         $message = $_POST["message"];
         $condition = $_POST["condition"];
@@ -120,7 +123,7 @@ switch ($_POST["action"])
 
         try
         {
-            News::create($message, $condition, $important, $web_display);
+            News::create(User::getLoggedId(), $message, $condition, $important, $web_display);
         }
         catch(NewsException $e)
         {
@@ -135,6 +138,10 @@ switch ($_POST["action"])
         if ($errors)
         {
             exit_json_error(implode("<br>", $errors));
+        }
+        if (!User::hasPermission(AccessControl::PERM_EDIT_SETTINGS))
+        {
+            exit_json_error("You do not have the necessary permission to delete a news id");
         }
 
         try
@@ -168,7 +175,6 @@ switch ($_POST["action"])
         {
             exit_json_error(implode("<br>", $errors));
         }
-
         if (!User::hasPermission(AccessControl::PERM_EDIT_SETTINGS))
         {
             exit_json_error("You do not have the necessary permission to edit general settings");

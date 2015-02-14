@@ -39,7 +39,7 @@ class Config
     const IMAGE_MAX_DIMENSION = "max_image_dimension";
 
     /**
-     * The rss blog feed url
+     * The Atom or RSS blog feed url
      */
     const FEED_BLOG = "blog_feed";
 

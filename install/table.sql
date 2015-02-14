@@ -296,7 +296,8 @@ CREATE TABLE IF NOT EXISTS `v2_config` (
 INSERT INTO `v2_config` (`name`, `value`) VALUES
     ('allowed_addon_exts', 'zip, tar, tar.gz, tgz, gz, tbz, tar.bz2, bz2, b3d, txt, png, jpg, jpeg, xml'),
     ('allowed_source_exts', 'txt, blend, b3d, xml, png, jpg, jpeg, xcf, rgb, svg'),
-    ('max_image_dimension', '2048');
+    ('max_image_dimension', '2048'),
+    ('blog_feed', 'http://supertuxkart.blogspot.com/feeds/posts/default');
 
 -- --------------------------------------------------------
 

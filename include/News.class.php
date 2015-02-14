@@ -1,7 +1,7 @@
 <?php
 /**
- * copyright 2011 Stephen Just <stephenjust@users.sourceforge.net>
- *           2014 Daniel Butum <danibutum at gmail dot com>
+ * copyright 2011      Stephen Just <stephenjust@users.sourceforge.net>
+ *           2014-2015 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -29,11 +29,10 @@ class News
     /**
      * Refresh all the dynamic entries in the database
      *
-     * @return null|bool
+     * @throws NewsException
      */
     public static function refreshDynamicEntries()
     {
-        // TODO throw exceptions instead of echoing to the user
         // Get dynamic entries
         try
         {
@@ -47,254 +46,123 @@ class News
         }
         catch(DBException $e)
         {
-            return false;
+            throw new NewsException("Failed to fetch dynamic news entries");
         }
 
-        // Dynamic newest kart display
-        $new_kart = Addon::getNameByID(Statistic::newestAddon(Addon::KART));
-        $existing_id = false;
+        $dynamic_news = [
+            [
+                "new"     => Addon::getNameByID(Statistic::newestAddon(Addon::KART)),
+                "exists"  => false,
+                "message" => "Newest add-on kart: "
+            ],
+            [
+                "new"     => Addon::getNameByID(Statistic::newestAddon(Addon::TRACK)),
+                "exists"  => false,
+                "message" => "Newest add-on track: "
+            ],
+            [
+                "new"     => Addon::getNameByID(Statistic::newestAddon(Addon::ARENA)),
+                "exists"  => false,
+                "message" => "Newest add-on arena: "
+            ],
+            [
+                "new"     => News::getLatestBlogPost(),
+                "exists"  => false,
+                "message" => "Latest post on stkblog.net: "
+            ],
+        ];
+
+        // replace/delete old entries
         foreach ($dynamic_entries as $entry)
         {
-            if (preg_match('/^Newest add-on kart: (.*)$/i', $entry['content'], $matches))
+            foreach ($dynamic_news as $key => $value)
             {
-                if ($matches[1] !== $new_kart)
+                $news = $dynamic_news[$key];
+                $pattern = sprintf("/^%s(.*)$/i", $news["message"]);
+                if (preg_match($pattern, $entry["content"], $matches))
                 {
-                    // Delete old record
-                    try
+                    if ($matches[1] !== $news["new"])
                     {
-                        DBConnection::get()->delete(
-                            "news",
-                            "`id` = :id",
-                            [":id" => $entry['id']],
-                            [":id" => DBConnection::PARAM_INT]
-                        );
+                        // pattern matches but our value differs, so delete it, and create it below
+                        static::delete($entry["id"]);
                     }
-                    catch(DBException $e)
+                    else
                     {
-                        echo 'Warning: failed to delete old news record.<br />';
+                        $dynamic_news[$key]["exists"] = true;
                     }
-                }
-                else
-                {
-                    $existing_id = true;
+
+                    // this assumes only one match per pattern, multiple news entry can not match the same pattern
                     break;
                 }
             }
         }
 
-        // Add new entry
-        if (!$existing_id && $new_kart)
+        // create new entries
+        foreach ($dynamic_news as $news)
         {
+            // news entry already exits or the new record is invalid
+            if ($news["exists"] || !$news["new"])
+            {
+                continue;
+            }
+
+            // insert new record
             try
             {
                 DBConnection::get()->insert(
                     'news',
                     [
-                        ":content"    => "Newest add-on kart: " . $new_kart,
+                        ":content"    => $news["message"] . $news["new"],
                         "web_display" => 1,
                         "dynamic"     => 1
-                    ]
-                );
-            }
-            catch(DBException $e)
-            {
-                echo 'Failed to insert newest kart news entry.<br />';
-            }
-        }
-
-        // Dynamic newest track display
-        $new_track = Addon::getNameByID(Statistic::newestAddon(Addon::TRACK));
-        $existing_id = false;
-        foreach ($dynamic_entries as $entry)
-        {
-            if (preg_match('/^Newest add-on track: (.*)$/i', $entry['content'], $matches))
-            {
-                if ($matches[1] !== $new_track)
-                {
-                    // Delete old record
-                    try
-                    {
-                        DBConnection::get()->delete(
-                            "news",
-                            "`id` = :id",
-                            [":id" => $entry['id']],
-                            [":id" => DBConnection::PARAM_INT]
-                        );
-                    }
-                    catch(DBException $e)
-                    {
-                        echo 'Warning: failed to delete old news record.<br />';
-                    }
-                }
-                else
-                {
-                    $existing_id = true;
-                    break;
-                }
-            }
-        }
-
-        // Add new entry
-        if ($existing_id === false && $new_track !== false)
-        {
-            try
-            {
-                DBConnection::get()->insert(
-                    'news',
+                    ],
                     [
-                        ":content"    => "Newest add-on track: " . $new_track,
-                        "web_display" => 1,
-                        "dynamic"     => 1
+                        ':web_display' => DBConnection::PARAM_INT,
+                        ':dynamic'     => DBConnection::PARAM_INT
                     ]
                 );
             }
             catch(DBException $e)
             {
-                echo 'Failed to insert newest track news entry.<br />';
+                throw new NewsException("Failed to create dynamic news entry");
             }
         }
-
-        // Dynamic newest arena display
-        $new_arena = Addon::getNameByID(Statistic::newestAddon(Addon::ARENA));
-        $existing_id = false;
-        foreach ($dynamic_entries as $entry)
-        {
-            if (preg_match('/^Newest add-on arena: (.*)$/i', $entry['content'], $matches))
-            {
-                if ($matches[1] !== $new_arena)
-                {
-                    // Delete old record
-                    try
-                    {
-                        DBConnection::get()->delete(
-                            "news",
-                            "`id` = :id",
-                            [":id" => $entry['id']],
-                            [":id" => DBConnection::PARAM_INT]
-                        );
-                    }
-                    catch(DBException $e)
-                    {
-                        echo 'Warning: failed to delete old news record.<br />';
-                    }
-                }
-                else
-                {
-                    $existing_id = true;
-                    break;
-                }
-            }
-        }
-
-        // Add new entry
-        if ($existing_id === false && $new_arena !== false)
-        {
-            try
-            {
-                DBConnection::get()->insert(
-                    'news',
-                    [
-                        ":content"    => "Newest add-on arena: " . $new_arena,
-                        "web_display" => 1,
-                        "dynamic"     => 1
-                    ]
-                );
-            }
-            catch(DBException $e)
-            {
-                echo 'Failed to insert newest kart news entry.<br />';
-            }
-        }
-
-        // Add message for the latest blog-post
-        $latest_blogpost = News::getLatestBlogPost();
-        $existing_id = false;
-        foreach ($dynamic_entries as $entry)
-        {
-            if (preg_match('/^Latest post on stkblog.net: (.*)$/i', $entry['content'], $matches))
-            {
-                if ($matches[1] !== $latest_blogpost)
-                {
-                    // Delete old record
-                    try
-                    {
-                        DBConnection::get()->delete(
-                            "news",
-                            "`id` = :id",
-                            [":id" => $entry['id']],
-                            [":id" => DBConnection::PARAM_INT]
-                        );
-
-                    }
-                    catch(DBException $e)
-                    {
-                        echo 'Warning: failed to delete old news record.<br />';
-                    }
-                }
-                else
-                {
-                    $existing_id = true;
-                    break;
-                }
-            }
-        }
-
-        // Add new entry
-        if ($existing_id === false && $latest_blogpost !== false)
-        {
-            try
-            {
-                DBConnection::get()->insert(
-                    'news',
-                    [
-                        ":content"    => "Latest post on stkblog.net: " . $latest_blogpost,
-                        "web_display" => 1,
-                        "dynamic"     => 1,
-                    ]
-                );
-            }
-            catch(DBException $e)
-            {
-                echo 'Failed to insert newest kart news entry.<br />';
-            }
-        }
-
-        return null;
     }
 
     /**
-     * Get the last article title
+     * Get the last article title, TODO cache result, maybe add to cron job
      *
-     * @return string|bool
+     * @return string|null
+     * @throws NewsException
      */
     private static function getLatestBlogPost()
     {
         $feed_url = Config::get(Config::FEED_BLOG);
-        if (empty($feed_url))
+        if (!$feed_url)
         {
-            return false;
+            return null;
         }
 
-        $xml_content = file($feed_url, FILE_IGNORE_NEW_LINES);
+        $xml_content = file_get_contents($feed_url);
         if (!$xml_content)
         {
-            return false;
+            return null;
         }
 
         $reader = xml_parser_create();
-        if (!xml_parse_into_struct($reader, implode('', $xml_content), $vals, $index))
+        if (!xml_parse_into_struct($reader, $xml_content, $values, $index))
         {
-            echo 'XML Error: ' . xml_error_string(xml_get_error_code($reader)) . '<br />';
+            Log::newEvent('Failed to get feed. XML Error: ' . xml_error_string(xml_get_error_code($reader)));
 
-            return false;
+            return null;
         }
+        xml_parser_free($reader);
 
-        // TODO maybe use a more sane way to parse
         $start_search = -1;
-        $vals_count = count($vals);
-        for ($i = 0; $i < $vals_count; $i++)
+        $values_count = count($values);
+        for ($i = 0; $i < $values_count; $i++)
         {
-            if ($vals[$i]['tag'] === 'ITEM')
+            if ($values[$i]['tag'] === 'ITEM' || $values[$i]['tag'] === 'ENTRY')
             {
                 $start_search = $i;
                 break;
@@ -303,25 +171,20 @@ class News
 
         if ($start_search === -1)
         {
-            return false;
+            return null;
         }
 
         $article_title = null;
-        for ($i = $start_search; $i < $vals_count; $i++)
+        for ($i = $start_search; $i < $values_count; $i++)
         {
-            if ($vals[$i]['tag'] === 'TITLE')
+            if ($values[$i]['tag'] === 'TITLE')
             {
-                $article_title = $vals[$i]['value'];
+                $article_title = $values[$i]['value'];
                 break;
             }
         }
 
-        if ($article_title === null)
-        {
-            return false;
-        }
-
-        return h($article_title);
+        return $article_title;
     }
 
     /**
@@ -409,23 +272,19 @@ class News
     }
 
     /**
-     * Create a news entry
+     * Create a news entry from the user interface
      *
+     * @param int    $author_id   the user who created the news entry
      * @param string $message     the message to display
      * @param string $condition   display only on certain stk versions, TODO better document
      * @param bool   $important   create a notification while creating the news
      * @param bool   $web_display display on the website
+     * @param bool   $dynamic     tells if the news entry was created by a user action or automatically
      *
      * @throws NewsException
      */
-    public static function create($message, $condition, $important, $web_display)
+    public static function create($author_id, $message, $condition, $important, $web_display, $dynamic = false)
     {
-        // check permission
-        if (!User::hasPermission(AccessControl::PERM_EDIT_SETTINGS))
-        {
-            throw new NewsException("You do not have the necessary permission to add a news entry");
-        }
-
         // Make sure no invalid version number sneaks in
         if (Util::str_icontains($condition, "stkversion"))
         {
@@ -452,17 +311,19 @@ class News
             DBConnection::get()->insert(
                 'news',
                 [
-                    ':author_id'   => User::getLoggedId(),
+                    ':author_id'   => $author_id,
                     ':content'     => $message,
                     ':condition'   => $condition,
                     ':important'   => $important,
                     ':web_display' => $web_display,
+                    ':dynamic'     => $dynamic,
                     'active'       => 1
                 ],
                 [
                     ':author_id'   => DBConnection::PARAM_INT,
                     ':important'   => DBConnection::PARAM_INT,
                     ':web_display' => DBConnection::PARAM_INT,
+                    ':dynamic'     => DBConnection::PARAM_INT
                 ]
             );
         }
@@ -483,11 +344,6 @@ class News
      */
     public static function delete($id)
     {
-        if (!User::hasPermission(AccessControl::PERM_EDIT_SETTINGS))
-        {
-            throw new NewsException("You do not have the necessary permission to delete a news");
-        }
-
         try
         {
             DBConnection::get()->delete("news", "`id` = :id", [":id" => $id], [":id" => DBConnection::PARAM_INT]);
