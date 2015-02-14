@@ -100,7 +100,7 @@ class News
         // create new entries
         foreach ($dynamic_news as $news)
         {
-            // news entry already exits or the new record is invalid
+            // news entry already exists or the new record is invalid
             if ($news["exists"] || !$news["new"])
             {
                 continue;
@@ -331,8 +331,6 @@ class News
         {
             throw new NewsException('Database error while creating message.');
         }
-
-        writeNewsXML();
     }
 
     /**
@@ -352,7 +350,5 @@ class News
         {
             throw new NewsException("Database error while trying to delete a news article");
         }
-
-        writeNewsXML();
     }
 }

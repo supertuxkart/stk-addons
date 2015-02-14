@@ -130,6 +130,7 @@ switch ($_POST["action"])
             exit_json_error($e->getMessage());
         }
 
+        writeNewsXML();
         exit_json_success("News message created");
         break;
 
@@ -153,6 +154,7 @@ switch ($_POST["action"])
             exit_json_error($e->getMessage());
         }
 
+        writeNewsXML();
         exit_json_success("News entry deleted");
         break;
 
