@@ -166,6 +166,7 @@ class Config
             return false;
         }
 
+        // TODO set multiple values at once, not that critical, as this is only used in the manage part of the website
         try
         {
             DBConnection::get()->query(
@@ -188,9 +189,8 @@ class Config
             return false;
         }
 
-        // Update cache - first, make sure the cache exists
-        static::get($config_name); // TODO check if we really need to update cache
-        static::$cache[$config_name] = $config_value;
+        // Update cache by cleaning the cache array, on the next call of get() method it will repopulate the cache
+        static::$cache = [];
 
         return true;
     }
