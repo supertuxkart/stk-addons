@@ -25,7 +25,7 @@ $_GET['action'] = (isset($_GET['action'])) ? $_GET['action'] : null;
 switch ($_GET['view'])
 {
     case 'overview':
-        $tpl = new StkTemplate("manage/page/overview.tpl");
+        $tpl = StkTemplate::get("manage/page/overview.tpl");
         $tpl_data = [
             "addons"   => [],
             "images"   => [],
@@ -74,7 +74,8 @@ switch ($_GET['view'])
             {
                 if ($image["approved"] == 0)
                 {
-                    $unapproved[] = '<img src="' . ROOT_LOCATION . 'image.php?size=' . SImage::SIZE_MEDIUM . '&pic=' . $image['file_path'] . '" />';
+                    $unapproved[] =
+                        '<img src="' . ROOT_LOCATION . 'image.php?size=' . SImage::SIZE_MEDIUM . '&pic=' . $image['file_path'] . '" />';
                 }
             }
             // add to view
@@ -115,23 +116,23 @@ switch ($_GET['view'])
         {
             exit("You do not have the necessary permission");
         }
-        $tpl = new StkTemplate("manage/page/general.tpl");
+        $tpl = StkTemplate::get("manage/page/general.tpl");
         $tpl_data = [
-            "xml_frequency"       => (int)Config::get(Config::XML_UPDATE_TIME),
-            "allowed_addon_exts"  => Config::get(Config::ALLOWED_ADDON_EXTENSIONS),
-            "allowed_source_exts" => Config::get(Config::ALLOWED_SOURCE_EXTENSIONS),
-            "admin_email"         => Config::get(Config::EMAIL_ADMIN),
-            "list_email"          => Config::get(Config::EMAIL_LIST),
-            "list_invisible"      => [
+            Config::XML_UPDATE_TIME           => (int)Config::get(Config::XML_UPDATE_TIME),
+            Config::ALLOWED_ADDON_EXTENSIONS  => Config::get(Config::ALLOWED_ADDON_EXTENSIONS),
+            Config::ALLOWED_SOURCE_EXTENSIONS => Config::get(Config::ALLOWED_SOURCE_EXTENSIONS),
+            Config::EMAIL_ADMIN               => Config::get(Config::EMAIL_ADMIN),
+            Config::EMAIL_LIST                => Config::get(Config::EMAIL_LIST),
+            Config::SHOW_INVISIBLE_ADDONS     => [
                 "options"  => [
                     0 => _h("False"),
                     1 => _h("True"),
                 ],
                 "selected" => (Config::get(Config::SHOW_INVISIBLE_ADDONS) == 1) ? 1 : 0
             ],
-            "blog_feed"           => Config::get(Config::FEED_BLOG),
-            "max_image_dimension" => (int)Config::get(Config::IMAGE_MAX_DIMENSION),
-            "apache_rewrites"     => Config::get(Config::APACHE_REWRITES),
+            Config::FEED_BLOG                 => Config::get(Config::FEED_BLOG),
+            Config::IMAGE_MAX_DIMENSION       => (int)Config::get(Config::IMAGE_MAX_DIMENSION),
+            Config::APACHE_REWRITES           => Config::get(Config::APACHE_REWRITES),
         ];
 
         $tpl->assign("general", $tpl_data);
@@ -147,7 +148,7 @@ switch ($_GET['view'])
         {
             exit("You do not have the necessary permission");
         }
-        $tpl = new StkTemplate("manage/page/news.tpl");
+        $tpl = StkTemplate::get("manage/page/news.tpl");
         $tpl_data = ["items" => News::getAll()];
 
         $tpl->assign("news", $tpl_data);
@@ -164,7 +165,7 @@ switch ($_GET['view'])
         {
             exit("You do not have the necessary permission");
         }
-        $tpl = new StkTemplate("manage/page/clients.tpl");
+        $tpl = StkTemplate::get("manage/page/clients.tpl");
         $tpl_data = [
             "items" => DBConnection::get()->query(
                     'SELECT * FROM ' . DB_PREFIX . 'clients
@@ -182,14 +183,14 @@ switch ($_GET['view'])
         {
             exit("You do not have the necessary permission");
         }
-        $tpl = new StkTemplate("manage/page/cache.tpl");
+        $tpl = StkTemplate::get("manage/page/cache.tpl");
         $tpl_data = [];
 
         $tpl->assign("cache", $tpl_data);
         break;
 
     case 'files':
-        $tpl = new StkTemplate("manage/page/files.tpl");
+        $tpl = StkTemplate::get("manage/page/files.tpl");
         $tpl_data = [];
 
         $files = File::getAllFiles();
@@ -252,7 +253,7 @@ switch ($_GET['view'])
         break;
 
     case 'logs':
-        $tpl = new StkTemplate("manage/page/logs.tpl");
+        $tpl = StkTemplate::get("manage/page/logs.tpl");
         $tpl_data = ["items" => Log::getEvents()];
 
         $tpl->assign("logs", $tpl_data);
@@ -263,7 +264,7 @@ switch ($_GET['view'])
         {
             exit("You do not have the necessary permission");
         }
-        $tpl = new StkTemplate("manage/page/roles.tpl");
+        $tpl = StkTemplate::get("manage/page/roles.tpl");
         $tpl_data = [
             "roles"       => AccessControl::getRoles(),
             "permissions" => AccessControl::getPermissionsChecked()

@@ -162,15 +162,15 @@ switch ($_POST["action"])
         $errors = Validate::ensureIsSet(
             $_POST,
             [
-                "xml_frequency",
-                "allowed_addon_exts",
-                "allowed_source_exts",
-                "admin_email",
-                "list_email",
-                "list_invisible",
-                "blog_feed",
-                "max_image_dimension",
-                "apache_rewrites"
+                Config::XML_UPDATE_TIME,
+                Config::ALLOWED_ADDON_EXTENSIONS,
+                Config::ALLOWED_SOURCE_EXTENSIONS,
+                Config::EMAIL_LIST,
+                Config::EMAIL_ADMIN,
+                Config::SHOW_INVISIBLE_ADDONS,
+                Config::FEED_BLOG,
+                Config::IMAGE_MAX_DIMENSION,
+                Config::APACHE_REWRITES
             ]
         );
         if ($errors)
@@ -182,15 +182,15 @@ switch ($_POST["action"])
             exit_json_error("You do not have the necessary permission to edit general settings");
         }
 
-        Config::set(Config::XML_UPDATE_TIME, (int)$_POST['xml_frequency']);
-        Config::set(Config::ALLOWED_ADDON_EXTENSIONS, $_POST['allowed_addon_exts']);
-        Config::set(Config::ALLOWED_SOURCE_EXTENSIONS, $_POST['allowed_source_exts']);
-        Config::set(Config::EMAIL_ADMIN, $_POST['admin_email']);
-        Config::set(Config::EMAIL_LIST, $_POST['list_email']);
-        Config::set(Config::SHOW_INVISIBLE_ADDONS, (int)$_POST['list_invisible']);
-        Config::set(Config::FEED_BLOG, $_POST['blog_feed']);
-        Config::set(Config::IMAGE_MAX_DIMENSION, (int)$_POST['max_image_dimension']);
-        Config::set(Config::APACHE_REWRITES, $_POST['apache_rewrites']);
+        Config::set(Config::XML_UPDATE_TIME, (int)$_POST[Config::XML_UPDATE_TIME]);
+        Config::set(Config::ALLOWED_ADDON_EXTENSIONS, $_POST[Config::ALLOWED_ADDON_EXTENSIONS]);
+        Config::set(Config::ALLOWED_SOURCE_EXTENSIONS, $_POST[Config::ALLOWED_SOURCE_EXTENSIONS]);
+        Config::set(Config::EMAIL_ADMIN, $_POST[Config::EMAIL_ADMIN]);
+        Config::set(Config::EMAIL_LIST, $_POST[Config::EMAIL_LIST]);
+        Config::set(Config::SHOW_INVISIBLE_ADDONS, (int)$_POST[Config::SHOW_INVISIBLE_ADDONS]);
+        Config::set(Config::FEED_BLOG, $_POST[Config::FEED_BLOG]);
+        Config::set(Config::IMAGE_MAX_DIMENSION, (int)$_POST[Config::IMAGE_MAX_DIMENSION]);
+        Config::set(Config::APACHE_REWRITES, $_POST[Config::APACHE_REWRITES]);
 
         writeXML();
 
