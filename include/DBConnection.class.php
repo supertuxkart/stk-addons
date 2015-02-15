@@ -1,8 +1,8 @@
 <?php
 /**
- * copyright 2013 Glenn De Jonghe
- *           2013 Stephen Just <stephenjust@users.sourceforge.net>
- *           2014 Daniel Butum <danibutum at gmail dot com>
+ * copyright 2013      Glenn De Jonghe
+ *           2013      Stephen Just <stephenjust@users.sourceforge.net>
+ *           2014-2015 Daniel Butum <danibutum at gmail dot com>
  * This file is part of SuperTuxKart
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -20,33 +20,10 @@
  */
 
 /**
- * Class DBException
- */
-class DBException extends Exception
-{
-    /**
-     * @param string $error_code
-     */
-    public function __construct($error_code = "")
-    {
-        $this->error_code = $error_code;
-    }
-
-    /**
-     * @return string
-     */
-    public function getErrorCode()
-    {
-        return $this->error_code;
-    }
-}
-
-/**
  * Class DBConnection
  */
 class DBConnection
 {
-
     /**
      * @var PDO
      */

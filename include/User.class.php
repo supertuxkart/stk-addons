@@ -1154,8 +1154,6 @@ class User extends Base
             {
                 throw new DBException();
             }
-
-            Verification::delete($userid);
         }
         catch(DBException $e)
         {
@@ -1165,6 +1163,7 @@ class User extends Base
             ));
         }
 
+        Verification::delete($userid);
         Log::newEvent("User with ID '{$userid}' activated.");
     }
 

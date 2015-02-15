@@ -29,7 +29,7 @@ class Verification
      * @param int    $userid
      * @param string $ver_code
      *
-     * @throws UserException when verification failed
+     * @throws VerificationException when verification failed
      */
     public static function verify($userid, $ver_code)
     {
@@ -50,14 +50,11 @@ class Verification
         }
         catch(DBException $e)
         {
-            throw new UserException(h(
-                _('An error occurred while trying to validate verification information.') . ' ' .
-                _('Please contact a website administrator.')
-            ));
+            throw new VerificationException(exception_message_db(_('validate verification information')));
         }
         if ($count !== 1)
         {
-            throw new UserException(_h(
+            throw new VerificationException(_h(
                 "Verification failed. Either the supplied user doesn't exist, the account doesn't need verification (anymore), or the verification code is incorrect."
             ));
         }
@@ -68,20 +65,28 @@ class Verification
      *
      * @param int $userid
      *
-     * @throws DBException when nothing got deleted.
+     * @throws VerificationException when nothing got deleted.
      */
     public static function delete($userid)
     {
-        $count = DBConnection::get()->delete(
-            "verification",
-            "`userid` = :userid",
-            [':userid' => $userid],
-            [':userid' => DBConnection::PARAM_INT]
-        );
+        try
+        {
+            $count = DBConnection::get()->delete(
+                "verification",
+                "`userid` = :userid",
+                [':userid' => $userid],
+                [':userid' => DBConnection::PARAM_INT]
+            );
+        }
+        catch(DBException $e)
+        {
+            throw new VerificationException(exception_message_db(_("delete verification entry")));
+        }
+
 
         if (!$count)
         {
-            throw new DBException();
+            throw new VerificationException("No verify entry got deleted");
         }
     }
 
@@ -90,26 +95,29 @@ class Verification
      *
      * @param int $userid
      *
-     * @throws DBException
+     * @throws VerificationException
      * @return string the generated verification code
      */
     public static function generate($userid)
     {
-        $verification_code = Util::getRandomString(12);
-        $count = DBConnection::get()->query(
-            "INSERT INTO `" . DB_PREFIX . "verification` (`userid`,`code`)
-            VALUES(:userid, :code)
-            ON DUPLICATE KEY UPDATE code = :code",
-            DBConnection::ROW_COUNT,
-            [
-                ':userid' => $userid,
-                ':code'   => $verification_code
-            ],
-            [':userid' => DBConnection::PARAM_INT]
-        );
-        if ($count === 0)
+        try
         {
-            throw new DBException();
+            $verification_code = Util::getRandomString(12);
+            DBConnection::get()->query(
+                "INSERT INTO `" . DB_PREFIX . "verification` (`userid`,`code`)
+                VALUES(:userid, :code)
+                ON DUPLICATE KEY UPDATE code = :code",
+                DBConnection::ROW_COUNT,
+                [
+                    ':userid' => $userid,
+                    ':code'   => $verification_code
+                ],
+                [':userid' => DBConnection::PARAM_INT]
+            );
+        }
+        catch(DBException $e)
+        {
+            throw new VerificationException(exception_message_db(_("generate verification entry")));
         }
 
         return $verification_code;

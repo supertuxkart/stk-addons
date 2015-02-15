@@ -65,6 +65,20 @@ function exit_json_success($message, array $other_values = [])
 }
 
 /**
+ * Get the default exception message when something is wrong with the database
+ *
+ * @param string $message
+ * @return string
+ */
+function exception_message_db($message)
+{
+    return h(
+        sprintf(_('An error occured while trying to %s.'), $message) . ' ' .
+        _('Please contact a website administrator.')
+    );
+}
+
+/**
  * Minify html
  *
  * @param string                   $tpl_output the html to minify

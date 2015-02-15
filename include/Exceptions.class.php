@@ -1,7 +1,7 @@
 <?php
 /**
- * copyright 2011 Stephen Just <stephenjust@users.sf.net>
- *           2014 Daniel Butum <danibutum at gmail dot com>
+ * copyright 2011      Stephen Just <stephenjust@users.sf.net>
+ *           2014-2015 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -18,9 +18,32 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * Class DBException
+ */
+class DBException extends Exception
+{
+    /**
+     * @param string $error_code
+     */
+    public function __construct($error_code = "")
+    {
+        $this->error_code = $error_code;
+    }
+
+    /**
+     * @return string
+     */
+    public function getErrorCode()
+    {
+        return $this->error_code;
+    }
+}
+
 class BaseException extends Exception {}
 class BugException extends BaseException {}
 class UserException extends BaseException {}
+class VerificationException extends UserException {}
 class AddonException extends BaseException {}
 
 class ValidateException extends Exception {}
