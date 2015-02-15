@@ -1,7 +1,7 @@
 <?php
 /**
- * copyright 2009 Lucas Baudin <xapantu@gmail.com>
- *           2014 Daniel Butum <danibutum at gmail dot com>
+ * copyright 2009      Lucas Baudin <xapantu@gmail.com>
+ *           2014-2015 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -32,17 +32,17 @@ $tpl->assign(
     'index_menu',
     [
         [
-            'href'  => File::rewrite('addons.php?type=karts'),
+            'href'  => File::rewrite('addons.php?type=' . Addon::KART),
             'label' => _h('Karts'),
             'type'  => Addon::KART
         ],
         [
-            'href'  => File::rewrite('addons.php?type=tracks'),
+            'href'  => File::rewrite('addons.php?type=' . Addon::TRACK),
             'label' => _h('Tracks'),
             'type'  => Addon::TRACK
         ],
         [
-            'href'  => File::rewrite('addons.php?type=arenas'),
+            'href'  => File::rewrite('addons.php?type=' . Addon::ARENA),
             'label' => _h('Arenas'),
             'type'  => Addon::ARENA
         ],
@@ -62,8 +62,8 @@ $pop_kart = Statistic::mostDownloadedAddon(Addon::KART);
 $pop_track = Statistic::mostDownloadedAddon(Addon::TRACK);
 array_unshift(
     $news_messages,
-    sprintf(_h('The most downloaded kart is %s.'), Addon::getNameByID($pop_kart)),
-    sprintf(_h('The most downloaded track is %s.'), Addon::getNameByID($pop_track))
+    sprintf(_h('The most downloaded kart is %s.'), $pop_kart),
+    sprintf(_h('The most downloaded track is %s.'), $pop_track)
 );
 
 $tpl->assign('news_messages', $news_messages);

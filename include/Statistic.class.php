@@ -350,7 +350,7 @@ class Statistic
      * @param string $addon_type the type of addon eg: kart, track, arena etc
      * @param string $file_type
      *
-     * @return null|string the id of the addon or null on empty selection
+     * @return null|string the name of the addon or null on empty selection
      * @throws StatisticException
      */
     public static function mostDownloadedAddon($addon_type, $file_type = 'addon')
@@ -363,8 +363,10 @@ class Statistic
         try
         {
             $download_counts = DBConnection::get()->query(
-                'SELECT `addon_id`, SUM(`downloads`) AS `count`
-                FROM `' . DB_PREFIX . 'files`
+                'SELECT a.name as addon_name
+                FROM `' . DB_PREFIX . 'files` f
+                INNER JOIN ' . DB_PREFIX . 'addons a
+                    ON f.`addon_id` =  a.`id`
                 WHERE `addon_type` = :addon_type
                 AND `file_type` = :file_type
                 GROUP BY `addon_id`
@@ -384,12 +386,12 @@ class Statistic
             ));
         }
 
-        if (empty($download_counts))
+        if (!$download_counts)
         {
             return null;
         }
 
-        return $download_counts['addon_id'];
+        return $download_counts['addon_name'];
     }
 
     /**
