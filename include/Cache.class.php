@@ -35,16 +35,11 @@ class Cache
      */
     public static function clear($exclude_regex = '/^^(cache_graph_.*\.json)|\.gitignore$/i')
     {
-        if (!User::hasPermission(AccessControl::PERM_EDIT_SETTINGS))
-        {
-            throw new CacheException("You do not have the necessary permission to empty the cache");
-        }
-
         try
         {
             File::deleteDir(CACHE_PATH, $exclude_regex);
         }
-        catch (FileException $e)
+        catch(FileException $e)
         {
             throw new CacheException($e->getMessage());
         }
@@ -102,9 +97,10 @@ class Cache
                 {
                     File::deleteFileFS(CACHE_PATH . $cache_item['file']);
                 }
-                catch (FileException $e)
+                catch(FileException $e)
                 {
                     Log::newEvent($e->getMessage());
+
                     return false;
                 }
 

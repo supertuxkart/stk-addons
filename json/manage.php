@@ -198,6 +198,11 @@ switch ($_POST["action"])
         break;
 
     case "clear-cache": // delete all the cache
+        if (!User::hasPermission(AccessControl::PERM_EDIT_SETTINGS))
+        {
+            exit_json_error("You do not have the necessary permission to empty the cache");
+        }
+
         try
         {
             Cache::clear();
