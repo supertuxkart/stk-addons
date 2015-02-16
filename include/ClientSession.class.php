@@ -1,8 +1,8 @@
 <?php
 
 /**
- * copyright 2013        Glenn De Jonghe
- *           2014 - 2015 Daniel Butum <danibutum at gmail dot com>
+ * copyright 2013      Glenn De Jonghe
+ *           2014-2015 Daniel Butum <danibutum at gmail dot com>
  * This file is part of SuperTuxKart
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -778,7 +778,7 @@ class ClientSession
         // check if username/password is correct, throws exception
         try
         {
-            $user = Validate::credentials($password, $username, Validate::CREDENTIAL_USERNAME);
+            $user = User::validateCredentials($password, $username, User::CREDENTIAL_USERNAME);
         }
         catch(UserException $e)
         {

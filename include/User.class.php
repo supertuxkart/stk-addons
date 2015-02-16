@@ -42,6 +42,15 @@ class User extends Base
 
     const MAX_AVATAR = 64;
 
+    // fake enumeration
+    const PASSWORD_ID = 1;
+
+    const PASSWORD_USERNAME = 2;
+
+    const CREDENTIAL_ID = 1;
+
+    const CREDENTIAL_USERNAME = 2;
+
     /**
      * Flag to indicate if the a user is logged in
      * @var bool
@@ -474,7 +483,7 @@ class User extends Base
     {
         try
         {
-            $user = Validate::credentials($password, $username, Validate::CREDENTIAL_USERNAME);
+            $user = static::validateCredentials($password, $username, static::CREDENTIAL_USERNAME);
         }
         catch(UserException $e)
         {
@@ -629,7 +638,7 @@ class User extends Base
         {
             // Make sure that the user is active, or the viewer has permission to
             // manage this type of user
-            if ($user->isActive() || User::hasPermissionOnRole($user->getRole()))
+            if ($user->isActive() || static::hasPermissionOnRole($user->getRole()))
             {
                 $template_users[] = [
                     'username' => h($user->getUserName()),
@@ -748,7 +757,7 @@ class User extends Base
      */
     public static function refreshFriends()
     {
-        static::setFriends(Friend::getFriendsOf(User::getLoggedId(), true));
+        static::setFriends(Friend::getFriendsOf(static::getLoggedId(), true));
     }
 
     /**
@@ -911,7 +920,7 @@ class User extends Base
         $user = static::getFromID($user_id);
 
         // verify permissions
-        $is_owner = (User::getLoggedId() === $user->getId());
+        $is_owner = (static::getLoggedId() === $user->getId());
         $can_edit = static::hasPermissionOnRole($user->getRole());
         if (!$is_owner && !$can_edit)
         {
@@ -949,7 +958,7 @@ class User extends Base
      *
      * @param int    $user_id
      * @param string $role
-     * @param bool $available
+     * @param bool   $available
      *
      * @throws UserException
      */
@@ -971,7 +980,7 @@ class User extends Base
         $user = static::getFromID($user_id);
 
         // can not edit your own role
-        if ($user->getId() === User::getLoggedId())
+        if ($user->getId() === static::getLoggedId())
         {
             throw new UserException(_h("You can not edit your own role"));
         }
@@ -1106,7 +1115,7 @@ class User extends Base
         {
             DBConnection::get()->beginTransaction();
 
-            $user = Validate::credentials($current_password, $user_id, Validate::CREDENTIAL_ID);
+            $user = static::validateCredentials($current_password, $user_id, static::CREDENTIAL_ID);
 
             // only user can change his password
             if ($user->getId() !== $user_id)
@@ -1181,11 +1190,11 @@ class User extends Base
         static::validateUserName($username);
         static::validateEmail($email);
 
+        $userid = static::validateUsernameEmail($username, $email);
+        $verification_code = Verification::generate($userid);
+
         try
         {
-            $userid = Validate::account($username, $email);
-            $verification_code = Verification::generate($userid);
-
             // Send verification email
             try
             {
@@ -1206,6 +1215,92 @@ class User extends Base
                 _('Please contact a website administrator.')
             ));
         }
+    }
+
+    /**
+     * Check if the username/password matches
+     *
+     * @param string $password        unhashed password
+     * @param mixed  $field_value     the field value
+     * @param int    $credential_type denotes the $field_type credential, can be ID or username
+     *
+     * @throws UserException
+     * @throws InvalidArgumentException
+     * @return User
+     */
+    public static function validateCredentials($password, $field_value, $credential_type)
+    {
+        // validate
+        if ($credential_type === static::CREDENTIAL_ID)
+        {
+            $user = static::validateCheckPassword($password, $field_value, static::PASSWORD_ID);
+        }
+        elseif ($credential_type === static::CREDENTIAL_USERNAME)
+        {
+            static::validateUserName($field_value);
+
+            $user = static::validateCheckPassword($password, $field_value, static::PASSWORD_USERNAME);
+        }
+        else
+        {
+            throw new InvalidArgumentException("credential type is invalid");
+        }
+
+        if (!$user->isActive())
+        {
+            throw new UserException(_h("Your account is not active"));
+        }
+
+        return $user;
+    }
+
+    /**
+     * Check the password length and check it against the database
+     *
+     * @param string $password
+     * @param string $field_value
+     * @param int    $field_type
+     *
+     * @return User
+     * @throws UserException
+     * @throws InvalidArgumentException when the $field_type is invalid
+     */
+    protected static function validateCheckPassword($password, $field_value, $field_type)
+    {
+        // Check password properties
+        static::validatePassword($password);
+
+        try
+        {
+            if ($field_type === static::PASSWORD_ID) // get by id
+            {
+                $user = static::getFromID($field_value);
+            }
+            elseif ($field_type === static::PASSWORD_USERNAME) // get by username
+            {
+                $user = static::getFromUserName($field_value);
+            }
+            else
+            {
+                throw new InvalidArgumentException(_h("Invalid validation field type"));
+            }
+        }
+        catch(UserException $e)
+        {
+            throw new UserException(_h("Username or password is invalid"));
+        }
+
+        // the field value exists, so something about the user is true
+        $db_password_hash = $user->getPassword();
+
+        // verify if password is correct
+        $salt = Util::getSaltFromPassword($db_password_hash);
+        if (Util::getPasswordHash($password, $salt) !== $db_password_hash)
+        {
+            throw new UserException(_h("Username or password is invalid"));
+        }
+
+        return $user;
     }
 
     /**
@@ -1320,6 +1415,38 @@ class User extends Base
         }
 
         Log::newEvent("Registration submitted for user '$username' with id '$userid'.");
+    }
+
+    /**
+     * Checks a username/email address combination and returns the user id if valid
+     *
+     * @param string $username
+     * @param string $email
+     *
+     * @throws UserException when username/email combination is invalid, or multiple accounts are found
+     */
+    public static function validateUsernameEmail($username, $email)
+    {
+        $users = DBConnection::get()->query(
+            "SELECT `id`
+	        FROM `" . DB_PREFIX . "users`
+	        WHERE `user` = :username
+            AND `email` = :email
+            AND `active` = 1",
+            DBConnection::FETCH_ALL,
+            [':username' => $username, ':email' => $email]
+        );
+
+        if (!$users)
+        {
+            throw new UserException(_h('Username and email address combination not found.'));
+        }
+        if (count($users) > 1)
+        {
+            throw new UserException(_h("Multiple accounts with the same username and email combination."));
+        }
+
+        return $users[0]['id'];
     }
 
     /**
