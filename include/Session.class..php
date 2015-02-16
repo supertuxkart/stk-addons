@@ -166,8 +166,8 @@ class Session
             return;
         }
 
-        session_name();
-        if (!session_start($name))
+        session_name($name);
+        if (!session_start())
         {
             trigger_error("Session failed to start");
         }
