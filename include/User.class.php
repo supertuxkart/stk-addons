@@ -52,24 +52,6 @@ class User extends Base
     const CREDENTIAL_USERNAME = 2;
 
     /**
-     * Flag to indicate if the a user is logged in
-     * @var bool
-     */
-    protected static $logged_in = false;
-
-    /**
-     * Current user id that is logged in. Keep it around because we do not want to check the session every time.
-     * @var int
-     */
-    protected static $logged_user_id = -1;
-
-    /**
-     * Required session vars to be a valid session. All user vars are under the "user" key
-     * @var array
-     */
-    protected static $session_required = ["id", "user_name", "real_name", "date_last_login", "role", "permissions"];
-
-    /**
      * @param string $message
      *
      * @throws UserException
@@ -144,6 +126,13 @@ class User extends Base
      * @var string
      */
     protected $avatar;
+
+    /**
+     * Required session vars to be a valid session. All user vars are under the "user" key
+     * @var array
+     */
+    protected static $session_required = ["id", "user_name", "real_name", "date_last_login", "role", "permissions"];
+
 
     /**
      * The user constructor
@@ -319,159 +308,6 @@ class User extends Base
     }
 
     /**
-     * Set a value in the session for the user
-     *
-     * @param mixed $key
-     * @param mixed $value
-     */
-    protected static function sessionSet($key, $value)
-    {
-        $_SESSION["user"][$key] = $value;
-    }
-
-    /**
-     * Get a key from the session for the user
-     *
-     * @param mixed $key
-     *
-     * @return mixed
-     */
-    protected static function sessionGet($key)
-    {
-        return $_SESSION["user"][$key];
-    }
-
-    /**
-     * See if the key exists in the user session
-     *
-     * @param mixed $key
-     *
-     * @return bool
-     */
-    protected static function sessionExists($key)
-    {
-        return isset($_SESSION["user"][$key]);
-    }
-
-    /**
-     * Init the session. Should be called only once (by login)
-     *
-     * @param int $user_id
-     */
-    protected static function sessionInit($user_id)
-    {
-        static::sessionStart();
-
-        if (!isset($_SESSION["user"]))
-        {
-            $_SESSION["user"] = [];
-            static::$logged_in = true;
-            static::$logged_user_id = (int)$user_id;
-        }
-        else
-        {
-            trigger_error("initSession has found a session that is already started. Maybe it is not used right");
-        }
-    }
-
-    /**
-     * Clear the session data associated with the user
-     */
-    protected static function sessionClear()
-    {
-        static::sessionStart();
-
-        unset($_SESSION["user"]);
-        static::$logged_in = false;
-        static::$logged_user_id = -1;
-    }
-
-    /**
-     * Start a session, only if was no previous started
-     */
-    protected static function sessionStart()
-    {
-        // session is already started
-        if (session_id() === "")
-        {
-            session_name("STK_SESSID");
-            if (!session_start())
-            {
-                trigger_error("Session failed to start");
-            }
-        }
-    }
-
-    /**
-     * Init the user session and do some validation on the current data in the session.
-     * This should be called once per user
-     *
-     * @throws UserException
-     */
-    public static function init()
-    {
-        // do not init session if we are in the api part area
-        if (API_MODE || CRON_MODE)
-        {
-            return;
-        }
-
-        // start session
-        static::sessionStart();
-
-        // Check if any session variables are not set
-        foreach (static::$session_required as $key)
-        {
-            // One or more of the session variables was not set - this may be an issue, so force logout
-            if (!static::sessionExists($key))
-            {
-                //                trigger_error(sprintf("Session key = '%s' was not set", $key));
-                //                var_debug("Init");
-
-                static::logout();
-
-                return;
-            }
-        }
-
-        // Validate session if complete set of variables is available
-        try
-        {
-            $count = DBConnection::get()->query(
-                "SELECT `id`,`user`,`name`,`role`
-    	        FROM `" . DB_PREFIX . "users`
-                WHERE `user` = :username
-                AND `last_login` = :lastlogin
-                AND `name` = :realname
-                AND `active` = 1",
-                DBConnection::ROW_COUNT,
-                [
-                    ':username'  => static::sessionGet('user_name'),
-                    ':lastlogin' => static::sessionGet('date_last_login'),
-                    ':realname'  => static::sessionGet('real_name')
-                ]
-            );
-        }
-        catch(DBException $e)
-        {
-            throw new UserException(h(
-                _('An error occurred trying to validate your session.') . ' ' .
-                _('Please contact a website administrator.')
-            ));
-        }
-
-        if ($count !== 1)
-        {
-            static::logout();
-
-            return;
-        }
-
-        static::$logged_in = true;
-        static::$logged_user_id = (int)static::sessionGet("id");
-    }
-
-    /**
      * Log in a user
      *
      * @param string $username
@@ -495,13 +331,13 @@ class User extends Base
         $role = $user->getRole();
 
         // init session vars
-        static::sessionInit($id);
-        static::sessionSet("id", $id);
-        static::sessionSet("user_name", $user->getUserName());
-        static::sessionSet("real_name", $user->getRealName());
-        static::sessionSet("date_last_login", static::updateLoginTime($id));
-        static::sessionSet("role", $role);
-        static::setPermissions($role);
+        Session::user()->init();
+        Session::user()->set("id", $id);
+        Session::user()->set("user_name", $user->getUserName());
+        Session::user()->set("real_name", $user->getRealName());
+        Session::user()->set("date_last_login", static::updateLoginTime($id));
+        Session::user()->set("role", $role);
+        Session::user()->set("permissions", AccessControl::getPermissions($role));
         static::setFriends(Friend::getFriendsOf($id, true));
     }
 
@@ -510,18 +346,92 @@ class User extends Base
      */
     public static function logout()
     {
-        static::sessionClear();
-
-        session_destroy();
-        static::sessionStart();
+        Session::flush();
+        Session::destroy();
+        Session::start(); // restart session
     }
 
     /**
+     * Init the user session and do some validation on the current data in the session.
+     * This should be called once per user
+     *
+     * @throws UserException
+     */
+    public static function init()
+    {
+        // do not init session if we are in the api part area
+        if (API_MODE || CRON_MODE)
+        {
+            return;
+        }
+
+        // start session
+        Session::start();
+
+        // there is nothing to init
+        if (Session::user()->isEmpty())
+        {
+            return;
+        }
+
+        // Check if any session variables are not set
+        foreach (static::$session_required as $key)
+        {
+            // One or more of the session variables was not set - this may be an issue, so force logout
+            if (!Session::user()->has($key))
+            {
+                if (DEBUG_MODE)
+                {
+                    trigger_error(sprintf("Session key = '%s' was not set", $key));
+                }
+                static::logout();
+
+                return;
+            }
+        }
+
+        // Validate session if complete set of variables is available
+        $session = Session::user();
+        try
+        {
+            $count = DBConnection::get()->query(
+                "SELECT `id`,`user`,`name`,`role`
+    	        FROM `" . DB_PREFIX . "users`
+                WHERE `user` = :username
+                AND `last_login` = :lastlogin
+                AND `name` = :realname
+                AND `active` = 1",
+                DBConnection::ROW_COUNT,
+                [
+                    ':username'  => $session->get('user_name'),
+                    ':lastlogin' => $session->get('date_last_login'),
+                    ':realname'  => $session->get('real_name')
+                ]
+            );
+        }
+        catch(DBException $e)
+        {
+            throw new UserException(h(
+                _('An error occurred trying to validate your session.') . ' ' .
+                _('Please contact a website administrator.')
+            ));
+        }
+
+        if ($count !== 1)
+        {
+            // todo, set flash message
+            static::logout();
+        }
+    }
+
+    /**
+     * Checks if the user is logged ing
+     *
      * @return bool
      */
     public static function isLoggedIn()
     {
-        return static::$logged_in;
+        return Session::user()->get("id", -1) !== -1;
     }
 
     /**
@@ -531,7 +441,7 @@ class User extends Base
      */
     public static function getLoggedId()
     {
-        return static::$logged_user_id;
+        return Session::user()->get("id", -1);
     }
 
     /**
@@ -541,7 +451,7 @@ class User extends Base
      */
     public static function getLoggedUserName()
     {
-        return static::isLoggedIn() ? static::sessionGet("user_name") : "";
+        return static::isLoggedIn() ? Session::user()->get("user_name") : "";
     }
 
     /**
@@ -551,7 +461,7 @@ class User extends Base
      */
     public static function getLoggedRealName()
     {
-        return static::isLoggedIn() ? static::sessionGet("real_name") : "";
+        return static::isLoggedIn() ? Session::user()->get("real_name") : "";
     }
 
     /**
@@ -561,7 +471,7 @@ class User extends Base
      */
     public static function getLoggedRole()
     {
-        return static::isLoggedIn() ? static::sessionGet("role") : "unregistered";
+        return static::isLoggedIn() ? Session::user()->get("role") : "unregistered";
     }
 
     /**
@@ -739,7 +649,7 @@ class User extends Base
      */
     public static function setFriends(array $friends)
     {
-        static::sessionSet("friends", serialize($friends));
+        Session::user()->set("friends", serialize($friends));
     }
 
     /**
@@ -749,7 +659,7 @@ class User extends Base
      */
     public static function getFriends()
     {
-        return unserialize(static::sessionGet("friends"));
+        return unserialize(Session::user()->get("friends"));
     }
 
     /**
@@ -782,23 +692,13 @@ class User extends Base
     }
 
     /**
-     * Set the permission in the session
-     *
-     * @param string $role
-     */
-    protected static function setPermissions($role)
-    {
-        static::sessionSet("permissions", AccessControl::getPermissions($role));
-    }
-
-    /**
      * Get the permission for the session
      *
      * @return array
      */
     public static function getPermissions()
     {
-        return static::isLoggedIn() ? static::sessionGet("permissions") : [];
+        return static::isLoggedIn() ? Session::user()->get("permissions") : [];
     }
 
     /**
@@ -928,7 +828,7 @@ class User extends Base
         }
 
         // update session
-        static::sessionSet("real_name", $real_name);
+        Session::user()->set("real_name", $real_name);
 
         try
         {
@@ -1424,6 +1324,7 @@ class User extends Base
      * @param string $email
      *
      * @throws UserException when username/email combination is invalid, or multiple accounts are found
+     * @return int the id of the valid user
      */
     public static function validateUsernameEmail($username, $email)
     {
