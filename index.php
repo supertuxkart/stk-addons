@@ -68,4 +68,3 @@ array_unshift(
 
 $tpl->assign('news_messages', $news_messages);
 echo $tpl;
-var_debug();

@@ -156,16 +156,18 @@ class Session
 
     /**
      * Start a session, only if was no previous started
+     *
+     * @param string $name the name of the session identifier
      */
-    public static function start()
+    public static function start($name = "STK_SESSID")
     {
         if (static::isStarted())
         {
             return;
         }
 
-        session_name("STK_SESSID");
-        if (!session_start())
+        session_name();
+        if (!session_start($name))
         {
             trigger_error("Session failed to start");
         }
