@@ -115,7 +115,7 @@ class Session
      */
     public static function user()
     {
-        static $instance = null;
+        static $instance;
         if (!$instance)
         {
             $instance = static::withKey("user");

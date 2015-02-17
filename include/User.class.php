@@ -1119,6 +1119,120 @@ class User extends Base
     }
 
     /**
+     * Register a new user account
+     *
+     * @param string $username Must be unique
+     * @param string $password
+     * @param string $password_conf
+     * @param string $email    Must be unique
+     * @param string $realname
+     * @param string $terms
+     *
+     * @throws UserException
+     */
+    public static function register($username, $password, $password_conf, $email, $realname, $terms)
+    {
+        // validate
+        static::validateUserName($username);
+        static::validateNewPassword($password, $password_conf);
+        static::validateEmail($email);
+        static::validateRealName($realname);
+        Validate::checkbox($terms, _h('You must agree to the terms to register.'));
+
+        DBConnection::get()->beginTransaction();
+        // Make sure requested username is not taken
+        try
+        {
+            $result = DBConnection::get()->query(
+                "SELECT `user`
+    	        FROM `" . DB_PREFIX . "users`
+    	        WHERE `user` LIKE :username",
+                DBConnection::FETCH_FIRST,
+                [':username' => $username]
+            );
+        }
+        catch(DBException $e)
+        {
+            throw new UserException(h(
+                _('An error occurred trying to validate your username.') . ' ' .
+                _('Please contact a website administrator.')
+            ));
+        }
+        if ($result)
+        {
+            throw new UserException(_h('This username is already taken.'));
+        }
+
+        // Make sure the email address is unique
+        try
+        {
+            $result = DBConnection::get()->query(
+                "SELECT `email`
+    	        FROM `" . DB_PREFIX . "users`
+    	        WHERE `email` LIKE :email",
+                DBConnection::FETCH_FIRST,
+                [':email' => $email]
+            );
+        }
+        catch(DBException $e)
+        {
+            throw new UserException(h(
+                _('An error occurred trying to validate your email address.') . ' ' .
+                _('Please contact a website administrator.')
+            ));
+        }
+        if ($result)
+        {
+            throw new UserException(_h('This email address is already taken.'));
+        }
+
+        // No exception occurred - continue with registration
+        try
+        {
+            $count = DBConnection::get()->insert(
+                "users",
+                [
+                    ":user"    => $username,
+                    ":pass"    => Util::getPasswordHash($password),
+                    ":name"    => $realname,
+                    ":email"   => $email,
+                    "role"     => "'user'",
+                    "reg_date" => "CURRENT_DATE()"
+                ]
+            );
+
+            if ($count !== 1)
+            {
+                throw new DBException("Multiple rows affected(or none). Not good");
+            }
+
+            $userid = DBConnection::get()->lastInsertId();
+            DBConnection::get()->commit();
+            $verification_code = Verification::generate($userid);
+
+            // Send verification email
+            try
+            {
+                SMail::get()->newAccountNotification($email, $userid, $username, $verification_code, 'register.php');
+            }
+            catch(SMailException $e)
+            {
+                Log::newEvent("Registration email for user '$username' with id '$userid' failed.");
+                throw new UserException($e->getMessage() . ' ' . _h('Please contact a website administrator.'));
+            }
+        }
+        catch(DBException $e)
+        {
+            throw new UserException(h(
+                _('An error occurred while creating your account.') . ' ' .
+                _('Please contact a website administrator.')
+            ));
+        }
+
+        Log::newEvent("Registration submitted for user '$username' with id '$userid'.");
+    }
+
+    /**
      * Check if the username/password matches
      *
      * @param string $password        unhashed password
@@ -1202,120 +1316,6 @@ class User extends Base
         }
 
         return $user;
-    }
-
-    /**
-     * Register a new user account
-     *
-     * @param string $username Must be unique
-     * @param string $password
-     * @param string $password_conf
-     * @param string $email    Must be unique
-     * @param string $realname
-     * @param string $terms
-     *
-     * @throws UserException
-     */
-    public static function register($username, $password, $password_conf, $email, $realname, $terms)
-    {
-        // validate
-        static::validateUserName($username);
-        static::validateNewPassword($password, $password_conf);
-        static::validateEmail($email);
-        static::validateRealName($realname);
-        Validate::checkbox($terms, _h('You must agree to the terms to register.'));
-
-        DBConnection::get()->beginTransaction();
-        // Make sure requested username is not taken
-        try
-        {
-            $result = DBConnection::get()->query(
-                "SELECT `user` 
-    	        FROM `" . DB_PREFIX . "users`
-    	        WHERE `user` LIKE :username",
-                DBConnection::FETCH_FIRST,
-                [':username' => $username]
-            );
-        }
-        catch(DBException $e)
-        {
-            throw new UserException(h(
-                _('An error occurred trying to validate your username.') . ' ' .
-                _('Please contact a website administrator.')
-            ));
-        }
-        if ($result)
-        {
-            throw new UserException(_h('This username is already taken.'));
-        }
-
-        // Make sure the email address is unique
-        try
-        {
-            $result = DBConnection::get()->query(
-                "SELECT `email` 
-    	        FROM `" . DB_PREFIX . "users`
-    	        WHERE `email` LIKE :email",
-                DBConnection::FETCH_FIRST,
-                [':email' => $email]
-            );
-        }
-        catch(DBException $e)
-        {
-            throw new UserException(h(
-                _('An error occurred trying to validate your email address.') . ' ' .
-                _('Please contact a website administrator.')
-            ));
-        }
-        if ($result)
-        {
-            throw new UserException(_h('This email address is already taken.'));
-        }
-
-        // No exception occurred - continue with registration
-        try
-        {
-            $count = DBConnection::get()->insert(
-                "users",
-                [
-                    ":user"    => $username,
-                    ":pass"    => Util::getPasswordHash($password),
-                    ":name"    => $realname,
-                    ":email"   => $email,
-                    "role"     => "'user'",
-                    "reg_date" => "CURRENT_DATE()"
-                ]
-            );
-
-            if ($count !== 1)
-            {
-                throw new DBException("Multiple rows affected(or none). Not good");
-            }
-
-            $userid = DBConnection::get()->lastInsertId();
-            DBConnection::get()->commit();
-            $verification_code = Verification::generate($userid);
-
-            // Send verification email
-            try
-            {
-                SMail::get()->newAccountNotification($email, $userid, $username, $verification_code, 'register.php');
-            }
-            catch(SMailException $e)
-            {
-                Log::newEvent("Registration email for user '$username' with id '$userid' failed.");
-                throw new UserException($e->getMessage() . ' ' . _h('Please contact a website administrator.'));
-            }
-        }
-        catch(DBException $e)
-        {
-            throw new UserException(h(
-                _('An error occurred while creating your account.') . ' ' .
-                _('Please contact a website administrator.')
-            ));
-        }
-
-        Log::newEvent("Registration submitted for user '$username' with id '$userid'.");
     }
 
     /**
