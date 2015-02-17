@@ -331,13 +331,14 @@ class User extends Base
         $role = $user->getRole();
 
         // init session vars
-        Session::user()->init();
-        Session::user()->set("id", $id);
-        Session::user()->set("user_name", $user->getUserName());
-        Session::user()->set("real_name", $user->getRealName());
-        Session::user()->set("date_last_login", static::updateLoginTime($id));
-        Session::user()->set("role", $role);
-        Session::user()->set("permissions", AccessControl::getPermissions($role));
+        $session = Session::user();
+        $session->init()
+            ->set("id", $id)
+            ->set("user_name", $user->getUserName())
+            ->set("real_name", $user->getRealName())
+            ->set("date_last_login", static::updateLoginTime($id))
+            ->set("role", $role)
+            ->set("permissions", AccessControl::getPermissions($role));
         static::setFriends(Friend::getFriendsOf($id, true));
     }
 

@@ -41,10 +41,14 @@ class Session
      *
      * @param mixed $key
      * @param mixed $value
+     *
+     * @return Session
      */
     public function set($key, $value)
     {
         $_SESSION[$this->key][$key] = $value;
+
+        return $this;
     }
 
     /**
@@ -88,6 +92,8 @@ class Session
 
     /**
      * Init the session values for the current key
+     *
+     * @return Session
      */
     public function init()
     {
@@ -95,10 +101,12 @@ class Session
         {
             trigger_error(sprintf("Can not build session object = '%s' without starting the session", $this->key));
 
-            return;
+            return $this;
         }
 
         $_SESSION[$this->key] = [];
+
+        return $this;
     }
 
     /**
@@ -107,7 +115,13 @@ class Session
      */
     public static function user()
     {
-        return static::withKey("user");
+        static $instance = null;
+        if (!$instance)
+        {
+            $instance = static::withKey("user");
+        }
+
+        return $instance;
     }
 
     /**
