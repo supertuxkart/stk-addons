@@ -1,7 +1,7 @@
 <?php
 /**
  * copyright 2011-2013 Stephen Just <stephenjust@users.sf.net>
- *                2013 Glenn De Jonghe
+ *           2013      Glenn De Jonghe
  *           2014-2015 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
@@ -283,7 +283,7 @@ class User extends Base
         }
         catch(DBException $e)
         {
-            throw new UserException(_h("A database error occurred"));
+            throw new UserException(exception_message_db(_(" get the addons for a user")));
         }
 
         return $addons;
@@ -412,10 +412,7 @@ class User extends Base
         }
         catch(DBException $e)
         {
-            throw new UserException(h(
-                _('An error occurred trying to validate your session.') . ' ' .
-                _('Please contact a website administrator.')
-            ));
+            throw new UserException(exception_message_db(_("validate your session")));
         }
 
         if ($count !== 1)
@@ -606,10 +603,7 @@ class User extends Base
         }
         catch(DBException $e)
         {
-            throw new UserException(h(
-                _('An error occurred while performing your search query.') . ' .' .
-                _('Please contact a website administrator.')
-            ));
+            throw new UserException(exception_message_db(_('perform your search query')));
         }
 
         $matched_users = [];
@@ -786,7 +780,7 @@ class User extends Base
         }
         catch(DBException $e)
         {
-            throw new UserException(_h("Tried to count the number of users"));
+            throw new UserException(exception_message_db(_("count the number of users")));
         }
 
         return $count;
@@ -846,10 +840,7 @@ class User extends Base
         }
         catch(DBException $e)
         {
-            throw new UserException(h(
-                _('An error occurred while updating the profile') . '. ' .
-                _('Please contact a website administrator.')
-            ));
+            throw new UserException(exception_message_db(_('update your profile')));
         }
     }
 
@@ -905,10 +896,7 @@ class User extends Base
         }
         catch(DBException $e)
         {
-            throw new UserException(h(
-                _('An error occurred while updating the role') . '. ' .
-                _('Please contact a website administrator.')
-            ));
+            throw new UserException(exception_message_db(_('update your role')));
         }
     }
 
@@ -950,10 +938,7 @@ class User extends Base
         catch(DBException $e)
         {
             static::logout();
-            throw new UserException(h(
-                _('An error occurred while recording last login time.') . ' ' .
-                _('Please contact a website administrator.')
-            ));
+            throw new UserException(exception_message_db(_('record the last login time')));
         }
 
         return $user['last_login'];
@@ -986,10 +971,7 @@ class User extends Base
         }
         catch(DBException $e)
         {
-            throw new UserException(h(
-                _('An error occured while trying to change your password.') . ' ' .
-                _('Please contact a website administrator.')
-            ));
+            throw new UserException(exception_message_db(_('change your password')));
         }
 
         if (!$count)
@@ -1031,10 +1013,7 @@ class User extends Base
         catch(DBException $e)
         {
             DBConnection::get()->rollback();
-            throw new UserException(h(
-                _('An error occured while trying to change your password.') . ' ' .
-                _('Please contact a website administrator.')
-            ));
+            throw new UserException(exception_message_db(_('change your password')));
         }
     }
 
@@ -1067,10 +1046,7 @@ class User extends Base
         }
         catch(DBException $e)
         {
-            throw new UserException(h(
-                _('An error occurred trying to activate your user account.') . ' ' .
-                _('Please contact a website administrator.')
-            ));
+            throw new UserException(exception_message_db(_('activate your user account')));
         }
 
         Verification::delete($userid);
@@ -1106,16 +1082,13 @@ class User extends Base
                 Log::newEvent('Password reset email for "' . $username . '" could not be sent.');
                 throw new UserException($e->getMessage() . ' ' . _h('Please contact a website administrator.'));
             }
-
-            Log::newEvent("Password reset request for user '$username'");
         }
         catch(DBException $e)
         {
-            throw new UserException(h(
-                _('An error occurred trying to validate your username and email-address for password reset.') . ' ' .
-                _('Please contact a website administrator.')
-            ));
+            throw new UserException(exception_message_db(_('validate your username and email address for password reset')));
         }
+
+        Log::newEvent("Password reset request for user '$username'");
     }
 
     /**
@@ -1153,10 +1126,7 @@ class User extends Base
         }
         catch(DBException $e)
         {
-            throw new UserException(h(
-                _('An error occurred trying to validate your username.') . ' ' .
-                _('Please contact a website administrator.')
-            ));
+            throw new UserException(exception_message_db(_('validate your username')));
         }
         if ($result)
         {
@@ -1176,10 +1146,7 @@ class User extends Base
         }
         catch(DBException $e)
         {
-            throw new UserException(h(
-                _('An error occurred trying to validate your email address.') . ' ' .
-                _('Please contact a website administrator.')
-            ));
+            throw new UserException(exception_message_db(_('validate your email address')));
         }
         if ($result)
         {
@@ -1223,10 +1190,7 @@ class User extends Base
         }
         catch(DBException $e)
         {
-            throw new UserException(h(
-                _('An error occurred while creating your account.') . ' ' .
-                _('Please contact a website administrator.')
-            ));
+            throw new UserException(exception_message_db(_('create your account')));
         }
 
         Log::newEvent("Registration submitted for user '$username' with id '$userid'.");

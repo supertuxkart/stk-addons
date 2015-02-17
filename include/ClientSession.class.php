@@ -1,5 +1,4 @@
 <?php
-
 /**
  * copyright 2013      Glenn De Jonghe
  *           2014-2015 Daniel Butum <danibutum at gmail dot com>
@@ -17,6 +16,10 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/**
+ * Handle all the STK client sessions
  */
 class ClientSession
 {
@@ -92,7 +95,7 @@ class ClientSession
      * @param int $ip   the server ip
      * @param int $port the server port
      *
-     * @throws UserException
+     * @throws ClientSessionException
      */
     public function stopServer($ip, $port)
     {
@@ -120,15 +123,12 @@ class ClientSession
         }
         catch(DBException $e)
         {
-            throw new UserException(
-                _h('An error occurred while ending a server.') . ' ' .
-                _h('Please contact a website administrator.')
-            );
+            throw new ClientSessionException(exception_message_db(_('stop a server')));
         }
 
         if ($count !== 1)
         {
-            throw new UserException(_h('Not the good number of servers deleted.'));
+            throw new ClientSessionException(_h('Not the good number of servers deleted.'));
         }
     }
 
@@ -147,7 +147,7 @@ class ClientSession
      * Get all the user notifications
      *
      * @return array
-     * @throws FriendException
+     * @throws ClientSessionException
      */
     public function getNotifications()
     {
@@ -175,10 +175,7 @@ class ClientSession
         catch(DBException $e)
         {
             DBConnection::get()->rollback();
-            throw new FriendException(
-                _h('An unexpected error occured while fetching new notifications.') . ' ' .
-                _h('Please contact a website administrator.')
-            );
+            throw new ClientSessionException(exception_message_db(_('fetch notifications')));
         }
 
         $result_array = [];
@@ -220,10 +217,7 @@ class ClientSession
         }
         catch(DBException $e)
         {
-            throw new ClientSessionException(
-                _h('An error occurred while getting a peer\'s ip:port.') . ' ' .
-                _h('Please contact a website administrator.')
-            );
+            throw new ClientSessionException(exception_message_db(_('get a peer\'s public address.')));
         }
 
         $size = count($result);
@@ -320,10 +314,7 @@ class ClientSession
         }
         catch(DBException $e)
         {
-            throw new ClientSessionException(
-                _h('An error occurred while fetching server connection requests.') . ' ' .
-                _h('Please contact a website administrator.')
-            );
+            throw new ClientSessionException(exception_message_db(_('fetch server connection requests')));
         }
 
         return $connection_requests;
@@ -395,10 +386,7 @@ class ClientSession
         }
         catch(DBException $e)
         {
-            throw new ClientSessionExpiredException(
-                _h('An error occurred while signing out.') . ' ' .
-                _h('Please contact a website administrator.')
-            );
+            throw new ClientSessionExpiredException(exception_message_db(_('to sign out')));
         }
     }
 
@@ -439,10 +427,7 @@ class ClientSession
         }
         catch(DBException $e)
         {
-            throw new ClientSessionExpiredException(
-                _h('An error occurred while logging out.') . ' ' .
-                _h('Please contact a website administrator.')
-            );
+            throw new ClientSessionExpiredException(exception_message_db(_('log out')));
         }
     }
 
@@ -474,10 +459,7 @@ class ClientSession
         }
         catch(DBException $e)
         {
-            throw new ClientSessionConnectException(
-                _h('An error occurred while requesting a server connection.') . ' ' .
-                _h('Please contact a website administrator.')
-            );
+            throw new ClientSessionConnectException(exception_message_db(_('request a server connection')));
         }
 
         if ($count > 2 || $count < 0)
@@ -525,10 +507,7 @@ class ClientSession
         }
         catch(DBException $e)
         {
-            throw new ClientSessionConnectException(
-                _h('An error occurred while quick joining.') . ' ' .
-                _h('Please contact a website administrator.')
-            );
+            throw new ClientSessionConnectException(exception_message_db(_('quick join a server')));
         }
 
         return $server;
@@ -536,7 +515,7 @@ class ClientSession
 
 
     /**
-     * Vote on a server, TODO fix server host votes
+     * Vote on a server,
      *
      * @param int $host_id
      * @param int $vote
@@ -572,12 +551,10 @@ class ClientSession
         }
         catch(DBException $e)
         {
-            throw new ClientSessionException(
-                _h('An unexpected error occured while casting your host vote.') . ' ' .
-                _h('Please contact a website administrator.')
-            );
+            throw new ClientSessionException(exception_message_db(_('cast your host vote')));
         }
 
+        // TODO fix server host votes
         return 0;
     }
 
@@ -612,10 +589,7 @@ class ClientSession
         }
         catch(DBException $e)
         {
-            throw new ClientSessionException(
-                _h('An unexpected error occured while updating your status.') . ' ' .
-                _h('Please contact a website administrator.')
-            );
+            throw new ClientSessionException(exception_message_db(_('update your status')));
         }
 
         return $this;
@@ -628,7 +602,7 @@ class ClientSession
      * @param int $port         user port
      * @param int $private_port the private port (for LANs and special NATs)
      *
-     * @throws UserException if the request fails
+     * @throws ClientSessionException if the request fails
      * @return ClientSession
      */
     public function setPublicAddress($ip, $port, $private_port)
@@ -659,13 +633,13 @@ class ClientSession
         }
         catch(DBException $e)
         {
-            throw new UserException(_h('An error occurred while setting ip:port') . ' .' . _h('Please contact a website administrator.'));
+            throw new ClientSessionException(exception_message_db(_('set your public address')));
         }
 
         // if count = 0 that may be a re-update of an existing key
         if ($count > 1)
         {
-            throw new UserException(_h('Could not set the ip:port'));
+            throw new ClientSessionException(_h('Could not set the ip:port'));
         }
 
         return $this;
@@ -694,9 +668,7 @@ class ClientSession
         }
         catch(DBException $e)
         {
-            throw new ClientSessionException(_h('An error occurred while unsetting ip:port') . ' .' . _h(
-                    'Please contact a website administrator.'
-                ));
+            throw new ClientSessionException(exception_message_db(_('unset your public address')));
         }
 
         if ($count === 0)
@@ -717,7 +689,6 @@ class ClientSession
      *
      * @return ClientSession
      * @throws ClientSessionExpiredException|ClientSessionException when session does not exist
-     * @throws UserException on database error
      */
     public static function get($session_id, $user_id)
     {
@@ -733,24 +704,21 @@ class ClientSession
                 ],
                 [':userid' => DBConnection::PARAM_INT]
             );
-
-            // session is not valid
-            $size = count($session_info);
-            if ($size !== 1)
-            {
-                throw new ClientSessionExpiredException(_h('Session not valid. Please sign in.'));
-            }
-
-            // here an if statement will come for Guest and registered
-            return new static($session_info[0]["cid"], User::getFromID($user_id));
         }
         catch(DBException $e)
         {
-            throw new ClientSessionException(
-                _h('An error occurred while verifying session.') . ' ' .
-                _h('Please contact a website administrator.')
-            );
+            throw new ClientSessionException(exception_message_db(_('verify session')));
         }
+
+        // session is not valid
+        $size = count($session_info);
+        if ($size !== 1)
+        {
+            throw new ClientSessionExpiredException(_h('Session not valid. Please sign in.'));
+        }
+
+        // here an if statement will come for Guest and registered
+        return new static($session_info[0]["cid"], User::getFromID($user_id));
     }
 
     /**
@@ -806,16 +774,13 @@ class ClientSession
                 throw new DBException();
             }
             User::updateLoginTime($user_id);
-
-            return new static($session_id, $user);
         }
         catch(DBException $e)
         {
-            throw new ClientSessionConnectException(
-                _h('An unexpected error occured while creating your session.') . ' ' .
-                _h('Please contact a website administrator.')
-            );
+            throw new ClientSessionConnectException(exception_message_db(_('create your session')));
         }
+
+        return new static($session_id, $user);
     }
 
     /**

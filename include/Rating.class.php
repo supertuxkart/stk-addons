@@ -137,10 +137,7 @@ class Rating
         }
         catch(DBException $e)
         {
-            throw new RatingsException(
-                _h('An unexpected error occured while fetching your last vote.') . ' ' .
-                _h('Please contact a website administrator if this problem persists.')
-            );
+            throw new RatingsException(exception_message_db(_('fetch your vote')));
         }
 
         if (!$result)
@@ -319,10 +316,7 @@ class Rating
         }
         catch(DBException $e)
         {
-            throw new RatingsException(
-                _h('An unexpected error occured while performing your vote.') . ' ' .
-                _h('Please contact a website administrator if this problem persists.')
-            );
+            throw new RatingsException(exception_message_db(_('perform your vote')));
         }
 
         // reset
@@ -333,12 +327,13 @@ class Rating
     }
 
     /**
-     * Gets the percentage of total possible rating value. TODO find usage
+     * Gets the percentage of total possible rating value.
      *
      * @return int percent value
      */
     public function getUserVotePercent()
     {
+        // TODO find usage
         if ($this->user_vote === false)
         {
             return 0;

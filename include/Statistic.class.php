@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright 2011-2013 Stephen Just <stephenjust@users.sf.net>
- *                2014 Daniel Butum <danibutum at gmail dot com>
+ *           2014-2015 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -74,7 +74,7 @@ class Statistic
         }
         catch(DBException $e)
         {
-            throw new StatisticException(_h("Tried to create a section for statistics"));
+            throw new StatisticException(exception_message_db(_("create a section for statistics")));
         }
 
         if ($data) // not empty
@@ -305,7 +305,7 @@ class Statistic
             }
             catch(DBException $e)
             {
-                throw new StatisticException(_h("Tried to build a chart"));
+                throw new StatisticException(exception_message_db(_("select the data, to build a chart")));
             }
 
             if (!$data)
@@ -380,10 +380,7 @@ class Statistic
         }
         catch(DBException $e)
         {
-            throw new StatisticException(h(
-                _('An error occurred while performing your statistic query') . ' ' .
-                _('Please contact a website administrator.')
-            ));
+            throw new StatisticException(exception_message_db(_('get the most downloaded addons')));
         }
 
         if (!$download_counts)
@@ -424,10 +421,7 @@ class Statistic
         }
         catch(DBException $e)
         {
-            throw new StatisticException(h(
-                _('An error occurred while performing your statistic query') . ' ' .
-                _('Please contact a website administrator.')
-            ));
+            throw new StatisticException(exception_message_db(_('get the newest addons')));
         }
 
         $return = [
@@ -457,10 +451,7 @@ class Statistic
         }
         catch(DBException $e)
         {
-            throw new StatisticException(h(
-                _('Failed to count number of online users') . ' ' .
-                _('Please contact a website administrator.')
-            ));
+            throw new StatisticException(exception_message_db(_('count the number of online users')));
         }
 
         return $count;

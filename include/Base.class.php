@@ -109,9 +109,7 @@ abstract class Base
         }
         catch(DBException $e)
         {
-            $message =
-                h(sprintf(_('An error occurred while retrieving the %s'), $table) . ' .' . _('Please contact a website administrator.'));
-            static::throwException($message);
+            static::throwException(exception_message_db(sprintf(_("retrieve the '%s'"), $table)));
         }
 
         // empty result
@@ -147,8 +145,7 @@ abstract class Base
         }
         catch(DBException $e)
         {
-            $message = h(sprintf(_("Tried to see if a %s exists."), $table) . '. ' . _("Please contact a website administrator."));
-            static::throwException($message);
+            static::throwException(exception_message_db(sprintf(_("see if a '%s' exists."), $table)));
         }
 
         return $count !== 0;
@@ -203,7 +200,7 @@ abstract class Base
         }
         catch(DBException $e)
         {
-            static::throwException(_h("Error on selecting all from table"));
+            static::throwException(exception_message_db(_("select all data from table")));
         }
 
         return $data;

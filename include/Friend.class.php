@@ -1,7 +1,7 @@
 <?php
 /**
- * copyright 2013 Glenn De Jonghe
- *
+ * copyright 2013      Glenn De Jonghe
+ *           2014-2015 Daniel Butum <danibutum at gmail dot com>
  * This file is part of SuperTuxKart
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -19,7 +19,7 @@
  */
 
 /**
- * Server class
+ * Friend class
  */
 class Friend
 {
@@ -184,10 +184,7 @@ class Friend
         }
         catch(DBException $e)
         {
-            throw new FriendException(
-                _('An unexpected error occured while fetching online friends.') . ' ' .
-                _('Please contact a website administrator.')
-            );
+            throw new FriendException(exception_message_db(_('fetch online friends')));
         }
 
         // build array of ids
@@ -265,10 +262,7 @@ class Friend
         }
         catch(DBException $e)
         {
-            throw new FriendException(h(
-                _('An unexpected error occurred while fetching friends.') . ' .' .
-                _('Please contact a website administrator.')
-            ));
+            throw new FriendException(exception_message_db(_('fetch friends')));
         }
 
         // build friends array
@@ -393,10 +387,7 @@ class Friend
         catch(DBException $e)
         {
             DBConnection::get()->rollback();
-            throw new FriendException(
-                _h('An unexpected error occured while adding your friend request.') . ' ' .
-                _h('Please contact a website administrator.')
-            );
+            throw new FriendException(exception_message_db(_('add a friend request')));
         }
     }
 
@@ -426,10 +417,7 @@ class Friend
         }
         catch(DBException $e)
         {
-            throw new FriendException(
-                _h('An unexpected error occured while accepting a friend request.') . ' ' .
-                _h('Please contact a website administrator.')
-            );
+            throw new FriendException(exception_message_db(_('accept a friend request')));
         }
     }
 
@@ -461,10 +449,7 @@ class Friend
         }
         catch(DBException $e)
         {
-            throw new FriendException(
-                $message_error . ' ' .
-                _h('Please contact a website administrator.')
-            );
+            throw new FriendException(exception_message_db($message_error));
         }
 
         return $count;
@@ -480,7 +465,7 @@ class Friend
      */
     public static function declineFriendRequest($friend_id, $receiver_id)
     {
-        static::removeFriendRecord($friend_id, $receiver_id, _h('An unexpected error occurred while declining a friend request.'));
+        static::removeFriendRecord($friend_id, $receiver_id, _('decline a friend request'));
     }
 
     /**
@@ -493,7 +478,7 @@ class Friend
      */
     public static function cancelFriendRequest($asker_id, $friend_id)
     {
-        static::removeFriendRecord($asker_id, $friend_id, _h('An unexpected error occurred while cancelling your friend request.'));
+        static::removeFriendRecord($asker_id, $friend_id, _('cancel a friend request'));
     }
 
     /**

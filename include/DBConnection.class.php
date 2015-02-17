@@ -20,7 +20,7 @@
  */
 
 /**
- * Class DBConnection
+ * Class DBConnection, handles all the database connections
  */
 class DBConnection
 {
@@ -204,7 +204,6 @@ class DBConnection
 
             foreach ($prepared_pairs as $key => $param)
             {
-                // TODO maybe check if $key is valid
                 if (isset($data_types[$key]))
                 {
                     $sth->bindValue($key, $param, $data_types[$key]);

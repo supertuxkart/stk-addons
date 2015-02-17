@@ -145,10 +145,10 @@ class Addon extends Base
         }
         catch(DBException $e)
         {
-            throw new AddonException(_h('Failed to read the requested add-on\'s revision information.'));
+            throw new AddonException(exception_message_db(_('load revisions')));
         }
 
-        if (empty($revisions))
+        if (!$revisions)
         {
             throw new AddonException(_h('No revisions of this add-on exist. This should never happen.'));
         }
@@ -297,7 +297,7 @@ class Addon extends Base
         }
         catch(DBException $e)
         {
-            throw new AddonException(_h('Failed to create add-on revision.'));
+            throw new AddonException(exception_message_db(_('create add-on revision')));
         }
 
         writeXML();
@@ -348,7 +348,7 @@ class Addon extends Base
         }
         catch(DBException $e)
         {
-            throw new AddonException(_h('Failed to find files associated with this addon.'));
+            throw new AddonException(exception_message_db(_('find files associated with this addon')));
         }
 
         foreach ($files as $file)
@@ -370,7 +370,7 @@ class Addon extends Base
         }
         catch(DBException $e)
         {
-            throw new AddonException(_h('Failed to remove file records for this addon.'));
+            throw new AddonException(exception_message_db(_('remove file records for this addon')));
         }
 
         // Remove addon entry
@@ -383,7 +383,7 @@ class Addon extends Base
         }
         catch(DBException $e)
         {
-            throw new AddonException(_h('Failed to remove addon.'));
+            throw new AddonException(exception_message_db(_('remove addon')));
         }
 
         writeXML();
@@ -456,7 +456,7 @@ class Addon extends Base
         }
         catch(DBException $e)
         {
-            throw new AddonException(_h('The add-on revision could not be deleted.'));
+            throw new AddonException(exception_message_db(_('delete revisions')));
         }
 
         Log::newEvent('Deleted revision ' . $rev . ' of \'' . $this->name . '\'');
@@ -691,10 +691,10 @@ class Addon extends Base
         }
         catch(DBException $e)
         {
-            throw new AddonException(_h('Failed to look up file ID'));
+            throw new AddonException(exception_message_db(_('look up file ID')));
         }
 
-        if (empty($file_id_lookup))
+        if (!$file_id_lookup)
         {
             throw new AddonException(_h('There is no add-on found with the specified revision number.'));
         }
@@ -714,10 +714,10 @@ class Addon extends Base
         }
         catch(DBException $e)
         {
-            throw new AddonException(_h('Failed to search for the file in the database.'));
+            throw new AddonException(exception_message_db(_('search for file')));
         }
 
-        if (empty($file))
+        if (!$file)
         {
             throw new AddonException(_h('The requested file does not have an associated file record.'));
         }
@@ -748,7 +748,7 @@ class Addon extends Base
         }
         catch(DBException $e)
         {
-            throw new AddonException(_h('DB error when fetching images associated with this add-on.'));
+            throw new AddonException(exception_message_db(_('fetch associated images associated')));
         }
 
         $return = [];
@@ -766,6 +766,7 @@ class Addon extends Base
 
     /**
      * Get the image files associated with this addon
+     * This method will silently fail
      *
      * @return array
      */
@@ -794,6 +795,7 @@ class Addon extends Base
 
     /**
      * Get all of the source files associated with an addon
+     * This method will silently fail
      *
      * @return array
      */
@@ -847,7 +849,7 @@ class Addon extends Base
         }
         catch(DBException $e)
         {
-            throw new AddonException(_h('Failed to update the description record for this add-on.'));
+            throw new AddonException(exception_message_db(_('update the description')));
         }
 
         $this->description = $description;
@@ -884,7 +886,7 @@ class Addon extends Base
         }
         catch(DBException $e)
         {
-            throw new AddonException(_h('Failed to update the designer record for this add-on.'));
+            throw new AddonException(exception_message_db(_('update the designer')));
         }
 
         $this->designer = $designer;
@@ -922,7 +924,7 @@ class Addon extends Base
         }
         catch(DBException $e)
         {
-            throw new AddonException(_h('Failed to update the image record for this add-on.'));
+            throw new AddonException(exception_message_db(_('update the image')));
         }
 
         return $this;
@@ -960,7 +962,7 @@ class Addon extends Base
         }
         catch(DBException $e)
         {
-            throw new AddonException(_h('An error occurred while setting the min/max include versions.'));
+            throw new AddonException(exception_message_db(_('set the min/max include versions')));
         }
 
         $this->include_min = $start_ver;
@@ -996,7 +998,7 @@ class Addon extends Base
         }
         catch(DBException $e)
         {
-            throw new AddonException(_h('Failed to update the license record for this add-on.'));
+            throw new AddonException(exception_message_db(_('update the license')));
         }
 
         $this->license = $license;
@@ -1029,7 +1031,7 @@ class Addon extends Base
         }
         catch(DBException $e)
         {
-            throw new AddonException(_h('Failed to update the name record for this add-on.'));
+            throw new AddonException(exception_message_db(_('update the name')));
         }
 
         $this->name = $name;
@@ -1085,7 +1087,7 @@ class Addon extends Base
             }
             catch(DBException $e)
             {
-                throw new AddonException(_h('Failed to write add-on status.'));
+                throw new AddonException(exception_message_db(_('update add-on status')));
             }
         }
 
@@ -1115,7 +1117,7 @@ class Addon extends Base
         }
         catch(DBException $e)
         {
-            throw new AddonException(_h('Failed to find user record.'));
+            throw new AddonException(exception_message_db(_('find user record')));
         }
 
         try
@@ -1312,7 +1314,7 @@ class Addon extends Base
             }
             catch(DBException $e)
             {
-                throw new AddonException(_h('Failed to write add-on status.'));
+                throw new AddonException(exception_message_db(_('update add-on status')));
             }
         }
 
@@ -1339,7 +1341,8 @@ class Addon extends Base
     }
 
     /**
-     * Get the addon name, TODO refactor
+     * Get the addon name,
+     * This method will silently fail
      *
      * @param string $id the addon id
      *
@@ -1347,6 +1350,7 @@ class Addon extends Base
      */
     public static function getNameByID($id)
     {
+        // TODO refactor
         if (!$id)
         {
             return "";
@@ -1381,6 +1385,7 @@ class Addon extends Base
 
     /**
      * Get the addon type
+     * This method will sielntly fail
      *
      * @param string $id the addon id
      *
@@ -1612,7 +1617,7 @@ class Addon extends Base
         }
         catch(DBException $e)
         {
-            throw new AddonException(_h('Search failed!'));
+            throw new AddonException(exception_message_db(_('search for add-on')));
         }
 
         $return_addons = [];
@@ -1708,7 +1713,7 @@ class Addon extends Base
         }
         catch(DBException $e)
         {
-            throw new AddonException(_h("Error selecting all addons from the database"));
+            throw new AddonException(exception_message_db(_("select all addons from the database")));
         }
 
         $return = [];
@@ -1835,7 +1840,7 @@ class Addon extends Base
         }
         catch(DBException $e)
         {
-            throw new AddonException(_h('Your add-on could not be uploaded.'));
+            throw new AddonException(exception_message_db(_('create your add-on')));
         }
 
         // Add the first revision
@@ -1939,7 +1944,7 @@ class Addon extends Base
         }
         catch(DBException $e)
         {
-            throw new AddonException(_h("Tried to count the number of addons"));
+            throw new AddonException(exception_message_db(_("count the number of addons")));
         }
 
         return $count;

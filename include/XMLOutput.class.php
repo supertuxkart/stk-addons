@@ -1,7 +1,7 @@
 <?php
 /**
- * copyright 2013        Glenn De Jonghe
- *           2014 - 2015 Daniel Butum <danibutum at gmail dot com>
+ * copyright 2013      Glenn De Jonghe
+ *           2014-2015 Daniel Butum <danibutum at gmail dot com>
  * This file is part of SuperTuxKart
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -18,6 +18,9 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * XMLOutput class, handles all the XML writing behaviour
+ */
 class XMLOutput extends XMLWriter
 {
     /**

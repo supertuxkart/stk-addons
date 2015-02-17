@@ -1,7 +1,7 @@
 <?php
 /**
- * copyright 2011 Stephen Just <stephenjust@users.sf.net>
- *           2014 Daniel Butum <danibutum at gmail dot com>
+ * copyright 2011      Stephen Just <stephenjust@users.sf.net>
+ *           2014-2015 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -20,7 +20,6 @@
 
 /**
  * Class to hold all file-related operations
- *
  * @author Stephen
  */
 class File
@@ -66,7 +65,7 @@ class File
         }
         catch(DBException $e)
         {
-            throw new FileException(_h('Failed to change file approval status.'));
+            throw new FileException(exception_message_db(_('change file approval status')));
         }
 
         writeXML();
@@ -74,10 +73,11 @@ class File
 
     /**
      * Check if a file exists (based on record in database file table)
+     * This method will silently fail
      *
      * @param string $path Relative to upload directory
      *
-     * @return int File id, or 0 if file record does not exist
+     * @return int|bool File id, or false if file record does not exist
      */
     public static function existsDB($path)
     {
@@ -94,12 +94,12 @@ class File
         }
         catch(DBException $e)
         {
-            return 0;
+            return false;
         }
 
-        if (empty($file))
+        if (!$file)
         {
-            return 0;
+            return false;
         }
 
         return $file;
@@ -460,6 +460,7 @@ class File
 
     /**
      * Delete a file from the filesystem and the database
+     * This method will silently fail
      *
      * @param int $file_id
      *
@@ -557,7 +558,7 @@ class File
         }
         catch(DBException $e)
         {
-            throw new FileException('Failed to read deletion queue.');
+            throw new FileException(exception_message_db(_('read the deletion queue')));
         }
 
         // delete from the filesystem
@@ -673,19 +674,14 @@ class File
      * @param int $file_id
      *
      * @throws FileException
-     *
-     * @return int|bool the addon id or false otherwise
+     * @return int|null the addon id or false otherwise
      */
     public static function getAddon($file_id)
     {
         // Validate input
-        if (!is_numeric($file_id))
+        if (!is_numeric($file_id) || !$file_id)
         {
-            return false;
-        }
-        if ($file_id === 0)
-        {
-            return false;
+            return null;
         }
 
         // Look up file path from database
@@ -703,12 +699,12 @@ class File
         }
         catch(DBException $e)
         {
-            throw new FileException("Can not retrieve addon a DB error occurred");
+            throw new FileException(exception_message_db(_("retrieve the addon ID")));
         }
 
-        if (empty($addon))
+        if (!$addon)
         {
-            return false;
+            return null;
         }
 
         // get the first record
@@ -721,8 +717,7 @@ class File
      * @param int $file_id the id of the file
      *
      * @throws FileException
-     *
-     * @return string|bool the file path or false otherwise
+     * @return string|null the file path or false otherwise
      */
     public static function getPath($file_id)
     {
@@ -751,12 +746,12 @@ class File
         }
         catch(DBException $e)
         {
-            throw new FileException("Can not retrieve path a DB error occurred");
+            throw new FileException(exception_message_db(_("get the file path")));
         }
 
-        if (empty($file))
+        if (!$file)
         {
-            return false;
+            return null;
         }
 
         // get the first record
@@ -765,6 +760,7 @@ class File
 
     /**
      * Get all files from the database and filesystem
+     * This method will silently fail
      *
      * @return array of all file
      */
@@ -873,7 +869,7 @@ class File
         }
         catch(DBException $e)
         {
-            throw new FileException(_h('Failed to create file'));
+            throw new FileException(exception_message_db(_('create file')));
         }
 
         try
@@ -885,7 +881,7 @@ class File
         }
         catch(DBException $e)
         {
-            throw new FileException(_h("Could not find file id! Please contact a website administrator."));
+            throw new FileException(exception_message_db(_("select file id from procedure")));
         }
 
         return (int)$id["@result_id"];
@@ -919,7 +915,7 @@ class File
             }
             catch(DBException $e)
             {
-                throw new FileException("Failed to delete an existing image");
+                throw new FileException(exception_message_db(_("delete an existing image")));
             }
 
             // Clean image cache
@@ -1135,8 +1131,8 @@ class File
     }
 
     /**
-     * Mark a file to be deleted by a cron script a day after all clients should
-     * have updated their XML files
+     * Mark a file to be deleted by a cron script a day after all clients should have updated their XML files
+     * This method silently fails
      *
      * @param int $file_id
      *

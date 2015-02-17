@@ -1,8 +1,8 @@
 <?php
 /**
- * copyright 2009 Lucas Baudin <xapantu@gmail.com>
- *           2012 Stephen Just <stephenjust@users.sf.net>
- *           2014 Daniel Butum <danibutum at gmail dot com>
+ * copyright 2009      Lucas Baudin <xapantu@gmail.com>
+ *           2012      Stephen Just <stephenjust@users.sf.net>
+ *           2014-2015 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -143,7 +143,7 @@ class AccessControl
         }
         catch(DBException $e)
         {
-            throw new AccessControlException('An error occurred while trying add a role');
+            throw new AccessControlException(exception_message_db('add a role'));
         }
     }
 
@@ -174,7 +174,7 @@ class AccessControl
         }
         catch(DBException $e)
         {
-            throw new AccessControlException("An error occurred while trying to count users");
+            throw new AccessControlException(exception_message_db("count users"));
         }
 
         // there are users with that role, not good
@@ -189,7 +189,7 @@ class AccessControl
         }
         catch(DBException $e)
         {
-            throw new AccessControlException("An error occurred while trying to delete a role");
+            throw new AccessControlException(exception_message_db("delete a role"));
         }
     }
 
@@ -219,10 +219,7 @@ class AccessControl
         }
         catch(DBException $e)
         {
-            throw new AccessControlException(h(
-                _('An error occurred while trying to retrieve roles.') . ' ' .
-                _('Please contact a website administrator.')
-            ));
+            throw new AccessControlException(exception_message_db(_('retrieve roles')));
         }
 
         // put into the cache
@@ -292,10 +289,7 @@ class AccessControl
         }
         catch(DBException $e)
         {
-            throw new AccessControlException(h(
-                _('An error occurred while trying to retrieve permissions') . ' ' .
-                _('Please contact a website administrator.')
-            ));
+            throw new AccessControlException(exception_message_db(_('retrieve permissions')));
         }
 
         // put into the cache
@@ -356,10 +350,7 @@ class AccessControl
         }
         catch(DBException $e)
         {
-            throw new AccessControlException(h(
-                _('An error occurred while trying to clean the role permissions') . ' ' .
-                _('Please contact a website administrator.')
-            ));
+            throw new AccessControlException(exception_message_db(_('clean the role permissions')));
         }
 
         // insert new permissions
@@ -376,10 +367,7 @@ class AccessControl
         }
         catch(DBException $e)
         {
-            throw new AccessControlException(h(
-                _('An error occurred while trying to insert new permissions') . ' ' .
-                _('Please contact a website administrator.')
-            ));
+            throw new AccessControlException(exception_message_db(_('insert new permissions')));
         }
     }
 

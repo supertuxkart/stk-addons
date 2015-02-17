@@ -1,6 +1,6 @@
 <?php
 /**
- * copyright 2014 Daniel Butum <danibutum at gmail dot com>
+ * copyright 2014-2015 Daniel Butum <danibutum at gmail dot com>
  *
  * This file is part of stkaddons
  *
@@ -144,7 +144,7 @@ class Bug extends Base
         }
         catch(DBException $e)
         {
-            throw new BugException(h(_("Tried to fetch comments.") . ' ' . _("Please contact a website administrator.")));
+            throw new BugException(exception_message_db(_("fetch bug comments")));
         }
 
         $this->comments_data = $comments;
@@ -171,7 +171,6 @@ class Bug extends Base
         $this->title = $bug_data["title"];
         $this->description = $bug_data["description"];
         $this->is_report = (bool)$bug_data["is_report"];
-
 
         // load comments
         if ($load_comments)
@@ -370,7 +369,7 @@ class Bug extends Base
         }
         catch(DBException $e)
         {
-            throw new BugException(_h("An error occured while retrieving a bug record."));
+            throw new BugException(exception_message_db(_("get a bug record")));
         }
 
         if (!$data)
@@ -403,7 +402,7 @@ class Bug extends Base
         }
         catch(DBException $e)
         {
-            throw new BugException(h(_("Tried to fetch a comments data") . '. ' . _("Please contact a website administrator.")));
+            throw new BugException(exception_message_db(_("fetch a bug comments data")));
         }
 
         if (empty($comment))
@@ -476,7 +475,7 @@ class Bug extends Base
         }
         catch(DBException $e)
         {
-            throw new BugException(h(_("Error on searching bugs") . '. ' . _("Please contact a website administrator.")));
+            throw new BugException(exception_message_db(_("search bugs")));
         }
 
         return $bugs;
@@ -522,7 +521,7 @@ class Bug extends Base
         }
         catch(DBException $e)
         {
-            throw new BugException(h(_("Tried to insert a bug") . '. ' . _("Please contact a website administrator.")));
+            throw new BugException(exception_message_db(_("create a bug")));
         }
 
         return DBConnection::get()->lastInsertId();
@@ -565,7 +564,7 @@ class Bug extends Base
         }
         catch(DBException $e)
         {
-            throw new BugException(h(_("Tried to insert a bug comment") . '. ' . _("Please contact a website administrator.")));
+            throw new BugException(exception_message_db(_("create a bug comment")));
         }
 
         return DBConnection::get()->lastInsertId();
@@ -613,7 +612,7 @@ class Bug extends Base
         }
         catch(DBException $e)
         {
-            throw new BugException(h(_("Tried to update a bug") . '. ' . _("Please contact a website administrator.")));
+            throw new BugException(exception_message_db(_("update a bug")));
         }
     }
 
@@ -656,7 +655,7 @@ class Bug extends Base
         }
         catch(DBException $e)
         {
-            throw new BugException(h(_("Tried to update a bug comment") . '. ' . _("Please contact a website administrator.")));
+            throw new BugException(exception_message_db(_("update a bug comment")));
         }
     }
 
@@ -709,7 +708,7 @@ class Bug extends Base
         }
         catch(DBException $e)
         {
-            throw new BugException(h(_("Tried to close a bug") . '. ' . _("Please contact a website administrator.")));
+            throw new BugException(exception_message_db(_("close a bug")));
         }
     }
 
@@ -747,7 +746,7 @@ class Bug extends Base
         }
         catch(DBException $e)
         {
-            throw new BugException(h(_("Tried to delete a bug") . '. ' . _("Please contact a website administrator.")));
+            throw new BugException(exception_message_db(_("delete a bug")));
         }
     }
 
@@ -786,7 +785,7 @@ class Bug extends Base
         }
         catch(DBException $e)
         {
-            throw new BugException(h(_("Tried to delete a bug comment") . '. ' . _("Please contact a website administrator.")));
+            throw new BugException(exception_message_db(_("delete a bug comment")));
         }
     }
 

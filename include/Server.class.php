@@ -1,7 +1,7 @@
 <?php
 /**
- * copyright 2013 Glenn De Jonghe
- *           2014 Daniel Butum <danibutum at gmail dot com>
+ * copyright 2013      Glenn De Jonghe
+ *           2014-2015 Daniel Butum <danibutum at gmail dot com>
  * This file is part of SuperTuxKart
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -23,6 +23,7 @@
  */
 class Server
 {
+    // TODO refactor, user proprieties instead of array, weird!
     /**
      * @var int
      */
@@ -159,10 +160,7 @@ class Server
         }
         catch(DBException $e)
         {
-            throw new ServerException(
-                _('An error occurred while creating server.') . ' ' .
-                _('Please contact a website administrator.')
-            );
+            throw new ServerException(exception_message_db(_('create a server')));
         }
 
         if ($result != 1)
@@ -180,7 +178,6 @@ class Server
      *
      * @return Server
      * @throws ServerException
-     * @throws PDOException
      */
     public static function getServer($id)
     {
@@ -205,7 +202,7 @@ class Server
         }
         else if (count($result) > 1)
         {
-            throw new PDOException();
+            throw new ServerException("Multiple servers match the same id.");
         }
 
         return new Server($result[0]);

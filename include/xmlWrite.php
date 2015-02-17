@@ -141,7 +141,7 @@ function generateAssetXML()
                 }
 
                 $file_path = File::getPath($addon['fileid']);
-                if ($file_path === false)
+                if (!$file_path)
                 {
                     trigger_error('Error finding addon file for ' . $addon['name'], E_USER_WARNING);
                     echo '<span class="warning">An error occurred locating add-on: ' . $addon['name'] . '</span><br />';
@@ -164,7 +164,7 @@ function generateAssetXML()
                 $writer->writeAttribute('designer', $addon['designer']);
                 $writer->writeAttribute('description', $addon['description']);
                 $image_path = File::getPath($addon['image']);
-                if ($image_path !== false)
+                if (!$image_path)
                 {
                     if (file_exists(UP_PATH . $image_path))
                     {
@@ -175,7 +175,7 @@ function generateAssetXML()
                 if ($type == "kart")
                 {
                     $icon_path = File::getPath($addon['icon']);
-                    if ($icon_path !== false)
+                    if (!$icon_path)
                     {
                         if (file_exists(UP_PATH . $icon_path))
                         {
@@ -325,7 +325,7 @@ function generateAssetXML2()
                         }
 
                         $file_path = File::getPath($addon_rev['fileid']);
-                        if ($file_path === false || !file_exists(UP_PATH . $file_path))
+                        if (!$file_path || !file_exists(UP_PATH . $file_path))
                         {
                             continue;
                         }
@@ -341,7 +341,7 @@ function generateAssetXML2()
 
                         // Add image and icon to record
                         $image_path = File::getPath($addon_rev['image']);
-                        if ($image_path !== false)
+                        if (!$image_path)
                         {
                             if (file_exists(UP_PATH . $image_path))
                             {
@@ -351,7 +351,7 @@ function generateAssetXML2()
                         if ($type === "kart")
                         {
                             $icon_path = File::getPath($addon_rev['icon']);
-                            if ($icon_path !== false)
+                            if (!$icon_path)
                             {
                                 if (file_exists(UP_PATH . $icon_path))
                                 {

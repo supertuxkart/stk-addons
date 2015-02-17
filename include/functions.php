@@ -1,7 +1,7 @@
 <?php
 /**
- * copyright 2011 Stephen Just <stephenjust@users.sf.net>
- *           2014 Daniel Butum <danibutum at gmail dot com>
+ * copyright 2011      Stephen Just <stephenjust@users.sf.net>
+ *           2014-2015 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -73,7 +73,7 @@ function exit_json_success($message, array $other_values = [])
 function exception_message_db($message)
 {
     return h(
-        sprintf(_('An error occured while trying to %s.'), $message) . ' ' .
+        sprintf(_('A database error occured while trying to %s.'), $message) . ' ' .
         _('Please contact a website administrator.')
     );
 }

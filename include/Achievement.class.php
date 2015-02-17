@@ -1,7 +1,7 @@
 <?php
 /**
- * copyright 2013 Glenn De Jonghe
- *           2014 Daniel Butum <danibutum at gmail dot com>
+ * copyright 2013      Glenn De Jonghe
+ *           2014-2015 Daniel Butum <danibutum at gmail dot com>
  * This file is part of SuperTuxKart
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -45,10 +45,7 @@ class Achievement
         }
         catch(DBException $e)
         {
-            throw new AchievementException(h(
-                _('An unexpected error occured while fetching the achieved achievements.') . ' ' .
-                _('Please contact a website administrator.')
-            ));
+            throw new AchievementException(exception_message_db(_('fetch the achieved achievements')));
         }
 
         // build array of id's
@@ -86,10 +83,7 @@ class Achievement
         }
         catch(DBException $e)
         {
-            throw new AchievementException(h(
-                _('An unexpected error occured while fetching the achieved achievements.') . ' ' .
-                _('Please contact a website administrator.')
-            ));
+            throw new AchievementException(exception_message_db(_('fetch the achieved achievements')));
         }
 
         return $achievements;
@@ -130,10 +124,7 @@ class Achievement
             }
             else
             {
-                throw new AchievementException(h(
-                    _('An unexpected error occured while confirming your achievement.') . ' ' .
-                    _('Please contact a website administrator.')
-                ));
+                throw new AchievementException(exception_message_db(_('confirm your achievement')));
             }
         }
     }

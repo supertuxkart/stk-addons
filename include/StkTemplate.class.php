@@ -20,7 +20,6 @@
 
 /**
  * Customization of generic template class for main stkaddons pages
- *
  * @author Stephen
  */
 class StkTemplate extends Template

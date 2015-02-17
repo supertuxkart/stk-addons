@@ -1,7 +1,7 @@
 <?php
 /**
- * copyright 2012 Stephen Just <stephenjust@users.sf.net>
- *           2014 Daniel Butum <danibutum at gmail dot com>
+ * copyright 2012      Stephen Just <stephenjust@users.sf.net>
+ *           2014-2015 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -18,6 +18,9 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * Log class
+ */
 class Log
 {
     /**
@@ -32,8 +35,7 @@ class Log
         try
         {
             DBConnection::get()->query(
-                "CALL `" . DB_PREFIX . "log_event`
-                (:userid, :message)",
+                "CALL `" . DB_PREFIX . "log_event`(:userid, :message)",
                 DBConnection::NOTHING,
                 [
                     ':userid'  => User::getLoggedId(),
@@ -44,7 +46,7 @@ class Log
         }
         catch(DBException $e)
         {
-            throw new LogException('Failed to log new event.');
+            throw new LogException(exception_message_db(_('log a new event')));
         }
     }
 
@@ -88,7 +90,7 @@ class Log
         }
         catch(DBException $e)
         {
-            throw new LogException('Failed to fetch log entries.');
+            throw new LogException(exception_message_db(_('fetch the log entries')));
         }
 
         return $events;
@@ -116,7 +118,7 @@ class Log
         }
         catch(DBException $e)
         {
-            throw new LogException("Failed to load log for email.");
+            throw new LogException(exception_message_db(_('load unemailed logs')));
         }
 
         return $events;
@@ -125,7 +127,7 @@ class Log
     /**
      * Set the mailed flag on all log messages
      *
-     * @throws Exception
+     * @throws LogException
      */
     public static function setAllEventsMailed()
     {
@@ -138,7 +140,7 @@ class Log
         }
         catch(DBException $e)
         {
-            throw new LogException('Failed to mark log messages as mailed.');
+            throw new LogException(exception_message_db(_('mark log messages as mailed')));
         }
     }
 }

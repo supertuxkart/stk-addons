@@ -21,7 +21,6 @@
 
 /**
  * Handles management of temporary files
- *
  * @author Stephen
  */
 class Cache
@@ -63,12 +62,13 @@ class Cache
         }
         catch(DBException $e)
         {
-            throw new CacheException("Failed to empty cache");
+            throw new CacheException(exception_message_db(_("empty the cache")));
         }
     }
 
     /**
      * Clear the addon cache files
+     * This method silently fails
      *
      * @param string $addon the addon id
      *
@@ -117,6 +117,7 @@ class Cache
 
     /**
      * Add a database record for a cache file
+     * This method will silently fail
      *
      * @param string $path  Relative to cache root
      * @param string $addon Associated add-on's id or NULL
@@ -149,6 +150,7 @@ class Cache
 
     /**
      * Check if a cache file exist (based on database record of its existence)
+     * This method silently fails
      *
      * @param string $path Relative to upload root
      *
@@ -205,7 +207,7 @@ class Cache
         }
         catch(DBException $e)
         {
-            throw new CacheException('Failed to look up image file.');
+            throw new CacheException(exception_message_db(_('look up cache image file')));
         }
 
         // image does with tha id does not exist in the database

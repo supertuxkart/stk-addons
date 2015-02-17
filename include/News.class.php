@@ -20,7 +20,6 @@
 
 /**
  * Manage the newsfeed that is fed to the game
- *
  * @author Stephen
  */
 class News
@@ -46,7 +45,7 @@ class News
         }
         catch(DBException $e)
         {
-            throw new NewsException("Failed to fetch dynamic news entries");
+            throw new NewsException(exception_message_db(_("fetch dynamic news entries")));
         }
 
         $newest_addons = Statistic::newestAddons();
@@ -125,19 +124,21 @@ class News
             }
             catch(DBException $e)
             {
-                throw new NewsException("Failed to create dynamic news entry");
+                throw new NewsException(exception_message_db(_("create dynamic news entry")));
             }
         }
     }
 
     /**
-     * Get the last article title, TODO cache result, maybe add to cron job
+     * Get the last article title
+     * This method will silently fail
      *
      * @return string|null
      * @throws NewsException
      */
     private static function getLatestBlogPost()
     {
+        // TODO cache result, maybe add to cron job
         $feed_url = Config::get(Config::FEED_BLOG);
         if (!$feed_url)
         {
@@ -189,7 +190,8 @@ class News
     }
 
     /**
-     * Get active news articles flagged as web-visible
+     * Get active news articles flagged as web-visible.
+     * This method will silently fail
      *
      * @return array
      */
@@ -221,6 +223,7 @@ class News
 
     /**
      * Get news data for posts marked active
+     * This method will silently fail
      *
      * @return array
      */
@@ -248,6 +251,7 @@ class News
 
     /**
      * Get news data for all posts
+     * This method will silently fail
      *
      * @return array
      */
@@ -330,7 +334,7 @@ class News
         }
         catch(DBException $e)
         {
-            throw new NewsException('Database error while creating message.');
+            throw new NewsException(exception_message_db(_('create a news entry')));
         }
     }
 
@@ -349,7 +353,7 @@ class News
         }
         catch(DBException $e)
         {
-            throw new NewsException("Database error while trying to delete a news article");
+            throw new NewsException(exception_message_db(_("delete a news entry")));
         }
     }
 }

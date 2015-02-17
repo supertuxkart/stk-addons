@@ -20,7 +20,6 @@
 
 /**
  * Class to hold all image-manipulation operations
- *
  * @author Stephen
  */
 class SImage

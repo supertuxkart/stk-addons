@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright 2013 Stephen Just <stephenjust@users.sourceforge.net>
- *           2014 Daniel Butum <danibutum at gmail dot com>
+ * Copyright 2013      Stephen Just <stephenjust@users.sourceforge.net>
+ *           2014-2015 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -24,7 +24,7 @@
 class Music
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -44,7 +44,7 @@ class Music
     private $license;
 
     /**
-     * @var integer
+     * @var int
      */
     private $length;
 
@@ -69,7 +69,7 @@ class Music
     private $xml_file;
 
     /**
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -125,7 +125,7 @@ class Music
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getLength()
     {
@@ -135,7 +135,7 @@ class Music
     /**
      * Get a Music object by ID
      *
-     * @param integer $id
+     * @param int $id
      *
      * @return Music
      */
@@ -149,6 +149,7 @@ class Music
 
     /**
      * Get an array of Music objects containing all tracks, sorted by title
+     * This method will silently fail
      *
      * @return Music[] array of music instances
      */
@@ -182,10 +183,9 @@ class Music
 
     /**
      * Populate a music object by looking up the ID in the database
+     * This method will silently fail
      *
-     * @param integer $id
-     *
-     * @return null
+     * @param int $id
      */
     private function populateById($id)
     {
@@ -200,7 +200,7 @@ class Music
             );
             if (empty($track_info))
             {
-                return null;
+                return;
             }
 
             $this->id = $id;
