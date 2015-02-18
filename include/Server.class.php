@@ -23,47 +23,47 @@
  */
 class Server
 {
-    // TODO refactor, user proprieties instead of array, weird!
     /**
+     * The server id
      * @var int
      */
-    protected $server_id;
+    private $id;
 
     /**
+     * The user who created the server
      * @var int
      */
-    protected $host_id;
+    private $host_id;
 
     /**
+     * The server name
      * @var string
      */
-    protected $server_name;
+    private $name;
 
     /**
      * @var int
      */
-    protected $max_players;
-
-    /**
-     * @var array
-     */
-    protected $info_array = [];
+    private $max_players;
 
     /**
      *
-     * @param array $info_array an associative array based on the database
+     * @param array $data an associative array retrieved from the database
      */
-    protected function __construct(array $info_array)
+    private function __construct(array $data)
     {
-        $this->info_array = $info_array;
+        $this->id = (int)$data["id"];
+        $this->host_id = (int)$data["hostid"];
+        $this->name = $data["name"];
+        $this->max_players = (int)$data["max_players"];
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getServerId()
     {
-        return $this->info_array['id'];
+        return $this->id;
     }
 
     /**
@@ -71,7 +71,7 @@ class Server
      */
     public function getHostId()
     {
-        return $this->info_array['hostid'];
+        return $this->host_id;
     }
 
     /**
@@ -79,7 +79,7 @@ class Server
      */
     public function getName()
     {
-        return $this->info_array['name'];
+        return $this->name;
     }
 
     /**
@@ -87,7 +87,7 @@ class Server
      */
     public function getMaxPlayers()
     {
-        return $this->info_array['max_players'];
+        return $this->max_players;
     }
 
     /**
@@ -99,10 +99,10 @@ class Server
     {
         $server_xml = new XMLOutput();
         $server_xml->startElement('server');
-        foreach ($this->info_array as $key => $value)
-        {
-            $server_xml->writeAttribute($key, $value);
-        }
+        $server_xml->writeAttribute("id", $this->id);
+        $server_xml->writeAttribute("hostid", $this->host_id);
+        $server_xml->writeAttribute("name", $this->name);
+        $server_xml->writeAttribute("max_players", $this->max_players);
         $server_xml->endElement();
 
         return $server_xml->asString();
@@ -193,10 +193,10 @@ class Server
         }
         catch(DBException $e)
         {
-            throw new ServerException(_h('An error occurred while creating server') . '. ' . _h('Please contact a website administrator.'));
+            throw new ServerException(exception_message_db(_('retrieve a server')));
         }
 
-        if (empty($result))
+        if (!$result)
         {
             throw new ServerException(_h("Server doesn't exist."));
         }
@@ -205,7 +205,7 @@ class Server
             throw new ServerException("Multiple servers match the same id.");
         }
 
-        return new Server($result[0]);
+        return new self($result[0]);
     }
 
     /**
@@ -226,7 +226,7 @@ class Server
         $partial_output->startElement('servers');
         foreach ($servers as $server_result)
         {
-            $server = new Server($server_result);
+            $server = new self($server_result);
             $partial_output->insert($server->asXML());
         }
         $partial_output->endElement();

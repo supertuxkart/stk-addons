@@ -186,15 +186,14 @@ class Addon extends Base
     /**
      * Instance constructor
      *
-     * @param string $id             the addon id
-     * @param array  $data           the addon data
+     * @param array  $data           the addon data retrieved from the database
      * @param bool   $load_revisions load also the revisions
      *
      * @throws AddonException
      */
-    private function __construct($id, $data, $load_revisions = true)
+    private function __construct(array $data, $load_revisions = true)
     {
-        $this->id = (string)static::cleanId($id);
+        $this->id = (string)static::cleanId($data['id']);
         $this->type = $data['type'];
         $this->name = $data['name'];
         $this->uploader_id = (int)$data['uploader'];
@@ -1337,7 +1336,7 @@ class Addon extends Base
     {
         $data = static::getFromField("addons", "id", $addon_id, DBConnection::PARAM_STR, _h('The requested add-on does not exist.'));
 
-        return new Addon($data["id"], $data, $load_revisions);
+        return new static($data, $load_revisions);
     }
 
     /**

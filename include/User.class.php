@@ -140,7 +140,7 @@ class User extends Base
      * @param array $data        retrieved from the database
      * @param bool  $from_friend flag that indicates this constructor was called from the friend class
      */
-    public function __construct(array $data = [], $from_friend = false)
+    public function __construct(array $data, $from_friend = false)
     {
         $this->id = (int)$data["id"];
         $this->username = $data["user"];
