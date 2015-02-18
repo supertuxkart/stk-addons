@@ -3,7 +3,7 @@ This is the source code for the SuperTuxKart asset sharing and distribution
 platform. The official location of the production website is http://addons.supertuxkart.net/.
 
 ## Build Status
-[![Build Status](https://travis-ci.org/leyyin/stkaddons.svg?branch=master)](https://travis-ci.org/leyyin/stkaddons)
+[![Build Status](https://travis-ci.org/leyyin/stk-addons.svg?branch=master)](https://travis-ci.org/leyyin/stk-addons)
 
 
 ## Installation
