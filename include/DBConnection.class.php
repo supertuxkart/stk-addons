@@ -129,6 +129,7 @@ class DBConnection
      */
     public function beginTransaction()
     {
+        // TODO better test PDO transaction
         if (!$this->in_transaction)
         {
             $this->in_transaction = $this->conn->beginTransaction();

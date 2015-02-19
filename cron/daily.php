@@ -24,8 +24,19 @@ echo "Executed at: " . date('d/m/Y H:i:s', time()) . "\n";
 try
 {
     echo File::deleteQueuedFiles() . "\n";
+    echo "SUCCESS: File::deleteQueuedFiles \n";
 }
 catch (FileException $e)
 {
-    echo "ERROR: \n" . $e->getMessage();
+    echo "ERROR: File::deleteQueuedFiles \n" . $e->getMessage();
+}
+
+try
+{
+    Verification::cron(7);
+    echo "SUCCESS: Verification::cron \n";
+}
+catch (VerificationException $e)
+{
+    echo "ERROR: Verification::cron \n" . $e->getMessage();
 }

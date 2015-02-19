@@ -545,6 +545,7 @@ class File
      */
     public static function deleteQueuedFiles()
     {
+        // TODO refactor
         try
         {
             $queued_files = DBConnection::get()->query(

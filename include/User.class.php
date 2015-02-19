@@ -877,7 +877,7 @@ class User extends Base
             throw new UserException(_h("You can not edit your own role"));
         }
 
-        // update
+        // update, manually set the active status, the verification will be cleaned by a cron job, see Verification::cron
         try
         {
             DBConnection::get()->update(

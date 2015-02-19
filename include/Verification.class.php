@@ -122,4 +122,64 @@ class Verification
 
         return $verification_code;
     }
+
+    /**
+     * Daily cron job, to delete non activated users and old verifications
+     *
+     * @param int $days
+     *
+     * @throws VerificationException
+     */
+    public static function cron($days)
+    {
+        // delete all users that have a verification and did not activate
+        // their account in the last $days or more
+        try
+        {
+            DBConnection::get()->query(
+                "DELETE U
+                FROM `" . DB_PREFIX . "verification` V
+                INNER JOIN `" . DB_PREFIX . "users` U
+                    ON V.userid = U.id
+                WHERE
+                    active = 0
+                AND
+                    DATEDIFF(CURDATE(), U.reg_date) >= :days
+                ",
+                DBConnection::NOTHING,
+                [":days" => $days],
+                [":days" => DBConnection::PARAM_INT]
+            );
+
+        }
+        catch(DBException $e)
+        {
+            throw new VerificationException($e->getMessage());
+        }
+
+        // delete old verification queries, because sometimes we can activate users manually, from the user panel
+        try
+        {
+            DBConnection::get()->query(
+                "DELETE V
+                FROM `" . DB_PREFIX . "verification` V
+                INNER JOIN `" . DB_PREFIX . "users` U
+                    ON V.userid = U.id
+                WHERE
+                    active = 1
+                AND
+                    DATEDIFF(CURDATE(), U.reg_date) >= :days
+                ",
+                DBConnection::NOTHING,
+                [":days" => $days],
+                [":days" => DBConnection::PARAM_INT]
+            );
+
+        }
+        catch(DBException $e)
+        {
+            throw new VerificationException($e->getMessage());
+        }
+    }
+
 }
