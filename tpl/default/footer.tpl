@@ -1,6 +1,7 @@
 </div>{* content-wrapper *}
 <footer itemscope itemtype="http://schema.org/WPFooter">
     <a href="{$menu.about}">{t}About{/t}</a> | <a href="{$menu.privacy}">{t}Privacy{/t}</a>
+    | <a href="https://github.com/supertuxkart/stk-addons" target="_blank">{t}Contribute{/t}</a>
 </footer>
 </div> {* #body-wrapper *}
 {foreach $script_inline.before as $script}
