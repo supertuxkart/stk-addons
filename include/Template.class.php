@@ -162,6 +162,14 @@ class Template
     protected function setup() { throw new TemplateException("Not Implemented"); }
 
     /**
+     * Setup HTTP headers
+     */
+    protected function setupHeaders()
+    {
+        header('Content-Type: text/html; charset=utf-8', true);
+    }
+
+    /**
      * Set the template directory to use
      *
      * @param string $template_name
@@ -237,6 +245,8 @@ class Template
      */
     private function getFilledTemplate()
     {
+        $this->setupHeaders();
+
         try
         {
             $this->setup();

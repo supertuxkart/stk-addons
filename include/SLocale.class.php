@@ -30,6 +30,8 @@ class SLocale
      */
     const COOKIE_LIFETIME = 31536000;
 
+    const LANG_KEY = "lang";
+
     /**
      * Array of supported languages, format is:
      * language code, flag image y-offset, flag label
@@ -60,20 +62,23 @@ class SLocale
      */
     public function __construct($locale = null)
     {
-        if (!$locale && !empty($_GET['lang']))
+        $cookie_lang = !empty($_COOKIE[static::LANG_KEY]) ? $_COOKIE[static::LANG_KEY] : null;
+        $get_lang = !empty($_GET[static::LANG_KEY]) ? $_GET[static::LANG_KEY] : null;
+
+        if (!$locale && $get_lang) // set the locale from the get params
         {
-            $locale = $_GET['lang'];
+            $locale = $get_lang;
         }
-        elseif (!empty($_COOKIE['lang']))
+        elseif ($cookie_lang) // set the locale from the cookies
         {
-            $locale = $_COOKIE['lang'];
+            $locale = $cookie_lang;
         }
         else
         {
             $locale = "en_US"; // default locale
         }
 
-        if (!static::isLocale($locale))
+        if (!static::isLocale($locale)) // locale is invalid, fallback to default
         {
             $locale = "en_US";
         }
@@ -119,16 +124,24 @@ class SLocale
     private static function setLocale($locale)
     {
         $domain = 'translations';
+        $cookie_lang = !empty($_COOKIE[static::LANG_KEY]) ? $_COOKIE[static::LANG_KEY] : null;
 
         // Set cookie
-        header('Content-Type: text/html; charset=utf-8');
-        setcookie('lang', $locale, time() + static::COOKIE_LIFETIME);
         putenv("LC_ALL=$locale.UTF-8");
         if (setlocale(LC_ALL, $locale . ".UTF-8") === false)
         {
             trigger_error(sprintf("Set locale has failed for '%s'. No localization is possible", $locale));
         }
-        $_COOKIE['lang'] = $locale;
+
+        // change language cookie for next request only if language is different
+        if ($cookie_lang !== $locale)
+        {
+            if(!setcookie(static::LANG_KEY, $locale, time() + static::COOKIE_LIFETIME, "/"))
+            {
+                trigger_error("Failed to set locale language cookie");
+            }
+            $_COOKIE[static::LANG_KEY] = $locale;
+        }
 
         // Set translation file info
         bindtextdomain($domain, ROOT_PATH . 'locale');
