@@ -100,20 +100,11 @@ class SLocale
      * Check if locale is a valid value
      *
      * @param string $locale
-     *
      * @return bool
      */
     public static function isLocale($locale)
     {
-        foreach (static::$languages as $lang)
-        {
-            if ($locale === $lang[0])
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return in_array($locale, array_column(static::$languages, 0), true);
     }
 
     /**

@@ -156,20 +156,20 @@ class StkTemplate extends Template
     {
         // TODO make top menu more dynamic
         $menu = [
-            'welcome'  => h(sprintf(_h('Welcome, %s'), User::getLoggedRealName())),
-            'home'     => File::rewrite('index.php'),
-            'login'    => File::rewrite('login.php'),
-            'logout'   => File::rewrite('login.php?action=logout'),
-            'users'    => File::rewrite('users.php'),
-            'upload'   => File::rewrite('upload.php'),
-            'manage'   => File::rewrite('manage.php'),
-            'bugs'     => BUGS_LOCATION,
-            'karts'    => File::rewrite('addons.php?type=karts'),
-            'tracks'   => File::rewrite('addons.php?type=tracks'),
-            'arenas'   => File::rewrite('addons.php?type=arenas'),
-            'about'    => File::rewrite('about.php'),
-            'stats'    => STATS_LOCATION,
-            'privacy'  => File::rewrite('privacy.php'),
+            'welcome' => h(sprintf(_h('Welcome, %s'), User::getLoggedRealName())),
+            'home'    => File::rewrite('index.php'),
+            'login'   => File::rewrite('login.php'),
+            'logout'  => File::rewrite('login.php?action=logout'),
+            'users'   => File::rewrite('users.php'),
+            'upload'  => File::rewrite('upload.php'),
+            'manage'  => File::rewrite('manage.php'),
+            'bugs'    => BUGS_LOCATION,
+            'karts'   => File::rewrite('addons.php?type=karts'),
+            'tracks'  => File::rewrite('addons.php?type=tracks'),
+            'arenas'  => File::rewrite('addons.php?type=arenas'),
+            'about'   => File::rewrite('about.php'),
+            'stats'   => STATS_LOCATION,
+            'privacy' => File::rewrite('privacy.php'),
         ];
 
         // if the user can edit addons then he can access the manage panel
@@ -185,8 +185,11 @@ class StkTemplate extends Template
     private function setupLanguageMenu()
     {
         // Language menu
-        $this->smarty->assign('lang_menu_lbl', _h('Languages'));
         $languages = SLocale::getLanguages();
+        $data = [
+            "label" => _h('Languages'),
+            "items" => []
+        ];
 
         $languages_count = count($languages);
         for ($i = 0; $i < $languages_count; $i++)
@@ -207,10 +210,14 @@ class StkTemplate extends Template
                 $url .= '&amp;lang=' . $languages[$i][0];
                 $url = str_replace('?&amp;', '?', $url);
             }
-            $languages[$i][0] = $url;
+
+            $data["items"][] = [
+                "url" => $url,
+                "y"   => $languages[$i][1]
+            ];
         }
 
-        $this->smarty->assign('lang_menu_items', $languages);
+        $this->smarty->assign('lang', $data);
     }
 
     /**

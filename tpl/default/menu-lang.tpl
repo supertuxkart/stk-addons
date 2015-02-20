@@ -1,7 +1,7 @@
-<a href="#">{$lang_menu_lbl}</a>
+<a href="#">{$lang.label}</a>
 <ul class="menu-body">
-    {foreach $lang_menu_items as $item}
-        <li class="flag"><a href="{$item.0}" style="background-position: 0 {$item.1}px;"></a></li>
+    {foreach $lang.items as $item}
+        <li class="flag"><a href="{$item.url}" style="background-position: 0 {$item.y}px;"></a></li>
     {/foreach}
-    <li class="label"><a href="https://translations.launchpad.net/stk/stkaddons">Translate STK-Addons</a></li>
+    <li class="label"><a href="https://translations.launchpad.net/stk/stkaddons">{t}Translate STK-Addons{/t}</a></li>
 </ul>
