@@ -181,5 +181,4 @@ class Verification
             throw new VerificationException($e->getMessage());
         }
     }
-
 }

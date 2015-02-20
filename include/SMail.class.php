@@ -200,7 +200,7 @@ EMAIL;
             "username"  => $username,
             "url_href"  => $this->base_url . "$ver_page?action=valid&num=$ver_code&user=$userid",
             "url_label" => "Confirm email address",
-            "warning"   => "If you did not request an account for SuperTuxKart, please just ignore this email.",
+            "warning"   => "The activation link will expire in 7 days.\nIf you did not request an account for SuperTuxKart, please just ignore this email.",
             "subject"   => $subject,
             "message"   => "Thank you for registering an account on the SuperTuxKart server. Please click on the button/link below to confirm your email.",
         ];
