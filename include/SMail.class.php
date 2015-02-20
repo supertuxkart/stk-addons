@@ -115,13 +115,9 @@ EMAIL;
      */
     public function __construct()
     {
-        if (IS_SSL_CERTIFICATE_VALID)
+        $this->base_url = ROOT_LOCATION;
+        if (!IS_SSL_CERTIFICATE_VALID) // // use normal http
         {
-            $this->base_url = ROOT_LOCATION;
-        }
-        else // use normal http
-        {
-            $this->base_url = ROOT_LOCATION;
             $this->base_url = str_replace("https", "http", $this->base_url);
         }
 
