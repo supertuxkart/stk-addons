@@ -1,7 +1,7 @@
 <?php
 /**
- * copyright 2013 Stephen Just <stephenjust@users.sourceforge.net>
- *           2014 Daniel Butum <danibutum at gmail dot com>
+ * copyright 2013      Stephen Just <stephenjust@users.sourceforge.net>
+ *           2014-2015 Daniel Butum <danibutum at gmail dot com>
  *
  * This file is part of stkaddons
  *
@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
 if (empty($_GET["data-type"]))
@@ -29,18 +28,12 @@ if (empty($_GET["data-type"]))
 switch ($_GET["data-type"])
 {
     case "addon";
-        $errors = Validate::ensureNotEmpty($_GET, ["addon-type", "query", "flags"]);
-        if ($errors)
+        if (Validate::ensureNotEmpty($_GET, ["addon-type", "query", "flags"]))
         {
-            exit_json_error(_h("One or more fields are empty. This should never happen"));
+            exit_json_error("One or more fields are empty. This should never happen");
         }
 
         $return_html = isset($_GET["return-html"]) ? true : false;
-        if (!isset($_GET["query"]))
-        {
-            $_GET["query"] = "";
-        }
-
         $addons = [];
         try
         {
@@ -52,7 +45,6 @@ switch ($_GET["data-type"])
         }
 
         $template_addons = Addon::filterMenuTemplate($addons, $_GET["addon-type"]);
-
         if ($return_html)
         {
             $addons_html = StkTemplate::get("addons/menu.tpl")
@@ -68,13 +60,11 @@ switch ($_GET["data-type"])
         break;
 
     case "bug":
-        $errors = Validate::ensureNotEmpty($_GET, ["search-filter"]);
-        if ($errors)
+        if (Validate::ensureNotEmpty($_GET, ["search-filter"]))
         {
-            exit_json_error(_h("One or more fields are empty. This should never happen"));
+            exit_json_error("One or more fields are empty. This should never happen");
         }
-
-        if (!isset($_GET["query"]))
+        if (!isset($_GET["query"])) // set as empty, will be handled by Bug::search
         {
             $_GET["query"] = "";
         }
@@ -96,10 +86,13 @@ switch ($_GET["data-type"])
         break;
 
     case "user":
-        $errors = Validate::ensureNotEmpty($_GET, ["query"]);
-        if ($errors)
+        if (!User::isLoggedIn())
         {
-            exit_json_error(_h("One or more fields are empty. This should never happen"));
+            exit_json_error("You are not logged in");
+        }
+        if (Validate::ensureNotEmpty($_GET, ["query"]))
+        {
+            exit_json_error("One or more fields are empty. This should never happen");
         }
 
         $return_html = isset($_GET["return-html"]) ? true : false;
@@ -114,7 +107,6 @@ switch ($_GET["data-type"])
         }
 
         $template_users = User::filterMenuTemplate($users);
-
         if ($return_html)
         {
             $users_html = StkTemplate::get("users/menu.tpl")
