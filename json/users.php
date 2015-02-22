@@ -23,17 +23,15 @@ if (!isset($_POST["action"]))
 {
     exit_json_error("action param is not defined or is empty");
 }
-
 if (!User::isLoggedIn())
 {
-    exit_json_error("You are not a logged in");
+    exit_json_error("You are not logged in");
 }
 
 switch ($_POST["action"])
 {
     case "edit-profile":
-        $errors = Validate::ensureNotEmpty($_POST, ["user-id"]);
-        if ($errors)
+        if (Validate::ensureNotEmpty($_POST, ["user-id"]))
         {
             exit_json_error(_h("User id  is empty"));
         }
@@ -55,8 +53,7 @@ switch ($_POST["action"])
         break;
 
     case "edit-role":
-        $errors = Validate::ensureNotEmpty($_POST, ["role", "user-id"]);
-        if ($errors)
+        if (Validate::ensureNotEmpty($_POST, ["role", "user-id"]))
         {
             exit_json_error(_h("Role field is empty"));
         }
@@ -78,8 +75,7 @@ switch ($_POST["action"])
         break;
 
     case "change-password":
-        $errors = Validate::ensureNotEmpty($_POST, ["old-pass", "new-pass", "new-pass-verify"]);
-        if ($errors)
+        if (Validate::ensureNotEmpty($_POST, ["old-pass", "new-pass", "new-pass-verify"]))
         {
             exit_json_error(_h("One or more fields are empty"));
         }
@@ -97,8 +93,7 @@ switch ($_POST["action"])
         break;
 
     case "send-friend": // send friend request
-        $errors = Validate::ensureNotEmpty($_POST, ["friend-id"]);
-        if ($errors)
+        if (Validate::ensureNotEmpty($_POST, ["friend-id"]))
         {
             exit_json_error(_h("Friend id is empty"));
         }
@@ -117,8 +112,7 @@ switch ($_POST["action"])
         break;
 
     case "remove-friend": // remove friend
-        $errors = Validate::ensureNotEmpty($_POST, ["friend-id"]);
-        if ($errors)
+        if (Validate::ensureNotEmpty($_POST, ["friend-id"]))
         {
             exit_json_error(_h("Friend id is empty"));
         }
@@ -137,8 +131,7 @@ switch ($_POST["action"])
         break;
 
     case "accept-friend": // accept friend request
-        $errors = Validate::ensureNotEmpty($_POST, ["friend-id"]);
-        if ($errors)
+        if (Validate::ensureNotEmpty($_POST, ["friend-id"]))
         {
             exit_json_error(_h("Friend id is empty"));
         }
@@ -157,8 +150,7 @@ switch ($_POST["action"])
         break;
 
     case "decline-friend": // decline friend request
-        $errors = Validate::ensureNotEmpty($_POST, ["friend-id"]);
-        if ($errors)
+        if (Validate::ensureNotEmpty($_POST, ["friend-id"]))
         {
             exit_json_error(_h("Friend id is empty"));
         }
@@ -177,8 +169,7 @@ switch ($_POST["action"])
         break;
 
     case "cancel-friend": // cancel a friend request
-        $errors = Validate::ensureNotEmpty($_POST, ["friend-id"]);
-        if ($errors)
+        if (Validate::ensureNotEmpty($_POST, ["friend-id"]))
         {
             exit_json_error(_h("Friend id is empty"));
         }
