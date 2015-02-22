@@ -536,10 +536,11 @@ class User extends Base
      * Filter an array of users of the template menu view
      *
      * @param User[] $users
+     * @param string|null $current_username the currently selected username or null if not user is selected
      *
      * @return array
      */
-    public static function filterMenuTemplate($users)
+    public static function filterMenuTemplate($users, $current_username = null)
     {
         $template_users = [];
         foreach ($users as $user)
@@ -548,9 +549,16 @@ class User extends Base
             // manage this type of user
             if ($user->isActive() || static::hasPermissionOnRole($user->getRole()))
             {
+                // set css class
+                $class = $user->isActive() ? "" : "disabled ";
+                if ($current_username && $current_username === $user->getUserName())
+                {
+                    $class .= "active ";
+                }
+
                 $template_users[] = [
                     'username' => h($user->getUserName()),
-                    'active'   => $user->isActive()
+                    'class'    => $class
                 ];
             }
         }
@@ -1416,7 +1424,7 @@ class User extends Base
     {
         if (!Util::isURL($homepage))
         {
-            throw new UserException("Homepage url is not valid");
+            throw new UserException(_h("Homepage url is not valid"));
         }
 
         if (mb_strlen($homepage) > static::MAX_HOMEPAGE)

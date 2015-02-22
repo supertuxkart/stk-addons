@@ -77,9 +77,9 @@
                 <div class="col-md-6">
                     <input type="password" name="new-pass" id="user-settings-new-pass" class="form-control">
                 </div>
-                        <span class="help-block">
-                            ({t 1=8}Must be at least %1 characters long{/t})
-                        </span>
+                <span class="help-block">
+                    ({t 1=8}Must be at least %1 characters long{/t})
+                </span>
             </div>
             <div class="form-group">
                 <label class="col-md-2 control-label" for="user-settings-new-pass-verify">
