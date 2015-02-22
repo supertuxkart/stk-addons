@@ -37,7 +37,7 @@
                         </td>
                         <td>
                             <div class="btn-group" data-id="{$friend->getUser()->getId()}" data-tab="friends">
-                                {$class_accept=" hide"} {$class_decline=" hide"} {$class_cancel=" hide"} {$class_remove=" hide"}
+                                {$class_accept=" hidden"} {$class_decline=" hidden"} {$class_cancel=" hidden"} {$class_remove=" hidden"}
                                 {if $is_pending}
                                     {if $is_asker}
                                         {$class_accept=""} {$class_decline=""}

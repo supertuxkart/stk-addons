@@ -5,7 +5,7 @@
             {if !$is_owner}
                 {*Friend buttons*}
                 <div class="btn-group pull-right" data-id="{$user.user_id}" data-tab="profile">
-                    {$class_accept=" hide"} {$class_decline=" hide"} {$class_cancel=" hide"} {$class_already=" hide"} {$class_send=" hide"}
+                    {$class_accept=" hidden"} {$class_decline=" hidden"} {$class_cancel=" hidden"} {$class_already=" hidden"} {$class_send=" hidden"}
                     {if !empty($logged_friend)}
                         {if $logged_friend.is_pending}
                             {if $logged_friend.is_asker}
@@ -54,7 +54,7 @@
 
         {$homepage_class=""}
         {if empty($user.homepage)}
-            {$homepage_class=" hide"}
+            {$homepage_class=" hidden"}
         {/if}
         <div class="row form-group{$homepage_class}" id="user-homepage-row">
             <div class="col-md-3">{t}Homepage:{/t}</div>

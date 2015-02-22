@@ -42,8 +42,8 @@
 
     // begin helper functions
     function btnToggle() {
-        $btn_add.toggleClass("hide");
-        $btn_back.toggleClass("hide");
+        $btn_add.toggleClass("hidden");
+        $btn_back.toggleClass("hidden");
     }
 
     function bugFormSubmit(form_identifier, callback_success) {

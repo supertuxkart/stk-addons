@@ -83,8 +83,8 @@
                 if (tab === "friends") {
                     console.log("not handled");
                 } else if (tab === "profile") {
-                    $this.addClass("hide");
-                    $("#profile .btn-cancel-friend").removeClass("hide");
+                    $this.addClass("hidden");
+                    $("#profile .btn-cancel-friend").removeClass("hidden");
                 }
             });
         });
@@ -122,15 +122,15 @@
             jsonCallback(data, function() {
                 // update view
                 if (tab === "friends") {
-                    $this.addClass("hide");
-                    $this.siblings(".btn-decline-friend").addClass("hide");
-                    $this.siblings(".btn-remove-friend").removeClass("hide");
+                    $this.addClass("hidden");
+                    $this.siblings(".btn-decline-friend").addClass("hidden");
+                    $this.siblings(".btn-remove-friend").removeClass("hidden");
                     $parent.closest("tr").removeClass("danger");
                     $parent.closest("td").prev().text("Offline");
                 } else if (tab === "profile") {
-                    $this.addClass("hide");
-                    $("#profile .btn-decline-friend").addClass("hide");
-                    $("#profile .btn-already-friend").removeClass("hide");
+                    $this.addClass("hidden");
+                    $("#profile .btn-decline-friend").addClass("hidden");
+                    $("#profile .btn-already-friend").removeClass("hidden");
                 }
             });
         });
@@ -149,9 +149,9 @@
                 if (tab === "friends") {
                     $parent.closest("tr").remove();
                 } else if (tab === "profile") {
-                    $this.addClass("hide");
-                    $("#profile .btn-accept-friend").addClass("hide");
-                    $("#profile .btn-send-friend").removeClass("hide");
+                    $this.addClass("hidden");
+                    $("#profile .btn-accept-friend").addClass("hidden");
+                    $("#profile .btn-send-friend").removeClass("hidden");
                 }
             });
         });
@@ -170,8 +170,8 @@
                 if (tab === "friends") {
                     $parent.closest("tr").remove();
                 } else if (tab === "profile") {
-                    $this.addClass("hide");
-                    $("#profile .btn-send-friend").removeClass("hide");
+                    $this.addClass("hidden");
+                    $("#profile .btn-send-friend").removeClass("hidden");
                 }
             });
         });
@@ -188,9 +188,9 @@
             var homepage = getByID("user-profile-homepage").value;
             var $homepage_row = $("#user-homepage-row");
             if (_.isEmpty(homepage)) { // homepage is empty, hide the view
-                $homepage_row.addClass("hide");
+                $homepage_row.addClass("hidden");
             } else { // homepage is not empty
-                $homepage_row.removeClass("hide");
+                $homepage_row.removeClass("hidden");
                 $("#user-homepage").text(homepage);
             }
         });

@@ -29,9 +29,9 @@
         <div class="col-md-2 text-right">
             {if !empty($bugs.show_btn_file) && $bugs.show_btn_file == true}
                 {$btn_file_hide=""}
-                {$btn_back_hide=" hide"}
+                {$btn_back_hide=" hidden"}
             {else}
-                {$btn_file_hide=" hide"}
+                {$btn_file_hide=" hidden"}
                 {$btn_back_hide=""}
             {/if}
 
