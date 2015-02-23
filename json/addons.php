@@ -228,17 +228,16 @@ switch ($_POST["action"])
         try
         {
             $addon->setNotes($_POST, $_POST['fields']);
-
         }
         catch(Exception $e)
         {
-
+            exit_json_error($e->getMessage());
         }
 
         exit_json_success(_h('Saved notes.'));
         break;
 
     default:
-        exit_json_error(printf("action = %s is not recognized", h($_POST["action"])));
+        exit_json_error(sprintf("action = %s is not recognized", h($_POST["action"])));
         break;
 }

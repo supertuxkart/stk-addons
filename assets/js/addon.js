@@ -278,9 +278,9 @@
 
     // delete addon
     $addon_body.on("click", "#btn-delete-addon", function() {
-        modalDelete("Are you sure you want to delete this addon?", function() {
-            var addon_id = $("#addon-id").val();
+        var addon_id = $("#addon-id").val();
 
+        modalDelete("Are you sure you want to delete this addon?", function() {
             $.post(json_url, {action: "delete-addon", "addon-id": addon_id}, function(data) {
                 jsonCallback(data, function() {
                     // update view

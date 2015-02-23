@@ -847,7 +847,6 @@ class Util
 
         if (!file_exists($write_dir . $image_name))
         {
-            trigger_error("WTF");
             $text_size = 11;
             $text_angle = 90;
             $font = FONTS_PATH . 'DejaVuSans.ttf';
