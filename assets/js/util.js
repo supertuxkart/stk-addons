@@ -1,5 +1,5 @@
 /**
- * copyright 2014 Daniel Butum <danibutum at gmail dot com>
+ * copyright 2014-2015 Daniel Butum <danibutum at gmail dot com>
  *
  * This file is part of stkaddons
  *
@@ -369,7 +369,7 @@ function editorInit($editor_container, editor_options) {
  *
  * @return {object} hash map of all vars
  */
-function getUrlVars(url) {
+function getUrlVars(url) { // TODO fix usage of getUrlVars because if we activate the .htaccess some features might not work
     url = url || window.location.href;
 
     var vars = {}, hash, slice_start = url.indexOf('?');

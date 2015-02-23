@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright        2009 Lucas Baudin <xapantu@gmail.com>
- *           2011 - 2014 Stephen Just <stephenjust@gmail.com>
- *                  2014 Daniel Butum <danibutum at gmail dot com>
+ * Copyright      2009 Lucas Baudin <xapantu@gmail.com>
+ *           2011-2014 Stephen Just <stephenjust@gmail.com>
+ *           2014-2015 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -18,11 +18,10 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
 
 $id = isset($_GET['name']) ? $_GET['name'] : "";
-$a_tpl = new StkTemplate('addons/panel.tpl');
+$a_tpl = StkTemplate::get('addons/panel.tpl');
 
 try
 {

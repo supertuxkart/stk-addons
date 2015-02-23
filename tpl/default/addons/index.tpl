@@ -36,6 +36,7 @@
             <div id="addon-status">
                 {$addon.status}
             </div>
+            <input type="hidden" id="addon-type" value="{$addon.type}">
             <div id="addon-body">
                 {if $is_name && empty($addon.body)}
                     <br>

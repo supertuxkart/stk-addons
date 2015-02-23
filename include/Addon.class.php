@@ -171,7 +171,7 @@ class Addon extends Base
             {
                 $this->latest_revision = (int)$rev['revision'];
                 $this->image = $rev['image'];
-                $this->icon = (isset($rev['icon'])) ? $rev['icon'] : 0;
+                $this->icon = isset($rev['icon']) ? (int)$rev['icon'] : 0;
             }
 
             $this->revisions[$rev['revision']] = $current_rev;
@@ -186,8 +186,8 @@ class Addon extends Base
     /**
      * Instance constructor
      *
-     * @param array  $data           the addon data retrieved from the database
-     * @param bool   $load_revisions load also the revisions
+     * @param array $data           the addon data retrieved from the database
+     * @param bool  $load_revisions load also the revisions
      *
      * @throws AddonException
      */
@@ -305,13 +305,15 @@ class Addon extends Base
             // Send mail to moderators
             SMail::get()->moderatorNotification(
                 'New Addon Upload',
-                h(sprintf(
-                    "%s has uploaded a new revision for %s '%s' %s",
-                    User::getLoggedUserName(),
-                    $this->type,
-                    $attributes['name'],
-                    (string)$this->id
-                ))
+                h(
+                    sprintf(
+                        "%s has uploaded a new revision for %s '%s' %s",
+                        User::getLoggedUserName(),
+                        $this->type,
+                        $attributes['name'],
+                        (string)$this->id
+                    )
+                )
             );
         }
         catch(SMailException $e)
@@ -385,7 +387,6 @@ class Addon extends Base
             throw new AddonException(exception_message_db(_('remove addon')));
         }
 
-        writeXML();
         Log::newEvent("Deleted add-on '{$this->name}'");
     }
 
@@ -417,7 +418,6 @@ class Addon extends Base
     {
         $this->checkUserEditPermissions();
 
-        $rev = (int)$rev;
         if ($rev < 1 || !isset($this->revisions[$rev]))
         {
             throw new AddonException(_h('The revision you are trying to delete does not exist.'));
@@ -448,18 +448,17 @@ class Addon extends Base
                 $this->type . '_revs',
                 "`addon_id` = :id AND `revision` = :revision",
                 [
-                    ':addon_id' => $this->id,
+                    ':id'       => $this->id,
                     ':revision' => $rev
                 ]
             );
         }
         catch(DBException $e)
         {
-            throw new AddonException(exception_message_db(_('delete revisions')));
+            throw new AddonException(exception_message_db(_('delete a revision')));
         }
 
         Log::newEvent('Deleted revision ' . $rev . ' of \'' . $this->name . '\'');
-        writeXML();
     }
 
     /**
@@ -481,7 +480,7 @@ class Addon extends Base
      */
     public function getImage($icon = false)
     {
-        if ($icon === false)
+        if (!$icon)
         {
             return $this->image;
         }
@@ -673,6 +672,7 @@ class Addon extends Base
             throw new AddonException(_h('An invalid revision was provided.'));
         }
 
+        // TODO, optimize, use one query
         // Look up file ID
         try
         {
@@ -853,8 +853,6 @@ class Addon extends Base
 
         $this->description = $description;
 
-        writeXML();
-
         return $this;
     }
 
@@ -890,17 +888,16 @@ class Addon extends Base
 
         $this->designer = $designer;
 
-        writeXML();
         return $this;
     }
 
     /**
      * Set the image for the latest revision of this add-on.
      *
-     * @param integer $image_id
-     * @param string  $field
+     * @param int    $image_id
+     * @param string $field should only be set called internal methods
      *
-     * @return static
+     * @return Addon
      * @throws AddonException
      */
     public function setImage($image_id, $field = 'image')
@@ -923,10 +920,30 @@ class Addon extends Base
         }
         catch(DBException $e)
         {
-            throw new AddonException(exception_message_db(_('update the image')));
+            throw new AddonException(exception_message_db(_('update the image/icon')));
         }
 
         return $this;
+    }
+
+
+    /**
+     * Set the icon for the latest revision of a kart
+     * Only useful for karts
+     *
+     * @param int $icon_id
+     *
+     * @throws AddonException on database error or addon type does not have an icon
+     * @return Addon
+     */
+    public function setIcon($icon_id)
+    {
+        if ($this->type !== static::KART)
+        {
+            throw new AddonException(_h("This addon type does not have an icon associated with it"));
+        }
+
+        return $this->setImage($icon_id, 'icon');
     }
 
     /**
@@ -942,8 +959,15 @@ class Addon extends Base
     {
         $this->checkUserEditPermissions();
 
-        Validate::versionString($start_ver);
-        Validate::versionString($end_ver);
+        try
+        {
+            Validate::versionString($start_ver);
+            Validate::versionString($end_ver);
+        }
+        catch(ValidateException $e)
+        {
+            throw new AddonException($e->getMessage());
+        }
 
         try
         {
@@ -966,8 +990,6 @@ class Addon extends Base
 
         $this->include_min = $start_ver;
         $this->include_max = $end_ver;
-
-        writeXML();
 
         return $this;
     }
@@ -1041,29 +1063,34 @@ class Addon extends Base
     /**
      * Set notes on this addon
      *
-     * @param string $fields
+     * @param array  $pool   where each field is located
+     * @param string $fields hold all the fields in a comma separated array
      *
      * @return static
      * @throws AddonException
      */
-    public function setNotes($fields)
+    public function setNotes(array $pool, $fields)
     {
         $this->checkUserEditPermissions();
 
+        // prepare notes array
         $fields = explode(',', $fields);
         $notes = [];
         foreach ($fields as $field)
         {
-            // TODO remove post fields
-            if (!isset($_POST[$field]))
+            // TODO make more robust
+            // set default value if field is not in pool
+            if (!isset($pool[$field]))
             {
-                $_POST[$field] = null;
+                $pool[$field] = '';
             }
-            $fieldinfo = explode('-', $field);
-            $revision = (int)$fieldinfo[1];
+
+            // notes-$rev_n
+            $field_info = explode('-', $field);
+            $revision = (int)$field_info[1];
 
             // Update notes
-            $notes[$revision] = $_POST[$field];
+            $notes[$revision] = $pool[$field];
         }
 
         // Save record in database
@@ -1091,7 +1118,7 @@ class Addon extends Base
         }
 
         // Generate email
-        $email_body = null;
+        $email_body = '';
         $notes = array_reverse($notes, true);
         foreach ($notes as $revision => $value)
         {
@@ -1104,14 +1131,13 @@ class Addon extends Base
         try
         {
             $user = DBConnection::get()->query(
-                'SELECT `name`,`email`
+                'SELECT `name`, `email`
                 FROM `' . DB_PREFIX . 'users`
                 WHERE `id` = :user_id
                 LIMIT 1',
                 DBConnection::FETCH_FIRST,
-                [
-                    ':user_id' => $this->uploader_id,
-                ]
+                [':user_id' => $this->uploader_id],
+                [':user_id' => DBConnection::PARAM_INT]
             );
         }
         catch(DBException $e)
@@ -1154,12 +1180,13 @@ class Addon extends Base
     /**
      * Set the status flags of an addon
      *
-     * @param string $fields
+     * @param array  $pool   where each field is located
+     * @param string $fields hold all the fields in a comma separated array
      *
      * @return static
      * @throws AddonException
      */
-    public function setStatus($fields)
+    public function setStatus(array $pool, $fields)
     {
         $has_permission = User::hasPermission(AccessControl::PERM_EDIT_ADDONS);
 
@@ -1191,17 +1218,16 @@ class Addon extends Base
             $flag = "";
             $is_checked = $is_latest = false;
 
-            // TODO remove post fields
-            if (isset($_POST[$field])) // field is on most likely
+            if (isset($pool[$field])) // field is on most likely
             {
-                if ($_POST[$field] === 'on')
+                if ($pool[$field] === 'on')
                 {
                     $is_checked = true;
                 }
 
                 if ($field === 'latest') // latest field
                 {
-                    $revision = (int)$_POST['latest'];
+                    $revision = (int)$pool['latest'];
                     $is_latest = true;
                 }
                 else // normal field
@@ -1317,7 +1343,6 @@ class Addon extends Base
             }
         }
 
-        writeXML();
         Log::newEvent("Set status for add-on '{$this->name}'");
 
         return $this;
@@ -1488,11 +1513,12 @@ class Addon extends Base
      * Filter an array of addons for the addon menu template
      *
      * @param Addon[] $addons
-     * @param string  $type addon type
+     * @param string  $type       addon type
+     * @param string  $current_id the current selected addon
      *
      * @return array
      */
-    public static function filterMenuTemplate($addons, $type)
+    public static function filterMenuTemplate($addons, $type, $current_id = null)
     {
         $has_permission = User::hasPermission(AccessControl::PERM_EDIT_ADDONS);
         $template_addons = [];
@@ -1539,6 +1565,12 @@ class Addon extends Base
             {
                 // do not show
                 continue;
+            }
+
+            // is currently selected
+            if ($current_id && $current_id === $addon->getId())
+            {
+                $class .= " active";
             }
 
             $real_url = sprintf("addons.php?type=%s&amp;name=%s", $type, $addon->getId());
@@ -1823,6 +1855,7 @@ class Addon extends Base
         ];
         if ($type === static::TRACK)
         {
+            // TODO find usage or delete this
             if ($attributes['arena'] === 'Y')
             {
                 $fields_data[":props"] = '1';
@@ -1883,13 +1916,15 @@ class Addon extends Base
             // Send mail to moderators
             SMail::get()->moderatorNotification(
                 'New Addon Upload',
-                h(sprintf(
-                    "%s has uploaded a new %s '%s' %s",
-                    User::getLoggedUserName(),
-                    $type,
-                    $attributes['name'],
-                    (string)$id
-                ))
+                h(
+                    sprintf(
+                        "%s has uploaded a new %s '%s' %s",
+                        User::getLoggedUserName(),
+                        $type,
+                        $attributes['name'],
+                        (string)$id
+                    )
+                )
             );
         }
         catch(SMailException $e)
@@ -1983,6 +2018,7 @@ class Addon extends Base
      * If addon is approved
      *
      * @param int $status
+     *
      * @return bool
      */
     public static function isApproved($status)
@@ -1994,6 +2030,7 @@ class Addon extends Base
      * If addon is in alpha
      *
      * @param int $status
+     *
      * @return bool
      */
     public static function isAlpha($status)
@@ -2005,6 +2042,7 @@ class Addon extends Base
      * If addon is in beta
      *
      * @param int $status
+     *
      * @return bool
      */
     public static function isBeta($status)
@@ -2016,6 +2054,7 @@ class Addon extends Base
      * If addon is in release candidate
      *
      * @param int $status
+     *
      * @return bool
      */
     public static function isReleaseCandidate($status)
@@ -2027,6 +2066,7 @@ class Addon extends Base
      * If addon is invisible
      *
      * @param int $status
+     *
      * @return bool
      */
     public static function isInvisible($status)
@@ -2038,6 +2078,7 @@ class Addon extends Base
      * If addon is Debian Free Software Guidelines compliant
      *
      * @param int $status
+     *
      * @return bool
      */
     public static function isDFSGCompliant($status)
@@ -2049,6 +2090,7 @@ class Addon extends Base
      * If addon is featured
      *
      * @param int $status
+     *
      * @return bool
      */
     public static function isFeatured($status)
@@ -2060,6 +2102,7 @@ class Addon extends Base
      * If addon is latest
      *
      * @param int $status
+     *
      * @return bool
      */
     public static function isLatest($status)
@@ -2071,6 +2114,7 @@ class Addon extends Base
      * If texture is not a power of two, the the texture is invalid
      *
      * @param int $status
+     *
      * @return bool
      */
     public static function isTextureInvalid($status)

@@ -26,7 +26,7 @@
 class AccessControl
 {
     /**
-     * Can view the most basic pages
+     * Can view the most basic pages, if this is set, then the user is logged in
      * @var string
      */
     const PERM_VIEW_BASIC_PAGE = "view_basic_page";

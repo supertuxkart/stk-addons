@@ -51,9 +51,17 @@ class AddonViewer
     private $user_is_owner = false;
 
     /**
+     * Indicates if the user is a privileged user can edit the addon
      * @var bool
      */
     private $user_has_permission = false;
+
+
+    /**
+     * Indicates if the user is the owner of the addon  or has edit permission
+     * @var bool
+     */
+    private $can_edit = false;
 
     /**
      * Constructor
@@ -71,6 +79,7 @@ class AddonViewer
         {
             $this->user_is_owner = ($this->addon->getUploaderId() === User::getLoggedId());
             $this->user_has_permission = User::hasPermission(AccessControl::PERM_EDIT_ADDONS);
+            $this->can_edit = ($this->user_is_owner || $this->user_has_permission);
         }
 
         // can view addon
@@ -122,12 +131,8 @@ class AddonViewer
             'sources'        => []
         ];
 
-        // build permission variables
-        $can_edit = false;
         if ($this->user_is_logged) // not logged in, no reason to do checking
         {
-            $can_edit = ($this->user_is_owner || $this->user_has_permission);
-
             $tpl['vote'] = $this->rating->displayUserRating(User::getLoggedId());
         }
 
@@ -177,7 +182,7 @@ class AddonViewer
             $is_approved = Addon::isApproved($status);
 
             // If the user is not the uploader, or moderators, then they cannot see unapproved addons
-            if (!$can_edit && !$is_approved)
+            if (!$this->can_edit && !$is_approved)
             {
                 continue;
             }
@@ -187,7 +192,6 @@ class AddonViewer
                 'timestamp'    => $revision['timestamp'],
                 'file_path'    => DOWNLOAD_LOCATION . $this->addon->getFile($rev_n),
                 'dl_label'     => h(sprintf(_('Download revision %u'), $rev_n)),
-                'delete_link'  => File::rewrite($this->addon->getLink() . '&amp;save=del_rev&amp;rev=' . $rev_n),
                 // status vars
                 'is_approved'  => $is_approved,
                 'is_invisible' => Addon::isInvisible($status),
@@ -217,44 +221,25 @@ class AddonViewer
             $image['thumb']['url'] = $imageCache['url'];
             $image['url'] = DOWNLOAD_LOCATION . $image['file_path'];
             $image['approved'] = (bool)$image['approved'];
+            $image["has_icon"] = $image["has_image"] = false;
 
-            // do not compute anything
-            if (!$can_edit && !$image['approved'])
+            // do not display
+            if (!$this->can_edit && !$image['approved'])
             {
                 continue;
             }
 
-            $admin_links = null;
-            if ($this->user_is_logged)
+            // edit addons and the owner
+            if ($this->can_edit)
             {
-                // only users that can edit addons
-                if ($this->user_has_permission)
+                // has_icon, current icon is not already the icon
+                if ($this->addon->getType() === Addon::KART && $this->addon->getImage(true) != $image['id'])
                 {
-                    if ($image['approved'])
-                    {
-                        $image["unapprove_link"] = File::rewrite($this->addon->getLink() . '&amp;save=unapprove&amp;id=' . $image['id']);
-                    }
-                    else
-                    {
-                        $image["approve_link"] = File::rewrite($this->addon->getLink() . '&amp;save=approve&amp;id=' . $image['id']);
-                    }
+                    $image["has_icon"] = true;
                 }
-
-                // edit addons and the owner
-                if ($can_edit)
+                if ($this->addon->getImage() != $image['id']) // current image is not already the image
                 {
-                    if ($this->addon->getType() == Addon::KART)
-                    {
-                        if ($this->addon->getImage(true) != $image['id'])
-                        {
-                            $image["icon_link"] = File::rewrite($this->addon->getLink() . '&amp;save=seticon&amp;id=' . $image['id']);
-                        }
-                    }
-                    if ($this->addon->getImage() != $image['id'])
-                    {
-                        $image["image_link"] = File::rewrite($this->addon->getLink() . '&amp;save=setimage&amp;id=' . $image['id']);
-                    }
-                    $image["delete_link"] = File::rewrite($this->addon->getLink() . '&amp;save=deletefile&amp;id=' . $image['id']);
+                    $image["has_image"] = true;
                 }
             }
 
@@ -266,50 +251,24 @@ class AddonViewer
         $source_number = 0;
         foreach ($source_files_db as $source)
         {
-            $source['label'] = sprintf(_h('Source File %u'), $source_number + 1);
             $source['approved'] = (bool)$source['approved'];
 
-            // do not compute anything
-            if (!$can_edit && !$source['approved'])
+            // do not display
+            if (!$this->can_edit && !$source['approved'])
             {
                 continue;
             }
-
-            $source['download_link'] = DOWNLOAD_LOCATION . $source['file_path'];
-            if ($this->user_is_logged)
-            {
-                if ($this->user_has_permission)
-                {
-                    if ($source['approved'])
-                    {
-                        $source['unapprove_link'] = File::rewrite($this->addon->getLink() . '&amp;save=unapprove&amp;id=' . $source['id']);
-                    }
-                    else
-                    {
-                        $source['approve_link'] = File::rewrite($this->addon->getLink() . '&amp;save=approve&amp;id=' . $source['id']);
-                    }
-                }
-
-                if ($can_edit)
-                {
-                    $source['delete_link'] = File::rewrite($this->addon->getLink() . '&amp;save=deletefile&amp;id=' . $source['id']);
-                }
-            }
-
+            $source['label'] = sprintf(_h('Source File %u'), $source_number + 1);
+            $source['href'] = DOWNLOAD_LOCATION . $source['file_path'];
             $tpl['sources'][] = $source;
             $source_number++;
         }
 
         // configuration
-        if ($can_edit)
+        if ($this->can_edit)
         {
             $config = [
-                "change_props_action" => File::rewrite($this->addon->getLink() . '&amp;save=props'),
-                "delete_link"         => File::rewrite($this->addon->getLink() . '&amp;save=delete'),
-                "include_action"      => File::rewrite($this->addon->getLink() . '&amp;save=include'),
-                "moderator_action"    => File::rewrite($this->addon->getLink() . '&amp;save=notes'),
-                "status"              => [
-                    "action"      => File::rewrite($this->addon->getLink() . '&amp;save=status'),
+                "status" => [
                     "alpha_img"   => Util::getImageLabel(_h('Alpha')),
                     "beta_img"    => Util::getImageLabel(_h('Beta')),
                     "rc_img"      => Util::getImageLabel(_h('Release-Candidate')),
@@ -331,7 +290,7 @@ class AddonViewer
 
         $template->assign('addon', $tpl)
             ->assign("has_permission", $this->user_has_permission)
-            ->assign("can_edit", $can_edit)
+            ->assign("can_edit", $this->can_edit)
             ->assign("is_logged", $this->user_is_logged);
     }
 

@@ -9,7 +9,7 @@
     {$checked_3=" checked"}
 {/if}
 
-<span id="user-rating" data-id="{$addon_id}">
+<span id="user-rating">
     <input type="radio" name="rating" id="rating-1" class="add-rating" value="1"{$checked_1}>
     <label for="rating-1">
         <div class="rating">

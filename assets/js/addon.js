@@ -1,6 +1,6 @@
 /**
- * copyright 2013 Stephen Just <stephenjust@gmail.com>
- *           2014 Daniel Butum <danibutum at gmail dot com>
+ * copyright 2013      Stephen Just <stephenjust@gmail.com>
+ *           2014-2015 Daniel Butum <danibutum at gmail dot com>
  *
  * This file is part of stkaddons
  *
@@ -18,22 +18,21 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function confirm_delete(url) {
-    if (confirm("Really delete this item?")) {
-        window.location = url;
-    }
-}
-
 (function($, ROOT_LOCATION, JSON_LOCATION) {
     "use strict";
 
-    var json_url = JSON_LOCATION + "rating.php",
+    var json_url_rating = JSON_LOCATION + "rating.php",
+        json_url = JSON_LOCATION + "addons.php",
+        addon_type = $("#addon-type").val(), // once per page, the addon_id is in every panel
         $addon_body = $("#addon-body"),
         $addon_menu = $("#addon-menu"),
         $addon_sort = $("#addon-sort"),
         $search_by = $("#addon-search-by"),
-        addon_type = getUrlVars()["type"],
         original_menu;
+
+    function addonFormSubmit(form_identifier, callback_success) {
+        onFormSubmit(form_identifier, callback_success, $addon_body, json_url, {}, "POST");
+    }
 
     $('.multiselect').multiselect({});
 
@@ -73,28 +72,23 @@ function confirm_delete(url) {
     // left panel user addon clicked
     $addon_menu.on("click", "a.addon-list", function() {
         History.pushState(null, '', this.href);
-        var url = this.href;
-        var addonType = getUrlVars(url)['type'];
-        if (addonType === undefined) {
-            url = ROOT_LOCATION + $(this).children('meta').attr("content").replace('&amp;', '&');
-            addonType = getUrlVars(url)['type'];
-        }
+        var $this = $(this),
+            addon_id = $this.data("id");
 
-        var addonId = getUrlVars(url)['name']; // we use the id as a varchar in the database
-        loadContent($addon_body, ROOT_LOCATION + 'addons-panel.php', {name: addonId, type: addonType});
-        markMenuItemAsActive($(this));
+        loadContent($addon_body, ROOT_LOCATION + 'addons-panel.php', {name: addon_id, type: addon_type});
+        markMenuItemAsActive($this);
 
         return false;
     });
 
     // rating clicked
     $addon_body.on("click", '.add-rating', function() {
-        var addon_id = $("#user-rating").data("id"),
-            $ratings_container = $("#rating-container"),
+        var $ratings_container = $("#rating-container"),
+            addon_id = $("#addon-id").val(),
             rating = this.value;
 
         // set new rating
-        $.get(json_url, {"action": "set", "addon-id": addon_id, "rating": rating}, function(data) {
+        $.get(json_url_rating, {"action": "set", "addon-id": addon_id, "rating": rating}, function(data) {
             jsonCallback(data, function(jData) {
                 console.log(jData["success"]);
 
@@ -155,7 +149,145 @@ function confirm_delete(url) {
             $span.addClass("glyphicon " + icon_add);
         }
 
-        loadContent($addon_menu, "addons-menu.php", {type: addon_type, sort: sort_type, order: sort_order}, function() {}, "GET");
-    })
+        loadContent($addon_menu, "addons-menu.php", {type: addon_type, sort: sort_type, order: sort_order}, function() {
+        }, "GET");
+    });
+
+    // addon proprieties changed
+    addonFormSubmit("#addon-edit-props", function(data) {
+        jsonCallback(data, function() {
+            // update view
+            $("#addon-description").html($("#addon-edit-description").val());
+            $("#addon-designer").html($("#addon-edit-designer").val());
+        });
+    });
+
+    // game include versions changed
+    addonFormSubmit("#addon-edit-include-versions", function(data) {
+        jsonCallback(data);
+    });
+
+    // set flags
+    addonFormSubmit("#addon-set-flags", function(data) {
+        jsonCallback(data);
+    });
+
+    // set notes
+    addonFormSubmit("#addon-set-notes", function(data) {
+        jsonCallback(data);
+    });
+
+    // approve file
+    $addon_body.on("click", ".btn-approve-file", function() {
+        var $this = $(this),
+            $parent = $this.parent(),
+            file_id = $parent.data("id");
+
+        $.post(json_url, {action: "update-approval-file", "approve": true, "file-id": file_id}, function(data) {
+            jsonCallback(data, function() {
+                // update view
+                $this.addClass("hidden");
+                $this.siblings(".btn-unapprove-file").removeClass("hidden");
+                $parent.parent().removeClass("bg-danger").addClass("bg-success");
+            });
+        });
+    });
+
+    // unapprove file
+    $addon_body.on("click", ".btn-unapprove-file", function() {
+        var $this = $(this),
+            $parent = $this.parent(),
+            file_id = $parent.data("id");
+
+        $.post(json_url, {action: "update-approval-file", "approve": false, "file-id": file_id}, function(data) {
+            jsonCallback(data, function() {
+                // update view
+                $this.addClass("hidden");
+                $this.siblings(".btn-approve-file").removeClass("hidden");
+                $parent.parent().removeClass("bg-success").addClass("bg-danger");
+            });
+        });
+    });
+
+    // set icon for file
+    $addon_body.on("click", ".btn-set-icon", function() {
+        var $this = $(this),
+            $parent = $this.parent(),
+            addon_id = $("#addon-id").val(),
+            file_id = $parent.data("id");
+
+        $.post(json_url, {action: "set-icon", "file-id": file_id, "addon-id": addon_id}, function(data) {
+            jsonCallback(data, function() {
+                // update view
+                $(".btn-set-icon").removeClass("hidden");
+                $this.addClass("hidden");
+                // TODO update image icon
+            });
+        });
+    });
+
+    // set image for file
+    $addon_body.on("click", ".btn-set-image", function() {
+        var $this = $(this),
+            $parent = $this.parent(),
+            addon_id = $("#addon-id").val(),
+            file_id = $parent.data("id");
+
+        $.post(json_url, {action: "set-image", "file-id": file_id, "addon-id": addon_id}, function(data) {
+            jsonCallback(data, function() {
+                // update view
+                $(".btn-set-image").removeClass("hidden");
+                $this.addClass("hidden");
+                // TODO update image on page
+            });
+        });
+    });
+
+    // delete file
+    $addon_body.on("click", ".btn-delete-file", function() {
+        var $this = $(this),
+            $parent = $this.parent(),
+            addon_id = $("#addon-id").val(),
+            file_id = $parent.data("id");
+
+        modalDelete("Are you sure you want to delete this file?", function() {
+            $.post(json_url, {action: "delete-file", "file-id": file_id, "addon-id": addon_id}, function(data) {
+                jsonCallback(data, function() {
+                    // update view
+                    $parent.parent().remove();
+                });
+            });
+        });
+    });
+
+    // delete revision
+    $addon_body.on("click", ".btn-delete-revision", function() {
+        var $this = $(this),
+            addon_id = $("#addon-id").val(),
+            rev_id = $this.data("id");
+
+        modalDelete("Are you sure you want to delete this revision?", function() {
+            $.post(json_url, {action: "delete-revision", "revision-id": rev_id, "addon-id": addon_id}, function(data) {
+                jsonCallback(data, function() {
+                    // update view
+                    refreshPage(); // TODO
+                });
+            });
+        });
+    });
+
+    // delete addon
+    $addon_body.on("click", "#btn-delete-addon", function() {
+        modalDelete("Are you sure you want to delete this addon?", function() {
+            var addon_id = $("#addon-id").val();
+
+            $.post(json_url, {action: "delete-addon", "addon-id": addon_id}, function(data) {
+                jsonCallback(data, function() {
+                    // update view
+                    refreshPage(); // TODO
+                });
+            });
+        });
+    });
 
 })(jQuery, ROOT_LOCATION, JSON_LOCATION);

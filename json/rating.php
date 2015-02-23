@@ -1,7 +1,7 @@
 <?php
 /**
  * copyright 2011 computerfreak97
- *           2014 Daniel Butum <danibutum at gmail dot com>
+ *           2014-2015 Daniel Butum <danibutum at gmail dot com>
  *
  * This file is part of stkaddons
  *
@@ -19,14 +19,13 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
-AccessControl::setLevel(AccessControl::PERM_VIEW_BASIC_PAGE);
 
 if (empty($_GET['addon-id']))
 {
     exit_json_error('No addon id provided');
 }
 
-if (empty($_GET["action"]))
+if (!isset($_GET["action"]))
 {
     exit_json_error("action param is not defined or is empty");
 }
@@ -35,6 +34,10 @@ if (!Addon::exists($_GET['addon-id']))
 {
     exit_json_error('The addon does not exist ' . h($_GET['addon-id']));
 }
+if (!User::isLoggedIn())
+{
+    exit_json_error("You are not logged in");
+}
 
 $rating = Rating::get($_GET['addon-id']);
 switch ($_GET['action'])
@@ -42,7 +45,7 @@ switch ($_GET['action'])
     case "set": // set rating and get the overall rating
         if (empty($_GET["rating"]))
         {
-            exit_json_error("rating param is not defined or is empty");
+            exit_json_error("Rating param is not defined or is empty");
         }
 
         // set rating

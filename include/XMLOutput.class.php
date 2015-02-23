@@ -19,7 +19,7 @@
  */
 
 /**
- * XMLOutput class, handles all the XML writing behaviour
+ * XMLOutput class, handles all the XML writing behaviour for the API
  */
 class XMLOutput extends XMLWriter
 {
@@ -56,7 +56,7 @@ class XMLOutput extends XMLWriter
      */
     public function printAsString()
     {
-        echo h($this->outputMemory());
+        echo $this->outputMemory();
     }
 
     /**

@@ -842,12 +842,12 @@ class Util
         $write_dir = CACHE_PATH;
         $read_dir = CACHE_LOCATION;
 
-        $text = h($text);
         $text_no_accent = preg_replace('/\W/s', '_', $text); // remove some accents
         $image_name = 'im_' . $text_no_accent . '.png';
 
         if (!file_exists($write_dir . $image_name))
         {
+            trigger_error("WTF");
             $text_size = 11;
             $text_angle = 90;
             $font = FONTS_PATH . 'DejaVuSans.ttf';

@@ -24,6 +24,7 @@ echo "Executed at: " . date('d/m/Y H:i:s', time()) . "\n";
 try
 {
     echo File::deleteQueuedFiles() . "\n";
+    writeXML();
     echo "SUCCESS: File::deleteQueuedFiles \n";
 }
 catch (FileException $e)

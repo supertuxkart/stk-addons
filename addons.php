@@ -2,7 +2,7 @@
 /**
  * Copyright 2009      Lucas Baudin <xapantu@gmail.com>
  *           2011-2014 Stephen Just <stephenjust@gmail.com>
- *           2014      Daniel Butum <danibutum at gmail dot com>
+ *           2014-2015 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -23,7 +23,6 @@ require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
 // Validate addon-id parameter
 $_GET['type'] = (isset($_GET['type'])) ? $_GET['type'] : null;
 $_GET['name'] = (isset($_GET['name'])) ? Addon::cleanId($_GET['name']) : null; // name is actually the id
-$_GET['save'] = (isset($_GET['save'])) ? $_GET['save'] : null;
 $_GET['rev'] = (isset($_GET['rev'])) ? (int)$_GET['rev'] : null;
 $addon_exists = is_null($_GET['name']) ? false : Addon::exists($_GET["name"]);
 $status = "";
@@ -63,93 +62,6 @@ if ($addon_exists)
     {
         $title = $addonName . ' - ' . $title;
     }
-
-    // Execute actions
-    try
-    {
-        switch ($_GET['save'])
-        {
-            case 'props':
-                if (!isset($_POST['description']))
-                {
-                    break;
-                }
-                if (!isset($_POST['designer']))
-                {
-                    break;
-                }
-
-                Addon::get($_GET['name'])
-                    ->setDescription($_POST['description'])
-                    ->setDesigner($_POST['designer']);
-                $status = _h('Saved properties.') . '<br>';
-                break;
-
-            case 'status':
-                if (!isset($_GET['name']) || !isset($_POST['fields']))
-                {
-                    break;
-                }
-                Addon::get($_GET['name'])->setStatus($_POST['fields']);
-                $status = _h('Saved status.') . '<br>';
-                break;
-
-            case 'notes':
-                if (!isset($_GET['name']) || !isset($_POST['fields']))
-                {
-                    break;
-                }
-
-                Addon::get($_GET['name'])->setNotes($_POST['fields']);
-                $status = _h('Saved notes.') . '<br>';
-                break;
-
-            case 'delete':
-                Addon::get($_GET['name'])->delete();
-                $status = _h('Deleted addon.') . '<br>';
-                break;
-
-            case 'del_rev':
-                Addon::get($_GET['name'])->deleteRevision($_GET['rev']);
-                $status = _h('Deleted add-on revision.') . '<br>';
-                break;
-
-            case 'approve':
-            case 'unapprove':
-                $approve = ($_GET['save'] === 'approve') ? true : false;
-                File::approve((int)$_GET['id'], $approve);
-                $status = _h('File updated.') . '<br>';
-                break;
-
-            case 'setimage':
-                Addon::get($_GET['name'])->setImage((int)$_GET['id']);
-                $status = _h('Set image.') . '<br>';
-                break;
-
-            case 'seticon':
-                if ($_GET['type'] !== Addon::KART)
-                {
-                    break;
-                }
-                Addon::get($_GET['name'])->setImage((int)$_GET['id'], 'icon');
-                $status = _h('Set icon.') . '<br>';
-                break;
-
-            case 'deletefile':
-                Addon::get($_GET['name'])->deleteFile((int)$_GET['id']);
-                $status = _h('Deleted file.') . '<br>';
-                break;
-
-            case 'include':
-                Addon::get($_GET['name'])->setIncludeVersions($_POST['incl_start'], $_POST['incl_end']);
-                $status = _h('Marked game versions in which this add-on is included.');
-                break;
-        }
-    }
-    catch(Exception $e)
-    {
-        $status = $e->getMessage();
-    }
 }
 
 // build template
@@ -162,7 +74,8 @@ $tpl = StkTemplate::get("addons/index.tpl")
 $tpl_data = [
     'menu'   => Util::ob_get_require_once(ROOT_PATH . "addons-menu.php"),
     'body'   => '',
-    'status' => $status
+    'type'   => $_GET['type'],
+    'status'  => $status
 ];
 
 // right panel

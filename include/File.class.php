@@ -36,16 +36,6 @@ class File
      */
     public static function approve($file_id, $approve = true)
     {
-        if (!$approve)
-        {
-            $approve = false;
-        }
-
-        if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
-        {
-            throw new FileException(_h('Insufficient permissions to approve a file'));
-        }
-
         try
         {
             DBConnection::get()->query(
@@ -67,8 +57,6 @@ class File
         {
             throw new FileException(exception_message_db(_('change file approval status')));
         }
-
-        writeXML();
     }
 
     /**
@@ -509,8 +497,6 @@ class File
                 static::deleteFileFS(UP_PATH . $file['file_path'], false);
             }
         }
-
-        writeXML();
 
         return true;
     }

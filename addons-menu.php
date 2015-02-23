@@ -2,7 +2,7 @@
 /**
  * Copyright 2009      Lucas Baudin <xapantu@gmail.com>
  *           2011-2014 Stephen Just <stephenjust@gmail.com>
- *           2014      Daniel Butum <danibutum at gmail dot com>
+ *           2014-2015 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -28,7 +28,7 @@ $current_page = PaginationTemplate::getPageNumber();
 $limit = PaginationTemplate::getLimitNumber();
 
 $addons = Addon::getAll($_GET['type'], $limit, $current_page, $_GET['sort'], $_GET['order']);
-$template_addons = Addon::filterMenuTemplate($addons, $_GET['type']);
+$template_addons = Addon::filterMenuTemplate($addons, $_GET['type'], empty($_GET['name']) ? null : $_GET['name']);
 
 $pagination = PaginationTemplate::get()
     ->setItemsPerPage($limit)
@@ -37,7 +37,6 @@ $pagination = PaginationTemplate::get()
 
 $tpl = StkTemplate::get("addons/menu.tpl")
     ->assign("addons", $template_addons)
-    ->assign("current_id", isset($_GET['name']) ? $_GET['name'] : "")
     ->assign("pagination", $pagination->toString());
 
 echo $tpl;

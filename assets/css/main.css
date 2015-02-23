@@ -387,45 +387,25 @@ li div.icon {
 }
 
 /* Addons */
-div.image_thumbs {
-    overflow: auto;
-}
-
-div.image_thumb_container {
-    display: block;
-    background: #CCCCDD;
-    border: 1px solid #666677;
-    border-radius: 3px;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    float: left;
-    padding: 3px;
+.addon-images-container {
     margin: 1px;
     min-width: 78px;
     min-height: 78px;
-    text-align: center;
 }
 
-#addon_flags th {
+#addon-set-flags table th {
     vertical-align: bottom;
-}
-
-/* Addon Description in Panel */
-#addon-description {
-    clear: left;
-    display: block;
 }
 
 /* Addon Rating */
 #rating-container {
     background: #efefef;
     border: 1px solid #cccccc;
-    clear: none;
-    float: right;
     font-size: small;
     font-weight: normal;
     padding: 2px;
     display: block;
+    margin-top: 20px;
 }
 
 #rating-container p {
