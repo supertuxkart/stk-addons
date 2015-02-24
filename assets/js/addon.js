@@ -284,7 +284,7 @@
             $.post(json_url, {action: "delete-addon", "addon-id": addon_id}, function(data) {
                 jsonCallback(data, function() {
                     // update view
-                    refreshPage(); // TODO
+                    $addon_body.html("");
                 });
             });
         });
