@@ -224,10 +224,28 @@ switch ($_POST["action"])
         {
             exit_json_error("One or more proprieties are not set");
         }
+        if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
+        {
+            exit_json_error(_h("You do not have the permission to change this addon's notes"));
+        }
+
+        // prepare notes array
+        $fields = Util::commaStringToArray($_POST["fields"]); // array of numbers
+        $notes = [];
+        foreach ($fields as $field)
+        {
+            $key = "note-" . $field;
+            if (!isset($_POST[$key])) // do not ignore not set fields
+            {
+                exit_json_error(sprintf("Note for revision %s is missing", $field));
+            }
+
+            $notes[(int)$field] = $_POST[$key];
+        }
 
         try
         {
-            $addon->setNotes($_POST, $_POST['fields']);
+            $addon->setNotes($notes);
         }
         catch(Exception $e)
         {

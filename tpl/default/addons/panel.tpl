@@ -212,7 +212,7 @@
             <h3>Actions</h3>
             <button id="btn-delete-addon" class="btn btn-danger">{t}Delete Addon{/t}</button><br>
         </div>
-    </div>
+    </div><hr>
     <div class="row">
         <div class="col-md-12">
             <h3>{t}Configuration{/t}</h3>
@@ -238,7 +238,7 @@
                 </div>
             </form>
         </div>
-    </div>
+    </div><hr>
     {*Mark whether or not an add-on has ever been included in STK*}
     {if $has_permission}
     <div class="row">
@@ -272,7 +272,7 @@
                 </div>
             </form>
         </div>
-    </div>
+    </div><hr>
     {/if}
     {*Set status flags*}
     <div class="row">
@@ -346,20 +346,28 @@
                 </div>
             </form>
         </div>
-    </div>
+    </div><hr>
     {*Moderator notes*}
     <div class="row">
         <div class="col-md-12">
             <h4>{t}Notes from Moderator to Submitter:{/t}</h4>
+            {$readonly=" readonly"}
             {if $has_permission}
+                {$readonly=""}
                 <form id="addon-set-notes">
             {/if}
             {$fields=[]}
             {foreach $addon.revisions as $revision}
                 {$rev_n=$revision@key}
-                {t 1=$rev_n}Rev %1:{/t}<br>
-                <textarea name="notes-{$rev_n}" class="form-control" rows="6" cols="60">{$revision.moderator_note}</textarea><br>
-                {$fields[]="notes-$rev_n"}
+                <div class="row">
+                    <label class="col-md-12" for="note-{$rev_n}">{t 1=$rev_n}Rev %1:{/t}<label>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <textarea name="note-{$rev_n}" id="note-{$rev_n}" class="form-control" rows="6" cols="60"{$readonly}>{$revision.moderator_note}</textarea><br>
+                    </div>
+                </div>
+                {$fields[]="$rev_n"}
             {/foreach}
             {if $has_permission}
                     <div class="col-md-offset-8">

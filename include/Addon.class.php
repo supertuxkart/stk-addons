@@ -1063,39 +1063,22 @@ class Addon extends Base
     /**
      * Set notes on this addon
      *
-     * @param array  $pool   where each field is located
-     * @param string $fields hold all the fields in a comma separated array
+     * @param array $notes an array with key and int marking the revision note and value the note itself
      *
-     * @return static
+     * @return Addon
      * @throws AddonException
      */
-    public function setNotes(array $pool, $fields)
+    public function setNotes(array $notes)
     {
-        $this->checkUserEditPermissions();
-
-        // prepare notes array
-        $fields = explode(',', $fields);
-        $notes = [];
-        foreach ($fields as $field)
-        {
-            // TODO make more robust
-            // set default value if field is not in pool
-            if (!isset($pool[$field]))
-            {
-                $pool[$field] = '';
-            }
-
-            // notes-$rev_n
-            $field_info = explode('-', $field);
-            $revision = (int)$field_info[1];
-
-            // Update notes
-            $notes[$revision] = $pool[$field];
-        }
-
         // Save record in database
         foreach ($notes as $revision => $value)
         {
+            // check if revision is valid
+            if (!isset($this->revisions[$revision]))
+            {
+                throw new AddonException(sprintf("Revision %d does not exist", (int)$revision));
+            }
+
             try
             {
                 DBConnection::get()->query(
@@ -1127,6 +1110,7 @@ class Addon extends Base
             $email_body .= "$value\n\n";
         }
 
+        // TODO maybe move refactor
         // Get uploader email address
         try
         {
