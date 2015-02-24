@@ -368,7 +368,6 @@ class Upload
             catch(AddonException $e)
             {
                 throw new UploadException(_h('You do not have the necessary permissions to upload a revision for this addon'));
-
             }
         }
         else // new addon

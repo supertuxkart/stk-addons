@@ -223,8 +223,6 @@ class Addon extends Base
      */
     public function createRevision($attributes, $file_id, $moderator_message = "")
     {
-        $this->checkUserEditPermissions();
-
         foreach ($attributes['missing_textures'] as $tex)
         {
             $moderator_message .= "Texture not found: $tex\n";
@@ -331,8 +329,6 @@ class Addon extends Base
      */
     public function delete()
     {
-        $this->checkUserEditPermissions();
-
         // Remove cache files for this add-on
         Cache::clearAddon($this->id);
 
@@ -399,8 +395,6 @@ class Addon extends Base
      */
     public function deleteFile($file_id)
     {
-        $this->checkUserEditPermissions();
-
         if (!File::deleteFile($file_id))
         {
             throw new AddonException(_h('Failed to delete file.'));
@@ -416,8 +410,6 @@ class Addon extends Base
      */
     public function deleteRevision($rev)
     {
-        $this->checkUserEditPermissions();
-
         if ($rev < 1 || !isset($this->revisions[$rev]))
         {
             throw new AddonException(_h('The revision you are trying to delete does not exist.'));
@@ -831,8 +823,6 @@ class Addon extends Base
      */
     public function setDescription($description)
     {
-        $this->checkUserEditPermissions();
-
         try
         {
             DBConnection::get()->query(
@@ -866,8 +856,6 @@ class Addon extends Base
      */
     public function setDesigner($designer)
     {
-        $this->checkUserEditPermissions();
-
         try
         {
             DBConnection::get()->query(
@@ -902,8 +890,6 @@ class Addon extends Base
      */
     public function setImage($image_id, $field = 'image')
     {
-        $this->checkUserEditPermissions();
-
         try
         {
             DBConnection::get()->query(
@@ -957,8 +943,6 @@ class Addon extends Base
      */
     public function setIncludeVersions($start_ver, $end_ver)
     {
-        $this->checkUserEditPermissions();
-
         try
         {
             Validate::versionString($start_ver);

@@ -59,6 +59,7 @@ switch ($_POST["action"])
 
         try
         {
+            $addon->checkUserEditPermissions();
             $addon->setDescription($_POST['description'])->setDesigner($_POST['designer']);
             writeXML();
         }
@@ -74,6 +75,10 @@ switch ($_POST["action"])
         if (Validate::ensureIsSet($_POST, ["include-start", "include-end"]))
         {
             exit_json_error("One or more proprieties are not set");
+        }
+        if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
+        {
+            exit_json_error(_h("You do not have the permission to change this addon's include in game versions"));
         }
 
         try
@@ -120,6 +125,7 @@ switch ($_POST["action"])
 
         try
         {
+            $addon->checkUserEditPermissions();
             $addon->setImage((int)$_POST['file-id']);
         }
         catch(AddonException $e)
@@ -138,6 +144,7 @@ switch ($_POST["action"])
 
         try
         {
+            $addon->checkUserEditPermissions();
             $addon->setIcon((int)$_POST['file-id']);
         }
         catch(AddonException $e)
@@ -156,6 +163,7 @@ switch ($_POST["action"])
 
         try
         {
+            $addon->checkUserEditPermissions();
             $addon->deleteFile((int)$_POST['file-id']);
             writeXML();
         }
@@ -175,6 +183,7 @@ switch ($_POST["action"])
 
         try
         {
+            $addon->checkUserEditPermissions();
             $addon->deleteRevision((int)$_POST['revision-id']);
             writeXML();
         }
@@ -189,6 +198,7 @@ switch ($_POST["action"])
     case 'delete-addon':
         try
         {
+            $addon->checkUserEditPermissions();
             $addon->delete();
             writeXML();
         }
