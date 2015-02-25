@@ -11,9 +11,9 @@ DELIMITER $$
 --
 -- Procedures
 --
-CREATE PROCEDURE `v2_create_file_record`(IN id TEXT, IN atype TEXT, IN ftype TEXT, IN fname TEXT, OUT insertid INT)
+CREATE PROCEDURE `v3_create_file_record`(IN id TEXT, IN atype TEXT, IN ftype TEXT, IN fname TEXT, OUT insertid INT)
     BEGIN
-        INSERT INTO `v2_files`
+        INSERT INTO `v3_files`
         (`addon_id`, `addon_type`, `file_type`, `file_path`)
         VALUES
             (id, atype, ftype, fname);
@@ -22,19 +22,19 @@ CREATE PROCEDURE `v2_create_file_record`(IN id TEXT, IN atype TEXT, IN ftype TEX
         INTO insertid;
     END$$
 
-CREATE PROCEDURE `v2_increment_download`(IN filepath TEXT)
-    UPDATE `v2_files`
+CREATE PROCEDURE `v3_increment_download`(IN filepath TEXT)
+    UPDATE `v3_files`
     SET `downloads` = `downloads` + 1
     WHERE `file_path` = filepath$$
 
-CREATE PROCEDURE `v2_log_event`(IN in_user INT(10) UNSIGNED, IN in_message TEXT)
-    INSERT INTO `v2_logs`
+CREATE PROCEDURE `v3_log_event`(IN in_user INT(10) UNSIGNED, IN in_message TEXT)
+    INSERT INTO `v3_logs`
     (`user`, `message`)
     VALUES
         (in_user, in_message)$$
 
-CREATE PROCEDURE `v2_set_logintime`(IN userid INT(11), IN logintime TIMESTAMP)
-    UPDATE `v2_users`
+CREATE PROCEDURE `v3_set_logintime`(IN userid INT(11), IN logintime TIMESTAMP)
+    UPDATE `v3_users`
     SET `last_login` = logintime
     WHERE `id` = userid$$
 
@@ -43,10 +43,10 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Table structure for table `v2_achieved`
+-- Table structure for table `v3_achieved`
 --
 
-CREATE TABLE IF NOT EXISTS `v2_achieved` (
+CREATE TABLE IF NOT EXISTS `v3_achieved` (
     `userid`        INT(10) UNSIGNED NOT NULL,
     `achievementid` INT(10) UNSIGNED NOT NULL,
     PRIMARY KEY (`userid`, `achievementid`),
@@ -60,10 +60,10 @@ CREATE TABLE IF NOT EXISTS `v2_achieved` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `v2_achievements`
+-- Table structure for table `v3_achievements`
 --
 
-CREATE TABLE IF NOT EXISTS `v2_achievements` (
+CREATE TABLE IF NOT EXISTS `v3_achievements` (
     `id`   INT(10) UNSIGNED           NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(128)
            COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -74,10 +74,10 @@ CREATE TABLE IF NOT EXISTS `v2_achievements` (
     COLLATE =utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `v2_achievements`
+-- Dumping data for table `v3_achievements`
 --
 
-INSERT INTO `v2_achievements` (`id`, `name`) VALUES
+INSERT INTO `v3_achievements` (`id`, `name`) VALUES
     (1, 'Christoffel Columbus'),
     (2, 'Strike!'),
     (3, 'Arch Enemy'),
@@ -92,10 +92,10 @@ INSERT INTO `v2_achievements` (`id`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `v2_addons`
+-- Table structure for table `v3_addons`
 --
 
-CREATE TABLE IF NOT EXISTS `v2_addons` (
+CREATE TABLE IF NOT EXISTS `v3_addons` (
     `id`              VARCHAR(30)                NOT NULL,
     `type`            ENUM('karts', 'tracks', 'arenas')
                       CHARACTER SET utf8mb4
@@ -131,10 +131,10 @@ CREATE TABLE IF NOT EXISTS `v2_addons` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `v2_arenas_revs`
+-- Table structure for table `v3_arenas_revs`
 --
 
-CREATE TABLE IF NOT EXISTS `v2_arenas_revs` (
+CREATE TABLE IF NOT EXISTS `v3_arenas_revs` (
     `id`             VARCHAR(23)
                      COLLATE utf8mb4_unicode_ci NOT NULL,
     `addon_id`       VARCHAR(30)
@@ -158,10 +158,10 @@ CREATE TABLE IF NOT EXISTS `v2_arenas_revs` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `v2_tracks_revs`
+-- Table structure for table `v3_tracks_revs`
 --
 
-CREATE TABLE IF NOT EXISTS `v2_tracks_revs` (
+CREATE TABLE IF NOT EXISTS `v3_tracks_revs` (
     `id`             VARCHAR(23)
                      COLLATE utf8mb4_unicode_ci NOT NULL,
     `addon_id`       VARCHAR(30)
@@ -185,10 +185,10 @@ CREATE TABLE IF NOT EXISTS `v2_tracks_revs` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `v2_karts_revs`
+-- Table structure for table `v3_karts_revs`
 --
 
-CREATE TABLE IF NOT EXISTS `v2_karts_revs` (
+CREATE TABLE IF NOT EXISTS `v3_karts_revs` (
     `id`             VARCHAR(23)
                      COLLATE utf8mb4_unicode_ci NOT NULL,
     `addon_id`       VARCHAR(30)
@@ -213,10 +213,10 @@ CREATE TABLE IF NOT EXISTS `v2_karts_revs` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `v2_cache`
+-- Table structure for table `v3_cache`
 --
 
-CREATE TABLE IF NOT EXISTS `v2_cache` (
+CREATE TABLE IF NOT EXISTS `v3_cache` (
     `file`  VARCHAR(128)
             COLLATE utf8mb4_unicode_ci NOT NULL,
     `addon` VARCHAR(30)
@@ -232,10 +232,10 @@ CREATE TABLE IF NOT EXISTS `v2_cache` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `v2_clients`
+-- Table structure for table `v3_clients`
 --
 
-CREATE TABLE IF NOT EXISTS `v2_clients` (
+CREATE TABLE IF NOT EXISTS `v3_clients` (
     `agent_string` VARCHAR(255)
                    COLLATE utf8mb4_unicode_ci NOT NULL,
     `stk_version`  VARCHAR(64)
@@ -250,10 +250,10 @@ CREATE TABLE IF NOT EXISTS `v2_clients` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `v2_client_sessions`
+-- Table structure for table `v3_client_sessions`
 --
 
-CREATE TABLE IF NOT EXISTS `v2_client_sessions` (
+CREATE TABLE IF NOT EXISTS `v3_client_sessions` (
     `uid`          INT(10) UNSIGNED           NOT NULL,
     `cid`          CHAR(24)
                    COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -273,10 +273,10 @@ CREATE TABLE IF NOT EXISTS `v2_client_sessions` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `v2_config`
+-- Table structure for table `v3_config`
 --
 
-CREATE TABLE IF NOT EXISTS `v2_config` (
+CREATE TABLE IF NOT EXISTS `v3_config` (
     `name`  VARCHAR(128)
             CHARACTER SET utf8mb4
             COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -290,10 +290,10 @@ CREATE TABLE IF NOT EXISTS `v2_config` (
     COLLATE =utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `v2_config`
+-- Dumping data for table `v3_config`
 --
 
-INSERT INTO `v2_config` (`name`, `value`) VALUES
+INSERT INTO `v3_config` (`name`, `value`) VALUES
     ('allowed_addon_exts', 'zip, tar, tar.gz, tgz, gz, tbz, tar.bz2, bz2, b3d, txt, png, jpg, jpeg, xml'),
     ('allowed_source_exts', 'txt, blend, b3d, xml, png, jpg, jpeg, xcf, rgb, svg'),
     ('max_image_dimension', '2048'),
@@ -302,10 +302,10 @@ INSERT INTO `v2_config` (`name`, `value`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `v2_files`
+-- Table structure for table `v3_files`
 --
 
-CREATE TABLE IF NOT EXISTS `v2_files` (
+CREATE TABLE IF NOT EXISTS `v3_files` (
     `id`          INT(11) UNSIGNED           NOT NULL AUTO_INCREMENT,
     `addon_id`    VARCHAR(30)
                   COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -330,16 +330,16 @@ CREATE TABLE IF NOT EXISTS `v2_files` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `v2_friends`
+-- Table structure for table `v3_friends`
 --
 
-CREATE TABLE IF NOT EXISTS `v2_friends` (
+CREATE TABLE IF NOT EXISTS `v3_friends` (
     `asker_id`    INT(10) UNSIGNED NOT NULL,
     `receiver_id` INT(10) UNSIGNED NOT NULL,
     `request`     TINYINT(1)       NOT NULL DEFAULT '1',
     `date`        TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`asker_id`, `receiver_id`),
-    KEY `v2_friends_ibfk_2` (`receiver_id`)
+    KEY `v3_friends_ibfk_2` (`receiver_id`)
 )
     ENGINE =InnoDB
     DEFAULT CHARSET =utf8mb4
@@ -348,10 +348,10 @@ CREATE TABLE IF NOT EXISTS `v2_friends` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `v2_host_votes`
+-- Table structure for table `v3_host_votes`
 --
 
-CREATE TABLE IF NOT EXISTS `v2_host_votes` (
+CREATE TABLE IF NOT EXISTS `v3_host_votes` (
     `userid` INT(10) UNSIGNED NOT NULL,
     `hostid` INT(10) UNSIGNED NOT NULL,
     `vote`   INT(11)          NOT NULL,
@@ -365,10 +365,10 @@ CREATE TABLE IF NOT EXISTS `v2_host_votes` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `v2_logs`
+-- Table structure for table `v3_logs`
 --
 
-CREATE TABLE IF NOT EXISTS `v2_logs` (
+CREATE TABLE IF NOT EXISTS `v3_logs` (
     `id`      INT(10) UNSIGNED           NOT NULL AUTO_INCREMENT,
     `date`    TIMESTAMP                  NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `user`    INT(10) UNSIGNED           NOT NULL,
@@ -384,10 +384,10 @@ CREATE TABLE IF NOT EXISTS `v2_logs` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `v2_music`
+-- Table structure for table `v3_music`
 --
 
-CREATE TABLE IF NOT EXISTS `v2_music` (
+CREATE TABLE IF NOT EXISTS `v3_music` (
     `id`           INT(11)                    NOT NULL AUTO_INCREMENT,
     `title`        VARCHAR(256)
                    COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -414,10 +414,10 @@ CREATE TABLE IF NOT EXISTS `v2_music` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `v2_news`
+-- Table structure for table `v3_news`
 --
 
-CREATE TABLE IF NOT EXISTS `v2_news` (
+CREATE TABLE IF NOT EXISTS `v3_news` (
     `id`          INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
     `date`        TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `author_id`   INT(11) UNSIGNED DEFAULT NULL,
@@ -441,10 +441,10 @@ CREATE TABLE IF NOT EXISTS `v2_news` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `v2_notifications`
+-- Table structure for table `v3_notifications`
 --
 
-CREATE TABLE IF NOT EXISTS `v2_notifications` (
+CREATE TABLE IF NOT EXISTS `v3_notifications` (
     `to`   INT(10) UNSIGNED           NOT NULL,
     `from` INT(10) UNSIGNED           NOT NULL,
     `type` VARCHAR(16)
@@ -459,10 +459,10 @@ CREATE TABLE IF NOT EXISTS `v2_notifications` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `v2_servers`
+-- Table structure for table `v3_servers`
 --
 
-CREATE TABLE IF NOT EXISTS `v2_servers` (
+CREATE TABLE IF NOT EXISTS `v3_servers` (
     `id`              INT(10) UNSIGNED           NOT NULL AUTO_INCREMENT,
     `hostid`          INT(10) UNSIGNED           NOT NULL,
     `name`            TINYTEXT
@@ -483,10 +483,10 @@ CREATE TABLE IF NOT EXISTS `v2_servers` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `v2_server_conn`
+-- Table structure for table `v3_server_conn`
 --
 
-CREATE TABLE IF NOT EXISTS `v2_server_conn` (
+CREATE TABLE IF NOT EXISTS `v3_server_conn` (
     `serverid` INT(10) UNSIGNED NOT NULL,
     `userid`   INT(10) UNSIGNED NOT NULL,
     `request`  TINYINT(1)       NOT NULL DEFAULT '1',
@@ -500,10 +500,10 @@ CREATE TABLE IF NOT EXISTS `v2_server_conn` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `v2_stats`
+-- Table structure for table `v3_stats`
 --
 
-CREATE TABLE IF NOT EXISTS `v2_stats` (
+CREATE TABLE IF NOT EXISTS `v3_stats` (
     `type`  TEXT
             COLLATE utf8mb4_unicode_ci NOT NULL,
     `date`  DATE                       NOT NULL,
@@ -518,10 +518,10 @@ CREATE TABLE IF NOT EXISTS `v2_stats` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `v2_users`
+-- Table structure for table `v3_users`
 --
 
-CREATE TABLE IF NOT EXISTS `v2_users` (
+CREATE TABLE IF NOT EXISTS `v3_users` (
     `id`         INT(11) UNSIGNED           NOT NULL AUTO_INCREMENT,
     `user`       VARCHAR(30)
                  CHARACTER SET ascii        NOT NULL,
@@ -550,10 +550,10 @@ CREATE TABLE IF NOT EXISTS `v2_users` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `v2_verification`
+-- Table structure for table `v3_verification`
 --
 
-CREATE TABLE IF NOT EXISTS `v2_verification` (
+CREATE TABLE IF NOT EXISTS `v3_verification` (
     `userid` INT(10) UNSIGNED           NOT NULL DEFAULT '0',
     `code`   VARCHAR(32)
              COLLATE utf8mb4_unicode_ci NOT NULL
@@ -570,10 +570,10 @@ CREATE TABLE IF NOT EXISTS `v2_verification` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `v2_votes`
+-- Table structure for table `v3_votes`
 --
 
-CREATE TABLE IF NOT EXISTS `v2_votes` (
+CREATE TABLE IF NOT EXISTS `v3_votes` (
     `user_id`  INT(11) UNSIGNED   NOT NULL,
     `addon_id` VARCHAR(30)
                CHARACTER SET utf8 NOT NULL,
@@ -588,10 +588,10 @@ CREATE TABLE IF NOT EXISTS `v2_votes` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `v2_bugs`
+-- Table structure for table `v3_bugs`
 --
 
-CREATE TABLE IF NOT EXISTS `v2_bugs` (
+CREATE TABLE IF NOT EXISTS `v3_bugs` (
     `id`           INT(11) UNSIGNED           NOT NULL AUTO_INCREMENT,
     `user_id`      INT(11) UNSIGNED           NOT NULL
     COMMENT 'User who filed the bug report',
@@ -627,10 +627,10 @@ CREATE TABLE IF NOT EXISTS `v2_bugs` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `v2_bugs_comments`
+-- Table structure for table `v3_bugs_comments`
 --
 
-CREATE TABLE IF NOT EXISTS `v2_bugs_comments` (
+CREATE TABLE IF NOT EXISTS `v3_bugs_comments` (
     `id`          INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
     `bug_id`      INT(11) UNSIGNED NOT NULL
     COMMENT 'The bug we commented on',
@@ -652,10 +652,10 @@ CREATE TABLE IF NOT EXISTS `v2_bugs_comments` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `v2_roles`
+-- Table structure for table `v3_roles`
 --
 
-CREATE TABLE IF NOT EXISTS `v2_roles` (
+CREATE TABLE IF NOT EXISTS `v3_roles` (
     `id`   INT(4)                     NOT NULL AUTO_INCREMENT COMMENT 'The role unique identifier',
     `name` VARCHAR(128)
            COLLATE utf8mb4_unicode_ci NOT NULL
@@ -668,10 +668,10 @@ CREATE TABLE IF NOT EXISTS `v2_roles` (
     AUTO_INCREMENT =4;
 
 --
--- Dumping data for table `v2_roles`
+-- Dumping data for table `v3_roles`
 --
 
-INSERT INTO `v2_roles` (`id`, `name`) VALUES
+INSERT INTO `v3_roles` (`id`, `name`) VALUES
     (1, 'user'),
     (2, 'moderator'),
     (3, 'admin');
@@ -679,10 +679,10 @@ INSERT INTO `v2_roles` (`id`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `v2_role_permissions`
+-- Table structure for table `v3_role_permissions`
 --
 
-CREATE TABLE IF NOT EXISTS `v2_role_permissions` (
+CREATE TABLE IF NOT EXISTS `v3_role_permissions` (
     `role_id`    INT(4)                     NOT NULL
     COMMENT 'The id from the roles table',
     `permission` VARCHAR(128)
@@ -695,10 +695,10 @@ CREATE TABLE IF NOT EXISTS `v2_role_permissions` (
     COLLATE =utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `v2_role_permissions`
+-- Dumping data for table `v3_role_permissions`
 --
 
-INSERT INTO `v2_role_permissions` (`role_id`, `permission`) VALUES
+INSERT INTO `v3_role_permissions` (`role_id`, `permission`) VALUES
     (1, 'view_basic_page'),
     (1, 'add_addon'),
     (1, 'add_bug'),
@@ -724,132 +724,132 @@ INSERT INTO `v2_role_permissions` (`role_id`, `permission`) VALUES
 -- --------------------------------------------------------
 
 --
--- Constraints for table `v2_achieved`
+-- Constraints for table `v3_achieved`
 --
-ALTER TABLE `v2_achieved`
-ADD CONSTRAINT `v2_achieved_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `v2_users` (`id`)
+ALTER TABLE `v3_achieved`
+ADD CONSTRAINT `v3_achieved_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `v3_users` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION,
-ADD CONSTRAINT `v2_achieved_ibfk_2` FOREIGN KEY (`achievementid`) REFERENCES `v2_achievements` (`id`)
+ADD CONSTRAINT `v3_achieved_ibfk_2` FOREIGN KEY (`achievementid`) REFERENCES `v3_achievements` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION;
 
 --
--- Constraints for table `v2_friends`
+-- Constraints for table `v3_friends`
 --
-ALTER TABLE `v2_friends`
-ADD CONSTRAINT `v2_friends_ibfk_1` FOREIGN KEY (`asker_id`) REFERENCES `v2_users` (`id`)
+ALTER TABLE `v3_friends`
+ADD CONSTRAINT `v3_friends_ibfk_1` FOREIGN KEY (`asker_id`) REFERENCES `v3_users` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION,
-ADD CONSTRAINT `v2_friends_ibfk_2` FOREIGN KEY (`receiver_id`) REFERENCES `v2_users` (`id`)
+ADD CONSTRAINT `v3_friends_ibfk_2` FOREIGN KEY (`receiver_id`) REFERENCES `v3_users` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION;
 
 --
--- Constraints for table `v2_addons`
+-- Constraints for table `v3_addons`
 --
-ALTER TABLE `v2_addons`
-ADD CONSTRAINT `v2_addons_ibfk_1` FOREIGN KEY (`uploader`) REFERENCES `v2_users` (`id`)
+ALTER TABLE `v3_addons`
+ADD CONSTRAINT `v3_addons_ibfk_1` FOREIGN KEY (`uploader`) REFERENCES `v3_users` (`id`)
     ON DELETE SET NULL
     ON UPDATE NO ACTION;
 
 --
--- Constraints for table `v2_arenas_revs`
+-- Constraints for table `v3_arenas_revs`
 --
-ALTER TABLE `v2_arenas_revs`
-ADD CONSTRAINT `v2_arenas_revs_ibfk_1` FOREIGN KEY (`addon_id`) REFERENCES `v2_addons` (`id`)
+ALTER TABLE `v3_arenas_revs`
+ADD CONSTRAINT `v3_arenas_revs_ibfk_1` FOREIGN KEY (`addon_id`) REFERENCES `v3_addons` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION;
 
 --
--- Constraints for table `v2_karts_revs`
+-- Constraints for table `v3_karts_revs`
 --
-ALTER TABLE `v2_karts_revs`
-ADD CONSTRAINT `v2_karts_revs_ibfk_1` FOREIGN KEY (`addon_id`) REFERENCES `v2_addons` (`id`)
+ALTER TABLE `v3_karts_revs`
+ADD CONSTRAINT `v3_karts_revs_ibfk_1` FOREIGN KEY (`addon_id`) REFERENCES `v3_addons` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION;
 
 --
--- Constraints for table `v2_tracks_revs`
+-- Constraints for table `v3_tracks_revs`
 --
-ALTER TABLE `v2_tracks_revs`
-ADD CONSTRAINT `v2_tracks_revs_ibfk_1` FOREIGN KEY (`addon_id`) REFERENCES `v2_addons` (`id`)
+ALTER TABLE `v3_tracks_revs`
+ADD CONSTRAINT `v3_tracks_revs_ibfk_1` FOREIGN KEY (`addon_id`) REFERENCES `v3_addons` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION;
 
 --
--- Constraints for table `v2_news`
+-- Constraints for table `v3_news`
 --
-ALTER TABLE `v2_news`
-ADD CONSTRAINT `v2_news_ibfk_1` FOREIGN KEY (`author_id`) REFERENCES `v2_users` (`id`)
+ALTER TABLE `v3_news`
+ADD CONSTRAINT `v3_news_ibfk_1` FOREIGN KEY (`author_id`) REFERENCES `v3_users` (`id`)
     ON DELETE SET NULL
     ON UPDATE NO ACTION;
 
 --
--- Constraints for table `v2_servers`
+-- Constraints for table `v3_servers`
 --
-ALTER TABLE `v2_servers`
-ADD CONSTRAINT `v2_servers_ibfk_1` FOREIGN KEY (`hostid`) REFERENCES `v2_users` (`id`)
+ALTER TABLE `v3_servers`
+ADD CONSTRAINT `v3_servers_ibfk_1` FOREIGN KEY (`hostid`) REFERENCES `v3_users` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION;
 
 --
--- Constraints for table `v2_server_conn`
+-- Constraints for table `v3_server_conn`
 --
-ALTER TABLE `v2_server_conn`
-ADD CONSTRAINT `v2_server_conn_ibfk_1` FOREIGN KEY (`serverid`) REFERENCES `v2_servers` (`id`)
+ALTER TABLE `v3_server_conn`
+ADD CONSTRAINT `v3_server_conn_ibfk_1` FOREIGN KEY (`serverid`) REFERENCES `v3_servers` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION,
-ADD CONSTRAINT `v2_server_conn_ibfk_2` FOREIGN KEY (`userid`) REFERENCES `v2_users` (`id`)
+ADD CONSTRAINT `v3_server_conn_ibfk_2` FOREIGN KEY (`userid`) REFERENCES `v3_users` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION;
 
 --
--- Constraints for table `v2_verification`
+-- Constraints for table `v3_verification`
 --
-ALTER TABLE `v2_verification`
-ADD CONSTRAINT `v2_verification_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `v2_users` (`id`)
+ALTER TABLE `v3_verification`
+ADD CONSTRAINT `v3_verification_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `v3_users` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION;
 
 --
--- Constraints for table `v2_votes`
+-- Constraints for table `v3_votes`
 --
-ALTER TABLE `v2_votes`
-ADD CONSTRAINT `v2_votes_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `v2_users` (`id`)
+ALTER TABLE `v3_votes`
+ADD CONSTRAINT `v3_votes_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `v3_users` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION,
-ADD CONSTRAINT `v2_votes_ibfk_2` FOREIGN KEY (`addon_id`) REFERENCES `v2_addons` (`id`)
+ADD CONSTRAINT `v3_votes_ibfk_2` FOREIGN KEY (`addon_id`) REFERENCES `v3_addons` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION;
 
 --
--- Constraints for table `v2_bugs`
+-- Constraints for table `v3_bugs`
 --
-ALTER TABLE `v2_bugs`
-ADD CONSTRAINT `v2_bugs_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `v2_users` (`id`)
+ALTER TABLE `v3_bugs`
+ADD CONSTRAINT `v3_bugs_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `v3_users` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION,
-ADD CONSTRAINT `v2_bugs_ibfk_2` FOREIGN KEY (`addon_id`) REFERENCES `v2_addons` (`id`)
+ADD CONSTRAINT `v3_bugs_ibfk_2` FOREIGN KEY (`addon_id`) REFERENCES `v3_addons` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION;
 
 --
--- Constraints for table `v2_bugs_comments`
+-- Constraints for table `v3_bugs_comments`
 --
-ALTER TABLE `v2_bugs_comments`
-ADD CONSTRAINT `v2_bugs_comments_ibfk_1` FOREIGN KEY (`bug_id`) REFERENCES `v2_bugs` (`id`)
+ALTER TABLE `v3_bugs_comments`
+ADD CONSTRAINT `v3_bugs_comments_ibfk_1` FOREIGN KEY (`bug_id`) REFERENCES `v3_bugs` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION,
-ADD CONSTRAINT `v2_bugs_comments_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `v2_users` (`id`)
+ADD CONSTRAINT `v3_bugs_comments_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `v3_users` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION;
 
 --
--- Constraints for table `v2_role_permissions`
+-- Constraints for table `v3_role_permissions`
 --
-ALTER TABLE `v2_role_permissions`
-ADD CONSTRAINT `v2_role_permissions_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `v2_roles` (`id`)
+ALTER TABLE `v3_role_permissions`
+ADD CONSTRAINT `v3_role_permissions_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `v3_roles` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION;
 

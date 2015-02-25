@@ -95,7 +95,7 @@ define("DB_USER", "root");
 define("DB_PASSWORD", "");
 define("DB_NAME", "stkbase");
 define("DB_HOST", "localhost");
-define("DB_PREFIX", "v2_"); // should not be modified
+define("DB_PREFIX", "v3_"); // should not be modified
 
 // Mail proprieties
 define("IS_SMTP", false); // true for "smtp" and false for "sendmail"
