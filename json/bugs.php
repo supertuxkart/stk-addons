@@ -28,8 +28,7 @@ if (empty($_POST["action"]))
 switch ($_POST["action"])
 {
     case "add": // add bug
-        $errors = Validate::ensureNotEmpty($_POST, ["addon-name", "bug-title", "bug-description"]);
-        if ($errors)
+        if (Validate::ensureNotEmpty($_POST, ["addon-name", "bug-title", "bug-description"]))
         {
             exit_json_error(_h("One or more fields are empty"));
         }
@@ -47,8 +46,7 @@ switch ($_POST["action"])
         break;
 
     case "add-comment": // add bug comment
-        $errors = Validate::ensureNotEmpty($_POST, ["bug-comment-description", "bug-id"]);
-        if ($errors)
+        if (Validate::ensureNotEmpty($_POST, ["bug-comment-description", "bug-id"]))
         {
             exit_json_error(_h("One or more fields are empty"));
         }
@@ -80,8 +78,7 @@ switch ($_POST["action"])
         break;
 
     case "edit":
-        $errors = Validate::ensureNotEmpty($_POST, ["bug-title-edit", "bug-description-edit", "bug-id"]);
-        if ($errors)
+        if (Validate::ensureNotEmpty($_POST, ["bug-title-edit", "bug-description-edit", "bug-id"]))
         {
             exit_json_error(_h("One or more fields are empty"));
         }
@@ -99,8 +96,7 @@ switch ($_POST["action"])
         break;
 
     case "edit-comment":
-        $errors = Validate::ensureNotEmpty($_POST, ["bug-comment-edit-description", "comment-id"]);
-        if ($errors)
+        if (Validate::ensureNotEmpty($_POST, ["bug-comment-edit-description", "comment-id"]))
         {
             exit_json_error(_h("One or more fields are empty"));
         }
@@ -118,8 +114,7 @@ switch ($_POST["action"])
         break;
 
     case "close": // close a bug
-        $errors = Validate::ensureNotEmpty($_POST, ["modal-close-reason", "bug-id"]);
-        if ($errors)
+        if (Validate::ensureNotEmpty($_POST, ["modal-close-reason", "bug-id"]))
         {
             exit_json_error(_h("One or more fields are empty"));
         }
@@ -137,8 +132,7 @@ switch ($_POST["action"])
         break;
 
     case "delete":
-        $errors = Validate::ensureNotEmpty($_POST, ["bug-id"]);
-        if ($errors)
+        if (Validate::ensureNotEmpty($_POST, ["bug-id"]))
         {
             exit_json_error(_h("One or more fields are empty"));
         }
@@ -156,8 +150,7 @@ switch ($_POST["action"])
         break;
 
     case "delete-comment": // delete a comment
-        $errors = Validate::ensureNotEmpty($_POST, ["comment-id"]);
-        if ($errors)
+        if (Validate::ensureNotEmpty($_POST, ["comment-id"]))
         {
             exit_json_error(_h("One or more fields are empty"));
         }

@@ -1,6 +1,6 @@
 <?php
 /**
- * copyright 2011 computerfreak97
+ * copyright 2011      computerfreak97
  *           2014-2015 Daniel Butum <danibutum at gmail dot com>
  *
  * This file is part of stkaddons
