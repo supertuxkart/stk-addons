@@ -50,7 +50,7 @@ foreach ($addon_images as $image_record)
     $json_array[] = array(
         'url'      => DOWNLOAD_LOCATION . $image_record['file_path'],
         'date'     => strtotime($image_record['date_added']),
-        'approved' => (int)$image_record['approved']
+        'approved' => (int)$image_record['is_approved']
     );
 }
 echo json_encode($json_array);

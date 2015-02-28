@@ -52,8 +52,8 @@
                     <th>{t}Message{/t}</th>
                     <th>{t}Author{/t}</th>
                     <th>{t}Condition{/t}</th>
-                    <th>{t}Web{/t}</th>
-                    <th>{t}Important{/t}</th>
+                    <th>{t}Display on web page{/t}</th>
+                    <th>{t}Is Important{/t}</th>
                     <th>{t}Actions{/t}</th>
                 </tr>
                 {foreach $news.items as $item}
@@ -62,8 +62,8 @@
                         <td>{$item.content}</td>
                         <td>{$item.author}</td>
                         <td>{$item.condition}</td>
-                        <td>{$item.web_display}</td>
-                        <td>{$item.important}</td>
+                        <td>{$item.is_web_display}</td>
+                        <td>{$item.is_important}</td>
                         <td>
                             <input type="button" data-id="{$item.id}" class="news-delete-btn btn btn-danger" value="{t}Delete{/t}">
                         </td>

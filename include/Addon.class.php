@@ -1500,7 +1500,7 @@ class Addon extends Base
                 if ($addon->getImage(true) != 0)
                 {
                     $im = Cache::getImage($addon->getImage(true), SImage::SIZE_SMALL);
-                    if ($im['exists'] && $im['approved'])
+                    if ($im['exists'] && $im['is_approved'])
                     {
                         $icon = $im['url'];
                     }

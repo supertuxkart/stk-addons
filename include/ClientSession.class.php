@@ -39,6 +39,7 @@ class ClientSession
      */
     protected function __construct($session_id, User $user)
     {
+        // TODO store also the table data
         $this->session_id = $session_id;
         $this->user = $user;
     }
@@ -64,6 +65,7 @@ class ClientSession
      * Get the friends as an xml string
      *
      * @param int $visiting_id
+     *
      * @return string and xml string
      */
     public function getFriendsOf($visiting_id)
@@ -282,10 +284,10 @@ class ClientSession
             $connection_requests = DBConnection::get()->query(
                 "SELECT `userid`
                 FROM `" . DB_PREFIX . "server_conn`
-                WHERE `serverid` = :server_id AND `request` = '1'",
+                WHERE `serverid` = :server_id AND `is_request` = '1'",
                 DBConnection::FETCH_ALL,
                 [':server_id' => $server_id['id']],
-                [':serverid' => DBConnection::PARAM_INT]
+                [':server_id' => DBConnection::PARAM_INT]
             );
 
             // Set the request bit to zero for all users we fetch
@@ -304,7 +306,7 @@ class ClientSession
             {
                 DBConnection::get()->query(
                     "UPDATE `" . DB_PREFIX . "server_conn`
-                    SET `request` = 0
+                    SET `is_request` = 0
                     WHERE " . implode(" OR ", $query_parts),
                     DBConnection::ROW_COUNT,
                     $parameters
@@ -354,7 +356,6 @@ class ClientSession
     }
 
 
-
     /**
      * @param int $achievement_id
      */
@@ -400,7 +401,7 @@ class ClientSession
             DBConnection::get()->beginTransaction();
 
             $client = DBConnection::get()->query(
-                "SELECT `save` FROM `" . DB_PREFIX . "client_sessions`
+                "SELECT `is_save` FROM `" . DB_PREFIX . "client_sessions`
     	        WHERE `cid` = :session_id AND uid = :user_id",
                 DBConnection::FETCH_FIRST,
                 [
@@ -412,7 +413,7 @@ class ClientSession
 
             if ($client)
             {
-                if ($client['save'] == 1)
+                if ($client['is_save'] == 1)
                 {
                     $this->setOnline(false);
                 }
@@ -445,10 +446,10 @@ class ClientSession
         try
         {
             $count = DBConnection::get()->query(
-                "INSERT INTO `" . DB_PREFIX . "server_conn` (serverid, userid, request)
-                VALUES ( :serverid, :userid, 1) 
+                "INSERT INTO `" . DB_PREFIX . "server_conn` (serverid, userid, is_request)
+                VALUES (:serverid, :userid, 1)
                 ON DUPLICATE KEY 
-                UPDATE request = '1', serverid = :serverid",
+                UPDATE is_request = '1', serverid = :serverid",
                 DBConnection::ROW_COUNT,
                 [
                     ':userid'   => $this->user->getId(),
@@ -494,9 +495,9 @@ class ClientSession
             }
 
             DBConnection::get()->query(
-                "INSERT INTO `" . DB_PREFIX . "server_conn` (serverid, userid, request)
-                VALUES ( :serverid, :userid, 1)
-                ON DUPLICATE KEY UPDATE request = '1'",
+                "INSERT INTO `" . DB_PREFIX . "server_conn` (serverid, userid, is_request)
+                VALUES (:serverid, :userid, 1)
+                ON DUPLICATE KEY UPDATE is_request = '1'",
                 DBConnection::NOTHING,
                 [
                     ':userid'   => $this->user->getId(),
@@ -573,17 +574,17 @@ class ClientSession
             // sometimes the MYSQL 'ON UPDATE' does not fire because the online value is the same
             DBConnection::get()->query(
                 "UPDATE `" . DB_PREFIX . "client_sessions`
-                SET `online` = :online, `last-online` = NOW()
+                SET `is_online` = :online, `last-online` = NOW()
                 WHERE `uid` = :id",
                 DBConnection::ROW_COUNT,
                 [
-                    ':id'     => $this->user->getId(),
-                    ':online' => ($online ? 1 : 0),
+                    ':id'        => $this->user->getId(),
+                    ':is_online' => ($online ? 1 : 0),
 
                 ],
                 [
-                    ':id'     => DBConnection::PARAM_INT,
-                    ':online' => DBConnection::PARAM_INT
+                    ':id'        => DBConnection::PARAM_INT,
+                    ':is_online' => DBConnection::PARAM_BOOL
                 ]
             );
         }
@@ -758,16 +759,19 @@ class ClientSession
             $session_id = Util::getClientSessionId();
             $user_id = $user->getId();
             $count = DBConnection::get()->query(
-                "INSERT INTO `" . DB_PREFIX . "client_sessions` (cid, uid, save, `last-online`)
-                VALUES (:session_id, :user_id, :save, NOW())
-                ON DUPLICATE KEY UPDATE cid = :session_id, online = 1",
+                "INSERT INTO `" . DB_PREFIX . "client_sessions` (cid, uid, is_save, `last-online`)
+                VALUES (:session_id, :user_id, :is_save, NOW())
+                ON DUPLICATE KEY UPDATE cid = :session_id, is_online = 1",
                 DBConnection::ROW_COUNT,
                 [
                     ':session_id' => $session_id,
                     ':user_id'    => $user_id,
-                    ':save'       => ($save_session ? 1 : 0),
+                    ':is_save'    => ($save_session ? 1 : 0),
                 ],
-                [':user_id' => DBConnection::PARAM_INT, ':save' => DBConnection::PARAM_INT]
+                [
+                    ':user_id' => DBConnection::PARAM_INT,
+                    ':is_save' => DBConnection::PARAM_BOOL
+                ]
             );
             if ($count > 2 || $count < 0)
             {
@@ -802,7 +806,7 @@ class ClientSession
                 "client_sessions",
                 "((UNIX_TIMESTAMP() - UNIX_TIMESTAMP(`last-online`)) > :old_seconds)
                     OR
-                 ((UNIX_TIMESTAMP() - UNIX_TIMESTAMP(`last-online`)) > :seconds AND `save` = 0)
+                 ((UNIX_TIMESTAMP() - UNIX_TIMESTAMP(`last-online`)) > :seconds AND `is_save` = 0)
                 ",
                 [
                     ":seconds"     => $seconds,
@@ -824,10 +828,10 @@ class ClientSession
         {
             DBConnection::get()->update(
                 "client_sessions",
-                "((UNIX_TIMESTAMP() - UNIX_TIMESTAMP(`last-online`)) > :seconds AND `save` = 1)",
+                "((UNIX_TIMESTAMP() - UNIX_TIMESTAMP(`last-online`)) > :seconds AND `is_save` = 1)",
                 [
-                    ":seconds" => $seconds,
-                    "online"   => 0
+                    ":seconds"  => $seconds,
+                    "is_online" => 0
                 ],
                 [":seconds" => DBConnection::PARAM_INT]
             );

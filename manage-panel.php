@@ -72,7 +72,7 @@ switch ($_GET['view'])
             $unapproved = [];
             foreach ($addon->getImages() as $image)
             {
-                if ($image["approved"] == 0)
+                if ($image["is_approved"] == 0)
                 {
                     $unapproved[] =
                         '<img src="' . ROOT_LOCATION . 'image.php?size=' . SImage::SIZE_MEDIUM . '&pic=' . $image['file_path'] . '" />';
@@ -92,7 +92,7 @@ switch ($_GET['view'])
             $unapproved = 0;
             foreach ($addon->getSourceFiles() as $archive)
             {
-                if ($archive["approved"] == 0)
+                if ($archive["is_approved"] == 0)
                 {
                     $unapproved++;
                 }

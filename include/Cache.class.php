@@ -196,7 +196,7 @@ class Cache
         try
         {
             $file = DBConnection::get()->query(
-                'SELECT `file_path`, `approved`
+                'SELECT `file_path`, `is_approved`
                 FROM `' . DB_PREFIX . 'files`
                 WHERE `id` = :id
                 LIMIT 1',
@@ -214,16 +214,16 @@ class Cache
         if (!$file)
         {
             return [
-                'url'      => IMG_LOCATION . 'notfound.png',
-                'approved' => true,
-                'exists'   => false
+                'url'         => IMG_LOCATION . 'notfound.png',
+                'is_approved' => true,
+                'exists'      => false
             ];
         }
 
         $return = [
-            'url'      => DOWNLOAD_LOCATION . $file['file_path'],
-            'approved' => (bool)$file['approved'],
-            'exists'   => true
+            'url'         => DOWNLOAD_LOCATION . $file['file_path'],
+            'is_approved' => (bool)$file['is_approved'],
+            'exists'      => true
         ];
 
         $cache_prefix = $size ? Cache::cachePrefix($size) : "";

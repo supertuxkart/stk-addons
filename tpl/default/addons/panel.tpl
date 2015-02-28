@@ -119,7 +119,7 @@
         {foreach $addon.images as $image}
             {$class_container=""}
             {if $can_edit}
-                {if $image.approved}
+                {if $image.is_approved}
                     {$class_container=" bg-success"}
                 {else}
                     {$class_container=" bg-danger"}
@@ -133,7 +133,7 @@
                     <div class="btn-group-vertical" data-id="{$image.id}">
                         {if $has_permission}
                             {$class_approve=""} {$class_unapprove=""}
-                            {if $image.approved}
+                            {if $image.is_approved}
                                 {$class_approve=" hidden"}
                             {else}
                                 {$class_unapprove=" hidden"}
@@ -172,7 +172,7 @@
             {foreach $addon.sources as $source}
                 {$class_container=""}
                 {if $can_edit}
-                    {if $source.approved}
+                    {if $source.is_approved}
                         {$class_container=" bg-success"}
                     {else}
                         {$class_container=" bg-danger"}
@@ -185,7 +185,7 @@
                         {if $can_edit}
                             {if $has_permission}
                                 {$class_approve=""} {$class_unapprove=""}
-                                {if $source.approved}
+                                {if $source.is_approved}
                                     {$class_approve=" hidden"}
                                 {else}
                                     {$class_unapprove=" hidden"}

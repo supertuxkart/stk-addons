@@ -138,7 +138,7 @@ class AddonViewer
 
         // Get image url
         $image = Cache::getImage($this->addon->getImage(), SImage::SIZE_BIG);
-        if ($this->addon->getImage() != 0 && $image['exists'] == true && $image['approved'] == true)
+        if ($this->addon->getImage() != 0 && $image['exists'] == true && $image['is_approved'] == true)
         {
             $tpl['image_url'] = $image['url'];
         }
@@ -220,11 +220,11 @@ class AddonViewer
             $imageCache = Cache::getImage($image['id'], SImage::SIZE_MEDIUM);
             $image['thumb']['url'] = $imageCache['url'];
             $image['url'] = DOWNLOAD_LOCATION . $image['file_path'];
-            $image['approved'] = (bool)$image['approved'];
+            $image['is_approved'] = (bool)$image['is_approved'];
             $image["has_icon"] = $image["has_image"] = false;
 
             // do not display
-            if (!$this->can_edit && !$image['approved'])
+            if (!$this->can_edit && !$image['is_approved'])
             {
                 continue;
             }
@@ -251,10 +251,10 @@ class AddonViewer
         $source_number = 0;
         foreach ($source_files_db as $source)
         {
-            $source['approved'] = (bool)$source['approved'];
+            $source['is_approved'] = (bool)$source['is_approved'];
 
             // do not display
-            if (!$this->can_edit && !$source['approved'])
+            if (!$this->can_edit && !$source['is_approved'])
             {
                 continue;
             }

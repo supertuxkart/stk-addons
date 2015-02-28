@@ -447,7 +447,7 @@ class Statistic
     {
         try
         {
-            $count = DBConnection::get()->count("client_sessions", '`online` = 1');
+            $count = DBConnection::get()->count("client_sessions", '`is_online` = 1');
         }
         catch(DBException $e)
         {

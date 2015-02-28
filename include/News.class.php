@@ -38,7 +38,7 @@ class News
             $dynamic_entries = DBConnection::get()->query(
                 'SELECT *
                 FROM `' . DB_PREFIX . 'news`
-                WHERE `dynamic` = 1
+                WHERE `is_dynamic` = 1
                 ORDER BY `id` ASC',
                 DBConnection::FETCH_ALL
             );
@@ -112,13 +112,13 @@ class News
                 DBConnection::get()->insert(
                     'news',
                     [
-                        ":content"    => $news["message"] . $news["new"],
-                        "web_display" => 1,
-                        "dynamic"     => 1
+                        ":content"       => $news["message"] . $news["new"],
+                        "is_web_display" => 1,
+                        "is_dynamic"     => 1
                     ],
                     [
-                        ':web_display' => DBConnection::PARAM_INT,
-                        ':dynamic'     => DBConnection::PARAM_INT
+                        ':is_web_display' => DBConnection::PARAM_BOOL,
+                        ':is_dynamic'     => DBConnection::PARAM_BOOL
                     ]
                 );
             }
@@ -201,8 +201,8 @@ class News
         {
             $items = DBConnection::get()->query(
                 'SELECT `content` FROM `' . DB_PREFIX . 'news`
-                WHERE `active` = 1
-                AND `web_display` = 1
+                WHERE `is_active` = 1
+                AND `is_web_display` = 1
                 ORDER BY `date` DESC',
                 DBConnection::FETCH_ALL
             );
@@ -232,12 +232,12 @@ class News
         try
         {
             $news = DBConnection::get()->query(
-                'SELECT `n`.*, `u`.`user` AS `author`
-                FROM `' . DB_PREFIX . 'news` `n`
-                LEFT JOIN `' . DB_PREFIX . 'users` `u`
-                ON (`n`.`author_id`=`u`.`id`)
-                WHERE `n`.`active` = \'1\'
-                ORDER BY `date` DESC',
+                "SELECT N.*, `U`.`user` AS `author`
+                FROM " . DB_PREFIX . "news AS N
+                LEFT JOIN `' . DB_PREFIX . 'users` AS U
+                    ON N.`author_id` = U.`id`
+                WHERE N.`is_active` = '1'
+                    ORDER BY `date` DESC",
                 DBConnection::FETCH_ALL
             );
         }
@@ -260,10 +260,10 @@ class News
         try
         {
             $news = DBConnection::get()->query(
-                'SELECT `n`.*, `u`.`user` AS `author`
-                FROM `' . DB_PREFIX . 'news` `n`
-                LEFT JOIN `' . DB_PREFIX . 'users` `u`
-                ON (`n`.`author_id`=`u`.`id`)
+                'SELECT N.*, U.`user` AS `author`
+                FROM `' . DB_PREFIX . 'news` N
+                LEFT JOIN `' . DB_PREFIX . 'users` U
+                    ON N.`author_id` = U.`id`
                 ORDER BY `date` DESC',
                 DBConnection::FETCH_ALL
             );
@@ -316,19 +316,19 @@ class News
             DBConnection::get()->insert(
                 'news',
                 [
-                    ':author_id'   => $author_id,
-                    ':content'     => $message,
-                    ':condition'   => $condition,
-                    ':important'   => $important,
-                    ':web_display' => $web_display,
-                    ':dynamic'     => $dynamic,
-                    'active'       => 1
+                    ':author_id'      => $author_id,
+                    ':content'        => $message,
+                    ':condition'      => $condition,
+                    ':is_important'   => $important,
+                    ':is_web_display' => $web_display,
+                    ':is_dynamic'     => $dynamic,
+                    'is_active'          => 1
                 ],
                 [
-                    ':author_id'   => DBConnection::PARAM_INT,
-                    ':important'   => DBConnection::PARAM_INT,
-                    ':web_display' => DBConnection::PARAM_INT,
-                    ':dynamic'     => DBConnection::PARAM_INT
+                    ':author_id'      => DBConnection::PARAM_INT,
+                    ':is_important'   => DBConnection::PARAM_BOOL,
+                    ':is_web_display' => DBConnection::PARAM_BOOL,
+                    ':is_dynamic'     => DBConnection::PARAM_BOOL
                 ]
             );
         }

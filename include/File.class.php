@@ -40,16 +40,16 @@ class File
         {
             DBConnection::get()->query(
                 'UPDATE `' . DB_PREFIX . 'files`
-                SET `approved` = :approve
+                SET `is_approved` = :is_approved
                 WHERE `id` = :file_id',
                 DBConnection::NOTHING,
                 [
-                    ':approve' => (int)$approve,
-                    ':file_id' => $file_id
+                    ':is_approved' => $approve,
+                    ':file_id'     => $file_id
                 ],
                 [
-                    ":approve" => DBConnection::PARAM_INT,
-                    ":file_id" => DBConnection::PARAM_INT
+                    ":is_approved" => DBConnection::PARAM_BOOL,
+                    ":file_id"     => DBConnection::PARAM_INT
                 ]
             );
         }

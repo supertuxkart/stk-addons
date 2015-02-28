@@ -101,7 +101,7 @@ class User extends Base
      * Flag that indicates if the user is active
      * @var bool
      */
-    protected $active = false;
+    protected $is_active = false;
 
     /**
      * The last login date
@@ -154,7 +154,7 @@ class User extends Base
         $this->password = $data["pass"];
         $this->email = $data["email"];
         $this->role = $data["role"];
-        $this->active = (bool)$data["active"];
+        $this->is_active = (bool)$data["is_active"];
         $this->date_login = $data["last_login"];
         $this->date_registration = $data["reg_date"];
         $this->homepage = $data["homepage"];
@@ -235,7 +235,7 @@ class User extends Base
      */
     public function isActive()
     {
-        return (bool)$this->active === true;
+        return $this->is_active;
     }
 
     /**
@@ -401,7 +401,7 @@ class User extends Base
                 WHERE `user` = :username
                 AND `last_login` = :lastlogin
                 AND `name` = :realname
-                AND `active` = 1",
+                AND `is_active` = 1",
                 DBConnection::ROW_COUNT,
                 [
                     ':username'  => $session->get('user_name'),
@@ -475,18 +475,18 @@ class User extends Base
     /**
      * Get all the users from the database in an associative array
      *
-     * @param bool $active get only the active users
+     * @param bool $is_active get only the active users
      * @param int  $limit
      * @param int  $current_page
      *
      * @return User[] array of users
      * @throws UserException
      */
-    public static function getAll($active = true, $limit = -1, $current_page = 1)
+    public static function getAll($is_active = true, $limit = -1, $current_page = 1)
     {
-        if ($active)
+        if ($is_active)
         {
-            $users = static::getAllFromTable("users", "ORDER BY `user` ASC, `id` ASC", "`active` = '1'", $limit, $current_page);
+            $users = static::getAllFromTable("users", "ORDER BY `user` ASC, `id` ASC", "`is_active` = '1'", $limit, $current_page);
         }
         else
         {
@@ -535,7 +535,7 @@ class User extends Base
     /**
      * Filter an array of users of the template menu view
      *
-     * @param User[] $users
+     * @param User[]      $users
      * @param string|null $current_username the currently selected username or null if not user is selected
      *
      * @return array
@@ -779,7 +779,7 @@ class User extends Base
         {
             if ($active)
             {
-                $count = DBConnection::get()->count("users", "`active` = '1'");
+                $count = DBConnection::get()->count("users", "`is_active` = '1'");
             }
             else
             {
@@ -892,13 +892,13 @@ class User extends Base
                 "users",
                 "`id` = :id",
                 [
-                    ":id"     => $user->getId(),
-                    ":role"   => $role,
-                    ":active" => $available
+                    ":id"        => $user->getId(),
+                    ":role"      => $role,
+                    ":is_active" => $available
                 ],
                 [
-                    ":id"     => DBConnection::PARAM_INT,
-                    ":active" => DBConnection::PARAM_INT
+                    ":id"        => DBConnection::PARAM_INT,
+                    ":is_active" => DBConnection::PARAM_BOOL
                 ]
             );
         }
@@ -1040,7 +1040,7 @@ class User extends Base
         {
             $count = DBConnection::get()->query(
                 "UPDATE `" . DB_PREFIX . "users`
-                SET `active` = '1' 
+                SET `is_active` = '1'
     	        WHERE `id` = :userid",
                 DBConnection::ROW_COUNT,
                 [":userid" => $userid],
@@ -1306,7 +1306,7 @@ class User extends Base
 	        FROM `" . DB_PREFIX . "users`
 	        WHERE `user` = :username
             AND `email` = :email
-            AND `active` = 1",
+            AND `is_active` = 1",
             DBConnection::FETCH_ALL,
             [':username' => $username, ':email' => $email]
         );

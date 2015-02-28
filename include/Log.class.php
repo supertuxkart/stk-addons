@@ -77,11 +77,11 @@ class Log
         try
         {
             $events = DBConnection::get()->query(
-                'SELECT `l`.`date`, `l`.`user`, `l`.`message`, `u`.`name`
-                FROM `' . DB_PREFIX . 'logs` `l`
-                LEFT JOIN `' . DB_PREFIX . 'users` `u`
-                ON `l`.`user` = `u`.`id`
-                ORDER BY `l`.`date` DESC
+                'SELECT L.`date`, L.`user`, L.`message`, U.`name`
+                FROM `' . DB_PREFIX . 'logs` L
+                LEFT JOIN `' . DB_PREFIX . 'users` U
+                ON L.`user` = U.`id`
+                ORDER BY L.`date` DESC
                 LIMIT :limit',
                 DBConnection::FETCH_ALL,
                 [':limit' => $limit],
@@ -107,12 +107,12 @@ class Log
         try
         {
             $events = DBConnection::get()->query(
-                'SELECT `l`.`date`,`l`.`user`,`l`.`message`,`u`.`name`
-                FROM `' . DB_PREFIX . 'logs` `l`
-                LEFT JOIN `' . DB_PREFIX . 'users` `u`
-                ON `l`.`user` = `u`.`id`
-                WHERE `l`.`emailed` = 0
-                ORDER BY `l`.`date` DESC',
+                'SELECT L.`date`, L.`user`, L.`message`, U.`name`
+                FROM `' . DB_PREFIX . 'logs` L
+                LEFT JOIN `' . DB_PREFIX . 'users` U
+                ON L.`user` = U.`id`
+                WHERE L.`is_emailed` = 0
+                ORDER BY L.`date` DESC',
                 DBConnection::FETCH_ALL
             );
         }
@@ -134,7 +134,7 @@ class Log
         try
         {
             DBConnection::get()->query(
-                'UPDATE `' . DB_PREFIX . 'logs` SET `emailed` = 1',
+                'UPDATE `' . DB_PREFIX . 'logs` SET `is_emailed` = 1',
                 DBConnection::NOTHING
             );
         }

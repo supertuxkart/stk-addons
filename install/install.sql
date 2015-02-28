@@ -248,7 +248,7 @@ CREATE TABLE IF NOT EXISTS `v3_clients` (
                    COLLATE utf8mb4_unicode_ci NOT NULL,
     `stk_version`  VARCHAR(64)
                    COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'latest',
-    `disabled`     BOOL                       NOT NULL DEFAULT '0',
+    `is_disabled`  BOOL                       NOT NULL DEFAULT '0',
     PRIMARY KEY (`agent_string`(32))
 )
     ENGINE =InnoDB
@@ -265,8 +265,8 @@ CREATE TABLE IF NOT EXISTS `v3_client_sessions` (
     `uid`          INT UNSIGNED               NOT NULL,
     `cid`          CHAR(24)
                    COLLATE utf8mb4_unicode_ci NOT NULL,
-    `online`       BOOL                       NOT NULL DEFAULT '1',
-    `save`         BOOL                       NOT NULL DEFAULT '0',
+    `is_online`    BOOL                       NOT NULL DEFAULT '1',
+    `is_save`      BOOL                       NOT NULL DEFAULT '0',
     `ip`           INT UNSIGNED               NOT NULL DEFAULT '0',
     `private_port` SMALLINT UNSIGNED          NOT NULL DEFAULT '0',
     `port`         SMALLINT UNSIGNED          NOT NULL DEFAULT '0',
@@ -324,7 +324,7 @@ CREATE TABLE IF NOT EXISTS `v3_files` (
     `file_path`   VARCHAR(256)
                   COLLATE utf8mb4_unicode_ci NOT NULL,
     `date_added`  TIMESTAMP                  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `approved`    BOOL                       NOT NULL DEFAULT '0',
+    `is_approved` BOOL                       NOT NULL DEFAULT '0',
     `downloads`   INT UNSIGNED               NOT NULL DEFAULT '0',
     `delete_date` DATE                       NOT NULL DEFAULT '0000-00-00',
     PRIMARY KEY (`id`),
@@ -344,7 +344,7 @@ CREATE TABLE IF NOT EXISTS `v3_files` (
 CREATE TABLE IF NOT EXISTS `v3_friends` (
     `asker_id`    INT UNSIGNED NOT NULL,
     `receiver_id` INT UNSIGNED NOT NULL,
-    `request`     BOOL         NOT NULL DEFAULT '1',
+    `is_request`  BOOL         NOT NULL DEFAULT '1',
     `date`        TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`asker_id`, `receiver_id`),
     KEY `v3_friends_ibfk_2` (`receiver_id`)
@@ -377,12 +377,12 @@ CREATE TABLE IF NOT EXISTS `v3_host_votes` (
 --
 
 CREATE TABLE IF NOT EXISTS `v3_logs` (
-    `id`      INT UNSIGNED               NOT NULL AUTO_INCREMENT,
-    `date`    TIMESTAMP                  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `user`    INT UNSIGNED               NOT NULL,
-    `message` TEXT
-              COLLATE utf8mb4_unicode_ci NOT NULL,
-    `emailed` BOOL                       NOT NULL DEFAULT '0',
+    `id`         INT UNSIGNED               NOT NULL AUTO_INCREMENT,
+    `date`       TIMESTAMP                  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `user`       INT UNSIGNED               NOT NULL,
+    `message`    TEXT
+                 COLLATE utf8mb4_unicode_ci NOT NULL,
+    `is_emailed` BOOL                       NOT NULL DEFAULT '0',
     PRIMARY KEY (`id`)
 )
     ENGINE =InnoDB
@@ -426,21 +426,18 @@ CREATE TABLE IF NOT EXISTS `v3_music` (
 --
 
 CREATE TABLE IF NOT EXISTS `v3_news` (
-    `id`          INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `date`        TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `author_id`   INT UNSIGNED DEFAULT NULL,
-    `content`     VARCHAR(256)
-                  COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-    `condition`   VARCHAR(256)
-                  COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-    `important`   BOOL         NOT NULL DEFAULT '0',
-    `web_display` BOOL         NOT NULL DEFAULT '1',
-    `active`      BOOL         NOT NULL DEFAULT '1',
-    `dynamic`     BOOL         NOT NULL DEFAULT '0',
-    PRIMARY KEY (`id`),
-    KEY `date` (`date`, `active`),
-    KEY `dynamic` (`dynamic`),
-    KEY `author_id` (`author_id`)
+    `id`             INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `date`           TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `author_id`      INT UNSIGNED DEFAULT NULL,
+    `content`        VARCHAR(256)
+                     COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+    `condition`      VARCHAR(256)
+                     COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+    `is_important`   BOOL         NOT NULL DEFAULT '0',
+    `is_web_display` BOOL         NOT NULL DEFAULT '1',
+    `is_active`      BOOL         NOT NULL DEFAULT '1',
+    `is_dynamic`     BOOL         NOT NULL DEFAULT '0',
+    PRIMARY KEY (`id`)
 )
     ENGINE =InnoDB
     DEFAULT CHARSET =utf8mb4
@@ -495,9 +492,9 @@ CREATE TABLE IF NOT EXISTS `v3_servers` (
 --
 
 CREATE TABLE IF NOT EXISTS `v3_server_conn` (
-    `serverid` INT UNSIGNED NOT NULL,
-    `userid`   INT UNSIGNED NOT NULL,
-    `request`  BOOL         NOT NULL DEFAULT '1',
+    `serverid`   INT UNSIGNED NOT NULL,
+    `userid`     INT UNSIGNED NOT NULL,
+    `is_request` BOOL         NOT NULL DEFAULT '1',
     UNIQUE KEY `userid` (`userid`),
     KEY `serverid` (`serverid`)
 )
@@ -541,7 +538,7 @@ CREATE TABLE IF NOT EXISTS `v3_users` (
                  COLLATE utf8mb4_unicode_ci NOT NULL,
     `email`      VARCHAR(64)
                  COLLATE utf8mb4_unicode_ci NOT NULL,
-    `active`     BOOL                       NOT NULL,
+    `is_active`  BOOL                       NOT NULL,
     `last_login` TIMESTAMP                  NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `reg_date`   DATE                       NOT NULL,
     `homepage`   VARCHAR(64)

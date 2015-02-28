@@ -63,7 +63,7 @@ function generateNewsXML()
         {
             $writer->writeAttribute('condition', $result['condition']);
         }
-        if ($result['important'])
+        if ($result['is_important'])
         {
             $writer->writeAttribute('important', 'true');
         }
