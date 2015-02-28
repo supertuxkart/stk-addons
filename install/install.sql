@@ -11,6 +11,8 @@ DELIMITER $$
 --
 -- Procedures
 --
+DROP PROCEDURE IF EXISTS v3_create_file_record;
+$$
 CREATE PROCEDURE `v3_create_file_record`(IN id TEXT, IN atype TEXT, IN ftype TEXT, IN fname TEXT, OUT insertid INT)
     BEGIN
         INSERT INTO `v3_files`
@@ -22,18 +24,24 @@ CREATE PROCEDURE `v3_create_file_record`(IN id TEXT, IN atype TEXT, IN ftype TEX
         INTO insertid;
     END$$
 
+DROP PROCEDURE IF EXISTS v3_increment_download;
+$$
 CREATE PROCEDURE `v3_increment_download`(IN filepath TEXT)
     UPDATE `v3_files`
     SET `downloads` = `downloads` + 1
     WHERE `file_path` = filepath$$
 
-CREATE PROCEDURE `v3_log_event`(IN in_user INT(10) UNSIGNED, IN in_message TEXT)
+DROP PROCEDURE IF EXISTS v3_log_event;
+$$
+CREATE PROCEDURE `v3_log_event`(IN in_user INT UNSIGNED, IN in_message TEXT)
     INSERT INTO `v3_logs`
     (`user`, `message`)
     VALUES
         (in_user, in_message)$$
 
-CREATE PROCEDURE `v3_set_logintime`(IN userid INT(11), IN logintime TIMESTAMP)
+DROP PROCEDURE IF EXISTS v3_set_logintime;
+$$
+CREATE PROCEDURE `v3_set_logintime`(IN userid INT, IN logintime TIMESTAMP)
     UPDATE `v3_users`
     SET `last_login` = logintime
     WHERE `id` = userid$$
@@ -47,8 +55,8 @@ DELIMITER ;
 --
 
 CREATE TABLE IF NOT EXISTS `v3_achieved` (
-    `userid`        INT(10) UNSIGNED NOT NULL,
-    `achievementid` INT(10) UNSIGNED NOT NULL,
+    `userid`        INT UNSIGNED NOT NULL,
+    `achievementid` INT UNSIGNED NOT NULL,
     PRIMARY KEY (`userid`, `achievementid`),
     KEY `userid` (`userid`),
     KEY `achievementid` (`achievementid`)
@@ -64,7 +72,7 @@ CREATE TABLE IF NOT EXISTS `v3_achieved` (
 --
 
 CREATE TABLE IF NOT EXISTS `v3_achievements` (
-    `id`   INT(10) UNSIGNED           NOT NULL AUTO_INCREMENT,
+    `id`   INT UNSIGNED               NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(128)
            COLLATE utf8mb4_unicode_ci NOT NULL,
     PRIMARY KEY (`id`)
@@ -103,12 +111,12 @@ CREATE TABLE IF NOT EXISTS `v3_addons` (
     `name`            TINYTEXT
                       CHARACTER SET utf8mb4
                       COLLATE utf8mb4_unicode_ci NOT NULL,
-    `uploader`        INT(11) UNSIGNED DEFAULT NULL,
+    `uploader`        INT UNSIGNED DEFAULT NULL,
     `creation_date`   TIMESTAMP                  NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `designer`        TINYTEXT
                       CHARACTER SET utf8mb4
                       COLLATE utf8mb4_unicode_ci NOT NULL,
-    `props`           INT(10) UNSIGNED           NOT NULL DEFAULT '0',
+    `props`           INT UNSIGNED               NOT NULL DEFAULT '0',
     `description`     VARCHAR(140)
                       CHARACTER SET utf8mb4
                       COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -139,12 +147,12 @@ CREATE TABLE IF NOT EXISTS `v3_arenas_revs` (
                      COLLATE utf8mb4_unicode_ci NOT NULL,
     `addon_id`       VARCHAR(30)
                      CHARACTER SET utf8         NOT NULL,
-    `fileid`         INT(10) UNSIGNED           NOT NULL DEFAULT '0',
+    `fileid`         INT UNSIGNED               NOT NULL DEFAULT '0',
     `creation_date`  TIMESTAMP                  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `revision`       TINYINT(4)                 NOT NULL DEFAULT '1',
-    `format`         TINYINT(4)                 NOT NULL,
-    `image`          INT(10) UNSIGNED           NOT NULL DEFAULT '0',
-    `status`         MEDIUMINT(9) UNSIGNED      NOT NULL DEFAULT '0',
+    `revision`       TINYINT                    NOT NULL DEFAULT '1',
+    `format`         TINYINT                    NOT NULL,
+    `image`          INT UNSIGNED               NOT NULL DEFAULT '0',
+    `status`         MEDIUMINT UNSIGNED         NOT NULL DEFAULT '0',
     `moderator_note` VARCHAR(4096)
                      COLLATE utf8mb4_unicode_ci DEFAULT NULL,
     PRIMARY KEY (`addon_id`, `revision`),
@@ -166,12 +174,12 @@ CREATE TABLE IF NOT EXISTS `v3_tracks_revs` (
                      COLLATE utf8mb4_unicode_ci NOT NULL,
     `addon_id`       VARCHAR(30)
                      CHARACTER SET utf8         NOT NULL,
-    `fileid`         INT(10) UNSIGNED           NOT NULL DEFAULT '0',
+    `fileid`         INT UNSIGNED               NOT NULL DEFAULT '0',
     `creation_date`  TIMESTAMP                  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `revision`       TINYINT(4)                 NOT NULL DEFAULT '1',
-    `format`         TINYINT(4)                 NOT NULL,
-    `image`          INT(10) UNSIGNED DEFAULT NULL,
-    `status`         MEDIUMINT(9) UNSIGNED      NOT NULL DEFAULT '0',
+    `revision`       TINYINT                    NOT NULL DEFAULT '1',
+    `format`         TINYINT                    NOT NULL,
+    `image`          INT UNSIGNED DEFAULT NULL,
+    `status`         MEDIUMINT UNSIGNED         NOT NULL DEFAULT '0',
     `moderator_note` VARCHAR(4096)
                      COLLATE utf8mb4_unicode_ci DEFAULT NULL,
     PRIMARY KEY (`addon_id`, `revision`),
@@ -193,13 +201,13 @@ CREATE TABLE IF NOT EXISTS `v3_karts_revs` (
                      COLLATE utf8mb4_unicode_ci NOT NULL,
     `addon_id`       VARCHAR(30)
                      CHARACTER SET utf8         NOT NULL,
-    `fileid`         INT(10) UNSIGNED           NOT NULL DEFAULT '0',
+    `fileid`         INT UNSIGNED               NOT NULL DEFAULT '0',
     `creation_date`  TIMESTAMP                  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `revision`       TINYINT(4)                 NOT NULL DEFAULT '1',
-    `format`         TINYINT(4)                 NOT NULL,
-    `image`          INT(10) UNSIGNED           NOT NULL DEFAULT '0',
-    `icon`           INT(10) UNSIGNED           NOT NULL DEFAULT '0',
-    `status`         MEDIUMINT(9) UNSIGNED      NOT NULL DEFAULT '0',
+    `revision`       TINYINT                    NOT NULL DEFAULT '1',
+    `format`         TINYINT                    NOT NULL,
+    `image`          INT UNSIGNED               NOT NULL DEFAULT '0',
+    `icon`           INT UNSIGNED               NOT NULL DEFAULT '0',
+    `status`         MEDIUMINT UNSIGNED         NOT NULL DEFAULT '0',
     `moderator_note` VARCHAR(4096)
                      COLLATE utf8mb4_unicode_ci DEFAULT NULL,
     PRIMARY KEY (`addon_id`, `revision`),
@@ -240,7 +248,7 @@ CREATE TABLE IF NOT EXISTS `v3_clients` (
                    COLLATE utf8mb4_unicode_ci NOT NULL,
     `stk_version`  VARCHAR(64)
                    COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'latest',
-    `disabled`     INT(1)                     NOT NULL DEFAULT '0',
+    `disabled`     BOOL                       NOT NULL DEFAULT '0',
     PRIMARY KEY (`agent_string`(32))
 )
     ENGINE =InnoDB
@@ -254,14 +262,14 @@ CREATE TABLE IF NOT EXISTS `v3_clients` (
 --
 
 CREATE TABLE IF NOT EXISTS `v3_client_sessions` (
-    `uid`          INT(10) UNSIGNED           NOT NULL,
+    `uid`          INT UNSIGNED               NOT NULL,
     `cid`          CHAR(24)
                    COLLATE utf8mb4_unicode_ci NOT NULL,
-    `online`       TINYINT(1)                 NOT NULL DEFAULT '1',
-    `save`         TINYINT(1)                 NOT NULL DEFAULT '0',
-    `ip`           INT(10) UNSIGNED           NOT NULL DEFAULT '0',
-    `private_port` SMALLINT(5) UNSIGNED       NOT NULL DEFAULT '0',
-    `port`         SMALLINT(5) UNSIGNED       NOT NULL DEFAULT '0',
+    `online`       BOOL                       NOT NULL DEFAULT '1',
+    `save`         BOOL                       NOT NULL DEFAULT '0',
+    `ip`           INT UNSIGNED               NOT NULL DEFAULT '0',
+    `private_port` SMALLINT UNSIGNED          NOT NULL DEFAULT '0',
+    `port`         SMALLINT UNSIGNED          NOT NULL DEFAULT '0',
     `last-online`  TIMESTAMP                  NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`uid`),
     UNIQUE KEY `session` (`uid`, `cid`)
@@ -306,7 +314,7 @@ INSERT INTO `v3_config` (`name`, `value`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `v3_files` (
-    `id`          INT(11) UNSIGNED           NOT NULL AUTO_INCREMENT,
+    `id`          INT UNSIGNED               NOT NULL AUTO_INCREMENT,
     `addon_id`    VARCHAR(30)
                   COLLATE utf8mb4_unicode_ci NOT NULL,
     `addon_type`  ENUM('karts', 'tracks', 'arenas')
@@ -316,8 +324,8 @@ CREATE TABLE IF NOT EXISTS `v3_files` (
     `file_path`   VARCHAR(256)
                   COLLATE utf8mb4_unicode_ci NOT NULL,
     `date_added`  TIMESTAMP                  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `approved`    INT(1)                     NOT NULL DEFAULT '0',
-    `downloads`   INT(10) UNSIGNED           NOT NULL DEFAULT '0',
+    `approved`    BOOL                       NOT NULL DEFAULT '0',
+    `downloads`   INT UNSIGNED               NOT NULL DEFAULT '0',
     `delete_date` DATE                       NOT NULL DEFAULT '0000-00-00',
     PRIMARY KEY (`id`),
     KEY `delete_date` (`delete_date`),
@@ -334,10 +342,10 @@ CREATE TABLE IF NOT EXISTS `v3_files` (
 --
 
 CREATE TABLE IF NOT EXISTS `v3_friends` (
-    `asker_id`    INT(10) UNSIGNED NOT NULL,
-    `receiver_id` INT(10) UNSIGNED NOT NULL,
-    `request`     TINYINT(1)       NOT NULL DEFAULT '1',
-    `date`        TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `asker_id`    INT UNSIGNED NOT NULL,
+    `receiver_id` INT UNSIGNED NOT NULL,
+    `request`     BOOL         NOT NULL DEFAULT '1',
+    `date`        TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`asker_id`, `receiver_id`),
     KEY `v3_friends_ibfk_2` (`receiver_id`)
 )
@@ -352,9 +360,9 @@ CREATE TABLE IF NOT EXISTS `v3_friends` (
 --
 
 CREATE TABLE IF NOT EXISTS `v3_host_votes` (
-    `userid` INT(10) UNSIGNED NOT NULL,
-    `hostid` INT(10) UNSIGNED NOT NULL,
-    `vote`   INT(11)          NOT NULL,
+    `userid` INT UNSIGNED NOT NULL,
+    `hostid` INT UNSIGNED NOT NULL,
+    `vote`   INT          NOT NULL,
     PRIMARY KEY (`userid`, `hostid`),
     KEY `hostid` (`hostid`)
 )
@@ -369,12 +377,12 @@ CREATE TABLE IF NOT EXISTS `v3_host_votes` (
 --
 
 CREATE TABLE IF NOT EXISTS `v3_logs` (
-    `id`      INT(10) UNSIGNED           NOT NULL AUTO_INCREMENT,
+    `id`      INT UNSIGNED               NOT NULL AUTO_INCREMENT,
     `date`    TIMESTAMP                  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `user`    INT(10) UNSIGNED           NOT NULL,
+    `user`    INT UNSIGNED               NOT NULL,
     `message` TEXT
               COLLATE utf8mb4_unicode_ci NOT NULL,
-    `emailed` INT(1) UNSIGNED            NOT NULL DEFAULT '0',
+    `emailed` BOOL                       NOT NULL DEFAULT '0',
     PRIMARY KEY (`id`)
 )
     ENGINE =InnoDB
@@ -388,7 +396,7 @@ CREATE TABLE IF NOT EXISTS `v3_logs` (
 --
 
 CREATE TABLE IF NOT EXISTS `v3_music` (
-    `id`           INT(11)                    NOT NULL AUTO_INCREMENT,
+    `id`           INT                        NOT NULL AUTO_INCREMENT,
     `title`        VARCHAR(256)
                    COLLATE utf8mb4_unicode_ci NOT NULL,
     `artist`       VARCHAR(256)
@@ -396,7 +404,7 @@ CREATE TABLE IF NOT EXISTS `v3_music` (
     `license`      VARCHAR(1024)
                    COLLATE utf8mb4_unicode_ci NOT NULL,
     `gain`         FLOAT                      NOT NULL DEFAULT '1',
-    `length`       INT(11)                    NOT NULL DEFAULT '0',
+    `length`       INT                        NOT NULL DEFAULT '0',
     `file`         VARCHAR(191)
                    COLLATE utf8mb4_unicode_ci NOT NULL,
     `file_md5`     CHAR(32)
@@ -418,17 +426,17 @@ CREATE TABLE IF NOT EXISTS `v3_music` (
 --
 
 CREATE TABLE IF NOT EXISTS `v3_news` (
-    `id`          INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-    `date`        TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `author_id`   INT(11) UNSIGNED DEFAULT NULL,
+    `id`          INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `date`        TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `author_id`   INT UNSIGNED DEFAULT NULL,
     `content`     VARCHAR(256)
                   COLLATE utf8mb4_unicode_ci DEFAULT NULL,
     `condition`   VARCHAR(256)
                   COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-    `important`   TINYINT(1)       NOT NULL DEFAULT '0',
-    `web_display` TINYINT(1)       NOT NULL DEFAULT '1',
-    `active`      TINYINT(1)       NOT NULL DEFAULT '1',
-    `dynamic`     INT(1) UNSIGNED  NOT NULL DEFAULT '0',
+    `important`   BOOL         NOT NULL DEFAULT '0',
+    `web_display` BOOL         NOT NULL DEFAULT '1',
+    `active`      BOOL         NOT NULL DEFAULT '1',
+    `dynamic`     BOOL         NOT NULL DEFAULT '0',
     PRIMARY KEY (`id`),
     KEY `date` (`date`, `active`),
     KEY `dynamic` (`dynamic`),
@@ -445,8 +453,8 @@ CREATE TABLE IF NOT EXISTS `v3_news` (
 --
 
 CREATE TABLE IF NOT EXISTS `v3_notifications` (
-    `to`   INT(10) UNSIGNED           NOT NULL,
-    `from` INT(10) UNSIGNED           NOT NULL,
+    `to`   INT UNSIGNED               NOT NULL,
+    `from` INT UNSIGNED               NOT NULL,
     `type` VARCHAR(16)
            COLLATE utf8mb4_unicode_ci NOT NULL,
     UNIQUE KEY `to_2` (`to`, `type`),
@@ -463,15 +471,15 @@ CREATE TABLE IF NOT EXISTS `v3_notifications` (
 --
 
 CREATE TABLE IF NOT EXISTS `v3_servers` (
-    `id`              INT(10) UNSIGNED           NOT NULL AUTO_INCREMENT,
-    `hostid`          INT(10) UNSIGNED           NOT NULL,
+    `id`              INT UNSIGNED               NOT NULL AUTO_INCREMENT,
+    `hostid`          INT UNSIGNED               NOT NULL,
     `name`            TINYTEXT
                       COLLATE utf8mb4_unicode_ci NOT NULL,
-    `ip`              INT(10) UNSIGNED           NOT NULL DEFAULT '0',
-    `port`            SMALLINT(5) UNSIGNED       NOT NULL DEFAULT '0',
-    `private_port`    SMALLINT(5) UNSIGNED       NOT NULL DEFAULT '0',
-    `max_players`     TINYINT(3) UNSIGNED        NOT NULL DEFAULT '0',
-    `current_players` TINYINT(4) UNSIGNED        NOT NULL DEFAULT '0'
+    `ip`              INT UNSIGNED               NOT NULL DEFAULT '0',
+    `port`            SMALLINT UNSIGNED          NOT NULL DEFAULT '0',
+    `private_port`    SMALLINT UNSIGNED          NOT NULL DEFAULT '0',
+    `max_players`     TINYINT UNSIGNED           NOT NULL DEFAULT '0',
+    `current_players` TINYINT UNSIGNED           NOT NULL DEFAULT '0'
     COMMENT 'Isn''t exact. Just to show in the server-list, where it doens''t need to be exact.',
     PRIMARY KEY (`id`),
     KEY `hostid` (`hostid`)
@@ -487,9 +495,9 @@ CREATE TABLE IF NOT EXISTS `v3_servers` (
 --
 
 CREATE TABLE IF NOT EXISTS `v3_server_conn` (
-    `serverid` INT(10) UNSIGNED NOT NULL,
-    `userid`   INT(10) UNSIGNED NOT NULL,
-    `request`  TINYINT(1)       NOT NULL DEFAULT '1',
+    `serverid` INT UNSIGNED NOT NULL,
+    `userid`   INT UNSIGNED NOT NULL,
+    `request`  BOOL         NOT NULL DEFAULT '1',
     UNIQUE KEY `userid` (`userid`),
     KEY `serverid` (`serverid`)
 )
@@ -507,7 +515,7 @@ CREATE TABLE IF NOT EXISTS `v3_stats` (
     `type`  TEXT
             COLLATE utf8mb4_unicode_ci NOT NULL,
     `date`  DATE                       NOT NULL,
-    `value` INT(10) UNSIGNED           NOT NULL DEFAULT '0',
+    `value` INT UNSIGNED               NOT NULL DEFAULT '0',
     PRIMARY KEY (`date`, `type`(40)),
     KEY `date` (`date`)
 )
@@ -522,7 +530,7 @@ CREATE TABLE IF NOT EXISTS `v3_stats` (
 --
 
 CREATE TABLE IF NOT EXISTS `v3_users` (
-    `id`         INT(11) UNSIGNED           NOT NULL AUTO_INCREMENT,
+    `id`         INT UNSIGNED               NOT NULL AUTO_INCREMENT,
     `user`       VARCHAR(30)
                  CHARACTER SET ascii        NOT NULL,
     `pass`       CHAR(96)
@@ -533,7 +541,7 @@ CREATE TABLE IF NOT EXISTS `v3_users` (
                  COLLATE utf8mb4_unicode_ci NOT NULL,
     `email`      VARCHAR(64)
                  COLLATE utf8mb4_unicode_ci NOT NULL,
-    `active`     TINYINT(1)                 NOT NULL,
+    `active`     BOOL                       NOT NULL,
     `last_login` TIMESTAMP                  NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `reg_date`   DATE                       NOT NULL,
     `homepage`   VARCHAR(64)
@@ -554,7 +562,7 @@ CREATE TABLE IF NOT EXISTS `v3_users` (
 --
 
 CREATE TABLE IF NOT EXISTS `v3_verification` (
-    `userid` INT(10) UNSIGNED           NOT NULL DEFAULT '0',
+    `userid` INT UNSIGNED               NOT NULL DEFAULT '0',
     `code`   VARCHAR(32)
              COLLATE utf8mb4_unicode_ci NOT NULL
     COMMENT 'The verification code',
@@ -574,7 +582,7 @@ CREATE TABLE IF NOT EXISTS `v3_verification` (
 --
 
 CREATE TABLE IF NOT EXISTS `v3_votes` (
-    `user_id`  INT(11) UNSIGNED   NOT NULL,
+    `user_id`  INT UNSIGNED       NOT NULL,
     `addon_id` VARCHAR(30)
                CHARACTER SET utf8 NOT NULL,
     `vote`     FLOAT UNSIGNED     NOT NULL,
@@ -592,13 +600,13 @@ CREATE TABLE IF NOT EXISTS `v3_votes` (
 --
 
 CREATE TABLE IF NOT EXISTS `v3_bugs` (
-    `id`           INT(11) UNSIGNED           NOT NULL AUTO_INCREMENT,
-    `user_id`      INT(11) UNSIGNED           NOT NULL
+    `id`           INT UNSIGNED               NOT NULL AUTO_INCREMENT,
+    `user_id`      INT UNSIGNED               NOT NULL
     COMMENT 'User who filed the bug report',
     `addon_id`     VARCHAR(30)
                    CHARACTER SET utf8 DEFAULT NULL
     COMMENT 'The bug culprit',
-    `close_id`     INT(11) UNSIGNED DEFAULT NULL
+    `close_id`     INT UNSIGNED DEFAULT NULL
     COMMENT 'The user who closed the bug',
     `close_reason` VARCHAR(512)
                    COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -614,7 +622,7 @@ CREATE TABLE IF NOT EXISTS `v3_bugs` (
     `description`  VARCHAR(1024)
                    COLLATE utf8mb4_unicode_ci NOT NULL
     COMMENT 'Bug description',
-    `is_report`    TINYINT(1)                 NOT NULL DEFAULT '0'
+    `is_report`    BOOL                       NOT NULL DEFAULT '0'
     COMMENT 'Flag to indicate if the bug is a feedback',
     PRIMARY KEY (`id`),
     KEY `user_id` (`user_id`),
@@ -631,12 +639,12 @@ CREATE TABLE IF NOT EXISTS `v3_bugs` (
 --
 
 CREATE TABLE IF NOT EXISTS `v3_bugs_comments` (
-    `id`          INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-    `bug_id`      INT(11) UNSIGNED NOT NULL
+    `id`          INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `bug_id`      INT UNSIGNED NOT NULL
     COMMENT 'The bug we commented on',
-    `user_id`     INT(11) UNSIGNED NOT NULL
+    `user_id`     INT UNSIGNED NOT NULL
     COMMENT 'The user who commented',
-    `date`        TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP
+    `date`        TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
     COMMENT 'The date it was reported',
     `description` VARCHAR(512)
                   COLLATE utf8mb4_unicode_ci DEFAULT NULL
@@ -656,7 +664,7 @@ CREATE TABLE IF NOT EXISTS `v3_bugs_comments` (
 --
 
 CREATE TABLE IF NOT EXISTS `v3_roles` (
-    `id`   INT(4)                     NOT NULL AUTO_INCREMENT COMMENT 'The role unique identifier',
+    `id`   INT UNSIGNED               NOT NULL AUTO_INCREMENT COMMENT 'The role unique identifier',
     `name` VARCHAR(128)
            COLLATE utf8mb4_unicode_ci NOT NULL
     COMMENT 'The name identifier',
@@ -683,7 +691,7 @@ INSERT INTO `v3_roles` (`id`, `name`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `v3_role_permissions` (
-    `role_id`    INT(4)                     NOT NULL
+    `role_id`    INT UNSIGNED               NOT NULL
     COMMENT 'The id from the roles table',
     `permission` VARCHAR(128)
                  COLLATE utf8mb4_unicode_ci NOT NULL
