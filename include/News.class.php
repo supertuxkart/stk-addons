@@ -233,8 +233,8 @@ class News
         {
             $news = DBConnection::get()->query(
                 "SELECT N.*, `U`.`user` AS `author`
-                FROM " . DB_PREFIX . "news AS N
-                LEFT JOIN `' . DB_PREFIX . 'users` AS U
+                FROM " . DB_PREFIX . "news N
+                LEFT JOIN `" . DB_PREFIX . "users` U
                     ON N.`author_id` = U.`id`
                 WHERE N.`is_active` = '1'
                     ORDER BY `date` DESC",
@@ -322,7 +322,7 @@ class News
                     ':is_important'   => $important,
                     ':is_web_display' => $web_display,
                     ':is_dynamic'     => $dynamic,
-                    'is_active'          => 1
+                    'is_active'       => 1
                 ],
                 [
                     ':author_id'      => DBConnection::PARAM_INT,
