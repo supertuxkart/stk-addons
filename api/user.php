@@ -429,7 +429,7 @@ try
                 $password = isset($_POST['password']) ? utf8_encode($_POST['password']) : "";
                 $password_confirm = isset($_POST['password_confirm']) ? utf8_encode($_POST['password_confirm']) : "p";
                 $email = isset($_POST['email']) ? utf8_encode($_POST['email']) : "";
-                $realname = isset($_POST['realname']) ? utf8_encode($_POST['realname']) : "";
+                $realname = isset($_POST['realname']) ? utf8_encode($_POST['realname']) : $username; // use username as real name
                 $terms = isset($_POST['terms']) ? utf8_encode($_POST['terms']) : "";
 
                 User::register(

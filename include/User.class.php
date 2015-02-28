@@ -1390,7 +1390,7 @@ class User extends Base
      */
     public static function validateRealName($name)
     {
-        static::validateFieldLength(_h("name"), $name, static::MIN_REALNAME, static::MAX_REALNAME);
+        static::validateFieldLength(_h("real name"), $name, static::MIN_REALNAME, static::MAX_REALNAME);
     }
 
     /**
