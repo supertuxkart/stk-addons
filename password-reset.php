@@ -75,15 +75,15 @@ switch ($_GET['action'])
     case 'valid': // user comes from activation link
         try
         {
-            $userid = isset($_GET['user']) ? $_GET['user'] : 0;
+            $user_id = isset($_GET['user']) ? $_GET['user'] : 0;
             $verification_code = isset($_GET['num']) ? $_GET['num'] : "";
 
-            Verification::verify($userid, $verification_code);
+            Verification::verify($user_id, $verification_code);
 
             $pw_res['reset_form']['display'] = false;
             $pw_res['pass_form'] = [
                 'display'           => true,
-                'user_id'           => $userid,
+                'user_id'           => $user_id,
                 'verification_code' => $verification_code
             ];
         }
@@ -96,18 +96,18 @@ switch ($_GET['action'])
     case 'change': // change password clicked in the 'valid' page
         try
         {
-            $userid = isset($_POST['user']) ? $_POST['user'] : 0;
+            $user_id = isset($_POST['user']) ? $_POST['user'] : 0;
             $verification_code = isset($_POST['verify']) ? $_POST['verify'] : "";
             $pass1 = isset($_POST['pass1']) ? $_POST['pass1'] : "";
             $pass2 = isset($_POST['pass2']) ? $_POST['pass2'] : "";
 
             // validate
-            Verification::verify($userid, $verification_code);
+            Verification::verify($user_id, $verification_code);
             User::validateNewPassword($pass1, $pass2);
 
             // change password and clean up
-            User::changePassword($userid, $pass1);
-            Verification::delete($userid);
+            User::changePassword($user_id, $pass1);
+            Verification::delete($user_id);
 
             $pw_res['reset_form']['display'] = false;
             $tpl->assign("success", _h('Changed password was successful.') . '<a href="login.php"> ' . _h('Click here to login') . '</a>');
@@ -118,7 +118,7 @@ switch ($_GET['action'])
             $pw_res['reset_form']['display'] = false;
             $pw_res['pass_form'] = [
                 'display'           => true,
-                'user_id'           => $userid,
+                'user_id'           => $user_id,
                 'verification_code' => $verification_code
             ];
         }

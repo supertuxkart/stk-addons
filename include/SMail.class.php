@@ -182,19 +182,19 @@ EMAIL;
      * Send new register email
      *
      * @param string $email
-     * @param int    $userid
+     * @param int    $user_id
      * @param string $username
      * @param string $ver_code
      * @param string $ver_page
      *
      * @throws SMailException
      */
-    public function newAccountNotification($email, $userid, $username, $ver_code, $ver_page)
+    public function newAccountNotification($email, $user_id, $username, $ver_code, $ver_page)
     {
         $subject = "New SuperTuxKart Account";
         $tpl_data = [
             "username"  => $username,
-            "url_href"  => $this->base_url . "$ver_page?action=valid&num=$ver_code&user=$userid",
+            "url_href"  => $this->base_url . "$ver_page?action=valid&num=$ver_code&user=$user_id",
             "url_label" => "Confirm email address",
             "warning"   => "The activation link will expire in 7 days.\nIf you did not request an account for SuperTuxKart, please just ignore this email.",
             "subject"   => $subject,
@@ -212,19 +212,19 @@ EMAIL;
      * Send new password reset mail
      *
      * @param string $email
-     * @param int    $userid
+     * @param int    $user_id
      * @param string $username
      * @param string $ver_code
      * @param string $ver_page
      *
      * @throws SMailException
      */
-    public function passwordResetNotification($email, $userid, $username, $ver_code, $ver_page)
+    public function passwordResetNotification($email, $user_id, $username, $ver_code, $ver_page)
     {
         $subject = "Reset Password for SuperTuxKart Account";
         $tpl_data = [
             "username"  => $username,
-            "url_href"  => $this->base_url . "$ver_page?action=valid&num=$ver_code&user=$userid",
+            "url_href"  => $this->base_url . "$ver_page?action=valid&num=$ver_code&user=$user_id",
             "url_label" => "Reset your password",
             "warning"   => "If you did not request a password reset, please just ignore this email.",
             "subject"   => $subject,

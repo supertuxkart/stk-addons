@@ -24,13 +24,6 @@ CREATE PROCEDURE `v3_increment_download`(IN filepath TEXT)
     SET `downloads` = `downloads` + 1
     WHERE `file_path` = filepath$$
 
-DROP PROCEDURE IF EXISTS v3_log_event$$
-CREATE PROCEDURE `v3_log_event`(IN in_user INT UNSIGNED, IN in_message TEXT)
-    INSERT INTO `v3_logs`
-    (`user`, `message`)
-    VALUES
-        (in_user, in_message)$$
-
 DROP PROCEDURE IF EXISTS v3_set_logintime$$
 CREATE PROCEDURE `v3_set_logintime`(IN userid INT, IN logintime TIMESTAMP)
     UPDATE `v3_users`
@@ -138,12 +131,11 @@ CREATE TABLE IF NOT EXISTS `v3_users` (
 -- Table structure for table `v3_verification`
 --
 CREATE TABLE IF NOT EXISTS `v3_verification` (
-    `userid` INT UNSIGNED NOT NULL DEFAULT '0',
+    `user_id` INT UNSIGNED NOT NULL DEFAULT '0',
     `code`   VARCHAR(32)  NOT NULL
     COMMENT 'The verification code',
-    PRIMARY KEY (`userid`),
-    UNIQUE KEY `userid` (`userid`),
-    CONSTRAINT `v3_verification_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `v3_users` (`id`)
+    PRIMARY KEY (`user_id`),
+    CONSTRAINT `v3_verification_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `v3_users` (`id`)
         ON DELETE CASCADE
         ON UPDATE NO ACTION
 )
@@ -186,15 +178,15 @@ ON DUPLICATE KEY UPDATE `id` = VALUES(`id`), `name` = VALUES(`name`);
 -- Table structure for table `v3_achieved`
 --
 CREATE TABLE IF NOT EXISTS `v3_achieved` (
-    `userid`        INT UNSIGNED NOT NULL,
-    `achievementid` INT UNSIGNED NOT NULL,
-    PRIMARY KEY (`userid`, `achievementid`),
-    KEY `userid` (`userid`),
-    KEY `achievementid` (`achievementid`),
-    CONSTRAINT `v3_achieved_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `v3_users` (`id`)
+    `user_id`        INT UNSIGNED NOT NULL,
+    `achievement_id` INT UNSIGNED NOT NULL,
+    PRIMARY KEY (`user_id`, `achievement_id`),
+    KEY `user_id` (`user_id`),
+    KEY `achievement_id` (`achievement_id`),
+    CONSTRAINT `v3_achieved_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `v3_users` (`id`)
         ON DELETE CASCADE
         ON UPDATE NO ACTION,
-    CONSTRAINT `v3_achieved_ibfk_2` FOREIGN KEY (`achievementid`) REFERENCES `v3_achievements` (`id`)
+    CONSTRAINT `v3_achieved_ibfk_2` FOREIGN KEY (`achievement_id`) REFERENCES `v3_achievements` (`id`)
         ON DELETE CASCADE
         ON UPDATE NO ACTION
 )
@@ -250,12 +242,12 @@ CREATE TABLE IF NOT EXISTS `v3_notifications` (
 --
 CREATE TABLE IF NOT EXISTS `v3_logs` (
     `id`         INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `user`       INT UNSIGNED DEFAULT NULL,
+    `user_id`       INT UNSIGNED DEFAULT NULL,
     `date`       TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `message`    TEXT         NOT NULL,
     `is_emailed` BOOL         NOT NULL DEFAULT '0',
     PRIMARY KEY (`id`),
-    CONSTRAINT `v3_logs_ibfk_1` FOREIGN KEY (`user`) REFERENCES `v3_users` (`id`)
+    CONSTRAINT `v3_logs_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `v3_users` (`id`)
         ON DELETE CASCADE
         ON UPDATE NO ACTION
 )
@@ -497,7 +489,7 @@ CREATE TABLE IF NOT EXISTS `v3_karts_revs` (
 --
 CREATE TABLE IF NOT EXISTS `v3_cache` (
     `file`  VARCHAR(128) NOT NULL,
-    `addon` VARCHAR(30) DEFAULT NULL,
+    `addon` VARCHAR(32) DEFAULT NULL,
     `props` VARCHAR(256),
     UNIQUE KEY `file` (`file`)
 )

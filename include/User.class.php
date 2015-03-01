@@ -586,7 +586,7 @@ class User extends Base
             if (mb_strlen($term) > 2)
             {
                 // build sql query
-                $parameter = ":userid" . $index;
+                $parameter = ":user_id" . $index;
                 $index++;
                 $query_parts[] = "`user` RLIKE " . $parameter;
                 $parameters[$parameter] = $term;
@@ -930,17 +930,17 @@ class User extends Base
             DBConnection::get()->query(
                 "UPDATE `" . DB_PREFIX . "users`
                 SET `last_login` = NOW()
-                WHERE `id` = :userid",
+                WHERE `id` = :user_id",
                 DBConnection::NOTHING,
-                [':userid' => $user_id]
+                [':user_id' => $user_id]
             );
 
             $user = DBConnection::get()->query(
                 "SELECT `last_login`
                 FROM `" . DB_PREFIX . "users`
-                WHERE `id` = :userid",
+                WHERE `id` = :user_id",
                 DBConnection::FETCH_FIRST,
-                [':userid' => $user_id]
+                [':user_id' => $user_id]
             );
         }
         catch(DBException $e)
@@ -968,13 +968,13 @@ class User extends Base
             $count = DBConnection::get()->query(
                 "UPDATE `" . DB_PREFIX . "users`
                 SET `pass`   = :pass
-    	        WHERE `id` = :userid",
+    	        WHERE `id` = :user_id",
                 DBConnection::ROW_COUNT,
                 [
-                    ':userid' => $user_id,
-                    ':pass'   => Util::getPasswordHash($new_password)
+                    ':user_id' => $user_id,
+                    ':pass'    => Util::getPasswordHash($new_password)
                 ],
-                [":userid" => DBConnection::PARAM_INT]
+                [":user_id" => DBConnection::PARAM_INT]
             );
         }
         catch(DBException $e)
@@ -1028,23 +1028,23 @@ class User extends Base
     /**
      * Activate a new user
      *
-     * @param int    $userid
+     * @param int    $user_id
      * @param string $ver_code
      *
      * @throws UserException when activation failed
      */
-    public static function activate($userid, $ver_code)
+    public static function activate($user_id, $ver_code)
     {
-        Verification::verify($userid, $ver_code);
+        Verification::verify($user_id, $ver_code);
         try
         {
             $count = DBConnection::get()->query(
                 "UPDATE `" . DB_PREFIX . "users`
                 SET `is_active` = '1'
-    	        WHERE `id` = :userid",
+    	        WHERE `id` = :user_id",
                 DBConnection::ROW_COUNT,
-                [":userid" => $userid],
-                [":userid" => DBConnection::PARAM_INT]
+                [":user_id" => $user_id],
+                [":user_id" => DBConnection::PARAM_INT]
             );
 
             if ($count === 0)
@@ -1057,8 +1057,8 @@ class User extends Base
             throw new UserException(exception_message_db(_('activate your user account')));
         }
 
-        Verification::delete($userid);
-        Log::newEvent("User with ID '{$userid}' activated.");
+        Verification::delete($user_id);
+        Log::newEvent("User with ID '{$user_id}' activated.");
     }
 
     /**
@@ -1075,15 +1075,15 @@ class User extends Base
         static::validateUserName($username);
         static::validateEmail($email);
 
-        $userid = static::validateUsernameEmail($username, $email);
-        $verification_code = Verification::generate($userid);
+        $user_id = static::validateUsernameEmail($username, $email);
+        $verification_code = Verification::generate($user_id);
 
         try
         {
             // Send verification email
             try
             {
-                SMail::get()->passwordResetNotification($email, $userid, $username, $verification_code, 'password-reset.php');
+                SMail::get()->passwordResetNotification($email, $user_id, $username, $verification_code, 'password-reset.php');
             }
             catch(SMailException $e)
             {
@@ -1181,18 +1181,18 @@ class User extends Base
                 throw new DBException("Multiple rows affected(or none). Not good");
             }
 
-            $userid = DBConnection::get()->lastInsertId();
+            $user_id = DBConnection::get()->lastInsertId();
             DBConnection::get()->commit();
-            $verification_code = Verification::generate($userid);
+            $verification_code = Verification::generate($user_id);
 
             // Send verification email
             try
             {
-                SMail::get()->newAccountNotification($email, $userid, $username, $verification_code, 'register.php');
+                SMail::get()->newAccountNotification($email, $user_id, $username, $verification_code, 'register.php');
             }
             catch(SMailException $e)
             {
-                Log::newEvent("Registration email for user '$username' with id '$userid' failed.");
+                Log::newEvent("Registration email for user '$username' with id '$user_id' failed.");
                 throw new UserException($e->getMessage() . ' ' . _h('Please contact a website administrator.'));
             }
         }
@@ -1201,7 +1201,7 @@ class User extends Base
             throw new UserException(exception_message_db(_('create your account')));
         }
 
-        Log::newEvent("Registration submitted for user '$username' with id '$userid'.");
+        Log::newEvent("Registration submitted for user '$username' with id '$user_id'.");
     }
 
     /**

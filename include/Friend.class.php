@@ -166,20 +166,20 @@ class Friend
             $friends = DBConnection::get()->query(
                 "   SELECT " . DB_PREFIX . "friends.asker_id AS friend_id
                     FROM " . DB_PREFIX . "friends, " . DB_PREFIX . "client_sessions
-                    WHERE   " . DB_PREFIX . "friends.receiver_id = :userid
+                    WHERE   " . DB_PREFIX . "friends.receiver_id = :user_id
                         AND " . DB_PREFIX . "friends.is_request = 0
                         AND " . DB_PREFIX . "client_sessions.uid = " . DB_PREFIX . "friends.asker_id
                         AND " . DB_PREFIX . "client_sessions.is_online = 1
                 UNION
                     SELECT " . DB_PREFIX . "friends.receiver_id AS friend_id
                     FROM " . DB_PREFIX . "friends, " . DB_PREFIX . "client_sessions
-                    WHERE   " . DB_PREFIX . "friends.asker_id = :userid
+                    WHERE   " . DB_PREFIX . "friends.asker_id = :user_id
                         AND " . DB_PREFIX . "friends.is_request = 0
                         AND " . DB_PREFIX . "client_sessions.uid = " . DB_PREFIX . "friends.receiver_id
                         AND " . DB_PREFIX . "client_sessions.is_online = 1",
                 DBConnection::FETCH_ALL,
-                [":userid" => $user_id],
-                [":userid" => DBConnection::PARAM_INT]
+                [":user_id" => $user_id],
+                [":user_id" => DBConnection::PARAM_INT]
             );
         }
         catch(DBException $e)
@@ -220,7 +220,7 @@ class Friend
                     . DB_PREFIX . "friends.asker_id AS friend_id, "
                     . DB_PREFIX . "users.user AS friend_name, 1 AS is_asker
                         FROM " . DB_PREFIX . "friends, " . DB_PREFIX . "users
-                        WHERE   " . DB_PREFIX . "friends.receiver_id = :userid
+                        WHERE   " . DB_PREFIX . "friends.receiver_id = :user_id
                             AND " . DB_PREFIX . "users.id = " . DB_PREFIX . "friends.asker_id
                     UNION
                         SELECT " . DB_PREFIX . "friends.date AS date, "
@@ -228,12 +228,12 @@ class Friend
                     . DB_PREFIX . "friends.receiver_id AS friend_id, "
                     . DB_PREFIX . "users.user AS friend_name, 0 AS is_asker
                         FROM " . DB_PREFIX . "friends, " . DB_PREFIX . "users
-                        WHERE " . DB_PREFIX . "friends.asker_id = :userid
+                        WHERE " . DB_PREFIX . "friends.asker_id = :user_id
                             AND " . DB_PREFIX . "users.id = " . DB_PREFIX . "friends.receiver_id
                         ORDER BY date ASC",
                     DBConnection::FETCH_ALL,
-                    [":userid" => $user_id],
-                    [":userid" => DBConnection::PARAM_INT]
+                    [":user_id" => $user_id],
+                    [":user_id" => DBConnection::PARAM_INT]
                 );
             }
             else // get only the accepted friends, viewing other user profile
@@ -243,7 +243,7 @@ class Friend
                     . DB_PREFIX . "friends.asker_id AS friend_id, "
                     . DB_PREFIX . "users.user AS friend_name
                         FROM " . DB_PREFIX . "friends, " . DB_PREFIX . "users
-                        WHERE   " . DB_PREFIX . "friends.receiver_id = :userid
+                        WHERE   " . DB_PREFIX . "friends.receiver_id = :user_id
                             AND " . DB_PREFIX . "users.id = " . DB_PREFIX . "friends.asker_id
                             AND " . DB_PREFIX . "friends.is_request = 0
                     UNION
@@ -251,13 +251,13 @@ class Friend
                     . DB_PREFIX . "friends.receiver_id AS friend_id, "
                     . DB_PREFIX . "users.user AS friend_name
                         FROM " . DB_PREFIX . "friends, " . DB_PREFIX . "users
-                        WHERE   " . DB_PREFIX . "friends.asker_id = :userid
+                        WHERE   " . DB_PREFIX . "friends.asker_id = :user_id
                             AND " . DB_PREFIX . "users.id = " . DB_PREFIX . "friends.receiver_id
                             AND " . DB_PREFIX . "friends.is_request = 0
                         ORDER BY date ASC",
                     DBConnection::FETCH_ALL,
-                    [":userid" => $user_id],
-                    [":userid" => DBConnection::PARAM_INT]
+                    [":user_id" => $user_id],
+                    [":user_id" => DBConnection::PARAM_INT]
                 );
             }
         }

@@ -36,11 +36,11 @@ class Achievement
         try
         {
             $achievements = DBConnection::get()->query(
-                "SELECT `achievementid` FROM " . DB_PREFIX . "achieved
-                WHERE `userid` = :userid",
+                "SELECT `achievement_id` FROM " . DB_PREFIX . "achieved
+                WHERE `user_id` = :user_id",
                 DBConnection::FETCH_ALL,
-                [':userid' => $user_id],
-                [':userid' => DBConnection::PARAM_INT]
+                [':user_id' => $user_id],
+                [':user_id' => DBConnection::PARAM_INT]
             );
         }
         catch(DBException $e)
@@ -52,7 +52,7 @@ class Achievement
         $return_achievements = [];
         foreach ($achievements as $achievement)
         {
-            $return_achievements[] = $achievement['achievementid'];
+            $return_achievements[] = $achievement['achievement_id'];
         }
 
         return $return_achievements;
@@ -74,11 +74,11 @@ class Achievement
                 "SELECT A.id, A.name
                 FROM " . DB_PREFIX . "achieved AS AC
                 INNER JOIN " . DB_PREFIX . "achievements AS A
-                    ON AC.achievementid = A.id
-                WHERE `userid` = :userid",
+                    ON AC.achievement_id = A.id
+                WHERE `user_id` = :user_id",
                 DBConnection::FETCH_ALL,
-                [':userid' => $user_id],
-                [':userid' => DBConnection::PARAM_INT]
+                [':user_id' => $user_id],
+                [':user_id' => DBConnection::PARAM_INT]
             );
         }
         catch(DBException $e)
@@ -102,17 +102,17 @@ class Achievement
         try
         {
             DBConnection::get()->query(
-                "INSERT INTO `" . DB_PREFIX . "achieved` (`userid`, `achievementid`)
-                VALUES (:userid, :achievementid)
-                ON DUPLICATE KEY UPDATE `userid` = :userid",
+                "INSERT INTO `" . DB_PREFIX . "achieved` (`user_id`, `achievement_id`)
+                VALUES (:user_id, :achievement_id)
+                ON DUPLICATE KEY UPDATE `user_id` = :user_id",
                 DBConnection::NOTHING,
                 [
-                    ':achievementid' => $achievement_id,
-                    ':userid'        => $user_id
+                    ':achievement_id' => $achievement_id,
+                    ':user_id'        => $user_id
                 ],
                 [
-                    ':achievementid' => DBConnection::PARAM_INT,
-                    ':userid'        => DBConnection::PARAM_INT
+                    ':achievement_id' => DBConnection::PARAM_INT,
+                    ':user_id'        => DBConnection::PARAM_INT
                 ]
             );
         }

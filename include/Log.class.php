@@ -34,14 +34,13 @@ class Log
     {
         try
         {
-            DBConnection::get()->query(
-                "CALL `" . DB_PREFIX . "log_event`(:userid, :message)",
-                DBConnection::NOTHING,
+            DBConnection::get()->insert(
+                "logs",
                 [
-                    ':userid'  => User::getLoggedId(),
+                    ':user_id' => User::getLoggedId(),
                     ':message' => h($message)
                 ],
-                [':userid' => DBConnection::PARAM_INT]
+                [':user_id' => DBConnection::PARAM_INT]
             );
         }
         catch(DBException $e)
@@ -65,22 +64,13 @@ class Log
             throw new LogException('$number must be an integer.');
         }
 
-        if (!User::isLoggedIn())
-        {
-            throw new LogException('You must be logged in ot view the event log.');
-        }
-        if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
-        {
-            throw new LogException('You do not have the necessary permissions to view the event log.');
-        }
-
         try
         {
             $events = DBConnection::get()->query(
-                'SELECT L.`date`, L.`user`, L.`message`, U.`name`
+                'SELECT L.`date`, L.`user_id`, L.`message`, U.`name`
                 FROM `' . DB_PREFIX . 'logs` L
                 LEFT JOIN `' . DB_PREFIX . 'users` U
-                ON L.`user` = U.`id`
+                    ON L.`user_id` = U.`id`
                 ORDER BY L.`date` DESC
                 LIMIT :limit',
                 DBConnection::FETCH_ALL,
@@ -107,10 +97,10 @@ class Log
         try
         {
             $events = DBConnection::get()->query(
-                'SELECT L.`date`, L.`user`, L.`message`, U.`name`
+                'SELECT L.`date`, L.`user_id`, L.`message`, U.`name`
                 FROM `' . DB_PREFIX . 'logs` L
                 LEFT JOIN `' . DB_PREFIX . 'users` U
-                ON L.`user` = U.`id`
+                    ON L.`user_id` = U.`id`
                 WHERE L.`is_emailed` = 0
                 ORDER BY L.`date` DESC',
                 DBConnection::FETCH_ALL

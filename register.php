@@ -36,7 +36,7 @@ $captcha = new Captcha();
 $captcha->setPublicKey(CAPTCHA_PUB)->setPrivateKey(CAPTCHA_PRIV);
 
 $register = [
-    'display' => false,
+    'display'  => false,
     'captcha'  => $captcha->html(),
     'username' => ['min' => User::MIN_USERNAME, 'max' => User::MAX_USERNAME, 'value' => h($username)],
     'password' => ['min' => User::MIN_PASSWORD, 'max' => User::MAX_PASSWORD],
@@ -97,7 +97,7 @@ switch ($action)
                 throw new UserException(implode("<br>", $errors));
             }
 
-            User::activate($_GET['user'] /* userid */, $_GET["num"] /* verification code */);
+            User::activate($_GET['user'] /* user id */, $_GET["num"] /* verification code */);
 
             $tpl->assign('success', _h('Your account has been activated.'));
             $tpl->setMetaRefresh("login.php", 10);

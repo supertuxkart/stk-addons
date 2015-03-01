@@ -26,26 +26,26 @@ class Verification
     /**
      * Verifies a supplied verification code.
      *
-     * @param int    $userid
+     * @param int    $user_id
      * @param string $ver_code
      *
      * @throws VerificationException when verification failed
      */
-    public static function verify($userid, $ver_code)
+    public static function verify($user_id, $ver_code)
     {
         try
         {
             $count = DBConnection::get()->query(
-                "SELECT `userid`
+                "SELECT `user_id`
     	        FROM `" . DB_PREFIX . "verification`
-    	        WHERE `userid` = :userid
+    	        WHERE `user_id` = :user_id
                 AND `code` = :code",
                 DBConnection::ROW_COUNT,
                 [
-                    ':userid' => $userid,
-                    ':code'   => $ver_code
+                    ':user_id' => $user_id,
+                    ':code'    => $ver_code
                 ],
-                [':userid' => DBConnection::PARAM_INT]
+                [':user_id' => DBConnection::PARAM_INT]
             );
         }
         catch(DBException $e)
@@ -63,19 +63,19 @@ class Verification
     /**
      * Deletes an entry from the verification table
      *
-     * @param int $userid
+     * @param int $user_id
      *
      * @throws VerificationException when nothing got deleted.
      */
-    public static function delete($userid)
+    public static function delete($user_id)
     {
         try
         {
             $count = DBConnection::get()->delete(
                 "verification",
-                "`userid` = :userid",
-                [':userid' => $userid],
-                [':userid' => DBConnection::PARAM_INT]
+                "`user_id` = :user_id",
+                [':user_id' => $user_id],
+                [':user_id' => DBConnection::PARAM_INT]
             );
         }
         catch(DBException $e)
@@ -93,26 +93,26 @@ class Verification
     /**
      * Generates and insert a verification code for the user with supplied user id
      *
-     * @param int $userid
+     * @param int $user_id
      *
      * @throws VerificationException
      * @return string the generated verification code
      */
-    public static function generate($userid)
+    public static function generate($user_id)
     {
         try
         {
             $verification_code = Util::getRandomString(12);
             DBConnection::get()->query(
-                "INSERT INTO `" . DB_PREFIX . "verification` (`userid`,`code`)
-                VALUES(:userid, :code)
+                "INSERT INTO `" . DB_PREFIX . "verification` (`user_id`,`code`)
+                VALUES(:user_id, :code)
                 ON DUPLICATE KEY UPDATE code = :code",
                 DBConnection::ROW_COUNT,
                 [
-                    ':userid' => $userid,
-                    ':code'   => $verification_code
+                    ':user_id' => $user_id,
+                    ':code'    => $verification_code
                 ],
-                [':userid' => DBConnection::PARAM_INT]
+                [':user_id' => DBConnection::PARAM_INT]
             );
         }
         catch(DBException $e)
@@ -140,7 +140,7 @@ class Verification
                 "DELETE U
                 FROM `" . DB_PREFIX . "verification` V
                 INNER JOIN `" . DB_PREFIX . "users` U
-                    ON V.userid = U.id
+                    ON V.user_id = U.id
                 WHERE
                     active = 0
                 AND
@@ -164,7 +164,7 @@ class Verification
                 "DELETE V
                 FROM `" . DB_PREFIX . "verification` V
                 INNER JOIN `" . DB_PREFIX . "users` U
-                    ON V.userid = U.id
+                    ON V.user_id = U.id
                 WHERE
                     active = 1
                 AND
