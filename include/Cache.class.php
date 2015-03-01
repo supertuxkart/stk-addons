@@ -134,9 +134,9 @@ class Cache
             DBConnection::get()->insert(
                 "cache",
                 [
-                    ":file"  => $path,
-                    ":addon" => $addon,
-                    ":props" => $props
+                    ":file"     => $path,
+                    ":addon_id" => $addon,
+                    ":props"    => $props
                 ]
             );
         }
@@ -161,7 +161,7 @@ class Cache
         try
         {
             $result = DBConnection::get()->query(
-                'SELECT `addon`, `props`
+                'SELECT *
                 FROM `' . DB_PREFIX . 'cache`
                 WHERE `file` = :file',
                 DBConnection::FETCH_ALL,
@@ -169,11 +169,6 @@ class Cache
             );
         }
         catch(DBException $e)
-        {
-            return [];
-        }
-
-        if (empty($result))
         {
             return [];
         }

@@ -132,7 +132,7 @@ CREATE TABLE IF NOT EXISTS `v3_users` (
 --
 CREATE TABLE IF NOT EXISTS `v3_verification` (
     `user_id` INT UNSIGNED NOT NULL DEFAULT '0',
-    `code`   VARCHAR(32)  NOT NULL
+    `code`    VARCHAR(32)  NOT NULL
     COMMENT 'The verification code',
     PRIMARY KEY (`user_id`),
     CONSTRAINT `v3_verification_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `v3_users` (`id`)
@@ -242,7 +242,7 @@ CREATE TABLE IF NOT EXISTS `v3_notifications` (
 --
 CREATE TABLE IF NOT EXISTS `v3_logs` (
     `id`         INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `user_id`       INT UNSIGNED DEFAULT NULL,
+    `user_id`    INT UNSIGNED DEFAULT NULL,
     `date`       TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `message`    TEXT         NOT NULL,
     `is_emailed` BOOL         NOT NULL DEFAULT '0',
@@ -488,10 +488,13 @@ CREATE TABLE IF NOT EXISTS `v3_karts_revs` (
 -- Table structure for table `v3_cache`
 --
 CREATE TABLE IF NOT EXISTS `v3_cache` (
-    `file`  VARCHAR(128) NOT NULL,
-    `addon` VARCHAR(32) DEFAULT NULL,
-    `props` VARCHAR(256),
-    UNIQUE KEY `file` (`file`)
+    `file`     VARCHAR(128) NOT NULL,
+    `addon_id` VARCHAR(30) DEFAULT NULL,
+    `props`    VARCHAR(256),
+    PRIMARY KEY (`file`),
+    CONSTRAINT `v3_cache_ibfk_1` FOREIGN KEY (`addon_id`) REFERENCES `v3_addons` (`id`)
+        ON DELETE CASCADE
+        ON UPDATE NO ACTION
 )
     ENGINE =InnoDB
     CHARSET =utf8mb4
