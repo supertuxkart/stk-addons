@@ -404,7 +404,7 @@ class Statistic
             $query = '(SELECT `a`.`name`, `a`.type
                 FROM `' . DB_PREFIX . 'addons` `a`
                 LEFT JOIN `' . DB_PREFIX . '%s_revs` `r`
-                ON `a`.`id` = `r`.`addon_id`
+                    ON `a`.`id` = `r`.`addon_id`
                 WHERE `r`.`status` & ' . F_APPROVED . '
                 ORDER BY `a`.`creation_date` DESC
                 LIMIT 1)';

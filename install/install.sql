@@ -156,7 +156,6 @@ CREATE TABLE IF NOT EXISTS `v3_arenas_revs` (
     `moderator_note` VARCHAR(4096)
                      COLLATE utf8mb4_unicode_ci DEFAULT NULL,
     PRIMARY KEY (`addon_id`, `revision`),
-    UNIQUE KEY `id` (`id`),
     KEY `status` (`status`)
 )
     ENGINE =InnoDB
@@ -178,13 +177,12 @@ CREATE TABLE IF NOT EXISTS `v3_tracks_revs` (
     `creation_date`  TIMESTAMP                  NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `revision`       TINYINT                    NOT NULL DEFAULT '1',
     `format`         TINYINT                    NOT NULL,
-    `image`          INT UNSIGNED DEFAULT NULL,
+    `image`          INT UNSIGNED               NOT NULL DEFAULT '0',
     `status`         MEDIUMINT UNSIGNED         NOT NULL DEFAULT '0',
     `moderator_note` VARCHAR(4096)
                      COLLATE utf8mb4_unicode_ci DEFAULT NULL,
     PRIMARY KEY (`addon_id`, `revision`),
-    KEY `status` (`status`),
-    KEY `image` (`image`)
+    KEY `status` (`status`)
 )
     ENGINE =InnoDB
     DEFAULT CHARSET =utf8mb4
@@ -211,7 +209,6 @@ CREATE TABLE IF NOT EXISTS `v3_karts_revs` (
     `moderator_note` VARCHAR(4096)
                      COLLATE utf8mb4_unicode_ci DEFAULT NULL,
     PRIMARY KEY (`addon_id`, `revision`),
-    KEY `track_id` (`addon_id`),
     KEY `status` (`status`)
 )
     ENGINE =InnoDB
@@ -328,7 +325,6 @@ CREATE TABLE IF NOT EXISTS `v3_files` (
     `downloads`   INT UNSIGNED               NOT NULL DEFAULT '0',
     `delete_date` DATE                       NOT NULL DEFAULT '0000-00-00',
     PRIMARY KEY (`id`),
-    KEY `delete_date` (`delete_date`),
     KEY `addon_id` (`addon_id`)
 )
     ENGINE =InnoDB
@@ -346,8 +342,7 @@ CREATE TABLE IF NOT EXISTS `v3_friends` (
     `receiver_id` INT UNSIGNED NOT NULL,
     `is_request`  BOOL         NOT NULL DEFAULT '1',
     `date`        TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`asker_id`, `receiver_id`),
-    KEY `v3_friends_ibfk_2` (`receiver_id`)
+    PRIMARY KEY (`asker_id`, `receiver_id`)
 )
     ENGINE =InnoDB
     DEFAULT CHARSET =utf8mb4
@@ -427,8 +422,8 @@ CREATE TABLE IF NOT EXISTS `v3_music` (
 
 CREATE TABLE IF NOT EXISTS `v3_news` (
     `id`             INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `date`           TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `author_id`      INT UNSIGNED DEFAULT NULL,
+    `date`           TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `content`        VARCHAR(256)
                      COLLATE utf8mb4_unicode_ci DEFAULT NULL,
     `condition`      VARCHAR(256)
@@ -622,7 +617,6 @@ CREATE TABLE IF NOT EXISTS `v3_bugs` (
     `is_report`    BOOL                       NOT NULL DEFAULT '0'
     COMMENT 'Flag to indicate if the bug is a feedback',
     PRIMARY KEY (`id`),
-    KEY `user_id` (`user_id`),
     KEY `addon_id` (`addon_id`)
 )
     ENGINE =InnoDB
@@ -647,7 +641,6 @@ CREATE TABLE IF NOT EXISTS `v3_bugs_comments` (
                   COLLATE utf8mb4_unicode_ci DEFAULT NULL
     COMMENT 'The comment description',
     PRIMARY KEY (`id`),
-    KEY `user_id` (`user_id`),
     KEY `bug_id` (`bug_id`)
 )
     ENGINE =InnoDB
@@ -693,7 +686,7 @@ CREATE TABLE IF NOT EXISTS `v3_role_permissions` (
     `permission` VARCHAR(128)
                  COLLATE utf8mb4_unicode_ci NOT NULL
     COMMENT 'The actual permission',
-    KEY `role_id` (`role_id`)
+    PRIMARY KEY (`role_id`, `permission`)
 )
     ENGINE =InnoDB
     DEFAULT CHARSET =utf8mb4

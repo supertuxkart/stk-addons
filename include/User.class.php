@@ -273,9 +273,9 @@ class User extends Base
                 'SELECT `a`.*, `r`.`status`
                 FROM `' . DB_PREFIX . 'addons` `a`
                 LEFT JOIN `' . DB_PREFIX . $type . '_revs` `r`
-                ON `a`.`id` = `r`.`addon_id`
+                    ON `a`.`id` = `r`.`addon_id`
                 WHERE `a`.`uploader` = :uploader
-                AND `a`.`type` = :addon_type',
+                    AND `a`.`type` = :addon_type',
                 DBConnection::FETCH_ALL,
                 [":uploader" => $this->id, ":addon_type" => $type],
                 [":uploader" => DBConnection::PARAM_INT]
