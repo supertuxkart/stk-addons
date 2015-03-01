@@ -157,7 +157,7 @@ CREATE TABLE IF NOT EXISTS `v3_verification` (
 -- Table structure for table `v3_achievements`
 --
 CREATE TABLE IF NOT EXISTS `v3_achievements` (
-    `id`   INT UNSIGNED               NOT NULL AUTO_INCREMENT,
+    `id`   INT UNSIGNED NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(128) NOT NULL,
     PRIMARY KEY (`id`)
 )
@@ -231,7 +231,7 @@ CREATE TABLE IF NOT EXISTS `v3_notifications` (
     `to`   INT UNSIGNED NOT NULL,
     `from` INT UNSIGNED NOT NULL,
     `type` VARCHAR(16)  NOT NULL,
-    UNIQUE KEY `to_2` (`to`, `type`),
+    PRIMARY KEY (`to`, `type`),
     KEY `to` (`to`),
     CONSTRAINT `v3_notifications_ibfk_1` FOREIGN KEY (`to`) REFERENCES `v3_users` (`id`)
         ON DELETE CASCADE
