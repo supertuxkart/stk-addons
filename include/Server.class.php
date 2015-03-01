@@ -53,7 +53,7 @@ class Server
     private function __construct(array $data)
     {
         $this->id = (int)$data["id"];
-        $this->host_id = (int)$data["hostid"];
+        $this->host_id = (int)$data["host_id"];
         $this->name = $data["name"];
         $this->max_players = (int)$data["max_players"];
     }
@@ -114,14 +114,14 @@ class Server
      * @param string $ip
      * @param int    $port
      * @param int    $private_port
-     * @param int    $userid
+     * @param int    $user_id
      * @param string $server_name
      * @param int    $max_players
      *
      * @return Server
      * @throws ServerException
      */
-    public static function create($ip, $port, $private_port, $userid, $server_name, $max_players)
+    public static function create($ip, $port, $private_port, $user_id, $server_name, $max_players)
     {
         $max_players = (int)$max_players;
 
@@ -138,11 +138,11 @@ class Server
             }
 
             $result = DBConnection::get()->query(
-                "INSERT INTO `" . DB_PREFIX . "servers` (hostid, ip, port, private_port, name, max_players)
-                VALUES (:hostid, :ip, :port, :private_port, :name, :max_players)",
+                "INSERT INTO `" . DB_PREFIX . "servers` (host_id, ip, port, private_port, name, max_players)
+                VALUES (:host_id, :ip, :port, :private_port, :name, :max_players)",
                 DBConnection::ROW_COUNT,
                 [
-                    ':hostid'       => $userid,
+                    ':host_id'      => $user_id,
                     ':ip'           => $ip, // do not use (int) or it truncates to 127.255.255.255
                     ':port'         => $port,
                     ':private_port' => $private_port,
@@ -150,7 +150,7 @@ class Server
                     ':max_players'  => $max_players
                 ],
                 [
-                    ':hostid'       => DBConnection::PARAM_INT,
+                    ':host_id'      => DBConnection::PARAM_INT,
                     ':ip'           => DBConnection::PARAM_INT,
                     ':port'         => DBConnection::PARAM_INT,
                     ':private_port' => DBConnection::PARAM_INT,

@@ -195,7 +195,7 @@ try
                 $output->startElement('quick-join');
                     $output->writeAttribute('success', 'yes');
                     $output->writeAttribute('info', '');
-                    $output->writeAttribute('hostid', $result['hostid']);
+                    $output->writeAttribute('hostid', $result['host_id']);
                     $output->writeAttribute('ip', $result['ip']);
                     $output->writeAttribute('port', $result['port']);
                     $output->writeAttribute('private_port', $result['private_port']);
@@ -264,15 +264,15 @@ try
             {
                 $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
                 $token = isset($_POST['token']) ? $_POST['token'] : "";
-                $hostid = isset($_POST['hostid']) ? (int)$_POST['hostid'] : 0;
+                $host_id = isset($_POST['hostid']) ? (int)$_POST['hostid'] : 0;
                 $vote = isset($_POST['vote']) ? (int)$_POST['vote'] : 0;
 
-                $new_rating = ClientSession::get($token, $userid)->setHostVote($hostid, $vote);
+                $new_rating = ClientSession::get($token, $userid)->setHostVote($host_id, $vote);
 
                 $output->startElement('vote');
                     $output->writeAttribute('success', 'yes');
                     $output->writeAttribute('new-rating', $new_rating);
-                    $output->writeAttribute('hostid', $hostid);
+                    $output->writeAttribute('hostid', $host_id);
                     $output->writeAttribute('info', '');
                 $output->endElement();
             }

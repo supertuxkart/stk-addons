@@ -308,26 +308,11 @@ CREATE TABLE IF NOT EXISTS `v3_client_sessions` (
 
 -- --------------------------------------------------------------------------------
 --
--- Table structure for table `v3_host_votes`
---
-CREATE TABLE IF NOT EXISTS `v3_host_votes` (
-    `userid` INT UNSIGNED NOT NULL,
-    `hostid` INT UNSIGNED NOT NULL,
-    `vote`   INT          NOT NULL,
-    PRIMARY KEY (`userid`, `hostid`),
-    KEY `hostid` (`hostid`)
-)
-    ENGINE =InnoDB
-    DEFAULT CHARSET =utf8mb4
-    COLLATE =utf8mb4_unicode_ci;
-
--- --------------------------------------------------------------------------------
---
 -- Table structure for table `v3_servers`
 --
 CREATE TABLE IF NOT EXISTS `v3_servers` (
     `id`              INT UNSIGNED      NOT NULL AUTO_INCREMENT,
-    `hostid`          INT UNSIGNED      NOT NULL,
+    `host_id`         INT UNSIGNED      NOT NULL,
     `name`            VARCHAR(64)       NOT NULL,
     `ip`              INT UNSIGNED      NOT NULL DEFAULT '0',
     `port`            SMALLINT UNSIGNED NOT NULL DEFAULT '0',
@@ -336,8 +321,8 @@ CREATE TABLE IF NOT EXISTS `v3_servers` (
     `current_players` TINYINT UNSIGNED  NOT NULL DEFAULT '0'
     COMMENT 'Isn''t exact. Just to show in the server-list, where it doesn''t need to be exact.',
     PRIMARY KEY (`id`),
-    KEY `hostid` (`hostid`),
-    CONSTRAINT `v3_servers_ibfk_1` FOREIGN KEY (`hostid`) REFERENCES `v3_users` (`id`)
+    KEY `hostid` (`host_id`),
+    CONSTRAINT `v3_servers_ibfk_1` FOREIGN KEY (`host_id`) REFERENCES `v3_users` (`id`)
         ON DELETE CASCADE
         ON UPDATE NO ACTION
 )
@@ -350,15 +335,33 @@ CREATE TABLE IF NOT EXISTS `v3_servers` (
 -- Table structure for table `v3_server_conn`
 --
 CREATE TABLE IF NOT EXISTS `v3_server_conn` (
-    `serverid`   INT UNSIGNED NOT NULL,
-    `userid`     INT UNSIGNED NOT NULL,
+    `user_id`    INT UNSIGNED NOT NULL,
+    `server_id`  INT UNSIGNED NOT NULL,
     `is_request` BOOL         NOT NULL DEFAULT '1',
-    UNIQUE KEY `userid` (`userid`),
-    KEY `serverid` (`serverid`),
-    CONSTRAINT `v3_server_conn_ibfk_1` FOREIGN KEY (`serverid`) REFERENCES `v3_servers` (`id`)
+    PRIMARY KEY (`user_id`),
+    KEY `server_id` (`server_id`),
+    CONSTRAINT `v3_server_conn_ibfk_1` FOREIGN KEY (`server_id`) REFERENCES `v3_servers` (`id`)
         ON DELETE CASCADE
         ON UPDATE NO ACTION,
-    CONSTRAINT `v3_server_conn_ibfk_2` FOREIGN KEY (`userid`) REFERENCES `v3_users` (`id`)
+    CONSTRAINT `v3_server_conn_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `v3_users` (`id`)
+        ON DELETE CASCADE
+        ON UPDATE NO ACTION
+)
+    ENGINE =InnoDB
+    DEFAULT CHARSET =utf8mb4
+    COLLATE =utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------------------------------
+--
+-- Table structure for table `v3_host_votes`
+--
+CREATE TABLE IF NOT EXISTS `v3_host_votes` (
+    `user_id` INT UNSIGNED NOT NULL,
+    `host_id` INT UNSIGNED NOT NULL,
+    `vote`    INT          NOT NULL,
+    PRIMARY KEY (`user_id`, `host_id`),
+    KEY `hostid` (`host_id`),
+    CONSTRAINT `v3_host_votes_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `v3_users` (`id`)
         ON DELETE CASCADE
         ON UPDATE NO ACTION
 )

@@ -109,7 +109,7 @@ class ClientSession
             // now setup the serv info
             $count = DBConnection::get()->query(
                 "DELETE FROM `" . DB_PREFIX . "servers`
-                WHERE `ip`= :ip AND `port`= :port AND `hostid`= :id",
+                WHERE `ip`= :ip AND `port`= :port AND `host_id`= :id",
                 DBConnection::ROW_COUNT,
                 [
                     ':ip'   => $ip,
@@ -263,17 +263,17 @@ class ClientSession
         {
             $server_id = DBConnection::get()->query(
                 "SELECT `id` FROM `" . DB_PREFIX . "servers`
-                WHERE `hostid` = :hostid AND `ip` = :ip AND `port` = :port LIMIT 1",
+                WHERE `host_id` = :host_id AND `ip` = :ip AND `port` = :port LIMIT 1",
                 DBConnection::FETCH_FIRST,
                 [
-                    ':hostid' => $this->user->getId(),
-                    ':ip'     => $ip,
-                    ':port'   => $port
+                    ':host_id' => $this->user->getId(),
+                    ':ip'      => $ip,
+                    ':port'    => $port
                 ],
                 [
-                    ':hostid' => DBConnection::PARAM_INT,
-                    ':ip'     => DBConnection::PARAM_INT,
-                    ':port'   => DBConnection::PARAM_INT
+                    ':host_id' => DBConnection::PARAM_INT,
+                    ':ip'      => DBConnection::PARAM_INT,
+                    ':port'    => DBConnection::PARAM_INT
                 ]
             );
             if (!$server_id)
@@ -282,9 +282,9 @@ class ClientSession
             }
 
             $connection_requests = DBConnection::get()->query(
-                "SELECT `userid`
+                "SELECT `user_id`
                 FROM `" . DB_PREFIX . "server_conn`
-                WHERE `serverid` = :server_id AND `is_request` = '1'",
+                WHERE `server_id` = :server_id AND `is_request` = '1'",
                 DBConnection::FETCH_ALL,
                 [':server_id' => $server_id['id']],
                 [':server_id' => DBConnection::PARAM_INT]
@@ -296,10 +296,10 @@ class ClientSession
             $query_parts = [];
             foreach ($connection_requests as $user)
             {
-                $parameter = ":userid" . $index;
+                $parameter = ":user_id" . $index;
                 $index++;
-                $query_parts[] = "`userid` = " . $parameter;
-                $parameters[$parameter] = $user['userid'];
+                $query_parts[] = "`user_id` = " . $parameter;
+                $parameters[$parameter] = $user['user_id'];
             }
 
             if ($index > 0)
@@ -446,16 +446,16 @@ class ClientSession
         try
         {
             $count = DBConnection::get()->query(
-                "INSERT INTO `" . DB_PREFIX . "server_conn` (serverid, userid, is_request)
-                VALUES (:serverid, :userid, 1)
+                "INSERT INTO `" . DB_PREFIX . "server_conn` (server_id, user_id, is_request)
+                VALUES (:server_id, :user_id, 1)
                 ON DUPLICATE KEY 
-                UPDATE is_request = '1', serverid = :serverid",
+                UPDATE is_request = '1', server_id = :server_id",
                 DBConnection::ROW_COUNT,
                 [
-                    ':userid'   => $this->user->getId(),
-                    ':serverid' => $server_id
+                    ':user_id'   => $this->user->getId(),
+                    ':server_id' => $server_id
                 ],
-                [':userid' => DBConnection::PARAM_INT, ':serverid' => DBConnection::PARAM_INT]
+                [':user_id' => DBConnection::PARAM_INT, ':server_id' => DBConnection::PARAM_INT]
             );
         }
         catch(DBException $e)
@@ -483,7 +483,7 @@ class ClientSession
         {
             // Query the database to add the request entry
             $server = DBConnection::get()->query(
-                "SELECT `id`, `hostid`, `ip`, `port`, `private_port`
+                "SELECT `id`, `host_id`, `ip`, `port`, `private_port`
                 FROM `" . DB_PREFIX . "servers`
                 LIMIT 1",
                 DBConnection::FETCH_FIRST
@@ -495,15 +495,15 @@ class ClientSession
             }
 
             DBConnection::get()->query(
-                "INSERT INTO `" . DB_PREFIX . "server_conn` (serverid, userid, is_request)
-                VALUES (:serverid, :userid, 1)
+                "INSERT INTO `" . DB_PREFIX . "server_conn` (server_id, user_id, is_request)
+                VALUES (:server_id, :user_id, 1)
                 ON DUPLICATE KEY UPDATE is_request = '1'",
                 DBConnection::NOTHING,
                 [
-                    ':userid'   => $this->user->getId(),
-                    ':serverid' => $server['id']
+                    ':user_id'   => $this->user->getId(),
+                    ':server_id' => $server['id']
                 ],
-                [':userid' => DBConnection::PARAM_INT, ':serverid' => DBConnection::PARAM_INT]
+                [':user_id' => DBConnection::PARAM_INT, ':server_id' => DBConnection::PARAM_INT]
             );
         }
         catch(DBException $e)
@@ -533,20 +533,21 @@ class ClientSession
         }
         try
         {
+            // TODO find out if host_id is a server or user
             DBConnection::get()->query(
-                "INSERT INTO `" . DB_PREFIX . "host_votes` (`userid`, `hostid`, `vote`)
-                VALUES (:userid, :hostid, :vote)
-                ON DUPLICATE KEY UPDATE `to` = :to",
+                "INSERT INTO `" . DB_PREFIX . "host_votes` (`user_id`, `host_id`, `vote`)
+                VALUES (:user_id, :host_id, :vote)
+                ON DUPLICATE KEY UPDATE `vote` = :vote",
                 DBConnection::ROW_COUNT,
                 [
-                    ':hostid' => $host_id,
-                    ':userid' => $this->user->getId(),
-                    ':vote'   => $vote
+                    ':host_id' => $host_id,
+                    ':user_id' => $this->user->getId(),
+                    ':vote'    => $vote
                 ],
                 [
-                    ':hostid' => DBConnection::PARAM_INT,
-                    ':userid' => DBConnection::PARAM_INT,
-                    ':vote'   => DBConnection::PARAM_INT
+                    ':host_id' => DBConnection::PARAM_INT,
+                    ':user_id' => DBConnection::PARAM_INT,
+                    ':vote'    => DBConnection::PARAM_INT
                 ]
             );
         }
@@ -614,20 +615,20 @@ class ClientSession
             $count = DBConnection::get()->query(
                 "UPDATE `" . DB_PREFIX . "client_sessions`
                 SET `ip` = :ip , `port` = :port, `private_port` = :private_port
-                WHERE `uid` = :userid AND `cid` = :token",
+                WHERE `uid` = :user_id AND `cid` = :token",
                 DBConnection::ROW_COUNT,
                 [
                     ':ip'           => $ip,
                     ':port'         => $port,
                     ':private_port' => $private_port,
-                    ':userid'       => $this->user->getId(),
+                    ':user_id'      => $this->user->getId(),
                     ':token'        => $this->session_id
                 ],
                 [
                     ':ip'           => DBConnection::PARAM_INT,
                     ':port'         => DBConnection::PARAM_INT,
                     ':private_port' => DBConnection::PARAM_INT,
-                    ':userid'       => DBConnection::PARAM_INT,
+                    ':user_id'      => DBConnection::PARAM_INT,
                 ]
 
             );
@@ -658,13 +659,13 @@ class ClientSession
             $count = DBConnection::get()->query(
                 "UPDATE `" . DB_PREFIX . "client_sessions`
                 SET `ip` = '0' , `port` = '0'
-                WHERE `uid` = :userid AND `cid` = :token",
+                WHERE `uid` = :user_id AND `cid` = :token",
                 DBConnection::ROW_COUNT,
                 [
-                    ':userid' => $this->user->getId(),
-                    ':token'  => $this->session_id
+                    ':user_id' => $this->user->getId(),
+                    ':token'   => $this->session_id
                 ],
-                [':userid' => DBConnection::PARAM_INT]
+                [':user_id' => DBConnection::PARAM_INT]
             );
         }
         catch(DBException $e)
@@ -697,13 +698,13 @@ class ClientSession
         {
             $session_info = DBConnection::get()->query(
                 "SELECT * FROM `" . DB_PREFIX . "client_sessions`
-                WHERE cid = :sessionid AND uid = :userid",
+                WHERE cid = :sessionid AND uid = :user_id",
                 DBConnection::FETCH_ALL,
                 [
                     ':sessionid' => $session_id,
-                    ':userid'    => $user_id
+                    ':user_id'   => $user_id
                 ],
-                [':userid' => DBConnection::PARAM_INT]
+                [':user_id' => DBConnection::PARAM_INT]
             );
         }
         catch(DBException $e)
