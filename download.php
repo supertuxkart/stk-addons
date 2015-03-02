@@ -76,7 +76,10 @@ if (preg_match('#^(SuperTuxKart/[a-z0-9\\.\\-_]+)( \\(.*\\))?$#', $user_agent, $
 try
 {
     DBConnection::get()->query(
-        'CALL `' . DB_PREFIX . 'increment_download` (:path)',
+        "UPDATE `" . DB_PREFIX . "files`
+        SET `downloads` = `downloads` + 1
+        WHERE `file_path` = :path
+        ",
         DBConnection::NOTHING,
         [':path' => $assets_path]
     );

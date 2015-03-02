@@ -2,7 +2,7 @@
 
 /**
  * Copyright 2011-2013 Stephen Just <stephenjust@users.sf.net>
- *                2014 Daniel Butum <danibutum at gmail dot com>
+ *           2014-2015 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify

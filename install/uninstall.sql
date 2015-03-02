@@ -1,8 +1,5 @@
 -- drop procedures
 DROP PROCEDURE IF EXISTS v3_create_file_record;
-DROP PROCEDURE IF EXISTS v3_increment_download;
-DROP PROCEDURE IF EXISTS v3_log_event;
-DROP PROCEDURE IF EXISTS v3_set_logintime;
 
 -- drop tables
 DROP TABLE IF EXISTS v3_bugs_comments;

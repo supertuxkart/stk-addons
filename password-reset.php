@@ -3,7 +3,7 @@
  * copyright 2009      Lucas Baudin <xapantu@gmail.com>
  *           2012-2014 Stephen Just <stephenjust@gmail.com>
  *           2013      Glenn De Jonghe
- *           2014      Daniel Butum <danibutum at gmail dot com>
+ *           2014-2015 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify

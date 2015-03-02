@@ -18,18 +18,6 @@ CREATE PROCEDURE `v3_create_file_record`(IN id TEXT, IN atype TEXT, IN ftype TEX
         INTO insertid;
     END$$
 
-DROP PROCEDURE IF EXISTS v3_increment_download$$
-CREATE PROCEDURE `v3_increment_download`(IN filepath TEXT)
-    UPDATE `v3_files`
-    SET `downloads` = `downloads` + 1
-    WHERE `file_path` = filepath$$
-
-DROP PROCEDURE IF EXISTS v3_set_logintime$$
-CREATE PROCEDURE `v3_set_logintime`(IN userid INT, IN logintime TIMESTAMP)
-    UPDATE `v3_users`
-    SET `last_login` = logintime
-    WHERE `id` = userid$$
-
 DELIMITER ;
 
 -- --------------------------------------------------------------------------------
