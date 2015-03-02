@@ -51,6 +51,10 @@ switch ($_POST["action"])
         {
             exit_json_error(implode("<br>", $errors));
         }
+        if (!User::hasPermission(AccessControl::PERM_EDIT_PERMISSIONS))
+        {
+            exit_json_error("You do not have the permission to delete a role");
+        }
 
         try
         {
@@ -73,6 +77,10 @@ switch ($_POST["action"])
         if (!is_array($_POST["permissions"]))
         {
             exit_json_error("The permissions param is not an array");
+        }
+        if (!User::hasPermission(AccessControl::PERM_EDIT_PERMISSIONS))
+        {
+            exit_json_error("You do not have the permission to change a roles permissions");
         }
 
         try

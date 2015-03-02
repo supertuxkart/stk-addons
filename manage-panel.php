@@ -266,7 +266,7 @@ switch ($_GET['view'])
         }
         $tpl = StkTemplate::get("manage/page/roles.tpl");
         $tpl_data = [
-            "roles"       => AccessControl::getRoles(),
+            "roles"       => AccessControl::getRoleNames(),
             "permissions" => AccessControl::getPermissionsChecked()
         ];
 

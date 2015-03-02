@@ -62,77 +62,88 @@ class User extends Base
     }
 
     /**
+     * Get common SQL select all statement
+     * @return string
+     */
+    private static function getSQLAll()
+    {
+        return "SELECT U.*, R.name as role_name
+                FROM " . DB_PREFIX . "users U
+                INNER JOIN " . DB_PREFIX . "roles R
+                    ON U.role_id = R.id ";
+    }
+
+    /**
      * The id of the user
      * @var int
      */
-    protected $id = -1;
+    private $id = -1;
 
     /**
      * The username
      * @var string
      */
-    protected $username;
+    private $username;
 
     /**
      * The real name
      * @var string
      */
-    protected $realname;
+    private $realname;
 
     /**
      * The password hashed
      * @var string
      */
-    protected $password;
+    private $password;
 
     /**
      * The user email
      * @var string
      */
-    protected $email;
+    private $email;
 
     /**
      * The user role
      * @var string
      */
-    protected $role;
+    private $role;
 
     /**
      * Flag that indicates if the user is active
      * @var bool
      */
-    protected $is_active = false;
+    private $is_active = false;
 
     /**
      * The last login date
      * @var string
      */
-    protected $date_login;
+    private $date_login;
 
     /**
      * The registration date
      * @var
      */
-    protected $date_registration;
+    private $date_registration;
 
     /**
      * The homepage of the user
      * @var string
      */
-    protected $homepage;
+    private $homepage;
 
     /**
      * The avatar
      * @var string
      */
-    protected $avatar;
+    private $avatar;
 
     /**
      * Required session vars to be a valid session. All user vars are under the "user" key
      * @var array
      */
-    protected static $session_required = ["id", "user_name", "real_name", "date_last_login", "role", "permissions"];
-
+    private static $session_required = ["id", "user_name", "real_name", "date_last_login", "role", "permissions"];
 
     /**
      * The user constructor
@@ -153,7 +164,7 @@ class User extends Base
         $this->realname = $data["name"];
         $this->password = $data["pass"];
         $this->email = $data["email"];
-        $this->role = $data["role"];
+        $this->role = $data["role_name"];
         $this->is_active = (bool)$data["is_active"];
         $this->date_login = $data["last_login"];
         $this->date_registration = $data["reg_date"];
@@ -396,7 +407,7 @@ class User extends Base
         try
         {
             $count = DBConnection::get()->query(
-                "SELECT `id`,`user`,`name`,`role`
+                "SELECT *
     	        FROM `" . DB_PREFIX . "users`
                 WHERE `user` = :username
                 AND `last_login` = :lastlogin
@@ -484,13 +495,18 @@ class User extends Base
      */
     public static function getAll($is_active = true, $limit = -1, $current_page = 1)
     {
+        $order_by = "ORDER BY U.`user` ASC, U.`id` ASC";
         if ($is_active)
         {
-            $users = static::getAllFromTable("users", "ORDER BY `user` ASC, `id` ASC", "`is_active` = '1'", $limit, $current_page);
+            $users = static::getAllFromTable(
+                static::getSQLAll() . "WHERE U.`is_active` = '1' " . $order_by,
+                $limit,
+                $current_page
+            );
         }
         else
         {
-            $users = static::getAllFromTable("users", "ORDER BY `user` ASC, `id` ASC", "", $limit, $current_page);
+            $users = static::getAllFromTable(static::getSQLAll() . $order_by, $limit, $current_page);
         }
 
         $return = [];
@@ -512,7 +528,14 @@ class User extends Base
      */
     public static function getFromID($user_id)
     {
-        $data = static::getFromField("users", "id", $user_id, DBConnection::PARAM_INT, _h("User ID does not exist"));
+        $data = static::getFromField(
+            static::getSQLAll(),
+            "U.id",
+            $user_id,
+            DBConnection::PARAM_INT,
+            _h("User ID does not exist"),
+            ":id"
+        );
 
         return new User($data);
     }
@@ -527,7 +550,14 @@ class User extends Base
      */
     public static function getFromUserName($username)
     {
-        $data = static::getFromField("users", "user", $username, DBConnection::PARAM_STR, _h("Username does not exist"));
+        $data = static::getFromField(
+            static::getSQLAll(),
+            "U.user",
+            $username,
+            DBConnection::PARAM_STR,
+            _h("Username does not exist"),
+            ":user"
+        );
 
         return new User($data);
     }
@@ -602,9 +632,8 @@ class User extends Base
         try
         {
             $users = DBConnection::get()->query(
-                "SELECT *
-                FROM `" . DB_PREFIX . "users`
-                WHERE " . implode(" OR ", $query_parts) . " LIMIT 50",
+                static::getSQLAll() .
+                "WHERE " . implode(" OR ", $query_parts) . " LIMIT 50",
                 DBConnection::FETCH_ALL,
                 $parameters
             );
@@ -1120,11 +1149,12 @@ class User extends Base
         static::validateRealName($realname);
         Validate::checkbox($terms, _h('You must agree to the terms to register.'));
 
-        DBConnection::get()->beginTransaction();
+        $db = DBConnection::get();
+        $db->beginTransaction();
         // Make sure requested username is not taken
         try
         {
-            $result = DBConnection::get()->query(
+            $result = $db->query(
                 "SELECT `user`
     	        FROM `" . DB_PREFIX . "users`
     	        WHERE `user` LIKE :username",
@@ -1144,7 +1174,7 @@ class User extends Base
         // Make sure the email address is unique
         try
         {
-            $result = DBConnection::get()->query(
+            $result = $db->query(
                 "SELECT `email`
     	        FROM `" . DB_PREFIX . "users`
     	        WHERE `email` LIKE :email",
@@ -1164,14 +1194,13 @@ class User extends Base
         // No exception occurred - continue with registration
         try
         {
-            $count = DBConnection::get()->insert(
+            $count = $db->insert(
                 "users",
                 [
                     ":user"    => $username,
                     ":pass"    => Util::getPasswordHash($password),
                     ":name"    => $realname,
                     ":email"   => $email,
-                    "role"     => "'user'",
                     "reg_date" => "CURRENT_DATE()"
                 ]
             );
@@ -1181,8 +1210,8 @@ class User extends Base
                 throw new DBException("Multiple rows affected(or none). Not good");
             }
 
-            $user_id = DBConnection::get()->lastInsertId();
-            DBConnection::get()->commit();
+            $user_id = $db->lastInsertId();
+            $db->commit();
             $verification_code = Verification::generate($user_id);
 
             // Send verification email

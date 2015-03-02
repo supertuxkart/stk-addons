@@ -165,7 +165,7 @@ if ($can_elevate_user && !$is_owner)
     $role = ["options" => []];
 
     // check if current user can edit that role, if not we can not change to that role
-    foreach (AccessControl::getRoles() as $db_role)
+    foreach (AccessControl::getRoleNames() as $db_role)
     {
         // has permission
         $can_edit = User::hasPermissionOnRole($db_role);

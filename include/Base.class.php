@@ -79,37 +79,42 @@ abstract class Base
     /**
      * Get an object data from a field
      *
-     * @param string $table         the table name
-     * @param string $field         the from field
-     * @param mixed  $value         the value of the field that must match
-     * @param int    $value_type    the PDO var type
-     * @param string $empty_message custom message on empty database
+     * @param string      $query          the select query
+     * @param string      $field          the from field
+     * @param mixed       $value          the value of the field that must match
+     * @param int         $value_type     the PDO var type
+     * @param string      $empty_message  custom message on empty database
+     * @param string|null $prepared_field optional name for the prepared field
      *
      * @return array the data from the database
      * @throws mixed
      */
     protected static function getFromField(
-        $table,
+        $query,
         $field,
         $value,
         $value_type = DBConnection::PARAM_STR,
-        $empty_message = "The abstract values does not exist"
+        $empty_message = "The abstract values does not exist",
+        $prepared_field = null
     ) {
+        if (!$prepared_field)
+        {
+            $prepared_field = ":" . $field;
+        }
+
         $data = [];
         try
         {
             $data = DBConnection::get()->query(
-                "SELECT *
-                FROM `" . DB_PREFIX . $table . "`
-                WHERE " . sprintf("`%s` = :%s", $field, $field) . " LIMIT 1",
+                $query . " WHERE " . sprintf("%s = %s", $field, $prepared_field) . " LIMIT 1",
                 DBConnection::FETCH_FIRST,
-                [':' . $field => $value],
-                [':' . $field => $value_type] // bind value
+                [$prepared_field => $value],
+                [$prepared_field => $value_type] // bind value
             );
         }
         catch(DBException $e)
         {
-            static::throwException(exception_message_db(sprintf(_("retrieve the '%s'"), $table)));
+            static::throwException(exception_message_db(_("retrieve the singleton")));
         }
 
         // empty result
@@ -152,25 +157,16 @@ abstract class Base
     }
 
     /**
-     * Get all the data from the database
+     * Get all the data from the database with pagination support
      *
-     * @param string $table        the table name
-     * @param string $order_by     the sql order clause
-     * @param string $where        where statement
+     * @param string $query
      * @param int    $limit        number of retrievals, -1 for all
      * @param int    $current_page the current page
      *
      * @return array
      */
-    protected static function getAllFromTable($table, $order_by, $where = "", $limit = -1, $current_page = 1)
+    protected static function getAllFromTable($query, $limit = -1, $current_page = 1)
     {
-        // build query
-        $query = "SELECT * FROM `" . DB_PREFIX . $table . "`";
-        if ($where)
-        {
-            $query .= sprintf(" WHERE %s", $where);
-        }
-        $query .= " " . $order_by;
         $data = [];
 
         try

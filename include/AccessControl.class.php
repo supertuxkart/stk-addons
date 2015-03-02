@@ -121,25 +121,25 @@ class AccessControl
      * Add a new role to the database.
      * Only high privilege users can call this method
      *
-     * @param string $role
+     * @param string $role_name
      *
      * @throws AccessControlException
      */
-    public static function addRole($role)
+    public static function addRole($role_name)
     {
         // validate
         if (!User::hasPermission(static::PERM_EDIT_PERMISSIONS))
         {
             throw new AccessControlException("You do not have the permission to add a role");
         }
-        if (static::isRole($role))
+        if (static::isRole($role_name))
         {
             throw new AccessControlException("The role already exists");
         }
 
         try
         {
-            DBConnection::get()->insert("roles", [":name" => $role]);
+            DBConnection::get()->insert("roles", [":name" => $role_name]);
         }
         catch(DBException $e)
         {
@@ -151,26 +151,23 @@ class AccessControl
      * Delete a role from the database
      * Only high privilege users can call this method
      *
-     * @param string $role
+     * @param string $role_name
      *
      * @throws AccessControlException
      */
-    public static function deleteRole($role)
+    public static function deleteRole($role_name)
     {
         // validate
-        if (!User::hasPermission(static::PERM_EDIT_PERMISSIONS))
-        {
-            throw new AccessControlException("You do not have the permission to delete a role");
-        }
-        if (!static::isRole($role))
+        if (!static::isRole($role_name))
         {
             throw new AccessControlException("The role does not exist");
         }
 
+        $role_id = static::getRoles()[$role_name];
         // find out if there are any users with that role,
         try
         {
-            $count = DBConnection::get()->count("users", "`role` = :role", [":role" => $role]);
+            $count = DBConnection::get()->count("users", "`role_id` = :role_id", [":role_id" => $role_id]);
         }
         catch(DBException $e)
         {
@@ -185,7 +182,7 @@ class AccessControl
 
         try
         {
-            DBConnection::get()->delete("roles", "`name` = :name", [":name" => $role]);
+            DBConnection::get()->delete("roles", "`id` = :id", [":id" => $role_id]);
         }
         catch(DBException $e)
         {
@@ -194,7 +191,20 @@ class AccessControl
     }
 
     /**
-     * Retrieve all the roles available from the database
+     * Retrieve all the role names available from the database
+     *
+     * @param bool $refresh_cache flag set to refer
+     *
+     * @return array
+     * @throws AccessControlException
+     */
+    public static function getRoleNames($refresh_cache = false)
+    {
+        return array_keys(static::getRoles($refresh_cache));
+    }
+
+    /**
+     * Retrieve all the role table data from the database
      *
      * @param bool $refresh_cache flag set to refer
      *
@@ -203,10 +213,9 @@ class AccessControl
      */
     public static function getRoles($refresh_cache = false)
     {
-        // retrieve from cache
         if (static::$roles && !$refresh_cache)
         {
-            return array_keys(static::$roles);
+            return static::$roles;
         }
 
         // retrieve from db
@@ -225,23 +234,23 @@ class AccessControl
         // put into the cache
         foreach ($roles as $role)
         {
-            // role => id
+            // role name => role_id
             static::$roles[$role["name"]] = $role["id"];
         }
 
-        return array_keys(static::$roles);
+        return static::$roles;
     }
 
     /**
      * Checks if a role is valid
      *
-     * @param,string $role
+     * @param,string $role_name
      *
      * @return bool
      */
-    public static function isRole($role)
+    public static function isRole($role_name)
     {
-        return in_array($role, static::getRoles());
+        return in_array($role_name, static::getRoleNames());
     }
 
     /**
@@ -259,33 +268,27 @@ class AccessControl
     /**
      * Get all the permission of a role
      *
-     * @param string $role
+     * @param string $role_name
      *
      * @return array
      * @throws AccessControlException
      */
-    public static function getPermissions($role = "user")
+    public static function getPermissions($role_name)
     {
         // retrieve from cache
-        if (isset(static::$permissions[$role]))
+        if (isset(static::$permissions[$role_name]))
         {
-            return static::$permissions[$role];
+            return static::$permissions[$role_name];
         }
 
         try
         {
-            $permissions = DBConnection::get()->query(
-                sprintf(
-                    "SELECT `p`.`permission`
-                    FROM `%s` `r`
-                    INNER JOIN `%s` `p`
-                        ON `r`.`id` = `p`.`role_id`
-                    WHERE `r`.`name` = :roleName",
-                    DB_PREFIX . "roles",
-                    DB_PREFIX . "role_permissions"
-                ),
-                DBConnection::FETCH_ALL,
-                [":roleName" => $role]
+            $roles_permissions = DBConnection::get()->query(
+                "SELECT R.name, P.permission
+                FROM `" . DB_PREFIX . "roles` R
+                INNER JOIN `" . DB_PREFIX . "role_permissions` P
+                    ON R.`id` = P.`role_id`",
+                DBConnection::FETCH_ALL
             );
         }
         catch(DBException $e)
@@ -293,14 +296,20 @@ class AccessControl
             throw new AccessControlException(exception_message_db(_('retrieve permissions')));
         }
 
-        // put into the cache
-        static::$permissions[$role] = [];
-        foreach ($permissions as $permission)
+        // fill cache
+        foreach($roles_permissions as $role_permission)
         {
-            static::$permissions[$role][] = $permission["permission"];
+            $name = $role_permission["name"];
+            $permission = $role_permission["permission"];
+
+            if (!isset(static::$permissions[$name]))
+            {
+                static::$permissions[$name] = [];
+            }
+            static::$permissions[$name][] = $permission;
         }
 
-        return static::$permissions[$role];
+        return static::$permissions[$role_name];
     }
 
     /**
@@ -308,24 +317,20 @@ class AccessControl
      * Use with precaution. The validation is performed inside this method
      * Only users with high privilege can call this method
      *
-     * @param string $role
+     * @param string $role_name
      * @param array  $permissions
      *
      * @throws AccessControlException
      */
-    public static function setPermissions($role, array $permissions)
+    public static function setPermissions($role_name, array $permissions)
     {
         // validate
-        if (!User::hasPermission(static::PERM_EDIT_PERMISSIONS))
-        {
-            throw new AccessControlException(_h("You do not have the permission to change a roles permissions"));
-        }
-        if (!static::isRole($role))
+        if (!static::isRole($role_name))
         {
             throw new AccessControlException(_h("The role is not valid"));
         }
 
-        $role_id = static::$roles[$role]; // getRoles is called by isRole
+        $role_id = static::getRoles()[$role_name];
         $insert_values = [];
 
         foreach ($permissions as $permission) // validate permission and populate insert values

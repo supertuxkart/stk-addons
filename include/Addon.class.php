@@ -1327,9 +1327,15 @@ class Addon extends Base
      */
     public static function get($addon_id, $load_revisions = true)
     {
-        $data = static::getFromField("addons", "id", $addon_id, DBConnection::PARAM_STR, _h('The requested add-on does not exist.'));
+        $data = static::getFromField(
+            "SELECT * FROM " . DB_PREFIX . "addons",
+            "`id`",
+            $addon_id,
+            DBConnection::PARAM_STR,
+            _h('The requested add-on does not exist.')
+        );
 
-        return new static($data, $load_revisions);
+        return new Addon($data, $load_revisions);
     }
 
     /**
@@ -1377,7 +1383,7 @@ class Addon extends Base
 
     /**
      * Get the addon type
-     * This method will sielntly fail
+     * This method will silently fail
      *
      * @param string $id the addon id
      *

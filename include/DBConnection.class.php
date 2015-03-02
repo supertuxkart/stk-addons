@@ -108,6 +108,20 @@ class DBConnection
     }
 
     /**
+     * @return array
+     */
+    private static function getReturnTypes()
+    {
+        return [
+            static::ROW_COUNT,
+            static::FETCH_ALL,
+            static::FETCH_FIRST_COLUMN,
+            static::FETCH_FIRST,
+            static::NOTHING
+        ];
+    }
+
+    /**
      * Get the DBConnection singleton
      *
      * @return \DBConnection
@@ -194,9 +208,10 @@ class DBConnection
         array $prepared_pairs = [],
         array $data_types = []
     ) {
-        if (!$query)
+        if (DEBUG_MODE && !in_array($return_type, static::getReturnTypes()))
         {
-            throw new DBException("Empty Query");
+            trigger_error("Return type is invalid");
+            exit;
         }
 
         try

@@ -34,13 +34,23 @@ class Log
     {
         try
         {
-            DBConnection::get()->insert(
-                "logs",
+            $user_id = User::getLoggedId();
+            $user_id_type = DBConnection::PARAM_INT;
+            if ($user_id === -1) // no user, respect database constraints, set it null
+            {
+                $user_id = null;
+                $user_id_type = DBConnection::PARAM_NULL;
+            }
+
+            DBConnection::get()->query(
+                "INSERT INTO " . DB_PREFIX . "logs (`user_id`, `message`)
+                VALUES (:user_id, :message)",
+                DBConnection::NOTHING,
                 [
-                    ':user_id' => User::getLoggedId(),
-                    ':message' => h($message)
+                    ':user_id' => $user_id,
+                    ':message' => $message
                 ],
-                [':user_id' => DBConnection::PARAM_INT]
+                [':user_id' => $user_id_type]
             );
         }
         catch(DBException $e)

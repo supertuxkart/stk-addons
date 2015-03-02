@@ -339,7 +339,7 @@ class Bug extends Base
      */
     public static function getAll($limit = -1, $current_page = 1)
     {
-        return static::getAllFromTable("bugs", "ORDER BY `date_edit` DESC, `id` ASC", "", $limit, $current_page);
+        return static::getAllFromTable("SELECT * FROM " . DB_PREFIX . "bugs ORDER BY `date_edit` DESC, `id` ASC", $limit, $current_page);
     }
 
     /**

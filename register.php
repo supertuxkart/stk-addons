@@ -71,7 +71,7 @@ switch ($action)
                 $_POST['password'],
                 $_POST['password_confirm'],
                 $email,
-                $realname,
+                empty(trim($realname)) ? $username : $realname,
                 $_POST['terms']
             );
 
