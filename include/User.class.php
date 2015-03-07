@@ -123,9 +123,9 @@ class User extends Base
 
     /**
      * The registration date
-     * @var
+     * @var string
      */
-    private $date_registration;
+    private $date_register;
 
     /**
      * The homepage of the user
@@ -137,7 +137,7 @@ class User extends Base
      * Required session vars to be a valid session. All user vars are under the "user" key
      * @var array
      */
-    private static $session_required = ["id", "user_name", "real_name", "date_last_login", "role", "permissions"];
+    private static $session_required = ["id", "user_name", "real_name", "date_login", "role", "permissions"];
 
     /**
      * The user constructor
@@ -160,8 +160,8 @@ class User extends Base
         $this->email = $data["email"];
         $this->role = $data["role_name"];
         $this->is_active = (bool)$data["is_active"];
-        $this->date_login = $data["last_login"];
-        $this->date_registration = $data["reg_date"];
+        $this->date_login = $data["date_login"];
+        $this->date_register = $data["date_register"];
         $this->homepage = $data["homepage"];
     }
 
@@ -245,9 +245,9 @@ class User extends Base
     /**
      * @return string
      */
-    public function getDateRegistration()
+    public function getDateRegister()
     {
-        return $this->date_registration;
+        return $this->date_register;
     }
 
     /**
@@ -332,7 +332,7 @@ class User extends Base
             ->set("id", $id)
             ->set("user_name", $user->getUserName())
             ->set("real_name", $user->getRealName())
-            ->set("date_last_login", static::updateLoginTime($id))
+            ->set("date_login", static::updateLoginTime($id))
             ->set("role", $role)
             ->set("permissions", AccessControl::getPermissions($role));
         static::setFriends(Friend::getFriendsOf($id, true));
@@ -395,14 +395,14 @@ class User extends Base
                 "SELECT *
     	        FROM `" . DB_PREFIX . "users`
                 WHERE `user` = :username
-                AND `last_login` = :lastlogin
+                AND `date_login` = :date_login
                 AND `name` = :realname
                 AND `is_active` = 1",
                 DBConnection::ROW_COUNT,
                 [
-                    ':username'  => $session->get('user_name'),
-                    ':lastlogin' => $session->get('date_last_login'),
-                    ':realname'  => $session->get('real_name')
+                    ':username'   => $session->get('user_name'),
+                    ':date_login' => $session->get('date_login'),
+                    ':realname'   => $session->get('real_name')
                 ]
             );
         }
@@ -943,14 +943,14 @@ class User extends Base
             // TODO use one query
             DBConnection::get()->query(
                 "UPDATE `" . DB_PREFIX . "users`
-                SET `last_login` = NOW()
+                SET `date_login` = NOW()
                 WHERE `id` = :user_id",
                 DBConnection::NOTHING,
                 [':user_id' => $user_id]
             );
 
             $user = DBConnection::get()->query(
-                "SELECT `last_login`
+                "SELECT `date_login`
                 FROM `" . DB_PREFIX . "users`
                 WHERE `id` = :user_id",
                 DBConnection::FETCH_FIRST,
@@ -963,7 +963,7 @@ class User extends Base
             throw new UserException(exception_message_db(_('record the last login time')));
         }
 
-        return $user['last_login'];
+        return $user['date_login'];
     }
 
     /**
@@ -1182,11 +1182,11 @@ class User extends Base
             $count = $db->insert(
                 "users",
                 [
-                    ":user"    => $username,
-                    ":pass"    => Util::getPasswordHash($password),
-                    ":name"    => $realname,
-                    ":email"   => $email,
-                    "reg_date" => "CURRENT_DATE()"
+                    ":user"         => $username,
+                    ":pass"         => Util::getPasswordHash($password),
+                    ":name"         => $realname,
+                    ":email"        => $email,
+                    "date_register" => "CURRENT_DATE()"
                 ]
             );
 

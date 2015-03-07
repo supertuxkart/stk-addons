@@ -144,8 +144,7 @@ class Verification
                 WHERE
                     active = 0
                 AND
-                    DATEDIFF(CURDATE(), U.reg_date) >= :days
-                ",
+                    DATEDIFF(CURDATE(), U.date_register) >= :days",
                 DBConnection::NOTHING,
                 [":days" => $days],
                 [":days" => DBConnection::PARAM_INT]
@@ -168,8 +167,7 @@ class Verification
                 WHERE
                     active = 1
                 AND
-                    DATEDIFF(CURDATE(), U.reg_date) >= :days
-                ",
+                    DATEDIFF(CURDATE(), U.date_register) >= :days",
                 DBConnection::NOTHING,
                 [":days" => $days],
                 [":days" => DBConnection::PARAM_INT]

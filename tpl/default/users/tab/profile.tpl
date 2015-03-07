@@ -35,7 +35,7 @@
         </div>
         <div class="row form-group">
             <div class="col-md-3">{t}Registration Date:{/t}</div>
-            <div class="col-md-3">{$user.date_registration}</div>
+            <div class="col-md-3">{$user.date_register}</div>
         </div>
         <div class="row form-group">
             <div class="col-md-3">{t}Real Name:{/t}</div>

@@ -95,17 +95,17 @@ ON DUPLICATE KEY UPDATE `role_id` = VALUES(`role_id`), `permission` = VALUES(`pe
 -- Table structure for table `v3_users`
 --
 CREATE TABLE IF NOT EXISTS `v3_users` (
-    `id`         INT UNSIGNED        NOT NULL AUTO_INCREMENT,
-    `role_id`    INT UNSIGNED        DEFAULT '1',
-    `user`       VARCHAR(30)
-                 CHARACTER SET ascii NOT NULL,
-    `pass`       CHAR(96)            NOT NULL,
-    `name`       VARCHAR(64)         NOT NULL,
-    `email`      VARCHAR(64)         NOT NULL,
-    `is_active`  BOOL                NOT NULL,
-    `last_login` TIMESTAMP           NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `reg_date`   DATE                NOT NULL,
-    `homepage`   VARCHAR(64) DEFAULT NULL,
+    `id`            INT UNSIGNED        NOT NULL AUTO_INCREMENT,
+    `role_id`       INT UNSIGNED DEFAULT '1',
+    `user`          VARCHAR(30)
+                    CHARACTER SET ascii NOT NULL,
+    `pass`          CHAR(96)            NOT NULL,
+    `name`          VARCHAR(64)         NOT NULL,
+    `email`         VARCHAR(64)         NOT NULL,
+    `is_active`     BOOL                NOT NULL,
+    `date_login`    TIMESTAMP           NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `date_register` DATE                NOT NULL,
+    `homepage`      VARCHAR(64) DEFAULT NULL,
     PRIMARY KEY (`id`),
     UNIQUE KEY `user` (`user`),
     CONSTRAINT `v3_users_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `v3_roles` (`id`)

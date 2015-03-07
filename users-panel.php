@@ -52,21 +52,21 @@ $tpl = StkTemplate::get("users/panel.tpl")
 
 $friends = Friend::getFriendsOf($user->getId(), $is_owner);
 $tpl_data = [
-    "username"          => h($user->getUserName()),
-    "user_id"           => $user->getId(),
-    "date_registration" => $user->getDateRegistration(),
-    "real_name"         => h($user->getRealName()),
-    "email"             => h($user->getEmail()),
-    "role"              => $user_role,
-    "homepage"          => h($user->getHomepage()),
-    "addon_types"       => [],
-    "settings"          => [
+    "username"      => h($user->getUserName()),
+    "user_id"       => $user->getId(),
+    "date_register" => $user->getDateRegister(),
+    "real_name"     => h($user->getRealName()),
+    "email"         => h($user->getEmail()),
+    "role"          => $user_role,
+    "homepage"      => h($user->getHomepage()),
+    "addon_types"   => [],
+    "settings"      => [
         "profile"  => [],
         "elevate"  => [],
         "password" => []
     ],
-    "friends"           => $friends,
-    "achievements"      => Achievement::getAchievementsOf($user->getId())
+    "friends"       => $friends,
+    "achievements"  => Achievement::getAchievementsOf($user->getId())
 ];
 
 // refresh friends cache and build friend array
