@@ -29,7 +29,8 @@ CREATE TABLE IF NOT EXISTS `v3_roles` (
     `id`   INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'The role unique identifier',
     `name` VARCHAR(128) NOT NULL
     COMMENT 'The name identifier',
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `name` (`name`)
 )
     ENGINE =InnoDB
     DEFAULT CHARSET =utf8mb4
