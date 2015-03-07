@@ -109,6 +109,7 @@ CREATE TABLE IF NOT EXISTS `v3_users` (
     `homepage`      VARCHAR(64) DEFAULT NULL,
     PRIMARY KEY (`id`),
     UNIQUE KEY `username` (`username`),
+    UNIQUE KEY `email` (`email`),
     CONSTRAINT `v3_users_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `v3_roles` (`id`)
         ON DELETE SET NULL -- TODO fix
         ON UPDATE NO ACTION
@@ -142,7 +143,8 @@ CREATE TABLE IF NOT EXISTS `v3_verification` (
 CREATE TABLE IF NOT EXISTS `v3_achievements` (
     `id`   INT UNSIGNED NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(128) NOT NULL,
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `name` (`name`)
 )
     ENGINE =InnoDB
     DEFAULT CHARSET =utf8mb4
@@ -599,7 +601,7 @@ CREATE TABLE IF NOT EXISTS `v3_clients` (
 CREATE TABLE IF NOT EXISTS `v3_config` (
     `name`  VARCHAR(128) NOT NULL,
     `value` VARCHAR(512) NOT NULL,
-    UNIQUE KEY `name` (`name`)
+    PRIMARY KEY (`name`)
 )
     ENGINE =InnoDB
     DEFAULT CHARSET =utf8mb4
