@@ -106,7 +106,6 @@ CREATE TABLE IF NOT EXISTS `v3_users` (
     `last_login` TIMESTAMP           NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `reg_date`   DATE                NOT NULL,
     `homepage`   VARCHAR(64) DEFAULT NULL,
-    `avatar`     VARCHAR(64) DEFAULT NULL,
     PRIMARY KEY (`id`),
     UNIQUE KEY `user` (`user`),
     CONSTRAINT `v3_users_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `v3_roles` (`id`)

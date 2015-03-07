@@ -134,12 +134,6 @@ class User extends Base
     private $homepage;
 
     /**
-     * The avatar
-     * @var string
-     */
-    private $avatar;
-
-    /**
      * Required session vars to be a valid session. All user vars are under the "user" key
      * @var array
      */
@@ -169,7 +163,6 @@ class User extends Base
         $this->date_login = $data["last_login"];
         $this->date_registration = $data["reg_date"];
         $this->homepage = $data["homepage"];
-        $this->avatar = $data["avatar"];
     }
 
     /**
@@ -231,14 +224,6 @@ class User extends Base
     public function getPassword()
     {
         return $this->password;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAvatar()
-    {
-        return $this->avatar;
     }
 
     /**
@@ -1433,7 +1418,7 @@ class User extends Base
     {
         if (!Util::isEmail($email))
         {
-            throw new UserException(h(sprintf(_('"%s" is not a valid email address.'), h($email))));
+            throw new UserException(h(sprintf(_('"%s" is not a valid email address.'), $email)));
         }
 
         if (mb_strlen($email) > static::MAX_EMAIL)
