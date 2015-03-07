@@ -128,10 +128,6 @@ class AccessControl
     public static function addRole($role_name)
     {
         // validate
-        if (!User::hasPermission(static::PERM_EDIT_PERMISSIONS))
-        {
-            throw new AccessControlException("You do not have the permission to add a role");
-        }
         if (static::isRole($role_name))
         {
             throw new AccessControlException("The role already exists");
@@ -297,7 +293,7 @@ class AccessControl
         }
 
         // fill cache
-        foreach($roles_permissions as $role_permission)
+        foreach ($roles_permissions as $role_permission)
         {
             $name = $role_permission["name"];
             $permission = $role_permission["permission"];
@@ -309,7 +305,7 @@ class AccessControl
             static::$permissions[$name][] = $permission;
         }
 
-        return static::$permissions[$role_name];
+        return isset(static::$permissions[$role_name]) ? static::$permissions[$role_name] : [];
     }
 
     /**

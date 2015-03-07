@@ -32,6 +32,10 @@ switch ($_POST["action"])
         {
             exit_json_error(implode("<br>", $errors));
         }
+        if (!User::hasPermission(AccessControl::PERM_EDIT_PERMISSIONS))
+        {
+            exit_json_error("You do not have the permission to add a role");
+        }
 
         try
         {
@@ -105,12 +109,24 @@ switch ($_POST["action"])
         {
             exit_json_error("You do not have the necessary permission to get a role");
         }
-        if (!AccessControl::isRole($_POST["role"]))
+
+        $role = $_POST["role"];
+        if (!AccessControl::isRole($role))
         {
             exit_json_error("The role is not valid");
         }
+        $permissions = [];
+        try
+        {
+            $permissions = AccessControl::getPermissions($_POST["role"]);
+        }
+        catch(AccessControlException $e)
+        {
+            exit_json_error($e->getMessage());
+        }
 
-        exit_json_success("", ["permissions" => AccessControl::getPermissions($_POST["role"])]);
+
+        exit_json_success("", ["permissions" => $permissions]);
         break;
 
     case "add-news": // add a new news entry

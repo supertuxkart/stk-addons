@@ -391,8 +391,9 @@ function getUrlVars(url) { // TODO fix usage of getUrlVars because if we activat
 // Extend string. Eg "{0} is {1}".format("JS", "nice") will output "JS is nice"
 if (!String.prototype.format) {
     String.prototype.format = function() {
-        return this.replace(/{(\d+)}/g, function(match, number) {
-            return typeof arguments[number] != 'undefined' ? arguments[number] : match;
+        var args = arguments;
+        return this.replace(/\{\{|\}\}|\{(\d+)\}/g, function(curlyBrack, index) {
+            return ((curlyBrack == "{{") ? "{" : ((curlyBrack == "}}") ? "}" : args[index]));
         });
     };
 }
