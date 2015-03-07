@@ -15,8 +15,8 @@
             </div>
             <hr>
             <div class="form-inline">
-                <input type="text" placeholder="Select a role to edit" id="manage-roles-edit-value" class="form-control" disabled>
-                <button type="button" id="manage-roles-edit-btn" class="btn btn-primary disabled">Edit role</button>
+                <input type="text" placeholder="Select a role to rename" id="manage-roles-rename-value" class="form-control" disabled>
+                <button type="button" id="manage-roles-rename-btn" class="btn btn-primary disabled">Rename role</button>
             </div>
             <hr>
             <div class="form-inline">

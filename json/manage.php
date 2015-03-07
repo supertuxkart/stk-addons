@@ -39,7 +39,7 @@ switch ($_POST["action"])
 
         try
         {
-            AccessControl::addRole($_POST["role"]);
+            AccessControl::addRole(trim($_POST["role"]));
         }
         catch(AccessControlException $e)
         {
@@ -47,6 +47,29 @@ switch ($_POST["action"])
         }
 
         exit_json_success("Role added");
+        break;
+
+    case "rename-role":
+        $errors = Validate::ensureNotEmpty($_POST, ["old-role", "new-role"]);
+        if ($errors)
+        {
+            exit_json_error(implode("<br>", $errors));
+        }
+        if (!User::hasPermission(AccessControl::PERM_EDIT_PERMISSIONS))
+        {
+            exit_json_error("You do not have the permission to rename a role");
+        }
+
+        try
+        {
+            AccessControl::renameRole($_POST["old-role"], trim($_POST["new-role"]));
+        }
+        catch(AccessControlException $e)
+        {
+            exit_json_error($e->getMessage());
+        }
+
+        exit_json_success("Role renamed");
         break;
 
     case "delete-role":

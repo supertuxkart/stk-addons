@@ -1,5 +1,5 @@
 /**
- * copyright 2014 Daniel Butum <danibutum at gmail dot com>
+ * copyright 2014-2015 Daniel Butum <danibutum at gmail dot com>
  *
  * This file is part of stkaddons
  *
@@ -24,7 +24,7 @@
         json_url = ROOT_LOCATION + "json/manage.php";
 
     // role variables
-    var $role_edit_value, $role_edit_btn, $role_delete_btn, selected_role;
+    var $role_rename_value, $role_rename_btn, $role_delete_btn, selected_role;
 
     function onPageLoad() {
         $(".table-no-sort").DataTable({"bSort": false, "iDisplayLength": 25});
@@ -77,12 +77,12 @@
         $("#manage-roles-permission-role").val(selected_role);
 
         // update toolbox values
-        $role_edit_value = $("#manage-roles-edit-value");
-        $role_edit_btn = $("#manage-roles-edit-btn");
+        $role_rename_value = $("#manage-roles-rename-value");
+        $role_rename_btn = $("#manage-roles-rename-btn");
         $role_delete_btn = $("#manage-roles-delete-btn");
 
-        $role_edit_value.prop("disabled", false).val(selected_role);
-        $role_edit_btn.removeClass("disabled");
+        $role_rename_value.prop("disabled", false).val(selected_role);
+        $role_rename_btn.removeClass("disabled");
         $role_delete_btn.removeClass("disabled");
 
         // update role checkboxes
@@ -117,18 +117,36 @@
         });
     });
 
-    // role edit clicked
-    $manage_body.on("click", "#manage-roles-edit-btn", function() {
-        growlError("Role edit not yet implemented.");
+    // role rename clicked
+    $manage_body.on("click", "#manage-roles-rename-btn", function() {
+        var new_role = $role_rename_value.val(),
+            old_role = $("#manage-roles-permission-role").val();
+
+        // check role really changed
+        if ($.trim(new_role) === old_role)
+        {
+            growlError("Role is the same, can not rename");
+            return;
+        }
+
+        $.post(json_url, {"old-role": old_role, "new-role": new_role, action: "rename-role"}, function(data) {
+            jsonCallback(data, function() {
+                $("#manage-roles-roles button:contains('{0}')".format(old_role)).text(new_role);
+                $("#manage-roles-permission-role").val(new_role); // update role permissions form value
+            })
+        });
     });
 
     // role delete clicked
     $manage_body.on("click", "#manage-roles-delete-btn", function() {
-        var role = $("#manage-roles-edit-value").val(); // use the value from edit
+        var role = $("#manage-roles-permission-role").val(); // use role from permissions form
 
         $.post(json_url, {role: role, action: "delete-role"}, function(data) {
             jsonCallback(data, function() {
                 $("#manage-roles-roles button:contains('{0}')".format(role)).remove();
+                $role_rename_btn.addClass("disabled");
+                $role_delete_btn.addClass("disabled");
+                $role_rename_value.prop("disabled", true);
             });
         })
     });

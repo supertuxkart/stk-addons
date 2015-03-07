@@ -128,6 +128,10 @@ class AccessControl
     public static function addRole($role_name)
     {
         // validate
+        if (!$role_name)
+        {
+            throw new AccessControlException("The role is empty");
+        }
         if (static::isRole($role_name))
         {
             throw new AccessControlException("The role already exists");
@@ -136,6 +140,47 @@ class AccessControl
         try
         {
             DBConnection::get()->insert("roles", [":name" => $role_name]);
+        }
+        catch(DBException $e)
+        {
+            throw new AccessControlException(exception_message_db('add a role'));
+        }
+    }
+
+    /**
+     * Rename a role
+     *
+     * @param string $old_role
+     * @param string $new_role
+     *
+     * @throws AccessControlException
+     */
+    public static function renameRole($old_role, $new_role)
+    {
+        // validate
+        if (!$new_role)
+        {
+            throw new AccessControlException("The new role is empty");
+        }
+        if (static::isRole(!$old_role))
+        {
+            throw new AccessControlException("The old role does not exist");
+        }
+        if (static::isRole($new_role))
+        {
+            throw new AccessControlException("The rename role already exists");
+        }
+
+        try
+        {
+            DBConnection::get()->update(
+                "roles",
+                "`name` = :where",
+                [
+                    ":where" => $old_role,
+                    ":name"  => $new_role
+                ]
+            );
         }
         catch(DBException $e)
         {
