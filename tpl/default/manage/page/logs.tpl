@@ -10,7 +10,7 @@
                 <thead>
                     <tr>
                         <th>{t}Date{/t}</th>
-                        <th>{t}User{/t}</th>
+                        <th>{t}Username{/t}</th>
                         <th>{t}Description{/t}</th>
                     </tr>
                 </thead>
@@ -18,7 +18,7 @@
                     {foreach $logs.items as $item}
                         <tr>
                             <td>{$item.date}</td>
-                            <td>{$item.name}</td>
+                            <td>{$item.username}</td>
                             <td>{$item.message}</td>
                         </tr>
                     {/foreach}

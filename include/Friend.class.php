@@ -69,7 +69,7 @@ class Friend
      */
     private function __construct($info_array, $online = false, $is_self = false)
     {
-        $this->user = new User(["id" => $info_array['friend_id'], "user" => $info_array['friend_name']], true);
+        $this->user = new User(["id" => $info_array['friend_id'], "username" => $info_array['friend_name']], true);
         $this->is_self = $is_self;
         $this->is_online = $online;
         $this->date = $info_array['date'];
@@ -218,7 +218,7 @@ class Friend
                     "   SELECT " . DB_PREFIX . "friends.date AS date, "
                     . DB_PREFIX . "friends.is_request AS is_request, "
                     . DB_PREFIX . "friends.asker_id AS friend_id, "
-                    . DB_PREFIX . "users.user AS friend_name, 1 AS is_asker
+                    . DB_PREFIX . "users.username AS friend_name, 1 AS is_asker
                         FROM " . DB_PREFIX . "friends, " . DB_PREFIX . "users
                         WHERE   " . DB_PREFIX . "friends.receiver_id = :user_id
                             AND " . DB_PREFIX . "users.id = " . DB_PREFIX . "friends.asker_id
@@ -226,7 +226,7 @@ class Friend
                         SELECT " . DB_PREFIX . "friends.date AS date, "
                     . DB_PREFIX . "friends.is_request AS is_request, "
                     . DB_PREFIX . "friends.receiver_id AS friend_id, "
-                    . DB_PREFIX . "users.user AS friend_name, 0 AS is_asker
+                    . DB_PREFIX . "users.username AS friend_name, 0 AS is_asker
                         FROM " . DB_PREFIX . "friends, " . DB_PREFIX . "users
                         WHERE " . DB_PREFIX . "friends.asker_id = :user_id
                             AND " . DB_PREFIX . "users.id = " . DB_PREFIX . "friends.receiver_id
@@ -241,7 +241,7 @@ class Friend
                 $friends = DBConnection::get()->query(
                     "   SELECT " . DB_PREFIX . "friends.date AS date, "
                     . DB_PREFIX . "friends.asker_id AS friend_id, "
-                    . DB_PREFIX . "users.user AS friend_name
+                    . DB_PREFIX . "users.username AS friend_name
                         FROM " . DB_PREFIX . "friends, " . DB_PREFIX . "users
                         WHERE   " . DB_PREFIX . "friends.receiver_id = :user_id
                             AND " . DB_PREFIX . "users.id = " . DB_PREFIX . "friends.asker_id
@@ -249,7 +249,7 @@ class Friend
                     UNION
                         SELECT " . DB_PREFIX . "friends.date AS date, "
                     . DB_PREFIX . "friends.receiver_id AS friend_id, "
-                    . DB_PREFIX . "users.user AS friend_name
+                    . DB_PREFIX . "users.username AS friend_name
                         FROM " . DB_PREFIX . "friends, " . DB_PREFIX . "users
                         WHERE   " . DB_PREFIX . "friends.asker_id = :user_id
                             AND " . DB_PREFIX . "users.id = " . DB_PREFIX . "friends.receiver_id

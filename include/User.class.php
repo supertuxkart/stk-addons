@@ -137,7 +137,7 @@ class User extends Base
      * Required session vars to be a valid session. All user vars are under the "user" key
      * @var array
      */
-    private static $session_required = ["id", "user_name", "real_name", "date_login", "role", "permissions"];
+    private static $session_required = ["id", "username", "realname", "date_login", "role", "permissions"];
 
     /**
      * The user constructor
@@ -148,15 +148,15 @@ class User extends Base
     public function __construct(array $data, $from_friend = false)
     {
         $this->id = (int)$data["id"];
-        $this->username = $data["user"];
+        $this->username = $data["username"];
 
         if ($from_friend) // we called the constructor from the friend class
         {
             return;
         }
 
-        $this->realname = $data["name"];
-        $this->password = $data["pass"];
+        $this->realname = $data["realname"];
+        $this->password = $data["password"];
         $this->email = $data["email"];
         $this->role = $data["role_name"];
         $this->is_active = (bool)$data["is_active"];
@@ -330,8 +330,8 @@ class User extends Base
         $session = Session::user();
         $session->init()
             ->set("id", $id)
-            ->set("user_name", $user->getUserName())
-            ->set("real_name", $user->getRealName())
+            ->set("username", $user->getUserName())
+            ->set("realname", $user->getRealName())
             ->set("date_login", static::updateLoginTime($id))
             ->set("role", $role)
             ->set("permissions", AccessControl::getPermissions($role));
@@ -394,15 +394,15 @@ class User extends Base
             $count = DBConnection::get()->query(
                 "SELECT *
     	        FROM `" . DB_PREFIX . "users`
-                WHERE `user` = :username
+                WHERE `username` = :username
                 AND `date_login` = :date_login
-                AND `name` = :realname
+                AND `realname` = :realname
                 AND `is_active` = 1",
                 DBConnection::ROW_COUNT,
                 [
-                    ':username'   => $session->get('user_name'),
+                    ':username'   => $session->get('username'),
                     ':date_login' => $session->get('date_login'),
-                    ':realname'   => $session->get('real_name')
+                    ':realname'   => $session->get('realname')
                 ]
             );
         }
@@ -445,7 +445,7 @@ class User extends Base
      */
     public static function getLoggedUserName()
     {
-        return static::isLoggedIn() ? Session::user()->get("user_name") : "";
+        return static::isLoggedIn() ? Session::user()->get("username") : "";
     }
 
     /**
@@ -455,7 +455,7 @@ class User extends Base
      */
     public static function getLoggedRealName()
     {
-        return static::isLoggedIn() ? Session::user()->get("real_name") : "";
+        return static::isLoggedIn() ? Session::user()->get("realname") : "";
     }
 
     /**
@@ -480,7 +480,7 @@ class User extends Base
      */
     public static function getAll($is_active = true, $limit = -1, $current_page = 1)
     {
-        $order_by = "ORDER BY U.`user` ASC, U.`id` ASC";
+        $order_by = "ORDER BY U.`username` ASC, U.`id` ASC";
         if ($is_active)
         {
             $users = static::getAllFromTable(
@@ -537,11 +537,11 @@ class User extends Base
     {
         $data = static::getFromField(
             static::getSQLAll(),
-            "U.user",
+            "U.username",
             $username,
             DBConnection::PARAM_STR,
             _h("Username does not exist"),
-            ":user"
+            ":username"
         );
 
         return new User($data);
@@ -603,7 +603,7 @@ class User extends Base
                 // build sql query
                 $parameter = ":user_id" . $index;
                 $index++;
-                $query_parts[] = "`user` RLIKE " . $parameter;
+                $query_parts[] = "`username` RLIKE " . $parameter;
                 $parameters[$parameter] = $term;
             }
         }
@@ -845,7 +845,7 @@ class User extends Base
         }
 
         // update session
-        Session::user()->set("real_name", $real_name);
+        Session::user()->set("realname", $real_name);
 
         try
         {
@@ -855,7 +855,7 @@ class User extends Base
                 [
                     ":id"       => $user->getId(),
                     ":homepage" => $homepage,
-                    ":name"     => $real_name
+                    ":realname" => $real_name
                 ],
                 [":id" => DBConnection::PARAM_INT]
             );
@@ -871,20 +871,20 @@ class User extends Base
      * Only a select few users can call this function.
      *
      * @param int    $user_id
-     * @param string $role
+     * @param string $role_name
      * @param bool   $available
      *
      * @throws UserException
      */
-    public static function updateRole($user_id, $role, $available)
+    public static function updateRole($user_id, $role_name, $available)
     {
         // validate
-        if (!AccessControl::isRole($role))
+        if (!AccessControl::isRole($role_name))
         {
-            throw new UserException(_h("The role specified is not valid"));
+            throw new UserException(_h("The specified role is not valid"));
         }
 
-        $canEdit = static::hasPermissionOnRole($role);
+        $canEdit = static::hasPermissionOnRole($role_name);
         if (!$canEdit)
         {
             throw new UserException(_h("You do not have the permission to edit the role"));
@@ -907,11 +907,12 @@ class User extends Base
                 "`id` = :id",
                 [
                     ":id"        => $user->getId(),
-                    ":role"      => $role,
+                    ":role_id"   => AccessControl::getRoles()[$role_name],
                     ":is_active" => $available
                 ],
                 [
                     ":id"        => DBConnection::PARAM_INT,
+                    ":role_id"   => DBConnection::PARAM_INT,
                     ":is_active" => DBConnection::PARAM_BOOL
                 ]
             );
@@ -981,12 +982,12 @@ class User extends Base
         {
             $count = DBConnection::get()->query(
                 "UPDATE `" . DB_PREFIX . "users`
-                SET `pass`   = :pass
+                SET `password`   = :password
     	        WHERE `id` = :user_id",
                 DBConnection::ROW_COUNT,
                 [
-                    ':user_id' => $user_id,
-                    ':pass'    => Util::getPasswordHash($new_password)
+                    ':user_id'  => $user_id,
+                    ':password' => Util::getPasswordHash($new_password)
                 ],
                 [":user_id" => DBConnection::PARAM_INT]
             );
@@ -1140,9 +1141,9 @@ class User extends Base
         try
         {
             $result = $db->query(
-                "SELECT `user`
+                "SELECT `username`
     	        FROM `" . DB_PREFIX . "users`
-    	        WHERE `user` LIKE :username",
+    	        WHERE `username` LIKE :username",
                 DBConnection::FETCH_FIRST,
                 [':username' => $username]
             );
@@ -1182,9 +1183,9 @@ class User extends Base
             $count = $db->insert(
                 "users",
                 [
-                    ":user"         => $username,
-                    ":pass"         => Util::getPasswordHash($password),
-                    ":name"         => $realname,
+                    ":username"     => $username,
+                    ":password"     => Util::getPasswordHash($password),
+                    ":realname"     => $realname,
                     ":email"        => $email,
                     "date_register" => "CURRENT_DATE()"
                 ]
@@ -1318,11 +1319,14 @@ class User extends Base
         $users = DBConnection::get()->query(
             "SELECT `id`
 	        FROM `" . DB_PREFIX . "users`
-	        WHERE `user` = :username
+	        WHERE `username` = :username
             AND `email` = :email
             AND `is_active` = 1",
             DBConnection::FETCH_ALL,
-            [':username' => $username, ':email' => $email]
+            [
+                ':username' => $username,
+                ':email'    => $email
+            ]
         );
 
         if (!$users)

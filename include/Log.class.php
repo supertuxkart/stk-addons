@@ -77,7 +77,7 @@ class Log
         try
         {
             $events = DBConnection::get()->query(
-                'SELECT L.`date`, L.`user_id`, L.`message`, U.`name`
+                'SELECT L.`date`, L.`user_id`, L.`message`, U.`username`
                 FROM `' . DB_PREFIX . 'logs` L
                 LEFT JOIN `' . DB_PREFIX . 'users` U
                     ON L.`user_id` = U.`id`

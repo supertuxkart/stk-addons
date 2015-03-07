@@ -133,9 +133,9 @@ class Bug extends Base
         try
         {
             $comments = DBConnection::get()->query(
-                "SELECT c.*, u.user AS user_name
+                "SELECT c.*, u.username AS user_name
                 FROM `" . DB_PREFIX . "bugs_comments` c
-                LEFT JOIN `" . DB_PREFIX . "users` u ON c.user_id = u.id
+                    LEFT JOIN `" . DB_PREFIX . "users` u ON c.user_id = u.id
                 WHERE c.bug_id = :bug_id
                 ORDER BY c.date ASC",
                 DBConnection::FETCH_ALL,
@@ -357,8 +357,8 @@ class Bug extends Base
         {
             $data = DBConnection::get()->query(
                 "SELECT
-                    (SELECT `user` FROM " . DB_PREFIX . "users WHERE id = B.user_id) AS user_username,
-                    (SELECT `user` FROM " . DB_PREFIX . "users WHERE id = B.close_id) AS close_username,
+                    (SELECT `username` FROM " . DB_PREFIX . "users WHERE id = B.user_id) AS user_username,
+                    (SELECT `username` FROM " . DB_PREFIX . "users WHERE id = B.close_id) AS close_username,
                     B.*
                 FROM " . DB_PREFIX . "bugs AS B
                 WHERE B.id = :id",

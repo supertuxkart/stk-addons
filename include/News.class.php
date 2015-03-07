@@ -232,7 +232,7 @@ class News
         try
         {
             $news = DBConnection::get()->query(
-                "SELECT N.*, `U`.`user` AS `author`
+                "SELECT N.*, `U`.`username` AS `author`
                 FROM " . DB_PREFIX . "news N
                 LEFT JOIN `" . DB_PREFIX . "users` U
                     ON N.`author_id` = U.`id`
@@ -260,7 +260,7 @@ class News
         try
         {
             $news = DBConnection::get()->query(
-                'SELECT N.*, U.`user` AS `author`
+                'SELECT N.*, U.`username` AS `author`
                 FROM `' . DB_PREFIX . 'news` N
                 LEFT JOIN `' . DB_PREFIX . 'users` U
                     ON N.`author_id` = U.`id`
