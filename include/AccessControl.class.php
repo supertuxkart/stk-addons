@@ -162,7 +162,7 @@ class AccessControl
         {
             throw new AccessControlException("The new role is empty");
         }
-        if (static::isRole(!$old_role))
+        if (!static::isRole($old_role))
         {
             throw new AccessControlException("The old role does not exist");
         }
