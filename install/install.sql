@@ -7,12 +7,12 @@ DELIMITER $$
 -- Procedures
 --
 DROP PROCEDURE IF EXISTS v3_create_file_record$$
-CREATE PROCEDURE `v3_create_file_record`(IN id TEXT, IN atype TEXT, IN ftype TEXT, IN fname TEXT, OUT insertid INT)
+CREATE PROCEDURE `v3_create_file_record`(IN id TEXT, IN ftype TEXT, IN fname TEXT, OUT insertid INT)
     BEGIN
         INSERT INTO `v3_files`
-        (`addon_id`, `addon_type`, `file_type`, `file_path`)
+        (`addon_id`, `file_type`, `file_path`)
         VALUES
-            (id, atype, ftype, fname);
+            (id, ftype, fname);
         SELECT
             LAST_INSERT_ID()
         INTO insertid;
@@ -389,7 +389,6 @@ CREATE TABLE IF NOT EXISTS `v3_addons` (
 CREATE TABLE IF NOT EXISTS `v3_files` (
     `id`          INT UNSIGNED NOT NULL AUTO_INCREMENT,
     `addon_id`    VARCHAR(30)  NOT NULL,
-    `addon_type`  ENUM('karts', 'tracks', 'arenas') DEFAULT NULL,
     `file_type`   ENUM('source', 'image', 'addon') DEFAULT NULL,
     `file_path`   VARCHAR(256) NOT NULL,
     `date_added`  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -397,7 +396,10 @@ CREATE TABLE IF NOT EXISTS `v3_files` (
     `downloads`   INT UNSIGNED NOT NULL DEFAULT '0',
     `delete_date` DATE         NOT NULL DEFAULT '0000-00-00',
     PRIMARY KEY (`id`),
-    KEY `addon_id` (`addon_id`)
+    KEY `addon_id` (`addon_id`),
+    CONSTRAINT `v3_files_ibfk_1` FOREIGN KEY (`addon_id`) REFERENCES `v3_addons` (`id`)
+        ON DELETE CASCADE
+        ON UPDATE NO ACTION
 )
     ENGINE =InnoDB
     DEFAULT CHARSET =utf8mb4

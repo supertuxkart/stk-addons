@@ -236,7 +236,7 @@ class File
             if (is_dir($current_dir . $file))
             {
                 static::flattenDirectory($current_dir . $file . DS, $destination_dir);
-                static::deleteDir($current_dir . $file);
+                static::deleteDirFS($current_dir . $file);
                 continue;
             }
 
@@ -596,7 +596,7 @@ class File
                 // Check if our folder is old enough to delete
                 if (Util::isOldEnough($last_mod, $max_age))
                 {
-                    static::deleteDir($dir . DS . $file);
+                    static::deleteDirFS($dir . DS . $file);
                 }
             }
         }
@@ -611,7 +611,7 @@ class File
      *
      * @throws FileException
      */
-    public static function deleteDir($dir, $exclude_regex = null)
+    public static function deleteDirFS($dir, $exclude_regex = null)
     {
         // Make sure we are looking at a directory
         $dir = rtrim($dir, DS);
@@ -637,7 +637,7 @@ class File
             $file_path = $dir . DS . $file;
             if (is_dir($file_path))
             {
-                static::deleteDir($file_path);
+                static::deleteDirFS($file_path);
             }
             else
             {
@@ -757,8 +757,10 @@ class File
         try
         {
             $db_files = DBConnection::get()->query(
-                'SELECT *
-                FROM `' . DB_PREFIX . 'files`
+                'SELECT F.*, A.`type` as addon_type
+                FROM `' . DB_PREFIX . 'files` F
+                INNER JOIN ' . DB_PREFIX . 'addons A
+                    ON F.`addon_id` =  A.`id`
                 ORDER BY `addon_id` ASC',
                 DBConnection::FETCH_ALL
             );
@@ -831,26 +833,24 @@ class File
      * Create a new file in the database table
      *
      * @param int    $addon_id
-     * @param string $addon_type
      * @param string $file_type
      * @param string $file_path
      *
      * @return int the id of the inserted file
      * @throws FileException
      */
-    public static function createFileDB($addon_id, $addon_type, $file_type, $file_path)
+    public static function createFileDB($addon_id, $file_type, $file_path)
     {
         try
         {
             DBConnection::get()->query(
                 "CALL `" . DB_PREFIX . "create_file_record`
-                (:addon_id, :addon_type, :file_type, :file_path, @result_id)",
+                (:addon_id, :file_type, :file_path, @result_id)",
                 DBConnection::NOTHING,
                 [
-                    ":addon_id"   => $addon_id,
-                    ":addon_type" => $addon_type,
-                    ":file_type"  => $file_type,
-                    ":file_path"  => $file_path
+                    ":addon_id"  => $addon_id,
+                    ":file_type" => $file_type,
+                    ":file_path" => $file_path
                 ]
             );
         }
@@ -879,13 +879,12 @@ class File
      * If an image with a similar name exists it will be deleted
      * If the image is to large it will be scaled down
      *
-     * @param string $file_name  the name of the image
-     * @param int    $addon_id   the addon_id that this image belongs tp
-     * @param string $addon_type the addon type
+     * @param string $file_name the name of the image
+     * @param int    $addon_id  the addon_id that this image belongs tp
      *
      * @throws FileException
      */
-    public static function createImage($file_name, $addon_id, $addon_type)
+    public static function createImage($file_name, $addon_id)
     {
         // Delete the existing image by this name
         $file_name = basename($file_name);
@@ -942,7 +941,7 @@ class File
         // Add database record for image
         try
         {
-            static::createFileDB($addon_id, $addon_type, 'image', 'images/' . $file_name);
+            static::createFileDB($addon_id, 'image', 'images/' . $file_name);
         }
         catch(FileException $e)
         {
@@ -1114,7 +1113,7 @@ class File
         imagepng($image, $out_file);
 
         // Add image record to add-on
-        static::createImage($out_file, $addon_id, $addon_type);
+        static::createImage($out_file, $addon_id);
     }
 
     /**

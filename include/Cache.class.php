@@ -36,7 +36,7 @@ class Cache
     {
         try
         {
-            File::deleteDir(CACHE_PATH, $exclude_regex);
+            File::deleteDirFS(CACHE_PATH, $exclude_regex);
         }
         catch(FileException $e)
         {

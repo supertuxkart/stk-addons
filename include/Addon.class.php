@@ -1329,7 +1329,7 @@ class Addon extends Base
     {
         $data = static::getFromField(
             "SELECT * FROM " . DB_PREFIX . "addons",
-            "`id`",
+            "id",
             $addon_id,
             DBConnection::PARAM_STR,
             _h('The requested add-on does not exist.')

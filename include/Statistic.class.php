@@ -363,11 +363,11 @@ class Statistic
         try
         {
             $download_counts = DBConnection::get()->query(
-                'SELECT a.name as addon_name
-                FROM `' . DB_PREFIX . 'files` f
-                INNER JOIN ' . DB_PREFIX . 'addons a
-                    ON f.`addon_id` =  a.`id`
-                WHERE `addon_type` = :addon_type
+                'SELECT A.name as addon_name
+                FROM `' . DB_PREFIX . 'files` F
+                INNER JOIN ' . DB_PREFIX . 'addons A
+                    ON F.`addon_id` =  A.`id`
+                WHERE A.`type` = :addon_type
                 AND `file_type` = :file_type
                 GROUP BY `addon_id`
                 ORDER BY SUM(`downloads`) DESC',

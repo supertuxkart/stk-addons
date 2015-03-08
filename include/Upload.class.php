@@ -187,7 +187,7 @@ class Upload
     {
         try
         {
-            File::deleteDir($this->temp_file_dir);
+            File::deleteDirFS($this->temp_file_dir);
         }
         catch(FileException $e)
         {
@@ -290,7 +290,7 @@ class Upload
         try
         {
             File::move($this->temp_file_fullpath, $this->upload_file_dir . $this->upload_file_name);
-            File::createImage($this->upload_file_dir . $this->upload_file_name, $this->addon_id, $this->addon_type);
+            File::createImage($this->upload_file_dir . $this->upload_file_name, $this->addon_id);
         }
         catch(FileException $e)
         {
@@ -463,8 +463,7 @@ class Upload
         // Record image file in database
         try
         {
-            $this->properties['image_file'] =
-                File::createFileDB($this->addon_id, $this->addon_type, 'image', $image_path);
+            $this->properties['image_file'] = File::createFileDB($this->addon_id, 'image', $image_path);
         }
         catch(FileException $e)
         {
@@ -515,8 +514,7 @@ class Upload
         // Record addon's file in database
         try
         {
-            $this->properties['xml_attributes']['fileid'] =
-                File::createFileDB($this->addon_id, $this->addon_type, $filetype, $this->upload_file_name);
+            $this->properties['xml_attributes']['fileid'] = File::createFileDB($this->addon_id, $filetype, $this->upload_file_name);
         }
         catch(FileException $e)
         {
