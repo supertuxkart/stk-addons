@@ -115,20 +115,20 @@ function generateAssetXML()
         // Fetch addon list
         try
         {
-            $iconQuery = ($type === "kart") ? '`r`.`icon`,' : '';
+            $iconQuery = ($type === "kart") ? "R.`icon`," : "";
 
             // TODO find a cleaner solution to writing these queries
             // we do not need to escape the $type variable because it is defined above
             $addons = DBConnection::get()->query(
-                'SELECT `k`.*, `r`.`fileid`, `r`.`creation_date` AS `date`,
-                `r`.`revision`, `r`.`format`, `r`.`image`,
-                ' . $iconQuery . ' `r`.`status`, `u`.`user`
-                FROM ' . DB_PREFIX . 'addons k
-                    LEFT JOIN ' . DB_PREFIX . $type . 's_revs r
-                        ON (`k`.`id` = `r`.`addon_id`)
-                    LEFT JOIN ' . DB_PREFIX . 'users u
-                        ON (`k`.`uploader` = `u`.`id`)
-                WHERE `k`.`type` = \'' . $type . 's\'',
+                "SELECT A.*, R.`fileid`, R.`creation_date` AS `date`,
+                        R.`revision`, R.`format`, R.`image`,
+                        " . $iconQuery . " R.`status`, U.`username`
+                FROM " . DB_PREFIX . "addons A
+                    LEFT JOIN " . DB_PREFIX . $type . "s_revs R
+                        ON A.`id` = R.`addon_id`
+                    LEFT JOIN " . DB_PREFIX . "users U
+                        ON A.`uploader` = U.`id`
+                WHERE A.`type` = '" . $type . "s'",
                 DBConnection::FETCH_ALL
             );
 
@@ -160,7 +160,7 @@ function generateAssetXML()
                 $writer->writeAttribute('name', $addon['name']);
                 $writer->writeAttribute('file', DOWNLOAD_LOCATION . $file_path);
                 $writer->writeAttribute('date', strtotime($addon['date']));
-                $writer->writeAttribute('uploader', $addon['user']);
+                $writer->writeAttribute('uploader', $addon['username']);
                 $writer->writeAttribute('designer', $addon['designer']);
                 $writer->writeAttribute('description', $addon['description']);
                 $image_path = File::getPath($addon['image']);
@@ -268,11 +268,11 @@ function generateAssetXML2()
 
             // we do not need to escape the $type variable because it is defined above
             $addons = DBConnection::get()->query(
-                'SELECT `a`.*, `u`.`user`
-                FROM `' . DB_PREFIX . 'addons` `a`
-                LEFT JOIN `' . DB_PREFIX . 'users` `u`
-                ON (`a`.`uploader` = `u`.`id`)
-                WHERE `a`.`type` = \'' . $type . 's\'',
+                "SELECT `A`.*, `U`.`username`
+                FROM `" . DB_PREFIX . "addons` A
+                LEFT JOIN `" . DB_PREFIX . "users` U
+                    ON A.`uploader` = U.`id`
+                WHERE A.`type` = '" . $type . "s'",
                 DBConnection::FETCH_ALL
             );
 
@@ -284,7 +284,7 @@ function generateAssetXML2()
                 $writer->writeAttribute('name', $addon['name']);
                 $writer->writeAttribute('designer', $addon['designer']);
                 $writer->writeAttribute('description', $addon['description']);
-                $writer->writeAttribute('uploader', $addon['user']);
+                $writer->writeAttribute('uploader', $addon['username']);
                 $writer->writeAttribute('min-include-version', $addon['min_include_ver']);
                 $writer->writeAttribute('max-include-version', $addon['max_include_ver']);
 
