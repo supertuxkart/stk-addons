@@ -1,7 +1,7 @@
 <?php
 /**
- * copyright 2012 Stephen Just <stephenjust@users.sf.net>
- *           2014 Daniel Butum <danibutum at gmail dot com>
+ * copyright 2012      Stephen Just <stephenjust@users.sf.net>
+ *           2014-2015 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -226,11 +226,13 @@ class Upload
         if ($this->expected_file_type === static::IMAGE)
         {
             $this->upload_file_dir = UP_PATH . 'images' . DS;
+            $this->generateUploadFilename($this->file_ext);
             $this->doImageUpload();
         }
         else
         {
             $this->upload_file_dir = UP_PATH;
+            $this->generateUploadFilename('zip');
             $this->doArchiveUpload();
         }
     }
@@ -285,8 +287,6 @@ class Upload
      */
     private function doImageUpload()
     {
-        $this->generateUploadFilename($this->file_ext);
-
         try
         {
             File::move($this->temp_file_fullpath, $this->upload_file_dir . $this->upload_file_name);
@@ -501,7 +501,6 @@ class Upload
     private function storeUploadArchive($filetype)
     {
         // Pack zip file
-        $this->generateUploadFilename('zip');
         try
         {
             File::compress($this->temp_file_dir, $this->upload_file_dir . $this->upload_file_name);
