@@ -187,27 +187,13 @@ class Cache
      */
     public static function getImage($id, $size = null)
     {
-        // TODO call File class
         try
         {
-            $file = DBConnection::get()->query(
-                'SELECT `file_path`, `is_approved`
-                FROM `' . DB_PREFIX . 'files`
-                WHERE `id` = :id
-                LIMIT 1',
-                DBConnection::FETCH_FIRST,
-                [':id' => $id],
-                [':id' => DBConnection::PARAM_INT]
-            );
+            $file = File::getFromID($id);
         }
-        catch(DBException $e)
+        catch(FileException $e)
         {
-            throw new CacheException(exception_message_db(_('look up cache image file')));
-        }
-
-        // image does with tha id does not exist in the database
-        if (!$file)
-        {
+            // image does with tha id does not exist in the database
             return [
                 'url'         => IMG_LOCATION . 'notfound.png',
                 'is_approved' => true,
@@ -216,22 +202,22 @@ class Cache
         }
 
         $return = [
-            'url'         => DOWNLOAD_LOCATION . $file['file_path'],
-            'is_approved' => (bool)$file['is_approved'],
+            'url'         => DOWNLOAD_LOCATION . $file->getPath(),
+            'is_approved' => $file->isApproved(),
             'exists'      => true
         ];
 
         $cache_prefix = $size ? Cache::cachePrefix($size) : "";
 
         // image exists in cache
-        $basename = basename($file['file_path']);
+        $basename = basename($file->getPath());
         if (static::fileExists($cache_prefix . $basename))
         {
             $return['url'] = CACHE_LOCATION . $cache_prefix . $basename;
         }
         else // create new cache by resizing the image
         {
-            $return['url'] = ROOT_LOCATION . 'image.php?size=' . $size . '&amp;pic=' . $file['file_path'];
+            $return['url'] = ROOT_LOCATION . 'image.php?size=' . $size . '&amp;pic=' . $file->getPath();
         }
 
         return $return;

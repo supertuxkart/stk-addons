@@ -118,7 +118,7 @@ abstract class Base
         }
 
         // empty result
-        if (empty($data))
+        if (!$data)
         {
             static::throwException($empty_message);
         }

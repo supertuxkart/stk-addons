@@ -114,17 +114,6 @@ class Addon extends Base
      */
     private $latest_revision;
 
-
-    /**
-     * @param string $message
-     *
-     * @throws AddonException
-     */
-    protected static function throwException($message)
-    {
-        throw new AddonException($message);
-    }
-
     /**
      * Load the revisions from the database into the current instance
      *
@@ -244,8 +233,16 @@ class Addon extends Base
         $images = $this->getImageHashes();
 
         // Compare with new image
-        $new_image = File::getPath($attributes['image']);
-        $new_hash = md5_file(UP_PATH . $new_image);
+        try
+        {
+            $file_image = File::getFromID($attributes['image']);
+        }
+        catch(FileException $e)
+        {
+            throw new AddonException($e->getMessage());
+        }
+
+        $new_hash = md5_file(UP_PATH . $file_image->getPath());
         $images_count = count($images);
         for ($i = 0; $i < $images_count; $i++)
         {
@@ -255,9 +252,10 @@ class Addon extends Base
                 continue;
             }
 
+            // image already exists in the database
             if ($new_hash === $images[$i]['hash'])
             {
-                File::deleteFile($attributes['image']);
+                $file_image->delete();
                 $attributes['image'] = $images[$i]['id'];
                 break;
             }
@@ -333,47 +331,21 @@ class Addon extends Base
         Cache::clearAddon($this->id);
 
         // Remove files associated with this addon
-        try
-        {
-            $files = DBConnection::get()->query(
-                'SELECT *
-                FROM `' . DB_PREFIX . "files`
-                WHERE `addon_id` = :id",
-                DBConnection::FETCH_ALL,
-                [":id" => $this->id]
-            );
-        }
-        catch(DBException $e)
-        {
-            throw new AddonException(exception_message_db(_('find files associated with this addon')));
-        }
-
+        $files = File::getAllAddon($this->id);
         foreach ($files as $file)
         {
             try
             {
-                File::deleteFileFS(UP_PATH . $file['file_path']);
+                $file->delete();
             }
             catch(FileException $e)
             {
-                throw new AddonException(_h('Failed to delete file:') . ' ' . h($file['file_path']));
+                throw new AddonException($e->getMessage());
             }
         }
 
-        // Remove file records associated with addon
-        try
-        {
-            DBConnection::get()->delete("files", "`addon_id` = :id", [":id" => $this->id]);
-        }
-        catch(DBException $e)
-        {
-            throw new AddonException(exception_message_db(_('remove file records for this addon')));
-        }
-
         // Remove addon entry
-        // FIXME: The two queries above should be included with this one
-        // in a transaction, or database constraints added so that the two
-        // queries above are no longer needed.
+        // No need to remove files or revisions, as they are removed by database constraints
         try
         {
             DBConnection::get()->delete("addons", "`id` = :id", [":id" => $this->id]);
@@ -384,21 +356,6 @@ class Addon extends Base
         }
 
         Log::newEvent("Deleted add-on '{$this->name}'");
-    }
-
-    /**
-     * Delete a file by id
-     *
-     * @param int $file_id
-     *
-     * @throws AddonException
-     */
-    public function deleteFile($file_id)
-    {
-        if (!File::deleteFile($file_id))
-        {
-            throw new AddonException(_h('Failed to delete file.'));
-        }
     }
 
     /**
@@ -695,25 +652,14 @@ class Addon extends Base
         // Look up file path from database
         try
         {
-            $file = DBConnection::get()->query(
-                'SELECT `file_path` FROM `' . DB_PREFIX . 'files`
-                WHERE `id` = :id
-                LIMIT 1',
-                DBConnection::FETCH_FIRST,
-                [':id' => $file_id]
-            );
+            $file_path = File::getFromID($file_id)->getPath();
         }
-        catch(DBException $e)
-        {
-            throw new AddonException(exception_message_db(_('search for file')));
-        }
-
-        if (!$file)
+        catch(FileException $e)
         {
             throw new AddonException(_h('The requested file does not have an associated file record.'));
         }
 
-        return $file['file_path'];
+        return $file_path;
     }
 
     /**
@@ -725,30 +671,13 @@ class Addon extends Base
      */
     public function getImageHashes()
     {
-        try
-        {
-            $paths = DBConnection::get()->query(
-                "SELECT `id`, `file_path`
-                FROM `" . DB_PREFIX . "files`
-                WHERE `addon_id` = :addon_id
-                AND `file_type` = 'image'
-                LIMIT 50",
-                DBConnection::FETCH_ALL,
-                [':addon_id' => $this->id]
-            );
-        }
-        catch(DBException $e)
-        {
-            throw new AddonException(exception_message_db(_('fetch associated images associated')));
-        }
-
         $return = [];
-        foreach ($paths as $path)
+        foreach ($this->getImages() as $image)
         {
             $return[] = [
-                'id'   => $path['id'],
-                'path' => $path['file_path'],
-                'hash' => md5_file(UP_PATH . $path['file_path'])
+                'id'   => $image->getId(),
+                'path' => $image->getPath(),
+                'hash' => md5_file(UP_PATH . $image->getPath())
             ];
         }
 
@@ -757,60 +686,22 @@ class Addon extends Base
 
     /**
      * Get the image files associated with this addon
-     * This method will silently fail
      *
-     * @return array
+     * @return File[]
      */
     public function getImages()
     {
-        try
-        {
-            $result = DBConnection::get()->query(
-                'SELECT * FROM `' . DB_PREFIX . 'files`
-                WHERE `addon_id` = :addon_id
-                AND `file_type` = :file_type',
-                DBConnection::FETCH_ALL,
-                [
-                    ':addon_id'  => $this->id,
-                    ':file_type' => 'image'
-                ]
-            );
-        }
-        catch(DBException $e)
-        {
-            return [];
-        }
-
-        return $result;
+        return File::getAllAddon($this->id, 'image');
     }
 
     /**
      * Get all of the source files associated with an addon
-     * This method will silently fail
      *
-     * @return array
+     * @return File[]
      */
     public function getSourceFiles()
     {
-        try
-        {
-            $result = DBConnection::get()->query(
-                'SELECT * FROM `' . DB_PREFIX . 'files`
-                WHERE `addon_id` = :addon_id
-                AND `file_type` = :file_type',
-                DBConnection::FETCH_ALL,
-                [
-                    ':addon_id'  => $this->id,
-                    ':file_type' => 'source'
-                ]
-            );
-        }
-        catch(DBException $e)
-        {
-            return [];
-        }
-
-        return $result;
+        return File::getAllAddon($this->id, 'source');
     }
 
     /**
@@ -1317,6 +1208,16 @@ class Addon extends Base
     }
 
     /**
+     * @param string $message
+     *
+     * @throws AddonException
+     */
+    protected static function throwException($message)
+    {
+        throw new AddonException($message);
+    }
+
+    /**
      * Factory method for the addon
      *
      * @param string $addon_id
@@ -1724,7 +1625,7 @@ class Addon extends Base
         $return = [];
         foreach ($addons as $addon)
         {
-            // TODO select all users with one SQL query
+            // TODO select all addons with one SQL query
             $return[] = static::get($addon['id']);
         }
 

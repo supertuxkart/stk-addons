@@ -72,10 +72,10 @@ switch ($_GET['view'])
             $unapproved = [];
             foreach ($addon->getImages() as $image)
             {
-                if ($image["is_approved"] == 0)
+                if (!$image->isApproved())
                 {
                     $unapproved[] =
-                        '<img src="' . ROOT_LOCATION . 'image.php?size=' . SImage::SIZE_MEDIUM . '&pic=' . $image['file_path'] . '" />';
+                        '<img src="' . ROOT_LOCATION . 'image.php?size=' . SImage::SIZE_MEDIUM . '&pic=' . $image->getPath() . '" />';
                 }
             }
             // add to view
@@ -92,7 +92,7 @@ switch ($_GET['view'])
             $unapproved = 0;
             foreach ($addon->getSourceFiles() as $archive)
             {
-                if ($archive["is_approved"] == 0)
+                if (!$archive->isApproved())
                 {
                     $unapproved++;
                 }

@@ -677,15 +677,15 @@ class Util
     /**
      * Resize an image, and send the new resized image to the user with http headers
      *
-     * @param string $file
+     * @param string $file_path
      * @param int    $orig_size the size of the image
      *
      * @return null
      */
-    public static function resizeImage($file, $orig_size = null)
+    public static function resizeImage($file_path, $orig_size = null)
     {
         // file is invalid
-        if (!$file)
+        if (!$file_path)
         {
             header('HTTP/1.1 404 Not Found');
             if (DEBUG_MODE)
@@ -716,17 +716,20 @@ class Util
                 break;
         }
 
-        $cache_name = Cache::cachePrefix($orig_size) . basename($file);
-        $local_path = UP_PATH . $file; // all images should be in our upload directory
+        $cache_name = Cache::cachePrefix($orig_size) . basename($file_path);
+        $local_path = UP_PATH . $file_path; // all images should be in our upload directory
 
         // Check if image exists in the database
-        $orig_file = File::existsDB($file);
-        if (!$orig_file)
+        try
+        {
+            $file = File::getFromPath($file_path);
+        }
+        catch(FileException $e)
         {
             header('HTTP/1.1 404 Not Found');
             if (DEBUG_MODE)
             {
-                echo sprintf("%s does not exist in the database", $file);
+                echo sprintf("%s does not exist in the database", $file_path);
             }
 
             return;
@@ -738,7 +741,7 @@ class Util
             header('HTTP/1.1 404 Not Found');
             if (DEBUG_MODE)
             {
-                echo sprintf("%s does not exist on the disk", $file);
+                echo sprintf("%s does not exist on the disk", $file_path);
             }
 
             return;
@@ -826,8 +829,7 @@ class Util
         }
 
         // Create a record of the cached file
-        $orig_file_addon = File::getAddon($orig_file); // TODO fix cache table addons
-        Cache::createFile($cache_name, $orig_file_addon, sprintf('w=%d,h=%d', $width_destination, $height_destination));
+        Cache::createFile($cache_name, $file->getAddonId(), sprintf('w=%d,h=%d', $width_destination, $height_destination));
     }
 
     /**
@@ -882,14 +884,14 @@ class Util
      * Get the stk version formatted
      *
      * @param int    $format the version format
-     * @param string $file_type
+     * @param string $addon_type
      *
      * @return string
      */
-    public static function getVersionFormat($format, $file_type)
+    public static function getVersionFormat($format, $addon_type)
     {
         $format = (int)$format;
-        switch ($file_type)
+        switch ($addon_type)
         {
             case Addon::KART:
                 if ($format === 1)

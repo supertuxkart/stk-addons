@@ -214,53 +214,57 @@ class AddonViewer
         }
 
         // Images
-        $image_files_db = $this->addon->getImages();
-        foreach ($image_files_db as $image)
+        foreach ($this->addon->getImages() as $image)
         {
-            $imageCache = Cache::getImage($image['id'], SImage::SIZE_MEDIUM);
-            $image['thumb']['url'] = $imageCache['url'];
-            $image['url'] = DOWNLOAD_LOCATION . $image['file_path'];
-            $image['is_approved'] = (bool)$image['is_approved'];
-            $image["has_icon"] = $image["has_image"] = false;
-
             // do not display
-            if (!$this->can_edit && !$image['is_approved'])
+            if (!$this->can_edit && !$image->isApproved())
             {
                 continue;
             }
+
+            $image_cache = Cache::getImage($image->getId(), SImage::SIZE_MEDIUM);
+            $image_tpl = [
+                "has_icon"    => false,
+                "has_image"   => false,
+                "thumb_url"   => $image_cache['url'],
+                "url"         => DOWNLOAD_LOCATION . $image->getPath(),
+                "is_approved" => $image->isApproved(),
+                "id"          => $image->getId(),
+            ];
 
             // edit addons and the owner
             if ($this->can_edit)
             {
                 // has_icon, current icon is not already the icon
-                if ($this->addon->getType() === Addon::KART && $this->addon->getImage(true) != $image['id'])
+                if ($this->addon->getType() === Addon::KART && $this->addon->getImage(true) !== $image->getId())
                 {
-                    $image["has_icon"] = true;
+                    $image_tpl["has_icon"] = true;
                 }
-                if ($this->addon->getImage() != $image['id']) // current image is not already the image
+                if ($this->addon->getImage() !== $image->getId()) // current image is not already the image
                 {
-                    $image["has_image"] = true;
+                    $image_tpl["has_image"] = true;
                 }
             }
 
-            $tpl['images'][] = $image;
+            $tpl['images'][] = $image_tpl;
         }
 
         // Search database for source files
-        $source_files_db = $this->addon->getSourceFiles();
         $source_number = 0;
-        foreach ($source_files_db as $source)
+        foreach ($this->addon->getSourceFiles() as $source)
         {
-            $source['is_approved'] = (bool)$source['is_approved'];
-
             // do not display
-            if (!$this->can_edit && !$source['is_approved'])
+            if (!$this->can_edit && !$source->isApproved())
             {
                 continue;
             }
-            $source['label'] = sprintf(_h('Source File %u'), $source_number + 1);
-            $source['href'] = DOWNLOAD_LOCATION . $source['file_path'];
-            $tpl['sources'][] = $source;
+
+            $tpl['sources'][] = [
+                "id"          => $source->getId(),
+                "is_approved" => $source->isApproved(),
+                "label"       => sprintf(_h('Source File %u'), $source_number + 1),
+                "url"         => DOWNLOAD_LOCATION . $source->getPath()
+            ];
             $source_number++;
         }
 

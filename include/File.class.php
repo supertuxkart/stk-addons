@@ -20,10 +20,338 @@
 
 /**
  * Class to hold all file-related operations
- * @author Stephen
  */
-class File
+class File extends Base
 {
+    /**
+     * @var int
+     */
+    private $id;
+
+    /**
+     * @var string
+     */
+    private $addon_id;
+
+    /**
+     * @var string
+     */
+    private $type;
+
+    /**
+     * @var string
+     */
+    private $path;
+
+    /**
+     * @var string
+     */
+    private $date_added;
+
+    /**
+     * @var bool
+     */
+    private $is_approved;
+
+    /**
+     * @var int
+     */
+    private $downloads;
+
+    /**
+     * @var string
+     */
+    private $date_delete;
+
+    /**
+     * @param array $data the data retrieved from the database
+     */
+    private function __construct(array $data)
+    {
+        $this->id = (int)$data["id"];
+        $this->addon_id = $data["addon_id"];
+        $this->type = $data["file_type"];
+        $this->path = $data["file_path"];
+        $this->date_added = $data["date_added"];
+        $this->date_delete = $data["delete_date"];
+        $this->is_approved = (bool)$data["is_approved"];
+        $this->downloads = (int)$data["downloads"];
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddonId()
+    {
+        return $this->addon_id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDateAdded()
+    {
+        return $this->date_added;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDateDelete()
+    {
+        return $this->date_delete;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDownloads()
+    {
+        return $this->downloads;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isApproved()
+    {
+        return $this->is_approved;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPath()
+    {
+        return $this->path;
+    }
+
+    /**
+     * Delete the current file from the database and filesystem
+     *
+     * @param string $parent the parent directory of the file in filesystem
+     *
+     * @return boolean true on success, false otherwise
+     * @throws FileException
+     */
+    public function delete($parent = UP_PATH)
+    {
+        try
+        {
+            DBConnection::get()->delete(
+                "files",
+                "`id` = :file_id",
+                [':file_id' => $this->id],
+                [':file_id' => DBConnection::PARAM_INT]
+            );
+        }
+        catch(DBException $e)
+        {
+            throw new FileException(exception_message_db(_h("delete a file")));
+        }
+
+        // delete from filesystem
+        static::deleteFileFS($parent . $this->path);
+    }
+
+
+    /**
+     * @param string $message
+     *
+     * @throws FileException
+     */
+    protected static function throwException($message)
+    {
+        throw new FileException($message);
+    }
+
+    /**
+     * Factory method from a id
+     *
+     * @param int $file_id
+     *
+     * @return File
+     */
+    public static function getFromID($file_id)
+    {
+        $data = static::getFromField(
+            "SELECT * FROM " . DB_PREFIX . "files",
+            "id",
+            $file_id,
+            DBConnection::PARAM_INT,
+            _h("The requested file id does not exist.")
+        );
+
+        return new File($data);
+    }
+
+    /**
+     * Factory method from a path
+     *
+     * @param string $file_path
+     *
+     * @return File
+     */
+    public static function getFromPath($file_path)
+    {
+        $data = static::getFromField(
+            "SELECT * FROM " . DB_PREFIX . "files",
+            "path",
+            $file_path,
+            DBConnection::PARAM_STR,
+            _h("The requested file path does not exist.")
+        );
+
+        return new File($data);
+    }
+
+    /**
+     * Get all the files of an addon
+     *
+     * @param string $addon_id
+     * @param string $file_type the type of file or null if we want all files
+     *
+     * @return File[]
+     * @throws FileException
+     */
+    public static function getAllAddon($addon_id, $file_type = null)
+    {
+        try
+        {
+            if ($file_type)
+            {
+                $files = DBConnection::get()->query(
+                    'SELECT * FROM `' . DB_PREFIX . "files` WHERE `addon_id` = :id AND `file_type` = :type",
+                    DBConnection::FETCH_ALL,
+                    [
+                        ":id" => $addon_id,
+                        ":type" => $file_type
+                    ]
+                );
+            }
+            else
+            {
+                $files = DBConnection::get()->query(
+                    'SELECT * FROM `' . DB_PREFIX . "files` WHERE `addon_id` = :id",
+                    DBConnection::FETCH_ALL,
+                    [":id" => $addon_id]
+                );
+            }
+        }
+        catch(DBException $e)
+        {
+            throw new FileException(exception_message_db(_h("get all the files of addon")));
+        }
+
+        $return = [];
+        foreach ($files as $file)
+        {
+            $return[] = new File($file);
+        }
+
+        return $return;
+    }
+
+    /**
+     * Get all files from the database and filesystem
+     * This method will silently fail
+     *
+     * @return array of all file
+     */
+    public static function getAllFiles()
+    {
+        // Look-up all file records in the database
+        try
+        {
+            $db_files = DBConnection::get()->query(
+                'SELECT F.*, A.`type` as addon_type
+                FROM `' . DB_PREFIX . 'files` F
+                INNER JOIN ' . DB_PREFIX . 'addons A
+                    ON F.`addon_id` =  A.`id`
+                ORDER BY `addon_id` ASC',
+                DBConnection::FETCH_ALL
+            );
+        }
+        catch(DBException $e)
+        {
+            return false;
+        }
+
+        // Look-up all existing files on the disk
+        $fs_files = [];
+        $folder = UP_PATH;
+        $dir_handle = opendir($folder);
+        while (false !== ($entry = readdir($dir_handle)))
+        {
+            if (is_dir($folder . $entry)) // ignore folders
+            {
+                continue;
+            }
+            $fs_files[] = $entry;
+        }
+
+        $folder = UP_PATH . 'images' . DS;
+        $dir_handle = opendir($folder);
+        while (false !== ($entry = readdir($dir_handle)))
+        {
+            if (is_dir($folder . $entry))
+            {
+                continue;
+            }
+            $fs_files[] = 'images' . DS . $entry;
+        }
+
+        // Loop through database records and remove those entries from the list of files existing on the disk
+        $return_files = [];
+        foreach ($db_files as $db_file)
+        {
+            $key = array_search($db_file['file_path'], $fs_files, true);
+            if ($key === false) // files does not exist in the database
+            {
+                $db_file['exists'] = false;
+            }
+            else // file does exist in the database
+            {
+                unset($fs_files[$key]); // remove it from fs_files
+                $db_file['exists'] = true;
+            }
+            $return_files[] = $db_file;
+        }
+        // fs_files now contains only files that do not exist in the database and exist only on disk
+        $fs_files = array_values($fs_files); // reset indices
+
+        // add files that exist on the disk but not in the database
+        foreach ($fs_files as $file_path)
+        {
+            $return_files[] = [
+                'id'         => false,
+                'addon_id'   => false,
+                'addon_type' => false,
+                'file_type'  => false,
+                'file_path'  => $file_path,
+                'exists'     => true
+            ];
+        }
+
+        return $return_files;
+    }
+
     /**
      * Approve a file
      *
@@ -65,32 +393,11 @@ class File
      *
      * @param string $path Relative to upload directory
      *
-     * @return int|bool File id, or false if file record does not exist
+     * @return bool File id, or false if file record does not exist
      */
     public static function existsDB($path)
     {
-        try
-        {
-            $file = DBConnection::get()->query(
-                'SELECT `id`
-                FROM `' . DB_PREFIX . 'files`
-                WHERE `file_path` = :path',
-                DBConnection::FETCH_FIRST,
-                [':path' => $path]
-            );
-
-        }
-        catch(DBException $e)
-        {
-            return false;
-        }
-
-        if (!$file)
-        {
-            return false;
-        }
-
-        return $file;
+        return static::existsField("files", "file_path", $path, DBConnection::PARAM_STR);
     }
 
     /**
@@ -447,61 +754,6 @@ class File
     }
 
     /**
-     * Delete a file from the filesystem and the database
-     * This method will silently fail
-     *
-     * @param int $file_id
-     *
-     * @return boolean true on success, false otherwise
-     */
-    public static function deleteFile($file_id)
-    {
-        // delete file from database
-        try
-        {
-            $file = DBConnection::get()->query(
-                'SELECT `file_path`
-                FROM `' . DB_PREFIX . 'files`
-                WHERE `id` = :file_id
-                LIMIT 1',
-                DBConnection::FETCH_FIRST,
-                [':file_id' => $file_id],
-                [':file_id' => DBConnection::PARAM_INT]
-            );
-        }
-        catch(DBException $e)
-        {
-            return false;
-        }
-
-        try
-        {
-            DBConnection::get()->query(
-                'DELETE FROM `' . DB_PREFIX . 'files`
-                WHERE `id` = :file_id',
-                DBConnection::NOTHING,
-                [':file_id' => $file_id],
-                [':file_id' => DBConnection::PARAM_INT]
-            );
-        }
-        catch(DBException $e)
-        {
-            return false;
-        }
-
-        // delete from filesystem
-        if ($file)
-        {
-            if (file_exists(UP_PATH . $file['file_path']))
-            {
-                static::deleteFileFS(UP_PATH . $file['file_path'], false);
-            }
-        }
-
-        return true;
-    }
-
-    /**
      * Delete a file from the filesystem
      *
      * @param string $file_name  the file to delete
@@ -514,6 +766,10 @@ class File
         if ($check_file && !is_file($file_name) && !is_link($file_name))
         {
             throw new FileException(sprintf("'%s' is not a file/link", $file_name));
+        }
+        if ($check_file && !file_exists($file_name))
+        {
+            throw new FileException(sprintf("'%s' file does not exist", $file_name));
         }
 
         if (unlink($file_name) === false)
@@ -552,10 +808,16 @@ class File
         $message = "";
         foreach ($queued_files as $file)
         {
-            if (static::deleteFile($file["id"]))
+            try
             {
+                static::getFromID($file["id"])->delete();
                 $message .= 'Deleted file ' . $file["id"] . "<br />\n";
                 Log::newEvent('Processed queued deletion of file ' . $file["id"]);
+            }
+            catch(FileException $e)
+            {
+                Log::newEvent("Failed to delete queued file: " . $file["id"]);
+                continue;
             }
         }
 
@@ -653,180 +915,6 @@ class File
                 throw new FileException(sprintf("Failed to remove '%s' directory", $dir));
             }
         }
-    }
-
-    /**
-     * Get the addon id based on the file id
-     *
-     * @param int $file_id
-     *
-     * @throws FileException
-     * @return int|null the addon id or false otherwise
-     */
-    public static function getAddon($file_id)
-    {
-        // Validate input
-        if (!is_numeric($file_id) || !$file_id)
-        {
-            return null;
-        }
-
-        // Look up file path from database
-        try
-        {
-            $addon = DBConnection::get()->query(
-                'SELECT `addon_id`
-                FROM `' . DB_PREFIX . 'files`
-                WHERE `id` = :file_id
-                LIMIT 1',
-                DBConnection::FETCH_FIRST,
-                [':file_id' => $file_id],
-                [':file_id' => DBConnection::PARAM_INT]
-            );
-        }
-        catch(DBException $e)
-        {
-            throw new FileException(exception_message_db(_("retrieve the addon ID")));
-        }
-
-        if (!$addon)
-        {
-            return null;
-        }
-
-        // get the first record
-        return $addon['addon_id'];
-    }
-
-    /**
-     * Get the file path
-     *
-     * @param int $file_id the id of the file
-     *
-     * @throws FileException
-     * @return string|null the file path or false otherwise
-     */
-    public static function getPath($file_id)
-    {
-        // Validate input
-        if (!is_numeric($file_id))
-        {
-            return false;
-        }
-        if ($file_id === 0)
-        {
-            return false;
-        }
-
-        // Look up file path from database
-        try
-        {
-            $file = DBConnection::get()->query(
-                'SELECT `file_path`
-                FROM `' . DB_PREFIX . 'files`
-                WHERE `id` = :file_id
-                LIMIT 1',
-                DBConnection::FETCH_FIRST,
-                [':file_id' => $file_id],
-                [':file_id' => DBConnection::PARAM_INT]
-            );
-        }
-        catch(DBException $e)
-        {
-            throw new FileException(exception_message_db(_("get the file path")));
-        }
-
-        if (!$file)
-        {
-            return null;
-        }
-
-        // get the first record
-        return $file['file_path'];
-    }
-
-    /**
-     * Get all files from the database and filesystem
-     * This method will silently fail
-     *
-     * @return array of all file
-     */
-    public static function getAllFiles()
-    {
-        // Look-up all file records in the database
-        try
-        {
-            $db_files = DBConnection::get()->query(
-                'SELECT F.*, A.`type` as addon_type
-                FROM `' . DB_PREFIX . 'files` F
-                INNER JOIN ' . DB_PREFIX . 'addons A
-                    ON F.`addon_id` =  A.`id`
-                ORDER BY `addon_id` ASC',
-                DBConnection::FETCH_ALL
-            );
-        }
-        catch(DBException $e)
-        {
-            return false;
-        }
-
-        // Look-up all existing files on the disk
-        $fs_files = [];
-        $folder = UP_PATH;
-        $dir_handle = opendir($folder);
-        while (false !== ($entry = readdir($dir_handle)))
-        {
-            if (is_dir($folder . $entry)) // ignore folders
-            {
-                continue;
-            }
-            $fs_files[] = $entry;
-        }
-
-        $folder = UP_PATH . 'images' . DS;
-        $dir_handle = opendir($folder);
-        while (false !== ($entry = readdir($dir_handle)))
-        {
-            if (is_dir($folder . $entry))
-            {
-                continue;
-            }
-            $fs_files[] = 'images' . DS . $entry;
-        }
-
-        // Loop through database records and remove those entries from the list of files existing on the disk
-        $return_files = [];
-        foreach ($db_files as $db_file)
-        {
-            $key = array_search($db_file['file_path'], $fs_files, true);
-            if ($key === false) // files does not exist in the database
-            {
-                $db_file['exists'] = false;
-            }
-            else // file does exist in the database
-            {
-                unset($fs_files[$key]); // remove it from fs_files
-                $db_file['exists'] = true;
-            }
-            $return_files[] = $db_file;
-        }
-        // fs_files now contains only files that do not exist in the database and exist only on disk
-        $fs_files = array_values($fs_files); // reset indices
-
-        // add files that exist on the disk but not in the database
-        foreach ($fs_files as $file_path)
-        {
-            $return_files[] = [
-                'id'         => false,
-                'addon_id'   => false,
-                'addon_type' => false,
-                'file_type'  => false,
-                'file_path'  => $file_path,
-                'exists'     => true
-            ];
-        }
-
-        return $return_files;
     }
 
     /**
@@ -955,11 +1043,10 @@ class File
      *
      * @param string $quad_file
      * @param int    $addon_id
-     * @param string $addon_type
      *
      * @throws FileException
      */
-    public static function newImageFromQuads($quad_file, $addon_id, $addon_type)
+    public static function newImageFromQuads($quad_file, $addon_id)
     {
         $reader = xml_parser_create();
 
@@ -1236,5 +1323,30 @@ class File
         } while (file_exists($directory . $filename . '.' . $extension));
 
         return $filename;
+    }
+
+    /**
+     * Increment the download number for a file path
+     *
+     * @param string $file_path
+     *
+     * @throws FileException
+     */
+    public static function incrementDownload($file_path)
+    {
+        try
+        {
+            DBConnection::get()->query(
+                "UPDATE `" . DB_PREFIX . "files`
+                SET `downloads` = `downloads` + 1
+                WHERE `file_path` = :path",
+                DBConnection::NOTHING,
+                [':path' => $file_path]
+            );
+        }
+        catch(DBException $e)
+        {
+            throw new FileException(exception_message_db("increment the download number"));
+        }
     }
 }

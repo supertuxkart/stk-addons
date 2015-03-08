@@ -52,28 +52,6 @@ class User extends Base
     const CREDENTIAL_USERNAME = 2;
 
     /**
-     * @param string $message
-     *
-     * @throws UserException
-     */
-    protected static function throwException($message)
-    {
-        throw new UserException($message);
-    }
-
-    /**
-     * Get common SQL select all statement
-     * @return string
-     */
-    private static function getSQLAll()
-    {
-        return "SELECT U.*, R.name as role_name
-                FROM " . DB_PREFIX . "users U
-                INNER JOIN " . DB_PREFIX . "roles R
-                    ON U.role_id = R.id ";
-    }
-
-    /**
      * The id of the user
      * @var int
      */
@@ -301,6 +279,28 @@ class User extends Base
         $user_xml->endElement();
 
         return $user_xml->asString();
+    }
+
+    /**
+     * @param string $message
+     *
+     * @throws UserException
+     */
+    protected static function throwException($message)
+    {
+        throw new UserException($message);
+    }
+
+    /**
+     * Get common SQL select all statement
+     * @return string
+     */
+    private static function getSQLAll()
+    {
+        return "SELECT U.*, R.name as role_name
+                FROM " . DB_PREFIX . "users U
+                INNER JOIN " . DB_PREFIX . "roles R
+                    ON U.role_id = R.id ";
     }
 
     /**

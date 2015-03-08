@@ -482,7 +482,7 @@ class Upload
         {
             if (isset($this->properties['quad_file']))
             {
-                File::newImageFromQuads($this->properties['quad_file'], $this->addon_id, $this->addon_type);
+                File::newImageFromQuads($this->properties['quad_file'], $this->addon_id);
             }
         }
         catch(FileException $e)

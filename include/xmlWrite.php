@@ -118,6 +118,7 @@ function generateAssetXML()
             $iconQuery = ($type === "kart") ? "R.`icon`," : "";
 
             // TODO find a cleaner solution to writing these queries
+            // TODo optimize
             // we do not need to escape the $type variable because it is defined above
             $addons = DBConnection::get()->query(
                 "SELECT A.*, R.`fileid`, R.`creation_date` AS `date`,
@@ -140,14 +141,16 @@ function generateAssetXML()
                     continue;
                 }
 
-                $file_path = File::getPath($addon['fileid']);
-                if (!$file_path)
+                try
+                {
+                    $file_path = File::getFromID($addon['fileid'])->getPath();
+                }
+                catch(FileException $e)
                 {
                     trigger_error('Error finding addon file for ' . $addon['name'], E_USER_WARNING);
                     echo '<span class="warning">An error occurred locating add-on: ' . $addon['name'] . '</span><br />';
                     continue;
                 }
-
                 if (!file_exists(UP_PATH . $file_path))
                 {
                     trigger_error('File not found for ' . $addon['name'], E_USER_WARNING);
@@ -163,24 +166,33 @@ function generateAssetXML()
                 $writer->writeAttribute('uploader', $addon['username']);
                 $writer->writeAttribute('designer', $addon['designer']);
                 $writer->writeAttribute('description', $addon['description']);
-                $image_path = File::getPath($addon['image']);
-                if (!$image_path)
+
+                try
                 {
+                    $image_path = File::getFromID($addon['image'])->getPath();
                     if (file_exists(UP_PATH . $image_path))
                     {
                         $writer->writeAttribute('image', DOWNLOAD_LOCATION . $image_path);
                     }
                 }
-
-                if ($type == "kart")
+                catch(FileException $e)
                 {
-                    $icon_path = File::getPath($addon['icon']);
-                    if (!$icon_path)
+                    Log::newEvent($e->getMessage());
+                }
+
+                if ($type === "kart")
+                {
+                    try
                     {
+                        $icon_path = File::getFromID($addon['icon'])->getPath();
                         if (file_exists(UP_PATH . $icon_path))
                         {
                             $writer->writeAttribute('icon', DOWNLOAD_LOCATION . $icon_path);
                         }
+                    }
+                    catch(FileException $e)
+                    {
+                        Log::newEvent($e->getMessage());
                     }
                 }
 
@@ -324,9 +336,22 @@ function generateAssetXML2()
                             continue;
                         }
 
-                        $file_path = File::getPath($addon_rev['fileid']);
-                        if (!$file_path || !file_exists(UP_PATH . $file_path))
+                        try
                         {
+                            $file_path = File::getFromID($addon_rev['fileid'])->getPath();
+                        }
+                        catch(FileException $e)
+                        {
+                            trigger_error('Error finding addon file for ' . $addon['name'], E_USER_WARNING);
+                            echo '<span class="warning">An error occurred locating add-on: ' . $addon['name'] . '</span><br />';
+                            continue;
+                        }
+                        if (!file_exists(UP_PATH . $file_path))
+                        {
+                            trigger_error('File not found for ' . $addon['name'], E_USER_WARNING);
+                            echo '<span class="warning">' . _h(
+                                    'The following file could not be found:'
+                                ) . ' ' . $file_path . '</span><br />';
                             continue;
                         }
 
@@ -340,23 +365,32 @@ function generateAssetXML2()
                         $writer->writeAttribute('size', filesize(UP_PATH . $file_path));
 
                         // Add image and icon to record
-                        $image_path = File::getPath($addon_rev['image']);
-                        if (!$image_path)
+                        try
                         {
+                            $image_path = File::getFromID($addon_rev['image'])->getPath();
                             if (file_exists(UP_PATH . $image_path))
                             {
                                 $writer->writeAttribute('image', DOWNLOAD_LOCATION . $image_path);
                             }
                         }
+                        catch(FileException $e)
+                        {
+                            Log::newEvent($e->getMessage());
+                        }
+
                         if ($type === "kart")
                         {
-                            $icon_path = File::getPath($addon_rev['icon']);
-                            if (!$icon_path)
+                            try
                             {
+                                $icon_path = File::getFromID($addon_rev['icon'])->getPath();
                                 if (file_exists(UP_PATH . $icon_path))
                                 {
                                     $writer->writeAttribute('icon', DOWNLOAD_LOCATION . $icon_path);
                                 }
+                            }
+                            catch(FileException $e)
+                            {
+                                Log::newEvent($e->getMessage());
                             }
                         }
 

@@ -164,7 +164,7 @@ switch ($_POST["action"])
         try
         {
             $addon->checkUserEditPermissions();
-            $addon->deleteFile((int)$_POST['file-id']);
+            File::getFromID((int)$_POST['file-id'])->delete();
             writeXML();
         }
         catch(Exception $e)

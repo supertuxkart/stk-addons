@@ -127,7 +127,7 @@
             {/if}
             <div class="text-center pull-left addon-images-container{$class_container}">
                 <a href="{$image.url}" target="_blank">
-                    <img src="{$image.thumb.url}" class="">
+                    <img src="{$image.thumb_url}" class="">
                 </a><br>
                 {if $can_edit}
                     <div class="btn-group-vertical" data-id="{$image.id}">
@@ -181,7 +181,7 @@
                 <div class="col-md-8{$class_container}">
                     <strong>{$source.label}</strong>
                     <div class="btn-group" data-id="{$source.id}">
-                        <a rel="nofollow" class="btn btn-link" href="{$source.href}">{t}Download{/t}</a>
+                        <a rel="nofollow" class="btn btn-link" href="{$source.url}">{t}Download{/t}</a>
                         {if $can_edit}
                             {if $has_permission}
                                 {$class_approve=""} {$class_unapprove=""}

@@ -75,16 +75,9 @@ if (preg_match('#^(SuperTuxKart/[a-z0-9\\.\\-_]+)( \\(.*\\))?$#', $user_agent, $
 // Update download count for addons
 try
 {
-    DBConnection::get()->query(
-        "UPDATE `" . DB_PREFIX . "files`
-        SET `downloads` = `downloads` + 1
-        WHERE `file_path` = :path
-        ",
-        DBConnection::NOTHING,
-        [':path' => $assets_path]
-    );
+    File::incrementDownload($assets_path);
 }
-catch(DBException $e)
+catch(FileException $e)
 {
     http_response_code(404);
     exit;

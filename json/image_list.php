@@ -42,15 +42,14 @@ if (!Addon::exists($addon_id))
 
 // Addon exists, get images
 $addon = Addon::get($addon_id);
-$addon_images = $addon->getImages();
 
-$json_array = array();
-foreach ($addon_images as $image_record)
+$json_array = [];
+foreach ($addon->getImages() as $image)
 {
     $json_array[] = array(
-        'url'      => DOWNLOAD_LOCATION . $image_record['file_path'],
-        'date'     => strtotime($image_record['date_added']),
-        'approved' => (int)$image_record['is_approved']
+        'url'      => DOWNLOAD_LOCATION . $image->getPath(),
+        'date'     => strtotime($image->getDateAdded()),
+        'approved' => $image->isApproved()
     );
 }
 echo json_encode($json_array);
