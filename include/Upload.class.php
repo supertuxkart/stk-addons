@@ -560,19 +560,12 @@ class Upload
      */
     private function parseFiles()
     {
-        $files = scandir($this->temp_file_dir);
-
         // Initialize counters
         $b3d_textures = [];
 
         // Loop through all files
-        foreach ($files as $file)
+        foreach (File::ls($this->temp_file_dir) as $file)
         {
-            if ($file === '.' || $file === '..')
-            {
-                continue;
-            }
-
             // Parse any B3D models
             if (preg_match('/\.b3d$/i', $file))
             {

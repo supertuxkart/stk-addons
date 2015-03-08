@@ -240,7 +240,7 @@ class File extends Base
                     'SELECT * FROM `' . DB_PREFIX . "files` WHERE `addon_id` = :id AND `file_type` = :type",
                     DBConnection::FETCH_ALL,
                     [
-                        ":id" => $addon_id,
+                        ":id"   => $addon_id,
                         ":type" => $file_type
                     ]
                 );
@@ -296,8 +296,7 @@ class File extends Base
         // Look-up all existing files on the disk
         $fs_files = [];
         $folder = UP_PATH;
-        $dir_handle = opendir($folder);
-        while (false !== ($entry = readdir($dir_handle)))
+        foreach (static::ls($folder) as $entry)
         {
             if (is_dir($folder . $entry)) // ignore folders
             {
@@ -307,8 +306,7 @@ class File extends Base
         }
 
         $folder = UP_PATH . 'images' . DS;
-        $dir_handle = opendir($folder);
-        while (false !== ($entry = readdir($dir_handle)))
+        foreach (static::ls($folder) as $entry)
         {
             if (is_dir($folder . $entry))
             {
@@ -350,6 +348,26 @@ class File extends Base
         }
 
         return $return_files;
+    }
+
+    /**
+     * Get the files in a specified path
+     *
+     * @param string $path
+     * @param bool   $has_dots flag that indicates the output has also the .. and . directory listings
+     *
+     * @return array of all files and directories
+     * @throws FileException
+     */
+    public static function ls($path, $has_dots = false)
+    {
+        $files = scandir($path);
+        if ($files === false)
+        {
+            throw new FileException(_h("Path is not a directory"));
+        }
+
+        return $has_dots ? $files : array_diff($files, ['..', '.']);
     }
 
     /**
@@ -495,9 +513,9 @@ class File extends Base
         }
 
         // Find files to add to archive
-        foreach (scandir($directory) as $file)
+        foreach (static::ls($directory) as $file)
         {
-            if ($file === ".." || $file === "." || is_dir($directory . $file))
+            if (is_dir($directory . $file))
             {
                 continue;
             }
@@ -532,14 +550,8 @@ class File extends Base
             throw new FileException(_h('Invalid source or destination directory.'));
         }
 
-        $dir_contents = scandir($current_dir);
-        foreach ($dir_contents as $file)
+        foreach (static::ls($current_dir) as $file)
         {
-            if ($file === '.' || $file === '..')
-            {
-                continue;
-            }
-
             if (is_dir($current_dir . $file))
             {
                 static::flattenDirectory($current_dir . $file . DS, $destination_dir);
@@ -597,11 +609,9 @@ class File extends Base
             $image_file_ext[] = 'xpm';
         }
 
-        $files = scandir($path);
-        foreach ($files as $file)
+        foreach (static::ls($path) as $file)
         {
-            // Don't check current and parent directory
-            if ($file === '.' || $file === '..' || is_dir($path . $file))
+            if (is_dir($path . $file))
             {
                 continue;
             }
@@ -666,10 +676,10 @@ class File extends Base
         $approved_types = Util::commaStringToArray($approved_types);
 
         $removed_files = [];
-        foreach (scandir($path) as $file)
+        foreach (static::ls($path) as $file)
         {
             // Don't check current and parent directory
-            if ($file === '.' || $file === '..' || is_dir($path . $file))
+            if (is_dir($path . $file))
             {
                 continue;
             }
@@ -842,14 +852,8 @@ class File extends Base
             return null;
         }
 
-        $files = scandir($dir);
-        foreach ($files as $file)
+        foreach (static::ls($dir) as $file)
         {
-            if ($file === "." || $file === "..")
-            {
-                continue;
-            }
-
             // Check if our item is a subfolder
             if (is_dir($dir . DS . $file))
             {
@@ -1317,6 +1321,7 @@ class File extends Base
      */
     public static function generateUniqueFileName($directory, $extension)
     {
+        // TODO use tempnam
         do
         {
             $filename = uniqid(mt_rand());
