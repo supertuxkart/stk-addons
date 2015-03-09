@@ -30,10 +30,10 @@
                     {/if}
 
                     <tr>
-                        <td>{$item.file_path}</td>
-                        <td>{$item.file_type}</td>
+                        <td>{$item.path}</td>
+                        <td>{$item.type}</td>
                         <td>
-                            {if $item.file_type}
+                            {if $item.type}
                                 {if !$item.exists}
                                     <span class="label label-danger">{t}File not found on filesystem{/t}</span>
                                 {/if}

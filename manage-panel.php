@@ -197,17 +197,9 @@ switch ($_GET['view'])
         $items = [];
         foreach ($files as $file)
         {
-            if (!isset($file["file_type"]))
-            {
-                continue;
-            }
-
             $references = "";
-            switch ($file["file_type"])
+            switch ($file["type"])
             {
-                case false:
-                    break;
-
                 case "addon":
                     $references = [];
 

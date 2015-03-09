@@ -21,15 +21,15 @@ require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
 $tpl = StkTemplate::get("stats/page/addons.tpl");
 
-$query_addon_revisions = "SELECT `addon_id`, `addon_type`, `file_path`, `date_added`, `downloads`
+$query_addon_revisions = "SELECT `addon_id`, `addon_type`, `path`, `date_added`, `downloads`
     FROM `" . DB_PREFIX . "files`
-    WHERE `file_type` = 'addon'
+    WHERE `type` = 'addon'
     ORDER BY `addon_id` ASC, `date_added` ASC";
 
 $query_addon_cumulative = "SELECT `a`.`id`, `a`.`type`, `a`.`name`, SUM(`f`.`downloads`) AS `dl_count`
     FROM `" . DB_PREFIX . "addons` `a`, `" . DB_PREFIX . "files` `f`
     WHERE `a`.`id` = `f`.`addon_id`
-    AND `f`.`file_type` = 'addon'
+    AND `f`.`type` = 'addon'
     GROUP BY `a`.`id`
     ORDER BY `a`.`id` ASC";
 

@@ -9,8 +9,8 @@ DROP TABLE IF EXISTS v3_arenas_revs;
 DROP TABLE IF EXISTS v3_tracks_revs;
 DROP TABLE IF EXISTS v3_karts_revs;
 DROP TABLE IF EXISTS v3_cache;
-DROP TABLE IF EXISTS v3_files;
 DROP TABLE IF EXISTS v3_files_delete;
+DROP TABLE IF EXISTS v3_files;
 DROP TABLE IF EXISTS v3_addons;
 
 DROP TABLE IF EXISTS v3_server_conn;

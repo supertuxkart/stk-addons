@@ -368,7 +368,7 @@ class Statistic
                 INNER JOIN ' . DB_PREFIX . 'addons A
                     ON F.`addon_id` =  A.`id`
                 WHERE A.`type` = :addon_type
-                AND `file_type` = :file_type
+                AND F.`type` = :file_type
                 GROUP BY `addon_id`
                 ORDER BY SUM(`downloads`) DESC',
                 DBConnection::FETCH_FIRST,

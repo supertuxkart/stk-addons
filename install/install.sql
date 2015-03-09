@@ -10,7 +10,7 @@ DROP PROCEDURE IF EXISTS v3_create_file_record$$
 CREATE PROCEDURE `v3_create_file_record`(IN id TEXT, IN ftype TEXT, IN fname TEXT, OUT insertid INT)
     BEGIN
         INSERT INTO `v3_files`
-        (`addon_id`, `file_type`, `file_path`)
+        (`addon_id`, `type`, `path`)
         VALUES
             (id, ftype, fname);
         SELECT
@@ -389,8 +389,8 @@ CREATE TABLE IF NOT EXISTS `v3_addons` (
 CREATE TABLE IF NOT EXISTS `v3_files` (
     `id`          INT UNSIGNED NOT NULL AUTO_INCREMENT,
     `addon_id`    VARCHAR(30)  NOT NULL,
-    `file_type`   ENUM('source', 'image', 'addon') DEFAULT NULL,
-    `file_path`   VARCHAR(256) NOT NULL,
+    `type`        ENUM('source', 'image', 'addon') DEFAULT NULL,
+    `path`        VARCHAR(256) NOT NULL,
     `date_added`  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `is_approved` BOOL         NOT NULL DEFAULT '0',
     `downloads`   INT UNSIGNED NOT NULL DEFAULT '0',

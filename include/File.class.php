@@ -65,8 +65,8 @@ class File extends Base
     {
         $this->id = (int)$data["id"];
         $this->addon_id = $data["addon_id"];
-        $this->type = $data["file_type"];
-        $this->path = $data["file_path"];
+        $this->type = $data["type"];
+        $this->path = $data["path"];
         $this->date_added = $data["date_added"];
         $this->is_approved = (bool)$data["is_approved"];
         $this->downloads = (int)$data["downloads"];
@@ -223,7 +223,7 @@ class File extends Base
             if ($file_type)
             {
                 $files = DBConnection::get()->query(
-                    'SELECT * FROM `' . DB_PREFIX . "files` WHERE `addon_id` = :id AND `file_type` = :type",
+                    'SELECT * FROM `' . DB_PREFIX . "files` WHERE `addon_id` = :id AND `type` = :type",
                     DBConnection::FETCH_ALL,
                     [
                         ":id"   => $addon_id,
@@ -305,7 +305,7 @@ class File extends Base
         $return_files = [];
         foreach ($db_files as $db_file)
         {
-            $key = array_search($db_file['file_path'], $fs_files, true);
+            $key = array_search($db_file['path'], $fs_files, true);
             if ($key === false) // files does not exist in the database
             {
                 $db_file['exists'] = false;
@@ -327,8 +327,8 @@ class File extends Base
                 'id'         => false,
                 'addon_id'   => false,
                 'addon_type' => false,
-                'file_type'  => false,
-                'file_path'  => $file_path,
+                'type'       => false,
+                'path'       => $file_path,
                 'exists'     => true
             ];
         }
@@ -401,7 +401,7 @@ class File extends Base
      */
     public static function existsDB($path)
     {
-        return static::existsField("files", "file_path", $path, DBConnection::PARAM_STR);
+        return static::existsField("files", "path", $path, DBConnection::PARAM_STR);
     }
 
     /**
@@ -973,7 +973,7 @@ class File extends Base
             {
                 DBConnection::get()->query(
                     'DELETE FROM `' . DB_PREFIX . 'files`
-                    WHERE `file_path` = :file_name',
+                    WHERE `path` = :file_name',
                     DBConnection::NOTHING,
                     [":file_name" => 'images/' . $file_name]
                 );
@@ -1326,7 +1326,7 @@ class File extends Base
             DBConnection::get()->query(
                 "UPDATE `" . DB_PREFIX . "files`
                 SET `downloads` = `downloads` + 1
-                WHERE `file_path` = :path",
+                WHERE `path` = :path",
                 DBConnection::NOTHING,
                 [':path' => $file_path]
             );
