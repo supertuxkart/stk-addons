@@ -142,7 +142,7 @@ class Verification
                 INNER JOIN `" . DB_PREFIX . "users` U
                     ON V.user_id = U.id
                 WHERE
-                    active = 0
+                    is_active = 0
                 AND
                     DATEDIFF(CURDATE(), U.date_register) >= :days",
                 DBConnection::NOTHING,
@@ -165,7 +165,7 @@ class Verification
                 INNER JOIN `" . DB_PREFIX . "users` U
                     ON V.user_id = U.id
                 WHERE
-                    active = 1
+                    is_active = 1
                 AND
                     DATEDIFF(CURDATE(), U.date_register) >= :days",
                 DBConnection::NOTHING,

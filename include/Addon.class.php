@@ -385,7 +385,11 @@ class Addon extends Base
         }
 
         // Queue addon file for deletion
-        if (!File::queueDelete($this->revisions[$rev]['file']))
+        try
+        {
+            File::queueDelete($this->revisions[$rev]['file']);
+        }
+        catch(FileException $e)
         {
             throw new AddonException(_h('The add-on file could not be queued for deletion.'));
         }

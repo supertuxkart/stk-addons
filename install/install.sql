@@ -394,10 +394,25 @@ CREATE TABLE IF NOT EXISTS `v3_files` (
     `date_added`  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `is_approved` BOOL         NOT NULL DEFAULT '0',
     `downloads`   INT UNSIGNED NOT NULL DEFAULT '0',
-    `delete_date` DATE         NOT NULL DEFAULT '0000-00-00',
     PRIMARY KEY (`id`),
     KEY `addon_id` (`addon_id`),
     CONSTRAINT `v3_files_ibfk_1` FOREIGN KEY (`addon_id`) REFERENCES `v3_addons` (`id`)
+        ON DELETE CASCADE
+        ON UPDATE NO ACTION
+)
+    ENGINE =InnoDB
+    DEFAULT CHARSET =utf8mb4
+    COLLATE =utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------------------------------
+--
+-- Table structure for table `v3_files_delete`
+--
+CREATE TABLE IF NOT EXISTS `v3_files_delete` (
+    `file_id`     INT UNSIGNED NOT NULL,
+    `date_delete` DATE         NOT NULL DEFAULT '0000-00-00',
+    PRIMARY KEY (`file_id`),
+    CONSTRAINT `v3_files_delete_ibfk_1` FOREIGN KEY (`file_id`) REFERENCES `v3_files` (`id`)
         ON DELETE CASCADE
         ON UPDATE NO ACTION
 )

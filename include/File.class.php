@@ -59,11 +59,6 @@ class File extends Base
     private $downloads;
 
     /**
-     * @var string
-     */
-    private $date_delete;
-
-    /**
      * @param array $data the data retrieved from the database
      */
     private function __construct(array $data)
@@ -73,7 +68,6 @@ class File extends Base
         $this->type = $data["file_type"];
         $this->path = $data["file_path"];
         $this->date_added = $data["date_added"];
-        $this->date_delete = $data["delete_date"];
         $this->is_approved = (bool)$data["is_approved"];
         $this->downloads = (int)$data["downloads"];
     }
@@ -92,14 +86,6 @@ class File extends Base
     public function getDateAdded()
     {
         return $this->date_added;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDateDelete()
-    {
-        return $this->date_delete;
     }
 
     /**
@@ -801,10 +787,11 @@ class File extends Base
         try
         {
             $queued_files = DBConnection::get()->query(
-                'SELECT `id`
-                FROM `' . DB_PREFIX . 'files`
-                WHERE `delete_date` <= :date
-                AND `delete_date` <> \'0000-00-00\'',
+                "SELECT F.`id`
+                FROM `" . DB_PREFIX . "files_delete` D
+                INNER JOIN " . DB_PREFIX . "files F
+                    ON F.id = D.file_id
+                WHERE D.`date_delete` <= :date AND D.`date_delete` <> '0000-00-00'",
                 DBConnection::FETCH_ALL,
                 [':date' => date('Y-m-d')]
             );
@@ -1213,31 +1200,26 @@ class File extends Base
      *
      * @param int $file_id
      *
-     * @return boolean
+     * @throws FileException
      */
     public static function queueDelete($file_id)
     {
         $del_date = date('Y-m-d', time() + (int)Config::get(Config::XML_UPDATE_TIME) + Util::SECONDS_IN_A_DAY);
         try
         {
-            DBConnection::get()->query(
-                'UPDATE `' . DB_PREFIX . 'files`
-                SET  `delete_date` = :date
-                WHERE  `id` = :file_id',
-                DBConnection::NOTHING,
+            DBConnection::get()->insert(
+                "files_delete",
                 [
-                    ":file_id" => $file_id,
-                    ":date"    => $del_date
+                    ":file_id"     => $file_id,
+                    ":date_delete" => $del_date
                 ],
                 [":file_id" => DBConnection::PARAM_INT]
             );
         }
         catch(DBException $e)
         {
-            return false;
+            throw new FileException(exception_message_db("mark file for delete"));
         }
-
-        return true;
     }
 
     /**
