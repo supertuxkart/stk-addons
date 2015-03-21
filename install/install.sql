@@ -426,7 +426,7 @@ CREATE TABLE IF NOT EXISTS `v3_files_delete` (
 --
 CREATE TABLE IF NOT EXISTS `v3_arenas_revs` (
     `addon_id`       VARCHAR(30)        NOT NULL,
-    `file_id`         INT UNSIGNED       NOT NULL DEFAULT '0',
+    `file_id`        INT UNSIGNED       NOT NULL DEFAULT '0',
     `creation_date`  TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `revision`       TINYINT            NOT NULL DEFAULT '1',
     `format`         TINYINT            NOT NULL,
@@ -437,6 +437,9 @@ CREATE TABLE IF NOT EXISTS `v3_arenas_revs` (
     KEY `status` (`status`),
     CONSTRAINT `v3_arenas_revs_ibfk_1` FOREIGN KEY (`addon_id`) REFERENCES `v3_addons` (`id`)
         ON DELETE CASCADE
+        ON UPDATE NO ACTION,
+    CONSTRAINT `v3_arenas_revs_ibfk_2` FOREIGN KEY (`file_id`) REFERENCES `v3_files` (`id`)
+        ON DELETE NO ACTION
         ON UPDATE NO ACTION
 )
     ENGINE =InnoDB
@@ -449,7 +452,7 @@ CREATE TABLE IF NOT EXISTS `v3_arenas_revs` (
 --
 CREATE TABLE IF NOT EXISTS `v3_tracks_revs` (
     `addon_id`       VARCHAR(30)        NOT NULL,
-    `file_id`         INT UNSIGNED       NOT NULL DEFAULT '0',
+    `file_id`        INT UNSIGNED       NOT NULL DEFAULT '0',
     `creation_date`  TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `revision`       TINYINT            NOT NULL DEFAULT '1',
     `format`         TINYINT            NOT NULL,
@@ -460,6 +463,9 @@ CREATE TABLE IF NOT EXISTS `v3_tracks_revs` (
     KEY `status` (`status`),
     CONSTRAINT `v3_tracks_revs_ibfk_1` FOREIGN KEY (`addon_id`) REFERENCES `v3_addons` (`id`)
         ON DELETE CASCADE
+        ON UPDATE NO ACTION,
+    CONSTRAINT `v3_tracks_revs_ibfk_2` FOREIGN KEY (`file_id`) REFERENCES `v3_files` (`id`)
+        ON DELETE NO ACTION
         ON UPDATE NO ACTION
 )
     ENGINE =InnoDB
@@ -472,7 +478,7 @@ CREATE TABLE IF NOT EXISTS `v3_tracks_revs` (
 --
 CREATE TABLE IF NOT EXISTS `v3_karts_revs` (
     `addon_id`       VARCHAR(30)        NOT NULL,
-    `file_id`         INT UNSIGNED       NOT NULL DEFAULT '0',
+    `file_id`        INT UNSIGNED       NOT NULL DEFAULT '0',
     `creation_date`  TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `revision`       TINYINT            NOT NULL DEFAULT '1',
     `format`         TINYINT            NOT NULL,
@@ -484,6 +490,9 @@ CREATE TABLE IF NOT EXISTS `v3_karts_revs` (
     KEY `status` (`status`),
     CONSTRAINT `v3_karts_revs_ibfk_1` FOREIGN KEY (`addon_id`) REFERENCES `v3_addons` (`id`)
         ON DELETE CASCADE
+        ON UPDATE NO ACTION,
+    CONSTRAINT `v3_karts_revs_ibfk_2` FOREIGN KEY (`file_id`) REFERENCES `v3_files` (`id`)
+        ON DELETE NO ACTION
         ON UPDATE NO ACTION
 )
     ENGINE =InnoDB
