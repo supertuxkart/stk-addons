@@ -515,7 +515,7 @@ class Upload
         // Record addon's file in database
         try
         {
-            $this->properties['xml_attributes']['fileid'] = File::createFileDB($this->addon_id, $filetype, $this->upload_file_name);
+            $this->properties['xml_attributes']['file_id'] = File::createFileDB($this->addon_id, $filetype, $this->upload_file_name);
         }
         catch(FileException $e)
         {

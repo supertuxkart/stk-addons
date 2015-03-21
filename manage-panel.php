@@ -211,7 +211,7 @@ switch ($_GET['view'])
                         {
                             $rev_files = DBConnection::get()->query(
                                 'SELECT * FROM `' . DB_PREFIX . $type_plural .
-                                '` WHERE `fileid` = :id',
+                                '` WHERE `file_id` = :id',
                                 DBConnection::FETCH_ALL,
                                 [':id' => $file["id"]]
                             );

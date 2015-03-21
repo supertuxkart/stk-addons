@@ -145,7 +145,7 @@ class Addon extends Base
         foreach ($revisions as $rev)
         {
             $current_rev = [
-                'file'           => $rev['fileid'],
+                'file'           => $rev['file_id'],
                 'format'         => $rev['format'],
                 'image'          => $rev['image'],
                 'icon'           => isset($rev['icon']) ? (int)$rev['icon'] : 0,
@@ -254,7 +254,7 @@ class Addon extends Base
         // Add revision entry
         $fields_data = [
             ":addon_id" => $this->id,
-            ":fileid"   => $attributes['fileid'],
+            ":file_id"  => $attributes['file_id'],
             ":revision" => $this->getMaxRevisionID() + 1, // the next revision number
             ":format"   => $attributes['version'],
             ":image"    => $attributes['image'],
@@ -615,7 +615,7 @@ class Addon extends Base
         try
         {
             $file_id_lookup = DBConnection::get()->query(
-                'SELECT `fileid`
+                'SELECT `file_id`
                 FROM `' . DB_PREFIX . $this->type . '_revs`
                 WHERE `addon_id` = :addon_id
                 AND `revision` = :revision',
@@ -636,7 +636,7 @@ class Addon extends Base
             throw new AddonException(_h('There is no add-on found with the specified revision number.'));
         }
 
-        $file_id = $file_id_lookup['fileid'];
+        $file_id = $file_id_lookup['file_id'];
 
         // Look up file path from database
         try
@@ -1662,7 +1662,7 @@ class Addon extends Base
      *
      * @param string $type               Add-on type
      * @param array  $attributes         Contains properties of the add-on. Must have the
-     *                                   following elements: name, designer, license, image, fileid, status, (arena)
+     *                                   following elements: name, designer, license, image, file_id, status, (arena)
      * @param string $moderator_message
      *
      * @throws AddonException
@@ -1719,7 +1719,7 @@ class Addon extends Base
         // Generate revision entry
         $fields_data = [
             ":addon_id" => $id,
-            ":fileid"   => $attributes['fileid'],
+            ":file_id"  => $attributes['file_id'],
             ":revision" => $rev,
             ":format"   => $attributes['version'],
             ":image"    => $attributes['image'],

@@ -121,7 +121,7 @@ function generateAssetXML()
             // TODo optimize
             // we do not need to escape the $type variable because it is defined above
             $addons = DBConnection::get()->query(
-                "SELECT A.*, R.`fileid`, R.`creation_date` AS `date`,
+                "SELECT A.*, R.`file_id`, R.`creation_date` AS `date`,
                         R.`revision`, R.`format`, R.`image`,
                         " . $iconQuery . " R.`status`, U.`username`
                 FROM " . DB_PREFIX . "addons A
@@ -143,7 +143,7 @@ function generateAssetXML()
 
                 try
                 {
-                    $file_path = File::getFromID($addon['fileid'])->getPath();
+                    $file_path = File::getFromID($addon['file_id'])->getPath();
                 }
                 catch(FileException $e)
                 {
@@ -338,7 +338,7 @@ function generateAssetXML2()
 
                         try
                         {
-                            $file_path = File::getFromID($addon_rev['fileid'])->getPath();
+                            $file_path = File::getFromID($addon_rev['file_id'])->getPath();
                         }
                         catch(FileException $e)
                         {
