@@ -425,7 +425,6 @@ CREATE TABLE IF NOT EXISTS `v3_files_delete` (
 -- Table structure for table `v3_arenas_revs`
 --
 CREATE TABLE IF NOT EXISTS `v3_arenas_revs` (
-    `id`             VARCHAR(23)        NOT NULL,
     `addon_id`       VARCHAR(30)        NOT NULL,
     `fileid`         INT UNSIGNED       NOT NULL DEFAULT '0',
     `creation_date`  TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -449,7 +448,6 @@ CREATE TABLE IF NOT EXISTS `v3_arenas_revs` (
 -- Table structure for table `v3_tracks_revs`
 --
 CREATE TABLE IF NOT EXISTS `v3_tracks_revs` (
-    `id`             VARCHAR(23)        NOT NULL,
     `addon_id`       VARCHAR(30)        NOT NULL,
     `fileid`         INT UNSIGNED       NOT NULL DEFAULT '0',
     `creation_date`  TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -473,7 +471,6 @@ CREATE TABLE IF NOT EXISTS `v3_tracks_revs` (
 -- Table structure for table `v3_karts_revs`
 --
 CREATE TABLE IF NOT EXISTS `v3_karts_revs` (
-    `id`             VARCHAR(23)        NOT NULL,
     `addon_id`       VARCHAR(30)        NOT NULL,
     `fileid`         INT UNSIGNED       NOT NULL DEFAULT '0',
     `creation_date`  TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP,

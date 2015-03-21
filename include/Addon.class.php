@@ -112,7 +112,7 @@ class Addon extends Base
     /**
      * @var int
      */
-    private $latest_revision;
+    private $latest_revision = 0;
 
     /**
      * Load the revisions from the database into the current instance
@@ -148,22 +148,22 @@ class Addon extends Base
                 'file'           => $rev['fileid'],
                 'format'         => $rev['format'],
                 'image'          => $rev['image'],
-                'icon'           => (isset($rev['icon'])) ? $rev['icon'] : 0,
+                'icon'           => isset($rev['icon']) ? (int)$rev['icon'] : 0,
                 'moderator_note' => $rev['moderator_note'],
-                'revision'       => $rev['revision'],
+                'revision'       => (int)$rev['revision'],
                 'status'         => $rev['status'],
                 'timestamp'      => $rev['creation_date']
             ];
 
             // revision is latest
-            if (Addon::isLatest($current_rev['status']))
+            if (static::isLatest($current_rev['status']))
             {
-                $this->latest_revision = (int)$rev['revision'];
-                $this->image = $rev['image'];
-                $this->icon = isset($rev['icon']) ? (int)$rev['icon'] : 0;
+                $this->latest_revision = $current_rev['revision'];
+                $this->image = $current_rev['image'];
+                $this->icon = $current_rev['icon'];
             }
 
-            $this->revisions[$rev['revision']] = $current_rev;
+            $this->revisions[$current_rev['revision']] = $current_rev;
         }
 
         if (!$this->latest_revision)
@@ -205,22 +205,15 @@ class Addon extends Base
      * Create an add-on revision
      *
      * @param array  $attributes
-     * @param string $file_id
      * @param string $moderator_message
      *
      * @throws AddonException
      */
-    public function createRevision($attributes, $file_id, $moderator_message = "")
+    public function createRevision($attributes, $moderator_message = "")
     {
         foreach ($attributes['missing_textures'] as $tex)
         {
             $moderator_message .= "Texture not found: $tex\n";
-        }
-
-        // Make sure an add-on file with this id does not exist
-        if (static::existsRevision($file_id, $this->type))
-        {
-            throw new AddonException(_h('The file you are trying to create already exists.'));
         }
 
         // Update the addon name
@@ -228,9 +221,6 @@ class Addon extends Base
 
         // Update license file record
         $this->setLicense($attributes['license']);
-
-        // Prevent duplicate images from being created.
-        $images = $this->getImageHashes();
 
         // Compare with new image
         try
@@ -243,33 +233,29 @@ class Addon extends Base
         }
 
         $new_hash = md5_file(UP_PATH . $file_image->getPath());
-        $images_count = count($images);
-        for ($i = 0; $i < $images_count; $i++)
+        // Prevent duplicate images from being created.
+        foreach ($this->getImageHashes() as $image)
         {
             // Skip image that was just uploaded
-            if ($images[$i]['id'] === $attributes['image'])
+            if ($image['id'] === $attributes['image'])
             {
                 continue;
             }
 
-            // image already exists in the database
-            if ($new_hash === $images[$i]['hash'])
+            // Image already exists in the database
+            if ($new_hash === $image['hash'])
             {
                 $file_image->delete();
-                $attributes['image'] = $images[$i]['id'];
+                $attributes['image'] = $image['id'];
                 break;
             }
         }
 
-        // Calculate the next revision number
-        $rev = max(array_keys($this->revisions)) + 1;
-
         // Add revision entry
         $fields_data = [
-            ":id"       => $file_id,
             ":addon_id" => $this->id,
             ":fileid"   => $attributes['fileid'],
-            ":revision" => $rev,
+            ":revision" => $this->getMaxRevisionID() + 1, // the next revision number
             ":format"   => $attributes['version'],
             ":image"    => $attributes['image'],
             ":status"   => $attributes['status']
@@ -295,7 +281,6 @@ class Addon extends Base
             throw new AddonException(exception_message_db(_('create add-on revision')));
         }
 
-        writeXML();
         try
         {
             // Send mail to moderators
@@ -519,13 +504,13 @@ class Addon extends Base
     }
 
     /**
-     * Get the last revision  id number
+     * Get the maximum revision number
      *
      * @return int
      */
-    public function getLatestRevisionID()
+    public function getMaxRevisionID()
     {
-        return $this->latest_revision;
+        return max(array_keys($this->revisions));
     }
 
     /**
@@ -669,11 +654,12 @@ class Addon extends Base
     /**
      * Get the md5sums of all the image files of this addon
      *
-     * @throws AddonException
+     * @param string $path_prefix the path to the file prefix
      *
-     * @return array
+     * @throws AddonException
+     * @return array of associative arrays with keys 'id', 'path', 'hash'
      */
-    public function getImageHashes()
+    public function getImageHashes($path_prefix = UP_PATH)
     {
         $return = [];
         foreach ($this->getImages() as $image)
@@ -681,7 +667,7 @@ class Addon extends Base
             $return[] = [
                 'id'   => $image->getId(),
                 'path' => $image->getPath(),
-                'hash' => md5_file(UP_PATH . $image->getPath())
+                'hash' => md5_file($path_prefix . $image->getPath())
             ];
         }
 
@@ -1645,11 +1631,6 @@ class Addon extends Base
      */
     public static function generateId($name)
     {
-        if (!is_string($name))
-        {
-            return false;
-        }
-
         $addon_id = static::cleanId($name);
         if (!$addon_id)
         {
@@ -1682,22 +1663,13 @@ class Addon extends Base
      * @param string $type               Add-on type
      * @param array  $attributes         Contains properties of the add-on. Must have the
      *                                   following elements: name, designer, license, image, fileid, status, (arena)
-     * @param string $fileid             ID for revision file (see FIXME below)
      * @param string $moderator_message
      *
      * @throws AddonException
      */
-    public static function create($type, $attributes, $fileid, $moderator_message)
+    public static function create($type, $attributes, $moderator_message)
     {
         // validate
-        if (!User::isLoggedIn())
-        {
-            throw new AddonException(_h('You must be logged in to create an add-on.'));
-        }
-        if (!User::hasPermission(AccessControl::PERM_ADD_ADDON))
-        {
-            throw new AddonException(_h('You do not have the necessary permissions to upload a addon'));
-        }
         if (!static::isAllowedType($type))
         {
             throw new AddonException(_h('An invalid add-on type was provided.'));
@@ -1707,21 +1679,8 @@ class Addon extends Base
         {
             $moderator_message .= "Texture not found: $tex\n";
         }
+        // Make sure the add-on doesn't already exist, generate an unique identifier
         $id = static::generateId($attributes['name']);
-
-        // Make sure the add-on doesn't already exist
-        if (static::exists($id))
-        {
-            throw new AddonException(_h('An add-on with this ID already exists.'));
-        }
-
-        // Make sure no revisions with this id exists
-        // FIXME: Check if this id is redundant or not. Could just
-        //        auto-increment this column if it is unused elsewhere.
-        if (static::existsRevision($fileid, $type))
-        {
-            throw new AddonException(_h('The add-on you are trying to create already exists.'));
-        }
 
         // add addon to database
         $fields_data = [
@@ -1759,7 +1718,6 @@ class Addon extends Base
 
         // Generate revision entry
         $fields_data = [
-            ":id"       => $fileid,
             ":addon_id" => $id,
             ":fileid"   => $attributes['fileid'],
             ":revision" => $rev,
@@ -1788,8 +1746,6 @@ class Addon extends Base
             throw new AddonException($e->getMessage());
         }
 
-
-        writeXML();
         try
         {
             // Send mail to moderators
@@ -1824,19 +1780,6 @@ class Addon extends Base
     public static function exists($id)
     {
         return static::existsField("addons", "id", Addon::cleanId($id), DBConnection::PARAM_STR);
-    }
-
-    /**
-     * Check if an addon revision exists in the database
-     *
-     * @param string $id   Addon ID
-     * @param string $type addon type
-     *
-     * @return bool
-     */
-    public static function existsRevision($id, $type)
-    {
-        return static::existsField($type . "_revs", "id", $id, DBConnection::PARAM_STR);
     }
 
     /**

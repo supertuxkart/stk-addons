@@ -347,12 +347,13 @@ class Upload
         $this->properties['xml_attributes']['license'] = h(file_get_contents($this->properties['license_file'], false));
 
         // new revision
+        $addon = null;
         if ($this->expected_file_type === static::REVISION)
         {
             try
             {
                 $addon = Addon::get($this->addon_id);
-                $this->properties['addon_revision'] = $addon->getLatestRevisionID() + 1;
+                $this->properties['addon_revision'] = $addon->getMaxRevisionID() + 1;
             }
             catch(AddonException $e)
             {
@@ -394,23 +395,24 @@ class Upload
         $this->properties['xml_attributes']['missing_textures'] = $this->properties['missing_textures'];
 
         // add addon to database
-        $path_parts = pathinfo($this->upload_file_name); // set in storeUploadArchive
         try
         {
             // new revision
-            if ($this->expected_file_type === static::REVISION && isset($addon))
+            if ($this->expected_file_type === static::REVISION && $addon)
             {
-                $addon->createRevision($this->properties['xml_attributes'], $path_parts["filename"], $this->moderator_message);
+                $addon->createRevision($this->properties['xml_attributes'], $this->moderator_message);
             }
             else // new addon
             {
-                Addon::create($this->addon_type, $this->properties['xml_attributes'], $path_parts["filename"], $this->moderator_message);
+                Addon::create($this->addon_type, $this->properties['xml_attributes'], $this->moderator_message);
             }
+            writeXML();
         }
         catch(AddonException $e)
         {
             throw new UploadException($e->getMessage());
         }
+
 
         $this->success[] =
             _h('Your add-on was uploaded successfully. It will be reviewed by our moderators before becoming publicly available.');
@@ -583,6 +585,7 @@ class Upload
 
                 if ($xml_type === 'TRACK' || $xml_type === 'KART')
                 {
+                    // TODO better validate attributes
                     $this->properties['xml_attributes'] = $xml_parse->addonFileAttributes();
 
                     if ($xml_type === 'TRACK')

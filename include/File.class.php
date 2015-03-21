@@ -363,8 +363,6 @@ class File extends Base
      * @param bool $approve
      *
      * @throws FileException
-     *
-     * @return int File id, or -1 if file record does not exist
      */
     public static function approve($file_id, $approve = true)
     {
