@@ -242,7 +242,8 @@ class File extends Base
             {
                 $files = DBConnection::get()->query(
                     'SELECT * FROM `' . DB_PREFIX . "files` WHERE `addon_id` = :id",
-                    DBConnection::FETCH_ALL
+                    DBConnection::FETCH_ALL,
+                    [":id" => $addon_id]
                 );
             }
         }
