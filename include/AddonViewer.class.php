@@ -107,7 +107,7 @@ class AddonViewer
             'id'             => $this->addon->getId(),
             'name'           => h($this->addon->getName()),
             'description'    => h($this->addon->getDescription()),
-            'type'           => $this->addon->getType(),
+            'type'           => Addon::typeToString($this->addon->getType()),
             'is_arena'       => $this->addon->getType() === Addon::ARENA,
             'designer'       => h($this->addon->getDesigner()),
             'license'        => h($this->addon->getLicense()),

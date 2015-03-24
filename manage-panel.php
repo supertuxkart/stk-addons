@@ -81,7 +81,7 @@ switch ($_GET['view'])
             // add to view
             if ($unapproved)
             {
-                $managePanelData["images"][] = [
+                $tpl_data["images"][] = [
                     "href"       => $addon->getLink(),
                     "name"       => h($addon->getName()),
                     "unapproved" => implode("<br>", $unapproved)
@@ -100,7 +100,7 @@ switch ($_GET['view'])
             // add to view
             if ($unapproved)
             {
-                $managePanelData["archives"][] = [
+                $tpl_data["archives"][] = [
                     "href"       => $addon->getLink(),
                     "name"       => h($addon->getName()),
                     "unapproved" => $unapproved
@@ -203,29 +203,24 @@ switch ($_GET['view'])
                 case "addon":
                     $references = [];
 
-                    $types = ["track", "kart", "arena"];
-                    foreach ($types as $type)
+                    try
                     {
-                        $type_plural = $type . 's_revs';
-                        try
-                        {
-                            $rev_files = DBConnection::get()->query(
-                                'SELECT * FROM `' . DB_PREFIX . $type_plural .
-                                '` WHERE `file_id` = :id',
-                                DBConnection::FETCH_ALL,
-                                [':id' => $file["id"]]
-                            );
+                        $rev_files = DBConnection::get()->query(
+                            'SELECT * FROM `' . DB_PREFIX . 'addon_revisions`
+                            WHERE `file_id` = :id',
+                            DBConnection::FETCH_ALL,
+                            [':id' => $file["id"]]
+                        );
 
-                            // add to
-                            foreach ($rev_files as $rev_file)
-                            {
-                                $references[] = $rev_file['addon_id'] . sprintf(' (%s)', $type);
-                            }
-                        }
-                        catch(DBException $e)
+                        // add to
+                        foreach ($rev_files as $rev_file)
                         {
-                            throw new Exception(sprintf("Error on selecting all %s", $type_plural));
+                            $references[] = $rev_file['addon_id'];
                         }
+                    }
+                    catch(DBException $e)
+                    {
+                        throw new Exception("Error on selecting all addon revisions");
                     }
 
                     $references = implode(', ', $references);
@@ -236,6 +231,7 @@ switch ($_GET['view'])
                     break;
             }
 
+            $file["addon_type"] = Addon::typeToString($file["addon_type"]);
             $file["references"] = $references;
             $items[] = $file;
         }

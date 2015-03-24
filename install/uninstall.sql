@@ -5,13 +5,12 @@ DROP PROCEDURE IF EXISTS v3_create_file_record;
 DROP TABLE IF EXISTS v3_bugs_comments;
 DROP TABLE IF EXISTS v3_bugs;
 DROP TABLE IF EXISTS v3_votes;
-DROP TABLE IF EXISTS v3_arenas_revs;
-DROP TABLE IF EXISTS v3_tracks_revs;
-DROP TABLE IF EXISTS v3_karts_revs;
+DROP TABLE IF EXISTS v3_addon_revisions;
 DROP TABLE IF EXISTS v3_cache;
 DROP TABLE IF EXISTS v3_files_delete;
 DROP TABLE IF EXISTS v3_files;
 DROP TABLE IF EXISTS v3_addons;
+DROP TABLE IF EXISTS v3_addon_types;
 
 DROP TABLE IF EXISTS v3_server_conn;
 DROP TABLE IF EXISTS v3_servers;

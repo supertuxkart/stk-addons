@@ -114,14 +114,14 @@ foreach (Addon::getAllowedTypes() as $type)
             $no_items = "";
     }
     $addon_type = [
-        "name"     => $type,
+        "name"     => Addon::typeToString($type),
         "heading"  => $heading,
         "no_items" => $no_items,
         "items"    => []
     ];
 
     $addons = $user->getAddonsData($type);
-    if (empty($addons)) // no addons for you
+    if (!$addons) // no addons for this type
     {
         $tpl_data["addon_types"][] = $addon_type;
         continue;

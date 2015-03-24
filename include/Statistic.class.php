@@ -347,7 +347,7 @@ class Statistic
     /**
      * Return the most downloaded addon of a given type
      *
-     * @param string $addon_type the type of addon eg: kart, track, arena etc
+     * @param int $addon_type the type of addon
      * @param string $file_type
      *
      * @return null|string the name of the addon or null on empty selection
@@ -401,21 +401,15 @@ class Statistic
     {
         try
         {
-            $query = '(SELECT `a`.`name`, `a`.type
+
+            $addons = DBConnection::get()->query(
+                'SELECT `a`.`name`, `a`.type
                 FROM `' . DB_PREFIX . 'addons` `a`
-                LEFT JOIN `' . DB_PREFIX . '%s_revs` `r`
+                LEFT JOIN `' . DB_PREFIX . 'addon_revisions` `r`
                     ON `a`.`id` = `r`.`addon_id`
                 WHERE `r`.`status` & ' . F_APPROVED . '
                 ORDER BY `a`.`creation_date` DESC
-                LIMIT 1)';
-
-            $addons = DBConnection::get()->query(
-                sprintf(
-                    "%s UNION %s UNION %s",
-                    sprintf($query, Addon::TRACK),
-                    sprintf($query, Addon::KART),
-                    sprintf($query, Addon::ARENA)
-                ),
+                LIMIT 1',
                 DBConnection::FETCH_ALL
             );
         }

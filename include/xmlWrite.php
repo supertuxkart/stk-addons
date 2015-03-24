@@ -115,7 +115,7 @@ function generateAssetXML()
         // Fetch addon list
         try
         {
-            $iconQuery = ($type === "kart") ? "R.`icon`," : "";
+            $type_int = Addon::stringToType($type);
 
             // TODO find a cleaner solution to writing these queries
             // TODo optimize
@@ -123,13 +123,13 @@ function generateAssetXML()
             $addons = DBConnection::get()->query(
                 "SELECT A.*, R.`file_id`, R.`creation_date` AS `date`,
                         R.`revision`, R.`format`, R.`image`,
-                        " . $iconQuery . " R.`status`, U.`username`
+                        R.`icon`, R.`status`, U.`username`
                 FROM " . DB_PREFIX . "addons A
-                    LEFT JOIN " . DB_PREFIX . $type . "s_revs R
+                    LEFT JOIN " . DB_PREFIX  . "addon_revisions R
                         ON A.`id` = R.`addon_id`
                     LEFT JOIN " . DB_PREFIX . "users U
                         ON A.`uploader` = U.`id`
-                WHERE A.`type` = '" . $type . "s'",
+                WHERE A.`type` = '" . $type_int . "s'",
                 DBConnection::FETCH_ALL
             );
 
@@ -180,7 +180,7 @@ function generateAssetXML()
                     Log::newEvent($e->getMessage());
                 }
 
-                if ($type === "kart")
+                if ($type_int === Addon::KART)
                 {
                     try
                     {
@@ -203,6 +203,7 @@ function generateAssetXML()
                 $writer->writeAttribute('min-include-version', $addon['min_include_ver']);
                 $writer->writeAttribute('max-include-version', $addon['max_include_ver']);
 
+                // TODO fix paths
                 // Write license path
                 $license_path = str_replace(
                     ['$aid', '$atype'],
@@ -277,6 +278,7 @@ function generateAssetXML2()
         try
         {
             $writer->startElement($type);
+            $type_int = Addon::stringToType($type);
 
             // we do not need to escape the $type variable because it is defined above
             $addons = DBConnection::get()->query(
@@ -284,7 +286,7 @@ function generateAssetXML2()
                 FROM `" . DB_PREFIX . "addons` A
                 LEFT JOIN `" . DB_PREFIX . "users` U
                     ON A.`uploader` = U.`id`
-                WHERE A.`type` = '" . $type . "s'",
+                WHERE A.`type` = '" . $type_int . "s'",
                 DBConnection::FETCH_ALL
             );
 
@@ -300,6 +302,7 @@ function generateAssetXML2()
                 $writer->writeAttribute('min-include-version', $addon['min_include_ver']);
                 $writer->writeAttribute('max-include-version', $addon['max_include_ver']);
 
+                // TODO fix paths
                 // Write image list path
                 $image_list_path = str_replace(
                     ['$aid', '$atype'],
@@ -323,7 +326,7 @@ function generateAssetXML2()
                 try
                 {
                     $addon_revs = DBConnection::get()->query(
-                        'SELECT * FROM `' . DB_PREFIX . $type . 's_revs` WHERE `addon_id` = :id',
+                        'SELECT * FROM `' . DB_PREFIX . 'addon_revisions` WHERE `addon_id` = :id',
                         DBConnection::FETCH_ALL,
                         [":id" => $addon['id']]
                     );
@@ -378,7 +381,7 @@ function generateAssetXML2()
                             Log::newEvent($e->getMessage());
                         }
 
-                        if ($type === "kart")
+                        if ($type_int === Addon::KART)
                         {
                             try
                             {
@@ -458,8 +461,9 @@ function writeNewsXML()
 
 function writeAssetXML()
 {
-    $count = File::write(ASSETS2_XML_PATH, generateAssetXML2());
-    $count += File::write(ASSETS_XML_PATH, generateAssetXML());
+    $count = File::write(ASSETS_XML_PATH, generateAssetXML());
+    //$count += File::write(ASSETS2_XML_PATH, generateAssetXML2());
+
 
     return $count;
 }

@@ -22,8 +22,9 @@ AccessControl::setLevel(AccessControl::PERM_ADD_ADDON);
 
 // used to set the post field with the same name
 $upload_type = !empty($_GET['upload-type']) ? Upload::stringToType($_GET['upload-type']) : null;
-$type = !empty($_GET['type']) ? $_GET['type'] : null; // addon type
-$name = !empty($_GET['name']) ? $_GET['name'] : null; // addon name
+$addon_type_string = !empty($_GET['type']) ? $_GET['type'] : null; // addon type
+$addon_type = Addon::stringToType($addon_type_string);
+$addon_name = !empty($_GET['name']) ? $_GET['name'] : null; // addon name
 
 $tpl = StkTemplate::get('upload.tpl')
     ->addBootstrapFileInputLibrary()
@@ -31,10 +32,10 @@ $tpl = StkTemplate::get('upload.tpl')
 
 $upload_form = [
     // add new things for this addon
-    "is_update"   => Addon::isAllowedType($type) && $name,
+    "is_update"   => Addon::isAllowedType($addon_type) && $addon_name,
     "addon"       => [
-        "type" => $type,
-        "name" => $name,
+        "type" => $addon_type_string,
+        "name" => $addon_name,
     ],
     "upload_type" => [
         "options"  => [
@@ -127,7 +128,7 @@ if (isset($_GET["submit"])) // form submitted
 
         try
         {
-            $upload = new Upload($_FILES['file_addon'], $name, $type, $expected_type, $moderator_message);
+            $upload = new Upload($_FILES['file_addon'], $addon_name, $addon_type, $expected_type, $moderator_message);
             $tpl->assign("warnings", $upload->getWarningMessage());
             $tpl->assign("success", $upload->getSuccessMessage());
 

@@ -184,7 +184,7 @@ class ClientSession
         $result_array['f_request'] = [];
         foreach ($result as $notification)
         {
-            if ($notification['type'] == 'f_request')
+            if ($notification['type'] === 'f_request')
             {
                 $result_array['f_request'][] = $notification['from'];
             }

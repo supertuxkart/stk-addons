@@ -28,23 +28,26 @@ $tpl = StkTemplate::get('index.tpl')
     ->addScriptInline('$("#news-messages").newsTicker();', StkTemplate::ORDER_AFTER);
 
 // Display index menu
+$type_kart = Addon::typeToString(Addon::KART);
+$type_track = Addon::typeToString(Addon::TRACK);
+$type_arena = Addon::typeToString(Addon::ARENA);
 $tpl->assign(
     'index_menu',
     [
         [
-            'href'  => File::rewrite('addons.php?type=' . Addon::KART),
+            'href'  => File::rewrite('addons.php?type=' . $type_kart),
             'label' => _h('Karts'),
-            'type'  => Addon::KART
+            'type'  => $type_kart
         ],
         [
-            'href'  => File::rewrite('addons.php?type=' . Addon::TRACK),
+            'href'  => File::rewrite('addons.php?type=' . $type_track),
             'label' => _h('Tracks'),
-            'type'  => Addon::TRACK
+            'type'  => $type_track
         ],
         [
-            'href'  => File::rewrite('addons.php?type=' . Addon::ARENA),
+            'href'  => File::rewrite('addons.php?type=' . $type_arena),
             'label' => _h('Arenas'),
-            'type'  => Addon::ARENA
+            'type'  => $type_arena
         ],
         [
             'href'  => 'https://github.com/supertuxkart/stkaddons/wiki',

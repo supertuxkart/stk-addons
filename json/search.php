@@ -34,17 +34,18 @@ switch ($_GET["data-type"])
         }
 
         $return_html = isset($_GET["return-html"]) ? true : false;
+        $addon_type = Addon::stringToType($_GET["addon-type"]);
         $addons = [];
         try
         {
-            $addons = Addon::search($_GET["query"], $_GET["addon-type"], $_GET["flags"]);
+            $addons = Addon::search($_GET["query"], $addon_type, $_GET["flags"]);
         }
         catch(AddonException $e)
         {
             exit_json_error($e->getMessage());
         }
 
-        $template_addons = Addon::filterMenuTemplate($addons, $_GET["addon-type"]);
+        $template_addons = Addon::filterMenuTemplate($addons);
         if ($return_html)
         {
             $addons_html = StkTemplate::get("addons/menu.tpl")
@@ -55,8 +56,6 @@ switch ($_GET["data-type"])
         }
 
         exit_json_success("", ["addons" => $template_addons]);
-        break;
-
         break;
 
     case "bug":

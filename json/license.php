@@ -42,7 +42,6 @@ if (!Addon::exists($addon_id))
 
 // Addon exists, get images
 $addon = Addon::get($addon_id);
-$license = h($addon->getLicense());
 
 // This isn't really JSON, but no reason to wrap one value in braces
-echo $license;
+echo h($addon->getLicense());

@@ -21,26 +21,40 @@ require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
 $tpl = StkTemplate::get("stats/page/addons.tpl");
 
-$query_addon_revisions = "SELECT `addon_id`, `addon_type`, `path`, `date_added`, `downloads`
-    FROM `" . DB_PREFIX . "files`
-    WHERE `type` = 'addon'
+$query_addon_revisions = "SELECT `addon_id`, AT.`name_singular` as `addon_type`, `path`, `date_added`, `downloads`
+    FROM `" . DB_PREFIX . "addons` A
+    INNER JOIN " . DB_PREFIX . "files F
+        ON A.id = F.addon_id
+    INNER JOIN " . DB_PREFIX . "addon_types AT
+        ON A.`type` = AT.`type`
+    WHERE F.`type` = 'addon'
     ORDER BY `addon_id` ASC, `date_added` ASC";
 
-$query_addon_cumulative = "SELECT `a`.`id`, `a`.`type`, `a`.`name`, SUM(`f`.`downloads`) AS `dl_count`
-    FROM `" . DB_PREFIX . "addons` `a`, `" . DB_PREFIX . "files` `f`
-    WHERE `a`.`id` = `f`.`addon_id`
-    AND `f`.`type` = 'addon'
-    GROUP BY `a`.`id`
-    ORDER BY `a`.`id` ASC";
+$query_addon_cumulative = "SELECT A.`id`, AT.`name_singular` as `type`, A.`name`, SUM(F.`downloads`) AS `dl_count`
+    FROM `" . DB_PREFIX . "addons` A
+    INNER JOIN `" . DB_PREFIX . "files` F
+        ON A.id = F.addon_id
+    INNER JOIN " . DB_PREFIX . "addon_types AT
+        ON A.`type` = AT.`type`
+    WHERE A.`id` = F.`addon_id`
+    AND F.`type` = 'addon'
+    GROUP BY A.`id`
+    ORDER BY A.`id` ASC";
 
-$query_addon_user = "SELECT `a`.`id`, `a`.`type`, `a`.`name`, `u`.`name` AS `uploader`,
-    `a`.`creation_date`, `a`.`designer`, `a`.`description`, `a`.`license`
-    FROM `" . DB_PREFIX . "addons` `a`
-    LEFT JOIN `" . DB_PREFIX . "users` `u`
-    ON `a`.`uploader` = `u`.`id`
-    ORDER BY `a`.`id` ASC";
+$query_addon_user = "SELECT A.`id`, AT.`name_singular` as `type`, A.`name`, U.`username` AS `uploader`,
+    A.`creation_date`, A.`designer`, A.`description`, A.`license`
+    FROM `" . DB_PREFIX . "addons` A
+    INNER JOIN `" . DB_PREFIX . "users` U
+        ON A.`uploader` = U.`id`
+    INNER JOIN " . DB_PREFIX . "addon_types AT
+        ON A.`type` = AT.`type`
+    ORDER BY A.`id` ASC";
 
-$query_addon_type = "SELECT `type`, COUNT(`id`) AS `count` FROM `" . DB_PREFIX . "addons` GROUP BY `type`";
+$query_addon_type = "SELECT AT.`name_plural` as `type`, COUNT(`id`) AS `count`
+    FROM `" . DB_PREFIX . "addons` A
+    INNER JOIN " . DB_PREFIX . "addon_types AT
+        ON A.`type` = AT.`type`
+    GROUP BY `type`";
 
 $tpl_data = [
     "sections" => [

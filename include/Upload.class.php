@@ -115,7 +115,7 @@ class Upload
     private $addon_id;
 
     /**
-     * @var string
+     * @var int
      */
     private $addon_type;
 
@@ -142,7 +142,7 @@ class Upload
      *
      * @param array  $file_record
      * @param string $addon_name
-     * @param string $addon_type
+     * @param int    $addon_type
      * @param int    $expected_type see File::SOURCE, FILE::ADDON
      * @param string $moderator_message
      */
@@ -298,8 +298,7 @@ class Upload
         }
 
         $this->success[] = _h('Successfully uploaded image.');
-        $this->success[] =
-            '<a href="addons.php?type=' . $this->addon_type . '&amp;name=' . $this->addon_id . '">' . _h('Continue to addon.') . '</a>';
+        $this->success[] = File::link(Addon::buildPermalink($this->addon_type, $this->addon_id), _h('Continue to addon.'));
     }
 
     /**
@@ -334,7 +333,7 @@ class Upload
             $this->storeUploadArchive('source');
 
             $this->success[] = _h('Successfully uploaded source archive.');
-            $this->success[] = File::link('addons.php?type=' . $this->addon_type . '&amp;name=' . $this->addon_id, _h('Continue.'));
+            $this->success[] = File::link(Addon::buildPermalink($this->addon_type, $this->addon_id), _h('Continue.'));
 
             return;
         }
@@ -422,8 +421,7 @@ class Upload
         $this->success[] = _h(
             '(Uploading the sources to your add-on enables others to improve your work and also ensure your add-on will not be lost in the future if new SuperTuxKart versions are not compatible with the current format.)'
         );
-        $this->success[] = '<a href="' . File::rewrite('addons.php?type=' . $this->addon_type . '&amp;name=' . $this->addon_id) . '">'
-            . _h('Click here to view your add-on.') . '</a>';
+        $this->success[] = File::link(Addon::buildPermalink($this->addon_type, $this->addon_id), _h('Click here to view your add-on.'));
     }
 
     /**
@@ -766,7 +764,7 @@ class Upload
     /**
      * Check if the type is allowed
      *
-     * @param string $type
+     * @param int $type
      *
      * @return bool
      */
@@ -778,7 +776,7 @@ class Upload
     /**
      * Return the appropriate upload type for the string provided
      *
-     * @param $string
+     * @param string $string
      *
      * @return int
      */

@@ -24,7 +24,7 @@ require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
 $_GET['type'] = (isset($_GET['type'])) ? $_GET['type'] : null;
 $_GET['name'] = (isset($_GET['name'])) ? Addon::cleanId($_GET['name']) : null; // name is actually the id
 $_GET['rev'] = (isset($_GET['rev'])) ? (int)$_GET['rev'] : null;
-$addon_exists = is_null($_GET['name']) ? false : Addon::exists($_GET["name"]);
+$addon_exists = Addon::exists($_GET["name"]);
 $status = "";
 
 // addon type is optional
@@ -34,7 +34,7 @@ if (!$_GET['type'])
 }
 
 // check type
-switch ($_GET['type'])
+switch (Addon::stringToType($_GET['type']))
 {
     case Addon::TRACK:
         $type_label = _h('Tracks');
@@ -49,7 +49,7 @@ switch ($_GET['type'])
         break;
 
     default:
-        exit(_h('Invalid addon type.'));
+        exit(_h('Invalid addon type.')); // TODO redirect with error
         break;
 }
 
@@ -72,9 +72,9 @@ $tpl = StkTemplate::get("addons/index.tpl")
     ->addBootstrapMultiSelectLibrary()
     ->addScriptInclude("addon.js");
 $tpl_data = [
-    'menu'   => Util::ob_get_require_once(ROOT_PATH . "addons-menu.php"),
-    'body'   => '',
-    'type'   => $_GET['type'],
+    'menu'    => Util::ob_get_require_once(ROOT_PATH . "addons-menu.php"),
+    'body'    => '',
+    'type'    => $_GET['type'],
     'status'  => $status
 ];
 

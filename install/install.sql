@@ -357,17 +357,41 @@ CREATE TABLE IF NOT EXISTS `v3_host_votes` (
 -- --------------------------------------------------------------------------------
 -- --------------------------------------------------------------------------------
 --
+-- Table structure for table `v3_addon_types`
+--
+CREATE TABLE IF NOT EXISTS `v3_addon_types` (
+    `type`          INT UNSIGNED NOT NULL,
+    `name_singular` VARCHAR(30)  NOT NULL,
+    `name_plural`   VARCHAR(30)  NOT NULL,
+    PRIMARY KEY (`type`)
+)
+    ENGINE =InnoDB
+    DEFAULT CHARSET =utf8mb4
+    COLLATE =utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `v3_addon_types`
+--
+INSERT INTO `v3_addon_types` (`type`, `name_singular`, `name_plural`) VALUES
+    (1, 'kart', 'karts'),
+    (2, 'track', 'tracks'),
+    (3, 'arena', 'arenas')
+ON DUPLICATE KEY UPDATE `type` = VALUES(`type`), `name_singular` = VALUES(`name_singular`),
+    `name_plural`              = VALUES(`name_plural`);
+
+-- --------------------------------------------------------------------------------
+--
 -- Table structure for table `v3_addons`
 --
 CREATE TABLE IF NOT EXISTS `v3_addons` (
-    `id`              VARCHAR(30)                       NOT NULL,
-    `type`            ENUM('karts', 'tracks', 'arenas') NOT NULL,
-    `name`            VARCHAR(64)                       NOT NULL,
+    `id`              VARCHAR(30)  NOT NULL,
+    `type`            INT UNSIGNED NOT NULL,
+    `name`            VARCHAR(64)  NOT NULL,
     `uploader`        INT UNSIGNED DEFAULT NULL,
-    `creation_date`   TIMESTAMP                         NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `designer`        VARCHAR(64)                       NOT NULL,
-    `props`           INT UNSIGNED                      NOT NULL DEFAULT '0',
-    `description`     VARCHAR(140)                      NOT NULL,
+    `creation_date`   TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `designer`        VARCHAR(64)  NOT NULL,
+    `props`           INT UNSIGNED NOT NULL DEFAULT '0',
+    `description`     VARCHAR(140) NOT NULL,
     `license`         TEXT,
     `min_include_ver` VARCHAR(16) DEFAULT NULL,
     `max_include_ver` VARCHAR(16) DEFAULT NULL,
@@ -376,6 +400,9 @@ CREATE TABLE IF NOT EXISTS `v3_addons` (
     KEY `uploader` (`uploader`),
     CONSTRAINT `v3_addons_ibfk_1` FOREIGN KEY (`uploader`) REFERENCES `v3_users` (`id`)
         ON DELETE SET NULL
+        ON UPDATE NO ACTION,
+    CONSTRAINT `v3_addons_ibfk_2` FOREIGN KEY (`type`) REFERENCES `v3_addon_types` (`type`)
+        ON DELETE NO ACTION
         ON UPDATE NO ACTION
 )
     ENGINE =InnoDB
@@ -420,63 +447,12 @@ CREATE TABLE IF NOT EXISTS `v3_files_delete` (
     DEFAULT CHARSET =utf8mb4
     COLLATE =utf8mb4_unicode_ci;
 
--- --------------------------------------------------------------------------------
---
--- Table structure for table `v3_arenas_revs`
---
-CREATE TABLE IF NOT EXISTS `v3_arenas_revs` (
-    `addon_id`       VARCHAR(30)        NOT NULL,
-    `file_id`        INT UNSIGNED       NOT NULL DEFAULT '0',
-    `creation_date`  TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `revision`       TINYINT            NOT NULL DEFAULT '1',
-    `format`         TINYINT            NOT NULL,
-    `image`          INT UNSIGNED       NOT NULL DEFAULT '0',
-    `status`         MEDIUMINT UNSIGNED NOT NULL DEFAULT '0',
-    `moderator_note` VARCHAR(4096) DEFAULT NULL,
-    PRIMARY KEY (`addon_id`, `revision`),
-    KEY `status` (`status`),
-    CONSTRAINT `v3_arenas_revs_ibfk_1` FOREIGN KEY (`addon_id`) REFERENCES `v3_addons` (`id`)
-        ON DELETE CASCADE
-        ON UPDATE NO ACTION,
-    CONSTRAINT `v3_arenas_revs_ibfk_2` FOREIGN KEY (`file_id`) REFERENCES `v3_files` (`id`)
-        ON DELETE NO ACTION
-        ON UPDATE NO ACTION
-)
-    ENGINE =InnoDB
-    DEFAULT CHARSET =utf8mb4
-    COLLATE =utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------------------------------
 --
--- Table structure for table `v3_tracks_revs`
+-- Table structure for table `v3_addon_revisions`
 --
-CREATE TABLE IF NOT EXISTS `v3_tracks_revs` (
-    `addon_id`       VARCHAR(30)        NOT NULL,
-    `file_id`        INT UNSIGNED       NOT NULL DEFAULT '0',
-    `creation_date`  TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `revision`       TINYINT            NOT NULL DEFAULT '1',
-    `format`         TINYINT            NOT NULL,
-    `image`          INT UNSIGNED       NOT NULL DEFAULT '0',
-    `status`         MEDIUMINT UNSIGNED NOT NULL DEFAULT '0',
-    `moderator_note` VARCHAR(4096) DEFAULT NULL,
-    PRIMARY KEY (`addon_id`, `revision`),
-    KEY `status` (`status`),
-    CONSTRAINT `v3_tracks_revs_ibfk_1` FOREIGN KEY (`addon_id`) REFERENCES `v3_addons` (`id`)
-        ON DELETE CASCADE
-        ON UPDATE NO ACTION,
-    CONSTRAINT `v3_tracks_revs_ibfk_2` FOREIGN KEY (`file_id`) REFERENCES `v3_files` (`id`)
-        ON DELETE NO ACTION
-        ON UPDATE NO ACTION
-)
-    ENGINE =InnoDB
-    DEFAULT CHARSET =utf8mb4
-    COLLATE =utf8mb4_unicode_ci;
-
--- --------------------------------------------------------------------------------
---
--- Table structure for table `v3_karts_revs`
---
-CREATE TABLE IF NOT EXISTS `v3_karts_revs` (
+CREATE TABLE IF NOT EXISTS `v3_addon_revisions` (
     `addon_id`       VARCHAR(30)        NOT NULL,
     `file_id`        INT UNSIGNED       NOT NULL DEFAULT '0',
     `creation_date`  TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -488,10 +464,11 @@ CREATE TABLE IF NOT EXISTS `v3_karts_revs` (
     `moderator_note` VARCHAR(4096) DEFAULT NULL,
     PRIMARY KEY (`addon_id`, `revision`),
     KEY `status` (`status`),
-    CONSTRAINT `v3_karts_revs_ibfk_1` FOREIGN KEY (`addon_id`) REFERENCES `v3_addons` (`id`)
+    KEY `addon_id` (`addon_id`),
+    CONSTRAINT `v3_addon_revisions_ibfk_1` FOREIGN KEY (`addon_id`) REFERENCES `v3_addons` (`id`)
         ON DELETE CASCADE
         ON UPDATE NO ACTION,
-    CONSTRAINT `v3_karts_revs_ibfk_2` FOREIGN KEY (`file_id`) REFERENCES `v3_files` (`id`)
+    CONSTRAINT `v3_addon_revisions_ibfk_2` FOREIGN KEY (`file_id`) REFERENCES `v3_files` (`id`)
         ON DELETE NO ACTION
         ON UPDATE NO ACTION
 )

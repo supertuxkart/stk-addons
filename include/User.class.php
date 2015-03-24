@@ -229,7 +229,9 @@ class User extends Base
     }
 
     /**
-     * @param string $type
+     * Get the users addons data
+     *
+     * @param int $type
      *
      * @return array|int|null
      * @throws UserException
@@ -238,7 +240,7 @@ class User extends Base
     {
         if (!Addon::isAllowedType($type))
         {
-            throw new UserException(sprintf("Addon type=%s does not exist", $type));
+            throw new UserException(sprintf("Addon type=%s does not exist", Addon::typeToString($type)));
         }
 
         try
@@ -246,12 +248,15 @@ class User extends Base
             $addons = DBConnection::get()->query(
                 'SELECT `a`.*, `r`.`status`
                 FROM `' . DB_PREFIX . 'addons` `a`
-                LEFT JOIN `' . DB_PREFIX . $type . '_revs` `r`
+                LEFT JOIN `' . DB_PREFIX . 'addon_revisions` `r`
                     ON `a`.`id` = `r`.`addon_id`
                 WHERE `a`.`uploader` = :uploader
                     AND `a`.`type` = :addon_type',
                 DBConnection::FETCH_ALL,
-                [":uploader" => $this->id, ":addon_type" => $type],
+                [
+                    ":uploader"   => $this->id,
+                    ":addon_type" => $type
+                ],
                 [":uploader" => DBConnection::PARAM_INT]
             );
         }

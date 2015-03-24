@@ -23,11 +23,11 @@
  */
 class Addon extends Base
 {
-    const KART = "karts";
+    const KART = 1;
 
-    const TRACK = "tracks";
+    const TRACK = 2;
 
-    const ARENA = "arenas";
+    const ARENA = 3;
 
     const SORT_FEATURED = "featured";
 
@@ -45,7 +45,7 @@ class Addon extends Base
     private $id;
 
     /**
-     * @var string
+     * @var int
      */
     private $type;
 
@@ -125,7 +125,7 @@ class Addon extends Base
         {
             $revisions = DBConnection::get()->query(
                 'SELECT *
-                FROM `' . DB_PREFIX . $this->type . '_revs`
+                FROM `' . DB_PREFIX . 'addon_revisions`
                 WHERE `addon_id` = :id
                 ORDER BY `revision` ASC',
                 DBConnection::FETCH_ALL,
@@ -183,14 +183,14 @@ class Addon extends Base
     private function __construct(array $data, $load_revisions = true)
     {
         $this->id = (string)static::cleanId($data['id']);
-        $this->type = $data['type'];
+        $this->type = (int)$data['type'];
         $this->name = $data['name'];
         $this->uploader_id = (int)$data['uploader'];
         $this->date_creation = $data['creation_date'];
         $this->designer = $data['designer'];
         $this->description = $data['description'];
         $this->license = $data['license'];
-        $this->permalink = ROOT_LOCATION . 'addons.php?type=' . $this->type . '&amp;name=' . $this->id;
+        $this->permalink = static::buildPermalink($this->type, $this->id);
         $this->include_min = $data['min_include_ver'];
         $this->include_max = $data['max_include_ver'];
 
@@ -274,7 +274,7 @@ class Addon extends Base
 
         try
         {
-            DBConnection::get()->insert($this->type . '_revs', $fields_data);
+            DBConnection::get()->insert('addon_revisions', $fields_data);
         }
         catch(DBException $e)
         {
@@ -290,7 +290,7 @@ class Addon extends Base
                     sprintf(
                         "%s has uploaded a new revision for %s '%s' %s",
                         User::getLoggedUserName(),
-                        $this->type,
+                        static::typeToString($this->type),
                         $attributes['name'],
                         (string)$this->id
                     )
@@ -383,7 +383,7 @@ class Addon extends Base
         try
         {
             DBConnection::get()->delete(
-                $this->type . '_revs',
+                "addon_revisions",
                 "`addon_id` = :id AND `revision` = :revision",
                 [
                     ':id'       => $this->id,
@@ -526,7 +526,7 @@ class Addon extends Base
     /**
      * Get the addon type
      *
-     * @return string
+     * @return int
      */
     public function getType()
     {
@@ -616,7 +616,7 @@ class Addon extends Base
         {
             $file_id_lookup = DBConnection::get()->query(
                 'SELECT `file_id`
-                FROM `' . DB_PREFIX . $this->type . '_revs`
+                FROM `' . DB_PREFIX . 'addon_revisions`
                 WHERE `addon_id` = :addon_id
                 AND `revision` = :revision',
                 DBConnection::FETCH_FIRST,
@@ -774,7 +774,7 @@ class Addon extends Base
         try
         {
             DBConnection::get()->query(
-                "UPDATE `" . DB_PREFIX . $this->type . "_revs`
+                "UPDATE `" . DB_PREFIX . "addon_revisions`
                 SET `" . $field . "` = :image_id
                 WHERE `addon_id` = :addon_id
                 AND `status` & " . F_LATEST,
@@ -947,7 +947,7 @@ class Addon extends Base
             try
             {
                 DBConnection::get()->query(
-                    'UPDATE `' . DB_PREFIX . $this->type . '_revs`
+                    'UPDATE `' . DB_PREFIX . 'addon_revisions`
                     SET `moderator_note` = :moderator_note
                     WHERE `addon_id` = :addon_id
                     AND `revision` = :revision',
@@ -1170,7 +1170,7 @@ class Addon extends Base
             try
             {
                 DBConnection::get()->query(
-                    'UPDATE `' . DB_PREFIX . $this->type . '_revs`
+                    'UPDATE `' . DB_PREFIX . 'addon_revisions`
                     SET `status` = :status
                     WHERE `addon_id` = :addon_id
                     AND `revision` = :revision',
@@ -1227,6 +1227,20 @@ class Addon extends Base
         );
 
         return new Addon($data, $load_revisions);
+    }
+
+    /**
+     * Build the permalink for an an addon name and type
+     *
+     * @param int    $addon_type
+     * @param string $addon_name
+     * @param string $prefix
+     *
+     * @return string
+     */
+    public static function buildPermalink($addon_type, $addon_name, $prefix = ROOT_LOCATION)
+    {
+        return  $prefix . 'addons.php?type=' . static::typeToString($addon_type) . '&amp;name=' . $addon_name;
     }
 
     /**
@@ -1317,7 +1331,7 @@ class Addon extends Base
     /**
      * Check if the type is allowed
      *
-     * @param string $type
+     * @param int $type
      *
      * @return bool true if allowed and false otherwise
      */
@@ -1333,6 +1347,59 @@ class Addon extends Base
     public static function getAllowedTypes()
     {
         return [static::KART, static::TRACK, static::ARENA];
+    }
+
+    /**
+     * Return the appropriate addon type for the string provided
+     *
+     * @param string $string
+     *
+     * @return int
+     */
+    public static function stringToType($string)
+    {
+        switch ($string)
+        {
+            case 'kart':
+            case 'karts':
+                return static::KART;
+
+            case 'track':
+            case 'tracks':
+                return static::TRACK;
+
+            case 'arena':
+            case 'arenas':
+                return static::ARENA;
+
+            default:
+                return (int)$string;
+        }
+    }
+
+    /**
+     * Return the appropriate addon string for the type provided
+     *
+     * @param int $type
+     *
+     * @return string
+     */
+    public static function typeToString($type)
+    {
+        switch ($type)
+        {
+            case static::KART:
+                return "karts";
+
+            case static::TRACK:
+                return "tracks";
+
+            case static::ARENA:
+                return "arenas";
+
+            default:
+                return "karts";
+        }
     }
 
     /**
@@ -1378,12 +1445,11 @@ class Addon extends Base
      * Filter an array of addons for the addon menu template
      *
      * @param Addon[] $addons
-     * @param string  $type       addon type
      * @param string  $current_id the current selected addon
      *
      * @return array
      */
-    public static function filterMenuTemplate($addons, $type, $current_id = null)
+    public static function filterMenuTemplate($addons, $current_id = null)
     {
         $has_permission = User::hasPermission(AccessControl::PERM_EDIT_ADDONS);
         $template_addons = [];
@@ -1438,15 +1504,14 @@ class Addon extends Base
                 $class .= " active";
             }
 
-            $real_url = sprintf("addons.php?type=%s&amp;name=%s", $type, $addon->getId());
             $template_addons[] = [
                 "id"          => $addon->getId(),
                 "class"       => $class,
                 "is_featured" => Addon::isFeatured($addon->getStatus()),
                 "name"        => h($addon->getName()),
-                "real_url"    => $real_url,
+                "real_url"    => $addon->getPermalink(),
                 "image_src"   => $icon,
-                "disp"        => File::rewrite($real_url)
+                "disp"        => File::rewrite($addon->getPermalink())
             ];
         }
 
@@ -1476,12 +1541,14 @@ class Addon extends Base
         }
         if (!Addon::isAllowedType($type) && $type !== "all")
         {
-            throw new AddonException(sprintf("Invalid search type = %s is not recognized", $type));
+            throw new AddonException(sprintf("Invalid search type = %s is not recognized", Addon::typeToString($type)));
         }
 
+        // TODO fix
         // build query
         $query = "SELECT id FROM `" . DB_PREFIX . "addons` WHERE";
 
+        // TODO fix
         // check addon type
         if ($type !== "all")
         {
@@ -1528,7 +1595,7 @@ class Addon extends Base
     /**
      * Get all the addon's of a type
      *
-     * @param string $addon_type   type of addon
+     * @param int    $addon_type   type of addon
      * @param int    $limit        the number of results
      * @param int    $current_page current page that the user is on
      * @param string $sort_type    the sort type
@@ -1547,7 +1614,7 @@ class Addon extends Base
         // build query
         $query = 'SELECT `a`.`id`, (`r`.`status` & ' . F_FEATURED . ') AS `featured`, `r`.`creation_date` as `date`
                   FROM `' . DB_PREFIX . 'addons` `a`
-                  LEFT JOIN `' . DB_PREFIX . $addon_type . '_revs` `r`
+                  LEFT JOIN `' . DB_PREFIX . 'addon_revisions` `r`
                   ON `a`.`id` = `r`.`addon_id`
                   WHERE `a`.`type` = :type
                   AND `r`.`status` & :latest_bit ';
@@ -1739,7 +1806,7 @@ class Addon extends Base
 
         try
         {
-            DBConnection::get()->insert($type . '_revs', $fields_data);
+            DBConnection::get()->insert('addon_revisions', $fields_data);
         }
         catch(DBException $e)
         {
@@ -1779,13 +1846,18 @@ class Addon extends Base
      */
     public static function exists($id)
     {
+        if (!$id)
+        {
+            return false;
+        }
+
         return static::existsField("addons", "id", Addon::cleanId($id), DBConnection::PARAM_STR);
     }
 
     /**
      * Get the total number of addons of a type
      *
-     * @param string $type the addon type
+     * @param int $type the addon type
      *
      * @return int
      * @throws AddonException

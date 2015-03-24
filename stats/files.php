@@ -21,14 +21,22 @@ require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
 $tpl = StkTemplate::get("stats/page/files.tpl");
 
-$query_images = "SELECT `addon_id`, `addon_type`, `path`, `date_added`, `approved`, `downloads`
-    FROM `" . DB_PREFIX . "files`
-    WHERE `type` = 'image'
+$query_images = "SELECT `addon_id`, AT.`name_singular` as `addon_type`, `path`, `date_added`, `is_approved`, `downloads`
+    FROM `" . DB_PREFIX . "files` F
+    INNER JOIN " . DB_PREFIX . "addons A
+        ON A.id = F.addon_id
+    INNER JOIN " . DB_PREFIX . "addon_types AT
+        ON A.`type` = AT.`type`
+    WHERE F.`type` = 'image'
     ORDER BY `addon_id` ASC, `date_added` ASC";
 
-$query_source = "SELECT `addon_id`, `addon_type`, `path`, `date_added`, `approved`, `downloads`
-    FROM `" . DB_PREFIX . "files`
-    WHERE `type` = 'source'
+$query_source = "SELECT `addon_id`, AT.`name_singular` as `addon_type`, `path`, `date_added`, `is_approved`, `downloads`
+    FROM `" . DB_PREFIX . "files` F
+    INNER JOIN " . DB_PREFIX . "addons A
+        ON A.id = F.addon_id
+    INNER JOIN " . DB_PREFIX . "addon_types AT
+        ON A.`type` = AT.`type`
+    WHERE F.`type` = 'source'
     ORDER BY `addon_id` ASC, `date_added` ASC";
 
 $query_file_downloads_month_30 = "SELECT `date`, SUM(`value`) AS count
@@ -43,9 +51,13 @@ $query_file_downloads_months_12 = "SELECT CONCAT(MONTHNAME(`date`), ' ', YEAR(`d
     GROUP BY `month`
     ORDER BY `date` DESC";
 
-$query_downloads_addon_type = "SELECT `addon_type`, SUM(`downloads`)
-    FROM `" . DB_PREFIX . "files`
-    WHERE `type` = 'addon'
+$query_downloads_addon_type = "SELECT AT.`name_plural` as `addon_type`, SUM(`downloads`)
+    FROM `" . DB_PREFIX . "files` F
+    INNER JOIN " . DB_PREFIX . "addons A
+        ON A.id = F.addon_id
+    INNER JOIN " . DB_PREFIX . "addon_types AT
+        ON A.`type` = AT.`type`
+    WHERE F.`type` = 'addon'
     GROUP BY `addon_type`";
 
 $tpl_data = [
