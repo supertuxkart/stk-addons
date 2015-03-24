@@ -32,9 +32,9 @@ CREATE TABLE IF NOT EXISTS `v3_roles` (
     PRIMARY KEY (`id`),
     UNIQUE KEY `key_name` (`name`)
 )
-    ENGINE =InnoDB
-    DEFAULT CHARSET =utf8mb4
-    COLLATE =utf8mb4_unicode_ci
+    ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4
+    COLLATE = utf8mb4_unicode_ci
     AUTO_INCREMENT =4;
 
 --
@@ -60,9 +60,9 @@ CREATE TABLE IF NOT EXISTS `v3_role_permissions` (
         ON DELETE CASCADE
         ON UPDATE NO ACTION
 )
-    ENGINE =InnoDB
-    DEFAULT CHARSET =utf8mb4
-    COLLATE =utf8mb4_unicode_ci;
+    ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4
+    COLLATE = utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `v3_role_permissions`
@@ -115,9 +115,9 @@ CREATE TABLE IF NOT EXISTS `v3_users` (
         ON DELETE SET NULL -- TODO fix
         ON UPDATE NO ACTION
 )
-    ENGINE =InnoDB
-    DEFAULT CHARSET =utf8mb4
-    COLLATE =utf8mb4_unicode_ci;
+    ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4
+    COLLATE = utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------------------------------
 --
@@ -132,10 +132,10 @@ CREATE TABLE IF NOT EXISTS `v3_verification` (
         ON DELETE CASCADE
         ON UPDATE NO ACTION
 )
-    ENGINE =InnoDB
-    DEFAULT CHARSET =utf8mb4
-    COLLATE =utf8mb4_unicode_ci
-    COMMENT ='Used for account activation and recovery';
+    ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4
+    COLLATE = utf8mb4_unicode_ci
+    COMMENT = 'Used for account activation and recovery';
 
 -- --------------------------------------------------------------------------------
 --
@@ -147,9 +147,9 @@ CREATE TABLE IF NOT EXISTS `v3_achievements` (
     PRIMARY KEY (`id`),
     UNIQUE KEY `key_name` (`name`)
 )
-    ENGINE =InnoDB
-    DEFAULT CHARSET =utf8mb4
-    COLLATE =utf8mb4_unicode_ci;
+    ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4
+    COLLATE = utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `v3_achievements`
@@ -184,9 +184,9 @@ CREATE TABLE IF NOT EXISTS `v3_achieved` (
         ON DELETE CASCADE
         ON UPDATE NO ACTION
 )
-    ENGINE =InnoDB
-    DEFAULT CHARSET =utf8mb4
-    COLLATE =utf8mb4_unicode_ci;
+    ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4
+    COLLATE = utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------------------------------
 --
@@ -205,9 +205,9 @@ CREATE TABLE IF NOT EXISTS `v3_friends` (
         ON DELETE CASCADE
         ON UPDATE NO ACTION
 )
-    ENGINE =InnoDB
-    DEFAULT CHARSET =utf8mb4
-    COLLATE =utf8mb4_unicode_ci;
+    ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4
+    COLLATE = utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------------------------------
 --
@@ -227,9 +227,9 @@ CREATE TABLE IF NOT EXISTS `v3_notifications` (
         ON DELETE CASCADE
         ON UPDATE NO ACTION
 )
-    ENGINE =InnoDB
-    DEFAULT CHARSET =utf8mb4
-    COLLATE =utf8mb4_unicode_ci;
+    ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4
+    COLLATE = utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------------------------------
 --
@@ -247,9 +247,9 @@ CREATE TABLE IF NOT EXISTS `v3_logs` (
         ON DELETE CASCADE
         ON UPDATE NO ACTION
 )
-    ENGINE =InnoDB
-    DEFAULT CHARSET =utf8mb4
-    COLLATE =utf8mb4_unicode_ci;
+    ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4
+    COLLATE = utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------------------------------
 --
@@ -271,9 +271,9 @@ CREATE TABLE IF NOT EXISTS `v3_news` (
         ON DELETE SET NULL
         ON UPDATE NO ACTION
 )
-    ENGINE =InnoDB
-    DEFAULT CHARSET =utf8mb4
-    COLLATE =utf8mb4_unicode_ci;
+    ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4
+    COLLATE = utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------------------------------
 --
@@ -292,8 +292,8 @@ CREATE TABLE IF NOT EXISTS `v3_client_sessions` (
     UNIQUE KEY `key_session` (`uid`, `cid`)
 )
     ENGINE = MEMORY
-    DEFAULT CHARSET =utf8mb4
-    COLLATE =utf8mb4_unicode_ci;
+    DEFAULT CHARSET = utf8mb4
+    COLLATE = utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------------------------------
 --
@@ -315,9 +315,9 @@ CREATE TABLE IF NOT EXISTS `v3_servers` (
         ON DELETE CASCADE
         ON UPDATE NO ACTION
 )
-    ENGINE =InnoDB
-    DEFAULT CHARSET =utf8mb4
-    COLLATE =utf8mb4_unicode_ci;
+    ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4
+    COLLATE = utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------------------------------
 --
@@ -336,9 +336,9 @@ CREATE TABLE IF NOT EXISTS `v3_server_conn` (
         ON DELETE CASCADE
         ON UPDATE NO ACTION
 )
-    ENGINE =InnoDB
-    DEFAULT CHARSET =utf8mb4
-    COLLATE =utf8mb4_unicode_ci;
+    ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4
+    COLLATE = utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------------------------------
 --
@@ -354,9 +354,9 @@ CREATE TABLE IF NOT EXISTS `v3_host_votes` (
         ON DELETE CASCADE
         ON UPDATE NO ACTION
 )
-    ENGINE =InnoDB
-    DEFAULT CHARSET =utf8mb4
-    COLLATE =utf8mb4_unicode_ci;
+    ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4
+    COLLATE = utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------------------------------
 -- --------------------------------------------------------------------------------
@@ -369,9 +369,9 @@ CREATE TABLE IF NOT EXISTS `v3_addon_types` (
     `name_plural`   VARCHAR(30)  NOT NULL,
     PRIMARY KEY (`type`)
 )
-    ENGINE =InnoDB
-    DEFAULT CHARSET =utf8mb4
-    COLLATE =utf8mb4_unicode_ci;
+    ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4
+    COLLATE = utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `v3_addon_types`
@@ -409,9 +409,9 @@ CREATE TABLE IF NOT EXISTS `v3_addons` (
         ON DELETE NO ACTION
         ON UPDATE NO ACTION
 )
-    ENGINE =InnoDB
-    DEFAULT CHARSET =utf8mb4
-    COLLATE =utf8mb4_unicode_ci;
+    ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4
+    COLLATE = utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------------------------------
 --
@@ -422,9 +422,9 @@ CREATE TABLE IF NOT EXISTS `v3_file_types` (
     `name` VARCHAR(30)  NOT NULL,
     PRIMARY KEY (`type`)
 )
-    ENGINE =InnoDB
-    DEFAULT CHARSET =utf8mb4
-    COLLATE =utf8mb4_unicode_ci;
+    ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4
+    COLLATE = utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `v3_file_types`
@@ -457,9 +457,9 @@ CREATE TABLE IF NOT EXISTS `v3_files` (
         ON DELETE NO ACTION
         ON UPDATE NO ACTION
 )
-    ENGINE =InnoDB
-    DEFAULT CHARSET =utf8mb4
-    COLLATE =utf8mb4_unicode_ci;
+    ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4
+    COLLATE = utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------------------------------
 --
@@ -473,9 +473,9 @@ CREATE TABLE IF NOT EXISTS `v3_files_delete` (
         ON DELETE CASCADE
         ON UPDATE NO ACTION
 )
-    ENGINE =InnoDB
-    DEFAULT CHARSET =utf8mb4
-    COLLATE =utf8mb4_unicode_ci;
+    ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4
+    COLLATE = utf8mb4_unicode_ci;
 
 
 -- --------------------------------------------------------------------------------
@@ -503,9 +503,9 @@ CREATE TABLE IF NOT EXISTS `v3_addon_revisions` (
         ON DELETE NO ACTION
         ON UPDATE NO ACTION
 )
-    ENGINE =InnoDB
-    DEFAULT CHARSET =utf8mb4
-    COLLATE =utf8mb4_unicode_ci;
+    ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4
+    COLLATE = utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------------------------------
 --
@@ -521,9 +521,9 @@ CREATE TABLE IF NOT EXISTS `v3_cache` (
         ON DELETE CASCADE
         ON UPDATE NO ACTION
 )
-    ENGINE =InnoDB
-    CHARSET =utf8mb4
-    COLLATE =utf8mb4_unicode_ci;
+    ENGINE = InnoDB
+    CHARSET = utf8mb4
+    COLLATE = utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------------------------------
 --
@@ -542,9 +542,9 @@ CREATE TABLE IF NOT EXISTS `v3_votes` (
         ON DELETE CASCADE
         ON UPDATE NO ACTION
 )
-    ENGINE =InnoDB
-    DEFAULT CHARSET =utf8mb4
-    COLLATE =utf8mb4_unicode_ci;
+    ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4
+    COLLATE = utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------------------------------
 --
@@ -581,9 +581,9 @@ CREATE TABLE IF NOT EXISTS `v3_bugs` (
         ON DELETE CASCADE
         ON UPDATE NO ACTION
 )
-    ENGINE =InnoDB
-    DEFAULT CHARSET =utf8mb4
-    COLLATE =utf8mb4_unicode_ci;
+    ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4
+    COLLATE = utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------------------------------
 --
@@ -609,9 +609,9 @@ CREATE TABLE IF NOT EXISTS `v3_bugs_comments` (
         ON DELETE CASCADE
         ON UPDATE NO ACTION
 )
-    ENGINE =InnoDB
-    DEFAULT CHARSET =utf8mb4
-    COLLATE =utf8mb4_unicode_ci;
+    ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4
+    COLLATE = utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------------------------------
 -- --------------------------------------------------------------------------------
@@ -624,9 +624,9 @@ CREATE TABLE IF NOT EXISTS `v3_clients` (
     `is_disabled`  BOOL         NOT NULL DEFAULT '0',
     PRIMARY KEY (`agent_string`(32))
 )
-    ENGINE =InnoDB
-    DEFAULT CHARSET =utf8mb4
-    COLLATE =utf8mb4_unicode_ci;
+    ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4
+    COLLATE = utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------------------------------
 --
@@ -637,9 +637,9 @@ CREATE TABLE IF NOT EXISTS `v3_config` (
     `value` VARCHAR(512) NOT NULL,
     PRIMARY KEY (`name`)
 )
-    ENGINE =InnoDB
-    DEFAULT CHARSET =utf8mb4
-    COLLATE =utf8mb4_unicode_ci;
+    ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4
+    COLLATE = utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `v3_config`
@@ -669,9 +669,9 @@ CREATE TABLE IF NOT EXISTS `v3_music` (
     UNIQUE KEY `key_file` (`file`),
     UNIQUE KEY `key_xml_filename` (`xml_filename`)
 )
-    ENGINE =InnoDB
-    DEFAULT CHARSET =utf8mb4
-    COLLATE =utf8mb4_unicode_ci;
+    ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4
+    COLLATE = utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------------------------------
 --
@@ -684,6 +684,6 @@ CREATE TABLE IF NOT EXISTS `v3_stats` (
     PRIMARY KEY (`date`, `type`(40)),
     KEY `key_date` (`date`)
 )
-    ENGINE =InnoDB
-    DEFAULT CHARSET =utf8mb4
-    COLLATE =utf8mb4_unicode_ci;
+    ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4
+    COLLATE = utf8mb4_unicode_ci;
