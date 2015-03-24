@@ -1398,7 +1398,7 @@ class Addon extends Base
                 return "arenas";
 
             default:
-                return "karts";
+                return sprintf("<type '%s' not recognized>", h($type));
         }
     }
 
@@ -1522,7 +1522,7 @@ class Addon extends Base
      * Search for an addon by its name or description
      *
      * @param string $search_query the search query
-     * @param string $type         the addon type
+     * @param string $type         the addon type as a string or 'all' to search all addons
      * @param array  $search_flags an array of flags
      *
      * @throws AddonException
@@ -1539,20 +1539,17 @@ class Addon extends Base
         {
             throw new AddonException(_h("No search field specified"));
         }
-        if (!Addon::isAllowedType($type) && $type !== "all")
+        $type_int = Addon::stringToType($type);
+        if (!Addon::isAllowedType($type_int) && $type !== "all")
         {
-            throw new AddonException(sprintf("Invalid search type = %s is not recognized", Addon::typeToString($type)));
+            throw new AddonException(sprintf("Invalid search type = %s is not recognized ", $type));
         }
 
-        // TODO fix
         // build query
-        $query = "SELECT id FROM `" . DB_PREFIX . "addons` WHERE";
-
-        // TODO fix
-        // check addon type
-        if ($type !== "all")
+        $query = "SELECT * FROM `" . DB_PREFIX . "addons` WHERE";
+        if ($type !== "all") // search for specific addon
         {
-            $query .= sprintf(" (`type` = '%s') AND", $type);
+            $query .= sprintf(" (`type` = '%d') AND", $type_int);
         }
 
         // check search flags
@@ -1586,7 +1583,7 @@ class Addon extends Base
         $return_addons = [];
         foreach ($addons as $addon)
         {
-            $return_addons[] = static::get($addon["id"]);
+            $return_addons[] = new static($addon);
         }
 
         return $return_addons;

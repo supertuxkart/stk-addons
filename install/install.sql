@@ -556,7 +556,7 @@ CREATE TABLE IF NOT EXISTS `v3_bugs` (
     COMMENT 'User who filed the bug report',
     `addon_id`     VARCHAR(30)   NOT NULL
     COMMENT 'The bug culprit',
-    `close_id`     INT UNSIGNED DEFAULT NULL
+    `close_id`     INT UNSIGNED DEFAULT '0'
     COMMENT 'The user who closed the bug',
     `close_reason` VARCHAR(512) DEFAULT NULL
     COMMENT 'The reason it was closed',

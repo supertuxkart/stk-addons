@@ -34,11 +34,10 @@ switch ($_GET["data-type"])
         }
 
         $return_html = isset($_GET["return-html"]) ? true : false;
-        $addon_type = Addon::stringToType($_GET["addon-type"]);
         $addons = [];
         try
         {
-            $addons = Addon::search($_GET["query"], $addon_type, $_GET["flags"]);
+            $addons = Addon::search($_GET["query"], $_GET["addon-type"], $_GET["flags"]);
         }
         catch(AddonException $e)
         {
