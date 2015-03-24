@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `v3_roles` (
     `name` VARCHAR(128) NOT NULL
     COMMENT 'The name identifier',
     PRIMARY KEY (`id`),
-    UNIQUE KEY `name` (`name`)
+    UNIQUE KEY `key_name` (`name`)
 )
     ENGINE =InnoDB
     DEFAULT CHARSET =utf8mb4
@@ -108,8 +108,9 @@ CREATE TABLE IF NOT EXISTS `v3_users` (
     `date_register` DATE                NOT NULL,
     `homepage`      VARCHAR(64) DEFAULT NULL,
     PRIMARY KEY (`id`),
-    UNIQUE KEY `username` (`username`),
-    UNIQUE KEY `email` (`email`),
+    UNIQUE KEY `key_username` (`username`),
+    UNIQUE KEY `key_email` (`email`),
+    KEY `key_role_id` (`role_id`),
     CONSTRAINT `v3_users_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `v3_roles` (`id`)
         ON DELETE SET NULL -- TODO fix
         ON UPDATE NO ACTION
@@ -144,7 +145,7 @@ CREATE TABLE IF NOT EXISTS `v3_achievements` (
     `id`   INT UNSIGNED NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(128) NOT NULL,
     PRIMARY KEY (`id`),
-    UNIQUE KEY `name` (`name`)
+    UNIQUE KEY `key_name` (`name`)
 )
     ENGINE =InnoDB
     DEFAULT CHARSET =utf8mb4
@@ -174,8 +175,8 @@ CREATE TABLE IF NOT EXISTS `v3_achieved` (
     `user_id`        INT UNSIGNED NOT NULL,
     `achievement_id` INT UNSIGNED NOT NULL,
     PRIMARY KEY (`user_id`, `achievement_id`),
-    KEY `user_id` (`user_id`),
-    KEY `achievement_id` (`achievement_id`),
+    KEY `key_user_id` (`user_id`),
+    KEY `key_achievement_id` (`achievement_id`),
     CONSTRAINT `v3_achieved_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `v3_users` (`id`)
         ON DELETE CASCADE
         ON UPDATE NO ACTION,
@@ -217,7 +218,8 @@ CREATE TABLE IF NOT EXISTS `v3_notifications` (
     `from` INT UNSIGNED NOT NULL,
     `type` VARCHAR(16)  NOT NULL,
     PRIMARY KEY (`to`, `type`),
-    KEY `to` (`to`),
+    KEY `key_to` (`to`),
+    KEY `key_from` (`from`),
     CONSTRAINT `v3_notifications_ibfk_1` FOREIGN KEY (`to`) REFERENCES `v3_users` (`id`)
         ON DELETE CASCADE
         ON UPDATE NO ACTION,
@@ -240,6 +242,7 @@ CREATE TABLE IF NOT EXISTS `v3_logs` (
     `message`    TEXT         NOT NULL,
     `is_emailed` BOOL         NOT NULL DEFAULT '0',
     PRIMARY KEY (`id`),
+    KEY `key_user_id` (`user_id`),
     CONSTRAINT `v3_logs_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `v3_users` (`id`)
         ON DELETE CASCADE
         ON UPDATE NO ACTION
@@ -263,6 +266,7 @@ CREATE TABLE IF NOT EXISTS `v3_news` (
     `is_active`      BOOL         NOT NULL DEFAULT '1',
     `is_dynamic`     BOOL         NOT NULL DEFAULT '0',
     PRIMARY KEY (`id`),
+    KEY `key_author_id` (`author_id`),
     CONSTRAINT `v3_news_ibfk_1` FOREIGN KEY (`author_id`) REFERENCES `v3_users` (`id`)
         ON DELETE SET NULL
         ON UPDATE NO ACTION
@@ -285,7 +289,7 @@ CREATE TABLE IF NOT EXISTS `v3_client_sessions` (
     `port`         SMALLINT UNSIGNED NOT NULL DEFAULT '0',
     `last-online`  TIMESTAMP         NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`uid`),
-    UNIQUE KEY `session` (`uid`, `cid`)
+    UNIQUE KEY `key_session` (`uid`, `cid`)
 )
     ENGINE = MEMORY
     DEFAULT CHARSET =utf8mb4
@@ -306,7 +310,7 @@ CREATE TABLE IF NOT EXISTS `v3_servers` (
     `current_players` TINYINT UNSIGNED  NOT NULL DEFAULT '0'
     COMMENT 'Isn''t exact. Just to show in the server-list, where it doesn''t need to be exact.',
     PRIMARY KEY (`id`),
-    KEY `hostid` (`host_id`),
+    KEY `key_hostid` (`host_id`),
     CONSTRAINT `v3_servers_ibfk_1` FOREIGN KEY (`host_id`) REFERENCES `v3_users` (`id`)
         ON DELETE CASCADE
         ON UPDATE NO ACTION
@@ -324,7 +328,7 @@ CREATE TABLE IF NOT EXISTS `v3_server_conn` (
     `server_id`  INT UNSIGNED NOT NULL,
     `is_request` BOOL         NOT NULL DEFAULT '1',
     PRIMARY KEY (`user_id`),
-    KEY `server_id` (`server_id`),
+    KEY `key_server_id` (`server_id`),
     CONSTRAINT `v3_server_conn_ibfk_1` FOREIGN KEY (`server_id`) REFERENCES `v3_servers` (`id`)
         ON DELETE CASCADE
         ON UPDATE NO ACTION,
@@ -345,7 +349,7 @@ CREATE TABLE IF NOT EXISTS `v3_host_votes` (
     `host_id` INT UNSIGNED NOT NULL,
     `vote`    INT          NOT NULL,
     PRIMARY KEY (`user_id`, `host_id`),
-    KEY `hostid` (`host_id`),
+    KEY `key_hostid` (`host_id`),
     CONSTRAINT `v3_host_votes_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `v3_users` (`id`)
         ON DELETE CASCADE
         ON UPDATE NO ACTION
@@ -396,8 +400,8 @@ CREATE TABLE IF NOT EXISTS `v3_addons` (
     `min_include_ver` VARCHAR(16) DEFAULT NULL,
     `max_include_ver` VARCHAR(16) DEFAULT NULL,
     PRIMARY KEY (`id`),
-    KEY `type` (`type`),
-    KEY `uploader` (`uploader`),
+    KEY `key_uploader` (`uploader`),
+    KEY `key_type` (`type`),
     CONSTRAINT `v3_addons_ibfk_1` FOREIGN KEY (`uploader`) REFERENCES `v3_users` (`id`)
         ON DELETE SET NULL
         ON UPDATE NO ACTION,
@@ -444,7 +448,8 @@ CREATE TABLE IF NOT EXISTS `v3_files` (
     `is_approved` BOOL         NOT NULL DEFAULT '0',
     `downloads`   INT UNSIGNED NOT NULL DEFAULT '0',
     PRIMARY KEY (`id`),
-    KEY `addon_id` (`addon_id`),
+    KEY `key_addon_id` (`addon_id`),
+    KEY `key_type` (`type`),
     CONSTRAINT `v3_files_ibfk_1` FOREIGN KEY (`addon_id`) REFERENCES `v3_addons` (`id`)
         ON DELETE CASCADE
         ON UPDATE NO ACTION,
@@ -488,8 +493,9 @@ CREATE TABLE IF NOT EXISTS `v3_addon_revisions` (
     `status`         MEDIUMINT UNSIGNED NOT NULL DEFAULT '0',
     `moderator_note` VARCHAR(4096) DEFAULT NULL,
     PRIMARY KEY (`addon_id`, `revision`),
-    KEY `status` (`status`),
-    KEY `addon_id` (`addon_id`),
+    KEY `key_status` (`status`),
+    KEY `key_addon_id` (`addon_id`),
+    KEY `key_file_id` (`file_id`),
     CONSTRAINT `v3_addon_revisions_ibfk_1` FOREIGN KEY (`addon_id`) REFERENCES `v3_addons` (`id`)
         ON DELETE CASCADE
         ON UPDATE NO ACTION,
@@ -510,6 +516,7 @@ CREATE TABLE IF NOT EXISTS `v3_cache` (
     `addon_id` VARCHAR(30) DEFAULT NULL,
     `props`    VARCHAR(256),
     PRIMARY KEY (`file`),
+    KEY `key_addon_id` (`addon_id`),
     CONSTRAINT `v3_cache_ibfk_1` FOREIGN KEY (`addon_id`) REFERENCES `v3_addons` (`id`)
         ON DELETE CASCADE
         ON UPDATE NO ACTION
@@ -527,7 +534,7 @@ CREATE TABLE IF NOT EXISTS `v3_votes` (
     `addon_id` VARCHAR(30)    NOT NULL,
     `vote`     FLOAT UNSIGNED NOT NULL,
     PRIMARY KEY (`user_id`, `addon_id`),
-    KEY `addon_id` (`addon_id`),
+    KEY `key_addon_id` (`addon_id`),
     CONSTRAINT `v3_votes_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `v3_users` (`id`)
         ON DELETE CASCADE
         ON UPDATE NO ACTION,
@@ -565,7 +572,8 @@ CREATE TABLE IF NOT EXISTS `v3_bugs` (
     `is_report`    BOOL          NOT NULL DEFAULT '0'
     COMMENT 'Flag to indicate if the bug is a feedback',
     PRIMARY KEY (`id`),
-    KEY `addon_id` (`addon_id`),
+    KEY `key_user_id` (`user_id`),
+    KEY `key_addon_id` (`addon_id`),
     CONSTRAINT `v3_bugs_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `v3_users` (`id`)
         ON DELETE CASCADE
         ON UPDATE NO ACTION,
@@ -592,7 +600,8 @@ CREATE TABLE IF NOT EXISTS `v3_bugs_comments` (
     `description` VARCHAR(512) DEFAULT NULL
     COMMENT 'The comment description',
     PRIMARY KEY (`id`),
-    KEY `bug_id` (`bug_id`),
+    KEY `key_bug_id` (`bug_id`),
+    KEY `key_user_id` (`user_id`),
     CONSTRAINT `v3_bugs_comments_ibfk_1` FOREIGN KEY (`bug_id`) REFERENCES `v3_bugs` (`id`)
         ON DELETE CASCADE
         ON UPDATE NO ACTION,
@@ -657,8 +666,8 @@ CREATE TABLE IF NOT EXISTS `v3_music` (
     `file_md5`     CHAR(32)      NOT NULL,
     `xml_filename` VARCHAR(191)  NOT NULL,
     PRIMARY KEY (`id`),
-    UNIQUE KEY `file` (`file`),
-    UNIQUE KEY `xml_filename` (`xml_filename`)
+    UNIQUE KEY `key_file` (`file`),
+    UNIQUE KEY `key_xml_filename` (`xml_filename`)
 )
     ENGINE =InnoDB
     DEFAULT CHARSET =utf8mb4
@@ -673,7 +682,7 @@ CREATE TABLE IF NOT EXISTS `v3_stats` (
     `date`  DATE         NOT NULL,
     `value` INT UNSIGNED NOT NULL DEFAULT '0',
     PRIMARY KEY (`date`, `type`(40)),
-    KEY `date` (`date`)
+    KEY `key_date` (`date`)
 )
     ENGINE =InnoDB
     DEFAULT CHARSET =utf8mb4
