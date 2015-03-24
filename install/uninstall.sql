@@ -9,6 +9,7 @@ DROP TABLE IF EXISTS v3_addon_revisions;
 DROP TABLE IF EXISTS v3_cache;
 DROP TABLE IF EXISTS v3_files_delete;
 DROP TABLE IF EXISTS v3_files;
+DROP TABLE IF EXISTS v3_file_types;
 DROP TABLE IF EXISTS v3_addons;
 DROP TABLE IF EXISTS v3_addon_types;
 

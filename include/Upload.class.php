@@ -330,7 +330,7 @@ class Upload
                 throw new UploadException(_h('The add-on you want to add a source file to, does not exist'));
             }
 
-            $this->storeUploadArchive('source');
+            $this->storeUploadArchive(File::SOURCE);
 
             $this->success[] = _h('Successfully uploaded source archive.');
             $this->success[] = File::link(Addon::buildPermalink($this->addon_type, $this->addon_id), _h('Continue.'));
@@ -387,7 +387,7 @@ class Upload
         $this->editInfoFile();
         $this->storeUploadImage();
         $this->storeUploadQuadFile();
-        $this->storeUploadArchive('addon');
+        $this->storeUploadArchive(File::ADDON);
 
         $this->properties['xml_attributes']['status'] = $this->properties['status'];
         $this->properties['xml_attributes']['image'] = $this->properties['image_file'];
@@ -463,7 +463,7 @@ class Upload
         // Record image file in database
         try
         {
-            $this->properties['image_file'] = File::createFileDB($this->addon_id, 'image', $image_path);
+            $this->properties['image_file'] = File::createFileDB($this->addon_id, File::IMAGE, $image_path);
         }
         catch(FileException $e)
         {
@@ -494,7 +494,7 @@ class Upload
     /**
      * Upload the archive
      *
-     * @param $filetype
+     * @param int $filetype
      *
      * @throws UploadException
      */

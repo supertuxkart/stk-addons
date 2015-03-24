@@ -27,7 +27,7 @@ $query_images = "SELECT `addon_id`, AT.`name_singular` as `addon_type`, `path`, 
         ON A.id = F.addon_id
     INNER JOIN " . DB_PREFIX . "addon_types AT
         ON A.`type` = AT.`type`
-    WHERE F.`type` = 'image'
+    WHERE F.`type` = '1'
     ORDER BY `addon_id` ASC, `date_added` ASC";
 
 $query_source = "SELECT `addon_id`, AT.`name_singular` as `addon_type`, `path`, `date_added`, `is_approved`, `downloads`
@@ -36,7 +36,7 @@ $query_source = "SELECT `addon_id`, AT.`name_singular` as `addon_type`, `path`, 
         ON A.id = F.addon_id
     INNER JOIN " . DB_PREFIX . "addon_types AT
         ON A.`type` = AT.`type`
-    WHERE F.`type` = 'source'
+    WHERE F.`type` = '2'
     ORDER BY `addon_id` ASC, `date_added` ASC";
 
 $query_file_downloads_month_30 = "SELECT `date`, SUM(`value`) AS count
@@ -57,7 +57,7 @@ $query_downloads_addon_type = "SELECT AT.`name_plural` as `addon_type`, SUM(`dow
         ON A.id = F.addon_id
     INNER JOIN " . DB_PREFIX . "addon_types AT
         ON A.`type` = AT.`type`
-    WHERE F.`type` = 'addon'
+    WHERE F.`type` = '3'
     GROUP BY `addon_type`";
 
 $tpl_data = [

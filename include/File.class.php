@@ -23,6 +23,12 @@
  */
 class File extends Base
 {
+    const IMAGE = 1;
+
+    const SOURCE = 2;
+
+    const ADDON = 3;
+
     /**
      * @var int
      */
@@ -34,7 +40,7 @@ class File extends Base
     private $addon_id;
 
     /**
-     * @var string
+     * @var int
      */
     private $type;
 
@@ -65,7 +71,7 @@ class File extends Base
     {
         $this->id = (int)$data["id"];
         $this->addon_id = $data["addon_id"];
-        $this->type = $data["type"];
+        $this->type = (int)$data["type"];
         $this->path = $data["path"];
         $this->date_added = $data["date_added"];
         $this->is_approved = (bool)$data["is_approved"];
@@ -113,7 +119,7 @@ class File extends Base
     }
 
     /**
-     * @return string
+     * @return int
      */
     public function getType()
     {
@@ -211,7 +217,7 @@ class File extends Base
      * Get all the files of an addon
      *
      * @param string $addon_id
-     * @param string $file_type the type of file or null if we want all files
+     * @param int    $file_type the type of file or null if we want all files
      *
      * @return File[]
      * @throws FileException
@@ -228,15 +234,15 @@ class File extends Base
                     [
                         ":id"   => $addon_id,
                         ":type" => $file_type
-                    ]
+                    ],
+                    [":type" => DBConnection::PARAM_INT]
                 );
             }
             else
             {
                 $files = DBConnection::get()->query(
                     'SELECT * FROM `' . DB_PREFIX . "files` WHERE `addon_id` = :id",
-                    DBConnection::FETCH_ALL,
-                    [":id" => $addon_id]
+                    DBConnection::FETCH_ALL
                 );
             }
         }
@@ -248,7 +254,7 @@ class File extends Base
         $return = [];
         foreach ($files as $file)
         {
-            $return[] = new File($file);
+            $return[] = new static($file);
         }
 
         return $return;
@@ -266,10 +272,12 @@ class File extends Base
         try
         {
             $db_files = DBConnection::get()->query(
-                'SELECT F.*, A.`type` as addon_type
+                'SELECT F.*, FT.`name` as `type_string`, A.`type` as addon_type
                 FROM `' . DB_PREFIX . 'files` F
                 INNER JOIN ' . DB_PREFIX . 'addons A
                     ON F.`addon_id` =  A.`id`
+                INNER JOIN ' . DB_PREFIX . 'file_types FT
+                    ON FT.`type` = F.`type`
                 ORDER BY `addon_id` ASC',
                 DBConnection::FETCH_ALL
             );
@@ -324,12 +332,13 @@ class File extends Base
         foreach ($fs_files as $file_path)
         {
             $return_files[] = [
-                'id'         => false,
-                'addon_id'   => false,
-                'addon_type' => false,
-                'type'       => false,
-                'path'       => $file_path,
-                'exists'     => true
+                'id'          => null,
+                'addon_id'    => null,
+                'addon_type'  => null,
+                'type'        => null,
+                'type_string' => null,
+                'path'        => $file_path,
+                'exists'      => true
             ];
         }
 
@@ -910,7 +919,7 @@ class File extends Base
      * Create a new file in the database table
      *
      * @param int    $addon_id
-     * @param string $file_type
+     * @param int    $file_type
      * @param string $file_path
      *
      * @return int the id of the inserted file
@@ -1018,7 +1027,7 @@ class File extends Base
         // Add database record for image
         try
         {
-            static::createFileDB($addon_id, 'image', 'images/' . $file_name);
+            static::createFileDB($addon_id, static::IMAGE, 'images/' . $file_name);
         }
         catch(FileException $e)
         {

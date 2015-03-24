@@ -16,7 +16,7 @@
                 {$last_id=null}
                 {foreach $upload.items as $item}
                     {if $last_id !== $item.addon_id}
-                        {if $item.addon_id === false}
+                        {if !$item.addon_id}
                             <tr>
                                 <td><strong>{t}Unassociated{/t}</strong></td>
                                 <td></td><td></td>
@@ -31,7 +31,7 @@
 
                     <tr>
                         <td>{$item.path}</td>
-                        <td>{$item.type}</td>
+                        <td>{$item.type_string}</td>
                         <td>
                             {if $item.type}
                                 {if !$item.exists}

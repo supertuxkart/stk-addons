@@ -681,7 +681,7 @@ class Addon extends Base
      */
     public function getImages()
     {
-        return File::getAllAddon($this->id, 'image');
+        return File::getAllAddon($this->id, File::IMAGE);
     }
 
     /**
@@ -691,7 +691,7 @@ class Addon extends Base
      */
     public function getSourceFiles()
     {
-        return File::getAllAddon($this->id, 'source');
+        return File::getAllAddon($this->id, File::SOURCE);
     }
 
     /**
@@ -1240,7 +1240,7 @@ class Addon extends Base
      */
     public static function buildPermalink($addon_type, $addon_name, $prefix = ROOT_LOCATION)
     {
-        return  $prefix . 'addons.php?type=' . static::typeToString($addon_type) . '&amp;name=' . $addon_name;
+        return $prefix . 'addons.php?type=' . static::typeToString($addon_type) . '&amp;name=' . $addon_name;
     }
 
     /**

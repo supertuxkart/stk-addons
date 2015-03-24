@@ -200,7 +200,7 @@ switch ($_GET['view'])
             $references = "";
             switch ($file["type"])
             {
-                case "addon":
+                case File::ADDON:
                     $references = [];
 
                     try

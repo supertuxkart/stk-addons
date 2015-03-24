@@ -7,7 +7,7 @@ DELIMITER $$
 -- Procedures
 --
 DROP PROCEDURE IF EXISTS v3_create_file_record$$
-CREATE PROCEDURE `v3_create_file_record`(IN id TEXT, IN ftype TEXT, IN fname TEXT, OUT insertid INT)
+CREATE PROCEDURE `v3_create_file_record`(IN id TEXT, IN ftype INT, IN fname TEXT, OUT insertid INT)
     BEGIN
         INSERT INTO `v3_files`
         (`addon_id`, `type`, `path`)
@@ -411,12 +411,34 @@ CREATE TABLE IF NOT EXISTS `v3_addons` (
 
 -- --------------------------------------------------------------------------------
 --
+-- Table structure for table `v3_file_types`
+--
+CREATE TABLE IF NOT EXISTS `v3_file_types` (
+    `type` INT UNSIGNED NOT NULL,
+    `name` VARCHAR(30)  NOT NULL,
+    PRIMARY KEY (`type`)
+)
+    ENGINE =InnoDB
+    DEFAULT CHARSET =utf8mb4
+    COLLATE =utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `v3_file_types`
+--
+INSERT INTO `v3_file_types` (`type`, `name`) VALUES
+    (1, 'image'),
+    (2, 'source'),
+    (3, 'addon')
+ON DUPLICATE KEY UPDATE `type` = VALUES(`type`), `name` = VALUES(`name`);
+
+-- --------------------------------------------------------------------------------
+--
 -- Table structure for table `v3_files`
 --
 CREATE TABLE IF NOT EXISTS `v3_files` (
     `id`          INT UNSIGNED NOT NULL AUTO_INCREMENT,
     `addon_id`    VARCHAR(30)  NOT NULL,
-    `type`        ENUM('source', 'image', 'addon') DEFAULT NULL,
+    `type`        INT UNSIGNED NOT NULL,
     `path`        VARCHAR(256) NOT NULL,
     `date_added`  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `is_approved` BOOL         NOT NULL DEFAULT '0',
@@ -425,6 +447,9 @@ CREATE TABLE IF NOT EXISTS `v3_files` (
     KEY `addon_id` (`addon_id`),
     CONSTRAINT `v3_files_ibfk_1` FOREIGN KEY (`addon_id`) REFERENCES `v3_addons` (`id`)
         ON DELETE CASCADE
+        ON UPDATE NO ACTION,
+    CONSTRAINT `v3_files_ibfk_2` FOREIGN KEY (`type`) REFERENCES `v3_file_types` (`type`)
+        ON DELETE NO ACTION
         ON UPDATE NO ACTION
 )
     ENGINE =InnoDB
