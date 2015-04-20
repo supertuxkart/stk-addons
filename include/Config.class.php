@@ -102,10 +102,6 @@ class Config
         {
             throw new InvalidArgumentException("config_name is no a string");
         }
-        if (!$config_name)
-        {
-            return null;
-        }
 
         // Populate the config cache
         if (empty(static::$cache))
@@ -160,10 +156,6 @@ class Config
     {
         // Validate parameters
         if (!is_string($config_name))
-        {
-            return false;
-        }
-        if (!$config_name || !$config_value)
         {
             return false;
         }
