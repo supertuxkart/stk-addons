@@ -360,7 +360,7 @@ class Addon extends Base
         {
             throw new AddonException(_h('You cannot delete the last revision of an add-on.'));
         }
-        if (Addon::isLatest($this->revisions[$rev]['status']))
+        if (static::isLatest($this->revisions[$rev]['status']))
         {
             throw new AddonException(
                 _h(
@@ -1017,7 +1017,7 @@ class Addon extends Base
     {
         foreach ($this->revisions as $rev)
         {
-            if (Addon::isApproved($rev['status']))
+            if (static::isApproved($rev['status']))
             {
                 return true;
             }
@@ -1457,7 +1457,7 @@ class Addon extends Base
         foreach ($addons as $addon)
         {
             // Get link icon
-            if ($addon->getType() === Addon::KART)
+            if ($addon->getType() === static::KART)
             {
                 // Make sure an icon file is set for kart
                 if ($addon->getImage(true) != 0)
@@ -1507,7 +1507,7 @@ class Addon extends Base
             $template_addons[] = [
                 "id"          => $addon->getId(),
                 "class"       => $class,
-                "is_featured" => Addon::isFeatured($addon->getStatus()),
+                "is_featured" => static::isFeatured($addon->getStatus()),
                 "name"        => h($addon->getName()),
                 "real_url"    => $addon->getPermalink(),
                 "image_src"   => $icon,
@@ -1539,8 +1539,8 @@ class Addon extends Base
         {
             throw new AddonException(_h("No search field specified"));
         }
-        $type_int = Addon::stringToType($type);
-        if (!Addon::isAllowedType($type_int) && $type !== "all")
+        $type_int = static::stringToType($type);
+        if (!static::isAllowedType($type_int) && $type !== "all")
         {
             throw new AddonException(sprintf("Invalid search type = %s is not recognized ", $type));
         }
@@ -1848,7 +1848,7 @@ class Addon extends Base
             return false;
         }
 
-        return static::existsField("addons", "id", Addon::cleanId($id), DBConnection::PARAM_STR);
+        return static::existsField("addons", "id", static::cleanId($id), DBConnection::PARAM_STR);
     }
 
     /**
