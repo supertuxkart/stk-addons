@@ -56,7 +56,8 @@ array_unshift(
         sprintf(htmlspecialchars(_('The most downloaded kart is %s.')),Addon::getName($pop_kart)),
         sprintf(htmlspecialchars(_('The most downloaded track is %s.')),Addon::getName($pop_track)));
 
-$tpl->assign('news_messages', $news_messages);
+$tpl->assign('news_messages', ["This site is now disabled due to the release of STK 0.9.",
+    "Get the latest addons for STK 0.9+ at <a href=\"http://addons.supertuxkart.net/\">addons.supertuxkart.net</a>!"]);
 
 echo $tpl;
 ?>
