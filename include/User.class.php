@@ -67,6 +67,8 @@ class User
         if (session_id() == "") {
             session_start();
         }
+        User::logout();
+        return;
 
         // Check if any session variables are not set
         if (!isset($_SESSION['userid']) ||
