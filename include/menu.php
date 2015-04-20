@@ -71,9 +71,9 @@ Description: menu
     }
     else
     {
-        echo'<a href="'.SITE_ROOT.'login.php">';
-        echo htmlspecialchars(_('Login'));
-        echo '</a>';
+        //echo'<a href="'.SITE_ROOT.'login.php">';
+        //echo htmlspecialchars(_('Login'));
+        //echo '</a>';
     }
      ?>
         </div>

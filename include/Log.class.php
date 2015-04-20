@@ -27,7 +27,11 @@ class Log {
      * @param string $message Event description
      */
     public static function newEvent($message) {
-        $userid = (User::$logged_in) ? User::$user_id : 0;
+        if (defined('CRON')) {
+            $userid = 0;
+        } else {
+            $userid = (User::$logged_in) ? User::$user_id : 0;
+        }
         DBConnection::get()->query(
             "CALL `".DB_PREFIX."log_event`
             (:userid, :message)",
@@ -108,4 +112,3 @@ class Log {
         }
     }
 }
-?>

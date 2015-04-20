@@ -19,6 +19,8 @@
  */
 
 require_once(INCLUDE_DIR . 'ConfigManager.php');
+require_once(INCLUDE_DIR . 'DBConnection.class.php');
+require_once(INCLUDE_DIR . 'sql.php');
 
 function get_self()
 {
@@ -75,7 +77,7 @@ class File {
      * @param string $destination
      * @param string $fileext 
      */
-    public static function extractArchive($file,$destination,$fileext = NULL) {
+    public static function extractArchive($file, $destination, $fileext = NULL) {
         if (!file_exists($file))
             throw new FileException(htmlspecialchars(_('The file to extract does not exist.')));
 
@@ -324,47 +326,78 @@ class File {
      * @return boolean
      */
     public static function delete($file_id) {
-        // Get file path
-        $get_file_query = 'SELECT `file_path` FROM `'.DB_PREFIX.'files`
-            WHERE `id` = '.(int)$file_id.'
-            LIMIT 1';
-        $get_file_handle = sql_query($get_file_query);
-        if (!$get_file_handle)
-            return false;
-        if (mysql_num_rows($get_file_handle) == 1) {
-            $get_file = mysql_fetch_assoc($get_file_handle);
-	    if (file_exists(UP_LOCATION.$get_file['file_path']))
-		unlink(UP_LOCATION.$get_file['file_path']);
+        $record = DBConnection::get()->query('SELECT `file_path` '
+                . 'FROM `'.DB_PREFIX.'files` '
+                . 'WHERE `id` = :id '
+                . 'LIMIT 1',
+                DBConnection::FETCH_ALL,
+                array(':id' => $file_id));
+        if (count($record) != 1) {
+            throw new FileException('File record does not exist.');
+        }
+        $file_location = UP_LOCATION.$record[0]['file_path'];
+        if (defined('CRON')) {
+            print "Attepmting to delete file $file_location...\n";
+        }
+        if (file_exists($file_location)) {
+            unlink($file_location);
+        } else {
+            if (defined('CRON')) {
+                print "File $file_location does not exist.\n";
+            }
         }
 
-        // Delete file record
-        $del_file_query = 'DELETE FROM `'.DB_PREFIX.'files`
-            WHERE `id` = '.(int)$file_id;
-        $del_file_handle = sql_query($del_file_query);
-        if(!$del_file_handle)
+        try {
+            DBConnection::get()->query('DELETE FROM `'.DB_PREFIX.'files` '
+                    . 'WHERE `id` = :id '
+                    . 'LIMIT 1',
+                    DBConnection::NOTHING,
+                    array(':id' => $file_id));
+            Log::newEvent("Deleted file $file_location.");
+        } catch (DBException $ex) {
+            if (defined('CRON')) {
+                print "Failed to remove database record for file.\n";
+            }
             return false;
-        writeAssetXML();
-        writeNewsXML();
+        }
+        try {
+            if (defined('CRON')) {
+                print "Updating XML records...\n";
+            }
+            writeAssetXML();
+            writeNewsXML();
+        } catch (Exception $ex) {
+            if (defined('CRON')) {
+                print "Failed to update asset information files.\n";
+            }
+            return false;
+        }
         return true;
     }
 
     public static function deleteQueuedFiles() {
-	$date = date('Y-m-d');
-	$q = 'SELECT `id`
-	    FROM `'.DB_PREFIX.'files`
-	    WHERE `delete_date` <= \''.$date.'\'
-	    AND `delete_date` <> \'0000-00-00\'';
-	$h = sql_query($q);
-	if (!$h) throw new Exception('Failed to read deletion queue.');
-	
-	$num_files = mysql_num_rows($h);
-	for ($i = 0; $i < $num_files; $i++) {
-	    $r = mysql_fetch_array($h);
-	    if (File::delete($r[0])) {
-		print 'Deleted file '.$r[0]."<br />\n";
-		Log::newEvent('Processed queued deletion of file '.$r[0]);
-	    }
-	}
+        if (defined('CRON')) {
+            print "Deleting queued files...\n";
+        }
+        try {
+            $files = DBConnection::get()->query('SELECT `id` '
+                    . 'FROM `'.DB_PREFIX.'files` '
+                    . 'WHERE `delete_date` <= :del_date '
+                    . 'AND `delete_date` <> \'0000-00-00\'',
+                    DBConnection::FETCH_ALL,
+                    array(':del_date' => date('Y-m-d')));
+        } catch (DBException $ex) {
+            print "Failed to search for queued files.\n";
+        }
+        printf("Found %d files to delete.\n", count($files));
+        foreach ($files AS $file) {
+            if (File::delete($file['id'])) {
+                print "Deleted file {$file['id']}.<br />\n";
+		Log::newEvent('Processed queued deletion of file '.$file['id']);
+	    } else {
+                print "Failed to delete file {$file['id']}.\n";
+            }
+        }
 	return true;
     }
     
@@ -383,7 +416,7 @@ class File {
                 if ($file != '.' && $file != '..' && is_dir($dir.'/'.$file)) {
                     $last_mod = filemtime($dir .'/'. $file .'/.');
                     // Check if our folder is old enough to delete
-                    if (mktime() - $last_mod > $max_age) {
+                    if (time() - $last_mod > $max_age) {
                         File::deleteRecursive($dir .'/'.$file);
                     }
                 }

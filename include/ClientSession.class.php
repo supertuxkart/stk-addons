@@ -113,6 +113,9 @@ abstract class ClientSession
      */
     public static function get($session_id, $user_id)
     {
+        throw new UserException(
+                'This API is no longer active. Please upgrade SuperTuxKart to use online features.'
+            );
         try{
             $session_info = DBConnection::get()->query
             (

@@ -62,7 +62,7 @@ class User
     
     
     static function init() {
-        if(defined('API')) return;
+        if(defined('API') || defined('CRON')) return;
         // Validate user's session on every page
         if (session_id() == "") {
             session_start();
@@ -153,6 +153,8 @@ class User
 
     static function login($username,$password)
     {
+        User::logout();
+        throw new UserException("This site has been disabled.");
         $result = Validate::credentials($username, $password);
         // Check if the user exists
         if(count($result) != 1) {

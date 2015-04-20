@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+die("Upload disabled.");
 define('ROOT','./');
 include('include.php');
 AccessControl::setLevel('addAddon');

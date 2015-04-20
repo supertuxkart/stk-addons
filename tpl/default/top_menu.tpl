@@ -5,11 +5,6 @@
 		{$menu.welcome}&nbsp;&nbsp;&nbsp;
 	    {/if}
 	    {$menu.home}
-	    {if $show_login==true}
-		{$menu.login}
-	    {else}
-		{$menu.logout}
-	    {/if}
 	    {if $show_karts==true}
 		{$menu.karts}
 	    {/if}
