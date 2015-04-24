@@ -50,7 +50,7 @@ $tpl->assign(
             'type'  => $type_arena
         ],
         [
-            'href'  => 'https://github.com/supertuxkart/stkaddons/wiki',
+            'href'  => 'https://github.com/supertuxkart/stk-addons/wiki',
             'label' => 'Help',
             'type'  => 'help'
         ]
