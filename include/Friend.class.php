@@ -1,7 +1,7 @@
 <?php
 /**
- * copyright 2013 Glenn De Jonghe
- *
+ * copyright 2013      Glenn De Jonghe
+ *           2014-2015 Daniel Butum <danibutum at gmail dot com>
  * This file is part of SuperTuxKart
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -18,228 +18,480 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(INCLUDE_DIR . 'exceptions.php');
-require_once(INCLUDE_DIR . 'DBConnection.class.php');
-require_once(INCLUDE_DIR . 'XMLOutput.class.php');
-require_once(INCLUDE_DIR . 'User.class.php');
-require_once(INCLUDE_DIR . 'ClientSession.class.php');
-
-
-class FriendException extends Exception {}
-
 /**
- * Server class
+ * Friend class
  */
 class Friend
 {
-    protected $is_asker;
-    protected $friend_id;
-    protected $date;
-    protected $is_pending;
-    protected $user;
-    protected $online;
+    /**
+     * @var int
+     */
+    private $friend_id;
 
     /**
-     * 
-     * @param array $info_array an associative array based on the database
+     * @var string
      */
-    protected function __construct($info_array, $online = False, $extra_info = False)
+    private $date;
+
+    /**
+     * @var bool
+     */
+    private $is_pending = false;
+
+    /**
+     * @var bool
+     */
+    private $is_online = false;
+
+    /**
+     * @var bool
+     */
+    private $is_asker = false;
+
+    /**
+     * We are the logged in user
+     * @var bool
+     */
+    private $is_self = false;
+
+    /**
+     * The user instance associated with the friend
+     * @var User
+     */
+    private $user;
+
+    /**
+     * The Friend constructor
+     *
+     * @param array $info_array an associative array based on the database
+     * @param bool  $online     is the user online
+     * @param bool  $is_self    initialize extra info
+     */
+    private function __construct($info_array, $online = false, $is_self = false)
     {
-        $this->user = new User($info_array['friend_id'], $info_array['friend_name']);
-        $this->extra_info = $extra_info;
-        if($extra_info){
-            $this->online = $online;
-    		$this->is_pending = $info_array['request'] == 1;
-    		$this->is_asker = $info_array['is_asker'] == 1;		
-    		$this->date = $info_array['date'];
+        $this->user = new User(["id" => $info_array['friend_id'], "username" => $info_array['friend_name']], true);
+        $this->is_self = $is_self;
+        $this->is_online = $online;
+        $this->date = $info_array['date'];
+
+        if ($is_self) // we are logged in
+        {
+            $this->is_pending = ((int)$info_array['is_request'] === 1);
+            $this->is_asker = ((int)$info_array['is_asker'] === 1);
         }
     }
-    
+
+    /**
+     * @return User
+     */
     public function getUser()
     {
         return $this->user;
     }
-    
-    public function isOnline()
-    {
-        return $this->online;
-    }
-    
-    public function asXML()
-    {
-    	$friend_xml = new XMLOutput();
-	    $friend_xml->startElement('friend');
-	    if($this->extra_info){
-    	    $friend_xml->writeAttribute("is_pending", ($this->is_pending ? "yes" : "no"));
-    	    if($this->is_pending){
-    	       $friend_xml->writeAttribute("is_asker", ($this->is_asker ? "yes" : "no"));
-    	    }else{
-    	       $friend_xml->writeAttribute("online", ($this->online ? "yes" : "no"));
-    	    }
-    	    $friend_xml->writeAttribute("date", $this->date);   
-	    } 
-	    $friend_xml->insert($this->user->asXML());
-	    $friend_xml->endElement();
-	    return $friend_xml->asString();
-    }
-    
-    /**
-     * Create server
-     * @param 
-     * @param 
-     * @return Server
-     * @throws 
-     *//*
-    public static function create(  $ip,
-                                    $port,
-                                    $userid,
-                                    $server_name,
-                                    $max_players)
-    {
-        $max_players = (int) $max_players;
-        try{
-            $count = DBConnection::get()->query
-            (
-                "SELECT `id` FROM `" . DB_PREFIX . "servers`
-                    WHERE `ip`= :ip AND `port`= :port ",
-                DBConnection::ROW_COUNT,
-                array
-                (
-                    ':ip'   => $ip,
-                    ':port' => $port
-                )
-            );
-            if ($count != 0)
-                throw new ServerException(_('Specified server already exists.'));
-            $result = DBConnection::get()->query
-            (
-                "INSERT INTO `" . DB_PREFIX ."servers` (hostid, ip, port, name, max_players)
-                VALUES (:hostid, :ip, :port, :name, :max_players)",
-                DBConnection::ROW_COUNT,
-                array
-                (
-                    ':hostid'       => (int) $userid,
-                    ':ip'           => (int) $ip,
-                    ':port'         => (int) $port,
-                    ':name'         => (string) $server_name,
-                    ':max_players'  => (int)    $max_players
-                )
-            );
-            if ($result != 1) {
-                throw new ServerException(_('Could not create server'));
-            }
-            return Server::getServer(DBConnection::get()->lastInsertId());
 
-        }catch(PDOExpcetion $e){
-            throw new ServerException(
-                _('An error occurred while creating server.') .' '.
-                _('Please contact a website administrator.')
-            );
-        }
-    }*/
-    
-    public static function getOnlineFriendsOf($userid)
-    {
-        try{
-            $result = DBConnection::get()->query
-            (
-                "
-                    SELECT " . DB_PREFIX ."friends.asker_id AS friend_id 
-                    FROM " . DB_PREFIX ."friends, " . DB_PREFIX ."client_sessions
-                    WHERE " . DB_PREFIX ."friends.receiver_id = :userid 
-                        AND " . DB_PREFIX ."friends.request = 0
-                        AND " . DB_PREFIX ."client_sessions.uid = " . DB_PREFIX ."friends.asker_id 
-                        AND " . DB_PREFIX ."client_sessions.online = 1
-                UNION
-                    SELECT " . DB_PREFIX ."friends.receiver_id AS friend_id 
-                    FROM " . DB_PREFIX ."friends, " . DB_PREFIX ."client_sessions
-                    WHERE " . DB_PREFIX ."friends.asker_id = :userid
-                        AND " . DB_PREFIX ."friends.request = 0
-                        AND " . DB_PREFIX ."client_sessions.uid = " . DB_PREFIX ."friends.receiver_id 
-                        AND " . DB_PREFIX ."client_sessions.online = 1
-                ",
-                DBConnection::FETCH_ALL,
-                array
-                (
-                        ':userid'       => (int) $userid
-                )
-            );
-        }catch (DBException $e){
-            throw new FriendException(
-                    _('An unexpected error occured while fetching online friends.') . ' ' .
-                    _('Please contact a website administrator.'));
-        }
-        $string_list = "";
-        foreach ($result as $r){
-            $string_list .= $r['friend_id'];
-            $string_list .= ' ';
-        }
-        $string_list = trim($string_list);
-        return $string_list;
-    }
-    
     /**
-     * Returns XML string
-     * @param int $userid
      * @return string
      */
-    public static function getFriendsAsXML($userid, $is_self = False)
+    public function getDate()
     {
-        try{
-            if($is_self){
-                $result = DBConnection::get()->query
-                ( 
-                    "
-                    SELECT " . DB_PREFIX ."friends.date AS date, " . DB_PREFIX ."friends.request AS request, " . DB_PREFIX ."friends.asker_id AS friend_id, " . DB_PREFIX ."users.user AS friend_name, 1 AS is_asker FROM " . DB_PREFIX ."friends, " . DB_PREFIX ."users
-                    WHERE " . DB_PREFIX ."friends.receiver_id = :userid AND " . DB_PREFIX ."users.id = " . DB_PREFIX ."friends.asker_id
+        return $this->date;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isOnline()
+    {
+        return $this->is_online;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAsker()
+    {
+        return $this->is_asker;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPending()
+    {
+        return $this->is_pending;
+    }
+
+    /**
+     * Get the friend as an xml string
+     *
+     * @return string
+     */
+    public function asXML()
+    {
+        $friend_xml = new XMLOutput();
+        $friend_xml->startElement('friend');
+
+        if ($this->is_self)
+        {
+            $friend_xml->writeAttribute("is_pending", ($this->is_pending ? "yes" : "no"));
+            if ($this->is_pending)
+            {
+                $friend_xml->writeAttribute("is_asker", ($this->is_asker ? "yes" : "no"));
+            }
+            else
+            {
+                $friend_xml->writeAttribute("online", ($this->is_online ? "yes" : "no"));
+            }
+            $friend_xml->writeAttribute("date", $this->date);
+        }
+
+        $friend_xml->insert($this->user->asXML());
+        $friend_xml->endElement();
+
+        return $friend_xml->asString();
+    }
+
+    /**
+     * Get a space separated string of friend id's
+     *
+     * @param $user_id
+     *
+     * @return int[] array of friend id's
+     * @throws FriendException
+     */
+    public static function getOnlineFriendsOf($user_id)
+    {
+        try
+        {
+            $friends = DBConnection::get()->query(
+                "   SELECT " . DB_PREFIX . "friends.asker_id AS friend_id
+                    FROM " . DB_PREFIX . "friends, " . DB_PREFIX . "client_sessions
+                    WHERE   " . DB_PREFIX . "friends.receiver_id = :user_id
+                        AND " . DB_PREFIX . "friends.is_request = 0
+                        AND " . DB_PREFIX . "client_sessions.uid = " . DB_PREFIX . "friends.asker_id
+                        AND " . DB_PREFIX . "client_sessions.is_online = 1
+                UNION
+                    SELECT " . DB_PREFIX . "friends.receiver_id AS friend_id
+                    FROM " . DB_PREFIX . "friends, " . DB_PREFIX . "client_sessions
+                    WHERE   " . DB_PREFIX . "friends.asker_id = :user_id
+                        AND " . DB_PREFIX . "friends.is_request = 0
+                        AND " . DB_PREFIX . "client_sessions.uid = " . DB_PREFIX . "friends.receiver_id
+                        AND " . DB_PREFIX . "client_sessions.is_online = 1",
+                DBConnection::FETCH_ALL,
+                [":user_id" => $user_id],
+                [":user_id" => DBConnection::PARAM_INT]
+            );
+        }
+        catch(DBException $e)
+        {
+            throw new FriendException(exception_message_db(_('fetch online friends')));
+        }
+
+        // build array of ids
+        $return_friends = [];
+        foreach ($friends as $friend)
+        {
+            $return_friends[] = $friend['friend_id'];
+        }
+
+        return $return_friends;
+    }
+
+    /**
+     * Return all the friends of a user
+     *
+     * @param int  $user_id
+     * @param bool $is_self
+     * @param bool $return_instance
+     *
+     * @throws FriendException
+     * @return Friend[]|array an array of friends
+     */
+    public static function getFriendsOf($user_id, $is_self = false, $return_instance = true)
+    {
+        try
+        {
+            // TODO clean selects, use JOIN instead of listing selects in the from clause
+            if ($is_self) // get all users if we are the logged in user
+            {
+                $friends = DBConnection::get()->query(
+                    "   SELECT " . DB_PREFIX . "friends.date AS date, "
+                    . DB_PREFIX . "friends.is_request AS is_request, "
+                    . DB_PREFIX . "friends.asker_id AS friend_id, "
+                    . DB_PREFIX . "users.username AS friend_name, 1 AS is_asker
+                        FROM " . DB_PREFIX . "friends, " . DB_PREFIX . "users
+                        WHERE   " . DB_PREFIX . "friends.receiver_id = :user_id
+                            AND " . DB_PREFIX . "users.id = " . DB_PREFIX . "friends.asker_id
                     UNION
-                    SELECT " . DB_PREFIX ."friends.date AS date, " . DB_PREFIX ."friends.request AS request, " . DB_PREFIX ."friends.receiver_id AS friend_id, " . DB_PREFIX ."users.user AS friend_name, 0 AS is_asker FROM " . DB_PREFIX ."friends, " . DB_PREFIX ."users 
-                    WHERE " . DB_PREFIX ."friends.asker_id = :userid AND " . DB_PREFIX ."users.id = " . DB_PREFIX ."friends.receiver_id
-                    ORDER BY friend_name ASC                 
-                    ",       
+                        SELECT " . DB_PREFIX . "friends.date AS date, "
+                    . DB_PREFIX . "friends.is_request AS is_request, "
+                    . DB_PREFIX . "friends.receiver_id AS friend_id, "
+                    . DB_PREFIX . "users.username AS friend_name, 0 AS is_asker
+                        FROM " . DB_PREFIX . "friends, " . DB_PREFIX . "users
+                        WHERE " . DB_PREFIX . "friends.asker_id = :user_id
+                            AND " . DB_PREFIX . "users.id = " . DB_PREFIX . "friends.receiver_id
+                        ORDER BY date ASC",
                     DBConnection::FETCH_ALL,
-                    array
-                    (
-                        ':userid'       => (int) $userid
-                    )          
-                );
-            }else{
-                $result = DBConnection::get()->query
-                (
-                    "
-                    SELECT " . DB_PREFIX ."friends.asker_id AS friend_id, " . DB_PREFIX ."users.user AS friend_name FROM " . DB_PREFIX ."friends, " . DB_PREFIX ."users
-                    WHERE " . DB_PREFIX ."friends.receiver_id = :userid 
-                        AND " . DB_PREFIX ."users.id = " . DB_PREFIX ."friends.asker_id 
-                        AND " . DB_PREFIX ."friends.request = 0
-                    UNION
-                    SELECT " . DB_PREFIX ."friends.receiver_id AS friend_id, " . DB_PREFIX ."users.user AS friend_name FROM " . DB_PREFIX ."friends, " . DB_PREFIX ."users
-                    WHERE " . DB_PREFIX ."friends.asker_id = :userid 
-                        AND " . DB_PREFIX ."users.id = " . DB_PREFIX ."friends.receiver_id
-                        AND " . DB_PREFIX ."friends.request = 0
-                    ORDER BY friend_name ASC
-                    ",
-                    DBConnection::FETCH_ALL,
-                    array
-                    (
-                            ':userid'       => (int) $userid
-                    )
+                    [":user_id" => $user_id],
+                    [":user_id" => DBConnection::PARAM_INT]
                 );
             }
-        }catch (DBException $e){
-            throw new FriendException(
-                _('An unexpected error occured while fetching friends.') . ' ' .
-                _('Please contact a website administrator.'));
+            else // get only the accepted friends, viewing other user profile
+            {
+                $friends = DBConnection::get()->query(
+                    "   SELECT " . DB_PREFIX . "friends.date AS date, "
+                    . DB_PREFIX . "friends.asker_id AS friend_id, "
+                    . DB_PREFIX . "users.username AS friend_name
+                        FROM " . DB_PREFIX . "friends, " . DB_PREFIX . "users
+                        WHERE   " . DB_PREFIX . "friends.receiver_id = :user_id
+                            AND " . DB_PREFIX . "users.id = " . DB_PREFIX . "friends.asker_id
+                            AND " . DB_PREFIX . "friends.is_request = 0
+                    UNION
+                        SELECT " . DB_PREFIX . "friends.date AS date, "
+                    . DB_PREFIX . "friends.receiver_id AS friend_id, "
+                    . DB_PREFIX . "users.username AS friend_name
+                        FROM " . DB_PREFIX . "friends, " . DB_PREFIX . "users
+                        WHERE   " . DB_PREFIX . "friends.asker_id = :user_id
+                            AND " . DB_PREFIX . "users.id = " . DB_PREFIX . "friends.receiver_id
+                            AND " . DB_PREFIX . "friends.is_request = 0
+                        ORDER BY date ASC",
+                    DBConnection::FETCH_ALL,
+                    [":user_id" => $user_id],
+                    [":user_id" => DBConnection::PARAM_INT]
+                );
+            }
         }
+        catch(DBException $e)
+        {
+            throw new FriendException(exception_message_db(_('fetch friends')));
+        }
+
+        // build friends array
+        $return_friends = [];
+        if ($return_instance)
+        {
+            foreach ($friends as $friend)
+            {
+                /// TODO also get online status
+                $return_friends[] = new Friend($friend, false, $is_self);
+            }
+        }
+        else
+        {
+            $return_friends = $friends;
+        }
+
+        return $return_friends;
+    }
+
+    /**
+     * Returns XML string of all friends
+     *
+     * @param int  $user_id
+     * @param bool $is_self
+     *
+     * @throws FriendException
+     * @return string
+     */
+    public static function getFriendsAsXML($user_id, $is_self = false)
+    {
+        $friends = static::getFriendsOf($user_id, $is_self);
+
         $partial_output = new XMLOutput();
         $partial_output->startElement('friends');
-        foreach ($result as $friend_result)
+        foreach ($friends as $friend)
         {
-            $friend = new Friend($friend_result, False, $is_self);
             $partial_output->insert($friend->asXML());
         }
         $partial_output->endElement();
+
         return $partial_output->asString();
     }
-}
 
-?>
+    /**
+     * Send a friend request to a user
+     *
+     * @param int $asker_id
+     * @param int $friend_id the id of the user we want to be friends with
+     *
+     * @throws FriendException
+     */
+    public static function friendRequest($asker_id, $friend_id)
+    {
+        if ($friend_id == $asker_id)
+        {
+            throw new FriendException(_h('You cannot ask yourself to be your friend!'));
+        }
+
+        try
+        {
+            DBConnection::get()->beginTransaction();
+
+            // see if request already exists
+            $result = DBConnection::get()->query(
+                "SELECT asker_id, receiver_id FROM `" . DB_PREFIX . "friends`
+                WHERE (asker_id = :asker AND receiver_id = :receiver)
+                OR (asker_id = :receiver AND receiver_id = :asker)",
+                DBConnection::FETCH_FIRST,
+                [
+                    ':asker'    => $asker_id,
+                    ':receiver' => $friend_id
+                ],
+                [':asker' => DBConnection::PARAM_INT, ':receiver' => DBConnection::PARAM_INT]
+            );
+
+            if ($result) // request already exists, maybe by the asker or by the friend
+            {
+                DBConnection::get()->commit();
+                if ($result['asker_id'] == $asker_id)
+                {
+                    // The request was already in there by the asker, should not be possible normally
+                    // ignore it but log this! FIXME
+                }
+                else
+                {
+                    // The friend already did a friend request! interpret as accepting the friend request!
+                    static::acceptFriendRequest($friend_id, $asker_id);
+                }
+            }
+            else
+            {
+                // add friend request
+                DBConnection::get()->query(
+                    "INSERT INTO `" . DB_PREFIX . "friends` (asker_id, receiver_id)
+                    VALUES (:asker, :receiver)
+                    ON DUPLICATE KEY UPDATE asker_id = :asker",
+                    DBConnection::ROW_COUNT,
+                    [
+                        ':asker'    => $asker_id,
+                        ':receiver' => $friend_id
+                    ],
+                    [':asker' => DBConnection::PARAM_INT, ':receiver' => DBConnection::PARAM_INT]
+                );
+
+                // add notification
+                DBConnection::get()->query(
+                    "INSERT INTO `" . DB_PREFIX . "notifications` (`to`, `from`, `type`)
+                    VALUES (:to, :from, 'f_request')
+                    ON DUPLICATE KEY UPDATE `to` = :to",
+                    DBConnection::ROW_COUNT,
+                    [
+                        ':to'   => $friend_id,
+                        ':from' => $asker_id
+                    ],
+                    [':to' => DBConnection::PARAM_INT, ':from' => DBConnection::PARAM_INT]
+                );
+
+                DBConnection::get()->commit();
+            }
+        }
+        catch(DBException $e)
+        {
+            DBConnection::get()->rollback();
+            throw new FriendException(exception_message_db(_('add a friend request')));
+        }
+    }
+
+    /**
+     * Accept a friend request
+     *
+     * @param int $friend_id   the user who sent the friend request, usually the friend
+     * @param int $receiver_id the user who accepts the friend request, usually the logged in user
+     *
+     * @throws FriendException
+     */
+    public static function acceptFriendRequest($friend_id, $receiver_id)
+    {
+        try
+        {
+            DBConnection::get()->query(
+                "UPDATE `" . DB_PREFIX . "friends`
+                SET is_request = 0
+                WHERE asker_id = :asker AND receiver_id = :receiver",
+                DBConnection::ROW_COUNT,
+                [
+                    ':asker'    => $friend_id,
+                    ':receiver' => $receiver_id
+                ],
+                [':asker' => DBConnection::PARAM_INT, ':receiver' => DBConnection::PARAM_INT]
+            );
+        }
+        catch(DBException $e)
+        {
+            throw new FriendException(exception_message_db(_('accept a friend request')));
+        }
+    }
+
+    /**
+     * Remove a friend by deleting the record from the database.
+     * This is used bu the decline and cancel methods.
+     *
+     * @param int    $asker_id    the asker
+     * @param int    $receiver_id the receiver
+     * @param string $message_error
+     *
+     * @return int the number of affected rows
+     * @throws FriendException
+     */
+    protected static function removeFriendRecord($asker_id, $receiver_id, $message_error)
+    {
+        try
+        {
+            $count = DBConnection::get()->query(
+                "DELETE FROM `" . DB_PREFIX . "friends`
+                WHERE asker_id = :asker AND receiver_id = :receiver",
+                DBConnection::ROW_COUNT,
+                [
+                    ':asker'    => $asker_id,
+                    ':receiver' => $receiver_id
+                ],
+                [':asker' => DBConnection::PARAM_INT, ':receiver' => DBConnection::PARAM_INT]
+            );
+        }
+        catch(DBException $e)
+        {
+            throw new FriendException(exception_message_db($message_error));
+        }
+
+        return $count;
+    }
+
+    /**
+     * Decline a friend request by deleting the record. We are the receiver
+     *
+     * @param int $friend_id   the user who sent the friend request
+     * @param int $receiver_id the user who declines the friend request
+     *
+     * @throws FriendException
+     */
+    public static function declineFriendRequest($friend_id, $receiver_id)
+    {
+        static::removeFriendRecord($friend_id, $receiver_id, _('decline a friend request'));
+    }
+
+    /**
+     * Cancel a friend request by deleting the record. The logged in user is the asker
+     *
+     * @param int $asker_id  the user who sent the friend request, usually the logged user
+     * @param int $friend_id the user who was asked by the logged in user
+     *
+     * @throws FriendException
+     */
+    public static function cancelFriendRequest($asker_id, $friend_id)
+    {
+        static::removeFriendRecord($asker_id, $friend_id, _('cancel a friend request'));
+    }
+
+    /**
+     * Remove a friend from the database. The order does not matter if the order is correct.
+     * As long as the 2 ids exists. remove all connections between the 2
+     *
+     * @param int $user1_id
+     * @param int $user2_id
+     */
+    public static function removeFriend($user1_id, $user2_id)
+    {
+        static::cancelFriendRequest($user1_id, $user2_id);
+        static::declineFriendRequest($user2_id, $user1_id);
+    }
+}

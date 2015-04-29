@@ -2,7 +2,7 @@
 /**
  * Copyright 2009      Lucas Baudin <xapantu@gmail.com>
  *           2012-2014 Stephen Just <stephenjust@users.sf.net>
- *
+ *           2014      Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -18,129 +18,100 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
+require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
+use Captcha\Captcha;
 
-define('ROOT','./');
-require_once(ROOT.'config.php');
-require_once(INCLUDE_DIR.'StkTemplate.class.php');
+$username = empty($_POST['username']) ? null : $_POST['username'];
+$realname = empty($_POST['realname']) ? null : $_POST['realname'];
+$email = empty($_POST['email']) ? null : $_POST['email'];
+$action = empty($_GET['action']) ? null : $_GET['action'];
 
-$_POST['user'] = (empty($_POST['user'])) ? NULL : $_POST['user'];
-$_POST['name'] = (empty($_POST['name'])) ? NULL : $_POST['name'];
-$_POST['mail'] = (empty($_POST['mail'])) ? NULL : $_POST['mail'];
+$tpl = StkTemplate::get('register.tpl')
+    ->assignTitle(_h('Register'))
+    ->addBootstrapValidatorLibrary()
+    ->setMinify(false);
 
-$tpl = new StkTemplate('register.tpl');
-$tpl->assign('title', htmlspecialchars(_('STK Add-ons').' | '._('Register')));
+// CAPTCHA
+$captcha = new Captcha();
+$captcha->setPublicKey(CAPTCHA_PUB)->setPrivateKey(CAPTCHA_PRIV);
 
-$terms_text = '=== '.htmlspecialchars(_('STK Addons Terms and Conditions'))." ===\n\n".
-htmlspecialchars(_('You must agree to these terms in order to upload content to the STK Addons site.'))."\n\n".
-_('The STK Addons service is designed to be a repository exclusively for Super
-Tux Kart addon content. All uploaded content must be intended for this
-purpose. When you upload your content, it will be available publicly on the
-internet, and will be made available in-game for download.')."\n\n".
-htmlspecialchars(_('Super Tux Kart aims to comply with the Debian Free Software Guidelines (DFSG).
-TuxFamily.org also requires that content they host comply with open licenses.
-You may not upload content which is locked down with a restrictive license.
-Licenses such as CC-BY-SA 3.0, or other DFSG-compliant licenses are required.
-All content taken from third-party sources must be attributed properly, and must
-also be available under an open license. Licenses and attribution should be
-included in a "license.txt" file in each uploaded archive. Uploads without
-proper licenses or attribution may be deleted without warning.'))."\n\n".
-htmlspecialchars(_('Even with valid licenses and attribution, content may not contain any
-of the following:'))."\n".
-'    1. '.htmlspecialchars(_('Profanity'))."\n".
-'    2. '.htmlspecialchars(_('Explicit images'))."\n".
-'    3. '.htmlspecialchars(_('Hateful messages and/or images'))."\n".
-'    4. '.htmlspecialchars(_('Any other content that may be unsuitable for children'))."\n".
-htmlspecialchars(_('If any of your uploads are found to contain any of the above, your upload
-will be removed, your account may be removed, and any other content you uploaded
-may be removed.'))."\n\n".
-htmlspecialchars(_('By checking the box below, you are confirming that you understand these
-terms. If you have any questions or comments regarding these terms, one of the
-members of the development team would gladly assist you.'));
+$register = [
+    'display'  => false,
+    'captcha'  => $captcha->html(),
+    'username' => ['min' => User::MIN_USERNAME, 'max' => User::MAX_USERNAME, 'value' => h($username)],
+    'password' => ['min' => User::MIN_PASSWORD, 'max' => User::MAX_PASSWORD],
+    'realname' => ['min' => User::MIN_REALNAME, 'max' => User::MAX_USERNAME, 'value' => h($realname)],
+    'email'    => ['max' => User::MAX_EMAIL, 'value' => h($email)]
 
-$register = array(
-    'heading' => htmlspecialchars(_('Account Registration')),
-    'display_form' => false,
-    'form' => array(
-        'start' => '<form id="register" action="register.php?action=reg" method="POST">',
-        'end' => '</form>',
-        'username' => array(
-            'label' => '<label for="reg_user">'.htmlspecialchars(_('Username:')).'</label>',
-            'requirement' => htmlspecialchars(sprintf(_('Must be at least %d characters long.'),'3')),
-            'field' => '<input type="text" name="user" id="reg_user" value="'.htmlspecialchars($_POST['user']).'" />'
-        ),
-        'password' => array(
-            'label' => '<label for="reg_pass">'.htmlspecialchars(_('Password:')).'</label>',
-            'requirement' => htmlspecialchars(sprintf(_('Must be at least %d characters long.'),'8')),
-            'field' => '<input type="password" name="pass1" id="reg_pass" />'
-        ),
-        'password_conf' => array(
-            'label' => '<label for="reg_pass2">'.htmlspecialchars(_('Password (confirm):')).'</label>',
-            'field' => '<input type="password" name="pass2" id="reg_pass2" />'
-        ),
-        'name' => array(
-            'label' => '<label for="reg_name">'.htmlspecialchars(_('Name:')).'</label>',
-            'field' => '<input type="text" name="name" id="reg_name" value="'.htmlspecialchars($_POST['name']).'" />'
-        ),
-        'email' => array(
-            'label' => '<label for="reg_email">'.htmlspecialchars(_('Email Address:')).'</label>',
-            'requirement' => htmlspecialchars(_('Email address used to activate your account.')),
-            'field' => '<input type="text" name="mail" id="reg_email" value="'.htmlspecialchars($_POST['mail']).'" />'
-        ),
-        'terms' => array(
-            'label' => '<label for="reg_terms">'.htmlspecialchars(_('Terms:')).'</label>',
-            'field' => '<textarea rows="10" cols="80" readonly id="reg_terms">'.$terms_text.'</textarea>'
-        ),
-        'terms_agree' => array(
-            'label' => '<label for="reg_check">'.htmlspecialchars(_('I agree to the above terms')).'</label>',
-            'field' => '<input type="checkbox" name="terms" id="reg_check" />'
-        ),
-        'submit' => '<input type="submit" value="'.htmlspecialchars(_('Register!')).'" />'
-    )
-);
-
+];
 
 // define possibly undefined variables
-$_GET['action'] = (isset($_GET['action'])) ? $_GET['action'] : NULL;
 
-switch ($_GET['action']) {
-    default:
-        $register['display_form'] = true;
-        break;
-
-    case 'reg':
-        // Register new account
+switch ($action)
+{
+    case 'register': // register new account
         try
         {
-            if (!isset($_POST['terms'])) $_POST['terms'] = NULL;
-            User::register($_POST['user'],
-                            $_POST['pass1'],
-                            $_POST['pass2'],
-                            $_POST['mail'],
-                            $_POST['name'],
-                            $_POST['terms']);
-            $tpl->assign('confirmation', htmlspecialchars(_("Account creation was successful. Please activate your account using the link emailed to you.")));
+            // validate
+            $errors = Validate::ensureNotEmpty($_POST, ["username", "password", "password_confirm", "email", "terms"]);
+            if ($errors)
+            {
+                throw new UserException(implode("<br>", $errors));
+            }
+
+            // check captcha
+            $response = $captcha->check();
+            if (!$response->isValid())
+            {
+                throw new UserException("The reCAPTCHA wasn't entered correctly. Go back and try it again.");
+            }
+
+            User::register(
+                $username,
+                $_POST['password'],
+                $_POST['password_confirm'],
+                $email,
+                empty(trim($realname)) ? $username : $realname,
+                $_POST['terms']
+            );
+
+            $tpl->assign(
+                'success',
+                _h("Account creation was successful. Please activate your account using the link emailed to you.")
+            );
         }
-        catch (UserException $e)
+        catch(UserException $e)
         {
             $tpl->assign('errors', $e->getMessage());
-            $register['display_form'] = true;
+            $register['display'] = true;
         }
         break;
 
-    case 'valid':
-        try {
-            $username = strip_tags($_GET['user']);
-            $verification_code = strip_tags($_GET['num']);
-            User::activate($username,$verification_code);
-            $tpl->assign('confirmation', htmlspecialchars(_('Your account has been activated.')));
+    case 'valid': // activation link
+        try
+        {
+            // validate
+            $errors = Validate::ensureNotEmpty($_GET, ["num", "user"]);
+            if ($errors)
+            {
+                throw new UserException(implode("<br>", $errors));
+            }
+
+            User::activate($_GET['user'] /* user id */, $_GET["num"] /* verification code */);
+
+            $tpl->assign('success', _h('Your account has been activated.'));
+            $tpl->setMetaRefresh("login.php", 10);
         }
-        catch (UserException $e) {
-            $tpl->assign('errors', $e->getMessage());
-            $tpl->assign('confirmation', htmlspecialchars(_('Could not validate your account. The link you followed is not valid.')));
+        catch(UserException $e)
+        {
+            $tpl->assign('errors', $e->getMessage() . ". " . _h('Could not validate your account. The link you followed is not valid.'));
         }
+        break;
+
+    default:
+        $register['display'] = true;
         break;
 }
-$tpl->assign('register', $register);
 
+$tpl->assign('register', $register);
 echo $tpl;
-?>

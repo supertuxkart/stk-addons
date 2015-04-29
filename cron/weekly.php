@@ -17,33 +17,44 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-define('ROOT', '/home/stkaddons/stkaddons-scripts/web/');
-define('CRON', 1);
-require (ROOT . 'config.php');
-require_once(INCLUDE_DIR . 'Log.class.php');
+define('CRON_MODE', true);
+require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
 log_email();
 
-function log_email() {
+echo "Executed at: " . date('d/m/Y H:i:s', time()) . "\n";
+function log_email()
+{
     $events = Log::getUnemailedEvents();
-    if (count($events) === 0) {
+    if (count($events) === 0)
+    {
         print "No new log messages to email.\n";
+
         return;
     }
-    
+
     $table = '<table><thead><tr><th>Date</th><th>User</th><th>Description</th></tr></thead><tbody>';
-    foreach ($events AS $event) {
-        $table .= '<tr><td>'.$event['date'].'</td><td>'.strip_tags($event['name']).'</td><td>'.strip_tags($event['message']).'</td></tr>';
+    foreach ($events AS $event)
+    {
+        $table .= '<tr><td>' . $event['date'] . '</td><td>' . strip_tags($event['name']) . '</td><td>' . strip_tags(
+                $event['message']
+            ) . '</td></tr>';
     }
     $table .= '</tbody></table>';
-    
-    $content = 'The following events have occurred in the last 7 days:<br />'.$table;
-    
-    moderator_email('Weekly log update',$content);
-    
+
+    $content = 'The following events have occurred in the last 7 days:<br />' . $table;
+
+    try
+    {
+        SMail::get()->moderatorNotification('Weekly log update', $content);
+    }
+    catch (SMailException $e)
+    {
+        Log::newEvent($e->getMessage());
+        exit;
+    }
+
     Log::setAllEventsMailed();
-    
+
     print "Sent log message email.\n";
 }
-?>

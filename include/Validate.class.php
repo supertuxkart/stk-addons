@@ -1,8 +1,8 @@
 <?php
 /**
- * copyright 2011 Stephen Just <stephenjust@users.sf.net>
- *           2013 Glenn De Jonghe
- *
+ * copyright 2011      Stephen Just <stephenjust@users.sf.net>
+ *           2013      Glenn De Jonghe
+ *           2014-2015 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -19,187 +19,99 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(INCLUDE_DIR . 'DBConnection.class.php');
-require_once(INCLUDE_DIR . 'exceptions.php');
-
 /**
- * Class to contain all string validation functions
- * @author stephenjust
+ * Class to contain all common validation functions, the user validation functions are in the User class
  */
-class Validate {
-    
+class Validate
+{
     /**
-     * Checks a username/email address combination and returns the user id if valid
-     * @param string $username
-     * @param string $email
-     * @throws DBException when something unexpected with the database happened
-     * @throws UserException when username/email combination is invalid
+     * @param string $box
+     * @param string $message
+     *
+     * @return mixed
+     * @throws ValidateException
      */
-    public static function account($username, $email){
-        $result = DBConnection::get()->query(
-            "SELECT `id`
-	        FROM `".DB_PREFIX."users`
-	        WHERE `user` = :username
-            AND `email` = :email
-            AND `active` = 1",
-            DBConnection::FETCH_ALL,
-            array(
-                    ':username'   => $username,
-                    ':email'    => $email
-            )
-        );
-        if(count($result) > 1){
-            throw new DBException();
+    public static function checkbox($box, $message)
+    {
+        if ($box !== 'on')
+        {
+            throw new ValidateException($message);
         }
-        if(count($result) === 0){
-            throw new UserException(htmlspecialchars(
-                _('Username and email address combination not found.')
-            ));
-        }
-        return $result[0]['id'];
-    }
-    
-    /**
-     * Check if the input is a valid email address
-     * @param string $email Email address
-     * @return string Email address
-     */
-    public static function email($email) {
-        if (strlen($email) == 0) {
-            throw new UserException(htmlspecialchars(_('You must enter an email address.')));
-        }
-        if (!preg_match('/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i',$email)) {
-            throw new UserException(htmlspecialchars(sprintf(_('"%s" is not a valid email address.'),$email)));
-        }
-        return htmlspecialchars($email);
-    }
-    
-    /**
-     * Check if the input is a valid alphanumeric username
-     * @param string $username Alphanumeric username
-     * @return string Username
-     */
-    public static function username($username) {
-        if (strlen($username) < 3) {
-            throw new UserException(htmlspecialchars(sprintf(_('Your username must be at least %d characters long.'), 3)));
-        }
-        if (!preg_match('/^[a-z0-9]+$/i',$username)) {
-            throw new UserException(htmlspecialchars(_('Your username can only contain alphanumeric characters.')));
-        }
-        return htmlspecialchars($username);
-    }
-    
-    public static function password($password1, $password2 = NULL, $username = NULL, $userid = NULL) {
-        // Check password properties
-        if (strlen($password1) < 8) {
-            throw new UserException(htmlspecialchars(_('Your password must be at least 8 characters long.')));
-        }
-        if ($password2 != NULL) {
-            if ($password1 !== $password2) {
-                throw new UserException(htmlspecialchars(_('Your passwords do not match.')));
-            }
-        }
-        // Salt password
-        $salt_length = 32;
-        if ($username === NULL && $userid === NULL)
-            $salt = md5(uniqid(NULL,true));
-        else {
-            // Get current user password entry to get salt
-            
-            try{
-                if($userid === NULL)
-                {
-                    $result = DBConnection::get()->query(
-                        "SELECT `pass` 
-            	        FROM `". DB_PREFIX . "users`
-            	        WHERE `user` = :username",
-                        DBConnection::FETCH_ALL,
-                        array(
-                            ':username'   => $username
-                        )
-                    );
-                }else{
-                    $result = DBConnection::get()->query(
-                        "SELECT `pass`
-            	        FROM `". DB_PREFIX . "users`
-            	        WHERE `id` = :userid",
-                        DBConnection::FETCH_ALL,
-                        array(
-                            ':userid'   => (int) $userid
-                        )
-                    );
-                }
-            }catch(DBException $e){
-                throw new UserException(htmlspecialchars(
-                    _('An error occurred trying to validate your password.') .' '.
-                    _('Please contact a website administrator.')
-                ));
-            }
-            if(count($result) === 0){
-                $salt = md5(uniqid(NULL,true));
-            }else {
-                if (strlen($result[0]['pass']) == 64) {
-                    // Not a salted password
-                    return hash('sha256',$password1);
-                }
-                $salt = substr($result[0]['pass'], 0, $salt_length);
-            }
-        }
-        return $salt.hash('sha256',$salt.$password1);
-    }
-    
-    public static function realname($name) {
-        if (strlen(trim($name)) < 2) {
-            throw new UserException(htmlspecialchars(_('You must enter a name.')));
-        }
-        return htmlspecialchars(trim($name));
-    }
-    
-    public static function checkbox($box, $message) {
-        if ($box !== 'on') {
-            throw new UserException($message);
-        }
+
         return $box;
     }
-    
-    public static function versionString($string) {
-	if (!preg_match('/^(svn|[\d]+\.[\d]+\.[\d](-rc[\d])?)$/i', $string)) {
-	    throw new Exception('Invalid version string! Format should be: W.X.Y[-rcZ]');
-	}
-	return true;
-    }
-    
+
     /**
-     * Check if the input is a valid alphanumeric username
-     * @param string $username Alphanumeric username
-     * @param string $password unhashed password
-     * @return associative array with user information from the database
+     * Validate the version string
+     *
+     * @param string $string
+     *
+     * @throws ValidateException
      */
-    public static function credentials($username, $password){
-        try{
-            $result = DBConnection::get()->query(
-                "SELECT `id`,`user`,`pass`,`name`,`role`
-                FROM `" . DB_PREFIX . "users`
-                WHERE `user` = :username AND `pass` = :pass",
-                DBConnection::FETCH_ALL,
-                array
-                (
-                    ':username'   => Validate::username($username),
-                    ':pass'   => Validate::password($password, null, $username)
-                )
-            );
-            return $result;
+    public static function versionString($string)
+    {
+        if (!preg_match('/^(svn|[\d]+\.[\d]+\.[\d](-rc[\d])?)$/i', $string))
+        {
+            throw new ValidateException(_h('Invalid version string! Format should be: W.X.Y[-rcZ]'));
         }
-        catch (UserException $e){
-            throw new UserException($e->getMessage());
+    }
+
+    /**
+     * Validator singleton
+     *
+     * @param array $data
+     *
+     * @link https://github.com/vlucas/valitron
+     * @return \Valitron\Validator
+     */
+    public static function get($data)
+    {
+        return new Valitron\Validator($data);
+    }
+
+    /**
+     * Check if an array has the keys in $params and must be not empty
+     *
+     * @param array $pool   the array to check
+     * @param array $params the keys to check
+     *
+     * @return array the error array
+     */
+    public static function ensureNotEmpty(array $pool, array $params)
+    {
+        $errors = [];
+
+        foreach ($params as $param)
+        {
+            if (empty($pool[$param]))
+            {
+                $errors[] = sprintf(_h("%s field is empty"), ucfirst($param));
+            }
         }
-        catch (PDOException $e){
-            throw new UserException(htmlspecialchars(
-                _('An error occurred while signing in.') .' '.
-                _('Please contact a website administrator.')
-            ));
+
+        return $errors;
+    }
+
+    /**
+     * Check if an array has the keys in $params
+     *
+     * @param array $pool   the array to check
+     * @param array $params the keys to check
+     *
+     * @return array the error array
+     */
+    public static function ensureIsSet(array $pool, array $params)
+    {
+        $errors = [];
+
+        foreach ($params as $param)
+        {
+            if (!isset($pool[$param]))
+            {
+                $errors[] = sprintf(_h("%s field is not set"), ucfirst($param));
+            }
         }
-    
+
+        return $errors;
     }
 }
-?>

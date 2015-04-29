@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 <html>
-    <head>
-	<title>{$title|default:"SuperTuxKart Add-ons"}</title>
-	{foreach $meta_tags as $meta_field => $meta_content}
-	<meta http-equiv="{$meta_field}" content="{$meta_content}" />
-	{/foreach}
-	<meta http-equiv="X-UA-Compatible" content="IE=9" />
-	{foreach $script_inline as $script}
-	<script type="{$script.type|default:'text/javascript'}">{$script.content}</script>    
-	{/foreach}
-	{foreach $script_includes as $script}
-	<script type="{$script.type|default:'text/javascript'}" src="{$script.src}"></script>
-	{/foreach}
-
-	<link rel="stylesheet" media="screen" href="{#css_screen#}" />
-	<link rel="stylesheet" media="print" href="{#css_print#}" />
-    </head>
-    <body>
-	{include file=#top_menu#}
-	<div id="body-frame">
+<head>
+    <title>{$title|default:"SuperTuxKart Add-ons"}</title>
+    <meta charset="UTF-8" />
+    {foreach $meta_tags as $meta_field => $meta_content}
+        <meta http-equiv="{$meta_field}" content="{$meta_content}">
+    {/foreach}
+    <meta http-equiv="X-UA-Compatible" content="IE=9" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {foreach $css_includes as $css}
+        {if empty($css.media)}
+            <link rel="stylesheet" href="{$css.href}">
+        {else}
+            <link rel="stylesheet" media="{$css.media}" href="{$css.href}">
+        {/if}
+    {/foreach}
+</head>
+<body>
+<div id="body-wrapper">
+{include file="./menu-top.tpl"}
+<div id="content-wrapper" class="container">

@@ -2,7 +2,7 @@
 /**
  * Copyright 2009      Lucas Baudin <xapantu@gmail.com>
  *           2011-2014 Stephen Just <stephenjust@users.sourceforge.net>
- *
+ *           2014-2015 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -18,92 +18,104 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-define('ROOT','./');
-require_once(ROOT . 'config.php');
-require_once(INCLUDE_DIR . 'File.class.php');
-require_once(INCLUDE_DIR . 'StkTemplate.class.php');
-require_once(INCLUDE_DIR . 'User.class.php');
+require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
 
 // define possibly undefined variables
-$_POST['user'] = (isset($_POST['user'])) ? $_POST['user'] : NULL;
-$_POST['pass'] = (isset($_POST['pass'])) ? $_POST['pass'] : NULL;
-$_GET['action'] = (isset($_GET['action'])) ? $_GET['action'] : NULL;
+$username = isset($_POST['username']) ? $_POST['username'] : null;
+$password = isset($_POST['password']) ? $_POST['password'] : null;
+$action = isset($_GET['action']) ? $_GET['action'] : null;
 
-$tpl = new StkTemplate('login.tpl');
-// Prepare forms
-$login_form = array(
-    'display' => true,
-    'form' => array(
-	'start' => '<form action="'.File::rewrite('login.php?action=submit').'" method="POST">',
-	'end'	=> '</form>',
-	'username' => array(
-	    'label' => htmlspecialchars(_('Username:')),
-	    'field' => '<input type="text" name="user" />'
-	),
-	'password' => array(
-	    'label' => htmlspecialchars(_('Password:')),
-	    'field' => '<input type="password" name="pass" />'
-	),
-	'submit' => '<input type="submit" value="'.htmlspecialchars(_('Log In')).'" />'
-    ),
-    'links' => array(
-	'register'	=> File::link('register.php',htmlspecialchars(_('Create an account.'))),
-	'reset_password'=> File::link('password-reset.php',htmlspecialchars(_('Forgot password?')))
-    )
-);
-
-$errors = '';
-switch ($_GET['action']) {
-    case 'logout':
-	$login_form['display'] = false;
-
-	User::logout();
-	if (User::$logged_in === true)
-	    $tpl->assign('confirmation', htmlspecialchars(_('Failed to logout.')));
-	else {
-        $tpl->setMetaRefresh('index.php', 3);
-	    $conf = htmlspecialchars(_('You have been logged out.')).'<br />';
-	    $conf .= sprintf(htmlspecialchars(_('Click %shere%s if you do not automatically redirect.')),'<a href="index.php">','</a>').'<br />';
-	    $tpl->assign('confirmation', $conf);
-	}
-	
-	break;
-    
-    case 'submit':
-	$login_form['display'] = false;
-
-	try
-	{
-	    // Variable validation is done by the function below
-	    User::login($_POST['user'],$_POST['pass']);
-	}
-	catch (UserException $e)
-	{
-	    $errors .= $e->getMessage();
-	}
-	if (User::$logged_in === true) {
-        $tpl->setMetaRefresh('index.php', 3);
-	    $conf = sprintf(htmlspecialchars(_('Welcome, %s!')).'<br />',$_SESSION['real_name']);
-	    $conf .= sprintf(htmlspecialchars(_('Click %shere%s if you do not automatically redirect.')),'<a href="index.php">','</a>').'<br />';
-	    $tpl->assign('confirmation', $conf);
-	} else {
-	    $tpl->assign('confirmation', $errors);
-	}
-	break;
-    
-    default:
-	if (User::$logged_in) {
-	    $login_form['display'] = false;
-        $tpl->setMetaRefresh('index.php', 3);
-	    $conf = htmlspecialchars(_('You are already logged in.')).' ';
-	    $conf .= sprintf(htmlspecialchars(_('Click %shere%s if you do not automatically redirect.')),'<a href="index.php">','</a>').'<br />';
-	    $tpl->assign('confirmation', $conf);
-	}
-	break;
+// set default redirect url from where the user was
+$return_to_url = $safe_url = ROOT_LOCATION;
+if (isset($_POST["return_to"]))
+{
+    $return_to_url = $_POST["return_to"];
+}
+elseif (isset($_GET["return_to"]))
+{
+    // decode the get
+    $return_to_url = urldecode($_GET["return_to"]);
+}
+// prevent foreign domain
+if (!Util::str_starts_with($return_to_url, ROOT_LOCATION))
+{
+    // silently fall back to safe url
+    $return_to_url = $safe_url;
 }
 
-$tpl->assign('title', htmlspecialchars(_('STK Add-ons').' | '._('Login')));
-$tpl->assign('login', $login_form);
+$tpl = StkTemplate::get('login.tpl')
+    ->assignTitle(_h("Login"))
+    ->addBootstrapValidatorLibrary();
 
+// Prepare forms
+$login_form = [
+    'display'     => true,
+    'username'    => ['min' => User::MIN_USERNAME, 'max' => User::MAX_USERNAME, 'value' => h($username)],
+    'password'    => ['min' => User::MIN_PASSWORD, 'max' => User::MAX_PASSWORD],
+    'return_to'   => $return_to_url,
+    'form_action' => File::rewrite('login.php?action=submit'),
+    'links'       => [
+        'register'       => File::link('register.php', _h('Sign up here.')),
+        'reset_password' => File::link('password-reset.php', _h('(forgot password)'), true, false)
+    ]
+];
+
+switch ($action)
+{
+    case 'logout':
+        $login_form['display'] = false;
+
+        User::logout();
+
+        if (User::isLoggedIn())
+        {
+            $tpl->assign('errors', _h('Failed to logout.'));
+        }
+        else
+        {
+            Util::redirectTo($safe_url);
+        }
+
+        break;
+
+    case 'submit':
+        $login_form['display'] = false;
+
+        $errors = "";
+        try
+        {
+            User::login($username, $password);
+        }
+        catch(UserException $e)
+        {
+            $login_form['display'] = true;
+            $errors = $e->getMessage();
+        }
+
+        if (User::isLoggedIn())
+        {
+            Util::redirectTo($return_to_url);
+        }
+        else
+        {
+            $login_form['display'] = true;
+            $tpl->assign('errors', $errors);
+        }
+
+        break;
+
+    default:
+        if (User::isLoggedIn())
+        {
+            $login_form['display'] = false;
+            $tpl->setMetaRefresh($safe_url, 5);
+
+            $conf = _h('You are already logged in.');
+            $conf .= sprintf(' Click <a href="%s">here</a> if you do not automatically redirect.', $safe_url);
+            $tpl->assign('success', $conf);
+        }
+        break;
+}
+
+$tpl->assign('login', $login_form);
 echo $tpl;

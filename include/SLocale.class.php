@@ -1,7 +1,7 @@
 <?php
 /**
  * copyright 2013 Stephen Just <stephenjust@users.sf.net>
- *
+ *           2014 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -18,83 +18,127 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Note that PHP has a built-in Locale class in the newest versions of PHP
-class SLocale {
-    
+/**
+ * Class SLocale
+ * Note that PHP has a built-in Locale class in the newest versions of PHP
+ */
+class SLocale
+{
+    /**
+     * Cookie lifetime in seconds representing a year
+     * @var int
+     */
+    const COOKIE_LIFETIME = 31536000;
+
+    const LANG_KEY = "lang";
+
     /**
      * Array of supported languages, format is:
-     * language code, flag image x-offset, flag image y-offset, flag label
+     * language code, flag image y-offset, flag label
      * @var array
      */
-    private static $languages = array(
-        array('en_US',0,0,'EN'),
-        array('ca_ES',-96,-99,'CA'),
-        array('de_DE',0,-33,'DE'),
-        array('es_ES',-96,-66,'ES'),
-        array('eu_ES', -144, -66, 'EU'),
-        array('fr_FR',0,-66,'FR'),
-        array('ga_IE',0,-99,'GA'),
-        array('gd_GB',-144, -33,'GD'),
-        array('gl_ES',-48,0,'GL'),
-        array('id_ID',-48,-33,'ID'),
-        array('it_IT',-96,-33,'IT'),
-        array('nl_NL',-48,-66,'NL'),
-        array('pt_BR',-144,0,'PT'),
-        array('ru_RU',-48,-99,'RU'),
-        array('zh_TW',-96,0,'ZH (T)')
-        );
-    
-    private static $cookie_lifetime = 31536000; // One year
-    
+    private static $languages = [
+        ['en_US', -560, 'GD'],
+        ['fr_FR', -160, 'FR'],
+        ['de_DE', -240, 'DE'],
+        ['es_ES', -520, 'ES'],
+        ['it_IT', -360, 'IT'],
+        ['nl_NL', -400, 'NL'],
+        ['ru_RU', -480, 'RU'],
+        ['zh_TW', -120, 'ZH'],
+        //['pt_PT', -440, 'PT'],
+        ['pt_BR', -40,  'PT'],
+        ['ga_IE', -320, 'GA'],
+        ['gl_ES', -200, 'GL'],
+        ['id_ID', -280, 'ID'],
+        ['eu_ES', -0,   'EU'],
+        ['ca_ES', -80,  'CA'],
+    ];
+
     /**
      * Create the locale object
-     * @param string $locale
+     *
+     * @param string $locale optional
      */
-    public function __construct($locale = NULL) {
-        if ($locale == NULL && isset($_GET['lang']) && strlen($_GET['lang']) != 0) {
-            $locale = $_GET['lang'];
-        } elseif ($locale == NULL && isset($_COOKIE['lang'])) {
-            $locale = $_COOKIE['lang'];
-        } elseif ($locale == NULL)
-            $locale = "en_US";
+    public function __construct($locale = null)
+    {
+        $cookie_lang = !empty($_COOKIE[static::LANG_KEY]) ? $_COOKIE[static::LANG_KEY] : null;
+        $get_lang = !empty($_GET[static::LANG_KEY]) ? $_GET[static::LANG_KEY] : null;
 
-        if (!SLocale::IsValid($locale))
-            die("Invalid locale");
-        
-        SLocale::SetLocale($locale);
+        if (!$locale && $get_lang) // set the locale from the get params
+        {
+            $locale = $get_lang;
+        }
+        elseif ($cookie_lang) // set the locale from the cookies
+        {
+            $locale = $cookie_lang;
+        }
+        else
+        {
+            $locale = "en_US"; // default locale
+        }
+
+        if (!static::isLocale($locale)) // locale is invalid, fallback to default
+        {
+            $locale = "en_US";
+        }
+
+        static::setLocale($locale);
     }
-    
+
+    /**
+     * Get all the supported translate languages
+     *
+     * @return array
+     */
+    public static function getLanguages()
+    {
+        return static::$languages;
+    }
+
     /**
      * Check if locale is a valid value
+     *
      * @param string $locale
-     * @return boolean
+     * @return bool
      */
-    public static function IsValid($locale) {
-        foreach (SLocale::$languages AS $lang) {
-            if ($locale == $lang[0]) return true;
-        }
-        return false;
+    public static function isLocale($locale)
+    {
+        return in_array($locale, array_column(static::$languages, 0), true);
     }
-    
+
     /**
      * Set page locale
+     *
      * @param string $locale Locale string - input should already be checked
      */
-    private static function SetLocale($locale) {
+    private static function setLocale($locale)
+    {
+        $domain = 'translations';
+        $cookie_lang = !empty($_COOKIE[static::LANG_KEY]) ? $_COOKIE[static::LANG_KEY] : null;
+
         // Set cookie
-        setcookie('lang', $locale, time() + SLocale::$cookie_lifetime);
         putenv("LC_ALL=$locale.UTF-8");
-        setlocale(LC_ALL, "$locale.UTF-8");
-        $_COOKIE['lang'] = $locale;
+        if (setlocale(LC_ALL, $locale . ".UTF-8") === false)
+        {
+            trigger_error(sprintf("Set locale has failed for '%s'. No localization is possible", $locale));
+        }
+
+        // change language cookie for next request only if language is different
+        if ($cookie_lang !== $locale)
+        {
+            if(!setcookie(static::LANG_KEY, $locale, time() + static::COOKIE_LIFETIME, "/"))
+            {
+                trigger_error("Failed to set locale language cookie");
+            }
+            $_COOKIE[static::LANG_KEY] = $locale;
+        }
 
         // Set translation file info
-        bindtextdomain('translations', ROOT.'locale');
-        textdomain('translations');
-        bind_textdomain_codeset('translations', 'UTF-8');
+        bindtextdomain($domain, ROOT_PATH . 'locale');
+        textdomain($domain);
+        bind_textdomain_codeset($domain, 'UTF-8');
 
-        if (!defined('LANG'))
-            define('LANG', $locale);
+        define('LANG', $locale);
     }
 }
-
-?>

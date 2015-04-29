@@ -18,40 +18,80 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-abstract class Parser {
+/**
+ * Class Parser
+ */
+abstract class Parser
+{
+    /**
+     * @var bool
+     */
     protected $binary_file = false;
-    protected $file = NULL;
-    protected $file_name = NULL;
+
+    /**
+     * The file resource
+     * @var resource
+     */
+    protected $file;
+
+    /**
+     * @var string
+     */
+    protected $file_name;
+
+    /**
+     * @var int
+     */
     protected $file_size = 0;
+
+    /**
+     * Flag that indicates to open the file with write access
+     * @var bool
+     */
     protected $writeable = false;
 
     /**
      * Load a file into the parser
-     * @param string $file File, absolute path
-     * @param boolean $write Open with write access
+     *
+     * @param string  $file   File, absolute path
+     * @param boolean $write  Open with write access
      * @param boolean $binary Open in binary mode
-     * @throws ParserException 
+     *
+     * @throws ParserException
      */
-    public function loadFile($file, $write = false, $binary = NULL) {
-	if ($binary === NULL) $binary = $this->binary_file;
-	if (!file_exists($file))
-	    throw new ParserException('File not found');
-	
-	$read_flag = ($write) ? 'r+' : 'r';
-	if ($binary) $read_flag .= 'b';
-	$handle = fopen($file, $read_flag);
-	$this->file_name = basename($file);
-	if (!$handle)
-	    throw new ParserException('Error opening file');
-	$this->file = $handle;
-	
-	$this->file_size = filesize($file);
-	
-	$this->writeable = $write;
-	$this->_loadFile();
+    public function loadFile($file, $write = false, $binary = null)
+    {
+        if ($binary === null)
+        {
+            $binary = $this->binary_file;
+        }
+        if (!file_exists($file))
+        {
+            throw new ParserException('File not found');
+        }
+
+        $read_flag = ($write) ? 'r+' : 'r';
+        if ($binary)
+        {
+            $read_flag .= 'b';
+        }
+
+        $handle = fopen($file, $read_flag);
+        if (!$handle)
+        {
+            throw new ParserException('Error opening file');
+        }
+
+        $this->file_name = basename($file);
+        $this->file = $handle;
+        $this->file_size = filesize($file);
+
+        $this->writeable = $write;
+        $this->_loadFile();
     }
+
+    /**
+     * Custom load file
+     */
     abstract protected function _loadFile();
 }
-
-class ParserException extends Exception {}
-?>

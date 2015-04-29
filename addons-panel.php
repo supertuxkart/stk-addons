@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright        2009 Lucas Baudin <xapantu@gmail.com>
- *           2011 - 2014 Stephen Just <stephenjust@gmail.com>
- *
+ * Copyright      2009 Lucas Baudin <xapantu@gmail.com>
+ *           2011-2014 Stephen Just <stephenjust@gmail.com>
+ *           2014-2015 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -18,37 +18,18 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
+require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
 
-if (!defined('ROOT'))
-    define('ROOT','./');
-require_once('include.php');
-require_once(INCLUDE_DIR.'StkTemplate.class.php');
+$id = isset($_GET['name']) ? $_GET['name'] : "";
+$a_tpl = StkTemplate::get('addons/panel.tpl');
 
-$a_tpl = new StkTemplate('addons-panel.tpl');
-
-// POST used with javascript navigation
-// GET used with everything else
-if (!isset($_GET['id']))
-    $_GET['id'] = NULL;
-if (!isset($_POST['id']))
-    $_POST['id'] = NULL;
-
-$type = (isset($_GET['type']))? $_GET['type'] : NULL;
-if (!Addon::isAllowedType($type))
-    die(htmlspecialchars(_('This page cannot be loaded because an invalid add-on type was provided.')));
-
-if(isset($_GET['id']))
-    $id = mysql_real_escape_string($_GET['id']);
-else
-    $id = mysql_real_escape_string($_POST['id']);
-
-try {
+try
+{
     $viewer = new AddonViewer($id);
     $viewer->fillTemplate($a_tpl);
     echo $a_tpl;
-    echo $viewer;
 }
-catch (Exception $e) {
-    echo '<span class="error">'.$e->getMessage().'</span><br />';
+catch(Exception $e)
+{
+    echo $e->getMessage();
 }
-?>

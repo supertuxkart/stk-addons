@@ -1,7 +1,7 @@
 <?php
 /**
- * copyright 2013 Glenn De Jonghe
- *
+ * copyright 2013      Glenn De Jonghe
+ *           2014-2015 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -18,86 +18,165 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(INCLUDE_DIR . 'Validate.class.php');
-require_once(INCLUDE_DIR . 'File.class.php');
-require_once(INCLUDE_DIR . 'DBConnection.class.php');
-require_once(INCLUDE_DIR . 'exceptions.php');
-
+/**
+ * Class Verification
+ */
 class Verification
 {
     /**
      * Verifies a supplied verification code.
-     * @param int $userid
+     *
+     * @param int    $user_id
      * @param string $ver_code
-     * @throws UserException when verification failed
+     *
+     * @throws VerificationException when verification failed
      */
-    static function verify($userid, $ver_code){
-        try{
+    public static function verify($user_id, $ver_code)
+    {
+        try
+        {
             $count = DBConnection::get()->query(
-                "SELECT `userid`
-    	        FROM `".DB_PREFIX."verification`
-    	        WHERE `userid` = :userid
+                "SELECT `user_id`
+    	        FROM `" . DB_PREFIX . "verification`
+    	        WHERE `user_id` = :user_id
                 AND `code` = :code",
                 DBConnection::ROW_COUNT,
-                array(
-                        ':userid'   => $userid,
-                        ':code'     => $ver_code
-                )
+                [
+                    ':user_id' => $user_id,
+                    ':code'    => $ver_code
+                ],
+                [':user_id' => DBConnection::PARAM_INT]
             );
-        }catch(DBException $e){
-            throw new UserException(htmlspecialchars(
-                    _('An error occurred while trying to validate verification information.') .' '.
-                    _('Please contact a website administrator.')
-            ));
+        }
+        catch(DBException $e)
+        {
+            throw new VerificationException(exception_message_db(_('validate verification information')));
         }
         if ($count !== 1)
-            throw new UserException(_("Verification failed. Either the supplied user doesn't exist,"
-                    . "the account doesn't need verification (anymore), or the verification code is incorrect.") );
+        {
+            throw new VerificationException(_h(
+                "Verification failed. Either the supplied user doesn't exist, the account doesn't need verification (anymore), or the verification code is incorrect."
+            ));
+        }
     }
-    
+
     /**
      * Deletes an entry from the verification table
-     * @param int $userid
-     * @throws DBException when nothing got deleted.
+     *
+     * @param int $user_id
+     *
+     * @throws VerificationException when nothing got deleted.
      */
-    static function delete($userid){
-        $count = DBConnection::get()->query(
-                "DELETE
-    	        FROM `".DB_PREFIX."verification`
-    	        WHERE `userid` = :userid",
-                DBConnection::ROW_COUNT,
-                array(
-                        ':userid'   => $userid
-                )
-        );
-        if ($count === 0)
-            throw new DBException();
+    public static function delete($user_id)
+    {
+        try
+        {
+            $count = DBConnection::get()->delete(
+                "verification",
+                "`user_id` = :user_id",
+                [':user_id' => $user_id],
+                [':user_id' => DBConnection::PARAM_INT]
+            );
+        }
+        catch(DBException $e)
+        {
+            throw new VerificationException(exception_message_db(_("delete verification entry")));
+        }
+
+
+        if (!$count)
+        {
+            throw new VerificationException("No verify entry got deleted");
+        }
     }
-    
+
     /**
      * Generates and insert a verification code for the user with supplied user id
-     * @param int $userid
-     * @throws DBException
+     *
+     * @param int $user_id
+     *
+     * @throws VerificationException
      * @return string the generated verification code
      */
-    static function generate($userid){
-        $verification_code = cryptUrl(12);
-        $count = DBConnection::get()->query
-        (
-            "INSERT INTO `".DB_PREFIX."verification` (`userid`,`code`)
-            VALUES(:userid, :code)
-            ON DUPLICATE KEY UPDATE code = :code",
-            DBConnection::ROW_COUNT,
-            array
-            (
-                    ':userid'   => (int) $userid,
-                    ':code'     => (string) $verification_code
-            )
-        );
-        if($count == 0){
-            throw new DBException();
+    public static function generate($user_id)
+    {
+        try
+        {
+            $verification_code = Util::getRandomString(12);
+            DBConnection::get()->query(
+                "INSERT INTO `" . DB_PREFIX . "verification` (`user_id`,`code`)
+                VALUES(:user_id, :code)
+                ON DUPLICATE KEY UPDATE code = :code",
+                DBConnection::ROW_COUNT,
+                [
+                    ':user_id' => $user_id,
+                    ':code'    => $verification_code
+                ],
+                [':user_id' => DBConnection::PARAM_INT]
+            );
         }
+        catch(DBException $e)
+        {
+            throw new VerificationException(exception_message_db(_("generate verification entry")));
+        }
+
         return $verification_code;
     }
+
+    /**
+     * Daily cron job, to delete non activated users and old verifications
+     *
+     * @param int $days
+     *
+     * @throws VerificationException
+     */
+    public static function cron($days)
+    {
+        // delete all users that have a verification and did not activate
+        // their account in the last $days or more
+        try
+        {
+            DBConnection::get()->query(
+                "DELETE U
+                FROM `" . DB_PREFIX . "verification` V
+                INNER JOIN `" . DB_PREFIX . "users` U
+                    ON V.user_id = U.id
+                WHERE
+                    is_active = 0
+                AND
+                    DATEDIFF(CURDATE(), U.date_register) >= :days",
+                DBConnection::NOTHING,
+                [":days" => $days],
+                [":days" => DBConnection::PARAM_INT]
+            );
+
+        }
+        catch(DBException $e)
+        {
+            throw new VerificationException($e->getMessage());
+        }
+
+        // delete old verification queries, because sometimes we can activate users manually, from the user panel
+        try
+        {
+            DBConnection::get()->query(
+                "DELETE V
+                FROM `" . DB_PREFIX . "verification` V
+                INNER JOIN `" . DB_PREFIX . "users` U
+                    ON V.user_id = U.id
+                WHERE
+                    is_active = 1
+                AND
+                    DATEDIFF(CURDATE(), U.date_register) >= :days",
+                DBConnection::NOTHING,
+                [":days" => $days],
+                [":days" => DBConnection::PARAM_INT]
+            );
+
+        }
+        catch(DBException $e)
+        {
+            throw new VerificationException($e->getMessage());
+        }
+    }
 }
-?>

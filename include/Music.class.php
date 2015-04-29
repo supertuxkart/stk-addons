@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright 2013 Stephen Just <stephenjust@users.sourceforge.net>
- *
+ * Copyright 2013      Stephen Just <stephenjust@users.sourceforge.net>
+ *           2014-2015 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -18,154 +18,204 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(INCLUDE_DIR . 'DBConnection.class.php');
+/**
+ * Class Music
+ */
+class Music
+{
+    /**
+     * @var int
+     */
+    private $id;
 
-class Music {
-    /**
-     * @var integer
-     */
-    private $id = NULL;
     /**
      * @var string
      */
-    private $title = NULL;
+    private $title;
+
     /**
      * @var string
      */
-    private $artist = NULL;
+    private $artist;
+
     /**
      * @var string
      */
-    private $license = NULL;
+    private $license;
+
     /**
-     * @var integer
+     * @var int
      */
-    private $length = NULL;
+    private $length;
+
     /**
      * @var float
      */
-    private $gain = NULL;
+    private $gain;
+
     /**
      * @var string
      */
-    private $file = NULL;
+    private $file;
+
     /**
      * @var string
      */
-    private $file_md5 = NULL;
+    private $file_md5;
+
     /**
      * @var string
      */
-    private $xml_file = NULL;
-    
+    private $xml_file;
+
     /**
-     * @return integer
+     * @return int
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
+
     /**
      * @return string
      */
-    public function getTitle() {
+    public function getTitle()
+    {
         return $this->title;
     }
+
     /**
      * @return string
      */
-    public function getArtist() {
+    public function getArtist()
+    {
         return $this->artist;
     }
+
     /**
      * @return string
      */
-    public function getLicense() {
+    public function getLicense()
+    {
         return $this->license;
     }
+
     /**
      * @return string
      */
-    public function getFile() {
+    public function getFile()
+    {
         return $this->file;
     }
+
     /**
      * @return string
      */
-    public function getXmlFile() {
+    public function getXmlFile()
+    {
         return $this->xml_file;
     }
+
     /**
      * @return float
      */
-    public function getGain() {
+    public function getGain()
+    {
         return $this->gain;
     }
+
     /**
-     * @return integer
+     * @return int
      */
-    public function getLength() {
+    public function getLength()
+    {
         return $this->length;
     }
-    
+
     /**
      * Get a Music object by ID
-     * @param integer $id
-     * @return \self
+     *
+     * @param int $id
+     *
+     * @return Music
      */
-    public static function get($id) {
+    public static function get($id)
+    {
         $instance = new self();
         $instance->populateById($id);
+
         return $instance;
     }
-    
+
     /**
      * Get an array of Music objects containing all tracks, sorted by title
-     * @return array
+     * This method will silently fail
+     *
+     * @return Music[] array of music instances
      */
-    public static function getAllByTitle() {
-        try {
-            $music_tracks = array();
-            $result = DBConnection::get()->query(
-                    'SELECT `id` FROM `'.DB_PREFIX.'music`
-                     ORDER BY `title` ASC',
-                    DBConnection::FETCH_ALL);
-            foreach ($result AS $music_track) {
-                $track = Music::get($music_track['id']);
-                if ($track->getId() !== NULL)
-                    $music_tracks[] = $track;
-            }
-            return $music_tracks;
-        } catch (DBException $e) {
-            return array();
+    public static function getAllByTitle()
+    {
+        try
+        {
+            $tracks = DBConnection::get()->query(
+                'SELECT `id` FROM `' . DB_PREFIX . 'music`
+                ORDER BY `title` ASC',
+                DBConnection::FETCH_ALL
+            );
         }
+        catch(DBException $e)
+        {
+            return [];
+        }
+
+        $music_tracks = [];
+        foreach ($tracks as $track)
+        {
+            $track_instance = Music::get($track['id']);
+            if ($track_instance->getId() !== null)
+            {
+                $music_tracks[] = $track_instance;
+            }
+        }
+
+        return $music_tracks;
     }
-    
+
     /**
      * Populate a music object by looking up the ID in the database
-     * @param integer $id
-     * @return void
+     * This method will silently fail
+     *
+     * @param int $id
      */
-    private function populateById($id) {
-        try {
+    private function populateById($id)
+    {
+        try
+        {
             $track_info = DBConnection::get()->query(
-                    'SELECT * FROM `'.DB_PREFIX.'music`
-                     WHERE `id` = :id',
-                    DBConnection::FETCH_ALL,
-                    array(':id' => (int) $id));
-            if (count($track_info) === 0) return;
-            
+                'SELECT * FROM `' . DB_PREFIX . 'music`
+                WHERE `id` = :id',
+                DBConnection::FETCH_FIRST,
+                [':id' => $id],
+                [':id' => DBConnection::PARAM_INT]
+            );
+            if (empty($track_info))
+            {
+                return;
+            }
+
             $this->id = $id;
-            $this->title = $track_info[0]['title'];
-            $this->artist = $track_info[0]['artist'];
-            $this->license = $track_info[0]['license'];
-            $this->gain = $track_info[0]['gain'];
-            $this->length = $track_info[0]['length'];
-            $this->file = $track_info[0]['file'];
-            $this->file_md5 = $track_info[0]['file_md5'];
-            $this->xml_file = $track_info[0]['xml_filename'];
-        } catch (DBException $e) {
+            $this->title = $track_info['title'];
+            $this->artist = $track_info['artist'];
+            $this->license = $track_info['license'];
+            $this->gain = $track_info['gain'];
+            $this->length = $track_info['length'];
+            $this->file = $track_info['file'];
+            $this->file_md5 = $track_info['file_md5'];
+            $this->xml_file = $track_info['xml_filename'];
+        }
+        catch(DBException $e)
+        {
             return;
         }
     }
 }
-?>

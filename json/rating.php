@@ -1,6 +1,7 @@
 <?php
 /**
- * copyright 2011 computerfreak97
+ * copyright 2011      computerfreak97
+ *           2014-2015 Daniel Butum <danibutum at gmail dot com>
  *
  * This file is part of stkaddons
  *
@@ -17,38 +18,54 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
+require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
-session_start();
-define('ROOT','../');
-require_once(ROOT . 'config.php');
-require_once(INCLUDE_DIR . 'sql.php'); // FIXME
-require_once(INCLUDE_DIR . 'AccessControl.class.php');
-require_once(INCLUDE_DIR . 'Ratings.class.php');
-AccessControl::setLevel('basicPage');
-
-if (!isset($_GET['addonId']))
-    die('No addon.');
-if (!User::$logged_in)
-    die('Not logged in.');
-$addonId = mysql_real_escape_string(stripslashes($_GET['addonId']));
-$rating = new Ratings($addonId);
-if (isset($_GET['rating'])) {
-    try{
-        $rating->setUserVote($_GET['rating'], NULL);
-    }catch (RatingsException $e)
-    {
-        //FIXME
-    }
-    echo $rating->displayUserRating();
-    exit;
+if (empty($_GET['addon-id']))
+{
+    exit_json_error('No addon id provided');
 }
 
-//create the string with the number of ratings (for use in the function below)
-if ($rating->getNumRatings() != 1) {
-    $numRatingsString = $rating->getNumRatings().' Votes';
-} else {
-    $numRatingsString = $rating->getNumRatings().' Vote';
+if (!isset($_GET["action"]))
+{
+    exit_json_error("action param is not defined or is empty");
 }
-echo '<div class="rating"><div class="emptystars">
-    </div><div class="fullstars" style="width: '.$rating->getAvgRatingPercent().'%;"></div></div><p>'.$numRatingsString.'</p>';
-?>
+
+if (!Addon::exists($_GET['addon-id']))
+{
+    exit_json_error('The addon does not exist ' . h($_GET['addon-id']));
+}
+if (!User::isLoggedIn())
+{
+    exit_json_error("You are not logged in");
+}
+
+$rating = Rating::get($_GET['addon-id']);
+switch ($_GET['action'])
+{
+    case "set": // set rating and get the overall rating
+        if (empty($_GET["rating"]))
+        {
+            exit_json_error("Rating param is not defined or is empty");
+        }
+
+        // set rating
+        try
+        {
+            $rating->setUserVote(User::getLoggedId(), $_GET['rating']);
+        }
+        catch(RatingsException $e)
+        {
+            exit_json_error($e->getMessage());
+        }
+
+        exit_json_success("Rating set", ["width" => $rating->getAvgRatingPercent(), "num-ratings" => $rating->getRatingString()]);
+        break;
+
+    case "get": // get overall rating
+        exit_json_success("", ["width" => $rating->getAvgRatingPercent(), "num-ratings" => $rating->getRatingString()]);
+        break;
+
+    default:
+        exit_json_error(sprintf("action = %s is not recognized", h($_GET["action"])));
+        break;
+}

@@ -18,15 +18,10 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('ROOT','./');
-include_once('include.php');
+require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
 
 $xml = writeNewsXML();
-echo 'News xml written: '.$xml.'<br />';
+echo 'News xml written: ' . $xml . '<br />';
 
 $xml = writeAssetXML();
-echo 'Asset xml written: '.$xml.'<br />';
-
-
-
-?>
+echo 'Asset xml written: ' . $xml . '<br />';

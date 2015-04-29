@@ -1,8 +1,7 @@
 <?php
-
 /**
  * copyright 2011 Stephen Just <stephenjust@users.sourceforge.net>
- *
+ *           2014 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -18,131 +17,24 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
-define('ROOT', './');
-require('include.php');
-AccessControl::setLevel('manageaddons');
+require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
+AccessControl::setLevel(AccessControl::PERM_EDIT_ADDONS);
 
-$title = htmlspecialchars(_('STK Add-ons') . ' | ' . _('Manage'));
+$_GET['action'] = (isset($_GET['action'])) ? $_GET['action'] : null;
+$_GET['view'] = (isset($_GET['view'])) ? $_GET['view'] : 'overview';
 
-require('include/top.php');
-echo '</head><body>';
-require('include/menu.php');
-if (!isset($_GET['action']))
-    $_GET['action'] = NULL;
+$tpl = StkTemplate::get("manage/index.tpl")
+    ->assignTitle(_h("Manage"))
+    ->addUtilLibrary()
+    ->addDataTablesLibrary()
+    ->addScriptInclude("manage.js")
+    ->assign("can_edit_settings", User::hasPermission(AccessControl::PERM_EDIT_SETTINGS))
+    ->assign("can_edit_roles", User::hasPermission(AccessControl::PERM_EDIT_PERMISSIONS));
+$tpl_data = ["status" => "", "body" => ""];
 
-$panels = new PanelInterface();
+// right panel
+$tpl_data["body"] = Util::ob_get_require_once(ROOT_PATH . "manage-panel.php");
 
-$menu_items =
-        array(
-            array(
-                'url' => 'manage.php?view=overview',
-                'label' => htmlspecialchars(_('Overview')),
-                'class' => 'manage-list menu-item'
-            )
-);
-if ($_SESSION['role']['managesettings']) {
-    $menu_items[] = array(
-        'url' => 'manage.php?view=general',
-        'label' => htmlspecialchars(_('General Settings')),
-        'class' => 'manage-list menu-item'
-    );
-    $menu_items[] =
-            array(
-                'url' => 'manage.php?view=news',
-                'label' => htmlspecialchars(_('News Messages')),
-                'class' => 'manage-list menu-item'
-    );
-    $menu_items[] =
-            array(
-                'url' => 'manage.php?view=clients',
-                'label' => htmlspecialchars(_('Client Versions')),
-                'class' => 'manage-list menu-item'
-    );
-    $menu_items[] =
-            array(
-                'url' => 'manage.php?view=cache',
-                'label' => htmlspecialchars(_('Cache Files')),
-                'class' => 'manage-list menu-item'
-    );
-}
-$menu_items[] =
-        array(
-            'url' => 'manage.php?view=files',
-            'label' => htmlspecialchars(_('Uploaded Files')),
-            'class' => 'manage-list menu-item'
-);
-$menu_items[] =
-        array(
-            'url' => 'manage.php?view=logs',
-            'label' => htmlspecialchars(_('Event Logs')),
-            'class' => 'manage-list menu-item'
-);
-$panels->setMenuItems($menu_items);
-
-ob_start();
-try {
-    switch ($_GET['action']) {
-        default:
-            break;
-        case 'save_config':
-            if (!isset($_POST['xml_frequency']) ||
-                    !isset($_POST['allowed_addon_exts']) ||
-                    !isset($_POST['allowed_source_exts'])) {
-                throw new Exception(htmlspecialchars(_('One or more fields has been left blank. Settings were not saved.')));
-            }
-            if (!is_numeric($_POST['xml_frequency'])) {
-                throw new Exception(htmlspecialchars(_('XML Download Frequency value is invalid.')));
-            }
-
-            ConfigManager::set_config('xml_frequency', (int) $_POST['xml_frequency']);
-            ConfigManager::set_config('allowed_addon_exts', $_POST['allowed_addon_exts']);
-            ConfigManager::set_config('allowed_source_exts', $_POST['allowed_source_exts']);
-            ConfigManager::set_config('admin_email', $_POST['admin_email']);
-            ConfigManager::set_config('list_email', $_POST['list_email']);
-            ConfigManager::set_config('list_invisible', (int) $_POST['list_invisible']);
-            ConfigManager::set_config('blog_feed', $_POST['blog_feed']);
-            ConfigManager::set_config('max_image_dimension', (int) $_POST['max_image_dimension']);
-            ConfigManager::set_config('apache_rewrites', $_POST['apache_rewrites']);
-
-            echo htmlspecialchars(_('Saved settings.')) . '<br />';
-            break;
-        case 'new_news':
-            if (empty($_POST['message']) || !isset($_POST['condition']))
-                throw new Exception('Missing response for message and condition fields.');
-
-            $web_display = (empty($_POST['web_display'])) ? false : (($_POST['web_display'] == 'on') ? true : false);
-            $important = (empty($_POST['important'])) ? false : (($_POST['important'] == 'on') ? true : false);
-            $condition = $_POST['condition'];
-
-            // Make sure no invalid version number sneaks in
-            if (stristr($condition, 'stkversion') !== false) {
-                $cond_check = explode(' ', $condition);
-                if (count($cond_check) !== 3)
-                    throw new Exception('Version comparison should contain three tokens, only found: ' . count($cond_check));
-                // Validate version string
-                Validate::versionString($cond_check[2]);
-            }
-
-            News::create($_POST['message'], $condition, $important, $web_display);
-            echo htmlspecialchars(_('Created message.')) . '<br />';
-            break;
-    }
-} catch (Exception $e) {
-    echo '<span class="error">' . $e->getMessage() . '</span><br />';
-}
-$status_content = ob_get_clean();
-$panels->setStatusContent($status_content);
-
-if (!isset($_GET['view']))
-    $_GET['view'] = 'overview';
-$_POST['id'] = $_GET['view'];
-
-ob_start();
-include(ROOT . 'manage-panel.php');
-$content = ob_get_clean();
-$panels->setContent($content);
-
-echo $panels;
-
-require('include/footer.php');
-?>
+// output the view
+$tpl->assign("manage", $tpl_data);
+echo $tpl;

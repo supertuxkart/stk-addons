@@ -1,3 +1,11 @@
-/config.php
-/assets/temp/*
-/assets/xml/*
+config.php
+*.patch
+*.diff
+.directory
+*~
+*.swp
+*.swo
+/.htaccess
+.idea/
+vendor/
+node_modules/

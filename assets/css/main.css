@@ -1,0 +1,639 @@
+/**
+ * copyright 2012 Stephen Just <stephenjust@users.sourceforge.net>
+ *           2014 Daniel Butum <danibutum at gmail dot com>
+ * This file is part of stkaddons
+ *
+ * stkaddons is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * stkaddons is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@font-face {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Open Sans'), local('OpenSans'), url(../fonts/OpenSans.woff) format('woff');
+}
+
+/* Remove outline from links */
+.nav-tabs > .active > a, a:focus, a:active {
+    outline: none;
+}
+
+body {
+    font-family: 'Open Sans', Verdana, Geneva, sans-serif;
+    font-size: 14px;
+    background-repeat: no-repeat;
+    background-position: top left;
+    color: black;
+}
+
+textarea {
+    resize: horizontal;
+}
+
+a:hover {
+    color: #999999;
+}
+
+a img {
+    border: none;
+}
+
+#body-wrapper {
+    width: 100%;
+    height: 100%;
+}
+
+#body-wrapper > header {
+    z-index: 10000;
+}
+
+#body-wrapper > footer {
+    font-size: small;
+    padding-top: 10px;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+#content-wrapper {
+    margin-top: 45px;
+    min-height: 500px;
+}
+
+#login-main {
+    margin-top: 5%;
+}
+
+.left-menu {
+    margin-top: 30px;
+}
+
+/* Home Page */
+#index-body {
+    margin-top: -10px;
+    min-height: 600px;
+    position: relative;
+    background: url("../img/background.jpg") no-repeat;
+    background-size: 100%;
+}
+
+#index-logo {
+    display: block;
+    margin: 15px auto 0 auto;
+    padding-top: 10px;
+}
+
+#index-menu {
+    display: table;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    height: 130px;
+    width: auto;
+    padding-top: 15px;
+}
+
+#index-menu > div {
+    display: table-cell;
+    padding: 0 50px 0 50px;
+    width: 106px;
+}
+
+#index-menu a {
+    background: url('../img/index-icons.png') no-repeat;
+    color: black;
+    display: block;
+    padding: 108px 0 0 0;
+    width: 106px;
+}
+
+#index-menu a.karts {
+    background-position: -106px 0;
+}
+
+#index-menu a.tracks {
+    background-position: 0 0;
+}
+
+#index-menu a.arenas {
+    background-position: -212px 0;
+}
+
+#index-menu a.help {
+    background-position: -318px 0;
+}
+
+#index-menu a span {
+    display: inline;
+    background: #efefef !important;
+    padding: 2px 15px 2px 15px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px; /* This and line below for IE */
+}
+
+/* News Bar */
+#index-news {
+    position: absolute;
+    width: 100%;
+    background: url('../img/news-panel.png') no-repeat;
+    background-size: 100%;
+    height: 91px;
+    bottom: 0;
+    -webkit-box-shadow: 0 -5px 3px rgba(40, 40, 40, 1);
+    -moz-box-shadow:    0 -5px 3px rgba(40, 40, 40, 1);
+    box-shadow:         0 -5px 4px rgba(40, 40, 40, 1);
+}
+
+#news-messages {
+    position: relative;
+    display: block;
+    list-style: none;
+    font-size: 1.8em;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 85px;
+}
+
+#news-messages > li {
+    position: absolute;
+    left: 5px;
+    right: 5px;
+    top: 0;
+    bottom: 0;
+    height: 30%;
+    margin: auto;
+    text-align: center;
+}
+
+/* Language Menu */
+
+#lang-menu ul.menu-body {
+    background-color: #F8F8F8;
+    border-color: #E7E7E7;
+    display: none;
+    list-style: none;
+    position: absolute;
+    padding: 0;
+    margin: 0;
+    width: 168px;
+    z-index: 9999;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px; /* This and line below for IE */
+}
+
+#lang-menu li {
+    display: block;
+    float: left;
+    margin-left: 4px;
+    margin-right: 4px;
+    padding: 0;
+}
+
+#lang-menu li.label {
+    clear: left;
+    float: none;
+    width: auto;
+    height: auto;
+    padding: 3px;
+}
+
+#lang-menu li a {
+    display: block;
+    margin: 0;
+    padding: 0;
+}
+
+#lang-menu li.flag a {
+    background-image: url('../img/flags.svg');
+    background-size: 48px 600px;
+    color: #4e4e4e;
+    font-size: xx-small;
+    font-weight: bold;
+    height: 40px;
+    padding: 0;
+    text-align: right;
+    text-decoration: none;
+    text-shadow: #efefef 0 1px 0;
+    width: 48px;
+}
+
+#lang-menu li.flag a:hover {
+    color: #999999;
+}
+
+/* Loading Message */
+#loading {
+    background-image: url('../img/loader.gif');
+    display: block;
+    height: 32px;
+    width: 32px;
+}
+
+#manage-menu-sidenav li, #manage-menu-sidenav li a {
+    width: 100%;
+}
+
+/* Error Messages */
+span.error {
+    background: #FFCCCC;
+    border: 1px solid #CC0000;
+    color: #CC0000;
+    display: inline-block;
+    padding: 0 2px 0 2px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+
+span.warning {
+    background: #FFFFCC;
+    border: 1px solid #FFCC00;
+    color: #996600;
+    display: inline-block;
+    padding: 0 2px 0 2px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+
+/* Error Pages */
+#error-container {
+    padding-top: 10em;
+}
+
+#error-container h1 {
+    margin-top: 0;
+    font-size: 3em;
+    font-weight: bold;
+    text-align: center;
+}
+
+#error-container p {
+    font-size: 1.5em;
+}
+
+.subtext {
+    font-size: x-small;
+    color: #666666;
+    font-weight: normal;
+}
+
+.center {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    left: 50%;
+    top: 50%;
+    margin-left: -50px;
+    margin-top: -50px;
+}
+
+.available {
+    color: #000000;
+}
+
+.unavailable {
+    color: #999999;
+}
+
+.help-hidden div {
+    display: none;
+}
+
+div.unapproved {
+    border: 1px solid #CC0000;
+    background: #DDCCCC
+}
+
+span.help-hidden {
+    color: white;
+    background-color: black;
+    width: 250px;
+    display: block;
+    font-weight: bold;
+    text-align: center;
+}
+
+div.help-hidden {
+    border: 1px solid grey;
+    width: 250px;
+}
+
+.preview {
+    width: 300px;
+}
+
+/* ------------------------------ addons  ------------------------------*/
+li div.icon {
+    position: relative;
+    float: left;
+    width: 25px;
+    height: 25px;
+}
+
+#addon-body {
+    margin-top: 20px;
+}
+
+#addon-top {
+    margin-top: 20px;
+}
+
+#addon-sort {
+    float: left;
+}
+
+#addon-search-form {
+    float: right;
+}
+
+.icon {
+    height: 25px;
+    margin-left: 2px;
+    margin-right: 10px;
+}
+
+.icon-featured {
+    background: url('../img/emblem-favorite.png') no-repeat right;
+    float: left;
+    height: 25px;
+    width: 25px;
+    position: absolute;
+    left: 5px;
+    top: 5px;
+    z-index: 500;
+}
+
+#logo_center {
+    padding-top: 15px;
+    display: inline;
+}
+
+#upload_agreement td {
+    vertical-align: top;
+}
+
+/* Addons */
+.addon-images-container {
+    margin: 1px;
+    min-width: 78px;
+    min-height: 78px;
+}
+
+#addon-set-flags table th {
+    vertical-align: bottom;
+}
+
+/* Addon Rating */
+#rating-container {
+    background: #efefef;
+    border: 1px solid #cccccc;
+    font-size: small;
+    font-weight: normal;
+    padding: 2px;
+    display: block;
+    margin-top: 20px;
+}
+
+#rating-container p {
+    margin: 0;
+    text-align: center;
+}
+
+.rating {
+    position: relative;
+    width: 55px;
+    height: 17px;
+}
+
+.rating .emptystars {
+    position: absolute;
+    background: transparent url('../img/stars.png') top left no-repeat;
+    top: 0;
+    left: 0;
+    width: 55px;
+    height: 17px;
+    z-index: 101;
+}
+
+.rating .fullstars {
+    position: absolute;
+    background: transparent url('../img/stars.png') bottom left no-repeat;
+    top: 0;
+    left: 0;
+    height: 17px;
+    z-index: 102;
+}
+
+#user-rating .rating {
+    display: inline-block;
+}
+
+/* Flag Badges */
+span.badge {
+    display: block;
+    float: left;
+    margin: 1px;
+    padding: 3px;
+    white-space: nowrap;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+
+span.f_featured {
+    background-color: #FFFFCC;
+    border: 1px solid #996600;
+    color: #996600;
+}
+
+span.f_alpha {
+    background-color: #CCCCFF;
+    border: 1px solid #000099;
+    color: #000099;
+}
+
+span.f_beta {
+    background-color: #CCFFFF;
+    border: 1px solid #009999;
+    color: #009999;
+}
+
+span.f_rc {
+    background-color: #CCFFCC;
+    border: 1px solid #009900;
+    color: #009900;
+}
+
+span.f_dfsg {
+    background-color: #CCCCCC;
+    border: 1px solid #000000;
+    color: #000000;
+}
+
+/* ------------------------------ addons  ------------------------------*/
+
+/* ------------------------------ users  ------------------------------*/
+#user-body {
+    margin-top: 20px;
+}
+
+#user-search-form {
+    position: absolute;
+    left: 80%;
+    margin-top: 20px;
+    z-index: 1000;
+}
+
+#user-menu {
+    position: relative;
+}
+
+/* ------------------------------ users  ------------------------------*/
+
+/* ------------------------------ bugs  ------------------------------*/
+#bugs-content {
+    background: white;
+    min-height: 500px;
+}
+
+#bugs-content > h1 {
+    text-align: center;
+    margin-top: 0;
+    padding-top: 20px;
+}
+
+#bugs-content h1 > form {
+
+}
+
+#bug-comments-container img {
+    max-height: 480px;
+}
+/* ------------------------------ bugs  ------------------------------*/
+
+/* ------------------------------ pagination  ------------------------------*/
+.stk-pagination {
+    position: relative;
+    z-index: 200;
+}
+
+.stk-pagination .limit, .stk-pagination .buttons {
+    display: block;
+}
+/* ------------------------------ pagination  ------------------------------*/
+
+/* ------------------------------ typehead  ------------------------------*/
+.typeahead,
+.tt-query,
+.tt-hint {
+    width: 100%;
+}
+
+.typeahead {
+    background-color: #ffffff;
+}
+
+.typeahead:focus {
+    border: 2px solid #0097cf;
+}
+
+.tt-query {
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+
+.tt-hint {
+    color: #999999
+}
+
+.tt-dropdown-menu {
+    width: 300px;
+    margin-top: 12px;
+    padding: 8px 0;
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+    -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+    -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+}
+
+.tt-suggestion {
+    padding: 3px 20px;
+    font-size: 16px;
+    line-height: 24px;
+}
+
+.tt-suggestion.tt-cursor {
+    color: #ffffff;
+    background-color: #0097cf;
+
+}
+
+.tt-suggestion p {
+    margin: 0;
+}
+
+.twitter-typeahead {
+    width: 100%;
+}
+/* ------------------------------ typehead  ------------------------------*/
+
+/* ------------------------------ stats  ------------------------------*/
+#stats-main .stats-pie-chart {
+    width: 500px;
+    height: 300px;
+}
+
+#stats-main .stats-time-chart {
+    width: auto;
+    height: 300px;
+}
+
+#stats-main .stats-time-chart-wide {
+    margin: 0 auto;
+    width: 1024px;
+    height: 500px;
+}
+
+#flotTip {
+    font-size: 14px;
+    background-color: white;
+    padding: 5px;
+    border-radius: 5px 5px 5px 5px;
+    -moz-border-radius: 5px 5px 5px 5px;
+    -webkit-border-radius: 5px 5px 5px 5px;
+    border: 0 solid #000000;
+    -webkit-box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.75);
+    box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.75);
+}
+
+.stats-buttons-container {
+    position: relative;
+}
+
+.stats-buttons {
+    position: absolute;
+    right: 0;
+    top: 2px;
+}
+/* ------------------------------ stats  ------------------------------*/

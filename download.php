@@ -1,7 +1,7 @@
 <?php
 /**
  * copyright 2011 Stephen Just <stephenjust@users.sf.net>
- *
+ *           2014 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -17,86 +17,72 @@
  * You should have received a copy of the GNU General Public License
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
+require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
 
-define('ROOT','./');
-require_once('config.php');
-require_once(INCLUDE_DIR . 'DBConnection.class.php');
+$file = isset($_GET['file']) ? $_GET['file'] : null;
 
-$dir = $_GET['type'];
-$file = $_GET['file'];
-// Make sure directory is not unsafe
-if (!preg_match('/^[a-z]+$/i',$dir))
-{
-    // Directory is unsafe - throw a 404 error
-    header("HTTP/1.0 404 Not Found");
-    exit;
-}
-// Make sure file name is not unsafe
-if (!preg_match('/^[\w\-\ ]+\.[a-z0-9]+$/i',$file))
-{
-    // File is unsafe - throw a 404 error
-    header("HTTP/1.0 404 Not Found");
-    exit;
-}
+$assets_path = filter_var($file, FILTER_SANITIZE_URL);
 
-if ($dir != 'assets')
-    $assetpath = $dir.'/'.$file;
-else
-    $assetpath = $file;
-
+// TODO probably the best solutions is not to redirect to the file, but instead output the file from here
 // Don't bother checking if the file exists - if it doesn't exist, you'll get
 // a 404 error anyways after redirecting. Yes, this may make the stats below
 // inaccurate, but the actual 404's that used to be thrown here were relatively
 // rare anyways.
 
 // Check user-agent
-$uagent = $_SERVER['HTTP_USER_AGENT'];
-$matches = array();
-if (preg_match('#^(SuperTuxKart/[a-z0-9\\.\\-_]+)( \\(.*\\))?$#', $uagent, $matches)) {
-    try {
+$user_agent = $_SERVER['HTTP_USER_AGENT'];
+$matches = [];
+if (preg_match('#^(SuperTuxKart/[a-z0-9\\.\\-_]+)( \\(.*\\))?$#', $user_agent, $matches))
+{
+    try
+    {
         DBConnection::get()->query(
-                'INSERT IGNORE INTO `'.DB_PREFIX.'clients`
-                 (`agent_string`)
-                 VALUES
-                 (:uagent)',
-                DBConnection::NOTHING,
-                array(':uagent' => $matches[1]));
-    } catch (DBException $e) {
-        header("HTTP/1.0 404 Not Found");
+            'INSERT IGNORE INTO `' . DB_PREFIX . 'clients`
+            (`agent_string`)
+            VALUES
+            (:uagent)',
+            DBConnection::NOTHING,
+            [':uagent' => $matches[1]]
+        );
+    }
+    catch(DBException $e)
+    {
+        http_response_code(404);
         exit;
     }
-    
+
     // Increase daily count for this user-agent
-    try {
+    try
+    {
         DBConnection::get()->query(
-            'INSERT INTO `'.DB_PREFIX.'stats`
+            'INSERT INTO `' . DB_PREFIX . 'stats`
              (`type`,`date`,`value`)
              VALUES
              (:type, CURDATE(), 1)
              ON DUPLICATE KEY UPDATE
              `value` = `value` + 1',
             DBConnection::NOTHING,
-            array(':type' => 'uagent '.$uagent));
-    } catch (DBException $e) {
-        header("HTTP/1.0 404 Not Found");
-        echo 'Failed to update statistics';
-        exit;
+            [':type' => 'uagent ' . $user_agent]
+        );
+    }
+    catch(DBException $e)
+    {
+        http_response_code(404);
+        exit('Failed to update statistics');
     }
 }
 
 // Update download count for addons
-try {
-    DBConnection::get()->query('CALL `'.DB_PREFIX.'increment_download` (:path)',
-            DBConnection::NOTHING, array(':path' => $assetpath));
-} catch (DBException $e) {
-    // Do nothing
+try
+{
+    File::incrementDownload($assets_path);
+}
+catch(FileException $e)
+{
+    http_response_code(404);
+    exit;
 }
 
-// Redirect to actual resource
-if ($dir == 'xml') {
-    header('Location: http://stkaddons.net/xml/'.$file);
-} else {
-    header('Location: http://downloads.tuxfamily.org/stkaddons/assets/'.$assetpath);
-}
+// Redirect to actual resource,
+header('Location: ' . ROOT_LOCATION . 'downloads/' . $assets_path);
 exit;
-?>

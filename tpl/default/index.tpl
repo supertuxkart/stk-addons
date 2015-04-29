@@ -1,11 +1,6 @@
-{config_load file="tpl/default/tpl.conf"}
-{include file=#header#}
-
-<div id="index-body">
-    <img id="index-logo"
-	src="{#tpl_image_dir#}logo.png"
-	alt="SuperTuxKart Logo"
-	title="SuperTuxKart Logo" />
+{include file=$tpl_config.header}
+<div id="index-body" class="stk-image">
+    <img id="index-logo" src="{$smarty.const.IMG_LOCATION}logo.png" alt="SuperTuxKart Logo" title="SuperTuxKart Logo" />
     
     <div id="index-menu">
 	{foreach $index_menu as $index}
@@ -17,7 +12,6 @@
 	    </div>
 	{/foreach}
     </div>{* #index-menu *}
-    <div id="index-news-shadow"></div>
     <div id="index-news">
 	<noscript><div style="display: none;"></noscript>
 	<ul id="news-messages">
@@ -28,4 +22,4 @@
 	<noscript></div></noscript>
     </div>
 </div>{* #index-body *}
-{include file=#footer#}
+{include file=$tpl_config.footer}
