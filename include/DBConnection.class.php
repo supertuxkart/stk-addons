@@ -324,10 +324,7 @@ class DBConnection
             DB_PREFIX . $table,
             '`' . implode("`, `", array_keys($column_value_pairs)) . '`', // use back ticks for reserved mysql keywords
             implode(", ", array_values($column_value_pairs))
-        );
-        // TODO add on duplicate key
-
-        if (DEBUG_MODE) Log::newEvent($query);
+        ); // TODO add on duplicate key
 
         return $this->query($query, static::ROW_COUNT, $prepared_pairs, $data_types);
     }
@@ -372,8 +369,6 @@ class DBConnection
 
         $query = sprintf("UPDATE %s SET %s WHERE %s", DB_PREFIX . $table, $set_string, $where_statement);
 
-        if (DEBUG_MODE) Log::newEvent($query);
-
         return $this->query($query, static::ROW_COUNT, $prepared_pairs, $data_types);
     }
 
@@ -401,8 +396,6 @@ class DBConnection
         static::buildQueryParams($fields_data, $prepared_pairs);
 
         $query = sprintf("DELETE FROM %s WHERE %s", DB_PREFIX . $table, $where_statement);
-
-        if (DEBUG_MODE) Log::newEvent($query);
 
         return $this->query($query, static::ROW_COUNT, $prepared_pairs, $data_types);
     }
