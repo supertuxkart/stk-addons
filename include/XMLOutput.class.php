@@ -67,9 +67,12 @@ class XMLOutput extends XMLWriter
      */
     public function addErrorElement($element_name, $info)
     {
+        // handle MAINTENANCE_MODE
+        $attr_info = function_exists("h") ? h($info) : $info;
+
         $this->startElement($element_name);
             $this->writeAttribute('success', 'no');
-            $this->writeAttribute('info', h($info));
+            $this->writeAttribute('info', $attr_info);
         $this->endElement();
     }
 

@@ -24,6 +24,7 @@
 $ROOT_LOCATION = "addons.supertuxkart.net";
 
 define("DEBUG_MODE", true); // FIXME turn off on server.
+define("MAINTENANCE_MODE", false);
 if (DEBUG_MODE) // useful for debugging
 {
     error_reporting(E_ALL);
@@ -127,6 +128,7 @@ define('F_TEX_NOT_POWER_OF_2', 512);
 define("API_LOCATION", "/api");
 define("API_VERSION", "v2");
 
+// auto load stuff, when testing we do this manually
 if (!TEST_MODE)
 {
     // set string encoding
@@ -146,6 +148,23 @@ if (!TEST_MODE)
     // disable external entity loading
     libxml_disable_entity_loader(true);
 
-    // add composer autoload
-    require_once(ROOT_PATH . "vendor" . DS . "autoload.php");
+    // Maintenance mode
+    if (MAINTENANCE_MODE)
+    {
+        if (API_MODE) // handle API
+        {
+            require(INCLUDE_PATH . "XMLOutput.class.php");
+            XMLOutput::exitXML("Server is down for maintenance. More details at " . ROOT_LOCATION);
+        }
+        else
+        {
+            require(TPL_PATH . "maintenance.html");
+            exit;
+        }
+    }
+    else // normal mode
+    {
+        // add composer autoload
+        require_once(ROOT_PATH . "vendor" . DS . "autoload.php");
+    }
 }
