@@ -1,3 +1,4 @@
+# #-#-#-#-#  code.pot (stkaddons)  #-#-#-#-#
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR SuperTuxKart Team
 # This file is distributed under the same license as the PACKAGE package.
@@ -6,66 +7,1512 @@
 #, fuzzy
 msgid ""
 msgstr ""
+"#-#-#-#-#  code.pot (stkaddons)  #-#-#-#-#\n"
 "Project-Id-Version: stkaddons\n"
 "Report-Msgid-Bugs-To: stephenjust@users.sourceforge.net\n"
-"POT-Creation-Date: 2012-12-12 06:38-0700\n"
+"POT-Creation-Date: 2015-05-09 17:12+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"#-#-#-#-#  template.pot  #-#-#-#-#\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 
-#: ../about.php:35 ../include/Template.class.php:111 ../include/menu.php:79
+#: ../about.php:25 ../tpl/default/footer.tpl:3
 msgid "About"
 msgstr ""
 
-#: ../about.php:35 ../login.php:112 ../manage.php:25 ../password-reset.php:27
-#: ../register.php:24
+#: ../addons.php:40 ../index.php:44 ../users-panel.php:98
+#: ../tpl/default/menu-top.tpl:35
+msgid "Tracks"
+msgstr ""
+
+#: ../addons.php:44 ../index.php:39 ../users-panel.php:103
+#: ../tpl/default/menu-top.tpl:34
+msgid "Karts"
+msgstr ""
+
+#: ../addons.php:48 ../index.php:49 ../users-panel.php:108
+#: ../tpl/default/menu-top.tpl:33
+msgid "Arenas"
+msgstr ""
+
+#: ../addons.php:52 ../include/Statistic.class.php:360
+msgid "Invalid addon type."
+msgstr ""
+
+#: ../addons.php:57 ../index.php:24
+msgid "SuperTuxKart Add-ons"
+msgstr ""
+
+#: ../error.php:34
+msgid "401 Unauthorized"
+msgstr ""
+
+#: ../error.php:35
+msgid "You do not have permission to access this page."
+msgstr ""
+
+#: ../error.php:40
+msgid "403 - Forbidden"
+msgstr ""
+
+#: ../error.php:41
+msgid ""
+"You're not supposed to be here. Click one of the links in the menu above to "
+"find some better content."
+msgstr ""
+
+#: ../error.php:46
+msgid "404 - Not Found"
+msgstr ""
+
+#: ../error.php:47
+msgid ""
+"We can't find what you are looking for. The link you followed may be broken."
+msgstr ""
+
+#: ../error.php:51
+msgid "An Error Occurred"
+msgstr ""
+
+#: ../error.php:52
+msgid "Something broke! We'll try to fix it as soon as we can!"
+msgstr ""
+
+#: ../include/AccessControl.class.php:273
+msgid "retrieve roles"
+msgstr ""
+
+#: ../include/AccessControl.class.php:338
+msgid "retrieve permissions"
+msgstr ""
+
+#: ../include/AccessControl.class.php:372
+msgid "The role is not valid"
+msgstr ""
+
+#: ../include/AccessControl.class.php:401
+msgid "clean the role permissions"
+msgstr ""
+
+#: ../include/AccessControl.class.php:418
+msgid "insert new permissions"
+msgstr ""
+
+#: ../include/Achievement.class.php:48 ../include/Achievement.class.php:86
+msgid "fetch the achieved achievements"
+msgstr ""
+
+#: ../include/Achievement.class.php:123
+msgid "Provided an id of an achievement that doesn't exist in the database."
+msgstr ""
+
+#: ../include/Achievement.class.php:127
+msgid "confirm your achievement"
+msgstr ""
+
+#: ../include/Addon.class.php:137
+msgid "load revisions"
+msgstr ""
+
+#: ../include/Addon.class.php:142
+msgid "No revisions of this add-on exist. This should never happen."
+msgstr ""
+
+#: ../include/Addon.class.php:171
+msgid ""
+"Did not found latest revision (possibly wrong status). This should never "
+"happen"
+msgstr ""
+
+#: ../include/Addon.class.php:281
+msgid "create add-on revision"
+msgstr ""
+
+#: ../include/Addon.class.php:340
+msgid "remove addon"
+msgstr ""
+
+#: ../include/Addon.class.php:357
+msgid "The revision you are trying to delete does not exist."
+msgstr ""
+
+#: ../include/Addon.class.php:361
+msgid "You cannot delete the last revision of an add-on."
+msgstr ""
+
+#: ../include/Addon.class.php:367
+msgid ""
+"You cannot delete the latest revision of an add-on. Please mark a different "
+"revision to be the latest revision first."
+msgstr ""
+
+#: ../include/Addon.class.php:379
+msgid "The add-on file could not be queued for deletion."
+msgstr ""
+
+#: ../include/Addon.class.php:396
+msgid "delete a revision"
+msgstr ""
+
+#: ../include/Addon.class.php:480 ../include/Util.class.php:906
+#: ../include/Util.class.php:924 ../include/Util.class.php:928
+msgid "Unknown"
+msgstr ""
+
+#: ../include/Addon.class.php:610
+msgid "An invalid revision was provided."
+msgstr ""
+
+#: ../include/Addon.class.php:631
+msgid "look up file ID"
+msgstr ""
+
+#: ../include/Addon.class.php:636
+msgid "There is no add-on found with the specified revision number."
+msgstr ""
+
+#: ../include/Addon.class.php:648
+msgid "The requested file does not have an associated file record."
+msgstr ""
+
+#: ../include/Addon.class.php:722
+msgid "update the description"
+msgstr ""
+
+#: ../include/Addon.class.php:755
+msgid "update the designer"
+msgstr ""
+
+#: ../include/Addon.class.php:790
+msgid "update the image/icon"
+msgstr ""
+
+#: ../include/Addon.class.php:810
+msgid "This addon type does not have an icon associated with it"
+msgstr ""
+
+#: ../include/Addon.class.php:853
+msgid "set the min/max include versions"
+msgstr ""
+
+#: ../include/Addon.class.php:887
+msgid "update the license"
+msgstr ""
+
+#: ../include/Addon.class.php:920
+msgid "update the name"
+msgstr ""
+
+#: ../include/Addon.class.php:964 ../include/Addon.class.php:1191
+msgid "update add-on status"
+msgstr ""
+
+#: ../include/Addon.class.php:994
+msgid "find user record"
+msgstr ""
+
+#: ../include/Addon.class.php:1045
+msgid "You do not have the permission to change this addon's status"
+msgstr ""
+
+#: ../include/Addon.class.php:1226
+msgid "The requested add-on does not exist."
+msgstr ""
+
+#: ../include/Addon.class.php:1536 ../include/Bug.class.php:431
+msgid "The search term is empty"
+msgstr ""
+
+#: ../include/Addon.class.php:1540
+msgid "No search field specified"
+msgstr ""
+
+#: ../include/Addon.class.php:1580
+msgid "search for add-on"
+msgstr ""
+
+#: ../include/Addon.class.php:1608
+msgid "Invalid addon type"
+msgstr ""
+
+#: ../include/Addon.class.php:1676
+msgid "select all addons from the database"
+msgstr ""
+
+#: ../include/Addon.class.php:1739
+msgid "An invalid add-on type was provided."
+msgstr ""
+
+#: ../include/Addon.class.php:1777
+msgid "create your add-on"
+msgstr ""
+
+#: ../include/Addon.class.php:1872
+msgid "count the number of addons"
+msgstr ""
+
+#: ../include/Addon.class.php:1888
+msgid "You must be logged in to perform this action."
+msgstr ""
+
+#: ../include/Addon.class.php:1894
+msgid "You do not have the necessary permissions to perform this action."
+msgstr ""
+
+#: ../include/AddonViewer.class.php:90
+msgid "Addon is not approved"
+msgstr ""
+
+#: ../include/AddonViewer.class.php:169
+#, php-format
+msgid "Download %s"
+msgstr ""
+
+#: ../include/AddonViewer.class.php:194
+#, php-format
+msgid "Download revision %u"
+msgstr ""
+
+#: ../include/AddonViewer.class.php:265
+#, php-format
+msgid "Source File %u"
+msgstr ""
+
+#: ../include/AddonViewer.class.php:276 ../include/AddonViewer.class.php:317
+msgid "Alpha"
+msgstr ""
+
+#: ../include/AddonViewer.class.php:277 ../include/AddonViewer.class.php:321
+msgid "Beta"
+msgstr ""
+
+#: ../include/AddonViewer.class.php:278 ../include/AddonViewer.class.php:325
+msgid "Release-Candidate"
+msgstr ""
+
+#: ../include/AddonViewer.class.php:279
+msgid "Latest"
+msgstr ""
+
+#: ../include/AddonViewer.class.php:280
+msgid "Invalid Textures"
+msgstr ""
+
+#: ../include/AddonViewer.class.php:286
+msgid "Approved"
+msgstr ""
+
+#: ../include/AddonViewer.class.php:287
+msgid "Invisible"
+msgstr ""
+
+#: ../include/AddonViewer.class.php:288 ../include/AddonViewer.class.php:329
+msgid "DFSG Compliant"
+msgstr ""
+
+#: ../include/AddonViewer.class.php:289 ../include/AddonViewer.class.php:313
+#: ../tpl/default/addons/index.tpl:7
+msgid "Featured"
+msgstr ""
+
+#: ../include/Base.class.php:74
+#, php-format
+msgid "The %s must be between %s and %s characters long"
+msgstr ""
+
+#: ../include/Base.class.php:117
+msgid "retrieve the singleton"
+msgstr ""
+
+#: ../include/Base.class.php:153
+#, php-format
+msgid "see if a '%s' exists."
+msgstr ""
+
+#: ../include/Base.class.php:199
+msgid "select all data from table"
+msgstr ""
+
+#: ../include/Bug.class.php:147
+msgid "fetch bug comments"
+msgstr ""
+
+#: ../include/Bug.class.php:372
+msgid "get a bug record"
+msgstr ""
+
+#: ../include/Bug.class.php:377
+#, php-format
+msgid "There is no bug with id %d"
+msgstr ""
+
+#: ../include/Bug.class.php:405
+msgid "fetch a bug comments data"
+msgstr ""
+
+#: ../include/Bug.class.php:410 ../include/Bug.class.php:633
+#: ../include/Bug.class.php:765
+msgid "The bug comment does not exist"
+msgstr ""
+
+#: ../include/Bug.class.php:478
+msgid "search bugs"
+msgstr ""
+
+#: ../include/Bug.class.php:502 ../tpl/default/addons/index.tpl:44
+msgid "The addon name does not exist"
+msgstr ""
+
+#: ../include/Bug.class.php:506
+msgid "You do not have the necessary permission to add a bug"
+msgstr ""
+
+#: ../include/Bug.class.php:524
+msgid "create a bug"
+msgstr ""
+
+#: ../include/Bug.class.php:546 ../include/Bug.class.php:727
+msgid "The bug does not exist"
+msgstr ""
+
+#: ../include/Bug.class.php:550
+msgid "You do not have the necessary permission to add a comment"
+msgstr ""
+
+#: ../include/Bug.class.php:567
+msgid "create a bug comment"
+msgstr ""
+
+#: ../include/Bug.class.php:597
+msgid "You do not have the necessary permission to update this bug"
+msgstr ""
+
+#: ../include/Bug.class.php:615
+msgid "update a bug"
+msgstr ""
+
+#: ../include/Bug.class.php:641
+msgid "You do not have the necessary permission to update this bug comment"
+msgstr ""
+
+#: ../include/Bug.class.php:658
+msgid "update a bug comment"
+msgstr ""
+
+#: ../include/Bug.class.php:680
+msgid "The bug is already closed"
+msgstr ""
+
+#: ../include/Bug.class.php:689
+msgid "You do not have the necessary permission to close this bug"
+msgstr ""
+
+#: ../include/Bug.class.php:711
+msgid "close a bug"
+msgstr ""
+
+#: ../include/Bug.class.php:735
+msgid "You do not have the necessary permission to delete this bug"
+msgstr ""
+
+#: ../include/Bug.class.php:749
+msgid "delete a bug"
+msgstr ""
+
+#: ../include/Bug.class.php:774
+msgid "You do not have the necessary permission to delete this bug comment"
+msgstr ""
+
+#: ../include/Bug.class.php:788
+msgid "delete a bug comment"
+msgstr ""
+
+#: ../include/Bug.class.php:811
+msgid "title"
+msgstr ""
+
+#: ../include/Bug.class.php:823
+msgid "description"
+msgstr ""
+
+#: ../include/Bug.class.php:836
+msgid "comment description"
+msgstr ""
+
+#: ../include/Bug.class.php:852
+msgid "close reason"
+msgstr ""
+
+#: ../include/Cache.class.php:65
+msgid "empty the cache"
+msgstr ""
+
+#: ../include/ClientSession.class.php:128
+msgid "stop a server"
+msgstr ""
+
+#: ../include/ClientSession.class.php:133
+msgid "Not the good number of servers deleted."
+msgstr ""
+
+#: ../include/ClientSession.class.php:180
+msgid "fetch notifications"
+msgstr ""
+
+#: ../include/ClientSession.class.php:222
+msgid "get a peer's public address."
+msgstr ""
+
+#: ../include/ClientSession.class.php:228
+msgid "That user is not signed in."
+msgstr ""
+
+#: ../include/ClientSession.class.php:232
+msgid "Too many users match the request"
+msgstr ""
+
+#: ../include/ClientSession.class.php:319
+msgid "fetch server connection requests"
+msgstr ""
+
+#: ../include/ClientSession.class.php:390
+msgid "to sign out"
+msgstr ""
+
+#: ../include/ClientSession.class.php:431
+msgid "log out"
+msgstr ""
+
+#: ../include/ClientSession.class.php:463
+msgid "request a server connection"
+msgstr ""
+
+#: ../include/ClientSession.class.php:494
+msgid "No server found"
+msgstr ""
+
+#: ../include/ClientSession.class.php:511
+msgid "quick join a server"
+msgstr ""
+
+#: ../include/ClientSession.class.php:532
+msgid "Invalid vote. Your rating has to be either -1 or 1."
+msgstr ""
+
+#: ../include/ClientSession.class.php:556
+msgid "cast your host vote"
+msgstr ""
+
+#: ../include/ClientSession.class.php:594
+msgid "update your status"
+msgstr ""
+
+#: ../include/ClientSession.class.php:638
+msgid "set your public address"
+msgstr ""
+
+#: ../include/ClientSession.class.php:644
+msgid "Could not set the ip:port"
+msgstr ""
+
+#: ../include/ClientSession.class.php:673
+msgid "unset your public address"
+msgstr ""
+
+#: ../include/ClientSession.class.php:678
+msgid "ID:Token must be wrong."
+msgstr ""
+
+#: ../include/ClientSession.class.php:682
+msgid "Weird count of updates"
+msgstr ""
+
+#: ../include/ClientSession.class.php:712
+msgid "verify session"
+msgstr ""
+
+#: ../include/ClientSession.class.php:719
+msgid "Session not valid. Please sign in."
+msgstr ""
+
+#: ../include/ClientSession.class.php:741
+msgid "Username required"
+msgstr ""
+
+#: ../include/ClientSession.class.php:745
+msgid "Password required"
+msgstr ""
+
+#: ../include/ClientSession.class.php:785
+msgid "create your session"
+msgstr ""
+
+#: ../include/File.class.php:158
+msgid "delete a file"
+msgstr ""
+
+#: ../include/File.class.php:190
+msgid "The requested file id does not exist."
+msgstr ""
+
+#: ../include/File.class.php:210
+msgid "The requested file path does not exist."
+msgstr ""
+
+#: ../include/File.class.php:252
+msgid "get all the files of addon"
+msgstr ""
+
+#: ../include/File.class.php:363
+msgid "Path is not a directory"
+msgstr ""
+
+#: ../include/File.class.php:398
+msgid "change file approval status"
+msgstr ""
+
+#: ../include/File.class.php:428
+msgid "The file to extract does not exist."
+msgstr ""
+
+#: ../include/File.class.php:440 ../include/File.class.php:472
+msgid "Could not open archive file. It may be corrupted."
+msgstr ""
+
+#: ../include/File.class.php:444 ../include/File.class.php:476
+msgid "Failed to extract archive file."
+msgstr ""
+
+#: ../include/File.class.php:482
+msgid "Unknown archive type."
+msgstr ""
+
+#: ../include/File.class.php:544
+msgid "Invalid source or destination directory."
+msgstr ""
+
+#: ../include/File.class.php:809
+msgid "read the deletion queue"
+msgstr ""
+
+#: ../include/File.class.php:946
+msgid "create file"
+msgstr ""
+
+#: ../include/File.class.php:958
+msgid "select file id from procedure"
+msgstr ""
+
+#: ../include/File.class.php:991
+msgid "delete an existing image"
+msgstr ""
+
+#: ../include/File.class.php:1005
+msgid "The uploaded image file is invalid."
+msgstr ""
+
+#: ../include/Friend.class.php:187
+msgid "fetch online friends"
+msgstr ""
+
+#: ../include/Friend.class.php:266
+msgid "fetch friends"
+msgstr ""
+
+#: ../include/Friend.class.php:323
+msgid "You cannot ask yourself to be your friend!"
+msgstr ""
+
+#: ../include/Friend.class.php:391
+msgid "add a friend request"
+msgstr ""
+
+#: ../include/Friend.class.php:421
+msgid "accept a friend request"
+msgstr ""
+
+#: ../include/Friend.class.php:469
+msgid "decline a friend request"
+msgstr ""
+
+#: ../include/Friend.class.php:482
+msgid "cancel a friend request"
+msgstr ""
+
+#: ../include/Log.class.php:58
+msgid "log a new event"
+msgstr ""
+
+#: ../include/Log.class.php:93
+msgid "fetch the log entries"
+msgstr ""
+
+#: ../include/Log.class.php:121
+msgid "load unemailed logs"
+msgstr ""
+
+#: ../include/Log.class.php:143
+msgid "mark log messages as mailed"
+msgstr ""
+
+#: ../include/News.class.php:48
+msgid "fetch dynamic news entries"
+msgstr ""
+
+#: ../include/News.class.php:127
+msgid "create dynamic news entry"
+msgstr ""
+
+#: ../include/News.class.php:337
+msgid "create a news entry"
+msgstr ""
+
+#: ../include/News.class.php:356
+msgid "delete a news entry"
+msgstr ""
+
+#: ../include/Rating.class.php:140
+msgid "fetch your vote"
+msgstr ""
+
+#: ../include/Rating.class.php:298
+msgid "The rating is out of allowed boundaries."
+msgstr ""
+
+#: ../include/Rating.class.php:319
+msgid "perform your vote"
+msgstr ""
+
+#: ../include/SImage.class.php:103
+msgid "Path does not exist on the filesystem"
+msgstr ""
+
+#: ../include/SImage.class.php:107
+msgid "Path does not point to a file."
+msgstr ""
+
+#: ../include/Server.class.php:137
+msgid "Specified server already exists."
+msgstr ""
+
+#: ../include/Server.class.php:163
+msgid "create a server"
+msgstr ""
+
+#: ../include/Server.class.php:168
+msgid "Could not create server"
+msgstr ""
+
+#: ../include/Server.class.php:196
+msgid "retrieve a server"
+msgstr ""
+
+#: ../include/Server.class.php:201
+msgid "Server doesn't exist."
+msgstr ""
+
+#: ../include/Statistic.class.php:59
+msgid "The query is empty"
+msgstr ""
+
+#: ../include/Statistic.class.php:77
+msgid "create a section for statistics"
+msgstr ""
+
+#: ../include/Statistic.class.php:128
+msgid "The data is invalid the columns count should be 2"
+msgstr ""
+
+#: ../include/Statistic.class.php:159
+msgid "The data is invalid the columns count should be 3"
+msgstr ""
+
+#: ../include/Statistic.class.php:275
+msgid "The chart type is invalid"
+msgstr ""
+
+#: ../include/Statistic.class.php:308
+msgid "select the data, to build a chart"
+msgstr ""
+
+#: ../include/Statistic.class.php:338
+msgid "Failed to open json file for writing!"
+msgstr ""
+
+#: ../include/Statistic.class.php:383
+msgid "get the most downloaded addons"
+msgstr ""
+
+#: ../include/Statistic.class.php:418
+msgid "get the newest addons"
+msgstr ""
+
+#: ../include/Statistic.class.php:448
+msgid "count the number of online users"
+msgstr ""
+
+#: ../include/StkTemplate.class.php:159
+#, php-format
+msgid "Welcome, %s"
+msgstr ""
+
+#: ../include/StkTemplate.class.php:190
+msgid "Languages"
+msgstr ""
+
+#: ../include/StkTemplate.class.php:260
 msgid "STK Add-ons"
 msgstr ""
 
-#: ../about.php:38
+#: ../include/Upload.class.php:300
+msgid "Successfully uploaded image."
+msgstr ""
+
+#: ../include/Upload.class.php:301
+msgid "Continue to addon."
+msgstr ""
+
+#: ../include/Upload.class.php:313
+msgid ""
+"A valid License.txt file was not found. Please add it to your archive and re-"
+"submit."
+msgstr ""
+
+#: ../include/Upload.class.php:318
+msgid "Invalid add-on type."
+msgstr ""
+
+#: ../include/Upload.class.php:326
+msgid "No add-on id was provided with your source archive."
+msgstr ""
+
+#: ../include/Upload.class.php:330
+msgid "The add-on you want to add a source file to, does not exist"
+msgstr ""
+
+#: ../include/Upload.class.php:335
+msgid "Successfully uploaded source archive."
+msgstr ""
+
+#: ../include/Upload.class.php:336
+msgid "Continue."
+msgstr ""
+
+#: ../include/Upload.class.php:344
+msgid "The archive does not contain any addon information"
+msgstr ""
+
+#: ../include/Upload.class.php:360
+#, php-format
+msgid ""
+"Can not upload revision because the addon with name = '%s' does not exist"
+msgstr ""
+
+#: ../include/Upload.class.php:370
+msgid ""
+"You do not have the necessary permissions to upload a revision for this addon"
+msgstr ""
+
+#: ../include/Upload.class.php:377
+msgid "You do not have the necessary permissions to upload a addon"
+msgstr ""
+
+#: ../include/Upload.class.php:417
+msgid ""
+"Your add-on was uploaded successfully. It will be reviewed by our moderators "
+"before becoming publicly available."
+msgstr ""
+
+#: ../include/Upload.class.php:419
+msgid "Click here to upload the sources to your add-on now."
+msgstr ""
+
+#: ../include/Upload.class.php:422
+msgid ""
+"(Uploading the sources to your add-on enables others to improve your work "
+"and also ensure your add-on will not be lost in the future if new "
+"SuperTuxKart versions are not compatible with the current format.)"
+msgstr ""
+
+#: ../include/Upload.class.php:424
+msgid "Click here to view your add-on."
+msgstr ""
+
+#: ../include/Upload.class.php:446
+msgid ""
+"A screenshot/icon file does not exist in the archive(file name is case "
+"sensitive)"
+msgstr ""
+
+#: ../include/Upload.class.php:510
+msgid "Failed to re-pack archive file. Reason: "
+msgstr ""
+
+#: ../include/Upload.class.php:534
+msgid ""
+"Some invalid files were found in the uploaded add-on. These files have been "
+"removed from the archive:"
+msgstr ""
+
+#: ../include/Upload.class.php:637
+msgid ""
+"Some images in this add-on do not have dimensions that are a power of two."
+msgstr ""
+
+#: ../include/Upload.class.php:638
+msgid "This may cause display errors on some video cards."
+msgstr ""
+
+#: ../include/Upload.class.php:681
+#, php-format
+msgid "Failed to move uploaded file '%s' "
+msgstr ""
+
+#: ../include/Upload.class.php:703 ../include/Upload.class.php:705
+msgid "Uploaded file is too large."
+msgstr ""
+
+#: ../include/Upload.class.php:707
+msgid "Uploaded file is incomplete."
+msgstr ""
+
+#: ../include/Upload.class.php:709
+msgid "No file was uploaded."
+msgstr ""
+
+#: ../include/Upload.class.php:711
+msgid "There is no TEMP directory to store the uploaded file in."
+msgstr ""
+
+#: ../include/Upload.class.php:713
+msgid "Unable to write uploaded file to disk."
+msgstr ""
+
+#: ../include/Upload.class.php:715
+msgid "Upload file stopped by extension"
+msgstr ""
+
+#: ../include/Upload.class.php:717
+msgid "Unknown file upload error."
+msgstr ""
+
+#: ../include/Upload.class.php:737
+msgid "Uploaded image files must be either PNG or JPEG files."
+msgstr ""
+
+#: ../include/Upload.class.php:746
+msgid ""
+"The file you uploaded was not the correct type. File extension must one of "
+"these types:"
+msgstr ""
+
+#: ../include/User.class.php:265
+msgid " get the addons for a user"
+msgstr ""
+
+#: ../include/User.class.php:416
+msgid "validate your session"
+msgstr ""
+
+#: ../include/User.class.php:526
+msgid "User ID does not exist"
+msgstr ""
+
+#: ../include/User.class.php:548
+msgid "Username does not exist"
+msgstr ""
+
+#: ../include/User.class.php:633
+msgid "perform your search query"
+msgstr ""
+
+#: ../include/User.class.php:810
+msgid "count the number of users"
+msgstr ""
+
+#: ../include/User.class.php:849
+msgid "You do not have the permission to update the profile"
+msgstr ""
+
+#: ../include/User.class.php:870
+msgid "update your profile"
+msgstr ""
+
+#: ../include/User.class.php:889
+msgid "The specified role is not valid"
+msgstr ""
+
+#: ../include/User.class.php:895
+msgid "You do not have the permission to edit the role"
+msgstr ""
+
+#: ../include/User.class.php:904
+msgid "You can not edit your own role"
+msgstr ""
+
+#: ../include/User.class.php:927
+msgid "update your role"
+msgstr ""
+
+#: ../include/User.class.php:944
+msgid "User id is not set"
+msgstr ""
+
+#: ../include/User.class.php:969
+msgid "record the last login time"
+msgstr ""
+
+#: ../include/User.class.php:1002 ../include/User.class.php:1044
+msgid "change your password"
+msgstr ""
+
+#: ../include/User.class.php:1034
+msgid "You do not have the permission to change the password"
+msgstr ""
+
+#: ../include/User.class.php:1077
+msgid "activate your user account"
+msgstr ""
+
+#: ../include/User.class.php:1111 ../include/User.class.php:1216
+#: ../include/functions.php:77
+msgid "Please contact a website administrator."
+msgstr ""
+
+#: ../include/User.class.php:1116
+msgid "validate your username and email address for password reset"
+msgstr ""
+
+#: ../include/User.class.php:1141
+msgid "You must agree to the terms to register."
+msgstr ""
+
+#: ../include/User.class.php:1158
+msgid "validate your username"
+msgstr ""
+
+#: ../include/User.class.php:1162
+msgid "This username is already taken."
+msgstr ""
+
+#: ../include/User.class.php:1178
+msgid "validate your email address"
+msgstr ""
+
+#: ../include/User.class.php:1182
+msgid "This email address is already taken."
+msgstr ""
+
+#: ../include/User.class.php:1221
+msgid "create your account"
+msgstr ""
+
+#: ../include/User.class.php:1258
+msgid "Your account is not active"
+msgstr ""
+
+#: ../include/User.class.php:1292
+msgid "Invalid validation field type"
+msgstr ""
+
+#: ../include/User.class.php:1297 ../include/User.class.php:1307
+msgid "Username or password is invalid"
+msgstr ""
+
+#: ../include/User.class.php:1339
+msgid "Username and email address combination not found."
+msgstr ""
+
+#: ../include/User.class.php:1343
+msgid "Multiple accounts with the same username and email combination."
+msgstr ""
+
+#: ../include/User.class.php:1361
+msgid "username"
+msgstr ""
+
+#: ../include/User.class.php:1372 ../tpl/default/register.tpl:31
+#: ../tpl/default/login.tpl:27
+msgid "Your username can only contain alphanumeric characters"
+msgstr ""
+
+#: ../include/User.class.php:1385
+msgid "password"
+msgstr ""
+
+#: ../include/User.class.php:1403
+msgid "Passwords do not match"
+msgstr ""
+
+#: ../include/User.class.php:1416
+msgid "real name"
+msgstr ""
+
+#: ../include/User.class.php:1430
+#, php-format
+msgid "\"%s\" is not a valid email address."
+msgstr ""
+
+#: ../include/User.class.php:1435
+msgid "Email is to long."
+msgstr ""
+
+#: ../include/User.class.php:1450
+msgid "Homepage url is not valid"
+msgstr ""
+
+#: ../include/User.class.php:1455
+msgid "Homepage is to long."
+msgstr ""
+
+#: ../include/Util.class.php:921
+msgid "Latest development version"
+msgstr ""
+
+#: ../include/Validate.class.php:55
+msgid "Invalid version string! Format should be: W.X.Y[-rcZ]"
+msgstr ""
+
+#: ../include/Validate.class.php:88
+#, php-format
+msgid "%s field is empty"
+msgstr ""
+
+#: ../include/Validate.class.php:111
+#, php-format
+msgid "%s field is not set"
+msgstr ""
+
+#: ../include/Verification.class.php:53
+msgid "validate verification information"
+msgstr ""
+
+#: ../include/Verification.class.php:58
+msgid ""
+"Verification failed. Either the supplied user doesn't exist, the account "
+"doesn't need verification (anymore), or the verification code is incorrect."
+msgstr ""
+
+#: ../include/Verification.class.php:83
+msgid "delete verification entry"
+msgstr ""
+
+#: ../include/Verification.class.php:120
+msgid "generate verification entry"
+msgstr ""
+
+#: ../include/functions.php:76
+#, php-format
+msgid "A database error occured while trying to %s."
+msgstr ""
+
+#: ../include/xmlWrite.php:157 ../include/xmlWrite.php:356
+msgid "The following file could not be found:"
+msgstr ""
+
+#: ../index.php:22
+msgid ""
+"This is the official SuperTuxKart add-on repository. It contains extra karts "
+"and tracks for the SuperTuxKart game."
+msgstr ""
+
+#: ../index.php:68
+#, php-format
+msgid "The most downloaded kart is %s."
+msgstr ""
+
+#: ../index.php:69
+#, php-format
+msgid "The most downloaded track is %s."
+msgstr ""
+
+#: ../login.php:47 ../tpl/default/login.tpl:7 ../tpl/default/login.tpl:50
+#: ../tpl/default/menu-top.tpl:50 ../tpl/default/bugs/view.tpl:140
+msgid "Login"
+msgstr ""
+
+#: ../login.php:58
+msgid "Sign up here."
+msgstr ""
+
+#: ../login.php:59
+msgid "(forgot password)"
+msgstr ""
+
+#: ../login.php:72
+msgid "Failed to logout."
+msgstr ""
+
+#: ../login.php:113
+msgid "You are already logged in."
+msgstr ""
+
+#: ../manage-panel.php:128
+msgid "False"
+msgstr ""
+
+#: ../manage-panel.php:129
+msgid "True"
+msgstr ""
+
+#: ../manage-panel.php:266
+msgid "Invalid page. You may have followed a broken link."
+msgstr ""
+
+#: ../manage.php:27 ../tpl/default/menu-top.tpl:42
+msgid "Manage"
+msgstr ""
+
+#: ../music.php:22 ../tpl/default/music-browser.tpl:3
+msgid "Browse Music"
+msgstr ""
+
+#: ../music.php:38
+msgid "Track Title"
+msgstr ""
+
+#: ../music.php:39
+msgid "Track Artist"
+msgstr ""
+
+#: ../music.php:40 ../tpl/default/addons/panel.tpl:86
+msgid "License"
+msgstr ""
+
+#: ../music.php:41
+msgid "File"
+msgstr ""
+
+#: ../password-reset.php:25 ../tpl/default/password-reset.tpl:3
+msgid "Reset Password"
+msgstr ""
+
+#: ../password-reset.php:67
+msgid ""
+"Password reset link sent. Please reset your password using the link emailed "
+"to you."
+msgstr ""
+
+#: ../password-reset.php:92
+msgid "Could not reset your password. The link you followed is not valid."
+msgstr ""
+
+#: ../password-reset.php:113
+msgid "Changed password was successful."
+msgstr ""
+
+#: ../password-reset.php:113
+msgid "Click here to login"
+msgstr ""
+
+#: ../privacy.php:24 ../tpl/default/footer.tpl:3
+msgid "Privacy"
+msgstr ""
+
+#: ../register.php:30
+msgid "Register"
+msgstr ""
+
+#: ../register.php:80
+msgid ""
+"Account creation was successful. Please activate your account using the link "
+"emailed to you."
+msgstr ""
+
+#: ../register.php:102
+msgid "Your account has been activated."
+msgstr ""
+
+#: ../register.php:107
+msgid "Could not validate your account. The link you followed is not valid."
+msgstr ""
+
+#: ../upload.php:42
+msgid "Source Archive"
+msgstr ""
+
+#: ../upload.php:43
+msgid "Image File"
+msgstr ""
+
+#: ../upload.php:44
+msgid "Addon Revision"
+msgstr ""
+
+#: ../upload.php:58
+msgid ""
+"You did not submit anything/Maximum POST size exceeded(your file is too "
+"large!)"
+msgstr ""
+
+#: ../upload.php:153
+msgid ""
+"Your response to the agreement was unacceptable. You may not upload this "
+"content to the STK Addons website."
+msgstr ""
+
+#: ../users-panel.php:99
+msgid "This user has not uploaded any tracks."
+msgstr ""
+
+#: ../users-panel.php:104
+msgid "This user has not uploaded any karts."
+msgstr ""
+
+#: ../users-panel.php:109
+msgid "This user has not uploaded any arenas."
+msgstr ""
+
+#: ../users.php:28 ../tpl/default/menu-top.tpl:39
+msgid "Users"
+msgstr ""
+
+#: ../tpl/default/footer.tpl:4
+msgid "Contribute"
+msgstr ""
+
+#: ../tpl/default/register.tpl:4
+msgid "Account Registration"
+msgstr ""
+
+#: ../tpl/default/register.tpl:13 ../tpl/default/manage/page/logs.tpl:13
+#: ../tpl/default/login.tpl:14 ../tpl/default/users/tab/friends.tpl:11
+msgid "Username"
+msgstr ""
+
+#: ../tpl/default/register.tpl:15 ../tpl/default/register.tpl:43
+#: ../tpl/default/password-reset.tpl:43
+msgid "Must be at least %1 characters long."
+msgstr ""
+
+#: ../tpl/default/register.tpl:22 ../tpl/default/login.tpl:18
+msgid "The username is required"
+msgstr ""
+
+#: ../tpl/default/register.tpl:27 ../tpl/default/login.tpl:23
+msgid "The username must be between %1 and %2 characters long"
+msgstr ""
+
+#: ../tpl/default/register.tpl:35 ../tpl/default/login.tpl:31
+msgid "The username and password cannot be the same as each other"
+msgstr ""
+
+#: ../tpl/default/register.tpl:41 ../tpl/default/login.tpl:34
+#: ../tpl/default/login.tpl:35
+msgid "Password"
+msgstr ""
+
+#: ../tpl/default/register.tpl:49 ../tpl/default/login.tpl:37
+msgid "The password is required"
+msgstr ""
+
+#: ../tpl/default/register.tpl:54 ../tpl/default/login.tpl:42
+msgid "The password must be between %1 and %2 characters long"
+msgstr ""
+
+#: ../tpl/default/register.tpl:58 ../tpl/default/login.tpl:46
+msgid "The password cannot be the same as username"
+msgstr ""
+
+#: ../tpl/default/register.tpl:63
+msgid "Password (confirm)"
+msgstr ""
+
+#: ../tpl/default/register.tpl:68
+msgid "The confirm password is required"
+msgstr ""
+
+#: ../tpl/default/register.tpl:72
+msgid "The passwords do not match"
+msgstr ""
+
+#: ../tpl/default/register.tpl:77
+msgid "Email Address"
+msgstr ""
+
+#: ../tpl/default/register.tpl:79
+msgid "Email address used to activate your account."
+msgstr ""
+
+#: ../tpl/default/register.tpl:86
+msgid "The registration email is required"
+msgstr ""
+
+#: ../tpl/default/register.tpl:89
+msgid "The email address is not a valid"
+msgstr ""
+
+#: ../tpl/default/register.tpl:94 ../tpl/default/manage/page/files.tpl:10
+#: ../tpl/default/users/tab/achievements.tpl:10
+msgid "Name"
+msgstr ""
+
+#: ../tpl/default/register.tpl:96
+msgid "Optional"
+msgstr ""
+
+#: ../tpl/default/register.tpl:106
+msgid "The nam must be between %1 and %2 characters long"
+msgstr ""
+
+#: ../tpl/default/register.tpl:111
+msgid "Terms:"
+msgstr ""
+
+#: ../tpl/default/register.tpl:115
+msgid "STK Addons Terms and Conditions"
+msgstr ""
+
+#: ../tpl/default/register.tpl:117
+msgid ""
+"You must agree to these terms in order to upload content to the STK Addons "
+"site."
+msgstr ""
+
+#: ../tpl/default/register.tpl:119
+msgid ""
+"The STK Addons service is designed to be a repository exclusively for "
+"SuperTux Kart addon content. All uploaded content must be intended for this "
+"purpose. When you upload your content, it will be available publicly on the "
+"internet, and will be made available in-game for download."
+msgstr ""
+
+#: ../tpl/default/register.tpl:121
+msgid ""
+"Super Tux Kart aims to comply with the Debian Free Software Guidelines "
+"(DFSG). TuxFamily.org also requires that content they host comply with open "
+"licenses. You may not upload content which is locked down with a restrictive "
+"license. Licenses such as CC-BY-SA 3.0, or other DFSG-compliant licenses are "
+"required. All content taken from third-party sources must be attributed "
+"properly, and must also be available under an open license. Licenses and "
+"attribution should be included in a \"license.txt\" file in each uploaded "
+"archive. Uploads without proper licenses or attribution may be deleted "
+"without warning."
+msgstr ""
+
+#: ../tpl/default/register.tpl:123
+msgid ""
+"Even with valid licenses and attribution, content may not contain any of the "
+"following:"
+msgstr ""
+
+#: ../tpl/default/register.tpl:124 ../tpl/default/upload.tpl:132
+msgid "Profanity"
+msgstr ""
+
+#: ../tpl/default/register.tpl:125 ../tpl/default/upload.tpl:133
+msgid "Explicit images"
+msgstr ""
+
+#: ../tpl/default/register.tpl:126 ../tpl/default/upload.tpl:134
+msgid "Hateful messages and/or images"
+msgstr ""
+
+#: ../tpl/default/register.tpl:127 ../tpl/default/upload.tpl:135
+msgid "Any other content that may be unsuitable for children"
+msgstr ""
+
+#: ../tpl/default/register.tpl:128
+msgid ""
+"If any of your uploads are found to contain any of the above, your upload "
+"will be removed, your account may be removed, and any other content you "
+"uploaded may be removed."
+msgstr ""
+
+#: ../tpl/default/register.tpl:130
+msgid ""
+"By checking the box below, you are confirming that you understand these "
+"terms. If you have any questions or comments regarding these terms, one of "
+"the members of the development team would gladly assist you."
+msgstr ""
+
+#: ../tpl/default/register.tpl:136
+msgid "I agree to the above terms"
+msgstr ""
+
+#: ../tpl/default/register.tpl:141
+msgid "You must agree to the above terms"
+msgstr ""
+
+#: ../tpl/default/register.tpl:146
+msgid "Verify that you are not a bot"
+msgstr ""
+
+#: ../tpl/default/register.tpl:154
+msgid "Register!"
+msgstr ""
+
+#: ../tpl/default/stats/index.tpl:3
+msgid "Statistics"
+msgstr ""
+
+#: ../tpl/default/stats/page/overview.tpl:5 ../tpl/default/menu-top.tpl:23
+msgid "Addons"
+msgstr ""
+
+#: ../tpl/default/stats/page/overview.tpl:16
+msgid "Files"
+msgstr ""
+
+#: ../tpl/default/stats/page/overview.tpl:17
+msgid "downloads (by add-on type)"
+msgstr ""
+
+#: ../tpl/default/stats/page/overview.tpl:31
+msgid "Clients"
+msgstr ""
+
+#: ../tpl/default/stats/page/overview.tpl:41
+msgid "Servers"
+msgstr ""
+
+#: ../tpl/default/pagination.tpl:4
+msgid "Items"
+msgstr ""
+
+#: ../tpl/default/about.tpl:3
 msgid "About STK Add-Ons"
 msgstr ""
 
-#: ../about.php:42
+#: ../tpl/default/about.tpl:5
 msgid ""
 "SuperTuxKart is a Free 3D kart racing game, with many tracks, characters and "
 "items for you to try."
 msgstr ""
 
-#: ../about.php:43
+#: ../tpl/default/about.tpl:6
 msgid ""
 "Since version 0.7.1, SuperTuxKart has had the ability to fetch important "
 "messages from the STKAddons website. Since 0.7.2, the game has included a "
 "built-in add-on manager."
 msgstr ""
 
-#: ../about.php:44
-#, php-format
+#: ../tpl/default/about.tpl:7
 msgid ""
-"SuperTuxKart now has over %d karts, %d tracks, and %d arenas available in-"
+"SuperTuxKart now has over %1 karts, %2 tracks, and %3 arenas available in-"
 "game thanks to the add-on service."
 msgstr ""
 
-#: ../about.php:45
+#: ../tpl/default/about.tpl:8
 msgid ""
 "Of course, the artists who create all of this content must be thanked too. "
 "Without them, the add-on website would not be as great as it is today."
 msgstr ""
 
-#: ../about.php:46 ../about.php:54
-msgid "Donate!"
-msgstr ""
-
-#: ../about.php:46 ../about.php:54
+#: ../tpl/default/about.tpl:10 ../tpl/default/about.tpl:17
 msgid "Website"
 msgstr ""
 
-#: ../about.php:52
+#: ../tpl/default/about.tpl:10 ../tpl/default/about.tpl:17
+msgid "Donate"
+msgstr ""
+
+#: ../tpl/default/about.tpl:14
 msgid ""
 "TuxFamily is a non-profit organization. It provides free services for "
 "projects and contents dealing with the free software philosophy (free as in "
@@ -73,7 +1520,7 @@ msgid ""
 "free license (GPL, BSD, CC-BY-SA, Art Libre...)."
 msgstr ""
 
-#: ../about.php:53
+#: ../tpl/default/about.tpl:15
 msgid ""
 "TuxFamily operates the servers on which STKAddons runs, for free. Because of "
 "them, we can provide the add-on service for SuperTuxKart. Each month, over a "
@@ -81,1393 +1528,342 @@ msgid ""
 "for their generosity to us and to other open source projects."
 msgstr ""
 
-#: ../addons-panel.php:44
-msgid "This page cannot be loaded because an invalid add-on type was provided."
+#: ../tpl/default/about.tpl:20
+msgid "Credits"
 msgstr ""
 
-#: ../addons.php:35
-msgid "Unknown Type"
-msgstr ""
-
-#: ../addons.php:39 ../include/Template.class.php:109 ../include/menu.php:49
-#: ../include/menu.php:60 ../index.php:47
-msgid "Tracks"
-msgstr ""
-
-#: ../addons.php:42 ../include/Template.class.php:108 ../include/menu.php:54
-#: ../include/menu.php:59 ../index.php:44
-msgid "Karts"
-msgstr ""
-
-#: ../addons.php:45 ../include/Template.class.php:110 ../include/menu.php:50
-#: ../include/menu.php:55 ../index.php:50
-msgid "Arenas"
-msgstr ""
-
-#. I18N: Index page title
-#: ../addons.php:48 ../include/top.php:31 ../index.php:39 ../users.php:38
-msgid "SuperTuxKart Add-ons"
-msgstr ""
-
-#: ../addons.php:74
-msgid "Invalid addon type."
-msgstr ""
-
-#: ../addons.php:94
-msgid "Saved properties."
-msgstr ""
-
-#: ../addons.php:104
-msgid "Saved status."
-msgstr ""
-
-#: ../addons.php:111
-msgid "Saved notes."
-msgstr ""
-
-#: ../addons.php:117
-msgid "Deleted addon."
-msgstr ""
-
-#: ../addons.php:123
-msgid "Deleted add-on revision."
-msgstr ""
-
-#: ../addons.php:129
-msgid "File updated."
-msgstr ""
-
-#: ../addons.php:134
-msgid "Set image."
-msgstr ""
-
-#: ../addons.php:141
-msgid "Set icon."
-msgstr ""
-
-#: ../addons.php:146
-msgid "Deleted file."
-msgstr ""
-
-#: ../addons.php:151
-msgid "Marked game versions in which this add-on is included."
-msgstr ""
-
-#: ../disabled.php:40
-msgid "This page is currently disabled."
-msgstr ""
-
-#: ../disabled.php:41 ../include/AccessControl.class.php:91
-msgid "You will be redirected to the home page."
-msgstr ""
-
-#. I18N: Heading for general error page
-#: ../error.php:48
-msgid "An Error Occurred"
-msgstr ""
-
-#. I18N: Error message for general error page
-#: ../error.php:50
-msgid "Something broke! We'll try to fix it as soon as we can!"
-msgstr ""
-
-#. I18N: Heading for HTTP 403 Forbidden error page
-#: ../error.php:54
-msgid "403 - Forbidden"
-msgstr ""
-
-#. I18N: Error message for HTTP 403 Forbidden error page
-#: ../error.php:56
-msgid ""
-"You're not supposed to be here. Click one of the links in the menu above to "
-"find some better content."
-msgstr ""
-
-#. I18N: Heading for HTTP 404 Not Found error page
-#: ../error.php:60
-msgid "404 - Not Found"
-msgstr ""
-
-#. I18N: Error message for HTTP 404 Not Found error page
-#: ../error.php:62
-msgid ""
-"We can't find what you are looking for. The link you followed may be broken."
-msgstr ""
-
-#: ../include/AccessControl.class.php:90
-msgid "You do not have permission to access this page."
-msgstr ""
-
-#: ../include/Addon.class.php:57
-msgid "The requested add-on does not exist."
-msgstr ""
-
-#: ../include/Addon.class.php:119 ../include/Addon.class.php:198
-#, php-format
-msgid "Texture not found: %s"
-msgstr ""
-
-#: ../include/Addon.class.php:133
-msgid ""
-"An add-on with this ID already exists. Please try to upload your add-on "
-"again later."
-msgstr ""
-
-#: ../include/Addon.class.php:139
-msgid "The add-on you are trying to create already exists."
-msgstr ""
-
-#: ../include/Addon.class.php:141
-msgid "Creating a new add-on..."
-msgstr ""
-
-#: ../include/Addon.class.php:157
-msgid "Your add-on could not be uploaded."
-msgstr ""
-
-#: ../include/Addon.class.php:207
-msgid "The file you are trying to create already exists."
-msgstr ""
-
-#: ../include/Addon.class.php:211 ../include/Addon.class.php:288
-#: ../include/Addon.class.php:339 ../include/Addon.class.php:347
-#: ../include/Upload.class.php:247 ../users.php:58 ../users.php:75
-msgid "You do not have the necessary permissions to perform this action."
-msgstr ""
-
-#: ../include/Addon.class.php:285
-msgid "You must be logged in to perform this action."
-msgstr ""
-
-#: ../include/Addon.class.php:299
-msgid "Failed to find files associated with this addon."
-msgstr ""
-
-#: ../include/Addon.class.php:306
-msgid "Failed to delete file:"
-msgstr ""
-
-#: ../include/Addon.class.php:314
-msgid "Failed to remove file records for this addon."
-msgstr ""
-
-#: ../include/Addon.class.php:319
-msgid "Failed to remove ratings for this add-on."
-msgstr ""
-
-#: ../include/Addon.class.php:326
-msgid "Failed to remove add-on revisions."
-msgstr ""
-
-#: ../include/Addon.class.php:330
-msgid "Failed to remove addon."
-msgstr ""
-
-#: ../include/Addon.class.php:342
-msgid "Failed to delete file."
-msgstr ""
-
-#: ../include/Addon.class.php:350
-msgid "The revision you are trying to delete does not exist."
-msgstr ""
-
-#: ../include/Addon.class.php:352
-msgid "You cannot delete the last revision of an add-on."
-msgstr ""
-
-#: ../include/Addon.class.php:354
-msgid ""
-"You cannot delete the latest revision of an add-on. Please mark a different "
-"revision to be the latest revision first."
-msgstr ""
-
-#: ../include/Addon.class.php:358
-msgid "The add-on file could not be queued for deletion."
-msgstr ""
-
-#: ../include/Addon.class.php:366
-msgid "The add-on revision could not be deleted."
-msgstr ""
-
-#: ../include/Addon.class.php:437 ../include/AddonViewer.class.php:357
-#: ../include/AddonViewer.class.php:539 ../include/AddonViewer.class.php:549
-#: ../include/AddonViewer.class.php:561 ../include/AddonViewer.class.php:564
-msgid "Unknown"
-msgstr ""
-
-#: ../include/Addon.class.php:620 ../include/Addon.class.php:641
-#: ../include/Addon.class.php:663 ../include/Addon.class.php:676
-#: ../include/Addon.class.php:711
-msgid "You do not have the neccessary permissions to perform this action."
-msgstr ""
-
-#: ../include/Addon.class.php:628
-msgid "Failed to update the description record for this add-on."
-msgstr ""
-
-#: ../include/Addon.class.php:649
-msgid "Failed to update the designer record for this add-on."
-msgstr ""
-
-#: ../include/Addon.class.php:671
-msgid "Failed to update the image record for this add-on."
-msgstr ""
-
-#: ../include/Addon.class.php:696
-msgid "Failed to update the license record for this add-on."
-msgstr ""
-
-#: ../include/Addon.class.php:704
-msgid "Failed to update the name record for this add-on."
-msgstr ""
-
-#: ../include/AddonViewer.class.php:100 ../include/AddonViewer.class.php:214
-msgid "Upload Image"
-msgstr ""
-
-#: ../include/AddonViewer.class.php:108 ../manage-panel.php:258
-msgid "Type:"
-msgstr ""
-
-#: ../include/AddonViewer.class.php:109
-msgid "Arena"
-msgstr ""
-
-#: ../include/AddonViewer.class.php:112 ../include/AddonViewer.class.php:358
-msgid "Designer:"
-msgstr ""
-
-#: ../include/AddonViewer.class.php:116
-msgid "Upload date:"
-msgstr ""
-
-#: ../include/AddonViewer.class.php:120
-msgid "Submitted by:"
-msgstr ""
-
-#: ../include/AddonViewer.class.php:124
-msgid "Revision:"
-msgstr ""
-
-#: ../include/AddonViewer.class.php:128
-msgid "Compatible with:"
-msgstr ""
-
-#: ../include/AddonViewer.class.php:132
-msgid "License"
-msgstr ""
-
-#: ../include/AddonViewer.class.php:136
-msgid "Permalink"
-msgstr ""
-
-#: ../include/AddonViewer.class.php:143
-msgid ""
-"Warning: This addon may not display correctly on some systems. It uses "
-"textures that may not be compatible with all video cards."
-msgstr ""
-
-#: ../include/AddonViewer.class.php:147
-msgid "Your Rating:"
-msgstr ""
-
-#: ../include/AddonViewer.class.php:154
-#, php-format
-msgid "Download %s"
-msgstr ""
-
-#: ../include/AddonViewer.class.php:161
-msgid "Download this add-on in game!"
-msgstr ""
-
-#: ../include/AddonViewer.class.php:169
-msgid "Revisions"
-msgstr ""
-
-#: ../include/AddonViewer.class.php:173
-msgid "Upload Revision"
-msgstr ""
-
-#: ../include/AddonViewer.class.php:200
-#, php-format
-msgid "Download revision %u"
-msgstr ""
-
-#: ../include/AddonViewer.class.php:210
-msgid "Images"
-msgstr ""
-
-#: ../include/AddonViewer.class.php:217
-msgid "No images have been uploaded for this addon yet."
-msgstr ""
-
-#: ../include/AddonViewer.class.php:238 ../include/AddonViewer.class.php:303
-msgid "Unapprove"
-msgstr ""
-
-#: ../include/AddonViewer.class.php:240 ../include/AddonViewer.class.php:305
-msgid "Approve"
-msgstr ""
-
-#: ../include/AddonViewer.class.php:246
-msgid "Set Icon"
-msgstr ""
-
-#: ../include/AddonViewer.class.php:250
-msgid "Set Image"
-msgstr ""
-
-#: ../include/AddonViewer.class.php:252 ../include/AddonViewer.class.php:308
-msgid "Delete File"
-msgstr ""
-
-#: ../include/AddonViewer.class.php:272
-msgid "Source Files"
-msgstr ""
-
-#: ../include/AddonViewer.class.php:276
-msgid "Upload Source File"
-msgstr ""
-
-#: ../include/AddonViewer.class.php:279
-msgid "No source files have been uploaded for this addon yet."
-msgstr ""
-
-#: ../include/AddonViewer.class.php:295
-#, php-format
-msgid "Source File %u"
-msgstr ""
-
-#: ../include/AddonViewer.class.php:297
-msgid "Not Approved"
-msgstr ""
-
-#: ../include/AddonViewer.class.php:298
-msgid "Download"
-msgstr ""
-
-#: ../include/AddonViewer.class.php:333 ../include/AddonViewer.class.php:401
-msgid "Featured"
-msgstr ""
-
-#: ../include/AddonViewer.class.php:335 ../include/AddonViewer.class.php:395
-msgid "Alpha"
-msgstr ""
-
-#: ../include/AddonViewer.class.php:337 ../include/AddonViewer.class.php:396
-msgid "Beta"
-msgstr ""
-
-#: ../include/AddonViewer.class.php:339 ../include/AddonViewer.class.php:397
-msgid "Release-Candidate"
-msgstr ""
-
-#: ../include/AddonViewer.class.php:341 ../include/AddonViewer.class.php:400
-msgid "DFSG Compliant"
-msgstr ""
-
-#: ../include/AddonViewer.class.php:351
-msgid "You do not have the necessary privileges to perform this action."
-msgstr ""
-
-#: ../include/AddonViewer.class.php:353
-msgid "Configuration"
-msgstr ""
-
-#: ../include/AddonViewer.class.php:363
-msgid "Description:"
-msgstr ""
-
-#: ../include/AddonViewer.class.php:363
-#, php-format
-msgid "Max %u characters"
-msgstr ""
-
-#: ../include/AddonViewer.class.php:369
-msgid "Save Properties"
-msgstr ""
-
-#: ../include/AddonViewer.class.php:375
-msgid "Delete Addon"
-msgstr ""
-
-#: ../include/AddonViewer.class.php:380
-msgid "Included in Game Versions:"
-msgstr ""
-
-#: ../include/AddonViewer.class.php:382
-msgid "Start:"
-msgstr ""
-
-#: ../include/AddonViewer.class.php:383
-msgid "End:"
-msgstr ""
-
-#: ../include/AddonViewer.class.php:384
-msgid "Save"
-msgstr ""
-
-#: ../include/AddonViewer.class.php:389
-msgid "Status Flags:"
-msgstr ""
-
-#: ../include/AddonViewer.class.php:393
-msgid "Approved"
-msgstr ""
-
-#: ../include/AddonViewer.class.php:394
-msgid "Invisible"
-msgstr ""
-
-#: ../include/AddonViewer.class.php:398
-msgid "Latest"
-msgstr ""
-
-#: ../include/AddonViewer.class.php:402
-msgid "Invalid Textures"
-msgstr ""
-
-#: ../include/AddonViewer.class.php:409 ../include/AddonViewer.class.php:514
-#, php-format
-msgid "Rev %u:"
-msgstr ""
-
-#: ../include/AddonViewer.class.php:498
-#, php-format
-msgid "Delete revision %d"
-msgstr ""
-
-#: ../include/AddonViewer.class.php:505
-msgid "Save Changes"
-msgstr ""
-
-#: ../include/AddonViewer.class.php:509
-msgid "Notes from Moderator to Submitter:"
-msgstr ""
-
-#: ../include/AddonViewer.class.php:526
-msgid "Save Notes"
-msgstr ""
-
-#: ../include/File.class.php:39
-msgid "Insufficient permissions."
-msgstr ""
-
-#: ../include/File.class.php:78
-msgid "The file to extract does not exist."
-msgstr ""
-
-#: ../include/File.class.php:90 ../include/File.class.php:119
-msgid "Could not open archive file. It may be corrupted."
-msgstr ""
-
-#: ../include/File.class.php:94 ../include/File.class.php:123
-msgid "Failed to extract archive file."
-msgstr ""
-
-#: ../include/File.class.php:130
-msgid "Unknown archive type."
-msgstr ""
-
-#: ../include/File.class.php:281 ../include/Upload.class.php:400
-msgid "Unknown file upload error."
-msgstr ""
-
-#: ../include/File.class.php:285 ../include/File.class.php:287
-#: ../include/Upload.class.php:404 ../include/Upload.class.php:406
-msgid "Uploaded file is too large."
-msgstr ""
-
-#: ../include/File.class.php:289 ../include/Upload.class.php:408
-msgid "Uploaded file is incomplete."
-msgstr ""
-
-#: ../include/File.class.php:291 ../include/Upload.class.php:410
-msgid "No file was uploaded."
-msgstr ""
-
-#: ../include/File.class.php:293 ../include/Upload.class.php:412
-msgid "There is no TEMP directory to store the uploaded file in."
-msgstr ""
-
-#: ../include/File.class.php:295 ../include/Upload.class.php:414
-msgid "Unable to write uploaded file to disk."
-msgstr ""
-
-#: ../include/File.class.php:310 ../include/Upload.class.php:427
-msgid "Uploaded image files must be either PNG or Jpeg files."
-msgstr ""
-
-#: ../include/File.class.php:314 ../include/Upload.class.php:431
-msgid "The file you uploaded was not the correct type."
-msgstr ""
-
-#: ../include/File.class.php:489 ../include/Upload.class.php:63
-msgid "Failed to move uploaded file."
-msgstr ""
-
-#: ../include/File.class.php:507
-msgid "The uploaded image file is invalid."
-msgstr ""
-
-#: ../include/File.class.php:531 ../include/Upload.class.php:158
-msgid "Failed to associate image file with addon."
-msgstr ""
-
-#: ../include/SMail.class.php:96
-msgid "No moderator mailing-list email is set."
-msgstr ""
-
-#: ../include/Template.class.php:101 ../include/menu.php:38
-#, php-format
-msgid "Welcome, %s"
-msgstr ""
-
-#: ../include/Template.class.php:102 ../include/menu.php:42
-msgid "Home"
-msgstr ""
-
-#: ../include/Template.class.php:103 ../include/menu.php:75 ../login.php:112
-#: ../password-reset.php:228
-msgid "Login"
-msgstr ""
-
-#: ../include/Template.class.php:104 ../include/menu.php:66
-msgid "Log out"
-msgstr ""
-
-#: ../include/Template.class.php:105 ../include/menu.php:67 ../users.php:38
-msgid "Users"
-msgstr ""
-
-#: ../include/Template.class.php:106 ../include/menu.php:68
-msgid "Upload"
-msgstr ""
-
-#: ../include/Template.class.php:107 ../include/menu.php:70 ../manage.php:25
-msgid "Manage"
-msgstr ""
-
-#: ../include/Template.class.php:112 ../include/menu.php:122
-msgid "STK Homepage"
-msgstr ""
-
-#: ../include/Template.class.php:131 ../include/menu.php:85
-msgid "Languages"
-msgstr ""
-
-#: ../include/Upload.class.php:96
-msgid ""
-"A valid License.txt file was not found. Please add a License.txt file to "
-"your archive and re-submit it."
-msgstr ""
-
-#: ../include/Upload.class.php:193
-msgid "Invalid add-on type."
-msgstr ""
-
-#: ../include/Upload.class.php:199
-msgid "Failed to re-pack archive file."
-msgstr ""
-
-#: ../include/Upload.class.php:207
-msgid "Failed to associate archive file with addon."
-msgstr ""
-
-#: ../include/Upload.class.php:223
-msgid "Successfully uploaded source archive."
-msgstr ""
-
-#: ../include/Upload.class.php:224 ../include/Upload.class.php:271
-msgid "Continue."
-msgstr ""
-
-#: ../include/Upload.class.php:240
-msgid "You are trying to add a new revision of an add-on that does not exist."
-msgstr ""
-
-#: ../include/Upload.class.php:256
-msgid ""
-"Your add-on was uploaded successfully. It will be reviewed by our moderators "
-"before becoming publicly available."
-msgstr ""
-
-#: ../include/Upload.class.php:257
-msgid "Click here to upload the sources to your add-on now."
-msgstr ""
-
-#: ../include/Upload.class.php:258
-msgid ""
-"(Uploading the sources to your add-on enables others to improve your work "
-"and also ensure your add-on will not be lost in the future if new "
-"SuperTuxKart versions are not compatible with the current format.)"
-msgstr ""
-
-#: ../include/Upload.class.php:259
-msgid "Click here to view your add-on."
-msgstr ""
-
-#: ../include/Upload.class.php:270
-msgid "Successfully uploaded image."
-msgstr ""
-
-#: ../include/Upload.class.php:288
-msgid ""
-"Some invalid files were found in the uploaded add-on. These files have been "
-"removed from the archive:"
-msgstr ""
-
-#: ../include/Upload.class.php:367
-msgid ""
-"Some images in this add-on do not have dimensions that are a power of two."
-msgstr ""
-
-#: ../include/Upload.class.php:368
-msgid "This may cause display errors on some video cards."
-msgstr ""
-
-#: ../include/User.class.php:85
-msgid "Failed to log in."
-msgstr ""
-
-#: ../include/User.class.php:92
-msgid "Your username or password is incorrect."
-msgstr ""
-
-#: ../include/User.class.php:146
-msgid "You must be logged in to change a password."
-msgstr ""
-
-#: ../include/User.class.php:153 ../password-reset.php:224
-msgid "Failed to change your password."
-msgstr ""
-
-#: ../include/User.class.php:220
-msgid "You must agree to the terms to register."
-msgstr ""
-
-#: ../include/User.class.php:227 ../password-reset.php:104
-msgid "An error occurred trying to validate your username."
-msgstr ""
-
-#: ../include/User.class.php:228 ../include/User.class.php:238
-#: ../include/User.class.php:253 ../include/User.class.php:262
-#: ../password-reset.php:105 ../password-reset.php:121
-#: ../password-reset.php:156 ../password-reset.php:210
-msgid "Please contact a website administrator."
-msgstr ""
-
-#: ../include/User.class.php:230
-msgid "Your username has already been used."
-msgstr ""
-
-#: ../include/User.class.php:237
-msgid "An error occurred trying to validate your email address."
-msgstr ""
-
-#: ../include/User.class.php:240
-msgid "Your email address has already been used."
-msgstr ""
-
-#: ../include/User.class.php:252
-msgid "An error occurred while creating your account."
-msgstr ""
-
-#: ../include/User.class.php:299 ../users.php:90
-msgid "Me"
-msgstr ""
-
-#: ../include/Validate.class.php:33
-msgid "You must enter an email address."
-msgstr ""
-
-#: ../include/Validate.class.php:36
-#, php-format
-msgid "\"%s\" is not a valid email address."
-msgstr ""
-
-#: ../include/Validate.class.php:48
-msgid "Your username must be at least 4 characters long."
-msgstr ""
-
-#: ../include/Validate.class.php:51
-msgid "Your username can only contain alphanumeric characters."
-msgstr ""
-
-#: ../include/Validate.class.php:59
-msgid "Your password must be at least 6 characters long."
-msgstr ""
-
-#: ../include/Validate.class.php:63
-msgid "Your passwords do not match."
-msgstr ""
-
-#: ../include/Validate.class.php:93
-msgid "You must enter a name."
-msgstr ""
-
-#: ../include/allow.php:102
-msgid "root"
-msgstr ""
-
-#: ../include/allow.php:103
-msgid "supAdministrator"
-msgstr ""
-
-#: ../include/allow.php:104
-msgid "administrator"
-msgstr ""
-
-#: ../include/allow.php:105
-msgid "moderator"
-msgstr ""
-
-#: ../include/allow.php:106
-msgid "basicUser"
-msgstr ""
-
-#: ../include/coreUser.php:87 ../login.php:45 ../password-reset.php:46
-#: ../register.php:35
-msgid "Username:"
-msgstr ""
-
-#: ../include/coreUser.php:88
-msgid "Registration Date:"
-msgstr ""
-
-#: ../include/coreUser.php:89
-msgid "Real Name:"
-msgstr ""
-
-#: ../include/coreUser.php:90 ../include/coreUser.php:114
-msgid "Role:"
-msgstr ""
-
-#: ../include/coreUser.php:93 ../include/coreUser.php:110
-msgid "Homepage:"
-msgstr ""
-
-#: ../include/coreUser.php:131
-msgid "User Activated:"
-msgstr ""
-
-#: ../include/coreUser.php:139
-msgid "Save Configuration"
-msgstr ""
-
-#: ../include/coreUser.php:143 ../include/coreUser.php:151
-#: ../password-reset.php:180 ../password-reset.php:252
-msgid "Change Password"
-msgstr ""
-
-#: ../include/coreUser.php:145
-msgid "Old Password:"
-msgstr ""
-
-#: ../include/coreUser.php:147 ../password-reset.php:172
-#: ../password-reset.php:244 ../register.php:36 ../register.php:41
-#, php-format
-msgid "Must be at least %d characters long."
-msgstr ""
-
-#: ../include/coreUser.php:147 ../password-reset.php:171
-#: ../password-reset.php:243
-msgid "New Password:"
-msgstr ""
-
-#: ../include/coreUser.php:149
-msgid "New Password (Confirm):"
-msgstr ""
-
-#: ../include/coreUser.php:162
-msgid "User's Tracks"
-msgstr ""
-
-#: ../include/coreUser.php:163
-msgid "This user has not uploaded any tracks."
-msgstr ""
-
-#: ../include/coreUser.php:167
-msgid "User's Karts"
-msgstr ""
-
-#: ../include/coreUser.php:168
-msgid "This user has not uploaded any karts."
-msgstr ""
-
-#: ../include/coreUser.php:172
-msgid "User's Arenas"
-msgstr ""
-
-#: ../include/coreUser.php:173
-msgid "This user has not uploaded any arenas."
-msgstr ""
-
-#: ../include/coreUser.php:215
-msgid "Your old password is not correct."
-msgstr ""
-
-#: ../include/xmlWrite.php:138
-msgid "The following file could not be found:"
-msgstr ""
-
-#. I18N: Website meta description
-#: ../index.php:35
-msgid ""
-"This is the official SuperTuxKart add-on repository. It contains extra karts "
-"and tracks for the SuperTuxKart game."
-msgstr ""
-
-#: ../index.php:63
-#, php-format
-msgid "The most downloaded kart is %s."
-msgstr ""
-
-#: ../index.php:64
-#, php-format
-msgid "The most downloaded track is %s."
-msgstr ""
-
-#: ../login.php:49 ../register.php:40
-msgid "Password:"
-msgstr ""
-
-#: ../login.php:52
-msgid "Log In"
-msgstr ""
-
-#: ../login.php:55
-msgid "Create an account."
-msgstr ""
-
-#: ../login.php:56
-msgid "Forgot password?"
-msgstr ""
-
-#: ../login.php:67
-msgid "Failed to logout."
-msgstr ""
-
-#: ../login.php:70
-msgid "You have been logged out."
-msgstr ""
-
-#: ../login.php:71 ../login.php:92 ../login.php:104
-#, php-format
-msgid "Click %shere%s if you do not automatically redirect."
-msgstr ""
-
-#: ../login.php:91
-#, php-format
-msgid "Welcome, %s!"
-msgstr ""
-
-#: ../login.php:103
-msgid "You are already logged in."
-msgstr ""
-
-#: ../manage-panel.php:44
-msgid "Deleted message."
-msgstr ""
-
-#: ../manage-panel.php:48
-msgid "Failed to delete message."
-msgstr ""
-
-#: ../manage-panel.php:63
-msgid "Invalid page. You may have followed a broken link."
-msgstr ""
-
-#. I18N: Moderator panel
-#: ../manage-panel.php:67 ../manage.php:38
+#: ../tpl/default/manage/index.tpl:19
+#: ../tpl/default/manage/page/overview.tpl:1
 msgid "Overview"
 msgstr ""
 
-#. I18N: Moderator panel
-#: ../manage-panel.php:72 ../manage.php:45
+#: ../tpl/default/manage/index.tpl:25 ../tpl/default/manage/page/roles.tpl:1
+msgid "Manage Roles"
+msgstr ""
+
+#: ../tpl/default/manage/index.tpl:32 ../tpl/default/manage/page/general.tpl:1
 msgid "General Settings"
 msgstr ""
 
-#. I18N: Moderator panel
-#: ../manage-panel.php:77 ../manage.php:51
+#: ../tpl/default/manage/index.tpl:37 ../tpl/default/manage/page/news.tpl:1
 msgid "News Messages"
 msgstr ""
 
-#: ../manage-panel.php:81 ../manage.php:70
-msgid "Uploaded Files"
-msgstr ""
-
-#: ../manage-panel.php:85 ../manage.php:57
+#: ../tpl/default/manage/index.tpl:42 ../tpl/default/manage/page/clients.tpl:1
 msgid "Client Versions"
 msgstr ""
 
-#: ../manage-panel.php:89 ../manage.php:63
+#: ../tpl/default/manage/index.tpl:47 ../tpl/default/manage/page/cache.tpl:1
 msgid "Cache Files"
 msgstr ""
 
-#. I18N: Moderator panel
-#: ../manage-panel.php:94 ../manage.php:76
+#: ../tpl/default/manage/index.tpl:53 ../tpl/default/manage/page/files.tpl:1
+msgid "Uploaded Files"
+msgstr ""
+
+#: ../tpl/default/manage/index.tpl:58 ../tpl/default/manage/page/logs.tpl:1
 msgid "Event Logs"
 msgstr ""
 
-#. I18N: Heading in moderator overview panel
-#: ../manage-panel.php:107
+#: ../tpl/default/manage/page/files.tpl:3
+msgid "No files have been uploaded."
+msgstr ""
+
+#: ../tpl/default/manage/page/files.tpl:11 ../tpl/default/addons/panel.tpl:30
+msgid "Type"
+msgstr ""
+
+#: ../tpl/default/manage/page/files.tpl:12
+msgid "References"
+msgstr ""
+
+#: ../tpl/default/manage/page/files.tpl:21
+msgid "Unassociated"
+msgstr ""
+
+#: ../tpl/default/manage/page/files.tpl:38
+msgid "File not found on filesystem"
+msgstr ""
+
+#: ../tpl/default/manage/page/files.tpl:41
+msgid "None"
+msgstr ""
+
+#: ../tpl/default/manage/page/files.tpl:45
+msgid "No record found in database"
+msgstr ""
+
+#: ../tpl/default/manage/page/overview.tpl:2
 msgid "Unapproved Add-Ons"
 msgstr ""
 
-#. I18N: Notice on unapproved add-on list in moderator overview panel
-#: ../manage-panel.php:109
+#: ../tpl/default/manage/page/overview.tpl:3
 msgid ""
 "Note that only add-ons where the newest revision is unapproved will appear "
 "here."
 msgstr ""
 
-#: ../manage-panel.php:131
+#: ../tpl/default/manage/page/overview.tpl:7
 msgid "Revisions:"
 msgstr ""
 
-#: ../manage-panel.php:136
+#: ../tpl/default/manage/page/overview.tpl:11
 msgid "No unapproved add-ons."
 msgstr ""
 
-#: ../manage-panel.php:139
+#: ../tpl/default/manage/page/overview.tpl:14
 msgid "Unapproved Files"
 msgstr ""
 
-#: ../manage-panel.php:140 ../manage-panel.php:153
+#: ../tpl/default/manage/page/overview.tpl:15
+#: ../tpl/default/manage/page/overview.tpl:19
 msgid "Images:"
 msgstr ""
 
-#: ../manage-panel.php:158
+#: ../tpl/default/manage/page/overview.tpl:23
 msgid "No unapproved images."
 msgstr ""
 
-#: ../manage-panel.php:160
+#: ../tpl/default/manage/page/overview.tpl:26
 msgid "Source Archives:"
 msgstr ""
 
-#: ../manage-panel.php:173
-#, php-format
-msgid "%d File"
-msgid_plural "%d Files"
+#: ../tpl/default/manage/page/overview.tpl:30
+msgid "%1 File"
+msgid_plural "%1 Files"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../manage-panel.php:178
+#: ../tpl/default/manage/page/overview.tpl:34
 msgid "No unapproved source archives."
 msgstr ""
 
-#: ../manage-panel.php:186
-msgid "XML Download Frequency"
+#: ../tpl/default/manage/page/general.tpl:5
+msgid "XML Download Frequency (seconds)"
 msgstr ""
 
-#: ../manage-panel.php:187
+#: ../tpl/default/manage/page/general.tpl:13
 msgid "Permitted Addon Filetypes"
 msgstr ""
 
-#: ../manage-panel.php:188
+#: ../tpl/default/manage/page/general.tpl:21
 msgid "Permitted Source Archive Filetypes"
 msgstr ""
 
-#: ../manage-panel.php:189
+#: ../tpl/default/manage/page/general.tpl:29
 msgid "Administrator Email"
 msgstr ""
 
-#: ../manage-panel.php:190
+#: ../tpl/default/manage/page/general.tpl:37
 msgid "Moderator List Email"
 msgstr ""
 
-#: ../manage-panel.php:192 ../manage-panel.php:194
-msgid "False"
-msgstr ""
-
-#: ../manage-panel.php:192 ../manage-panel.php:194
-msgid "True"
-msgstr ""
-
-#: ../manage-panel.php:195
+#: ../tpl/default/manage/page/general.tpl:45
 msgid "List Invisible Addons in XML"
 msgstr ""
 
-#: ../manage-panel.php:196
+#: ../tpl/default/manage/page/general.tpl:55
 msgid "Blog RSS Feed"
 msgstr ""
 
-#: ../manage-panel.php:197
+#: ../tpl/default/manage/page/general.tpl:63
 msgid "Maximum Uploaded Image Dimension"
 msgstr ""
 
-#: ../manage-panel.php:198
+#: ../tpl/default/manage/page/general.tpl:71
 msgid "Apache Rewrites"
 msgstr ""
 
-#: ../manage-panel.php:199
+#: ../tpl/default/manage/page/general.tpl:80
 msgid "Save Settings"
 msgstr ""
 
-#: ../manage-panel.php:207 ../manage-panel.php:229
-msgid "Message:"
+#: ../tpl/default/manage/page/logs.tpl:2
+msgid "The table below lists the most recent logged events."
 msgstr ""
 
-#: ../manage-panel.php:208 ../manage-panel.php:231
-msgid "Condition:"
+#: ../tpl/default/manage/page/logs.tpl:5
+msgid "No events have been logged yet."
 msgstr ""
 
-#: ../manage-panel.php:209
-msgid "Display on Website:"
+#: ../tpl/default/manage/page/logs.tpl:12
+#: ../tpl/default/manage/page/news.tpl:51 ../tpl/default/addons/index.tpl:13
+msgid "Date"
 msgstr ""
 
-#: ../manage-panel.php:210
-msgid "Create Message"
+#: ../tpl/default/manage/page/logs.tpl:14 ../tpl/default/addons/panel.tpl:227
+msgid "Description"
 msgstr ""
 
-#: ../manage-panel.php:223
-msgid "No news messages currently exist."
-msgstr ""
-
-#: ../manage-panel.php:228
-msgid "Date:"
-msgstr ""
-
-#: ../manage-panel.php:230
-msgid "Author:"
-msgstr ""
-
-#: ../manage-panel.php:232
-msgid "Web:"
-msgstr ""
-
-#: ../manage-panel.php:233
-msgid "Actions:"
-msgstr ""
-
-#: ../manage-panel.php:253
-msgid "No files have been uploaded."
-msgstr ""
-
-#: ../manage-panel.php:257 ../register.php:49
-msgid "Name:"
-msgstr ""
-
-#: ../manage-panel.php:259
-msgid "References:"
-msgstr ""
-
-#: ../manage-panel.php:343
+#: ../tpl/default/manage/page/clients.tpl:2
 msgid "Clients by User-Agent"
 msgstr ""
 
-#: ../manage-panel.php:350
+#: ../tpl/default/manage/page/clients.tpl:6
 msgid ""
 "There are currently no SuperTuxKart clients recorded. Your download script "
 "may not be configured properly."
 msgstr ""
 
-#: ../manage-panel.php:355
-msgid "Game Version:"
+#: ../tpl/default/manage/page/clients.tpl:13
+msgid "User-Agent String"
 msgstr ""
 
-#: ../manage-panel.php:355
-msgid "User-Agent String:"
+#: ../tpl/default/manage/page/clients.tpl:14
+msgid "Game Version"
 msgstr ""
 
-#: ../manage-panel.php:375
+#: ../tpl/default/manage/page/news.tpl:6
+#: ../tpl/default/manage/page/news.tpl:52
+msgid "Message"
+msgstr ""
+
+#: ../tpl/default/manage/page/news.tpl:14
+#: ../tpl/default/manage/page/news.tpl:54
+msgid "Condition"
+msgstr ""
+
+#: ../tpl/default/manage/page/news.tpl:22
+msgid "Display on Website:"
+msgstr ""
+
+#: ../tpl/default/manage/page/news.tpl:30
+msgid "Important (creates notification):"
+msgstr ""
+
+#: ../tpl/default/manage/page/news.tpl:39
+msgid "Create Message"
+msgstr ""
+
+#: ../tpl/default/manage/page/news.tpl:47
+msgid "No news messages currently exist."
+msgstr ""
+
+#: ../tpl/default/manage/page/news.tpl:53
+msgid "Author"
+msgstr ""
+
+#: ../tpl/default/manage/page/news.tpl:55
+msgid "Display on web page"
+msgstr ""
+
+#: ../tpl/default/manage/page/news.tpl:56
+msgid "Is Important"
+msgstr ""
+
+#: ../tpl/default/manage/page/news.tpl:57
+#: ../tpl/default/users/tab/friends.tpl:15
+msgid "Actions"
+msgstr ""
+
+#: ../tpl/default/manage/page/news.tpl:68
+#: ../tpl/default/bugs/view-comment.tpl:14 ../tpl/default/bugs/view.tpl:13
+msgid "Delete"
+msgstr ""
+
+#: ../tpl/default/manage/page/cache.tpl:2
 msgid "Empty cache"
 msgstr ""
 
-#: ../manage.php:89
-msgid "One or more fields has been left blank. Settings were not saved."
+#: ../tpl/default/upload.tpl:6 ../tpl/default/menu-top.tpl:28
+msgid "Upload"
 msgstr ""
 
-#: ../manage.php:94
-msgid "XML Download Frequency value is invalid."
+#: ../tpl/default/upload.tpl:8
+msgid "for addon"
 msgstr ""
 
-#: ../manage.php:108
-msgid "Saved settings."
-msgstr ""
-
-#: ../manage.php:126
-msgid "Created message."
-msgstr ""
-
-#: ../manage.php:130
-msgid "Failed to create message."
-msgstr ""
-
-#: ../password-reset.php:27 ../password-reset.php:36
-msgid "Reset Password"
-msgstr ""
-
-#: ../password-reset.php:44
-msgid ""
-"In order to reset your password, please enter your username and your email "
-"address. A password reset link will be emailed to you. Your old password "
-"will become inactive until your password is reset."
-msgstr ""
-
-#: ../password-reset.php:50 ../register.php:53
-msgid "Email Address:"
-msgstr ""
-
-#: ../password-reset.php:58
-msgid "Send Reset Link"
-msgstr ""
-
-#: ../password-reset.php:107
-msgid "Username and email address combination not found."
-msgstr ""
-
-#: ../password-reset.php:120 ../password-reset.php:155
-#: ../password-reset.php:209
-msgid "An error occurred while resetting your password."
-msgstr ""
-
-#: ../password-reset.php:132
-msgid ""
-"Password reset link sent. Please reset your password using the link emailed "
-"to you."
-msgstr ""
-
-#: ../password-reset.php:158
-msgid "Invalid verification code."
-msgstr ""
-
-#: ../password-reset.php:169 ../password-reset.php:241
-msgid "Please enter a new password for your account."
-msgstr ""
-
-#: ../password-reset.php:176 ../password-reset.php:248
-msgid "New Password (confirm):"
-msgstr ""
-
-#: ../password-reset.php:186
-msgid "Could not reset your password. The link you followed is not valid."
-msgstr ""
-
-#: ../password-reset.php:227
-msgid "Changed password."
-msgstr ""
-
-#: ../register.php:24
-msgid "Register"
-msgstr ""
-
-#: ../register.php:29
-msgid "Account Registration"
-msgstr ""
-
-#: ../register.php:45
-msgid "Password (confirm):"
-msgstr ""
-
-#: ../register.php:57
-msgid "Terms:"
-msgstr ""
-
-#: ../register.php:59
-msgid "STK Addons Terms and Conditions"
-msgstr ""
-
-#: ../register.php:60
-msgid ""
-"You must agree to these terms in order to upload content to the STK Addons "
-"site."
-msgstr ""
-
-#: ../register.php:61
-msgid ""
-"The STK Addons service is designed to be a repository exclusively for Super\n"
-"Tux Kart addon content. All uploaded content must be intended for this\n"
-"purpose. When you upload your content, it will be available publicly on the\n"
-"internet, and will be made available in-game for download."
-msgstr ""
-
-#: ../register.php:65
-msgid ""
-"Super Tux Kart aims to comply with the Debian Free Software Guidelines "
-"(DFSG).\n"
-"TuxFamily.org also requires that content they host comply with open "
-"licenses.\n"
-"You may not upload content which is locked down with a restrictive license.\n"
-"Licenses such as CC-BY-SA 3.0, or other DFSG-compliant licenses are "
-"required.\n"
-"All content taken from third-party sources must be attributed properly, and "
-"must\n"
-"also be available under an open license. Licenses and attribution should be\n"
-"included in a \"license.txt\" file in each uploaded archive. Uploads "
-"without\n"
-"proper licenses or attribution may be deleted without warning."
-msgstr ""
-
-#: ../register.php:73
-msgid ""
-"Even with valid licenses and attribution, content may not contain any\n"
-"of the following:"
-msgstr ""
-
-#: ../register.php:75 ../upload.php:272
-msgid "Profanity"
-msgstr ""
-
-#: ../register.php:76 ../upload.php:273
-msgid "Explicit images"
-msgstr ""
-
-#: ../register.php:77 ../upload.php:274
-msgid "Hateful messages and/or images"
-msgstr ""
-
-#: ../register.php:78 ../upload.php:275
-msgid "Any other content that may be unsuitable for children"
-msgstr ""
-
-#: ../register.php:79
-msgid ""
-"If any of your uploads are found to contain any of the above, your upload\n"
-"will be removed, your account may be removed, and any other content you "
-"uploaded\n"
-"may be removed."
-msgstr ""
-
-#: ../register.php:82
-msgid ""
-"By checking the box below, you are confirming that you understand these\n"
-"terms. If you have any questions or comments regarding these terms, one of "
-"the\n"
-"members of the development team would gladly assist you."
-msgstr ""
-
-#: ../register.php:89
-msgid "I agree to the above terms"
-msgstr ""
-
-#: ../register.php:93
-msgid "Register!"
-msgstr ""
-
-#: ../register.php:119
-msgid ""
-"Account creation was successful. Please activate your account using the link "
-"emailed to you."
-msgstr ""
-
-#: ../register.php:133
-msgid "Your account has been activated."
-msgstr ""
-
-#: ../register.php:137
-msgid "Could not validate your account. The link you followed is not valid."
-msgstr ""
-
-#: ../upload.php:125
-msgid ""
-"Your response to the agreement was unacceptable. You may not upload this "
-"content to the STK Addons website."
-msgstr ""
-
-#: ../upload.php:175
-msgid "Please upload a new revision of your kart or track."
-msgstr ""
-
-#: ../upload.php:179
+#: ../tpl/default/upload.tpl:23
 msgid "What type of file are you uploading?"
 msgstr ""
 
-#: ../upload.php:181
-msgid "Source Archive"
-msgstr ""
-
-#: ../upload.php:182
-msgid "Image File"
-msgstr ""
-
-#: ../upload.php:189
-msgid "Please upload a kart or track."
-msgstr ""
-
-#: ../upload.php:190
+#: ../tpl/default/upload.tpl:32
 msgid "Do not use this form if you are updating an existing add-on."
 msgstr ""
 
-#: ../upload.php:193
+#: ../tpl/default/upload.tpl:33
+msgid "Please upload a kart or track(arena)."
+msgstr ""
+
+#: ../tpl/default/upload.tpl:40
 msgid "File:"
 msgstr ""
 
-#: ../upload.php:194
+#: ../tpl/default/upload.tpl:48
 msgid "Supported archive types are:"
 msgstr ""
 
-#: ../upload.php:195
+#: ../tpl/default/upload.tpl:53
 msgid "Agreement:"
 msgstr ""
 
-#: ../upload.php:200
+#: ../tpl/default/upload.tpl:59
 msgid ""
 "I am the sole author of every file (model, texture, sound effect, etc.) in "
 "this package"
 msgstr ""
 
-#: ../upload.php:207
+#: ../tpl/default/upload.tpl:66
 msgid ""
 "I have included a License.txt file describing the license under which my "
 "work is released, and my name (or nickname) if I want credit."
 msgstr ""
 
-#: ../upload.php:207 ../upload.php:220 ../upload.php:265 ../upload.php:276
+#: ../tpl/default/upload.tpl:67 ../tpl/default/upload.tpl:82
+#: ../tpl/default/upload.tpl:130
 msgid "Required"
 msgstr ""
 
-#: ../upload.php:213
+#: ../tpl/default/upload.tpl:74
 msgid "I have included open content made by people other than me"
 msgstr ""
 
-#: ../upload.php:220
+#: ../tpl/default/upload.tpl:81
 msgid ""
 "I have included a License.txt file including the name of every author whose "
 "material is used in this package, along with the license under which their "
 "work is released."
 msgstr ""
 
-#: ../upload.php:224
-msgid "Must check at least one"
-msgstr ""
-
-#: ../upload.php:224
+#: ../tpl/default/upload.tpl:86
 msgid "This package includes files released under:"
 msgstr ""
 
-#: ../upload.php:229
+#: ../tpl/default/upload.tpl:87
+msgid "Must check at least one"
+msgstr ""
+
+#: ../tpl/default/upload.tpl:91
 msgid "GNU GPL"
 msgstr ""
 
-#: ../upload.php:234
+#: ../tpl/default/upload.tpl:96
 msgid "Creative Commons BY 3.0"
 msgstr ""
 
-#: ../upload.php:239
+#: ../tpl/default/upload.tpl:101
 msgid "Creative Commons BY SA 3.0"
 msgstr ""
 
-#: ../upload.php:244
+#: ../tpl/default/upload.tpl:106
 msgid "CC0 (Public Domain)"
 msgstr ""
 
-#: ../upload.php:249
+#: ../tpl/default/upload.tpl:111
 msgid "BSD License"
 msgstr ""
 
-#: ../upload.php:254
+#: ../tpl/default/upload.tpl:116
 msgid "Other open license"
 msgstr ""
 
-#: ../upload.php:259
+#: ../tpl/default/upload.tpl:120
 msgid ""
 "Files released under other licenses will be rejected unless it can be "
 "verified that the license is open."
 msgstr ""
 
-#: ../upload.php:265
+#: ../tpl/default/upload.tpl:127
 msgid ""
 "I recognize that if my file does not meet the above rules, it may be removed "
 "at any time without prior notice; I also assume the entire responsibility "
@@ -1475,14 +1871,553 @@ msgid ""
 "rules."
 msgstr ""
 
-#: ../upload.php:271
+#: ../tpl/default/upload.tpl:130
 msgid "My package does not include:"
 msgstr ""
 
-#: ../upload.php:283
+#: ../tpl/default/upload.tpl:144
 msgid "Upload file"
 msgstr ""
 
-#: ../users.php:63
-msgid "Your password has been changed successfully."
+#: ../tpl/default/password-reset.tpl:8
+msgid ""
+"In order to reset your password, please enter your username and your email "
+"address. A password reset link will be emailed to you. Your old password "
+"will become inactive until your password is reset."
+msgstr ""
+
+#: ../tpl/default/password-reset.tpl:11
+#: ../tpl/default/users/tab/profile.tpl:33
+msgid "Username:"
+msgstr ""
+
+#: ../tpl/default/password-reset.tpl:17
+msgid "Email Address:"
+msgstr ""
+
+#: ../tpl/default/password-reset.tpl:29
+msgid "Send Reset Link"
+msgstr ""
+
+#: ../tpl/default/password-reset.tpl:37
+msgid "Please enter a new password for your account."
+msgstr ""
+
+#: ../tpl/default/password-reset.tpl:41
+msgid "New Password:"
+msgstr ""
+
+#: ../tpl/default/password-reset.tpl:51
+msgid "New Password (confirm)"
+msgstr ""
+
+#: ../tpl/default/password-reset.tpl:60
+#: ../tpl/default/users/tab/settings.tpl:62
+#: ../tpl/default/users/tab/settings.tpl:95
+msgid "Change Password"
+msgstr ""
+
+#: ../tpl/default/menu-lang.tpl:6
+msgid "Translate STK-Addons"
+msgstr ""
+
+#: ../tpl/default/login.tpl:15
+msgid "Enter username"
+msgstr ""
+
+#: ../tpl/default/login.tpl:53
+msgid "Don't have an account?"
+msgstr ""
+
+#: ../tpl/default/menu-top.tpl:20
+msgid "Home"
+msgstr ""
+
+#: ../tpl/default/menu-top.tpl:31
+msgid "Bugs"
+msgstr ""
+
+#: ../tpl/default/menu-top.tpl:44
+msgid "Stats"
+msgstr ""
+
+#: ../tpl/default/menu-top.tpl:48
+msgid "STK Homepage"
+msgstr ""
+
+#: ../tpl/default/menu-top.tpl:52
+msgid "Logout"
+msgstr ""
+
+#: ../tpl/default/bugs/add.tpl:2 ../tpl/default/bugs/index.tpl:39
+msgid "File a bug"
+msgstr ""
+
+#: ../tpl/default/bugs/add.tpl:10
+msgid "Addon name:"
+msgstr ""
+
+#: ../tpl/default/bugs/add.tpl:15
+msgid "The addon name is required"
+msgstr ""
+
+#: ../tpl/default/bugs/add.tpl:20 ../tpl/default/bugs/view.tpl:54
+msgid "Title:"
+msgstr ""
+
+#: ../tpl/default/bugs/add.tpl:25
+msgid "The title is required"
+msgstr ""
+
+#: ../tpl/default/bugs/add.tpl:30
+msgid "The title must be between %1 and %2 characters long"
+msgstr ""
+
+#: ../tpl/default/bugs/add.tpl:35 ../tpl/default/bugs/view.tpl:62
+#: ../tpl/default/bugs/view.tpl:115 ../tpl/default/bugs/view.tpl:156
+msgid "Description:"
+msgstr ""
+
+#: ../tpl/default/bugs/add.tpl:41
+msgid "The bug description is required"
+msgstr ""
+
+#: ../tpl/default/bugs/add.tpl:53
+msgid "Warning!"
+msgstr ""
+
+#: ../tpl/default/bugs/add.tpl:53
+msgid "You must be "
+msgstr ""
+
+#: ../tpl/default/bugs/add.tpl:53
+msgid "logged in"
+msgstr ""
+
+#: ../tpl/default/bugs/all.tpl:3 ../tpl/default/users/tab/achievements.tpl:4
+#: ../tpl/default/users/tab/friends.tpl:5
+msgid "Empty!"
+msgstr ""
+
+#: ../tpl/default/bugs/all.tpl:3
+msgid "There are no bugs :)"
+msgstr ""
+
+#: ../tpl/default/bugs/all.tpl:10 ../tpl/default/bugs/view.tpl:88
+msgid "Addon"
+msgstr ""
+
+#: ../tpl/default/bugs/all.tpl:11
+msgid "Title"
+msgstr ""
+
+#: ../tpl/default/bugs/all.tpl:12 ../tpl/default/bugs/view.tpl:105
+#: ../tpl/default/bugs/view.tpl:110 ../tpl/default/users/tab/friends.tpl:14
+msgid "Status"
+msgstr ""
+
+#: ../tpl/default/bugs/all.tpl:13
+msgid "Changed"
+msgstr ""
+
+#: ../tpl/default/bugs/all.tpl:24 ../tpl/default/bugs/view.tpl:106
+msgid "closed"
+msgstr ""
+
+#: ../tpl/default/bugs/all.tpl:26 ../tpl/default/bugs/view.tpl:111
+msgid "open"
+msgstr ""
+
+#: ../tpl/default/bugs/view-comment.tpl:13 ../tpl/default/bugs/view.tpl:8
+#: ../tpl/default/users/tab/settings.tpl:55
+msgid "Edit"
+msgstr ""
+
+#: ../tpl/default/bugs/index.tpl:3
+msgid "Bug Tracker"
+msgstr ""
+
+#: ../tpl/default/bugs/index.tpl:4
+msgid "for addons"
+msgstr ""
+
+#: ../tpl/default/bugs/index.tpl:16
+msgid "All"
+msgstr ""
+
+#: ../tpl/default/bugs/index.tpl:17
+msgid "Open"
+msgstr ""
+
+#: ../tpl/default/bugs/index.tpl:18
+msgid "Closed"
+msgstr ""
+
+#: ../tpl/default/bugs/index.tpl:23
+msgid "Search Description"
+msgstr ""
+
+#: ../tpl/default/bugs/index.tpl:26
+msgid "Search"
+msgstr ""
+
+#: ../tpl/default/bugs/index.tpl:42 ../tpl/default/bugs/view.tpl:35
+#: ../tpl/default/bugs/view.tpl:72 ../tpl/default/bugs/view.tpl:166
+msgid "Back"
+msgstr ""
+
+#: ../tpl/default/bugs/view.tpl:10
+msgid "Close"
+msgstr ""
+
+#: ../tpl/default/bugs/view.tpl:22
+msgid "Close bug"
+msgstr ""
+
+#: ../tpl/default/bugs/view.tpl:28
+msgid "Close Reason"
+msgstr ""
+
+#: ../tpl/default/bugs/view.tpl:36
+msgid "Submit"
+msgstr ""
+
+#: ../tpl/default/bugs/view.tpl:48
+msgid "Edit bug"
+msgstr ""
+
+#: ../tpl/default/bugs/view.tpl:73 ../tpl/default/bugs/view.tpl:167
+msgid "Update"
+msgstr ""
+
+#: ../tpl/default/bugs/view.tpl:84
+msgid "Reported by"
+msgstr ""
+
+#: ../tpl/default/bugs/view.tpl:85 ../tpl/default/bugs/view.tpl:98
+msgid "on"
+msgstr ""
+
+#: ../tpl/default/bugs/view.tpl:92
+msgid "Date edit"
+msgstr ""
+
+#: ../tpl/default/bugs/view.tpl:97
+msgid "Closed by"
+msgstr ""
+
+#: ../tpl/default/bugs/view.tpl:101
+msgid "Close reason"
+msgstr ""
+
+#: ../tpl/default/bugs/view.tpl:134
+msgid "Add Comment"
+msgstr ""
+
+#: ../tpl/default/bugs/view.tpl:140
+msgid " to add a comment"
+msgstr ""
+
+#: ../tpl/default/bugs/view.tpl:150
+msgid "Edit comment"
+msgstr ""
+
+#: ../tpl/default/addons/menu.tpl:2
+msgid "No addons"
+msgstr ""
+
+#: ../tpl/default/addons/index.tpl:9
+msgid "Alphabetical"
+msgstr ""
+
+#: ../tpl/default/addons/index.tpl:20
+msgid "By Name"
+msgstr ""
+
+#: ../tpl/default/addons/index.tpl:21
+msgid "By Description"
+msgstr ""
+
+#: ../tpl/default/addons/index.tpl:22
+msgid "By Designer"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:31
+msgid "Arena"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:35 ../tpl/default/addons/panel.tpl:221
+msgid "Designer"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:39
+msgid "Upload date:"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:43
+msgid "Submitted by"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:47
+msgid "Revision:"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:51
+msgid "Compatible with"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:56
+msgid "Your Rating"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:68 ../tpl/default/addons/panel.tpl:116
+msgid "Upload Image"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:79
+msgid "Download this add-on in game!"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:93
+msgid "Permalink"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:98
+msgid "Revisions"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:101
+msgid "Upload Revision"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:113
+msgid "Images"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:141 ../tpl/default/addons/panel.tpl:193
+msgid "Unapprove"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:142 ../tpl/default/addons/panel.tpl:194
+msgid "Approve"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:151
+msgid "Set Icon"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:152
+msgid "Set Image"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:153 ../tpl/default/addons/panel.tpl:196
+msgid "Delete File"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:159
+msgid "No images have been uploaded for this addon yet."
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:166
+msgid "Source Files"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:169
+msgid "Upload Source File"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:184
+msgid "Download"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:202
+msgid "No source files have been uploaded for this addon yet."
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:213
+msgid "Delete Addon"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:218
+msgid "Configuration"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:227
+msgid "Max %1 characters"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:236
+msgid "Save Properties"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:246
+msgid "Included in Game Versions:"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:250
+msgid "Start"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:259
+msgid "End"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:270
+msgid "Save"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:280
+msgid "Status Flags:"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:305 ../tpl/default/addons/panel.tpl:363
+msgid "Rev %1:"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:336
+msgid "Delete revision %1"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:345
+msgid "Save Changes"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:353
+msgid "Notes from Moderator to Submitter:"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:377
+msgid "Save Notes"
+msgstr ""
+
+#: ../tpl/default/users/tab/achievements.tpl:4
+msgid "There are no achievements :("
+msgstr ""
+
+#: ../tpl/default/users/tab/settings.tpl:2 ../tpl/default/users/panel.tpl:2
+msgid "Profile"
+msgstr ""
+
+#: ../tpl/default/users/tab/settings.tpl:6
+msgid "Homepage"
+msgstr ""
+
+#: ../tpl/default/users/tab/settings.tpl:14
+msgid "Real name"
+msgstr ""
+
+#: ../tpl/default/users/tab/settings.tpl:24
+msgid "Save profile"
+msgstr ""
+
+#: ../tpl/default/users/tab/settings.tpl:34
+msgid "Role"
+msgstr ""
+
+#: ../tpl/default/users/tab/settings.tpl:46
+msgid "User Activated"
+msgstr ""
+
+#: ../tpl/default/users/tab/settings.tpl:67
+msgid "Old Password"
+msgstr ""
+
+#: ../tpl/default/users/tab/settings.tpl:75
+msgid "New Password"
+msgstr ""
+
+#: ../tpl/default/users/tab/settings.tpl:81
+msgid "Must be at least %1 characters long"
+msgstr ""
+
+#: ../tpl/default/users/tab/settings.tpl:86
+msgid "New Password (Confirm)"
+msgstr ""
+
+#: ../tpl/default/users/tab/profile.tpl:22
+msgid "Accept friend request"
+msgstr ""
+
+#: ../tpl/default/users/tab/profile.tpl:23
+msgid "Decline friend request"
+msgstr ""
+
+#: ../tpl/default/users/tab/profile.tpl:24
+msgid "Cancel friend request"
+msgstr ""
+
+#: ../tpl/default/users/tab/profile.tpl:25
+msgid "Already friends"
+msgstr ""
+
+#: ../tpl/default/users/tab/profile.tpl:26
+msgid "Send friend Request"
+msgstr ""
+
+#: ../tpl/default/users/tab/profile.tpl:37
+msgid "Registration Date:"
+msgstr ""
+
+#: ../tpl/default/users/tab/profile.tpl:41
+msgid "Real Name:"
+msgstr ""
+
+#: ../tpl/default/users/tab/profile.tpl:45
+msgid "Role:"
+msgstr ""
+
+#: ../tpl/default/users/tab/profile.tpl:50
+msgid "Email:"
+msgstr ""
+
+#: ../tpl/default/users/tab/profile.tpl:60
+msgid "Homepage:"
+msgstr ""
+
+#: ../tpl/default/users/tab/friends.tpl:5
+msgid "There are no friends :("
+msgstr ""
+
+#: ../tpl/default/users/tab/friends.tpl:12
+msgid "Since"
+msgstr ""
+
+#: ../tpl/default/users/tab/friends.tpl:33
+msgid "Pending"
+msgstr ""
+
+#: ../tpl/default/users/tab/friends.tpl:35
+msgid "Offline"
+msgstr ""
+
+#: ../tpl/default/users/tab/friends.tpl:50
+msgid "Accept"
+msgstr ""
+
+#: ../tpl/default/users/tab/friends.tpl:51
+msgid "Decline"
+msgstr ""
+
+#: ../tpl/default/users/tab/friends.tpl:52
+msgid "Cancel request"
+msgstr ""
+
+#: ../tpl/default/users/tab/friends.tpl:53
+msgid "Remove friend"
+msgstr ""
+
+#: ../tpl/default/users/menu.tpl:2
+msgid "No users match your search"
+msgstr ""
+
+#: ../tpl/default/users/panel.tpl:3
+msgid "Friends"
+msgstr ""
+
+#: ../tpl/default/users/panel.tpl:4
+msgid "Achievements"
+msgstr ""
+
+#: ../tpl/default/users/panel.tpl:6
+msgid "Settings"
 msgstr ""
