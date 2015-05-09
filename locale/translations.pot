@@ -10,7 +10,7 @@ msgstr ""
 "#-#-#-#-#  code.pot (stkaddons)  #-#-#-#-#\n"
 "Project-Id-Version: stkaddons\n"
 "Report-Msgid-Bugs-To: stephenjust@users.sourceforge.net\n"
-"POT-Creation-Date: 2015-05-09 17:12+0300\n"
+"POT-Creation-Date: 2015-05-09 17:19+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -46,6 +46,18 @@ msgstr ""
 
 #: ../addons.php:57 ../index.php:24
 msgid "SuperTuxKart Add-ons"
+msgstr ""
+
+#: ../bugs/index.php:33
+msgid "View Bug"
+msgstr ""
+
+#: ../bugs/index.php:39
+msgid "Add Bug"
+msgstr ""
+
+#: ../bugs/index.php:45
+msgid "All bugs"
 msgstr ""
 
 #: ../error.php:34
@@ -1131,6 +1143,139 @@ msgstr ""
 msgid "The most downloaded track is %s."
 msgstr ""
 
+#: ../json/addons.php:71
+msgid "Proprieties saved"
+msgstr ""
+
+#: ../json/addons.php:81
+msgid ""
+"You do not have the permission to change this addon's include in game "
+"versions"
+msgstr ""
+
+#: ../json/addons.php:94
+msgid "Marked game versions in which this add-on is included."
+msgstr ""
+
+#: ../json/addons.php:104
+msgid "Insufficient permissions to approve a file"
+msgstr ""
+
+#: ../json/addons.php:117
+msgid "File approval status changed."
+msgstr ""
+
+#: ../json/addons.php:136
+msgid "Set image."
+msgstr ""
+
+#: ../json/addons.php:155
+msgid "Set icon."
+msgstr ""
+
+#: ../json/addons.php:175
+msgid "Deleted file."
+msgstr ""
+
+#: ../json/addons.php:195
+msgid "Deleted add-on revision."
+msgstr ""
+
+#: ../json/addons.php:210
+msgid "Deleted addon."
+msgstr ""
+
+#: ../json/addons.php:229
+msgid "Saved status."
+msgstr ""
+
+#: ../json/addons.php:239
+msgid "You do not have the permission to change this addon's notes"
+msgstr ""
+
+#: ../json/addons.php:265
+msgid "Saved notes."
+msgstr ""
+
+#: ../json/bugs.php:33 ../json/bugs.php:51 ../json/bugs.php:83
+#: ../json/bugs.php:101 ../json/bugs.php:119 ../json/bugs.php:137
+#: ../json/bugs.php:155 ../json/users.php:80
+msgid "One or more fields are empty"
+msgstr ""
+
+#: ../json/bugs.php:45
+msgid "Bug report added"
+msgstr ""
+
+#: ../json/bugs.php:77
+msgid "Comment added"
+msgstr ""
+
+#: ../json/bugs.php:95
+msgid "Bug updated"
+msgstr ""
+
+#: ../json/bugs.php:113
+msgid "Bug comment updated"
+msgstr ""
+
+#: ../json/bugs.php:131
+msgid "Bug closed"
+msgstr ""
+
+#: ../json/bugs.php:149
+msgid "Bug deleted"
+msgstr ""
+
+#: ../json/bugs.php:167
+msgid "Comment deleted"
+msgstr ""
+
+#: ../json/users.php:36
+msgid "User id  is empty"
+msgstr ""
+
+#: ../json/users.php:52
+msgid "Profile updated"
+msgstr ""
+
+#: ../json/users.php:58
+msgid "Role field is empty"
+msgstr ""
+
+#: ../json/users.php:74
+msgid "Role edited successfully"
+msgstr ""
+
+#: ../json/users.php:92
+msgid "Your password has been changed"
+msgstr ""
+
+#: ../json/users.php:98 ../json/users.php:117 ../json/users.php:136
+#: ../json/users.php:155 ../json/users.php:174
+msgid "Friend id is empty"
+msgstr ""
+
+#: ../json/users.php:111
+msgid "Friend request sent"
+msgstr ""
+
+#: ../json/users.php:130
+msgid "Friend removed"
+msgstr ""
+
+#: ../json/users.php:149
+msgid "Friend request accepted"
+msgstr ""
+
+#: ../json/users.php:168
+msgid "Friend request declined"
+msgstr ""
+
+#: ../json/users.php:187
+msgid "Friend request canceled"
+msgstr ""
+
 #: ../login.php:47 ../tpl/default/login.tpl:7 ../tpl/default/login.tpl:50
 #: ../tpl/default/menu-top.tpl:50 ../tpl/default/bugs/view.tpl:140
 msgid "Login"
@@ -1230,6 +1375,26 @@ msgstr ""
 
 #: ../register.php:107
 msgid "Could not validate your account. The link you followed is not valid."
+msgstr ""
+
+#: ../stats/index.php:33
+msgid "Addon stats"
+msgstr ""
+
+#: ../stats/index.php:38
+msgid "File stats"
+msgstr ""
+
+#: ../stats/index.php:43
+msgid "Client stats"
+msgstr ""
+
+#: ../stats/index.php:48
+msgid "Server stats"
+msgstr ""
+
+#: ../stats/index.php:53
+msgid "Stats Overview"
 msgstr ""
 
 #: ../upload.php:42
