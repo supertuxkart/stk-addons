@@ -72,7 +72,7 @@ Add a new user with full access to the new database and import `install/install.
 or with ```mysql -u root -p -h DATABASE_HOST DATABASE_NAME < install/install.sql``` in a normal shell.
 
 ### Finish
-Copy the `install/config-base.php` to the root of the project and rename it to `config.php`.
+Copy the `install/config.EXAMPLE.php` to the root of the project and rename it to `config.php`.
 
 Change the `$ROOT_LOCATION` variable to match the location of your website. Otherwise, JavaScript and CSS will not work.
 

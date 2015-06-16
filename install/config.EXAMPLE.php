@@ -25,24 +25,25 @@ $ROOT_LOCATION = "addons.supertuxkart.net";
 
 define("DEBUG_MODE", true); // FIXME turn off on server.
 define("MAINTENANCE_MODE", false);
+
+// set default values
+ini_set("html_errors", "On");
 if (DEBUG_MODE) // useful for debugging
 {
     error_reporting(E_ALL);
     ini_set("display_errors", "On");
-    ini_set("html_errors", "On");
 }
-if (!defined("TEST_MODE")) // useful for phpunit testing
+else
 {
-    define("TEST_MODE", false);
+    error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
+    ini_set("display_errors", "Off");
 }
-if (!defined("CRON_MODE")) // useful for cron jobs
-{
-    define("CRON_MODE", false);
-}
-if (!defined("API_MODE")) // useful for the API
-{
-    define("API_MODE", false);
-}
+// useful for phpunit testing
+if (!defined("TEST_MODE")) define("TEST_MODE", false);
+// useful for cron jobs
+if (!defined("CRON_MODE")) define("CRON_MODE", false);
+// useful for the API
+if (!defined("API_MODE")) define("API_MODE", false);
 
 // Paths and locations
 define("DS", DIRECTORY_SEPARATOR);
@@ -132,18 +133,9 @@ define("API_VERSION", "v2");
 if (!TEST_MODE)
 {
     // set string encoding
-    if (mb_internal_encoding("UTF-8") !== true)
-    {
-        trigger_error("mb_internal_encoding failed");
-    }
-    if (mb_regex_encoding("UTF-8") !== true)
-    {
-        trigger_error("mb_regex_encoding failed");
-    }
-    if (mb_language("uni") !== true)
-    {
-        trigger_error("mb_language failed");
-    }
+    if (mb_internal_encoding("UTF-8") !== true) trigger_error("mb_internal_encoding failed");
+    if (mb_regex_encoding("UTF-8") !== true) trigger_error("mb_regex_encoding failed");
+    if (mb_language("uni") !== true) trigger_error("mb_language failed");
 
     // disable external entity loading
     libxml_disable_entity_loader(true);

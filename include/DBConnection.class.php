@@ -25,9 +25,10 @@
 class DBConnection
 {
     /**
+     * The PDO database handle
      * @var PDO
      */
-    private $conn;
+    private $connection;
 
     /**
      * Flag to see if we currently in a sql transaction
@@ -36,6 +37,7 @@ class DBConnection
     private $in_transaction = false;
 
     /**
+     * The singleton used for the database connection
      * @var DBConnection
      */
     private static $instance;
@@ -65,8 +67,19 @@ class DBConnection
      */
     private function __construct()
     {
-        $this->conn = new PDO(sprintf("mysql:host=%s;dbname=%s;charset=utf8mb4", DB_HOST, DB_NAME), DB_USER, DB_PASSWORD);
-        $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        try
+        {
+            $this->connection = new PDO(sprintf("mysql:host=%s;dbname=%s;charset=utf8mb4", DB_HOST, DB_NAME), DB_USER, DB_PASSWORD);
+
+            if (!$this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION))
+                throw new Exception("setAttribute ATTR_ERRMODE failed");
+            if (!$this->connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC))
+                throw new Exception("setAttribute ATTR_DEFAULT_FETCH_MODE failed");
+        }
+        catch (Exception $e)
+        {
+            die("ERROR: Can not connect to the database. " . $e->getMessage());
+        }
     }
 
     /**
@@ -146,7 +159,7 @@ class DBConnection
         // TODO better test PDO transaction
         if (!$this->in_transaction)
         {
-            $this->in_transaction = $this->conn->beginTransaction();
+            $this->in_transaction = $this->connection->beginTransaction();
         }
 
         return $this->in_transaction;
@@ -161,7 +174,7 @@ class DBConnection
     {
         if ($this->in_transaction)
         {
-            $this->in_transaction = !$this->conn->commit();
+            $this->in_transaction = !$this->connection->commit();
 
             return !$this->in_transaction;
         }
@@ -180,7 +193,7 @@ class DBConnection
     {
         if ($this->in_transaction)
         {
-            $this->in_transaction = !$this->conn->rollback();
+            $this->in_transaction = !$this->connection->rollback();
 
             return !$this->in_transaction;
         }
@@ -216,7 +229,7 @@ class DBConnection
 
         try
         {
-            $sth = $this->conn->prepare($query);
+            $sth = $this->connection->prepare($query);
 
             foreach ($prepared_pairs as $key => $param)
             {
@@ -256,7 +269,7 @@ class DBConnection
         {
             if ($this->in_transaction)
             {
-                $success = $this->conn->rollback();
+                $success = $this->connection->rollback();
                 if (DEBUG_MODE && !$success)
                 {
                     trigger_error("A PDO exception occurred during during a transaction, but the rollback failed");
@@ -291,7 +304,7 @@ class DBConnection
      */
     public function lastInsertId()
     {
-        return $this->conn->lastInsertId();
+        return $this->connection->lastInsertId();
     }
 
     /**
