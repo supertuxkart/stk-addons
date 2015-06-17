@@ -13,8 +13,7 @@ CREATE PROCEDURE `v3_create_file_record`(IN id TEXT, IN ftype INT, IN fname TEXT
         (`addon_id`, `type`, `path`)
         VALUES
             (id, ftype, fname);
-        SELECT
-            LAST_INSERT_ID()
+        SELECT LAST_INSERT_ID()
         INTO insertid;
     END$$
 
@@ -26,7 +25,8 @@ DELIMITER ;
 -- Table structure for table `v3_roles`
 --
 CREATE TABLE IF NOT EXISTS `v3_roles` (
-    `id`   INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'The role unique identifier',
+    `id`   INT UNSIGNED NOT NULL AUTO_INCREMENT
+    COMMENT 'The role unique identifier',
     `name` VARCHAR(128) NOT NULL
     COMMENT 'The name identifier',
     PRIMARY KEY (`id`),
@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS `v3_roles` (
     ENGINE = InnoDB
     DEFAULT CHARSET = utf8mb4
     COLLATE = utf8mb4_unicode_ci
-    AUTO_INCREMENT =4;
+    AUTO_INCREMENT = 4;
 
 --
 -- Dumping data for table `v3_roles`
@@ -97,7 +97,7 @@ ON DUPLICATE KEY UPDATE `role_id` = VALUES(`role_id`), `permission` = VALUES(`pe
 --
 CREATE TABLE IF NOT EXISTS `v3_users` (
     `id`            INT UNSIGNED             NOT NULL AUTO_INCREMENT,
-    `role_id`       INT UNSIGNED DEFAULT '1' NULL,
+    `role_id`       INT UNSIGNED DEFAULT '1' NOT NULL,
     `username`      VARCHAR(30)
                     CHARACTER SET ascii      NOT NULL,
     `password`      CHAR(96)                 NOT NULL,
@@ -106,7 +106,7 @@ CREATE TABLE IF NOT EXISTS `v3_users` (
     `is_active`     BOOL                     NOT NULL,
     `date_login`    TIMESTAMP                NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `date_register` DATE                     NOT NULL,
-    `homepage`      VARCHAR(64) DEFAULT NULL,
+    `homepage`      VARCHAR(64)                       DEFAULT NULL,
     PRIMARY KEY (`id`),
     UNIQUE KEY `key_username` (`username`),
     UNIQUE KEY `key_email` (`email`),
@@ -237,7 +237,7 @@ CREATE TABLE IF NOT EXISTS `v3_notifications` (
 --
 CREATE TABLE IF NOT EXISTS `v3_logs` (
     `id`         INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `user_id`    INT UNSIGNED DEFAULT NULL,
+    `user_id`    INT UNSIGNED          DEFAULT NULL,
     `date`       TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `message`    TEXT         NOT NULL,
     `is_emailed` BOOL         NOT NULL DEFAULT '0',
@@ -257,10 +257,10 @@ CREATE TABLE IF NOT EXISTS `v3_logs` (
 --
 CREATE TABLE IF NOT EXISTS `v3_news` (
     `id`             INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `author_id`      INT UNSIGNED DEFAULT NULL,
+    `author_id`      INT UNSIGNED          DEFAULT NULL,
     `date`           TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `content`        VARCHAR(256) DEFAULT NULL,
-    `condition`      VARCHAR(256) DEFAULT NULL,
+    `content`        VARCHAR(256)          DEFAULT NULL,
+    `condition`      VARCHAR(256)          DEFAULT NULL,
     `is_important`   BOOL         NOT NULL DEFAULT '0',
     `is_web_display` BOOL         NOT NULL DEFAULT '1',
     `is_active`      BOOL         NOT NULL DEFAULT '1',
@@ -391,14 +391,14 @@ CREATE TABLE IF NOT EXISTS `v3_addons` (
     `id`              VARCHAR(30)  NOT NULL,
     `type`            INT UNSIGNED NOT NULL,
     `name`            VARCHAR(64)  NOT NULL,
-    `uploader`        INT UNSIGNED DEFAULT NULL,
+    `uploader`        INT UNSIGNED          DEFAULT NULL,
     `creation_date`   TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `designer`        VARCHAR(64)  NOT NULL,
     `props`           INT UNSIGNED NOT NULL DEFAULT '0',
     `description`     VARCHAR(140) NOT NULL,
     `license`         TEXT,
-    `min_include_ver` VARCHAR(16) DEFAULT NULL,
-    `max_include_ver` VARCHAR(16) DEFAULT NULL,
+    `min_include_ver` VARCHAR(16)           DEFAULT NULL,
+    `max_include_ver` VARCHAR(16)           DEFAULT NULL,
     PRIMARY KEY (`id`),
     KEY `key_uploader` (`uploader`),
     KEY `key_type` (`type`),
@@ -486,12 +486,12 @@ CREATE TABLE IF NOT EXISTS `v3_addon_revisions` (
     `addon_id`       VARCHAR(30)        NOT NULL,
     `file_id`        INT UNSIGNED       NOT NULL DEFAULT '0',
     `creation_date`  TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `revision`       TINYINT            NOT NULL DEFAULT '1',
-    `format`         TINYINT            NOT NULL,
-    `image_id`       INT UNSIGNED       NULL DEFAULT NULL,
-    `icon_id`        INT UNSIGNED       NULL DEFAULT NULL,
+    `revision`       TINYINT UNSIGNED   NOT NULL DEFAULT '1',
+    `format`         TINYINT UNSIGNED   NOT NULL,
+    `image_id`       INT UNSIGNED       NULL     DEFAULT NULL,
+    `icon_id`        INT UNSIGNED       NULL     DEFAULT NULL,
     `status`         MEDIUMINT UNSIGNED NOT NULL DEFAULT '0',
-    `moderator_note` VARCHAR(4096) DEFAULT NULL,
+    `moderator_note` VARCHAR(4096)               DEFAULT NULL,
     PRIMARY KEY (`addon_id`, `revision`),
     KEY `key_status` (`status`),
     KEY `key_addon_id` (`addon_id`),
@@ -564,14 +564,14 @@ CREATE TABLE IF NOT EXISTS `v3_bugs` (
     COMMENT 'User who filed the bug report',
     `addon_id`     VARCHAR(30)   NOT NULL
     COMMENT 'The bug culprit',
-    `close_id`     INT UNSIGNED DEFAULT '0'
+    `close_id`     INT UNSIGNED           DEFAULT '0'
     COMMENT 'The user who closed the bug',
-    `close_reason` VARCHAR(512) DEFAULT NULL
+    `close_reason` VARCHAR(512)           DEFAULT NULL
     COMMENT 'The reason it was closed',
-    `date_report`  TIMESTAMP     NULL DEFAULT NULL
+    `date_report`  TIMESTAMP     NULL     DEFAULT NULL
     COMMENT 'Report date',
-    `date_edit`    TIMESTAMP     NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Last edit date',
-    `date_close`   TIMESTAMP     NULL DEFAULT NULL
+    `date_edit`    TIMESTAMP     NULL     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Last edit date',
+    `date_close`   TIMESTAMP     NULL     DEFAULT NULL
     COMMENT 'Close date',
     `title`        VARCHAR(64)   NOT NULL
     COMMENT 'Bug title',
@@ -605,7 +605,7 @@ CREATE TABLE IF NOT EXISTS `v3_bugs_comments` (
     COMMENT 'The user who commented',
     `date`        TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
     COMMENT 'The date it was reported',
-    `description` VARCHAR(512) DEFAULT NULL
+    `description` VARCHAR(512)          DEFAULT NULL
     COMMENT 'The comment description',
     PRIMARY KEY (`id`),
     KEY `key_bug_id` (`bug_id`),
@@ -664,12 +664,12 @@ ON DUPLICATE KEY UPDATE `name` = VALUES(`name`), `value` = VALUES(`value`);
 -- Table structure for table `v3_music`
 --
 CREATE TABLE IF NOT EXISTS `v3_music` (
-    `id`           INT           NOT NULL AUTO_INCREMENT,
+    `id`           INT UNSIGNED  NOT NULL AUTO_INCREMENT,
     `title`        VARCHAR(256)  NOT NULL,
     `artist`       VARCHAR(256)  NOT NULL,
     `license`      VARCHAR(1024) NOT NULL,
     `gain`         FLOAT         NOT NULL DEFAULT '1',
-    `length`       INT           NOT NULL DEFAULT '0',
+    `length`       INT UNSIGNED  NOT NULL DEFAULT '0',
     `file`         VARCHAR(191)  NOT NULL,
     `file_md5`     CHAR(32)      NOT NULL,
     `xml_filename` VARCHAR(191)  NOT NULL,
