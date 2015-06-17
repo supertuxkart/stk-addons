@@ -315,17 +315,6 @@ class Addon extends Base
         // Remove cache files for this add-on
         Cache::clearAddon($this->id);
 
-        // Remove addon entry
-        // No need to remove files or revisions, as they are removed by database constraints
-        try
-        {
-            DBConnection::get()->delete("addons", "`id` = :id", [":id" => $this->id]);
-        }
-        catch(DBException $e)
-        {
-            throw new AddonException(exception_message_db(_('remove addon')));
-        }
-
         // Remove files associated with this addon
         $files = File::getAllAddon($this->id);
         foreach ($files as $file)
@@ -338,6 +327,17 @@ class Addon extends Base
             {
                 throw new AddonException($e->getMessage());
             }
+        }
+
+        // Remove addon entry
+        // No need to remove files or revisions, as they are removed by database constraints
+        try
+        {
+            DBConnection::get()->delete("addons", "`id` = :id", [":id" => $this->id]);
+        }
+        catch(DBException $e)
+        {
+            throw new AddonException(exception_message_db(_('remove addon')));
         }
 
         Log::newEvent("Deleted add-on '{$this->name}'");
