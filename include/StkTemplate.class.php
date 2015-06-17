@@ -234,6 +234,7 @@ class StkTemplate extends Template
         $this->assign("tpl_config", $config);
 
         $this->assign("root_location", ROOT_LOCATION);
+        $this->assign("favicon_location", IMG_LOCATION . "favicon/");
     }
 
     /**
