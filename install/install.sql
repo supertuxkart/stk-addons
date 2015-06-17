@@ -484,7 +484,7 @@ CREATE TABLE IF NOT EXISTS `v3_files_delete` (
 --
 CREATE TABLE IF NOT EXISTS `v3_addon_revisions` (
     `addon_id`       VARCHAR(30)        NOT NULL,
-    `file_id`        INT UNSIGNED       NOT NULL DEFAULT '0',
+    `file_id`        INT UNSIGNED       NULL     DEFAULT NULL,
     `creation_date`  TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `revision`       TINYINT UNSIGNED   NOT NULL DEFAULT '1',
     `format`         TINYINT UNSIGNED   NOT NULL,
@@ -502,13 +502,13 @@ CREATE TABLE IF NOT EXISTS `v3_addon_revisions` (
         ON DELETE CASCADE
         ON UPDATE NO ACTION,
     CONSTRAINT `v3_addon_revisions_ibfk_2` FOREIGN KEY (`file_id`) REFERENCES `v3_files` (`id`)
-        ON DELETE NO ACTION
+        ON DELETE SET NULL
         ON UPDATE NO ACTION,
     CONSTRAINT `v3_addon_revisions_ibfk_3` FOREIGN KEY (`image_id`) REFERENCES `v3_files` (`id`)
-        ON DELETE NO ACTION
+        ON DELETE SET NULL
         ON UPDATE NO ACTION,
     CONSTRAINT `v3_addon_revisions_ibfk_4` FOREIGN KEY (`icon_id`) REFERENCES `v3_files` (`id`)
-        ON DELETE NO ACTION
+        ON DELETE SET NULL
         ON UPDATE NO ACTION
 )
     ENGINE = InnoDB

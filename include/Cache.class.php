@@ -76,6 +76,7 @@ class Cache
      */
     public static function clearAddon($addon)
     {
+        // TODO remove redundant method calls
         $addon = Addon::cleanId($addon);
         if (!Addon::exists($addon))
         {
@@ -87,9 +88,9 @@ class Cache
             $cache_list = DBConnection::get()->query(
                 'SELECT `file`
                 FROM `' . DB_PREFIX . 'cache`
-                WHERE `addon` = :addon',
+                WHERE `addon_id` = :addon_id',
                 DBConnection::FETCH_ALL,
-                [':addon' => $addon]
+                [':addon_id' => $addon]
             );
             foreach ($cache_list AS $cache_item)
             {
