@@ -96,23 +96,23 @@ ON DUPLICATE KEY UPDATE `role_id` = VALUES(`role_id`), `permission` = VALUES(`pe
 -- Table structure for table `v3_users`
 --
 CREATE TABLE IF NOT EXISTS `v3_users` (
-    `id`            INT UNSIGNED        NOT NULL AUTO_INCREMENT,
-    `role_id`       INT UNSIGNED DEFAULT '1',
+    `id`            INT UNSIGNED             NOT NULL AUTO_INCREMENT,
+    `role_id`       INT UNSIGNED DEFAULT '1' NULL,
     `username`      VARCHAR(30)
-                    CHARACTER SET ascii NOT NULL,
-    `password`      CHAR(96)            NOT NULL,
-    `realname`      VARCHAR(64)         NOT NULL,
-    `email`         VARCHAR(64)         NOT NULL,
-    `is_active`     BOOL                NOT NULL,
-    `date_login`    TIMESTAMP           NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `date_register` DATE                NOT NULL,
+                    CHARACTER SET ascii      NOT NULL,
+    `password`      CHAR(96)                 NOT NULL,
+    `realname`      VARCHAR(64)              NOT NULL,
+    `email`         VARCHAR(64)              NOT NULL,
+    `is_active`     BOOL                     NOT NULL,
+    `date_login`    TIMESTAMP                NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `date_register` DATE                     NOT NULL,
     `homepage`      VARCHAR(64) DEFAULT NULL,
     PRIMARY KEY (`id`),
     UNIQUE KEY `key_username` (`username`),
     UNIQUE KEY `key_email` (`email`),
     KEY `key_role_id` (`role_id`),
     CONSTRAINT `v3_users_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `v3_roles` (`id`)
-        ON DELETE SET NULL -- TODO fix
+        ON DELETE NO ACTION
         ON UPDATE NO ACTION
 )
     ENGINE = InnoDB
@@ -488,18 +488,26 @@ CREATE TABLE IF NOT EXISTS `v3_addon_revisions` (
     `creation_date`  TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `revision`       TINYINT            NOT NULL DEFAULT '1',
     `format`         TINYINT            NOT NULL,
-    `image`          INT UNSIGNED       NOT NULL DEFAULT '0',
-    `icon`           INT UNSIGNED       NOT NULL DEFAULT '0',
+    `image_id`       INT UNSIGNED       NULL DEFAULT NULL,
+    `icon_id`        INT UNSIGNED       NULL DEFAULT NULL,
     `status`         MEDIUMINT UNSIGNED NOT NULL DEFAULT '0',
     `moderator_note` VARCHAR(4096) DEFAULT NULL,
     PRIMARY KEY (`addon_id`, `revision`),
     KEY `key_status` (`status`),
     KEY `key_addon_id` (`addon_id`),
     KEY `key_file_id` (`file_id`),
+    KEY `key_image_id` (`image_id`),
+    KEY `key_icon_id` (`icon_id`),
     CONSTRAINT `v3_addon_revisions_ibfk_1` FOREIGN KEY (`addon_id`) REFERENCES `v3_addons` (`id`)
         ON DELETE CASCADE
         ON UPDATE NO ACTION,
     CONSTRAINT `v3_addon_revisions_ibfk_2` FOREIGN KEY (`file_id`) REFERENCES `v3_files` (`id`)
+        ON DELETE NO ACTION
+        ON UPDATE NO ACTION,
+    CONSTRAINT `v3_addon_revisions_ibfk_3` FOREIGN KEY (`image_id`) REFERENCES `v3_files` (`id`)
+        ON DELETE NO ACTION
+        ON UPDATE NO ACTION,
+    CONSTRAINT `v3_addon_revisions_ibfk_4` FOREIGN KEY (`icon_id`) REFERENCES `v3_files` (`id`)
         ON DELETE NO ACTION
         ON UPDATE NO ACTION
 )

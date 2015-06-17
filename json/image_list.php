@@ -46,10 +46,10 @@ $addon = Addon::get($addon_id);
 $json_array = [];
 foreach ($addon->getImages() as $image)
 {
-    $json_array[] = array(
+    $json_array[] = [
         'url'      => DOWNLOAD_LOCATION . $image->getPath(),
         'date'     => strtotime($image->getDateAdded()),
         'approved' => $image->isApproved()
-    );
+    ];
 }
 echo json_encode($json_array);

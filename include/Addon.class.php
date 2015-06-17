@@ -147,8 +147,8 @@ class Addon extends Base
             $current_rev = [
                 'file'           => $rev['file_id'],
                 'format'         => $rev['format'],
-                'image'          => $rev['image'],
-                'icon'           => isset($rev['icon']) ? (int)$rev['icon'] : 0,
+                'image'          => (int)$rev['image_id'],
+                'icon'           => isset($rev['icon_id']) ? (int)$rev['icon_id'] : 0,
                 'moderator_note' => $rev['moderator_note'],
                 'revision'       => (int)$rev['revision'],
                 'status'         => $rev['status'],
@@ -257,13 +257,13 @@ class Addon extends Base
             ":file_id"  => $attributes['file_id'],
             ":revision" => $this->getMaxRevisionID() + 1, // the next revision number
             ":format"   => $attributes['version'],
-            ":image"    => $attributes['image'],
+            ":image_id" => $attributes['image'],
             ":status"   => $attributes['status']
         ];
 
         if ($this->type === static::KART)
         {
-            $fields_data[":icon"] = $attributes['image'];
+            $fields_data[":icon_id"] = $attributes['image'];
         }
 
         // Add moderator message if available
@@ -760,28 +760,29 @@ class Addon extends Base
         return $this;
     }
 
+
     /**
-     * Set the image for the latest revision of this add-on.
+     * Helper method to set the image or icon
      *
-     * @param int    $image_id
-     * @param string $field should only be set called internal methods
+     * @param int    $image_or_icon_id
+     * @param string $field can be image_id or icon_id
      *
      * @return Addon
      * @throws AddonException
      */
-    public function setImage($image_id, $field = 'image')
+    private function setImageOrIcon($image_or_icon_id, $field)
     {
         try
         {
             DBConnection::get()->query(
                 "UPDATE `" . DB_PREFIX . "addon_revisions`
-                SET `" . $field . "` = :image_id
+                SET `" . $field . "` = :image_or_icon
                 WHERE `addon_id` = :addon_id
                 AND `status` & " . F_LATEST,
                 DBConnection::NOTHING,
                 [
-                    ':image_id' => $image_id,
-                    ':addon_id' => $this->id
+                    ':image_or_icon' => $image_or_icon_id,
+                    ':addon_id'      => $this->id
                 ]
             );
         }
@@ -791,6 +792,19 @@ class Addon extends Base
         }
 
         return $this;
+    }
+
+    /**
+     * Set the image for the latest revision of this add-on.
+     *
+     * @param int    $image_id
+     *
+     * @return Addon
+     * @throws AddonException
+     */
+    public function setImage($image_id)
+    {
+        return $this->setImageOrIcon($image_id, 'image_id');
     }
 
 
@@ -810,7 +824,7 @@ class Addon extends Base
             throw new AddonException(_h("This addon type does not have an icon associated with it"));
         }
 
-        return $this->setImage($icon_id, 'icon');
+        return $this->setImageOrIcon($icon_id, 'icon_id');
     }
 
     /**
@@ -1786,13 +1800,13 @@ class Addon extends Base
             ":file_id"  => $attributes['file_id'],
             ":revision" => $rev,
             ":format"   => $attributes['version'],
-            ":image"    => $attributes['image'],
+            ":image_id" => $attributes['image'],
             ":status"   => $attributes['status']
 
         ];
         if ($type === static::KART)
         {
-            $fields_data[":icon"] = $attributes['image'];
+            $fields_data[":icon_id"] = $attributes['image'];
         }
 
         // Add moderator message if available

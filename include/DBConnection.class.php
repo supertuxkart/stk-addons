@@ -78,7 +78,7 @@ class DBConnection
         }
         catch (Exception $e)
         {
-            die("ERROR: Can not connect to the database. " . $e->getMessage());
+            exit("ERROR: Can not connect to the database. " . $e->getMessage());
         }
     }
 

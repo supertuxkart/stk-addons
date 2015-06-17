@@ -118,12 +118,12 @@ function generateAssetXML()
             $type_int = Addon::stringToType($type);
 
             // TODO find a cleaner solution to writing these queries
-            // TODo optimize
+            // TODO optimize
             // we do not need to escape the $type variable because it is defined above
             $addons = DBConnection::get()->query(
                 "SELECT A.*, R.`file_id`, R.`creation_date` AS `date`,
-                        R.`revision`, R.`format`, R.`image`,
-                        R.`icon`, R.`status`, U.`username`
+                        R.`revision`, R.`format`, R.`image_id`,
+                        R.`icon_id`, R.`status`, U.`username`
                 FROM " . DB_PREFIX . "addons A
                     LEFT JOIN " . DB_PREFIX  . "addon_revisions R
                         ON A.`id` = R.`addon_id`
@@ -169,7 +169,7 @@ function generateAssetXML()
 
                 try
                 {
-                    $image_path = File::getFromID($addon['image'])->getPath();
+                    $image_path = File::getFromID($addon['image_id'])->getPath();
                     if (file_exists(UP_PATH . $image_path))
                     {
                         $writer->writeAttribute('image', DOWNLOAD_LOCATION . $image_path);
@@ -184,7 +184,7 @@ function generateAssetXML()
                 {
                     try
                     {
-                        $icon_path = File::getFromID($addon['icon'])->getPath();
+                        $icon_path = File::getFromID($addon['icon_id'])->getPath();
                         if (file_exists(UP_PATH . $icon_path))
                         {
                             $writer->writeAttribute('icon', DOWNLOAD_LOCATION . $icon_path);
@@ -370,7 +370,7 @@ function generateAssetXML2()
                         // Add image and icon to record
                         try
                         {
-                            $image_path = File::getFromID($addon_rev['image'])->getPath();
+                            $image_path = File::getFromID($addon_rev['image_id'])->getPath();
                             if (file_exists(UP_PATH . $image_path))
                             {
                                 $writer->writeAttribute('image', DOWNLOAD_LOCATION . $image_path);

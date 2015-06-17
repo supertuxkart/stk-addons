@@ -500,7 +500,7 @@ try
 }
 catch(Exception $e)
 {
-    $output->addErrorElement('request','An unexpected error occurred. Please contact a website administrator.');
+    $output->addErrorElement('request', 'An unexpected error occurred. Please contact a website administrator.');
 }
 
 $output->endDocument();
