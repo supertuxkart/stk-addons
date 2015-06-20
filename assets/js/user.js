@@ -33,6 +33,10 @@
     registerPagination($user_menu, "users-menu.php");
 
     // search form
+    $("#user-search-form").submit(function(e) { // prevent form submit
+        e.preventDefault();
+        return false
+    });
     $("#user-search-val").keyup(function() {
         var query = this.value;
         if (query.length <= 2) { // only if length is 3 or greater
