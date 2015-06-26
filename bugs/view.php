@@ -29,12 +29,10 @@ if (!$bug_id)
 try
 {
     $bug = Bug::get($bug_id);
-
 }
 catch(BugException $e)
 {
     Util::redirectError(404);
-
 }
 
 $tpl = StkTemplate::get("bugs/view.tpl");

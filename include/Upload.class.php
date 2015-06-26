@@ -428,7 +428,6 @@ class Upload
             throw new UploadException($e->getMessage());
         }
 
-
         $this->success[] =
             _h('Your add-on was uploaded successfully. It will be reviewed by our moderators before becoming publicly available.');
         $this->success[] = '<a href="?type=' . $this->addon_type . '&amp;name=' . $this->addon_id . '&amp;upload-type=source">' .
