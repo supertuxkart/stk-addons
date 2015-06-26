@@ -238,8 +238,8 @@ class Upload
     }
 
     /**
-     * Relocate uploaded files to a 'scratch' directory. If the uploaded
-     * file is compressed, decompress it.
+     * Relocate uploaded files to a 'scratch' directory.
+     * If the uploaded file is compressed, decompress it.
      * @throws UploadException
      */
     private function prepareUploadedFiles()
@@ -382,8 +382,21 @@ class Upload
             $this->properties['addon_revision'] = 1;
             $this->properties['status'] += F_LATEST;
         }
+        $is_revision = ($this->expected_file_type === static::REVISION && $addon);
 
-        // TODO add undo methods for steps below
+        if (!$is_revision) // add new addon
+        {
+            try
+            {
+                $addon = Addon::create($this->addon_id, $this->addon_type, $this->properties['xml_attributes']);
+            }
+            catch (AddonException $e)
+            {
+                throw new UploadException($e->getMessage());
+            }
+        }
+
+        // add additional addon data to database
         $this->editInfoFile();
         $this->storeUploadImage();
         $this->storeUploadQuadFile();
@@ -393,22 +406,25 @@ class Upload
         $this->properties['xml_attributes']['image'] = $this->properties['image_file'];
         $this->properties['xml_attributes']['missing_textures'] = $this->properties['missing_textures'];
 
-        // add addon to database
+        // add addon revision to database
         try
         {
             // new revision
-            if ($this->expected_file_type === static::REVISION && $addon)
+            if ($is_revision)
             {
                 $addon->createRevision($this->properties['xml_attributes'], $this->moderator_message);
+                $addon->sendMailModeratorNewRevision();
             }
             else // new addon
             {
-                Addon::create($this->addon_type, $this->properties['xml_attributes'], $this->moderator_message);
+                $addon->createRevisionFirst($this->properties['xml_attributes'], $this->moderator_message);
+                $addon->sendMailModeratorNewAddon();
             }
             writeXML();
         }
         catch(AddonException $e)
         {
+            // TODO add undo methods for steps above
             throw new UploadException($e->getMessage());
         }
 

@@ -201,21 +201,78 @@ class Addon extends Base
         }
     }
 
+
     /**
-     * Create an add-on revision
+     * Helper method to add a revision to the database
      *
-     * @param array  $attributes
+     * @param array  $missing_textures  a list of missing textures, useful for building moderator message
+     * @param int    $revision          the addon revision
+     * @param int    $file_id           the file archive that contains the addon data
+     * @param int    $format            the version specifier
+     * @param int    $image_id          the image file identifier
+     * @param int    $status            the status of the addon
      * @param string $moderator_message
+     * @param string $exception_message message to throw back when the insertion fails
      *
      * @throws AddonException
      */
-    public function createRevision($attributes, $moderator_message = "")
-    {
-        foreach ($attributes['missing_textures'] as $tex)
+    private function addRevision(
+        array $missing_textures,
+        $revision,
+        $file_id,
+        $format,
+        $image_id,
+        $status,
+        $moderator_message,
+        $exception_message
+    ) {
+        foreach ($missing_textures as $tex)
         {
             $moderator_message .= "Texture not found: $tex\n";
         }
 
+        // Add revision entry
+        $fields_data = [
+            ":addon_id" => $this->id,
+            ":file_id"  => $file_id,
+            ":revision" => $revision, // the next revision number
+            ":format"   => $format,
+            ":image_id" => $image_id,
+            ":status"   => $status
+        ];
+
+        if ($this->type === static::KART)
+        {
+            $fields_data[":icon_id"] = $image_id;
+        }
+
+        // Add moderator message if available
+        if ($moderator_message)
+        {
+            $fields_data[":moderator_note"] = $moderator_message;
+        }
+
+        try
+        {
+            DBConnection::get()->insert('addon_revisions', $fields_data);
+        }
+        catch(DBException $e)
+        {
+            throw new AddonException(exception_message_db($exception_message));
+        }
+    }
+
+    /**
+     * Create an add-on revision. Do not use this method to create the first addon revision
+     *
+     * @param array  $attributes contains name, designer, license, version, image, file_id, status, missing_textures
+     * @param string $moderator_message
+     *
+     * @throws AddonException
+     */
+    public function createRevision(array $attributes, $moderator_message)
+    {
+        // New revision can set a new addon name and a new license
         // Update the addon name
         $this->setName($attributes['name']);
 
@@ -251,58 +308,41 @@ class Addon extends Base
             }
         }
 
-        // Add revision entry
-        $fields_data = [
-            ":addon_id" => $this->id,
-            ":file_id"  => $attributes['file_id'],
-            ":revision" => $this->getMaxRevisionID() + 1, // the next revision number
-            ":format"   => $attributes['version'],
-            ":image_id" => $attributes['image'],
-            ":status"   => $attributes['status']
-        ];
-
-        if ($this->type === static::KART)
-        {
-            $fields_data[":icon_id"] = $attributes['image'];
-        }
-
-        // Add moderator message if available
-        if ($moderator_message)
-        {
-            $fields_data[":moderator_note"] = $moderator_message;
-        }
-
-        try
-        {
-            DBConnection::get()->insert('addon_revisions', $fields_data);
-        }
-        catch(DBException $e)
-        {
-            throw new AddonException(exception_message_db(_('create add-on revision')));
-        }
-
-        try
-        {
-            // Send mail to moderators
-            SMail::get()->moderatorNotification(
-                'New Addon Upload',
-                h(
-                    sprintf(
-                        "%s has uploaded a new revision for %s '%s' %s",
-                        User::getLoggedUserName(),
-                        static::typeToString($this->type),
-                        $attributes['name'],
-                        (string)$this->id
-                    )
-                )
-            );
-        }
-        catch(SMailException $e)
-        {
-            throw new AddonException($e->getMessage());
-        }
+        // add revision
+        $this->addRevision(
+            $attributes['missing_textures'],
+            $this->getMaxRevisionID() + 1,
+            $attributes['file_id'],
+            $attributes['version'],
+            $attributes['image'],
+            $attributes['status'],
+            $moderator_message,
+            _('create add-on revision')
+        );
 
         Log::newEvent("New add-on revision for '{$attributes['name']}'");
+    }
+
+    /**
+     * Create first addon revision
+     *
+     * @param array  $attributes contains name, designer, license, version, image, file_id, status, missing_textures
+     * @param string $moderator_message
+     *
+     * @throws AddonException
+     */
+    public function createRevisionFirst(array $attributes, $moderator_message)
+    {
+        $this->addRevision(
+            $attributes['missing_textures'],
+            1,
+            $attributes['file_id'],
+            $attributes['version'],
+            $attributes['image'],
+            $attributes['status'],
+            $moderator_message,
+            _('create first add-on revision')
+        );
     }
 
     /**
@@ -797,7 +837,7 @@ class Addon extends Base
     /**
      * Set the image for the latest revision of this add-on.
      *
-     * @param int    $image_id
+     * @param int $image_id
      *
      * @return Addon
      * @throws AddonException
@@ -1736,29 +1776,23 @@ class Addon extends Base
     }
 
     /**
-     * Create a new add-on record and an initial revision
+     * Create a new add-on record. To create the first addon revision, call $this->createRevisionFirst
      *
+     * @param string $id                 Addon ID
      * @param string $type               Add-on type
      * @param array  $attributes         Contains properties of the add-on. Must have the
-     *                                   following elements: name, designer, license, image, file_id, status, (arena)
-     * @param string $moderator_message
+     *                                   following elements: name, designer, license, image, file_id, status, missing_textures
      *
+     * @return Addon
      * @throws AddonException
      */
-    public static function create($type, $attributes, $moderator_message)
+    public static function create($id, $type, array $attributes)
     {
         // validate
         if (!static::isAllowedType($type))
         {
             throw new AddonException(_h('An invalid add-on type was provided.'));
         }
-
-        foreach ($attributes['missing_textures'] as $tex)
-        {
-            $moderator_message .= "Texture not found: $tex\n";
-        }
-        // Make sure the add-on doesn't already exist, generate an unique identifier
-        $id = static::generateId($attributes['name']);
 
         // add addon to database
         $fields_data = [
@@ -1790,62 +1824,73 @@ class Addon extends Base
         {
             throw new AddonException(exception_message_db(_('create your add-on')));
         }
+        Log::newEvent("New add-on '{$attributes['name']}'");
 
-        // Add the first revision
-        $rev = 1;
+        return static::get($id, false);
+    }
 
-        // Generate revision entry
-        $fields_data = [
-            ":addon_id" => $id,
-            ":file_id"  => $attributes['file_id'],
-            ":revision" => $rev,
-            ":format"   => $attributes['version'],
-            ":image_id" => $attributes['image'],
-            ":status"   => $attributes['status']
-
-        ];
-        if ($type === static::KART)
-        {
-            $fields_data[":icon_id"] = $attributes['image'];
-        }
-
-        // Add moderator message if available
-        if ($moderator_message)
-        {
-            $fields_data[":moderator_note"] = $moderator_message;
-        }
-
+    /**
+     * Wrapper for SMail::moderatorNotification which sends an email to the moderators list
+     *
+     * @param string $title the email subject
+     * @param string $body  the email body in html
+     *
+     * @throws AddonException
+     */
+    public static function sendMailModerator($title, $body)
+    {
         try
         {
-            DBConnection::get()->insert('addon_revisions', $fields_data);
-        }
-        catch(DBException $e)
-        {
-            throw new AddonException($e->getMessage());
-        }
-
-        try
-        {
-            // Send mail to moderators
-            SMail::get()->moderatorNotification(
-                'New Addon Upload',
-                h(
-                    sprintf(
-                        "%s has uploaded a new %s '%s' %s",
-                        User::getLoggedUserName(),
-                        $type,
-                        $attributes['name'],
-                        (string)$id
-                    )
-                )
-            );
+            SMail::get()->moderatorNotification($title, h($body));
         }
         catch(SMailException $e)
         {
             throw new AddonException($e->getMessage());
         }
+    }
 
-        Log::newEvent("New add-on '{$attributes['name']}'");
+    /**
+     * Send moderator notification for a new addon upload
+     *
+     * @param null|string $username the username who uploaded the addon, if null the default will be the currently logged in user
+     * @throws AddonException
+     */
+    public function sendMailModeratorNewAddon($username = null)
+    {
+        if (!$username) $username = User::getLoggedUserName();
+
+        static::sendMailModerator(
+            'New Addon Upload',
+            sprintf(
+                "%s has uploaded a new %s '%s' %s",
+                $username,
+                static::typetoString($this->type),
+                $this->name,
+                $this->id
+            )
+        );
+    }
+
+    /**
+     * Send moderator notification for a new revision upload
+     *
+     * @param null|string $username the username who uploaded the addon, if null the default will be the currently logged in user
+     * @throws AddonException
+     */
+    public function sendMailModeratorNewRevision($username = null)
+    {
+        if (!$username) $username = User::getLoggedUserName();
+
+        static::sendMailModerator(
+            'New Addon Revision Upload',
+            sprintf(
+                "%s has uploaded a new revision for %s '%s' %s",
+                $username,
+                static::typeToString($this->type),
+                $this->name,
+                $this->id
+            )
+        );
     }
 
     /**
