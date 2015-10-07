@@ -65,8 +65,19 @@ class DBConnection
      */
     private function __construct()
     {
-        $this->conn = new PDO(sprintf("mysql:host=%s;dbname=%s;charset=utf8mb4", DB_HOST, DB_NAME), DB_USER, DB_PASSWORD);
-        $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        try
+        {
+            $this->conn = new PDO(sprintf("mysql:host=%s;dbname=%s;charset=utf8mb4", DB_HOST, DB_NAME), DB_USER, DB_PASSWORD);
+
+            if (!$this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION))
+                throw new Exception("setAttribute ATTR_ERRMODE failed");
+            if (!$this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC))
+                throw new Exception("setAttribute ATTR_DEFAULT_FETCH_MODE failed");
+        }
+        catch (Exception $e)
+        {
+            exit("ERROR: Can not connect to the database. " . $e->getMessage());
+        }
     }
 
     /**

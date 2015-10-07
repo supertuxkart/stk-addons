@@ -9,3 +9,4 @@ config.php
 .idea/
 vendor/
 node_modules/
+locale/file-list.txt
