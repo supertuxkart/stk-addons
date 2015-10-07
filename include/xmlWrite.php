@@ -174,7 +174,6 @@ function generateAssetXML()
 
                 if ($type == "kart")
                 {
-                    echo 'FOUND KART';
                     $icon_path = File::getPath($addon['icon']);
                     if ($icon_path)
                     {
