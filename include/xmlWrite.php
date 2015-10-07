@@ -164,7 +164,7 @@ function generateAssetXML()
                 $writer->writeAttribute('designer', $addon['designer']);
                 $writer->writeAttribute('description', $addon['description']);
                 $image_path = File::getPath($addon['image']);
-                if (!$image_path)
+                if ($image_path)
                 {
                     if (file_exists(UP_PATH . $image_path))
                     {
@@ -174,8 +174,9 @@ function generateAssetXML()
 
                 if ($type == "kart")
                 {
+                    echo 'FOUND KART';
                     $icon_path = File::getPath($addon['icon']);
-                    if (!$icon_path)
+                    if ($icon_path)
                     {
                         if (file_exists(UP_PATH . $icon_path))
                         {
@@ -341,7 +342,7 @@ function generateAssetXML2()
 
                         // Add image and icon to record
                         $image_path = File::getPath($addon_rev['image']);
-                        if (!$image_path)
+                        if ($image_path)
                         {
                             if (file_exists(UP_PATH . $image_path))
                             {
@@ -351,7 +352,7 @@ function generateAssetXML2()
                         if ($type === "kart")
                         {
                             $icon_path = File::getPath($addon_rev['icon']);
-                            if (!$icon_path)
+                            if ($icon_path)
                             {
                                 if (file_exists(UP_PATH . $icon_path))
                                 {
