@@ -112,7 +112,7 @@ CREATE TABLE IF NOT EXISTS `v3_users` (
     UNIQUE KEY `key_email` (`email`),
     KEY `key_role_id` (`role_id`),
     CONSTRAINT `v3_users_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `v3_roles` (`id`)
-        ON DELETE NO ACTION
+        ON DELETE RESTRICT
         ON UPDATE NO ACTION
 )
     ENGINE = InnoDB
@@ -135,7 +135,7 @@ CREATE TABLE IF NOT EXISTS `v3_verification` (
     ENGINE = InnoDB
     DEFAULT CHARSET = utf8mb4
     COLLATE = utf8mb4_unicode_ci
-    COMMENT = 'Used for account activation and recovery';
+    COMMENT = 'Account activation and recovery codes';
 
 -- --------------------------------------------------------------------------------
 --
@@ -149,7 +149,8 @@ CREATE TABLE IF NOT EXISTS `v3_achievements` (
 )
     ENGINE = InnoDB
     DEFAULT CHARSET = utf8mb4
-    COLLATE = utf8mb4_unicode_ci;
+    COLLATE = utf8mb4_unicode_ci
+    COMMENT = 'Keep track of all achievements (see install/get-achievements.php)';
 
 --
 -- Dumping data for table `v3_achievements`
@@ -187,7 +188,8 @@ CREATE TABLE IF NOT EXISTS `v3_achieved` (
 )
     ENGINE = InnoDB
     DEFAULT CHARSET = utf8mb4
-    COLLATE = utf8mb4_unicode_ci;
+    COLLATE = utf8mb4_unicode_ci
+    COMMENT = 'The achievements of each user';
 
 -- --------------------------------------------------------------------------------
 --
@@ -218,7 +220,7 @@ CREATE TABLE IF NOT EXISTS `v3_notifications` (
     `to`   INT UNSIGNED NOT NULL,
     `from` INT UNSIGNED NOT NULL,
     `type` VARCHAR(16)  NOT NULL,
-    PRIMARY KEY (`to`, `type`),
+    PRIMARY KEY (`to`, `from`, `type`),
     KEY `key_to` (`to`),
     KEY `key_from` (`from`),
     CONSTRAINT `v3_notifications_ibfk_1` FOREIGN KEY (`to`) REFERENCES `v3_users` (`id`)
@@ -245,7 +247,7 @@ CREATE TABLE IF NOT EXISTS `v3_logs` (
     PRIMARY KEY (`id`),
     KEY `key_user_id` (`user_id`),
     CONSTRAINT `v3_logs_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `v3_users` (`id`)
-        ON DELETE CASCADE
+        ON DELETE NO ACTION
         ON UPDATE NO ACTION
 )
     ENGINE = InnoDB

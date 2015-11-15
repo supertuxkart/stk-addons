@@ -150,6 +150,23 @@ class DBConnection
     }
 
     /**
+     * Get the internal PDO connection object
+     * @return PDO
+     */
+    public function getConnection()
+    {
+        return $this->connection;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isInTransaction()
+    {
+        return $this->in_transaction;
+    }
+
+    /**
      * Start a database transaction
      *
      * @return bool

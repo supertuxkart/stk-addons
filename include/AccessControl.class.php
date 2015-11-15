@@ -249,8 +249,8 @@ class AccessControl
      *
      * @param bool $refresh_cache flag set to refer
      *
-     * @return array an associative array wih key being the 'id' of the role
-     *               and the value being the 'name' of the role
+     * @return array an associative array wih value being the 'id' of the role
+     *               and the key being the 'name' of the role
      * @throws AccessControlException
      */
     public static function getRoles($refresh_cache = false)
