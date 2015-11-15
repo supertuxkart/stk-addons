@@ -5,7 +5,6 @@ platform. The official location of the production website is http://addons.super
 ## Build Status
 [![Build Status](https://travis-ci.org/leyyin/stk-addons.svg?branch=master)](https://travis-ci.org/leyyin/stk-addons)
 
-
 ## Installation
 This software has no automated installation mechanism as it is not intended for wide
 usage. However, you can manually install all dependencies, database tables and
@@ -13,7 +12,7 @@ settings.
 
 ### Dependencies
 First of all, you need a the apache webserver with PHP 5 and MySQL server v5.5.3+.
-The most features will also work with other webservers, but there's no support for them.
+Most features will also work with other webservers, but there is no support for them.
 
 To get a list of the additional PHP packages needed, point your web browser to the `install/` directory.
 The script file located there (index.php) will show which dependencies are missing.
@@ -58,16 +57,16 @@ If you are running in a production environment, just append the `--production` o
 
 
 ### Database
-Currently we only support MySQL as database backend. A newer version `v5.5.3+` is required to have proper unicode support.
+Currently we only support MySQL as a database backend. A newer version `v5.5.3+` is required to have proper unicode support.
 
 You can generate the database (name it as you wish) using a tool like [phpMyAdmin](http://www.phpmyadmin.net/home_page/index.php) or with the mysql shell.
-With phpMyAdmin, import the [install.sql](install/install.sql) file found in the repository (in the `install` directory).
+Import the [install.sql](install/install.sql) file found in the repository (in the `install` directory).
 
 Register a new user using the web interface. Don't worry about configuring your email settings.
-After creating your user from the web interface (phpMyAdmin), you can change that user's role to 'admin', and set their 'active' value to 1.
+After creating your user, you can change that user's `role_id` to be 3 (see `roles` tables for other role id's), and  'is_active' value to 1.
 You can delete the relevant row in the 'verifications' table. You can login now with your new user.
 
-Alternatively, open a MySQL shell and create a database for STK Addons.
+#### Instructions for MySQL shell
 Add a new user with full access to the new database and import `install/install.sql` with ```use DATABASE_NAME; source install/install.sql;``` inside the MySQL shell
 or with ```mysql -u root -p -h DATABASE_HOST DATABASE_NAME < install/install.sql``` in a normal shell.
 
@@ -98,7 +97,7 @@ of the website. (e.g. if your project is in `localhost/stkaddons`, the rewrite f
 A common problem on Linux are the permissions for the `assets/cache` and `dl` directories.
 There are several ways to solve this problem:
 * Change the permission of the directories with `chmod 775` (not recommended)
-* Add yourself to the owner group of these directories and give the group read&write access, or change the owner of those directories
+* Add yourself to the owner group of these directories and give the group read & write access, or change the owner of those directories
 to the user under which your webserver is running (usually www-data). The latter can be achieved using:
 ```sudo chown -R www-data:www-data <directory>```
 
@@ -125,7 +124,7 @@ If you want to give it a custom configuration use the `--configuration` flag, li
 All contributions are welcome: ideas, patches, documentation, bug reports, complaints, etc!
 
 The PHP coding standard is heavily based on [PSR-2](http://www.php-fig.org/psr/psr-2/), with some modifications:
-* The line limit is 140 characters.
+* The line limit is 120 characters.
 * Opening braces for control structures MUST go on the next line, and closing braces MUST go on the next line after the body.
 ```php
 if ($a === 42)
