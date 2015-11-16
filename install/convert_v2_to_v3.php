@@ -3,10 +3,25 @@ if (php_sapi_name() !== 'cli')
 {
     exit('Not in CLI Mode');
 }
+
+// Prevent against disaster!!!
+error_reporting(-1);
+function exception_error_handler($severity, $message, $file, $line)
+{
+    if (!(error_reporting() & $severity))
+    {
+        // This error code is not included in error_reporting
+        return;
+    }
+    throw new ErrorException($message, 0, $severity, $file, $line);
+}
+
+set_error_handler("exception_error_handler");
 assert_options(ASSERT_ACTIVE, true);
 assert_options(ASSERT_BAIL, true);
+
 define('CRON_MODE', true);
-require_once('../config.php');
+require('../config.php');
 
 $doc = <<<DOC
  Script to convert the stk-addons from version 2 to version 3 of the database.
@@ -129,7 +144,7 @@ class Convert
      */
     public static function count_table($table)
     {
-        return static::$db->query("SELECT COUNT(*) FROM $table", DBConnection::FETCH_FIRST_COLUMN);
+        return (int)static::$db->query("SELECT COUNT(*) FROM $table", DBConnection::FETCH_FIRST_COLUMN);
     }
 
     /**
@@ -154,7 +169,8 @@ class Convert
             assert(static::$db->commit());
             $count_v3 = static::count_table($to_table);
 
-            if ($check_integrity && $count_v2 != $count_v3)
+
+            if ($check_integrity && $count_v2 !== $count_v3)
             {
                 throw new Exception(
                     sprintf(
@@ -218,13 +234,12 @@ class Convert
 Convert::init('v2', 'v3');
 echo $doc;
 
-// Check if tables exist
-//if (!get_prompt_answer("Run script?"))
-//{
-//    echo_error("ABORTING");
-//    exit();
-//}
+if (!Convert::get_prompt_answer("Run script?"))
+{
+    Convert::exit_error("ABORTING");
+}
 
+// Check if tables exist
 $tables = [
     'v3_bugs_comments',
     'v3_bugs',
@@ -298,56 +313,26 @@ Convert::echo_newline();
 
 // Users
 Convert::empty_table('v3_users');
+Convert::copy_table_one_to_one_sql(
+    'v2_users',
+    'v3_users',
+    'INSERT INTO `v3_users`(`id`, `role_id`, `username`, `password`, `realname`, `email`, `is_active`, `date_login`, `date_register`, `homepage`)
+                  SELECT V2.`id`, V3R.`id`, `user`, `pass`, V2.`name`, `email`, `active`, `last_login`, `reg_date`, `homepage`
+                  FROM `v2_users` V2
+                        LEFT JOIN `v3_roles` V3R
+                            ON V2.`role` = V3R.`name`'
+);
 
-echo "Converting v2_users ";
-$dbh = Convert::$db->getConnection();
-try
-{
-    $count_v2 = Convert::count_table('v2_users');
-    assert($dbh->beginTransaction());
-
-    $roles = AccessControl::getRoles();
-    $select_sth = $dbh->query('SELECT * FROM `v2_users`');
-    $insert_sth = $dbh->prepare(
-        'INSERT INTO `v3_users`(`id`, `role_id`, `username`, `password`, `realname`, `email`, `is_active`, `date_login`, `date_register`, `homepage`)
-        VALUES(:id, :role_id, :username, :password, :realname, :email, :is_active, :date_login, :date_register, :homepage)'
-    );
-
-    while ($row = $select_sth->fetch(PDO::FETCH_ASSOC))
-    {
-        $insert_sth->execute(
-            [
-                ':id'            => $row['id'],
-                ':role_id'       => $roles[$row['role']],
-                ':username'      => $row['user'],
-                ':password'      => $row['pass'],
-                ':realname'      => $row['name'],
-                ':email'         => $row['email'],
-                ':is_active'     => $row['active'],
-                ':date_login'    => $row['last_login'],
-                ':date_register' => $row['reg_date'],
-                ':homepage'      => $row['homepage']
-            ]
-        );
-    }
-
-    assert($dbh->commit());
-    $count_v3 = Convert::count_table('v3_users');
-
-    if ($count_v2 != $count_v3)
-    {
-        throw new Exception(sprintf('Integrity check failed, v2 != V3, %d != %d', $count_v2, $count_v3));
-    }
-}
-catch (Exception $e)
-{
-    if ($dbh->inTransaction())
-    {
-        $dbh->rollBack();
-    }
-    Convert::exit_error($e->getMessage());
-}
-Convert::echo_success("✓");
+// Non normal users count is equal
+assert(
+    Convert::$db->query(
+        "SELECT COUNT(*) FROM `v2_users` WHERE `role` != 'user'",
+        DBConnection::FETCH_FIRST_COLUMN
+    ) === Convert::$db->query(
+        "SELECT COUNT(*) FROM `v3_users` WHERE `role_id` != 1 ",
+        DBConnection::FETCH_FIRST_COLUMN
+    )
+);
 Convert::echo_newline();
 
 
@@ -410,9 +395,9 @@ list($count_v2, $count_v3) = Convert::copy_table_one_to_one_sql(
                   SELECT id, user, date, message, emailed FROM v2_logs WHERE `user` != 0',
     false
 );
-if ($count_v2 != $count_v3)
+if ($count_v2 !== $count_v3)
 {
-    Convert::exit_error(sprintf('Integrity check failed, v2 != V3, %d != %d', $count_v2, $count_v3));
+    Convert::exit_error(sprintf('Integrity check failed, v2 != v3, %d != %d', $count_v2, $count_v3));
 }
 Convert::echo_newline();
 
@@ -428,12 +413,114 @@ Convert::copy_table_one_to_one_sql(
 Convert::echo_newline();
 
 
-// Host votes
-Convert::empty_table('v3_host_votes');
-Convert::copy_table_one_to_one('host_votes');
+// Addons
+Convert::empty_table('v3_addons');
+Convert::copy_table_one_to_one_sql(
+    'v2_addons',
+    'v3_addons',
+    'INSERT INTO v3_addons(`id`, `type`, `name`, `uploader`, `creation_date`, `designer`, `props`, `description`, `license`, `min_include_ver`, `max_include_ver`)
+                      SELECT `id`, V3T.`type`, `name`, `uploader`, `creation_date`, `designer`, `props`, `description`, `license`, `min_include_ver`, `max_include_ver`
+                      FROM v2_addons V2
+                           LEFT JOIN v3_addon_types V3T
+                                ON V2.`type` = V3T.name_plural'
+);
 Convert::echo_newline();
 
 
-// Config
+// Files
+Convert::empty_table('v3_files_delete');
+Convert::empty_table('v3_files');
+Convert::copy_table_one_to_one_sql(
+    'v2_files',
+    'v3_files',
+    'INSERT INTO v3_files(id, addon_id, `type`, `path`, date_added, is_approved, downloads)
+                   SELECT id, addon_id, `type`, `file_path`, date_added, approved, downloads
+                   FROM v2_files V2
+                        LEFT JOIN v3_file_types V3T
+                            ON V3T.name = V2.file_type'
+);
+echo "(delete_date column) - ";
+Convert::copy_table_one_to_one_sql(
+    'v2_files',
+    'v3_files_delete',
+    "INSERT INTO v3_files_delete(file_id, date_delete)
+                   SELECT id, delete_date FROM `v2_files` WHERE delete_date <> '0000-00-00'",
+    false
+);
+Convert::echo_newline();
+
+
+// File Cache
+Convert::empty_table('v3_cache');
+Convert::copy_table_one_to_one('cache');
+Convert::echo_newline();
+
+
+// Addon votes
+Convert::empty_table('v3_votes');
+Convert::copy_table_one_to_one('votes');
+Convert::echo_newline();
+
+
+// Bugs
+Convert::empty_table('v3_bugs_comments');
+Convert::empty_table('v3_bugs');
+Convert::copy_table_one_to_one('bugs');
+Convert::copy_table_one_to_one('bugs_comments');
+Convert::echo_newline();
+
+
+// Addon revisions
+Convert::empty_table('v3_addon_revisions');
+list($count_karts, $count_total) = Convert::copy_table_one_to_one_sql(
+    'v2_karts_revs',
+    'v3_addon_revisions',
+    'INSERT INTO v3_addon_revisions(addon_id, file_id, creation_date, revision, `format`, image_id, icon_id, `status`, moderator_note)
+                             SELECT addon_id, fileid, creation_date, revision, `format`, `image`, `icon`, `status`, moderator_note
+                             FROM v2_karts_revs'
+);
+list($count_arenas, $count_total) = Convert::copy_table_one_to_one_sql(
+    'v2_arenas_revs',
+    'v3_addon_revisions',
+    'INSERT INTO v3_addon_revisions(addon_id, file_id, creation_date, revision, `format`, image_id, `status`, moderator_note)
+                             SELECT addon_id, fileid, creation_date, revision, `format`, `image`, `status`, moderator_note
+                             FROM v2_arenas_revs',
+    false
+);
+
+$check_total = $count_karts + $count_arenas;
+if ($check_total !== $count_total)
+{
+    Convert::exit_error(
+        sprintf('Integrity check failed, v2 (arenas + karts) != v3 (revisions), %d != %d', $check_total, $count_total)
+    );
+}
+
+list($count_tracks, $count_total) = Convert::copy_table_one_to_one_sql(
+    'v2_tracks_revs',
+    'v3_addon_revisions',
+    'INSERT INTO v3_addon_revisions(addon_id, file_id, creation_date, revision, `format`, image_id, `status`, moderator_note)
+                             SELECT addon_id, fileid, creation_date, revision, `format`, `image`, `status`, moderator_note
+                             FROM v2_tracks_revs',
+    false
+);
+
+$check_total = $count_karts + $count_arenas + $count_tracks;
+if ($check_total !== $count_total)
+{
+    Convert::exit_error(
+        sprintf(
+            'Integrity check failed, v2 (arenas + karts + tracks) != v3 (revisions), %d != %d',
+            $check_total,
+            $count_total
+        )
+    );
+}
+
+Convert::echo_newline();
+
+
+// Config, Servers
+Convert::echo_warning('Servers, Host votes and server connections table are not converted');
 Convert::echo_warning('You must copy v2_config table manually');
 Convert::echo_newline();
