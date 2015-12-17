@@ -36,6 +36,7 @@ WILL DELETE DATA FROM `v3_` TABLES. USE WITH CAUTION!!!
 
 DOC;
 
+
 class Convert
 {
     /**
@@ -169,7 +170,6 @@ class Convert
             assert(static::$db->commit());
             $count_v3 = static::count_table($to_table);
 
-
             if ($check_integrity && $count_v2 !== $count_v3)
             {
                 throw new Exception(
@@ -185,10 +185,6 @@ class Convert
         }
         catch (Exception $e)
         {
-            if (static::$db->isInTransaction())
-            {
-                static::$db->rollBack();
-            }
             static::exit_error("\n" . $e->getMessage());
         }
         static::echo_success("✓");
@@ -220,7 +216,7 @@ class Convert
         {
             assert(static::$db->beginTransaction());
             static::$db->query("SET FOREIGN_KEY_CHECKS=0; TRUNCATE TABLE `$table`; SET FOREIGN_KEY_CHECKS = 1;");
-            static::$db->commit();
+            assert(static::$db->commit());
         }
         catch (Exception $e)
         {
@@ -408,7 +404,8 @@ Convert::copy_table_one_to_one_sql(
     'v2_news',
     'v3_news',
     'INSERT INTO v3_news(`id`, author_id, `date`, `content`, `condition`, is_important, is_web_display, is_active, is_dynamic)
-                  SELECT `id`, author_id, `date`, `content`, `condition`, important, web_display, active, dynamic FROM v2_news'
+                  SELECT `id`, author_id, `date`, `content`, `condition`, important, web_display, active, dynamic
+                  FROM v2_news'
 );
 Convert::echo_newline();
 
@@ -447,12 +444,6 @@ Convert::copy_table_one_to_one_sql(
                    SELECT id, delete_date FROM `v2_files` WHERE delete_date <> '0000-00-00'",
     false
 );
-Convert::echo_newline();
-
-
-// File Cache
-Convert::empty_table('v3_cache');
-Convert::copy_table_one_to_one('cache');
 Convert::echo_newline();
 
 
@@ -516,11 +507,10 @@ if ($check_total !== $count_total)
         )
     );
 }
-
 Convert::echo_newline();
 
 
 // Config, Servers
-Convert::echo_warning('Servers, Host votes and server connections table are not converted');
+Convert::echo_warning('Servers, Host votes, cache and server connections table are not converted');
 Convert::echo_warning('You must copy v2_config table manually');
 Convert::echo_newline();

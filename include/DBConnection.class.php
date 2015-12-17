@@ -31,12 +31,6 @@ class DBConnection
     private $connection;
 
     /**
-     * Flag to see if we currently in a sql transaction
-     * @var bool
-     */
-    private $in_transaction = false;
-
-    /**
      * The singleton used for the database connection
      * @var DBConnection
      */
@@ -163,7 +157,7 @@ class DBConnection
      */
     public function isInTransaction()
     {
-        return $this->in_transaction;
+        return (bool)$this->connection->inTransaction();
     }
 
     /**
@@ -174,12 +168,12 @@ class DBConnection
     public function beginTransaction()
     {
         // TODO better test PDO transaction
-        if (!$this->in_transaction)
+        if (!$this->isInTransaction())
         {
-            $this->in_transaction = $this->connection->beginTransaction();
+            return $this->connection->beginTransaction();
         }
 
-        return $this->in_transaction;
+        return false;
     }
 
     /**
@@ -189,11 +183,9 @@ class DBConnection
      */
     public function commit()
     {
-        if ($this->in_transaction)
+        if ($this->isInTransaction())
         {
-            $this->in_transaction = !$this->connection->commit();
-
-            return !$this->in_transaction;
+            return $this->connection->commit();
         }
 
         trigger_error("Did a commit while not having a transaction running!");
@@ -208,11 +200,9 @@ class DBConnection
      */
     public function rollback()
     {
-        if ($this->in_transaction)
+        if ($this->isInTransaction())
         {
-            $this->in_transaction = !$this->connection->rollback();
-
-            return !$this->in_transaction;
+            return $this->connection->rollback();
         }
 
         trigger_error("Did a rollback while not having a transaction running!");
@@ -284,7 +274,7 @@ class DBConnection
         }
         catch (PDOException $e)
         {
-            if ($this->in_transaction)
+            if ($this->isInTransaction())
             {
                 $success = $this->connection->rollback();
                 if (DEBUG_MODE && !$success)
@@ -295,7 +285,6 @@ class DBConnection
 
             if (DEBUG_MODE)
             {
-                trigger_error("Database Error");
                 var_dump($e->errorInfo);
                 printf(
                     "SQLSTATE ERR: %s<br>\nmySQL ERR: %s<br>\nMessage: %s<br>\nQuery: %s<br>",
@@ -306,6 +295,7 @@ class DBConnection
                 );
                 echo "Fields data: <br>";
                 var_dump($prepared_pairs);
+                trigger_error("Database Error");
             }
 
             throw new DBException($e->errorInfo[0]);
