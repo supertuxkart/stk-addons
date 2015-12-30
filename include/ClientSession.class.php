@@ -575,7 +575,7 @@ class ClientSession
             // sometimes the MYSQL 'ON UPDATE' does not fire because the online value is the same
             DBConnection::get()->query(
                 "UPDATE `" . DB_PREFIX . "client_sessions`
-                SET `is_online` = :online, `last-online` = NOW()
+                SET `is_online` = :is_online, `last-online` = NOW()
                 WHERE `uid` = :id",
                 DBConnection::ROW_COUNT,
                 [
