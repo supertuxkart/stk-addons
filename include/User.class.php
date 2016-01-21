@@ -260,7 +260,7 @@ class User extends Base
                 [":uploader" => DBConnection::PARAM_INT]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new UserException(exception_message_db(_(" get the addons for a user")));
         }
@@ -320,9 +320,9 @@ class User extends Base
     {
         try
         {
-            $user = static::validateCredentials($password, $username, static::CREDENTIAL_USERNAME);
+            $user = static::validateCredentials($password, $username, static::CREDENTIAL_USERNAME, true);
         }
-        catch(UserException $e)
+        catch (UserException $e)
         {
             static::logout();
             throw new UserException($e->getMessage());
@@ -411,7 +411,7 @@ class User extends Base
                 ]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new UserException(exception_message_db(_("validate your session")));
         }
@@ -628,7 +628,7 @@ class User extends Base
                 $parameters
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new UserException(exception_message_db(_('perform your search query')));
         }
@@ -805,7 +805,7 @@ class User extends Base
                 $count = DBConnection::get()->count("users");
             }
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new UserException(exception_message_db(_("count the number of users")));
         }
@@ -865,7 +865,7 @@ class User extends Base
                 [":id" => DBConnection::PARAM_INT]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new UserException(exception_message_db(_('update your profile')));
         }
@@ -922,7 +922,7 @@ class User extends Base
                 ]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new UserException(exception_message_db(_('update your role')));
         }
@@ -963,7 +963,7 @@ class User extends Base
                 [':user_id' => $user_id]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             static::logout();
             throw new UserException(exception_message_db(_('record the last login time')));
@@ -997,7 +997,7 @@ class User extends Base
                 [":user_id" => DBConnection::PARAM_INT]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new UserException(exception_message_db(_('change your password')));
         }
@@ -1038,7 +1038,7 @@ class User extends Base
 
             DBConnection::get()->commit();
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             DBConnection::get()->rollback();
             throw new UserException(exception_message_db(_('change your password')));
@@ -1072,7 +1072,7 @@ class User extends Base
                 throw new DBException();
             }
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new UserException(exception_message_db(_('activate your user account')));
         }
@@ -1103,17 +1103,25 @@ class User extends Base
             // Send verification email
             try
             {
-                SMail::get()->passwordResetNotification($email, $user_id, $username, $verification_code, 'password-reset.php');
+                SMail::get()->passwordResetNotification(
+                    $email,
+                    $user_id,
+                    $username,
+                    $verification_code,
+                    'password-reset.php'
+                );
             }
-            catch(SMailException $e)
+            catch (SMailException $e)
             {
                 Log::newEvent('Password reset email for "' . $username . '" could not be sent.');
                 throw new UserException($e->getMessage() . ' ' . _h('Please contact a website administrator.'));
             }
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
-            throw new UserException(exception_message_db(_('validate your username and email address for password reset')));
+            throw new UserException(
+                exception_message_db(_('validate your username and email address for password reset'))
+            );
         }
 
         Log::newEvent("Password reset request for user '$username'");
@@ -1153,7 +1161,7 @@ class User extends Base
                 [':username' => $username]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new UserException(exception_message_db(_('validate your username')));
         }
@@ -1173,7 +1181,7 @@ class User extends Base
                 [':email' => $email]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new UserException(exception_message_db(_('validate your email address')));
         }
@@ -1210,13 +1218,13 @@ class User extends Base
             {
                 SMail::get()->newAccountNotification($email, $user_id, $username, $verification_code, 'register.php');
             }
-            catch(SMailException $e)
+            catch (SMailException $e)
             {
                 Log::newEvent("Registration email for user '$username' with id '$user_id' failed.");
                 throw new UserException($e->getMessage() . ' ' . _h('Please contact a website administrator.'));
             }
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new UserException(exception_message_db(_('create your account')));
         }
@@ -1227,15 +1235,16 @@ class User extends Base
     /**
      * Check if the username/password matches
      *
-     * @param string $password        unhashed password
-     * @param mixed  $field_value     the field value
-     * @param int    $credential_type denotes the $field_type credential, can be ID or username
+     * @param string $password             unhashed password
+     * @param mixed  $field_value          the field value
+     * @param int    $credential_type      denotes the $field_type credential, can be ID or username
+     * @param bool   $allow_username_space legacy parameter, old usernames allowed space in them
      *
      * @throws UserException
      * @throws InvalidArgumentException
      * @return User
      */
-    public static function validateCredentials($password, $field_value, $credential_type)
+    public static function validateCredentials($password, $field_value, $credential_type, $allow_username_space = false)
     {
         // validate
         if ($credential_type === static::CREDENTIAL_ID)
@@ -1244,7 +1253,7 @@ class User extends Base
         }
         elseif ($credential_type === static::CREDENTIAL_USERNAME)
         {
-            static::validateUserName($field_value);
+            static::validateUserName($field_value, $allow_username_space);
 
             $user = static::validateCheckPassword($password, $field_value, static::PASSWORD_USERNAME);
         }
@@ -1292,7 +1301,7 @@ class User extends Base
                 throw new InvalidArgumentException(_h("Invalid validation field type"));
             }
         }
-        catch(UserException $e)
+        catch (UserException $e)
         {
             throw new UserException(_h("Username or password is invalid"));
         }
@@ -1349,11 +1358,12 @@ class User extends Base
     /**
      * Check if the input is a valid alphanumeric username
      *
-     * @param string $username Alphanumeric username
+     * @param string $username    Alphanumeric username
+     * @param bool   $allow_space legacy parameter, old usernames allowed space in them
      *
      * @throws UserException
      */
-    public static function validateUserName($username)
+    public static function validateUserName($username, $allow_space = false)
     {
         static::validateFieldLength(
             _h("username"),
@@ -1365,9 +1375,12 @@ class User extends Base
         );
 
         // check if alphanumeric
-        if (!preg_match('/^[a-z0-9\.\-\_]+$/i', $username))
+        $space = $allow_space ? " " : "";
+        if (!preg_match("/^[a-z0-9\.\-\_$space]+$/i", $username))
         {
-            throw new UserException(_h('Your username can only contain alphanumeric characters, periods, dashes and underscores'));
+            throw new UserException(
+                _h('Your username can only contain alphanumeric characters, periods, dashes and underscores')
+            );
         }
     }
 
@@ -1457,4 +1470,4 @@ class User extends Base
 
 // start session and validate it
 // TODO find better position to put this in
-User::init();
+if (!TEST_MODE) User::init();

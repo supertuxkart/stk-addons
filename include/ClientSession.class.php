@@ -748,7 +748,7 @@ class ClientSession
         // check if username/password is correct, throws exception
         try
         {
-            $user = User::validateCredentials($password, $username, User::CREDENTIAL_USERNAME);
+            $user = User::validateCredentials($password, $username, User::CREDENTIAL_USERNAME, true);
         }
         catch(UserException $e)
         {
