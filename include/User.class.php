@@ -1355,21 +1355,19 @@ class User extends Base
      */
     public static function validateUserName($username)
     {
-        $username = Util::str_strip_space($username);
-
         static::validateFieldLength(
             _h("username"),
             $username,
             static::MIN_USERNAME,
             static::MAX_USERNAME,
-            false, // whitespace is already gone from our call to str_strip_space
-            true // username is alpha numeric, use normal ascii
+            true, // allow space here, fail below, if that is the case
+            false // username is alpha numeric, use normal ascii
         );
 
         // check if alphanumeric
-        if (!preg_match('/^[a-z0-9]+$/i', $username))
+        if (!preg_match('/^[a-z0-9\.\-\_]+$/i', $username))
         {
-            throw new UserException(_h('Your username can only contain alphanumeric characters'));
+            throw new UserException(_h('Your username can only contain alphanumeric characters, periods, dashes and underscores'));
         }
     }
 

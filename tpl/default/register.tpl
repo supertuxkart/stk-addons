@@ -27,8 +27,8 @@
                                data-bv-stringlength-message="{t 1=$register.username.min 2=$register.username.max}The username must be between %1 and %2 characters long{/t}"
 
                                data-bv-regexp="true"
-                               data-bv-regexp-regexp="^[a-zA-Z0-9]+$"
-                               data-bv-regexp-message="{t}Your username can only contain alphanumeric characters{/t}"
+                               data-bv-regexp-regexp="^[a-zA-Z0-9\.\-\_]+$"
+                               data-bv-regexp-message="{t}Your username can only contain alphanumeric characters, periods, dashes and underscores{/t}"
 
                                data-bv-different="true"
                                data-bv-different-field="password"
