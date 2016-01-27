@@ -23,9 +23,29 @@
  */
 class PaginationTemplate extends Template
 {
+    /**
+     * Where we get the page number from $_GET
+     * @const string
+     */
     const PAGE_ARGUMENT = "p";
 
+    /**
+     * Where we get the limit number from $_GET
+     * @const string
+     */
     const LIMIT_ARGUMENT = "l";
+
+    /**
+     * The maximum allowed limit on items
+     * @const int
+     */
+    const MAX_LIMIT_ITEMS = 50;
+
+    /**
+     * The minimum allowed limit on items
+     * @const int
+     */
+    const MIN_LIMIT_ITEMS = 10;
 
     /**
      * The total entries present
@@ -40,10 +60,10 @@ class PaginationTemplate extends Template
     protected $current_page = 1;
 
     /**
-     * Items on page ratio
+     * Items on page ratio, set to MIN_LIMIT_ITEMS in the constructor
      * @var int
      */
-    protected $items_per_page = 10;
+    protected $items_per_page;
 
     /**
      * The number of button visible, expect the first and last button
@@ -63,6 +83,7 @@ class PaginationTemplate extends Template
     public function __construct($template_dir = null)
     {
         parent::__construct("pagination.tpl", $template_dir);
+        $this->items_per_page = static::MIN_LIMIT_ITEMS;
     }
 
     /**
@@ -86,7 +107,12 @@ class PaginationTemplate extends Template
     {
         if (!empty($_GET[static::PAGE_ARGUMENT]))
         {
-            return (int)$_GET[static::PAGE_ARGUMENT];
+            $page = (int)$_GET[static::PAGE_ARGUMENT];
+
+            // do not accept negative page numbers
+            if ($page <= 0) return $default_page;
+
+            return $page;
         }
 
         return $default_page;
@@ -95,15 +121,26 @@ class PaginationTemplate extends Template
     /**
      * Get the items per page number from the get params
      *
-     * @param int $default_limit the default number of items
+     * @param int|null $default_limit the default number of items
      *
      * @return int
      */
-    public static function getLimitNumber($default_limit = 10)
+    public static function getLimitNumber($default_limit = null)
     {
+        // set default if not already set
+        if (is_null($default_limit)) $default_limit = static::MIN_LIMIT_ITEMS;
+
         if (!empty($_GET[static::LIMIT_ARGUMENT]))
         {
-            return (int)$_GET[static::LIMIT_ARGUMENT];
+            $limit = (int)$_GET[static::LIMIT_ARGUMENT];
+
+            // clamp if too large or too small
+            if ($limit < static::MIN_LIMIT_ITEMS || $limit > static::MAX_LIMIT_ITEMS)
+            {
+                return static::MIN_LIMIT_ITEMS;
+            }
+
+            return $limit;
         }
 
         return $default_limit;
@@ -120,7 +157,9 @@ class PaginationTemplate extends Template
         {
             for ($i = 1; $i <= ceil($total_items / $per_page); $i++)
             {
-                echo PaginationTemplate::get()->setCurrentPage($i)->setTotalItems($total_items)->setItemsPerPage($per_page);
+                echo PaginationTemplate::get()->setCurrentPage($i)->setTotalItems($total_items)->setItemsPerPage(
+                    $per_page
+                );
                 echo "<br>";
             }
         }
@@ -171,7 +210,11 @@ class PaginationTemplate extends Template
             "nr_buttons"     => $this->nr_buttons, // the relative number of buttons present except the first and last
             "build_left"     => $buildLeft, // display '...' on the left
             "build_right"    => $buildRight, // display '...' on the right
-            "limit_options"  => [10 => 10, 20 => 20, 50 => 50],
+            "limit_options"  => [
+                static::MIN_LIMIT_ITEMS => static::MIN_LIMIT_ITEMS,
+                25                      => 25,
+                static::MAX_LIMIT_ITEMS => static::MAX_LIMIT_ITEMS
+            ],
             "limit_selected" => $this->items_per_page
         ];
         $this->assign("pagination", $pagination);
@@ -226,13 +269,13 @@ class PaginationTemplate extends Template
     }
 
     /**
-     * @param int $perPage
+     * @param int $limit
      *
      * @return $this
      */
-    public function setItemsPerPage($perPage)
+    public function setItemsPerPage($limit)
     {
-        $this->items_per_page = $perPage;
+        $this->items_per_page = $limit;
 
         return $this;
     }

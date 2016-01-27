@@ -25,7 +25,8 @@ $has_permission = User::hasPermission(AccessControl::PERM_EDIT_USERS);
 $current_page = PaginationTemplate::getPageNumber();
 $limit = PaginationTemplate::getLimitNumber();
 
-// get all users from the database, create links
+
+// get all users from the database, create links, if the user has permission get all the users, not only the active ones
 $users = User::getAll(!$has_permission, $limit, $current_page);
 $template_users = User::filterMenuTemplate($users, empty($_GET["user"]) ? User::getLoggedUserName() : $_GET["user"]);
 

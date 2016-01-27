@@ -20,7 +20,8 @@
     "require-dev": {
         "phpunit/phpunit": "@stable",
         "phpunit/dbunit": "@stable",
-        "phpmd/phpmd" : "@stable"
+        "phpmd/phpmd" : "@stable",
+        "maximebf/debugbar": "1.*"
     },
     "autoload": {
         "classmap": ["include/"],

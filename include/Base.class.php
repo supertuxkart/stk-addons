@@ -168,6 +168,7 @@ abstract class Base
     protected static function getAllFromTable($query, $limit = -1, $current_page = 1)
     {
         $data = [];
+        if ($current_page <= 0) $current_page = 1;
 
         try
         {
