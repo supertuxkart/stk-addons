@@ -1034,7 +1034,7 @@ class Addon extends Base
         try
         {
             $user = DBConnection::get()->query(
-                'SELECT `name`, `email`
+                'SELECT `username`, `email`
                 FROM `' . DB_PREFIX . 'users`
                 WHERE `id` = :user_id
                 LIMIT 1',
