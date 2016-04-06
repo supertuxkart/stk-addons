@@ -60,12 +60,11 @@ function registerPagination($container, url) {
         }
 
         if (!limit || !parseInt(limit)) {
-            limit = 10;
+            url_vars["l"] = 10;
         }
 
-        loadContent($container, url, {p: page, l: limit}, function() {}, "GET");
-
-        console.log(page);
+        loadContent($container, url, url_vars, function() {}, "GET");
+        
         return false;
     });
 }

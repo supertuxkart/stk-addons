@@ -34,6 +34,8 @@
         onFormSubmit(form_identifier, callback_success, $addon_body, json_url, {}, "POST");
     }
 
+    registerPagination($addon_menu, "addons-menu.php");
+
     $('.multiselect').multiselect({});
 
     // search form
