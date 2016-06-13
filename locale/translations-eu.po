@@ -315,7 +315,7 @@ msgstr "Ezezaguna"
 #: ../include/Addon.class.php:620 ../include/Addon.class.php:641
 #: ../include/Addon.class.php:663 ../include/Addon.class.php:676
 #: ../include/Addon.class.php:711
-msgid "You do not have the neccessary permissions to perform this action."
+msgid "You do not have the necessary permissions to perform this action."
 msgstr "Ez daukazu baimenik ekintza hau gauzatzeko."
 
 #: ../include/Addon.class.php:628

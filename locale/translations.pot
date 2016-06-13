@@ -1120,7 +1120,7 @@ msgstr ""
 
 #: ../include/functions.php:76
 #, php-format
-msgid "A database error occured while trying to %s."
+msgid "A database error occurred while trying to %s."
 msgstr ""
 
 #: ../include/xmlWrite.php:157 ../include/xmlWrite.php:356
