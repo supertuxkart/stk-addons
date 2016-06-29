@@ -656,8 +656,8 @@ CREATE TABLE IF NOT EXISTS `v3_config` (
 -- Dumping data for table `v3_config`
 --
 INSERT INTO `v3_config` (`name`, `value`) VALUES
-    ('allowed_addon_exts', 'zip, tar, tar.gz, tgz, gz, tbz, tar.bz2, bz2, b3d, txt, png, jpg, jpeg, xml'),
-    ('allowed_source_exts', 'txt, blend, b3d, xml, png, jpg, jpeg, xcf, rgb, svg'),
+    ('allowed_addon_exts', 'b3d, bz2, gz, jpeg, jpg, music, ogg, png, tar, tar.bz2, tar.gz, tbz, tgz, txt, xml, zip'),
+    ('allowed_source_exts', 'b3d, blend, jpeg, jpg, music, ogg, png, rgb, svg, txt, xcf, xml'),
     ('max_image_dimension', '2048'),
     ('blog_feed', 'http://supertuxkart.blogspot.com/feeds/posts/default')
 ON DUPLICATE KEY UPDATE `name` = VALUES(`name`), `value` = VALUES(`value`);
