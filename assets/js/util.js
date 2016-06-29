@@ -27,7 +27,7 @@ var MSECONDS_MINUTE = 60000,
     MSECONDS_YEAR = 31536000000;
 
 var SEARCH_URL = JSON_LOCATION + "search.php";
-
+var EMPTY_FUNCTION = function() {};
 
 /**
  * Register the default pagination on a page
@@ -46,7 +46,7 @@ function registerPagination($container, url) {
         }
 
         url_vars["l"] = limit;
-        loadContent($container, url, url_vars, function() {}, "GET");
+        loadContent($container, url, url_vars, EMPTY_FUNCTION, "GET");
     });
 
     // page button clicked
@@ -63,7 +63,7 @@ function registerPagination($container, url) {
             url_vars["l"] = 10;
         }
 
-        loadContent($container, url, url_vars, function() {}, "GET");
+        loadContent($container, url, url_vars, EMPTY_FUNCTION, "GET");
 
         return false;
     });
@@ -104,7 +104,7 @@ function isInTimeInterval(time, elapsed_time) {
  */
 function loadContent($content, url, params, callback, request_type) {
     request_type = request_type || "GET";
-    callback = callback || function() {};
+    callback = callback || EMPTY_FUNCTION;
 
     // define callback
     function onCompleteCallback(response, status, xhr) {
@@ -281,8 +281,8 @@ function growlSuccess(message) {
  * @param {function} [no_callback]  that is called when the user answers no to the modal
  */
 function modalDelete(message, yes_callback, no_callback) {
-    yes_callback = yes_callback || function() {};
-    no_callback = no_callback || function() {};
+    yes_callback = yes_callback || EMPTY_FUNCTION;
+    no_callback = no_callback || EMPTY_FUNCTION;
 
     bootbox.dialog({
         title  : "Delete",
