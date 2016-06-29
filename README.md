@@ -148,5 +148,7 @@ STK Addons Website is licensed under GPL version 3. See [COPYING](COPYING) for t
 
 ## Contact
 * Mailing list: [supertuxkart-devel at SourceForge](http://sourceforge.net/p/supertuxkart/mailman/supertuxkart-devel/)
+* Forum: [at FreeGameDev Forums](http://forum.freegamedev.net/viewforum.php?f=16)
+* IRC: [#supertuxkart on Freenode](https://webchat.freenode.net/?channels=#supertuxkart)
 * Twitter: [@supertuxkart](https://twitter.com/supertuxkart)
-* IRC: [#stk on Freenode](https://webchat.freenode.net/?channels=#stk)
+
