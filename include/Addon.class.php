@@ -458,10 +458,7 @@ class Addon extends Base
      */
     public function getImage($icon = false)
     {
-        if (!$icon)
-        {
-            return $this->image;
-        }
+        if (!$icon) return $this->image;
 
         return $this->icon;
     }
@@ -515,10 +512,7 @@ class Addon extends Base
      */
     public function getDesigner()
     {
-        if (!$this->designer)
-        {
-            return _h('Unknown');
-        }
+        if (!$this->designer) return _h('Unknown');
 
         return $this->designer;
     }

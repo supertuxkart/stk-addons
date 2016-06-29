@@ -36,17 +36,17 @@ var SEARCH_URL = JSON_LOCATION + "search.php";
  * @param {string} url the php page that handles pagination
  */
 function registerPagination($container, url) {
-
     // limit changed
     $container.on("change", ".stk-pagination .limit select", function() {
         var limit = this.value,
-            page = getUrlVars()["p"];
+            url_vars = getUrlVars();
 
-        if (!parseInt(page)) {
-            page = 1;
+        if (!parseInt(url_vars["p"])) {
+            url_vars["p"] = 1;
         }
 
-        loadContent($container, url, {p: page, l: limit}, function() {}, "GET");
+        url_vars["l"] = limit;
+        loadContent($container, url, url_vars, function() {}, "GET");
     });
 
     // page button clicked
@@ -64,7 +64,7 @@ function registerPagination($container, url) {
         }
 
         loadContent($container, url, url_vars, function() {}, "GET");
-        
+
         return false;
     });
 }

@@ -20,23 +20,30 @@
  */
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
 
-$type = isset($_GET['type']) ? Addon::stringToType($_GET['type']) : null;
-$sort = isset($_GET['sort']) ? $_GET['sort'] : Addon::SORT_FEATURED;
-$order = isset($_GET['order']) ? $_GET['order'] : null;
+try
+{
+    $type = isset($_GET['type']) ? Addon::stringToType($_GET['type']) : null;
+    $sort = isset($_GET['sort']) ? $_GET['sort'] : Addon::SORT_FEATURED;
+    $order = isset($_GET['order']) ? $_GET['order'] : null;
 
-$current_page = PaginationTemplate::getPageNumber();
-$limit = PaginationTemplate::getLimitNumber();
+    $current_page = PaginationTemplate::getPageNumber();
+    $limit = PaginationTemplate::getLimitNumber();
 
-$addons = Addon::getAll($type, $limit, $current_page, $sort, $order);
-$template_addons = Addon::filterMenuTemplate($addons, empty($_GET['name']) ? null : $_GET['name']);
+    $addons = Addon::getAll($type, $limit, $current_page, $sort, $order);
+    $template_addons = Addon::filterMenuTemplate($addons, empty($_GET['name']) ? null : $_GET['name']);
 
-$pagination = PaginationTemplate::get()
-    ->setItemsPerPage($limit)
-    ->setTotalItems(Addon::count($type))
-    ->setCurrentPage($current_page);
+    $pagination = PaginationTemplate::get()
+        ->setItemsPerPage($limit)
+        ->setTotalItems(Addon::count($type))
+        ->setCurrentPage($current_page);
 
-$tpl = StkTemplate::get("addons/menu.tpl")
-    ->assign("addons", $template_addons)
-    ->assign("pagination", $pagination->toString());
+    $tpl = StkTemplate::get("addons/menu.tpl")
+        ->assign("addons", $template_addons)
+        ->assign("pagination", $pagination->toString());
 
-echo $tpl;
+    echo $tpl;
+}
+catch (AddonException $e)
+{
+    echo $e->getMessage();
+}
