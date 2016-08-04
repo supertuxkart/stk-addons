@@ -45,7 +45,25 @@ class Server
      * @var int
      */
     private $max_players;
+    
+    /**
+     * The server's IP address
+     * @var int
+     */
+    private $ip;
 
+    /**
+     * The server's public port
+     * @var int
+     */
+    private $port;
+    
+    /**
+     * The server's private port
+     * @var int
+     */
+    private $private_port;
+    
     /**
      *
      * @param array $data an associative array retrieved from the database
@@ -56,6 +74,9 @@ class Server
         $this->host_id = (int)$data["host_id"];
         $this->name = $data["name"];
         $this->max_players = (int)$data["max_players"];
+        $this->ip = (int)$data["ip"];
+        $this->port = (int)$data["port"];
+        $this->private_port = (int)$data["private_port"];
     }
 
     /**
@@ -103,6 +124,9 @@ class Server
         $server_xml->writeAttribute("hostid", $this->host_id);
         $server_xml->writeAttribute("name", $this->name);
         $server_xml->writeAttribute("max_players", $this->max_players);
+        $server_xml->writeAttribute("ip", $this->ip);
+        $server_xml->writeAttribute("port", $this->port);
+        $server_xml->writeAttribute("private_port", $this->private_port);
         $server_xml->endElement();
 
         return $server_xml->asString();

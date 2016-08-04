@@ -83,12 +83,13 @@ try
                 $port = isset($_POST['port']) ? utf8_encode($_POST['port']) : null;
                 $private_port = isset($_POST['private_port']) ? utf8_encode($_POST['private_port']) : null;
                 $max_players = isset($_POST['max_players']) ? utf8_encode($_POST['max_players']) : null;
+                $server_name = isset($_POST['server_name']) ? utf8_encode($_POST['server_name']) : "Temporary name";
 
                 ClientSession::get($token, $userid)->createServer(
                     $address,
                     $port,
                     $private_port,
-                    "Temporary name",
+                    $server_name,
                     $max_players
                 );
 
