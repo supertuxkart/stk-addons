@@ -247,7 +247,10 @@ try
                         foreach ($requests as $request)
                         {
                             $output->startElement('user');
-                                $output->writeAttribute("id", $request['userid']);
+                                $output->writeAttribute("id", $request['user_id']);
+                                $output->writeAttribute("ip", $request['ip']);
+                                $output->writeAttribute("port", $request['port']);
+                                $output->writeAttribute("private_port", $request['private_port']);
                             $output->endElement();
                         }
                     $output->endElement();

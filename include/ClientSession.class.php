@@ -280,11 +280,12 @@ class ClientSession
             {
                 return [];
             }
-
+                
             $connection_requests = DBConnection::get()->query(
-                "SELECT `user_id`
-                FROM `" . DB_PREFIX . "server_conn`
-                WHERE `server_id` = :server_id AND `is_request` = '1'",
+                "SELECT s.user_id, c.ip, c.private_port, c.port
+                FROM `" . DB_PREFIX . "server_conn` s
+                INNER JOIN `" . DB_PREFIX . "client_sessions` c ON c.uid = s.user_id
+                WHERE s.`server_id` = :server_id AND s.`is_request` = '1'",
                 DBConnection::FETCH_ALL,
                 [':server_id' => $server_id['id']],
                 [':server_id' => DBConnection::PARAM_INT]
