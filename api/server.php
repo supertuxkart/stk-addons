@@ -35,10 +35,19 @@ try
             {
                 $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
                 $token = isset($_POST['token']) ? $_POST['token'] : "";
+                $address = isset($_POST['address']) ? utf8_encode($_POST['address']) : null;
+                $port = isset($_POST['port']) ? utf8_encode($_POST['port']) : null;
+                $private_port = isset($_POST['private_port']) ? utf8_encode($_POST['private_port']) : null;
                 $server_name = isset($_POST['name']) ? utf8_encode($_POST['name']) : "";
                 $max_players = isset($_POST['max_players']) ? (int)$_POST['max_players'] : 0;
-
-                $server = ClientSession::get($token, $userid)->createServer(0, 0, 0, $server_name, $max_players);
+                
+                $server = ClientSession::get($token, $userid)->createServer(
+                    $address,
+                    $port,
+                    $private_port,
+                    $server_name, 
+                    $max_players
+                );
 
                 $output->startElement('create');
                     $output->writeAttribute('success', 'yes');
@@ -73,37 +82,7 @@ try
                 $output->addErrorElement('set', $e->getMessage());
             }
             break;
-
-        case 'start': // start a server
-            try
-            {
-                $userid = isset($_POST['userid']) ? (int)utf8_encode($_POST['userid']) : null;
-                $token = isset($_POST['token']) ? utf8_encode($_POST['token']) : null;
-                $address = isset($_POST['address']) ? utf8_encode($_POST['address']) : null;
-                $port = isset($_POST['port']) ? utf8_encode($_POST['port']) : null;
-                $private_port = isset($_POST['private_port']) ? utf8_encode($_POST['private_port']) : null;
-                $max_players = isset($_POST['max_players']) ? utf8_encode($_POST['max_players']) : null;
-                $server_name = isset($_POST['server_name']) ? utf8_encode($_POST['server_name']) : "Temporary name";
-
-                ClientSession::get($token, $userid)->createServer(
-                    $address,
-                    $port,
-                    $private_port,
-                    $server_name,
-                    $max_players
-                );
-
-                $output->startElement('start');
-                    $output->writeAttribute('success', 'yes');
-                    $output->writeAttribute('info', '');
-                $output->endElement();
-            }
-            catch(Exception $e)
-            {
-                $output->addErrorElement('start', $e->getMessage());
-            }
-            break;
-
+        
         case 'stop': // stop a server
             try
             {
