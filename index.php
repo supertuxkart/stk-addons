@@ -63,11 +63,20 @@ $news_messages = News::getWebVisible();
 // Note most downloaded track and kart
 $pop_kart = Statistic::mostDownloadedAddon(Addon::KART);
 $pop_track = Statistic::mostDownloadedAddon(Addon::TRACK);
-array_unshift(
-    $news_messages,
-    sprintf(_h('The most downloaded kart is %s.'), $pop_kart),
-    sprintf(_h('The most downloaded track is %s.'), $pop_track)
-);
+if ($pop_track !== null)
+{
+    array_unshift(
+        $news_messages,
+        sprintf(_h('The most downloaded track is %s.'), $pop_track)
+    );
+}
+if ($pop_kart !== null)
+{
+    array_unshift(
+        $news_messages,
+        sprintf(_h('The most downloaded kart is %s.'), $pop_kart)
+    );
+}
 
 $tpl->assign('news_messages', $news_messages);
 echo $tpl;
