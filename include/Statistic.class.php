@@ -348,12 +348,12 @@ class Statistic
      * Return the most downloaded addon of a given type
      *
      * @param int $addon_type the type of addon
-     * @param string $file_type
+     * @param int $file_type
      *
      * @return null|string the name of the addon or null on empty selection
      * @throws StatisticException
      */
-    public static function mostDownloadedAddon($addon_type, $file_type = 'addon')
+    public static function mostDownloadedAddon($addon_type, $file_type = File::ADDON)
     {
         if (!Addon::isAllowedType($addon_type))
         {
