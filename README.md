@@ -17,6 +17,11 @@ Most features will also work with other webservers, but there is no support for 
 To get a list of the additional PHP packages needed, point your web browser to the `install/` directory.
 The script file located there (index.php) will show which dependencies are missing.
 
+Install all package dependencies in a Debian system with the following command:
+```
+sudo apt-get install php php-mysql mysql-server apache2 php-mcrypt php-mbstring php-gd php-pdo php-zip php-gettext
+```
+
 PHP dependencies are handled by [composer](https://getcomposer.org/) (install it if you do not have it already).
 If you try to run `composer install` and you have unmet PHP extension dependencies
 (the script from the install directory should give an overview of all missing PHP extensions), then composer will fail.
