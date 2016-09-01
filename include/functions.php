@@ -73,7 +73,7 @@ function exit_json_success($message, array $other_values = [])
 function exception_message_db($message)
 {
     return h(
-        sprintf(_('A database error occured while trying to %s.'), $message) . ' ' .
+        sprintf(_('A database error occurred while trying to %s.'), $message) . ' ' .
         _('Please contact a website administrator.')
     );
 }
