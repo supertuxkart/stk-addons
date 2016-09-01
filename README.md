@@ -126,12 +126,12 @@ If you want to give it a custom configuration use the `--configuration` flag, li
     ./vendor/bin/phpunit --configuration custom.xml
 
 ## Translation and locales generation
-To generated all locales supported, run the script in `[locale/locale-gen.sh](locale/locale-gen.sh)`.
+To generated all locales supported, run the script in [locale/locale-gen.sh](locale/locale-gen.sh).
 
-After that, update the`translations.pot` files by running the `[locale/update-pot.sh](locale/update-pot.sh)` script.
+After that, update the [translations.pot](locale/translations.pot) files by running the [locale/update-pot.sh](locale/update-pot.sh) script.
 
 Then after getting the updated translate `po` files from https://www.transifex.com/supertuxkart/supertuxkart/ run the
-`[locale/generate-mo-pot.sh](locale/generate-mo-pot.sh)` script.
+[locale/generate-mo-pot.sh](locale/generate-mo-pot.sh) script.
 
 ## Contributing
 All contributions are welcome: ideas, patches, documentation, bug reports, complaints, etc!
