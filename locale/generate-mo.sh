@@ -1,4 +1,14 @@
 #!/bin/bash
+
+# make bash sane
+set -eu -o pipefail
+DIR=$(basename "$PWD")
+if [[ "$DIR" != "locale" ]]; then
+    echo "You are not inside the 'locale' directory"
+    echo "ABORTING."
+    exit 0
+fi
+
 echo "Generating .mo files"
 
 msgfmt translations-ca.po -o ca_ES/LC_MESSAGES/translations.mo

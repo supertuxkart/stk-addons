@@ -1,16 +1,16 @@
-# #-#-#-#-#  code.pot (stkaddons)  #-#-#-#-#
+# #-#-#-#-#  code.pot (stk-addons)  #-#-#-#-#
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR SuperTuxKart Team
-# This file is distributed under the same license as the PACKAGE package.
+# This file is distributed under the same license as the stk-addons package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"#-#-#-#-#  code.pot (stkaddons)  #-#-#-#-#\n"
-"Project-Id-Version: stkaddons\n"
+"#-#-#-#-#  code.pot (stk-addons)  #-#-#-#-#\n"
+"Project-Id-Version: stk-addons\n"
 "Report-Msgid-Bugs-To: stephenjust@users.sourceforge.net\n"
-"POT-Creation-Date: 2015-05-09 17:19+0300\n"
+"POT-Creation-Date: 2016-09-01 15:55+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -141,138 +141,142 @@ msgid ""
 "happen"
 msgstr ""
 
-#: ../include/Addon.class.php:281
+#: ../include/Addon.class.php:320
 msgid "create add-on revision"
 msgstr ""
 
-#: ../include/Addon.class.php:340
+#: ../include/Addon.class.php:344
+msgid "create first add-on revision"
+msgstr ""
+
+#: ../include/Addon.class.php:380
 msgid "remove addon"
 msgstr ""
 
-#: ../include/Addon.class.php:357
+#: ../include/Addon.class.php:397
 msgid "The revision you are trying to delete does not exist."
 msgstr ""
 
-#: ../include/Addon.class.php:361
+#: ../include/Addon.class.php:401
 msgid "You cannot delete the last revision of an add-on."
 msgstr ""
 
-#: ../include/Addon.class.php:367
+#: ../include/Addon.class.php:407
 msgid ""
 "You cannot delete the latest revision of an add-on. Please mark a different "
 "revision to be the latest revision first."
 msgstr ""
 
-#: ../include/Addon.class.php:379
+#: ../include/Addon.class.php:419
 msgid "The add-on file could not be queued for deletion."
 msgstr ""
 
-#: ../include/Addon.class.php:396
+#: ../include/Addon.class.php:436
 msgid "delete a revision"
 msgstr ""
 
-#: ../include/Addon.class.php:480 ../include/Util.class.php:906
+#: ../include/Addon.class.php:515 ../include/Util.class.php:906
 #: ../include/Util.class.php:924 ../include/Util.class.php:928
 msgid "Unknown"
 msgstr ""
 
-#: ../include/Addon.class.php:610
+#: ../include/Addon.class.php:644
 msgid "An invalid revision was provided."
 msgstr ""
 
-#: ../include/Addon.class.php:631
+#: ../include/Addon.class.php:665
 msgid "look up file ID"
 msgstr ""
 
-#: ../include/Addon.class.php:636
+#: ../include/Addon.class.php:670
 msgid "There is no add-on found with the specified revision number."
 msgstr ""
 
-#: ../include/Addon.class.php:648
+#: ../include/Addon.class.php:682
 msgid "The requested file does not have an associated file record."
 msgstr ""
 
-#: ../include/Addon.class.php:722
+#: ../include/Addon.class.php:756
 msgid "update the description"
 msgstr ""
 
-#: ../include/Addon.class.php:755
+#: ../include/Addon.class.php:789
 msgid "update the designer"
 msgstr ""
 
-#: ../include/Addon.class.php:790
+#: ../include/Addon.class.php:825
 msgid "update the image/icon"
 msgstr ""
 
-#: ../include/Addon.class.php:810
+#: ../include/Addon.class.php:858
 msgid "This addon type does not have an icon associated with it"
 msgstr ""
 
-#: ../include/Addon.class.php:853
+#: ../include/Addon.class.php:901
 msgid "set the min/max include versions"
 msgstr ""
 
-#: ../include/Addon.class.php:887
+#: ../include/Addon.class.php:935
 msgid "update the license"
 msgstr ""
 
-#: ../include/Addon.class.php:920
+#: ../include/Addon.class.php:968
 msgid "update the name"
 msgstr ""
 
-#: ../include/Addon.class.php:964 ../include/Addon.class.php:1191
+#: ../include/Addon.class.php:1012 ../include/Addon.class.php:1239
 msgid "update add-on status"
 msgstr ""
 
-#: ../include/Addon.class.php:994
+#: ../include/Addon.class.php:1042
 msgid "find user record"
 msgstr ""
 
-#: ../include/Addon.class.php:1045
+#: ../include/Addon.class.php:1093
 msgid "You do not have the permission to change this addon's status"
 msgstr ""
 
-#: ../include/Addon.class.php:1226
+#: ../include/Addon.class.php:1274
 msgid "The requested add-on does not exist."
 msgstr ""
 
-#: ../include/Addon.class.php:1536 ../include/Bug.class.php:431
+#: ../include/Addon.class.php:1584 ../include/Bug.class.php:431
 msgid "The search term is empty"
 msgstr ""
 
-#: ../include/Addon.class.php:1540
+#: ../include/Addon.class.php:1588
 msgid "No search field specified"
 msgstr ""
 
-#: ../include/Addon.class.php:1580
+#: ../include/Addon.class.php:1628
 msgid "search for add-on"
 msgstr ""
 
-#: ../include/Addon.class.php:1608
+#: ../include/Addon.class.php:1656
 msgid "Invalid addon type"
 msgstr ""
 
-#: ../include/Addon.class.php:1676
+#: ../include/Addon.class.php:1724
 msgid "select all addons from the database"
 msgstr ""
 
-#: ../include/Addon.class.php:1739
+#: ../include/Addon.class.php:1788
 msgid "An invalid add-on type was provided."
 msgstr ""
 
-#: ../include/Addon.class.php:1777
+#: ../include/Addon.class.php:1819
 msgid "create your add-on"
 msgstr ""
 
-#: ../include/Addon.class.php:1872
+#: ../include/Addon.class.php:1925
 msgid "count the number of addons"
 msgstr ""
 
-#: ../include/Addon.class.php:1888
+#: ../include/Addon.class.php:1941
 msgid "You must be logged in to perform this action."
 msgstr ""
 
-#: ../include/Addon.class.php:1894
+#: ../include/Addon.class.php:1947
 msgid "You do not have the necessary permissions to perform this action."
 msgstr ""
 
@@ -346,7 +350,7 @@ msgstr ""
 msgid "see if a '%s' exists."
 msgstr ""
 
-#: ../include/Base.class.php:199
+#: ../include/Base.class.php:200
 msgid "select all data from table"
 msgstr ""
 
@@ -488,79 +492,79 @@ msgstr ""
 msgid "Too many users match the request"
 msgstr ""
 
-#: ../include/ClientSession.class.php:319
+#: ../include/ClientSession.class.php:320
 msgid "fetch server connection requests"
 msgstr ""
 
-#: ../include/ClientSession.class.php:390
+#: ../include/ClientSession.class.php:391
 msgid "to sign out"
 msgstr ""
 
-#: ../include/ClientSession.class.php:431
+#: ../include/ClientSession.class.php:432
 msgid "log out"
 msgstr ""
 
-#: ../include/ClientSession.class.php:463
+#: ../include/ClientSession.class.php:464
 msgid "request a server connection"
 msgstr ""
 
-#: ../include/ClientSession.class.php:494
+#: ../include/ClientSession.class.php:495
 msgid "No server found"
 msgstr ""
 
-#: ../include/ClientSession.class.php:511
+#: ../include/ClientSession.class.php:512
 msgid "quick join a server"
 msgstr ""
 
-#: ../include/ClientSession.class.php:532
+#: ../include/ClientSession.class.php:533
 msgid "Invalid vote. Your rating has to be either -1 or 1."
 msgstr ""
 
-#: ../include/ClientSession.class.php:556
+#: ../include/ClientSession.class.php:557
 msgid "cast your host vote"
 msgstr ""
 
-#: ../include/ClientSession.class.php:594
+#: ../include/ClientSession.class.php:595
 msgid "update your status"
 msgstr ""
 
-#: ../include/ClientSession.class.php:638
+#: ../include/ClientSession.class.php:639
 msgid "set your public address"
 msgstr ""
 
-#: ../include/ClientSession.class.php:644
+#: ../include/ClientSession.class.php:645
 msgid "Could not set the ip:port"
 msgstr ""
 
-#: ../include/ClientSession.class.php:673
+#: ../include/ClientSession.class.php:674
 msgid "unset your public address"
 msgstr ""
 
-#: ../include/ClientSession.class.php:678
+#: ../include/ClientSession.class.php:679
 msgid "ID:Token must be wrong."
 msgstr ""
 
-#: ../include/ClientSession.class.php:682
+#: ../include/ClientSession.class.php:683
 msgid "Weird count of updates"
 msgstr ""
 
-#: ../include/ClientSession.class.php:712
+#: ../include/ClientSession.class.php:713
 msgid "verify session"
 msgstr ""
 
-#: ../include/ClientSession.class.php:719
+#: ../include/ClientSession.class.php:720
 msgid "Session not valid. Please sign in."
 msgstr ""
 
-#: ../include/ClientSession.class.php:741
+#: ../include/ClientSession.class.php:742
 msgid "Username required"
 msgstr ""
 
-#: ../include/ClientSession.class.php:745
+#: ../include/ClientSession.class.php:746
 msgid "Password required"
 msgstr ""
 
-#: ../include/ClientSession.class.php:785
+#: ../include/ClientSession.class.php:786
 msgid "create your session"
 msgstr ""
 
@@ -708,23 +712,23 @@ msgstr ""
 msgid "Path does not point to a file."
 msgstr ""
 
-#: ../include/Server.class.php:137
+#: ../include/Server.class.php:161
 msgid "Specified server already exists."
 msgstr ""
 
-#: ../include/Server.class.php:163
+#: ../include/Server.class.php:187
 msgid "create a server"
 msgstr ""
 
-#: ../include/Server.class.php:168
+#: ../include/Server.class.php:192
 msgid "Could not create server"
 msgstr ""
 
-#: ../include/Server.class.php:196
+#: ../include/Server.class.php:220
 msgid "retrieve a server"
 msgstr ""
 
-#: ../include/Server.class.php:201
+#: ../include/Server.class.php:225
 msgid "Server doesn't exist."
 msgstr ""
 
@@ -777,7 +781,7 @@ msgstr ""
 msgid "Languages"
 msgstr ""
 
-#: ../include/StkTemplate.class.php:260
+#: ../include/StkTemplate.class.php:261
 msgid "STK Add-ons"
 msgstr ""
 
@@ -834,90 +838,90 @@ msgstr ""
 msgid "You do not have the necessary permissions to upload a addon"
 msgstr ""
 
-#: ../include/Upload.class.php:417
+#: ../include/Upload.class.php:432
 msgid ""
 "Your add-on was uploaded successfully. It will be reviewed by our moderators "
 "before becoming publicly available."
 msgstr ""
 
-#: ../include/Upload.class.php:419
+#: ../include/Upload.class.php:434
 msgid "Click here to upload the sources to your add-on now."
 msgstr ""
 
-#: ../include/Upload.class.php:422
+#: ../include/Upload.class.php:437
 msgid ""
 "(Uploading the sources to your add-on enables others to improve your work "
 "and also ensure your add-on will not be lost in the future if new "
 "SuperTuxKart versions are not compatible with the current format.)"
 msgstr ""
 
-#: ../include/Upload.class.php:424
+#: ../include/Upload.class.php:439
 msgid "Click here to view your add-on."
 msgstr ""
 
-#: ../include/Upload.class.php:446
+#: ../include/Upload.class.php:461
 msgid ""
 "A screenshot/icon file does not exist in the archive(file name is case "
 "sensitive)"
 msgstr ""
 
-#: ../include/Upload.class.php:510
+#: ../include/Upload.class.php:525
 msgid "Failed to re-pack archive file. Reason: "
 msgstr ""
 
-#: ../include/Upload.class.php:534
+#: ../include/Upload.class.php:549
 msgid ""
 "Some invalid files were found in the uploaded add-on. These files have been "
 "removed from the archive:"
 msgstr ""
 
-#: ../include/Upload.class.php:637
+#: ../include/Upload.class.php:652
 msgid ""
 "Some images in this add-on do not have dimensions that are a power of two."
 msgstr ""
 
-#: ../include/Upload.class.php:638
+#: ../include/Upload.class.php:653
 msgid "This may cause display errors on some video cards."
 msgstr ""
 
-#: ../include/Upload.class.php:681
+#: ../include/Upload.class.php:696
 #, php-format
 msgid "Failed to move uploaded file '%s' "
 msgstr ""
 
-#: ../include/Upload.class.php:703 ../include/Upload.class.php:705
+#: ../include/Upload.class.php:718 ../include/Upload.class.php:720
 msgid "Uploaded file is too large."
 msgstr ""
 
-#: ../include/Upload.class.php:707
+#: ../include/Upload.class.php:722
 msgid "Uploaded file is incomplete."
 msgstr ""
 
-#: ../include/Upload.class.php:709
+#: ../include/Upload.class.php:724
 msgid "No file was uploaded."
 msgstr ""
 
-#: ../include/Upload.class.php:711
+#: ../include/Upload.class.php:726
 msgid "There is no TEMP directory to store the uploaded file in."
 msgstr ""
 
-#: ../include/Upload.class.php:713
+#: ../include/Upload.class.php:728
 msgid "Unable to write uploaded file to disk."
 msgstr ""
 
-#: ../include/Upload.class.php:715
+#: ../include/Upload.class.php:730
 msgid "Upload file stopped by extension"
 msgstr ""
 
-#: ../include/Upload.class.php:717
+#: ../include/Upload.class.php:732
 msgid "Unknown file upload error."
 msgstr ""
 
-#: ../include/Upload.class.php:737
+#: ../include/Upload.class.php:752
 msgid "Uploaded image files must be either PNG or JPEG files."
 msgstr ""
 
-#: ../include/Upload.class.php:746
+#: ../include/Upload.class.php:761
 msgid ""
 "The file you uploaded was not the correct type. File extension must one of "
 "these types:"
@@ -991,94 +995,96 @@ msgstr ""
 msgid "activate your user account"
 msgstr ""
 
-#: ../include/User.class.php:1111 ../include/User.class.php:1216
+#: ../include/User.class.php:1117 ../include/User.class.php:1224
 #: ../include/functions.php:77
 msgid "Please contact a website administrator."
 msgstr ""
 
-#: ../include/User.class.php:1116
+#: ../include/User.class.php:1123
 msgid "validate your username and email address for password reset"
 msgstr ""
 
-#: ../include/User.class.php:1141
+#: ../include/User.class.php:1149
 msgid "You must agree to the terms to register."
 msgstr ""
 
-#: ../include/User.class.php:1158
+#: ../include/User.class.php:1166
 msgid "validate your username"
 msgstr ""
 
-#: ../include/User.class.php:1162
+#: ../include/User.class.php:1170
 msgid "This username is already taken."
 msgstr ""
 
-#: ../include/User.class.php:1178
+#: ../include/User.class.php:1186
 msgid "validate your email address"
 msgstr ""
 
-#: ../include/User.class.php:1182
+#: ../include/User.class.php:1190
 msgid "This email address is already taken."
 msgstr ""
 
-#: ../include/User.class.php:1221
+#: ../include/User.class.php:1229
 msgid "create your account"
 msgstr ""
 
-#: ../include/User.class.php:1258
+#: ../include/User.class.php:1267
 msgid "Your account is not active"
 msgstr ""
 
-#: ../include/User.class.php:1292
+#: ../include/User.class.php:1301
 msgid "Invalid validation field type"
 msgstr ""
 
-#: ../include/User.class.php:1297 ../include/User.class.php:1307
+#: ../include/User.class.php:1306 ../include/User.class.php:1316
 msgid "Username or password is invalid"
 msgstr ""
 
-#: ../include/User.class.php:1339
+#: ../include/User.class.php:1348
 msgid "Username and email address combination not found."
 msgstr ""
 
-#: ../include/User.class.php:1343
+#: ../include/User.class.php:1352
 msgid "Multiple accounts with the same username and email combination."
 msgstr ""
 
-#: ../include/User.class.php:1361
+#: ../include/User.class.php:1369
 msgid "username"
 msgstr ""
 
-#: ../include/User.class.php:1372 ../tpl/default/register.tpl:31
-#: ../tpl/default/login.tpl:27
-msgid "Your username can only contain alphanumeric characters"
+#: ../include/User.class.php:1382 ../tpl/default/login.tpl:27
+#: ../tpl/default/register.tpl:31
+msgid ""
+"Your username can only contain alphanumeric characters, periods, dashes and "
+"underscores"
 msgstr ""
 
-#: ../include/User.class.php:1385
+#: ../include/User.class.php:1396
 msgid "password"
 msgstr ""
 
-#: ../include/User.class.php:1403
+#: ../include/User.class.php:1414
 msgid "Passwords do not match"
 msgstr ""
 
-#: ../include/User.class.php:1416
+#: ../include/User.class.php:1427
 msgid "real name"
 msgstr ""
 
-#: ../include/User.class.php:1430
+#: ../include/User.class.php:1441
 #, php-format
 msgid "\"%s\" is not a valid email address."
 msgstr ""
 
-#: ../include/User.class.php:1435
+#: ../include/User.class.php:1446
 msgid "Email is to long."
 msgstr ""
 
-#: ../include/User.class.php:1450
+#: ../include/User.class.php:1461
 msgid "Homepage url is not valid"
 msgstr ""
 
-#: ../include/User.class.php:1455
+#: ../include/User.class.php:1466
 msgid "Homepage is to long."
 msgstr ""
 
@@ -1120,7 +1126,7 @@ msgstr ""
 
 #: ../include/functions.php:76
 #, php-format
-msgid "A database error occured while trying to %s."
+msgid "A database error occurred while trying to %s."
 msgstr ""
 
 #: ../include/xmlWrite.php:157 ../include/xmlWrite.php:356
@@ -1133,14 +1139,14 @@ msgid ""
 "and tracks for the SuperTuxKart game."
 msgstr ""
 
-#: ../index.php:68
-#, php-format
-msgid "The most downloaded kart is %s."
-msgstr ""
-
-#: ../index.php:69
+#: ../index.php:70
 #, php-format
 msgid "The most downloaded track is %s."
+msgstr ""
+
+#: ../index.php:77
+#, php-format
+msgid "The most downloaded kart is %s."
 msgstr ""
 
 #: ../json/addons.php:71
@@ -1276,8 +1282,8 @@ msgstr ""
 msgid "Friend request canceled"
 msgstr ""
 
-#: ../login.php:47 ../tpl/default/login.tpl:7 ../tpl/default/login.tpl:50
-#: ../tpl/default/menu-top.tpl:50 ../tpl/default/bugs/view.tpl:140
+#: ../login.php:47 ../tpl/default/bugs/view.tpl:140 ../tpl/default/login.tpl:7
+#: ../tpl/default/login.tpl:50 ../tpl/default/menu-top.tpl:50
 msgid "Login"
 msgstr ""
 
@@ -1437,51 +1443,766 @@ msgstr ""
 msgid "Users"
 msgstr ""
 
+#: ../tpl/default/about.tpl:3
+msgid "About STK Add-Ons"
+msgstr ""
+
+#: ../tpl/default/about.tpl:5
+msgid ""
+"SuperTuxKart is a Free 3D kart racing game, with many tracks, characters and "
+"items for you to try."
+msgstr ""
+
+#: ../tpl/default/about.tpl:6
+msgid ""
+"Since version 0.7.1, SuperTuxKart has had the ability to fetch important "
+"messages from the STKAddons website. Since 0.7.2, the game has included a "
+"built-in add-on manager."
+msgstr ""
+
+#: ../tpl/default/about.tpl:7
+msgid ""
+"SuperTuxKart now has over %1 karts, %2 tracks, and %3 arenas available in-"
+"game thanks to the add-on service."
+msgstr ""
+
+#: ../tpl/default/about.tpl:8
+msgid ""
+"Of course, the artists who create all of this content must be thanked too. "
+"Without them, the add-on website would not be as great as it is today."
+msgstr ""
+
+#: ../tpl/default/about.tpl:10 ../tpl/default/about.tpl:17
+msgid "Website"
+msgstr ""
+
+#: ../tpl/default/about.tpl:10 ../tpl/default/about.tpl:17
+msgid "Donate"
+msgstr ""
+
+#: ../tpl/default/about.tpl:14
+msgid ""
+"TuxFamily is a non-profit organization. It provides free services for "
+"projects and contents dealing with the free software philosophy (free as in "
+"free speech, not as in free beer). They accept any project released under a "
+"free license (GPL, BSD, CC-BY-SA, Art Libre...)."
+msgstr ""
+
+#: ../tpl/default/about.tpl:15
+msgid ""
+"TuxFamily operates the servers on which STKAddons runs, for free. Because of "
+"them, we can provide the add-on service for SuperTuxKart. Each month, over a "
+"million downloads are made by SuperTuxKart players. We thank them very much "
+"for their generosity to us and to other open source projects."
+msgstr ""
+
+#: ../tpl/default/about.tpl:20
+msgid "Credits"
+msgstr ""
+
+#: ../tpl/default/addons/index.tpl:9
+msgid "Alphabetical"
+msgstr ""
+
+#: ../tpl/default/addons/index.tpl:13 ../tpl/default/manage/page/logs.tpl:12
+#: ../tpl/default/manage/page/news.tpl:51
+msgid "Date"
+msgstr ""
+
+#: ../tpl/default/addons/index.tpl:20
+msgid "By Name"
+msgstr ""
+
+#: ../tpl/default/addons/index.tpl:21
+msgid "By Description"
+msgstr ""
+
+#: ../tpl/default/addons/index.tpl:22
+msgid "By Designer"
+msgstr ""
+
+#: ../tpl/default/addons/menu.tpl:2
+msgid "No addons"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:30 ../tpl/default/manage/page/files.tpl:11
+msgid "Type"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:31
+msgid "Arena"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:35 ../tpl/default/addons/panel.tpl:221
+msgid "Designer"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:39
+msgid "Upload date:"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:43
+msgid "Submitted by"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:47
+msgid "Revision:"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:51
+msgid "Compatible with"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:56
+msgid "Your Rating"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:68 ../tpl/default/addons/panel.tpl:116
+msgid "Upload Image"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:79
+msgid "Download this add-on in game!"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:93
+msgid "Permalink"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:98
+msgid "Revisions"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:101
+msgid "Upload Revision"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:113
+msgid "Images"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:141 ../tpl/default/addons/panel.tpl:193
+msgid "Unapprove"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:142 ../tpl/default/addons/panel.tpl:194
+msgid "Approve"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:151
+msgid "Set Icon"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:152
+msgid "Set Image"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:153 ../tpl/default/addons/panel.tpl:196
+msgid "Delete File"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:159
+msgid "No images have been uploaded for this addon yet."
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:166
+msgid "Source Files"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:169
+msgid "Upload Source File"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:184
+msgid "Download"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:202
+msgid "No source files have been uploaded for this addon yet."
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:213
+msgid "Delete Addon"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:218
+msgid "Configuration"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:227 ../tpl/default/manage/page/logs.tpl:14
+msgid "Description"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:227
+msgid "Max %1 characters"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:236
+msgid "Save Properties"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:246
+msgid "Included in Game Versions:"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:250
+msgid "Start"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:259
+msgid "End"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:270
+msgid "Save"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:280
+msgid "Status Flags:"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:305 ../tpl/default/addons/panel.tpl:363
+msgid "Rev %1:"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:336
+msgid "Delete revision %1"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:345
+msgid "Save Changes"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:353
+msgid "Notes from Moderator to Submitter:"
+msgstr ""
+
+#: ../tpl/default/addons/panel.tpl:377
+msgid "Save Notes"
+msgstr ""
+
+#: ../tpl/default/bugs/add.tpl:2 ../tpl/default/bugs/index.tpl:39
+msgid "File a bug"
+msgstr ""
+
+#: ../tpl/default/bugs/add.tpl:10
+msgid "Addon name:"
+msgstr ""
+
+#: ../tpl/default/bugs/add.tpl:15
+msgid "The addon name is required"
+msgstr ""
+
+#: ../tpl/default/bugs/add.tpl:20 ../tpl/default/bugs/view.tpl:54
+msgid "Title:"
+msgstr ""
+
+#: ../tpl/default/bugs/add.tpl:25
+msgid "The title is required"
+msgstr ""
+
+#: ../tpl/default/bugs/add.tpl:30
+msgid "The title must be between %1 and %2 characters long"
+msgstr ""
+
+#: ../tpl/default/bugs/add.tpl:35 ../tpl/default/bugs/view.tpl:62
+#: ../tpl/default/bugs/view.tpl:115 ../tpl/default/bugs/view.tpl:156
+msgid "Description:"
+msgstr ""
+
+#: ../tpl/default/bugs/add.tpl:41
+msgid "The bug description is required"
+msgstr ""
+
+#: ../tpl/default/bugs/add.tpl:53
+msgid "Warning!"
+msgstr ""
+
+#: ../tpl/default/bugs/add.tpl:53
+msgid "You must be "
+msgstr ""
+
+#: ../tpl/default/bugs/add.tpl:53
+msgid "logged in"
+msgstr ""
+
+#: ../tpl/default/bugs/all.tpl:3 ../tpl/default/users/tab/achievements.tpl:4
+#: ../tpl/default/users/tab/friends.tpl:5
+msgid "Empty!"
+msgstr ""
+
+#: ../tpl/default/bugs/all.tpl:3
+msgid "There are no bugs :)"
+msgstr ""
+
+#: ../tpl/default/bugs/all.tpl:10 ../tpl/default/bugs/view.tpl:88
+msgid "Addon"
+msgstr ""
+
+#: ../tpl/default/bugs/all.tpl:11
+msgid "Title"
+msgstr ""
+
+#: ../tpl/default/bugs/all.tpl:12 ../tpl/default/bugs/view.tpl:105
+#: ../tpl/default/bugs/view.tpl:110 ../tpl/default/users/tab/friends.tpl:14
+msgid "Status"
+msgstr ""
+
+#: ../tpl/default/bugs/all.tpl:13
+msgid "Changed"
+msgstr ""
+
+#: ../tpl/default/bugs/all.tpl:24 ../tpl/default/bugs/view.tpl:106
+msgid "closed"
+msgstr ""
+
+#: ../tpl/default/bugs/all.tpl:26 ../tpl/default/bugs/view.tpl:111
+msgid "open"
+msgstr ""
+
+#: ../tpl/default/bugs/index.tpl:3
+msgid "Bug Tracker"
+msgstr ""
+
+#: ../tpl/default/bugs/index.tpl:4
+msgid "for addons"
+msgstr ""
+
+#: ../tpl/default/bugs/index.tpl:16
+msgid "All"
+msgstr ""
+
+#: ../tpl/default/bugs/index.tpl:17
+msgid "Open"
+msgstr ""
+
+#: ../tpl/default/bugs/index.tpl:18
+msgid "Closed"
+msgstr ""
+
+#: ../tpl/default/bugs/index.tpl:23
+msgid "Search Description"
+msgstr ""
+
+#: ../tpl/default/bugs/index.tpl:26
+msgid "Search"
+msgstr ""
+
+#: ../tpl/default/bugs/index.tpl:42 ../tpl/default/bugs/view.tpl:35
+#: ../tpl/default/bugs/view.tpl:72 ../tpl/default/bugs/view.tpl:166
+msgid "Back"
+msgstr ""
+
+#: ../tpl/default/bugs/view-comment.tpl:13 ../tpl/default/bugs/view.tpl:8
+#: ../tpl/default/users/tab/settings.tpl:55
+msgid "Edit"
+msgstr ""
+
+#: ../tpl/default/bugs/view-comment.tpl:14 ../tpl/default/bugs/view.tpl:13
+#: ../tpl/default/manage/page/news.tpl:68
+msgid "Delete"
+msgstr ""
+
+#: ../tpl/default/bugs/view.tpl:10
+msgid "Close"
+msgstr ""
+
+#: ../tpl/default/bugs/view.tpl:22
+msgid "Close bug"
+msgstr ""
+
+#: ../tpl/default/bugs/view.tpl:28
+msgid "Close Reason"
+msgstr ""
+
+#: ../tpl/default/bugs/view.tpl:36
+msgid "Submit"
+msgstr ""
+
+#: ../tpl/default/bugs/view.tpl:48
+msgid "Edit bug"
+msgstr ""
+
+#: ../tpl/default/bugs/view.tpl:73 ../tpl/default/bugs/view.tpl:167
+msgid "Update"
+msgstr ""
+
+#: ../tpl/default/bugs/view.tpl:84
+msgid "Reported by"
+msgstr ""
+
+#: ../tpl/default/bugs/view.tpl:85 ../tpl/default/bugs/view.tpl:98
+msgid "on"
+msgstr ""
+
+#: ../tpl/default/bugs/view.tpl:92
+msgid "Date edit"
+msgstr ""
+
+#: ../tpl/default/bugs/view.tpl:97
+msgid "Closed by"
+msgstr ""
+
+#: ../tpl/default/bugs/view.tpl:101
+msgid "Close reason"
+msgstr ""
+
+#: ../tpl/default/bugs/view.tpl:134
+msgid "Add Comment"
+msgstr ""
+
+#: ../tpl/default/bugs/view.tpl:140
+msgid " to add a comment"
+msgstr ""
+
+#: ../tpl/default/bugs/view.tpl:150
+msgid "Edit comment"
+msgstr ""
+
 #: ../tpl/default/footer.tpl:4
 msgid "Contribute"
 msgstr ""
 
-#: ../tpl/default/register.tpl:4
-msgid "Account Registration"
-msgstr ""
-
-#: ../tpl/default/register.tpl:13 ../tpl/default/manage/page/logs.tpl:13
-#: ../tpl/default/login.tpl:14 ../tpl/default/users/tab/friends.tpl:11
+#: ../tpl/default/login.tpl:14 ../tpl/default/manage/page/logs.tpl:13
+#: ../tpl/default/register.tpl:13 ../tpl/default/users/tab/friends.tpl:11
 msgid "Username"
 msgstr ""
 
-#: ../tpl/default/register.tpl:15 ../tpl/default/register.tpl:43
-#: ../tpl/default/password-reset.tpl:43
-msgid "Must be at least %1 characters long."
+#: ../tpl/default/login.tpl:15
+msgid "Enter username"
 msgstr ""
 
-#: ../tpl/default/register.tpl:22 ../tpl/default/login.tpl:18
+#: ../tpl/default/login.tpl:18 ../tpl/default/register.tpl:22
 msgid "The username is required"
 msgstr ""
 
-#: ../tpl/default/register.tpl:27 ../tpl/default/login.tpl:23
+#: ../tpl/default/login.tpl:23 ../tpl/default/register.tpl:27
 msgid "The username must be between %1 and %2 characters long"
 msgstr ""
 
-#: ../tpl/default/register.tpl:35 ../tpl/default/login.tpl:31
+#: ../tpl/default/login.tpl:31 ../tpl/default/register.tpl:35
 msgid "The username and password cannot be the same as each other"
 msgstr ""
 
-#: ../tpl/default/register.tpl:41 ../tpl/default/login.tpl:34
-#: ../tpl/default/login.tpl:35
+#: ../tpl/default/login.tpl:34 ../tpl/default/login.tpl:35
+#: ../tpl/default/register.tpl:41
 msgid "Password"
 msgstr ""
 
-#: ../tpl/default/register.tpl:49 ../tpl/default/login.tpl:37
+#: ../tpl/default/login.tpl:37 ../tpl/default/register.tpl:49
 msgid "The password is required"
 msgstr ""
 
-#: ../tpl/default/register.tpl:54 ../tpl/default/login.tpl:42
+#: ../tpl/default/login.tpl:42 ../tpl/default/register.tpl:54
 msgid "The password must be between %1 and %2 characters long"
 msgstr ""
 
-#: ../tpl/default/register.tpl:58 ../tpl/default/login.tpl:46
+#: ../tpl/default/login.tpl:46 ../tpl/default/register.tpl:58
 msgid "The password cannot be the same as username"
+msgstr ""
+
+#: ../tpl/default/login.tpl:53
+msgid "Don't have an account?"
+msgstr ""
+
+#: ../tpl/default/manage/index.tpl:19 ../tpl/default/manage/page/overview.tpl:1
+msgid "Overview"
+msgstr ""
+
+#: ../tpl/default/manage/index.tpl:25 ../tpl/default/manage/page/roles.tpl:1
+msgid "Manage Roles"
+msgstr ""
+
+#: ../tpl/default/manage/index.tpl:32 ../tpl/default/manage/page/general.tpl:1
+msgid "General Settings"
+msgstr ""
+
+#: ../tpl/default/manage/index.tpl:37 ../tpl/default/manage/page/news.tpl:1
+msgid "News Messages"
+msgstr ""
+
+#: ../tpl/default/manage/index.tpl:42 ../tpl/default/manage/page/clients.tpl:1
+msgid "Client Versions"
+msgstr ""
+
+#: ../tpl/default/manage/index.tpl:47 ../tpl/default/manage/page/cache.tpl:1
+msgid "Cache Files"
+msgstr ""
+
+#: ../tpl/default/manage/index.tpl:53 ../tpl/default/manage/page/files.tpl:1
+msgid "Uploaded Files"
+msgstr ""
+
+#: ../tpl/default/manage/index.tpl:58 ../tpl/default/manage/page/logs.tpl:1
+msgid "Event Logs"
+msgstr ""
+
+#: ../tpl/default/manage/page/cache.tpl:2
+msgid "Empty cache"
+msgstr ""
+
+#: ../tpl/default/manage/page/clients.tpl:2
+msgid "Clients by User-Agent"
+msgstr ""
+
+#: ../tpl/default/manage/page/clients.tpl:6
+msgid ""
+"There are currently no SuperTuxKart clients recorded. Your download script "
+"may not be configured properly."
+msgstr ""
+
+#: ../tpl/default/manage/page/clients.tpl:13
+msgid "User-Agent String"
+msgstr ""
+
+#: ../tpl/default/manage/page/clients.tpl:14
+msgid "Game Version"
+msgstr ""
+
+#: ../tpl/default/manage/page/files.tpl:3
+msgid "No files have been uploaded."
+msgstr ""
+
+#: ../tpl/default/manage/page/files.tpl:10 ../tpl/default/register.tpl:94
+#: ../tpl/default/users/tab/achievements.tpl:10
+msgid "Name"
+msgstr ""
+
+#: ../tpl/default/manage/page/files.tpl:12
+msgid "References"
+msgstr ""
+
+#: ../tpl/default/manage/page/files.tpl:21
+msgid "Unassociated"
+msgstr ""
+
+#: ../tpl/default/manage/page/files.tpl:38
+msgid "File not found on filesystem"
+msgstr ""
+
+#: ../tpl/default/manage/page/files.tpl:41
+msgid "None"
+msgstr ""
+
+#: ../tpl/default/manage/page/files.tpl:45
+msgid "No record found in database"
+msgstr ""
+
+#: ../tpl/default/manage/page/general.tpl:5
+msgid "XML Download Frequency (seconds)"
+msgstr ""
+
+#: ../tpl/default/manage/page/general.tpl:13
+msgid "Permitted Addon Filetypes"
+msgstr ""
+
+#: ../tpl/default/manage/page/general.tpl:21
+msgid "Permitted Source Archive Filetypes"
+msgstr ""
+
+#: ../tpl/default/manage/page/general.tpl:29
+msgid "Administrator Email"
+msgstr ""
+
+#: ../tpl/default/manage/page/general.tpl:37
+msgid "Moderator List Email"
+msgstr ""
+
+#: ../tpl/default/manage/page/general.tpl:45
+msgid "List Invisible Addons in XML"
+msgstr ""
+
+#: ../tpl/default/manage/page/general.tpl:55
+msgid "Blog RSS Feed"
+msgstr ""
+
+#: ../tpl/default/manage/page/general.tpl:63
+msgid "Maximum Uploaded Image Dimension"
+msgstr ""
+
+#: ../tpl/default/manage/page/general.tpl:71
+msgid "Apache Rewrites"
+msgstr ""
+
+#: ../tpl/default/manage/page/general.tpl:80
+msgid "Save Settings"
+msgstr ""
+
+#: ../tpl/default/manage/page/logs.tpl:2
+msgid "The table below lists the most recent logged events."
+msgstr ""
+
+#: ../tpl/default/manage/page/logs.tpl:5
+msgid "No events have been logged yet."
+msgstr ""
+
+#: ../tpl/default/manage/page/news.tpl:6 ../tpl/default/manage/page/news.tpl:52
+msgid "Message"
+msgstr ""
+
+#: ../tpl/default/manage/page/news.tpl:14
+#: ../tpl/default/manage/page/news.tpl:54
+msgid "Condition"
+msgstr ""
+
+#: ../tpl/default/manage/page/news.tpl:22
+msgid "Display on Website:"
+msgstr ""
+
+#: ../tpl/default/manage/page/news.tpl:30
+msgid "Important (creates notification):"
+msgstr ""
+
+#: ../tpl/default/manage/page/news.tpl:39
+msgid "Create Message"
+msgstr ""
+
+#: ../tpl/default/manage/page/news.tpl:47
+msgid "No news messages currently exist."
+msgstr ""
+
+#: ../tpl/default/manage/page/news.tpl:53
+msgid "Author"
+msgstr ""
+
+#: ../tpl/default/manage/page/news.tpl:55
+msgid "Display on web page"
+msgstr ""
+
+#: ../tpl/default/manage/page/news.tpl:56
+msgid "Is Important"
+msgstr ""
+
+#: ../tpl/default/manage/page/news.tpl:57
+#: ../tpl/default/users/tab/friends.tpl:15
+msgid "Actions"
+msgstr ""
+
+#: ../tpl/default/manage/page/overview.tpl:2
+msgid "Unapproved Add-Ons"
+msgstr ""
+
+#: ../tpl/default/manage/page/overview.tpl:3
+msgid ""
+"Note that only add-ons where the newest revision is unapproved will appear "
+"here."
+msgstr ""
+
+#: ../tpl/default/manage/page/overview.tpl:7
+msgid "Revisions:"
+msgstr ""
+
+#: ../tpl/default/manage/page/overview.tpl:11
+msgid "No unapproved add-ons."
+msgstr ""
+
+#: ../tpl/default/manage/page/overview.tpl:14
+msgid "Unapproved Files"
+msgstr ""
+
+#: ../tpl/default/manage/page/overview.tpl:15
+#: ../tpl/default/manage/page/overview.tpl:19
+msgid "Images:"
+msgstr ""
+
+#: ../tpl/default/manage/page/overview.tpl:23
+msgid "No unapproved images."
+msgstr ""
+
+#: ../tpl/default/manage/page/overview.tpl:26
+msgid "Source Archives:"
+msgstr ""
+
+#: ../tpl/default/manage/page/overview.tpl:30
+msgid "%1 File"
+msgid_plural "%1 Files"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../tpl/default/manage/page/overview.tpl:34
+msgid "No unapproved source archives."
+msgstr ""
+
+#: ../tpl/default/menu-lang.tpl:6
+msgid "Translate STK-Addons"
+msgstr ""
+
+#: ../tpl/default/menu-top.tpl:20
+msgid "Home"
+msgstr ""
+
+#: ../tpl/default/menu-top.tpl:23 ../tpl/default/stats/page/overview.tpl:5
+msgid "Addons"
+msgstr ""
+
+#: ../tpl/default/menu-top.tpl:28 ../tpl/default/upload.tpl:6
+msgid "Upload"
+msgstr ""
+
+#: ../tpl/default/menu-top.tpl:31
+msgid "Bugs"
+msgstr ""
+
+#: ../tpl/default/menu-top.tpl:44
+msgid "Stats"
+msgstr ""
+
+#: ../tpl/default/menu-top.tpl:48
+msgid "STK Homepage"
+msgstr ""
+
+#: ../tpl/default/menu-top.tpl:52
+msgid "Logout"
+msgstr ""
+
+#: ../tpl/default/pagination.tpl:4
+msgid "Items"
+msgstr ""
+
+#: ../tpl/default/password-reset.tpl:8
+msgid ""
+"In order to reset your password, please enter your username and your email "
+"address. A password reset link will be emailed to you. Your old password "
+"will become inactive until your password is reset."
+msgstr ""
+
+#: ../tpl/default/password-reset.tpl:11 ../tpl/default/users/tab/profile.tpl:33
+msgid "Username:"
+msgstr ""
+
+#: ../tpl/default/password-reset.tpl:17
+msgid "Email Address:"
+msgstr ""
+
+#: ../tpl/default/password-reset.tpl:29
+msgid "Send Reset Link"
+msgstr ""
+
+#: ../tpl/default/password-reset.tpl:37
+msgid "Please enter a new password for your account."
+msgstr ""
+
+#: ../tpl/default/password-reset.tpl:41
+msgid "New Password:"
+msgstr ""
+
+#: ../tpl/default/password-reset.tpl:43 ../tpl/default/register.tpl:15
+#: ../tpl/default/register.tpl:43
+msgid "Must be at least %1 characters long."
+msgstr ""
+
+#: ../tpl/default/password-reset.tpl:51
+msgid "New Password (confirm)"
+msgstr ""
+
+#: ../tpl/default/password-reset.tpl:60
+#: ../tpl/default/users/tab/settings.tpl:62
+#: ../tpl/default/users/tab/settings.tpl:95
+msgid "Change Password"
+msgstr ""
+
+#: ../tpl/default/register.tpl:4
+msgid "Account Registration"
 msgstr ""
 
 #: ../tpl/default/register.tpl:63
@@ -1510,11 +2231,6 @@ msgstr ""
 
 #: ../tpl/default/register.tpl:89
 msgid "The email address is not a valid"
-msgstr ""
-
-#: ../tpl/default/register.tpl:94 ../tpl/default/manage/page/files.tpl:10
-#: ../tpl/default/users/tab/achievements.tpl:10
-msgid "Name"
 msgstr ""
 
 #: ../tpl/default/register.tpl:96
@@ -1616,10 +2332,6 @@ msgstr ""
 msgid "Statistics"
 msgstr ""
 
-#: ../tpl/default/stats/page/overview.tpl:5 ../tpl/default/menu-top.tpl:23
-msgid "Addons"
-msgstr ""
-
 #: ../tpl/default/stats/page/overview.tpl:16
 msgid "Files"
 msgstr ""
@@ -1634,304 +2346,6 @@ msgstr ""
 
 #: ../tpl/default/stats/page/overview.tpl:41
 msgid "Servers"
-msgstr ""
-
-#: ../tpl/default/pagination.tpl:4
-msgid "Items"
-msgstr ""
-
-#: ../tpl/default/about.tpl:3
-msgid "About STK Add-Ons"
-msgstr ""
-
-#: ../tpl/default/about.tpl:5
-msgid ""
-"SuperTuxKart is a Free 3D kart racing game, with many tracks, characters and "
-"items for you to try."
-msgstr ""
-
-#: ../tpl/default/about.tpl:6
-msgid ""
-"Since version 0.7.1, SuperTuxKart has had the ability to fetch important "
-"messages from the STKAddons website. Since 0.7.2, the game has included a "
-"built-in add-on manager."
-msgstr ""
-
-#: ../tpl/default/about.tpl:7
-msgid ""
-"SuperTuxKart now has over %1 karts, %2 tracks, and %3 arenas available in-"
-"game thanks to the add-on service."
-msgstr ""
-
-#: ../tpl/default/about.tpl:8
-msgid ""
-"Of course, the artists who create all of this content must be thanked too. "
-"Without them, the add-on website would not be as great as it is today."
-msgstr ""
-
-#: ../tpl/default/about.tpl:10 ../tpl/default/about.tpl:17
-msgid "Website"
-msgstr ""
-
-#: ../tpl/default/about.tpl:10 ../tpl/default/about.tpl:17
-msgid "Donate"
-msgstr ""
-
-#: ../tpl/default/about.tpl:14
-msgid ""
-"TuxFamily is a non-profit organization. It provides free services for "
-"projects and contents dealing with the free software philosophy (free as in "
-"free speech, not as in free beer). They accept any project released under a "
-"free license (GPL, BSD, CC-BY-SA, Art Libre...)."
-msgstr ""
-
-#: ../tpl/default/about.tpl:15
-msgid ""
-"TuxFamily operates the servers on which STKAddons runs, for free. Because of "
-"them, we can provide the add-on service for SuperTuxKart. Each month, over a "
-"million downloads are made by SuperTuxKart players. We thank them very much "
-"for their generosity to us and to other open source projects."
-msgstr ""
-
-#: ../tpl/default/about.tpl:20
-msgid "Credits"
-msgstr ""
-
-#: ../tpl/default/manage/index.tpl:19
-#: ../tpl/default/manage/page/overview.tpl:1
-msgid "Overview"
-msgstr ""
-
-#: ../tpl/default/manage/index.tpl:25 ../tpl/default/manage/page/roles.tpl:1
-msgid "Manage Roles"
-msgstr ""
-
-#: ../tpl/default/manage/index.tpl:32 ../tpl/default/manage/page/general.tpl:1
-msgid "General Settings"
-msgstr ""
-
-#: ../tpl/default/manage/index.tpl:37 ../tpl/default/manage/page/news.tpl:1
-msgid "News Messages"
-msgstr ""
-
-#: ../tpl/default/manage/index.tpl:42 ../tpl/default/manage/page/clients.tpl:1
-msgid "Client Versions"
-msgstr ""
-
-#: ../tpl/default/manage/index.tpl:47 ../tpl/default/manage/page/cache.tpl:1
-msgid "Cache Files"
-msgstr ""
-
-#: ../tpl/default/manage/index.tpl:53 ../tpl/default/manage/page/files.tpl:1
-msgid "Uploaded Files"
-msgstr ""
-
-#: ../tpl/default/manage/index.tpl:58 ../tpl/default/manage/page/logs.tpl:1
-msgid "Event Logs"
-msgstr ""
-
-#: ../tpl/default/manage/page/files.tpl:3
-msgid "No files have been uploaded."
-msgstr ""
-
-#: ../tpl/default/manage/page/files.tpl:11 ../tpl/default/addons/panel.tpl:30
-msgid "Type"
-msgstr ""
-
-#: ../tpl/default/manage/page/files.tpl:12
-msgid "References"
-msgstr ""
-
-#: ../tpl/default/manage/page/files.tpl:21
-msgid "Unassociated"
-msgstr ""
-
-#: ../tpl/default/manage/page/files.tpl:38
-msgid "File not found on filesystem"
-msgstr ""
-
-#: ../tpl/default/manage/page/files.tpl:41
-msgid "None"
-msgstr ""
-
-#: ../tpl/default/manage/page/files.tpl:45
-msgid "No record found in database"
-msgstr ""
-
-#: ../tpl/default/manage/page/overview.tpl:2
-msgid "Unapproved Add-Ons"
-msgstr ""
-
-#: ../tpl/default/manage/page/overview.tpl:3
-msgid ""
-"Note that only add-ons where the newest revision is unapproved will appear "
-"here."
-msgstr ""
-
-#: ../tpl/default/manage/page/overview.tpl:7
-msgid "Revisions:"
-msgstr ""
-
-#: ../tpl/default/manage/page/overview.tpl:11
-msgid "No unapproved add-ons."
-msgstr ""
-
-#: ../tpl/default/manage/page/overview.tpl:14
-msgid "Unapproved Files"
-msgstr ""
-
-#: ../tpl/default/manage/page/overview.tpl:15
-#: ../tpl/default/manage/page/overview.tpl:19
-msgid "Images:"
-msgstr ""
-
-#: ../tpl/default/manage/page/overview.tpl:23
-msgid "No unapproved images."
-msgstr ""
-
-#: ../tpl/default/manage/page/overview.tpl:26
-msgid "Source Archives:"
-msgstr ""
-
-#: ../tpl/default/manage/page/overview.tpl:30
-msgid "%1 File"
-msgid_plural "%1 Files"
-msgstr[0] ""
-msgstr[1] ""
-
-#: ../tpl/default/manage/page/overview.tpl:34
-msgid "No unapproved source archives."
-msgstr ""
-
-#: ../tpl/default/manage/page/general.tpl:5
-msgid "XML Download Frequency (seconds)"
-msgstr ""
-
-#: ../tpl/default/manage/page/general.tpl:13
-msgid "Permitted Addon Filetypes"
-msgstr ""
-
-#: ../tpl/default/manage/page/general.tpl:21
-msgid "Permitted Source Archive Filetypes"
-msgstr ""
-
-#: ../tpl/default/manage/page/general.tpl:29
-msgid "Administrator Email"
-msgstr ""
-
-#: ../tpl/default/manage/page/general.tpl:37
-msgid "Moderator List Email"
-msgstr ""
-
-#: ../tpl/default/manage/page/general.tpl:45
-msgid "List Invisible Addons in XML"
-msgstr ""
-
-#: ../tpl/default/manage/page/general.tpl:55
-msgid "Blog RSS Feed"
-msgstr ""
-
-#: ../tpl/default/manage/page/general.tpl:63
-msgid "Maximum Uploaded Image Dimension"
-msgstr ""
-
-#: ../tpl/default/manage/page/general.tpl:71
-msgid "Apache Rewrites"
-msgstr ""
-
-#: ../tpl/default/manage/page/general.tpl:80
-msgid "Save Settings"
-msgstr ""
-
-#: ../tpl/default/manage/page/logs.tpl:2
-msgid "The table below lists the most recent logged events."
-msgstr ""
-
-#: ../tpl/default/manage/page/logs.tpl:5
-msgid "No events have been logged yet."
-msgstr ""
-
-#: ../tpl/default/manage/page/logs.tpl:12
-#: ../tpl/default/manage/page/news.tpl:51 ../tpl/default/addons/index.tpl:13
-msgid "Date"
-msgstr ""
-
-#: ../tpl/default/manage/page/logs.tpl:14 ../tpl/default/addons/panel.tpl:227
-msgid "Description"
-msgstr ""
-
-#: ../tpl/default/manage/page/clients.tpl:2
-msgid "Clients by User-Agent"
-msgstr ""
-
-#: ../tpl/default/manage/page/clients.tpl:6
-msgid ""
-"There are currently no SuperTuxKart clients recorded. Your download script "
-"may not be configured properly."
-msgstr ""
-
-#: ../tpl/default/manage/page/clients.tpl:13
-msgid "User-Agent String"
-msgstr ""
-
-#: ../tpl/default/manage/page/clients.tpl:14
-msgid "Game Version"
-msgstr ""
-
-#: ../tpl/default/manage/page/news.tpl:6
-#: ../tpl/default/manage/page/news.tpl:52
-msgid "Message"
-msgstr ""
-
-#: ../tpl/default/manage/page/news.tpl:14
-#: ../tpl/default/manage/page/news.tpl:54
-msgid "Condition"
-msgstr ""
-
-#: ../tpl/default/manage/page/news.tpl:22
-msgid "Display on Website:"
-msgstr ""
-
-#: ../tpl/default/manage/page/news.tpl:30
-msgid "Important (creates notification):"
-msgstr ""
-
-#: ../tpl/default/manage/page/news.tpl:39
-msgid "Create Message"
-msgstr ""
-
-#: ../tpl/default/manage/page/news.tpl:47
-msgid "No news messages currently exist."
-msgstr ""
-
-#: ../tpl/default/manage/page/news.tpl:53
-msgid "Author"
-msgstr ""
-
-#: ../tpl/default/manage/page/news.tpl:55
-msgid "Display on web page"
-msgstr ""
-
-#: ../tpl/default/manage/page/news.tpl:56
-msgid "Is Important"
-msgstr ""
-
-#: ../tpl/default/manage/page/news.tpl:57
-#: ../tpl/default/users/tab/friends.tpl:15
-msgid "Actions"
-msgstr ""
-
-#: ../tpl/default/manage/page/news.tpl:68
-#: ../tpl/default/bugs/view-comment.tpl:14 ../tpl/default/bugs/view.tpl:13
-msgid "Delete"
-msgstr ""
-
-#: ../tpl/default/manage/page/cache.tpl:2
-msgid "Empty cache"
-msgstr ""
-
-#: ../tpl/default/upload.tpl:6 ../tpl/default/menu-top.tpl:28
-msgid "Upload"
 msgstr ""
 
 #: ../tpl/default/upload.tpl:8
@@ -2044,459 +2458,60 @@ msgstr ""
 msgid "Upload file"
 msgstr ""
 
-#: ../tpl/default/password-reset.tpl:8
-msgid ""
-"In order to reset your password, please enter your username and your email "
-"address. A password reset link will be emailed to you. Your old password "
-"will become inactive until your password is reset."
+#: ../tpl/default/users/menu.tpl:2
+msgid "No users match your search"
 msgstr ""
 
-#: ../tpl/default/password-reset.tpl:11
-#: ../tpl/default/users/tab/profile.tpl:33
-msgid "Username:"
+#: ../tpl/default/users/panel.tpl:2 ../tpl/default/users/tab/settings.tpl:2
+msgid "Profile"
 msgstr ""
 
-#: ../tpl/default/password-reset.tpl:17
-msgid "Email Address:"
+#: ../tpl/default/users/panel.tpl:3
+msgid "Friends"
 msgstr ""
 
-#: ../tpl/default/password-reset.tpl:29
-msgid "Send Reset Link"
+#: ../tpl/default/users/panel.tpl:4
+msgid "Achievements"
 msgstr ""
 
-#: ../tpl/default/password-reset.tpl:37
-msgid "Please enter a new password for your account."
-msgstr ""
-
-#: ../tpl/default/password-reset.tpl:41
-msgid "New Password:"
-msgstr ""
-
-#: ../tpl/default/password-reset.tpl:51
-msgid "New Password (confirm)"
-msgstr ""
-
-#: ../tpl/default/password-reset.tpl:60
-#: ../tpl/default/users/tab/settings.tpl:62
-#: ../tpl/default/users/tab/settings.tpl:95
-msgid "Change Password"
-msgstr ""
-
-#: ../tpl/default/menu-lang.tpl:6
-msgid "Translate STK-Addons"
-msgstr ""
-
-#: ../tpl/default/login.tpl:15
-msgid "Enter username"
-msgstr ""
-
-#: ../tpl/default/login.tpl:53
-msgid "Don't have an account?"
-msgstr ""
-
-#: ../tpl/default/menu-top.tpl:20
-msgid "Home"
-msgstr ""
-
-#: ../tpl/default/menu-top.tpl:31
-msgid "Bugs"
-msgstr ""
-
-#: ../tpl/default/menu-top.tpl:44
-msgid "Stats"
-msgstr ""
-
-#: ../tpl/default/menu-top.tpl:48
-msgid "STK Homepage"
-msgstr ""
-
-#: ../tpl/default/menu-top.tpl:52
-msgid "Logout"
-msgstr ""
-
-#: ../tpl/default/bugs/add.tpl:2 ../tpl/default/bugs/index.tpl:39
-msgid "File a bug"
-msgstr ""
-
-#: ../tpl/default/bugs/add.tpl:10
-msgid "Addon name:"
-msgstr ""
-
-#: ../tpl/default/bugs/add.tpl:15
-msgid "The addon name is required"
-msgstr ""
-
-#: ../tpl/default/bugs/add.tpl:20 ../tpl/default/bugs/view.tpl:54
-msgid "Title:"
-msgstr ""
-
-#: ../tpl/default/bugs/add.tpl:25
-msgid "The title is required"
-msgstr ""
-
-#: ../tpl/default/bugs/add.tpl:30
-msgid "The title must be between %1 and %2 characters long"
-msgstr ""
-
-#: ../tpl/default/bugs/add.tpl:35 ../tpl/default/bugs/view.tpl:62
-#: ../tpl/default/bugs/view.tpl:115 ../tpl/default/bugs/view.tpl:156
-msgid "Description:"
-msgstr ""
-
-#: ../tpl/default/bugs/add.tpl:41
-msgid "The bug description is required"
-msgstr ""
-
-#: ../tpl/default/bugs/add.tpl:53
-msgid "Warning!"
-msgstr ""
-
-#: ../tpl/default/bugs/add.tpl:53
-msgid "You must be "
-msgstr ""
-
-#: ../tpl/default/bugs/add.tpl:53
-msgid "logged in"
-msgstr ""
-
-#: ../tpl/default/bugs/all.tpl:3 ../tpl/default/users/tab/achievements.tpl:4
-#: ../tpl/default/users/tab/friends.tpl:5
-msgid "Empty!"
-msgstr ""
-
-#: ../tpl/default/bugs/all.tpl:3
-msgid "There are no bugs :)"
-msgstr ""
-
-#: ../tpl/default/bugs/all.tpl:10 ../tpl/default/bugs/view.tpl:88
-msgid "Addon"
-msgstr ""
-
-#: ../tpl/default/bugs/all.tpl:11
-msgid "Title"
-msgstr ""
-
-#: ../tpl/default/bugs/all.tpl:12 ../tpl/default/bugs/view.tpl:105
-#: ../tpl/default/bugs/view.tpl:110 ../tpl/default/users/tab/friends.tpl:14
-msgid "Status"
-msgstr ""
-
-#: ../tpl/default/bugs/all.tpl:13
-msgid "Changed"
-msgstr ""
-
-#: ../tpl/default/bugs/all.tpl:24 ../tpl/default/bugs/view.tpl:106
-msgid "closed"
-msgstr ""
-
-#: ../tpl/default/bugs/all.tpl:26 ../tpl/default/bugs/view.tpl:111
-msgid "open"
-msgstr ""
-
-#: ../tpl/default/bugs/view-comment.tpl:13 ../tpl/default/bugs/view.tpl:8
-#: ../tpl/default/users/tab/settings.tpl:55
-msgid "Edit"
-msgstr ""
-
-#: ../tpl/default/bugs/index.tpl:3
-msgid "Bug Tracker"
-msgstr ""
-
-#: ../tpl/default/bugs/index.tpl:4
-msgid "for addons"
-msgstr ""
-
-#: ../tpl/default/bugs/index.tpl:16
-msgid "All"
-msgstr ""
-
-#: ../tpl/default/bugs/index.tpl:17
-msgid "Open"
-msgstr ""
-
-#: ../tpl/default/bugs/index.tpl:18
-msgid "Closed"
-msgstr ""
-
-#: ../tpl/default/bugs/index.tpl:23
-msgid "Search Description"
-msgstr ""
-
-#: ../tpl/default/bugs/index.tpl:26
-msgid "Search"
-msgstr ""
-
-#: ../tpl/default/bugs/index.tpl:42 ../tpl/default/bugs/view.tpl:35
-#: ../tpl/default/bugs/view.tpl:72 ../tpl/default/bugs/view.tpl:166
-msgid "Back"
-msgstr ""
-
-#: ../tpl/default/bugs/view.tpl:10
-msgid "Close"
-msgstr ""
-
-#: ../tpl/default/bugs/view.tpl:22
-msgid "Close bug"
-msgstr ""
-
-#: ../tpl/default/bugs/view.tpl:28
-msgid "Close Reason"
-msgstr ""
-
-#: ../tpl/default/bugs/view.tpl:36
-msgid "Submit"
-msgstr ""
-
-#: ../tpl/default/bugs/view.tpl:48
-msgid "Edit bug"
-msgstr ""
-
-#: ../tpl/default/bugs/view.tpl:73 ../tpl/default/bugs/view.tpl:167
-msgid "Update"
-msgstr ""
-
-#: ../tpl/default/bugs/view.tpl:84
-msgid "Reported by"
-msgstr ""
-
-#: ../tpl/default/bugs/view.tpl:85 ../tpl/default/bugs/view.tpl:98
-msgid "on"
-msgstr ""
-
-#: ../tpl/default/bugs/view.tpl:92
-msgid "Date edit"
-msgstr ""
-
-#: ../tpl/default/bugs/view.tpl:97
-msgid "Closed by"
-msgstr ""
-
-#: ../tpl/default/bugs/view.tpl:101
-msgid "Close reason"
-msgstr ""
-
-#: ../tpl/default/bugs/view.tpl:134
-msgid "Add Comment"
-msgstr ""
-
-#: ../tpl/default/bugs/view.tpl:140
-msgid " to add a comment"
-msgstr ""
-
-#: ../tpl/default/bugs/view.tpl:150
-msgid "Edit comment"
-msgstr ""
-
-#: ../tpl/default/addons/menu.tpl:2
-msgid "No addons"
-msgstr ""
-
-#: ../tpl/default/addons/index.tpl:9
-msgid "Alphabetical"
-msgstr ""
-
-#: ../tpl/default/addons/index.tpl:20
-msgid "By Name"
-msgstr ""
-
-#: ../tpl/default/addons/index.tpl:21
-msgid "By Description"
-msgstr ""
-
-#: ../tpl/default/addons/index.tpl:22
-msgid "By Designer"
-msgstr ""
-
-#: ../tpl/default/addons/panel.tpl:31
-msgid "Arena"
-msgstr ""
-
-#: ../tpl/default/addons/panel.tpl:35 ../tpl/default/addons/panel.tpl:221
-msgid "Designer"
-msgstr ""
-
-#: ../tpl/default/addons/panel.tpl:39
-msgid "Upload date:"
-msgstr ""
-
-#: ../tpl/default/addons/panel.tpl:43
-msgid "Submitted by"
-msgstr ""
-
-#: ../tpl/default/addons/panel.tpl:47
-msgid "Revision:"
-msgstr ""
-
-#: ../tpl/default/addons/panel.tpl:51
-msgid "Compatible with"
-msgstr ""
-
-#: ../tpl/default/addons/panel.tpl:56
-msgid "Your Rating"
-msgstr ""
-
-#: ../tpl/default/addons/panel.tpl:68 ../tpl/default/addons/panel.tpl:116
-msgid "Upload Image"
-msgstr ""
-
-#: ../tpl/default/addons/panel.tpl:79
-msgid "Download this add-on in game!"
-msgstr ""
-
-#: ../tpl/default/addons/panel.tpl:93
-msgid "Permalink"
-msgstr ""
-
-#: ../tpl/default/addons/panel.tpl:98
-msgid "Revisions"
-msgstr ""
-
-#: ../tpl/default/addons/panel.tpl:101
-msgid "Upload Revision"
-msgstr ""
-
-#: ../tpl/default/addons/panel.tpl:113
-msgid "Images"
-msgstr ""
-
-#: ../tpl/default/addons/panel.tpl:141 ../tpl/default/addons/panel.tpl:193
-msgid "Unapprove"
-msgstr ""
-
-#: ../tpl/default/addons/panel.tpl:142 ../tpl/default/addons/panel.tpl:194
-msgid "Approve"
-msgstr ""
-
-#: ../tpl/default/addons/panel.tpl:151
-msgid "Set Icon"
-msgstr ""
-
-#: ../tpl/default/addons/panel.tpl:152
-msgid "Set Image"
-msgstr ""
-
-#: ../tpl/default/addons/panel.tpl:153 ../tpl/default/addons/panel.tpl:196
-msgid "Delete File"
-msgstr ""
-
-#: ../tpl/default/addons/panel.tpl:159
-msgid "No images have been uploaded for this addon yet."
-msgstr ""
-
-#: ../tpl/default/addons/panel.tpl:166
-msgid "Source Files"
-msgstr ""
-
-#: ../tpl/default/addons/panel.tpl:169
-msgid "Upload Source File"
-msgstr ""
-
-#: ../tpl/default/addons/panel.tpl:184
-msgid "Download"
-msgstr ""
-
-#: ../tpl/default/addons/panel.tpl:202
-msgid "No source files have been uploaded for this addon yet."
-msgstr ""
-
-#: ../tpl/default/addons/panel.tpl:213
-msgid "Delete Addon"
-msgstr ""
-
-#: ../tpl/default/addons/panel.tpl:218
-msgid "Configuration"
-msgstr ""
-
-#: ../tpl/default/addons/panel.tpl:227
-msgid "Max %1 characters"
-msgstr ""
-
-#: ../tpl/default/addons/panel.tpl:236
-msgid "Save Properties"
-msgstr ""
-
-#: ../tpl/default/addons/panel.tpl:246
-msgid "Included in Game Versions:"
-msgstr ""
-
-#: ../tpl/default/addons/panel.tpl:250
-msgid "Start"
-msgstr ""
-
-#: ../tpl/default/addons/panel.tpl:259
-msgid "End"
-msgstr ""
-
-#: ../tpl/default/addons/panel.tpl:270
-msgid "Save"
-msgstr ""
-
-#: ../tpl/default/addons/panel.tpl:280
-msgid "Status Flags:"
-msgstr ""
-
-#: ../tpl/default/addons/panel.tpl:305 ../tpl/default/addons/panel.tpl:363
-msgid "Rev %1:"
-msgstr ""
-
-#: ../tpl/default/addons/panel.tpl:336
-msgid "Delete revision %1"
-msgstr ""
-
-#: ../tpl/default/addons/panel.tpl:345
-msgid "Save Changes"
-msgstr ""
-
-#: ../tpl/default/addons/panel.tpl:353
-msgid "Notes from Moderator to Submitter:"
-msgstr ""
-
-#: ../tpl/default/addons/panel.tpl:377
-msgid "Save Notes"
+#: ../tpl/default/users/panel.tpl:6
+msgid "Settings"
 msgstr ""
 
 #: ../tpl/default/users/tab/achievements.tpl:4
 msgid "There are no achievements :("
 msgstr ""
 
-#: ../tpl/default/users/tab/settings.tpl:2 ../tpl/default/users/panel.tpl:2
-msgid "Profile"
+#: ../tpl/default/users/tab/friends.tpl:5
+msgid "There are no friends :("
 msgstr ""
 
-#: ../tpl/default/users/tab/settings.tpl:6
-msgid "Homepage"
+#: ../tpl/default/users/tab/friends.tpl:12
+msgid "Since"
 msgstr ""
 
-#: ../tpl/default/users/tab/settings.tpl:14
-msgid "Real name"
+#: ../tpl/default/users/tab/friends.tpl:33
+msgid "Pending"
 msgstr ""
 
-#: ../tpl/default/users/tab/settings.tpl:24
-msgid "Save profile"
+#: ../tpl/default/users/tab/friends.tpl:35
+msgid "Offline"
 msgstr ""
 
-#: ../tpl/default/users/tab/settings.tpl:34
-msgid "Role"
+#: ../tpl/default/users/tab/friends.tpl:50
+msgid "Accept"
 msgstr ""
 
-#: ../tpl/default/users/tab/settings.tpl:46
-msgid "User Activated"
+#: ../tpl/default/users/tab/friends.tpl:51
+msgid "Decline"
 msgstr ""
 
-#: ../tpl/default/users/tab/settings.tpl:67
-msgid "Old Password"
+#: ../tpl/default/users/tab/friends.tpl:52
+msgid "Cancel request"
 msgstr ""
 
-#: ../tpl/default/users/tab/settings.tpl:75
-msgid "New Password"
-msgstr ""
-
-#: ../tpl/default/users/tab/settings.tpl:81
-msgid "Must be at least %1 characters long"
-msgstr ""
-
-#: ../tpl/default/users/tab/settings.tpl:86
-msgid "New Password (Confirm)"
+#: ../tpl/default/users/tab/friends.tpl:53
+msgid "Remove friend"
 msgstr ""
 
 #: ../tpl/default/users/tab/profile.tpl:22
@@ -2539,50 +2554,38 @@ msgstr ""
 msgid "Homepage:"
 msgstr ""
 
-#: ../tpl/default/users/tab/friends.tpl:5
-msgid "There are no friends :("
+#: ../tpl/default/users/tab/settings.tpl:6
+msgid "Homepage"
 msgstr ""
 
-#: ../tpl/default/users/tab/friends.tpl:12
-msgid "Since"
+#: ../tpl/default/users/tab/settings.tpl:14
+msgid "Real name"
 msgstr ""
 
-#: ../tpl/default/users/tab/friends.tpl:33
-msgid "Pending"
+#: ../tpl/default/users/tab/settings.tpl:24
+msgid "Save profile"
 msgstr ""
 
-#: ../tpl/default/users/tab/friends.tpl:35
-msgid "Offline"
+#: ../tpl/default/users/tab/settings.tpl:34
+msgid "Role"
 msgstr ""
 
-#: ../tpl/default/users/tab/friends.tpl:50
-msgid "Accept"
+#: ../tpl/default/users/tab/settings.tpl:46
+msgid "User Activated"
 msgstr ""
 
-#: ../tpl/default/users/tab/friends.tpl:51
-msgid "Decline"
+#: ../tpl/default/users/tab/settings.tpl:67
+msgid "Old Password"
 msgstr ""
 
-#: ../tpl/default/users/tab/friends.tpl:52
-msgid "Cancel request"
+#: ../tpl/default/users/tab/settings.tpl:75
+msgid "New Password"
 msgstr ""
 
-#: ../tpl/default/users/tab/friends.tpl:53
-msgid "Remove friend"
+#: ../tpl/default/users/tab/settings.tpl:81
+msgid "Must be at least %1 characters long"
 msgstr ""
 
-#: ../tpl/default/users/menu.tpl:2
-msgid "No users match your search"
-msgstr ""
-
-#: ../tpl/default/users/panel.tpl:3
-msgid "Friends"
-msgstr ""
-
-#: ../tpl/default/users/panel.tpl:4
-msgid "Achievements"
-msgstr ""
-
-#: ../tpl/default/users/panel.tpl:6
-msgid "Settings"
+#: ../tpl/default/users/tab/settings.tpl:86
+msgid "New Password (Confirm)"
 msgstr ""

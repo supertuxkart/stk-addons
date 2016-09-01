@@ -1,5 +1,14 @@
 #!/bin/bash
 
+# make bash sane
+set -eu -o pipefail
+DIR=$(basename "$PWD")
+if [[ "$DIR" != "locale" ]]; then
+    echo "You are not inside the 'locale' directory"
+    echo "ABORTING."
+    exit 0
+fi
+
 echo "Creating php files index (file-list.txt)"
 rm -f file-list.txt
 ls ../*.php >> ./file-list.txt
@@ -16,7 +25,7 @@ xgettext \
 --msgid-bugs-address=stephenjust@users.sourceforge.net \
 --add-comments=I18N \
 --copyright-holder="SuperTuxKart Team" \
---package-name=stkaddons -Fn \
+--package-name=stk-addons -Fn \
 --files-from=file-list.txt
 
 echo "Generating from templates"
