@@ -22,7 +22,7 @@ xgettext \
 --language=php \
 --keyword=_h \
 --output=./code.pot \
---msgid-bugs-address=stephenjust@users.sourceforge.net \
+--msgid-bugs-address=supertuxkart-translations@lists.sourceforge.net \
 --add-comments=I18N \
 --copyright-holder="SuperTuxKart Team" \
 --package-name=stk-addons -Fn \

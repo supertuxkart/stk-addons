@@ -131,7 +131,7 @@ To generated all locales supported, run the script in [locale/locale-gen.sh](loc
 After that, update the [translations.pot](locale/translations.pot) files by running the [locale/update-pot.sh](locale/update-pot.sh) script.
 
 Then after getting the updated translate `po` files from https://www.transifex.com/supertuxkart/supertuxkart/ run the
-[locale/generate-mo-pot.sh](locale/generate-mo-pot.sh) script.
+[locale/generate-mo.sh](locale/generate-mo.sh) script.
 
 ## Contributing
 All contributions are welcome: ideas, patches, documentation, bug reports, complaints, etc!
