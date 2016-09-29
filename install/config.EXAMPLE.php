@@ -88,14 +88,14 @@ define('IMG_LOCATION', ASSETS_LOCATION . 'img/');
 define('JS_LOCATION', ASSETS_LOCATION . 'js/');
 define('CSS_LOCATION', ASSETS_LOCATION . 'css/');
 
-// CAPTCHA properties
+// CAPTCHA properties, generate keys at https://www.google.com/recaptcha/admin
 define('CAPTCHA_PUB', ''); // reCAPTCHA public key
 define('CAPTCHA_PRIV', ''); // reCAPTCHA private key
 
 // Database proprieties
-define('DB_USER', 'root');
+define('DB_USER', 'stk_addons');
 define('DB_PASSWORD', '');
-define('DB_NAME', 'stkbase');
+define('DB_NAME', 'stk_addons');
 define('DB_HOST', 'localhost');
 define('DB_PREFIX', 'v3_'); // should not be modified
 
