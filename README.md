@@ -11,15 +11,15 @@ usage. However, you can manually install all dependencies, database tables and
 settings.
 
 ### Dependencies
-First of all, you need a the apache webserver with PHP 5 and MySQL server v5.5.3+.
+First of all, you need a the apache webserver with PHP 5.6+ and MySQL server v5.5.3+.
 Most features will also work with other webservers, but there is no support for them.
 
 To get a list of the additional PHP packages needed, point your web browser to the `install/` directory.
-The script file located there (index.php) will show which dependencies are missing.
+The script file located there (`index.php`) will show which dependencies are missing.
 
 Install all package dependencies in a Debian system with the following command:
 ```
-sudo apt-get install php php-mysql mysql-server apache2 php-mcrypt php-mbstring php-gd php-pdo php-zip php-gettext
+sudo apt-get install php php-mysql mysql-server apache2 php-mcrypt php-mbstring php-gd php-zip php-gettext
 ```
 
 PHP dependencies are handled by [composer](https://getcomposer.org/) (install it if you do not have it already).
@@ -68,8 +68,8 @@ You can generate the database (name it as you wish) using a tool like [phpMyAdmi
 Import the [install.sql](install/install.sql) file found in the repository (in the `install` directory).
 
 Register a new user using the web interface. Don't worry about configuring your email settings.
-After creating your user, you can change that user's `role_id` to be 3 (see `roles` tables for other role id's), and  'is_active' value to 1.
-You can delete the relevant row in the 'verifications' table. You can login now with your new user.
+After creating your user, you can change that user's `role_id` to be 3 (see `roles` tables for other role id's), and `is_active` value to `1`.
+You can delete the relevant row in the `verifications` table. You can login now with your new user.
 
 #### Instructions for MySQL shell
 Add a new user with full access to the new database and import `install/install.sql` with ```use DATABASE_NAME; source install/install.sql;``` inside the MySQL shell
@@ -126,7 +126,7 @@ If you want to give it a custom configuration use the `--configuration` flag, li
     ./vendor/bin/phpunit --configuration custom.xml
 
 ## Translation and locales generation
-To generated all locales supported, run the script in [locale/locale-gen.sh](locale/locale-gen.sh).
+To generate all locales supported (system wide), run the script in [locale/locale-gen.sh](locale/locale-gen.sh).
 
 After that, update the [translations.pot](locale/translations.pot) files by running the [locale/update-pot.sh](locale/update-pot.sh) script.
 
