@@ -21,7 +21,7 @@
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
 
 $id = isset($_GET['name']) ? $_GET['name'] : "";
-$a_tpl = StkTemplate::get('addons/panel.tpl');
+$a_tpl = StkTemplate::get('addons/panel.tpl')->setDebugAjax(true);
 
 try
 {

@@ -32,6 +32,7 @@
     <link rel="apple-touch-icon" sizes="76x76" href="{$favicon_location}favicon-76.png">
     <link rel="apple-touch-icon" sizes="152x152" href="{$favicon_location}favicon-152.png">
     <link rel="apple-touch-icon" sizes="180x180" href="{$favicon_location}favicon-180.png">
+    {$debug_toolbar.header}
 </head>
 <body>
 <div id="body-wrapper">

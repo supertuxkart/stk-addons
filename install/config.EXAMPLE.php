@@ -20,24 +20,38 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// make sure that this does not end with a trailing slash, and does not have a prefix in front
+// Make sure that this does not end with a trailing slash, and does not have a prefix in front
 $ROOT_LOCATION = 'addons.supertuxkart.net';
 
-define('DEBUG_MODE', true); // FIXME turn off on server.
+// WARNING!!!! turn OFF in the production server.
+// Enable this when you want detailed debugging output.
+// WARNING!!!! turn OFF in the production server.
+define('DEBUG_MODE', false);
+
+// Enable maintenance mode, will disable all requests and redirect to an HTML page
 define('MAINTENANCE_MODE', false);
+
+// Indicate if the certificate is signed by an authority
+define('IS_SSL_CERTIFICATE_VALID', false);
+
+// Enable the debug toolbar, will only work when in DEBUG_MODE.
+// WARNING!!! Never enable in the production server
+define('DEBUG_TOOLBAR', false);
 
 // set default values
 ini_set('html_errors', 'On');
-if (DEBUG_MODE) // useful for debugging
+if (DEBUG_MODE)
 {
+    // This does not show parse errors, to show those edit the php.ini file and edit the display_errors value
     error_reporting(E_ALL);
-    ini_set('display_errors', 'On');
+    ini_set('display_errors', 1);
 }
 else
 {
     error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
-    ini_set('display_errors', 'Off');
+    ini_set('display_errors', 0);
 }
+
 // useful for phpunit testing
 if (!defined('TEST_MODE')) define('TEST_MODE', false);
 // useful for cron jobs
@@ -45,7 +59,7 @@ if (!defined('CRON_MODE')) define('CRON_MODE', false);
 // useful for the API
 if (!defined('API_MODE')) define('API_MODE', false);
 
-// Paths and locations
+// Paths on the local filesystem
 define('DS', DIRECTORY_SEPARATOR);
 define('ROOT_PATH', __DIR__ . DS);
 define('INCLUDE_PATH', ROOT_PATH . 'include' . DS);
@@ -63,6 +77,7 @@ define('NEWS_XML_PATH', UP_PATH . 'xml' . DS . 'news.xml');
 define('ASSETS_XML_PATH', UP_PATH . 'xml' . DS . 'assets.xml');
 define('ASSETS2_XML_PATH', UP_PATH . 'xml' . DS . 'assets2.xml');
 
+// Location urls
 if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')
 {
     define('ROOT_LOCATION', 'https://' . $ROOT_LOCATION . '/');
@@ -71,7 +86,6 @@ else
 {
     define('ROOT_LOCATION', 'http://' . $ROOT_LOCATION . '/');
 }
-define('IS_SSL_CERTIFICATE_VALID', false); // tell if the certificate is signed by an authority
 
 define('DOWNLOAD_LOCATION', ROOT_LOCATION . 'dl/');
 define('DOWNLOAD_XML_LOCATION', DOWNLOAD_LOCATION . 'xml/');
@@ -125,7 +139,8 @@ define('F_LATEST', 256);
 define('F_TEX_NOT_POWER_OF_2', 512);
 
 // API
-// this should be changed depending where you have the api, for api.stkaddons.net is should be empty string
+// this should be changed depending where you have the api, for api.supertuxkart.net is should be empty string
+// for addons.supertuxkart.net/api, this is the default location
 define('API_LOCATION', '/api');
 define('API_VERSION', 'v2');
 

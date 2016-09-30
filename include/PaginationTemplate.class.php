@@ -78,11 +78,11 @@ class PaginationTemplate extends Template
     protected $page_url;
 
     /**
-     * @param null $template_dir
+     * @param null|string $template_dir
      */
     public function __construct($template_dir = null)
     {
-        parent::__construct("pagination.tpl", $template_dir);
+        parent::__construct("pagination/template.tpl", $template_dir);
         $this->items_per_page = static::MIN_LIMIT_ITEMS;
     }
 

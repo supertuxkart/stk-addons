@@ -45,13 +45,20 @@ class Template
 
     /**
      * Flag that indicates to minify the html
-     * @var bool
+     * @var boolean
      */
     private $minify = true;
 
     /**
+     * @var boolean
+     */
+    private $debug_ajax = false;
+
+    /**
+     * Template constructor.
+     *
      * @param string      $template_file
-     * @param string|null $template_dir
+     * @param null|string $template_dir
      */
     public function __construct($template_file, $template_dir = null)
     {
@@ -146,12 +153,22 @@ class Template
      * Enable or disable minify
      *
      * @param $minify
-     *
      * @return $this
      */
     public function setMinify($minify)
     {
         $this->minify = $minify;
+
+        return $this;
+    }
+
+    /**
+     * @param boolean $debug_ajax
+     * @return $this
+     */
+    public function setDebugAjax($debug_ajax)
+    {
+        $this->debug_ajax = $debug_ajax;
 
         return $this;
     }
@@ -260,9 +277,15 @@ class Template
             ob_start();
             $this->smarty->display($this->file, $this->directory);
 
+            // Debug ajax see http://phpdebugbar.com/docs/rendering.html#the-javascript-object
+            if (Debug::isToolbarEnabled() && $this->debug_ajax)
+            {
+                echo Debug::getToolbar()->getJavascriptRenderer()->render(false);
+            }
+
             return ob_get_clean();
         }
-        catch(SmartyException $e)
+        catch (SmartyException $e)
         {
             if (DEBUG_MODE)
             {

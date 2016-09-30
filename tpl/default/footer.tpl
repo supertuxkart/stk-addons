@@ -17,5 +17,6 @@
 {foreach $script_inline.after as $script}
     <script type="{$script.type|default:'text/javascript'}">{$script.content}</script>
 {/foreach}
+{$debug_toolbar.footer}
 </body>
 </html>

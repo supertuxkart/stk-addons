@@ -114,6 +114,14 @@ The solution is to enable it: `sudo php5enmod mcrypt && sudo service apache2 res
 If ```bower --version``` doesn't give any output, it hasn't found the nodejs installation. You can fix that with
 ```ln -s /usr/bin/nodejs /usr/bin/node```
 
+### Class not found after creating a new class
+Example:
+```
+Error: Class 'Debug' not found in /stk-addons/index.php on line 0
+```
+
+This is due to composer not knowing about it. To fix it update composer with `composer update`.
+
 ## Testing
 The project uses [PHPUnit](http://phpunit.de/) for unit testing (it's installed automatically by composer if you have enabled the developer dependencies)
 

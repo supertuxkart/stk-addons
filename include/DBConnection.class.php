@@ -65,6 +65,13 @@ class DBConnection
         {
             $this->connection = new PDO(sprintf("mysql:host=%s;dbname=%s;charset=utf8mb4", DB_HOST, DB_NAME), DB_USER, DB_PASSWORD);
 
+            // add database PDO collector
+            if (Debug::isToolbarEnabled())
+            {
+                $this->connection = new DebugBar\DataCollector\PDO\TraceablePDO($this->connection);
+                Debug::getToolbar()->addCollector(new DebugBar\DataCollector\PDO\PDOCollector($this->connection));
+            }
+
             if (!$this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION))
                 throw new Exception("setAttribute ATTR_ERRMODE failed");
             if (!$this->connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC))

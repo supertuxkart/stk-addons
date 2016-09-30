@@ -18,6 +18,7 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
 /**
  * Customization of generic template class for main stkaddons pages
  * @author Stephen
@@ -242,6 +243,17 @@ class StkTemplate extends Template
      */
     protected function setup()
     {
+        // Enable debug toolbar
+        if (Debug::isToolbarEnabled())
+        {
+            $renderer = Debug::getToolbar()->getJavascriptRenderer();
+            $this->smarty->assign('debug_toolbar', ['header' => $renderer->renderHead(), 'footer' => $renderer->render()]);
+        }
+        else
+        {
+            $this->smarty->assign('debug_toolbar', ['header' => '', 'footer' => '']);
+        }
+
         $this->setupHead();
         $this->setupTopMenu();
         $this->setupLanguageMenu();
