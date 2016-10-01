@@ -173,5 +173,13 @@ if (!TEST_MODE)
     {
         // add composer autoload
         require_once(ROOT_PATH . 'vendor' . DS . 'autoload.php');
+
+        // add nice error handling https://filp.github.io/whoops/
+        if (DEBUG_MODE)
+        {
+            $whoops = new \Whoops\Run;
+            $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
+            $whoops->register();
+        }
     }
 }

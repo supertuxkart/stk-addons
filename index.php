@@ -77,6 +77,6 @@ if ($pop_kart !== null)
         sprintf(_h('The most downloaded kart is %s.'), $pop_kart)
     );
 }
-//throw new Exception('foobar');
+
 $tpl->assign('news_messages', $news_messages);
 echo $tpl;

@@ -15,7 +15,8 @@
         "ext-pdo": "*",
         "ext-gettext": "*",
         "ext-mbstring": "*",
-        "ext-mcrypt": "*"
+        "ext-mcrypt": "*",
+        "filp/whoops": "^2.1"
     },
     "require-dev": {
         "phpunit/phpunit": "@stable",
