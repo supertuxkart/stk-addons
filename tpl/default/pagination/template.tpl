@@ -30,7 +30,7 @@
             {if $pagination.nr_buttons + 3 > $pagination.total_pages}
                 {*just display the buttons normally*}
                 {for $i=2 to $pagination.total_pages - 1}
-                    {include file="inner-for.tpl" scope="parent"}
+                    {include file="./inner-for.tpl" scope="parent"}
                 {/for}
             {else}
                 {*calculate where we are and build buttons*}
@@ -53,7 +53,7 @@
                         <li><a href="#" class="disabled">...</a></li>
                     {else}
                         {for $i = 2 to $pagination.nr_buttons + 2}
-                            {include file="inner-for.tpl" scope="parent"}
+                            {include file="./inner-for.tpl" scope="parent"}
                         {/for}
                     {/if}
 
@@ -61,7 +61,7 @@
                         <li><a href="#" class="disabled">...</a></li>
                     {else}
                         {for $i = ($pagination.total_pages - $pagination.nr_buttons) to $pagination.total_pages - 1}
-                            {include file="inner-for.tpl" scope="parent"}
+                            {include file="./inner-for.tpl" scope="parent"}
                         {/for}
                     {/if}
                 {/if}
