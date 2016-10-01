@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright 2012-2014 Stephen Just <stephenjust@gmail.com>
- *                2014 Daniel Butum <danibutum at gmail dot com>
+ *                2016 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -153,6 +153,7 @@ class Template
      * Enable or disable minify
      *
      * @param $minify
+     *
      * @return $this
      */
     public function setMinify($minify)
@@ -164,6 +165,7 @@ class Template
 
     /**
      * @param boolean $debug_ajax
+     *
      * @return $this
      */
     public function setDebugAjax($debug_ajax)
@@ -278,9 +280,14 @@ class Template
             $this->smarty->display($this->file, $this->directory);
 
             // Debug ajax see http://phpdebugbar.com/docs/rendering.html#the-javascript-object
-            if (Debug::isToolbarEnabled() && $this->debug_ajax)
+            if (Debug::isToolbarEnabled())
             {
-                echo Debug::getToolbar()->getJavascriptRenderer()->render(false);
+                $is_ajax_request = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&
+                                   strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+                if ($this->debug_ajax || $is_ajax_request)
+                {
+                    echo Debug::getToolbar()->getJavascriptRenderer()->render(false);
+                }
             }
 
             return ob_get_clean();

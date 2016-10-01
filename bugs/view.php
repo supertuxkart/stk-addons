@@ -67,7 +67,6 @@ $tpl->assign("bug", $tpl_data)
     ->assign("can_add_comment", User::hasPermission(AccessControl::PERM_ADD_BUG_COMMENT))
     ->assign("can_edit_bug", (User::getLoggedId() === $tpl_data["id"]) || $can_edit)
     ->assign("can_delete_bug", $can_edit)
-    ->assign("can_edit_comment", $can_edit)
-    ->setDebugAjax(true);
+    ->assign("can_edit_comment", $can_edit);
 
 echo $tpl;

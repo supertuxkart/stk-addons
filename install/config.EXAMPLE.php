@@ -2,7 +2,7 @@
 /**
  * Copyright        2009 Lucas Baudin <xapantu@gmail.com>
  *           2011 - 2014 Stephen Just <stephenjust@gmail.com>
- *           2014 - 2015 Daniel Butum <danibutum at gmail dot com>
+ *           2014 - 2016 Daniel Butum <danibutum at gmail dot com>
  *
  * This file is part of stkaddons
  *
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
+ * along with stkaddons. If not, see <http://www.gnu.org/licenses/>.
  */
 
 // Make sure that this does not end with a trailing slash, and does not have a prefix in front
