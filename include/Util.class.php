@@ -264,6 +264,17 @@ class Util
     }
 
     /**
+     * Checks to see if the page is requested by an AJAX (xmlhttprequest) request
+     *
+     * @return bool
+     */
+    public static function isAJAXRequest()
+    {
+        return !empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&
+               strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+    }
+
+    /**
      * Checks to see if the page is being server over SSL or not
      *
      * @return bool

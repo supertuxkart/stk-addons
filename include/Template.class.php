@@ -282,9 +282,7 @@ class Template
             // Debug ajax see http://phpdebugbar.com/docs/rendering.html#the-javascript-object
             if (Debug::isToolbarEnabled())
             {
-                $is_ajax_request = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&
-                                   strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
-                if ($this->debug_ajax || $is_ajax_request)
+                if ($this->debug_ajax || Util::isAJAXRequest())
                 {
                     echo Debug::getToolbar()->getJavascriptRenderer()->render(false);
                 }
