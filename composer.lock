@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "42adb329b1d52360440ad17f825d033a",
-    "content-hash": "ae0514bfa218b0634eaea22ed5b26960",
+    "hash": "d28df296f73312a82e86ddfe571b4451",
+    "content-hash": "047affbdc6898d9c04280f7f33117001",
     "packages": [
         {
             "name": "ezyang/htmlpurifier",
@@ -110,6 +110,51 @@
                 "zf2"
             ],
             "time": "2016-05-06 18:25:35"
+        },
+        {
+            "name": "google/recaptcha",
+            "version": "1.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/google/recaptcha.git",
+                "reference": "2b7e00566afca82a38a1d3adb8e42c118006296e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/google/recaptcha/zipball/2b7e00566afca82a38a1d3adb8e42c118006296e",
+                "reference": "2b7e00566afca82a38a1d3adb8e42c118006296e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.5.*"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "ReCaptcha\\": "src/ReCaptcha"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Client library for reCAPTCHA, a free service that protect websites from spam and abuse.",
+            "homepage": "http://www.google.com/recaptcha/",
+            "keywords": [
+                "Abuse",
+                "captcha",
+                "recaptcha",
+                "spam"
+            ],
+            "time": "2015-09-02 17:23:59"
         },
         {
             "name": "klein/klein",
@@ -438,52 +483,6 @@
             ],
             "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
             "time": "2016-06-06 09:09:37"
-        },
-        {
-            "name": "recaptcha/php5",
-            "version": "v1.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/AlekseyKorzun/reCaptcha-PHP-5.git",
-                "reference": "a38938e881a1cb3647271f666f13a01b0c1687f3"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/AlekseyKorzun/reCaptcha-PHP-5/zipball/a38938e881a1cb3647271f666f13a01b0c1687f3",
-                "reference": "a38938e881a1cb3647271f666f13a01b0c1687f3",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Captcha": "Package"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD"
-            ],
-            "authors": [
-                {
-                    "name": "Aleksey Korzun",
-                    "email": "al.ko@webfoundation.net",
-                    "homepage": "http://www.alekseykorzun.com",
-                    "role": "Developer"
-                }
-            ],
-            "description": "A properly coded PHP 5 reCaptcha class that will allow you to interact with Google's reCaptcha API.",
-            "homepage": "https://github.com/AlekseyKorzun/reCaptcha-PHP-5",
-            "keywords": [
-                "api",
-                "captcha",
-                "google",
-                "php",
-                "recaptcha"
-            ],
-            "time": "2014-07-07 17:21:13"
         },
         {
             "name": "smarty-gettext/smarty-gettext",

@@ -19,7 +19,6 @@
  * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
  */
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
-use Captcha\Captcha;
 
 $username = empty($_POST['username']) ? null : $_POST['username'];
 $realname = empty($_POST['realname']) ? null : $_POST['realname'];
@@ -29,19 +28,31 @@ $action = empty($_GET['action']) ? null : $_GET['action'];
 $tpl = StkTemplate::get('register.tpl')
     ->assignTitle(_h('Register'))
     ->addBootstrapValidatorLibrary()
-    ->setMinify(false);
+    ->setMinify(false)
+    ->addScriptInclude('https://www.google.com/recaptcha/api.js', '');
 
-// CAPTCHA
-$captcha = new Captcha();
-$captcha->setPublicKey(CAPTCHA_PUB)->setPrivateKey(CAPTCHA_PRIV);
+// TODO make template out of this
+$has_captcha_keys = !empty(CAPTCHA_SITE_KEY) && !empty(CAPTCHA_SECRET);
+if (!$has_captcha_keys)
+{
+    echo <<<HTML
+       <h2>Add your keys</h2>
+        <p>If you do not have keys already then visit
+        <a href = "https://www.google.com/recaptcha/admin">
+                https://www.google.com/recaptcha/admin</a> to generate them.
+        Edit this file and set the respective keys in CAPTCHA_SITE_KEY and
+CAPTCHA_SECRET inside the config.php file. Reload the page after this.</p>
+HTML;
+    exit;
+}
 
 $register = [
-    'display'  => false,
-    'captcha'  => $captcha->html(),
-    'username' => ['min' => User::MIN_USERNAME, 'max' => User::MAX_USERNAME, 'value' => h($username)],
-    'password' => ['min' => User::MIN_PASSWORD, 'max' => User::MAX_PASSWORD],
-    'realname' => ['min' => User::MIN_REALNAME, 'max' => User::MAX_USERNAME, 'value' => h($realname)],
-    'email'    => ['max' => User::MAX_EMAIL, 'value' => h($email)]
+    'captcha_site_key' => CAPTCHA_SITE_KEY,
+    'display'          => false,
+    'username'         => ['min' => User::MIN_USERNAME, 'max' => User::MAX_USERNAME, 'value' => h($username)],
+    'password'         => ['min' => User::MIN_PASSWORD, 'max' => User::MAX_PASSWORD],
+    'realname'         => ['min' => User::MIN_REALNAME, 'max' => User::MAX_USERNAME, 'value' => h($realname)],
+    'email'            => ['max' => User::MAX_EMAIL, 'value' => h($email)]
 
 ];
 
@@ -53,16 +64,23 @@ switch ($action)
         try
         {
             // validate
-            $errors = Validate::ensureNotEmpty($_POST, ["username", "password", "password_confirm", "email", "terms"]);
+            $errors = Validate::ensureNotEmpty(
+                $_POST,
+                ["username", "password", "password_confirm", "email", "terms", "g-recaptcha-response"]
+            );
             if ($errors)
             {
                 throw new UserException(implode("<br>", $errors));
             }
 
+            $captcha_response = $_POST['g-recaptcha-response'];
+            $captcha = new \ReCaptcha\ReCaptcha(CAPTCHA_SECRET);
+
             // check captcha
-            $response = $captcha->check();
-            if (!$response->isValid())
+            $response = $captcha->verify($captcha_response, Util::getClientIp());
+            if (!$response->isSuccess())
             {
+                // TODO handle better captcha errors.
                 throw new UserException("The reCAPTCHA wasn't entered correctly. Go back and try it again.");
             }
 
@@ -80,7 +98,7 @@ switch ($action)
                 _h("Account creation was successful. Please activate your account using the link emailed to you.")
             );
         }
-        catch(UserException $e)
+        catch (UserException $e)
         {
             $tpl->assign('errors', $e->getMessage());
             $register['display'] = true;
@@ -102,9 +120,12 @@ switch ($action)
             $tpl->assign('success', _h('Your account has been activated.'));
             $tpl->setMetaRefresh("login.php", 10);
         }
-        catch(UserException $e)
+        catch (UserException $e)
         {
-            $tpl->assign('errors', $e->getMessage() . ". " . _h('Could not validate your account. The link you followed is not valid.'));
+            $tpl->assign(
+                'errors',
+                $e->getMessage() . ". " . _h('Could not validate your account. The link you followed is not valid.')
+            );
         }
         break;
 

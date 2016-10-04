@@ -102,9 +102,9 @@ define('IMG_LOCATION', ASSETS_LOCATION . 'img/');
 define('JS_LOCATION', ASSETS_LOCATION . 'js/');
 define('CSS_LOCATION', ASSETS_LOCATION . 'css/');
 
-// CAPTCHA properties, generate keys at https://www.google.com/recaptcha/admin
-define('CAPTCHA_PUB', ''); // reCAPTCHA public key
-define('CAPTCHA_PRIV', ''); // reCAPTCHA private key
+// CAPTCHA properties, Register API keys at https://www.google.com/recaptcha/admin
+define('CAPTCHA_SITE_KEY', '');
+define('CAPTCHA_SECRET', '');
 
 // Database proprieties
 define('DB_USER', 'stk_addons');
