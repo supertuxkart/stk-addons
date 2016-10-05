@@ -115,20 +115,20 @@
                         <textarea rows="20" cols="70" readonly id="reg_terms">
 === {t}STK Addons Terms and Conditions{/t} ===
 
-                            {t}You must agree to these terms in order to upload content to the STK Addons site.{/t}
+{t}You must agree to these terms in order to upload content to the STK Addons site.{/t}
 
-                            {t}The STK Addons service is designed to be a repository exclusively for SuperTux Kart addon content. All uploaded content must be intended for this purpose. When you upload your content, it will be available publicly on the internet, and will be made available in-game for download.{/t}
+{t}The STK Addons service is designed to be a repository exclusively for SuperTux Kart addon content. All uploaded content must be intended for this purpose. When you upload your content, it will be available publicly on the internet, and will be made available in-game for download.{/t}
 
-                            {t}Super Tux Kart aims to comply with the Debian Free Software Guidelines (DFSG). TuxFamily.org also requires that content they host comply with open licenses. You may not upload content which is locked down with a restrictive license. Licenses such as CC-BY-SA 3.0, or other DFSG-compliant licenses are required. All content taken from third-party sources must be attributed properly, and must also be available under an open license. Licenses and attribution should be included in a "license.txt" file in each uploaded archive. Uploads without proper licenses or attribution may be deleted without warning.{/t}
+{t}Super Tux Kart aims to comply with the Debian Free Software Guidelines (DFSG). TuxFamily.org also requires that content they host comply with open licenses. You may not upload content which is locked down with a restrictive license. Licenses such as CC-BY-SA 3.0, or other DFSG-compliant licenses are required. All content taken from third-party sources must be attributed properly, and must also be available under an open license. Licenses and attribution should be included in a "license.txt" file in each uploaded archive. Uploads without proper licenses or attribution may be deleted without warning.{/t}
 
-                            {t}Even with valid licenses and attribution, content may not contain any of the following:{/t}
+{t}Even with valid licenses and attribution, content may not contain any of the following:{/t}
 1. {t}Profanity{/t}
 2. {t}Explicit images{/t}
 3. {t}Hateful messages and/or images{/t}
 4. {t}Any other content that may be unsuitable for children{/t}
-                            {t}If any of your uploads are found to contain any of the above, your upload will be removed, your account may be removed, and any other content you uploaded may be removed.{/t}
+{t}If any of your uploads are found to contain any of the above, your upload will be removed, your account may be removed, and any other content you uploaded may be removed.{/t}
 
-                            {t}By checking the box below, you are confirming that you understand these terms. If you have any questions or comments regarding these terms, one of the members of the development team would gladly assist you.{/t}
+{t}By checking the box below, you are confirming that you understand these terms. If you have any questions or comments regarding these terms, one of the members of the development team would gladly assist you.{/t}
                         </textarea>
                     </div>
                 </div>
