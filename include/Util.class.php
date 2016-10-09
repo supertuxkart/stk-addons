@@ -905,13 +905,15 @@ class Util
         switch ($addon_type)
         {
             case Addon::KART:
+                // latest version number should be set here
+                // https://svn.code.sf.net/p/supertuxkart/code/media/trunk/blender_25/stk_kart.py
                 if ($format === 1)
                 {
                     return 'Pre-0.7';
                 }
                 if ($format === 2)
                 {
-                    return '0.7.0 - 0.8.1';
+                    return '0.7.0 - ' . _h("Latest development version");
                 }
 
                 return _h('Unknown');
@@ -919,6 +921,8 @@ class Util
 
             case Addon::TRACK:
             case Addon::ARENA:
+                // latest version number should be set here
+                // https://svn.code.sf.net/p/supertuxkart/code/media/trunk/blender_25/stk_track.py
                 if ($format === 1 || $format === 2)
                 {
                     return 'Pre-0.7';
@@ -929,7 +933,7 @@ class Util
                 }
                 if ($format === 6)
                 {
-                    return _h("Latest development version");
+                    return '0.9.0 - ' . _h("Latest development version");
                 }
 
                 return _h('Unknown');
