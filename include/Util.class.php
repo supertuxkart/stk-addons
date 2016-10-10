@@ -457,10 +457,7 @@ class Util
      */
     public static function getScriptFilename($basename = true)
     {
-        if ($basename)
-        {
-            return basename($_SERVER["SCRIPT_FILENAME"]);
-        }
+        if ($basename) return basename($_SERVER["SCRIPT_FILENAME"]);
 
         return $_SERVER["SCRIPT_FILENAME"];
     }
