@@ -31,7 +31,6 @@ $tpl = StkTemplate::get('register.tpl')
     ->setMinify(false)
     ->addScriptInclude('https://www.google.com/recaptcha/api.js', '');
 
-// TODO make template out of this
 $has_captcha_keys = defined('CAPTCHA_SITE_KEY') && defined('CAPTCHA_SECRET') && !empty(CAPTCHA_SITE_KEY) && !empty(CAPTCHA_SECRET);
 if (!$has_captcha_keys)
 {
@@ -65,14 +64,11 @@ switch ($action)
         try
         {
             // validate
-            $errors = Validate::ensureNotEmpty(
-                $_POST,
-                ["username", "password", "password_confirm", "email", "terms", "g-recaptcha-response"]
-            );
+            $errors = Validate::ensureNotEmpty($_POST, ["username", "password", "password_confirm", "email", "terms"]);
             if ($errors)
-            {
                 throw new UserException(implode("<br>", $errors));
-            }
+            if (Validate::ensureNotEmpty($_POST, ['g-recaptcha-response']))
+                throw new UserException(_h('You did not complete the reCAPTCHA field'));
 
             $captcha_response = $_POST['g-recaptcha-response'];
             $captcha = new \ReCaptcha\ReCaptcha(CAPTCHA_SECRET);
@@ -81,8 +77,9 @@ switch ($action)
             $response = $captcha->verify($captcha_response, Util::getClientIp());
             if (!$response->isSuccess())
             {
-                // TODO handle better captcha errors.
-                throw new UserException("The reCAPTCHA wasn't entered correctly. Go back and try it again.");
+                // codes reference https://developers.google.com/recaptcha/docs/verify#error-code-reference
+                // $error_codes = $response->getErrorCodes();
+                throw new UserException(_h("The reCAPTCHA wasn't entered correctly. Go back and try it again."));
             }
 
             User::register(
@@ -111,10 +108,7 @@ switch ($action)
         {
             // validate
             $errors = Validate::ensureNotEmpty($_GET, ["num", "user"]);
-            if ($errors)
-            {
-                throw new UserException(implode("<br>", $errors));
-            }
+            if ($errors) throw new UserException(implode("<br>", $errors));
 
             User::activate($_GET['user'] /* user id */, $_GET["num"] /* verification code */);
 
