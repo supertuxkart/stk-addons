@@ -10,7 +10,7 @@ msgstr ""
 "#-#-#-#-#  code.pot (stk-addons)  #-#-#-#-#\n"
 "Project-Id-Version: stk-addons\n"
 "Report-Msgid-Bugs-To: supertuxkart-translations@lists.sourceforge.net\n"
-"POT-Creation-Date: 2016-09-01 17:26+0300\n"
+"POT-Creation-Date: 2016-10-13 13:08+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -175,8 +175,8 @@ msgstr ""
 msgid "delete a revision"
 msgstr ""
 
-#: ../include/Addon.class.php:515 ../include/Util.class.php:906
-#: ../include/Util.class.php:924 ../include/Util.class.php:928
+#: ../include/Addon.class.php:515 ../include/Util.class.php:916
+#: ../include/Util.class.php:936 ../include/Util.class.php:940
 msgid "Unknown"
 msgstr ""
 
@@ -772,16 +772,16 @@ msgstr ""
 msgid "count the number of online users"
 msgstr ""
 
-#: ../include/StkTemplate.class.php:159
+#: ../include/StkTemplate.class.php:160
 #, php-format
 msgid "Welcome, %s"
 msgstr ""
 
-#: ../include/StkTemplate.class.php:190
+#: ../include/StkTemplate.class.php:191
 msgid "Languages"
 msgstr ""
 
-#: ../include/StkTemplate.class.php:261
+#: ../include/StkTemplate.class.php:273
 msgid "STK Add-ons"
 msgstr ""
 
@@ -1053,7 +1053,7 @@ msgid "username"
 msgstr ""
 
 #: ../include/User.class.php:1382 ../tpl/default/login.tpl:27
-#: ../tpl/default/register.tpl:31
+#: ../tpl/default/register.tpl:33
 msgid ""
 "Your username can only contain alphanumeric characters, periods, dashes and "
 "underscores"
@@ -1088,7 +1088,7 @@ msgstr ""
 msgid "Homepage is to long."
 msgstr ""
 
-#: ../include/Util.class.php:921
+#: ../include/Util.class.php:913 ../include/Util.class.php:933
 msgid "Latest development version"
 msgstr ""
 
@@ -1365,21 +1365,29 @@ msgstr ""
 msgid "Privacy"
 msgstr ""
 
-#: ../register.php:30
+#: ../register.php:29
 msgid "Register"
 msgstr ""
 
-#: ../register.php:80
+#: ../register.php:71
+msgid "You did not complete the reCAPTCHA field"
+msgstr ""
+
+#: ../register.php:82
+msgid "The reCAPTCHA wasn't entered correctly. Go back and try it again."
+msgstr ""
+
+#: ../register.php:96
 msgid ""
 "Account creation was successful. Please activate your account using the link "
 "emailed to you."
 msgstr ""
 
-#: ../register.php:102
+#: ../register.php:115
 msgid "Your account has been activated."
 msgstr ""
 
-#: ../register.php:107
+#: ../register.php:122
 msgid "Could not validate your account. The link you followed is not valid."
 msgstr ""
 
@@ -1538,7 +1546,7 @@ msgid "Designer"
 msgstr ""
 
 #: ../tpl/default/addons/panel.tpl:39
-msgid "Upload date:"
+msgid "Upload date"
 msgstr ""
 
 #: ../tpl/default/addons/panel.tpl:43
@@ -1546,7 +1554,7 @@ msgid "Submitted by"
 msgstr ""
 
 #: ../tpl/default/addons/panel.tpl:47
-msgid "Revision:"
+msgid "Revision"
 msgstr ""
 
 #: ../tpl/default/addons/panel.tpl:51
@@ -1642,7 +1650,7 @@ msgid "Save Properties"
 msgstr ""
 
 #: ../tpl/default/addons/panel.tpl:246
-msgid "Included in Game Versions:"
+msgid "Included in Game Versions"
 msgstr ""
 
 #: ../tpl/default/addons/panel.tpl:250
@@ -1658,7 +1666,7 @@ msgid "Save"
 msgstr ""
 
 #: ../tpl/default/addons/panel.tpl:280
-msgid "Status Flags:"
+msgid "Status Flags"
 msgstr ""
 
 #: ../tpl/default/addons/panel.tpl:305 ../tpl/default/addons/panel.tpl:363
@@ -1674,7 +1682,7 @@ msgid "Save Changes"
 msgstr ""
 
 #: ../tpl/default/addons/panel.tpl:353
-msgid "Notes from Moderator to Submitter:"
+msgid "Notes from Moderator to Submitter"
 msgstr ""
 
 #: ../tpl/default/addons/panel.tpl:377
@@ -1864,7 +1872,7 @@ msgid "Contribute"
 msgstr ""
 
 #: ../tpl/default/login.tpl:14 ../tpl/default/manage/page/logs.tpl:13
-#: ../tpl/default/register.tpl:13 ../tpl/default/users/tab/friends.tpl:11
+#: ../tpl/default/register.tpl:15 ../tpl/default/users/tab/friends.tpl:11
 msgid "Username"
 msgstr ""
 
@@ -1872,32 +1880,32 @@ msgstr ""
 msgid "Enter username"
 msgstr ""
 
-#: ../tpl/default/login.tpl:18 ../tpl/default/register.tpl:22
+#: ../tpl/default/login.tpl:18 ../tpl/default/register.tpl:24
 msgid "The username is required"
 msgstr ""
 
-#: ../tpl/default/login.tpl:23 ../tpl/default/register.tpl:27
+#: ../tpl/default/login.tpl:23 ../tpl/default/register.tpl:29
 msgid "The username must be between %1 and %2 characters long"
 msgstr ""
 
-#: ../tpl/default/login.tpl:31 ../tpl/default/register.tpl:35
+#: ../tpl/default/login.tpl:31 ../tpl/default/register.tpl:37
 msgid "The username and password cannot be the same as each other"
 msgstr ""
 
 #: ../tpl/default/login.tpl:34 ../tpl/default/login.tpl:35
-#: ../tpl/default/register.tpl:41
+#: ../tpl/default/register.tpl:42
 msgid "Password"
 msgstr ""
 
-#: ../tpl/default/login.tpl:37 ../tpl/default/register.tpl:49
+#: ../tpl/default/login.tpl:37 ../tpl/default/register.tpl:50
 msgid "The password is required"
 msgstr ""
 
-#: ../tpl/default/login.tpl:42 ../tpl/default/register.tpl:54
+#: ../tpl/default/login.tpl:42 ../tpl/default/register.tpl:55
 msgid "The password must be between %1 and %2 characters long"
 msgstr ""
 
-#: ../tpl/default/login.tpl:46 ../tpl/default/register.tpl:58
+#: ../tpl/default/login.tpl:46 ../tpl/default/register.tpl:59
 msgid "The password cannot be the same as username"
 msgstr ""
 
@@ -1963,7 +1971,7 @@ msgstr ""
 msgid "No files have been uploaded."
 msgstr ""
 
-#: ../tpl/default/manage/page/files.tpl:10 ../tpl/default/register.tpl:94
+#: ../tpl/default/manage/page/files.tpl:10 ../tpl/default/register.tpl:95
 #: ../tpl/default/users/tab/achievements.tpl:10
 msgid "Name"
 msgstr ""
@@ -2155,7 +2163,7 @@ msgstr ""
 msgid "Logout"
 msgstr ""
 
-#: ../tpl/default/pagination.tpl:4
+#: ../tpl/default/pagination/template.tpl:4
 msgid "Items"
 msgstr ""
 
@@ -2186,8 +2194,8 @@ msgstr ""
 msgid "New Password:"
 msgstr ""
 
-#: ../tpl/default/password-reset.tpl:43 ../tpl/default/register.tpl:15
-#: ../tpl/default/register.tpl:43
+#: ../tpl/default/password-reset.tpl:43 ../tpl/default/register.tpl:17
+#: ../tpl/default/register.tpl:44
 msgid "Must be at least %1 characters long."
 msgstr ""
 
@@ -2205,57 +2213,57 @@ msgstr ""
 msgid "Account Registration"
 msgstr ""
 
-#: ../tpl/default/register.tpl:63
+#: ../tpl/default/register.tpl:64
 msgid "Password (confirm)"
 msgstr ""
 
-#: ../tpl/default/register.tpl:68
+#: ../tpl/default/register.tpl:69
 msgid "The confirm password is required"
 msgstr ""
 
-#: ../tpl/default/register.tpl:72
+#: ../tpl/default/register.tpl:73
 msgid "The passwords do not match"
 msgstr ""
 
-#: ../tpl/default/register.tpl:77
+#: ../tpl/default/register.tpl:78
 msgid "Email Address"
 msgstr ""
 
-#: ../tpl/default/register.tpl:79
+#: ../tpl/default/register.tpl:80
 msgid "Email address used to activate your account."
 msgstr ""
 
-#: ../tpl/default/register.tpl:86
+#: ../tpl/default/register.tpl:87
 msgid "The registration email is required"
 msgstr ""
 
-#: ../tpl/default/register.tpl:89
+#: ../tpl/default/register.tpl:90
 msgid "The email address is not a valid"
 msgstr ""
 
-#: ../tpl/default/register.tpl:96
+#: ../tpl/default/register.tpl:97
 msgid "Optional"
 msgstr ""
 
-#: ../tpl/default/register.tpl:106
+#: ../tpl/default/register.tpl:107
 msgid "The nam must be between %1 and %2 characters long"
 msgstr ""
 
-#: ../tpl/default/register.tpl:111
-msgid "Terms:"
+#: ../tpl/default/register.tpl:112
+msgid "Terms"
 msgstr ""
 
-#: ../tpl/default/register.tpl:115
+#: ../tpl/default/register.tpl:116
 msgid "STK Addons Terms and Conditions"
 msgstr ""
 
-#: ../tpl/default/register.tpl:117
+#: ../tpl/default/register.tpl:118
 msgid ""
 "You must agree to these terms in order to upload content to the STK Addons "
 "site."
 msgstr ""
 
-#: ../tpl/default/register.tpl:119
+#: ../tpl/default/register.tpl:120
 msgid ""
 "The STK Addons service is designed to be a repository exclusively for "
 "SuperTux Kart addon content. All uploaded content must be intended for this "
@@ -2263,7 +2271,7 @@ msgid ""
 "internet, and will be made available in-game for download."
 msgstr ""
 
-#: ../tpl/default/register.tpl:121
+#: ../tpl/default/register.tpl:122
 msgid ""
 "Super Tux Kart aims to comply with the Debian Free Software Guidelines "
 "(DFSG). TuxFamily.org also requires that content they host comply with open "
@@ -2276,55 +2284,55 @@ msgid ""
 "without warning."
 msgstr ""
 
-#: ../tpl/default/register.tpl:123
+#: ../tpl/default/register.tpl:124
 msgid ""
 "Even with valid licenses and attribution, content may not contain any of the "
 "following:"
 msgstr ""
 
-#: ../tpl/default/register.tpl:124 ../tpl/default/upload.tpl:132
+#: ../tpl/default/register.tpl:125 ../tpl/default/upload.tpl:132
 msgid "Profanity"
 msgstr ""
 
-#: ../tpl/default/register.tpl:125 ../tpl/default/upload.tpl:133
+#: ../tpl/default/register.tpl:126 ../tpl/default/upload.tpl:133
 msgid "Explicit images"
 msgstr ""
 
-#: ../tpl/default/register.tpl:126 ../tpl/default/upload.tpl:134
+#: ../tpl/default/register.tpl:127 ../tpl/default/upload.tpl:134
 msgid "Hateful messages and/or images"
 msgstr ""
 
-#: ../tpl/default/register.tpl:127 ../tpl/default/upload.tpl:135
+#: ../tpl/default/register.tpl:128 ../tpl/default/upload.tpl:135
 msgid "Any other content that may be unsuitable for children"
 msgstr ""
 
-#: ../tpl/default/register.tpl:128
+#: ../tpl/default/register.tpl:129
 msgid ""
 "If any of your uploads are found to contain any of the above, your upload "
 "will be removed, your account may be removed, and any other content you "
 "uploaded may be removed."
 msgstr ""
 
-#: ../tpl/default/register.tpl:130
+#: ../tpl/default/register.tpl:131
 msgid ""
 "By checking the box below, you are confirming that you understand these "
 "terms. If you have any questions or comments regarding these terms, one of "
 "the members of the development team would gladly assist you."
 msgstr ""
 
-#: ../tpl/default/register.tpl:136
+#: ../tpl/default/register.tpl:137
 msgid "I agree to the above terms"
 msgstr ""
 
-#: ../tpl/default/register.tpl:141
+#: ../tpl/default/register.tpl:142
 msgid "You must agree to the above terms"
 msgstr ""
 
-#: ../tpl/default/register.tpl:146
+#: ../tpl/default/register.tpl:147
 msgid "Verify that you are not a bot"
 msgstr ""
 
-#: ../tpl/default/register.tpl:154
+#: ../tpl/default/register.tpl:155
 msgid "Register!"
 msgstr ""
 
