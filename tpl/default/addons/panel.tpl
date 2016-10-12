@@ -36,7 +36,7 @@
                     <td itemprop="author" id="addon-designer">{$addon.designer}</td>
                 </tr>
                 <tr>
-                    <td><strong>{t}Upload date:{/t}</strong></td>
+                    <td><strong>{t}Upload date{/t}</strong></td>
                     <td itemprop="dateModified">{$addon.info.upload_date}</td>
                 </tr>
                 <tr>
@@ -44,7 +44,7 @@
                     <td><a href="users.php?user={$addon.info.submitter}">{$addon.info.submitter}</a></td>
                 </tr>
                 <tr>
-                    <td><strong>{t}Revision:{/t}</strong></td>
+                    <td><strong>{t}Revision{/t}</strong></td>
                     <td itemprop="version">{$addon.info.revision}</td>
                 </tr>
                 <tr>
@@ -243,7 +243,7 @@
     {if $has_permission}
     <div class="row">
         <div class="col-md-12">
-            <h4>{t}Included in Game Versions:{/t}</h4>
+            <h4>{t}Included in Game Versions{/t}</h4>
             <form id="addon-edit-include-versions" class="form-horizontal">
                 <div class="form-group">
                     <label for="addon-edit-include-start" class="col-md-1">
@@ -277,7 +277,7 @@
     {*Set status flags*}
     <div class="row">
         <div class="col-md-12">
-            <h4>{t}Status Flags:{/t}</h4>
+            <h4>{t}Status Flags{/t}</h4>
             <form id="addon-set-flags">
                 <table class="table table-striped">
                     <thead>
@@ -350,7 +350,7 @@
     {*Moderator notes*}
     <div class="row">
         <div class="col-md-12">
-            <h4>{t}Notes from Moderator to Submitter:{/t}</h4>
+            <h4>{t}Notes from Moderator to Submitter{/t}</h4>
             {$readonly=" readonly"}
             {if $has_permission}
                 {$readonly=""}

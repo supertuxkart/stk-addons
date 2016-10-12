@@ -109,7 +109,7 @@
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        <label for="reg_terms">{t}Terms:{/t}</label>
+                        <label for="reg_terms">{t}Terms{/t}</label>
                     </div>
                     <div class="col-md-7">
                         <textarea rows="20" cols="70" readonly id="reg_terms">
