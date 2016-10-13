@@ -290,11 +290,13 @@ class DBConnection
                 }
             }
 
+            // common error codes http://docstore.mik.ua/orelly/java-ent/jenut/ch08_06.htm
+            // error info array info https://secure.php.net/manual/en/pdostatement.errorinfo.php
             if (DEBUG_MODE)
             {
                 var_dump($e->errorInfo);
                 printf(
-                    "SQLSTATE ERR: %s<br>\nmySQL ERR: %s<br>\nMessage: %s<br>\nQuery: %s<br>",
+                    "SQLSTATE ERR: %s<br>\nDriver specific error code: %s<br>\nDriver specific error message: %s<br>\nQuery: %s<br>",
                     $e->errorInfo[0],
                     $e->errorInfo[1],
                     isset($e->errorInfo[2]) ? $e->errorInfo[2] : "",
@@ -305,7 +307,7 @@ class DBConnection
                 trigger_error("Database Error");
             }
 
-            throw new DBException($e->errorInfo[0]);
+            throw new DBException("Database error happened, yikes!", $e->errorInfo[0]);
         }
 
         throw new DBException("Unexpected reach of end of query(). Possibly return_type was invalid");

@@ -118,7 +118,7 @@ class Achievement
         }
         catch(DBException $e)
         {
-            if ($e->getErrorCode() == "23503")
+            if ($e->getCode() == "23503")
             {
                 throw new AchievementException(_h("Provided an id of an achievement that doesn't exist in the database."));
             }

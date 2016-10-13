@@ -1,7 +1,7 @@
 <?php
 /**
- * copyright 2011      Stephen Just <stephenjust@users.sf.net>
- *           2014-2015 Daniel Butum <danibutum at gmail dot com>
+ * copyright 2011        Stephen Just <stephenjust@users.sf.net>
+ *           2014 - 2016 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -15,57 +15,46 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
+ * along with stkaddons. If not, see <http://www.gnu.org/licenses/>.
  */
 
 /**
  * Class DBException
  */
-class DBException extends Exception
-{
-    /**
-     * @param string $error_code
-     */
-    public function __construct($error_code = "")
-    {
-        $this->error_code = $error_code;
-    }
 
-    /**
-     * @return string
-     */
-    public function getErrorCode()
-    {
-        return $this->error_code;
-    }
-}
 
 class BaseException extends Exception {}
+
+class DBException extends BaseException {}
 class BugException extends BaseException {}
+
 class UserException extends BaseException {}
 class VerificationException extends UserException {}
 class ValidateException extends UserException {}
+
+
 class AddonException extends BaseException {}
 
-class FileException extends Exception {}
-class UploadException extends Exception {}
-class NewsException extends  Exception {}
-class RatingsException extends Exception {}
-class TemplateException extends Exception {}
-class ServerException extends Exception {}
-class LogException extends Exception {}
-class CacheException extends Exception {}
-class StatisticException extends Exception {}
-class AchievementException extends Exception {}
-class FriendException extends Exception {}
-class AccessControlException extends Exception {}
-class SImageException extends Exception {}
-class SMailException extends Exception {}
+class FileException extends BaseException {}
+class UploadException extends BaseException {}
+class NewsException extends  BaseException {}
+class RatingsException extends BaseException {}
+class TemplateException extends BaseException {}
+class ServerException extends BaseException {}
+class LogException extends BaseException {}
+class CacheException extends BaseException {}
+class StatisticException extends BaseException {}
+class AchievementException extends BaseException {}
+class FriendException extends BaseException {}
+class AccessControlException extends BaseException {}
+class SImageException extends BaseException {}
+class SMailException extends BaseException {}
 
-class ParserException extends Exception {}
+class ParserException extends BaseException {}
 class XMLParserException extends ParserException {}
 class B3DException extends ParserException {}
 
-class ClientSessionException extends Exception {}
+class ClientSessionException extends BaseException {}
 class ClientSessionConnectException extends ClientSessionException {}
 class ClientSessionExpiredException extends ClientSessionException {}
+
