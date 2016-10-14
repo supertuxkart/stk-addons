@@ -16,7 +16,8 @@
         "ext-pdo": "*",
         "ext-gettext": "*",
         "ext-mbstring": "*",
-        "ext-mcrypt": "*"
+        "ext-mcrypt": "*",
+        "myclabs/php-enum": "^1.5"
     },
     "require-dev": {
         "phpunit/phpunit": "@stable",

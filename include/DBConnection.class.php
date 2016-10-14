@@ -73,9 +73,9 @@ class DBConnection
             }
 
             if (!$this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION))
-                throw new Exception("setAttribute ATTR_ERRMODE failed");
+                throw new DBException("setAttribute ATTR_ERRMODE failed");
             if (!$this->connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC))
-                throw new Exception("setAttribute ATTR_DEFAULT_FETCH_MODE failed");
+                throw new DBException("setAttribute ATTR_DEFAULT_FETCH_MODE failed");
         }
         catch (Exception $e)
         {

@@ -18,12 +18,31 @@
  * along with stkaddons. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Class DBException
- */
+
+class ErrorEnum extends \MyCLabs\Enum\Enum
+{
+    const UNKNOWN = 0;
+
+    const DB_CONNECT = 32; // can not connect to the database
+    const DB_SET_ATTRIBUTE = 33; // cannot set an attribute
+    const DB_GENERIC = 34; // generic error happened
+}
 
 
-class BaseException extends Exception {}
+class BaseException extends Exception
+{
+    /**
+     * Construct the exception.
+     * @link http://php.net/manual/en/exception.construct.php
+     * @param string $message [optional] The Exception message to throw.
+     * @param int $code [optional] The Exception code. Default error code is UNKNOWN
+     * @param Exception $previous [optional] The previous exception used for the exception chaining.
+     */
+    public function __construct($message = "", $code = ErrorEnum::UNKNOWN, Exception $previous = null)
+    {
+        parent::__construct($message, $code, $previous);
+    }
+}
 
 class DBException extends BaseException {}
 class BugException extends BaseException {}
