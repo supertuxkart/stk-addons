@@ -19,7 +19,7 @@
  */
 
 
-class ErrorEnum extends \MyCLabs\Enum\Enum
+class ErrorType extends \MyCLabs\Enum\Enum
 {
     const UNKNOWN = 0;
 
@@ -38,7 +38,7 @@ class BaseException extends Exception
      * @param int $code [optional] The Exception code. Default error code is UNKNOWN
      * @param Exception $previous [optional] The previous exception used for the exception chaining.
      */
-    public function __construct($message = "", $code = ErrorEnum::UNKNOWN, Exception $previous = null)
+    public function __construct($message = "", $code = ErrorType::UNKNOWN, Exception $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }
