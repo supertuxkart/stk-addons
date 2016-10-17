@@ -264,6 +264,28 @@ class Util
     }
 
     /**
+     * Checks if the captcha keys are set in the config, otherwise it will display an error and exit
+     */
+    public static function validateCaptchaKeysSet()
+    {
+        $has_captcha_keys = defined('CAPTCHA_SITE_KEY') && defined('CAPTCHA_SECRET') && !empty(CAPTCHA_SITE_KEY) &&
+                            !empty(CAPTCHA_SECRET);
+        if (!$has_captcha_keys)
+        {
+            // Display nice message to developer warning him about missing captcha keys
+            $message = <<<MSG
+<p>If you do not have keys already then visit
+<a href = "https://www.google.com/recaptcha/admin">https://www.google.com/recaptcha/admin</a> 
+to generate them. Edit the config.php file and set the respective keys in CAPTCHA_SITE_KEY and
+CAPTCHA_SECRET. Reload the page after this.</p>
+MSG;
+
+            exit(StkTemplate::get('error-page.tpl')
+                ->assign('error', ['title' => 'Add your captcha keys', 'message' => $message])->toString());
+        }
+    }
+
+    /**
      * Checks to see if the page is requested by an AJAX (xmlhttprequest) request
      *
      * @return bool

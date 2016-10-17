@@ -21,7 +21,7 @@
             </div>
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-4">
-                    {$pass_reset.reset_form.captcha}
+                    <div class="g-recaptcha" data-sitekey="{$pass_reset.reset_form.captcha_site_key}"></div>
                 </div>
             </div>
             <div class="form-group">

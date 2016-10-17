@@ -296,7 +296,20 @@ class StkTemplate extends Template
     }
 
     /**
-     * Add a script file to the page
+     * Add a script file to the page from the web
+     *
+     * @param string $src      the js file location
+     * @param bool   $ie       see if this script is for IE only, add it as a conditional
+     *
+     * @return $this
+     */
+    public function addScriptIncludeWeb($src, $ie = false)
+    {
+        return $this->addScriptInclude($src, '', $ie);
+    }
+
+    /**
+     * Add a script file to the page from the local filesystem
      *
      * @param string $src      the js file location
      * @param string $location the path to get the resource from
@@ -312,7 +325,7 @@ class StkTemplate extends Template
     }
 
     /**
-     * Add a css file to the page
+     * Add a css file to the page from the local filesystem
      *
      * @param string $href
      * @param string $location default path to look to

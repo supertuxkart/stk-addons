@@ -1,9 +1,9 @@
 <?php
 /**
- * copyright 2009      Lucas Baudin <xapantu@gmail.com>
- *           2012-2014 Stephen Just <stephenjust@gmail.com>
- *           2013      Glenn De Jonghe
- *           2014-2015 Daniel Butum <danibutum at gmail dot com>
+ * copyright 2009        Lucas Baudin <xapantu@gmail.com>
+ *           2012 - 2014 Stephen Just <stephenjust@gmail.com>
+ *           2013        Glenn De Jonghe
+ *           2014 - 2016 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stkaddons
  *
  * stkaddons is free software: you can redistribute it and/or modify
@@ -17,22 +17,20 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with stkaddons.  If not, see <http://www.gnu.org/licenses/>.
+ * along with stkaddons. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
-use Captcha\Captcha;
+Util::validateCaptchaKeysSet();
 
-$tpl = StkTemplate::get('password-reset.tpl')->assignTitle(_h('Reset Password'));
-
-// CAPTCHA
-$captcha = new Captcha();
-$captcha->setPublicKey(CAPTCHA_PUB)->setPrivateKey(CAPTCHA_PRIV);
+$tpl = StkTemplate::get('password-reset.tpl')
+    ->assignTitle(_h('Reset Password'))
+    ->addScriptIncludeWeb('https://www.google.com/recaptcha/api.js');
 
 // Fill out various templates
 $pw_res = [
     'reset_form' => [
         'display' => true,
-        'captcha' => $captcha->html(),
+        'captcha_site_key' => CAPTCHA_SITE_KEY,
     ],
     'pass_form'  => [
         'display'           => false,
@@ -53,14 +51,16 @@ switch ($_GET['action'])
         // Look up username and try to reset
         try
         {
+            if (Validate::ensureNotEmpty($_POST, ['g-recaptcha-response']))
+                throw new UserException(_h('You did not complete the reCAPTCHA field'));
+
             // Check CAPTCHA
-            $response = $captcha->check();
-            if (!$response->isValid())
+            $captcha = new \ReCaptcha\ReCaptcha(CAPTCHA_SECRET);
+            $response = $captcha->verify($_POST['g-recaptcha-response'], Util::getClientIp());
+            if (!$response->isSuccess())
             {
-                // What happens when the CAPTCHA was entered incorrectly
-                throw new UserException(
-                    "The reCAPTCHA wasn't entered correctly. Go back and try it again. (reCAPTCHA said: " . $response->getError() . ")"
-                );
+                // codes reference https://developers.google.com/recaptcha/docs/verify#error-code-reference
+                throw new UserException(_h("The reCAPTCHA wasn't entered correctly. Go back and try it again."));
             }
 
             User::recover($_POST['user'], $_POST['mail']);
@@ -94,13 +94,13 @@ switch ($_GET['action'])
         break;
 
     case 'change': // change password clicked in the 'valid' page
+        $user_id = isset($_POST['user']) ? $_POST['user'] : 0;
+        $verification_code = isset($_POST['verify']) ? $_POST['verify'] : "";
+        $pass1 = isset($_POST['pass1']) ? $_POST['pass1'] : "";
+        $pass2 = isset($_POST['pass2']) ? $_POST['pass2'] : "";
+
         try
         {
-            $user_id = isset($_POST['user']) ? $_POST['user'] : 0;
-            $verification_code = isset($_POST['verify']) ? $_POST['verify'] : "";
-            $pass1 = isset($_POST['pass1']) ? $_POST['pass1'] : "";
-            $pass2 = isset($_POST['pass2']) ? $_POST['pass2'] : "";
-
             // validate
             Verification::verify($user_id, $verification_code);
             User::validateNewPassword($pass1, $pass2);

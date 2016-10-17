@@ -19,6 +19,7 @@
  * along with stkaddons. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
+Util::validateCaptchaKeysSet();
 
 $username = empty($_POST['username']) ? null : $_POST['username'];
 $realname = empty($_POST['realname']) ? null : $_POST['realname'];
@@ -29,22 +30,8 @@ $tpl = StkTemplate::get('register.tpl')
     ->assignTitle(_h('Register'))
     ->addBootstrapValidatorLibrary()
     ->setMinify(false)
-    ->addScriptInclude('https://www.google.com/recaptcha/api.js', '');
+    ->addScriptIncludeWeb('https://www.google.com/recaptcha/api.js');
 
-$has_captcha_keys = defined('CAPTCHA_SITE_KEY') && defined('CAPTCHA_SECRET') && !empty(CAPTCHA_SITE_KEY) && !empty(CAPTCHA_SECRET);
-if (!$has_captcha_keys)
-{
-    // Display nice message to developer warning him about missing captcha keys
-    $message = <<<MSG
-<p>If you do not have keys already then visit
-<a href = "https://www.google.com/recaptcha/admin">https://www.google.com/recaptcha/admin</a> 
-to generate them. Edit the config.php file and set the respective keys in CAPTCHA_SITE_KEY and
-CAPTCHA_SECRET. Reload the page after this.</p>
-MSG;
-
-    exit(StkTemplate::get('error-page.tpl')
-        ->assign('error', ['title' => 'Add your captcha keys', 'message' => $message])->toString());
-}
 
 $register = [
     'captcha_site_key' => CAPTCHA_SITE_KEY,
@@ -70,11 +57,9 @@ switch ($action)
             if (Validate::ensureNotEmpty($_POST, ['g-recaptcha-response']))
                 throw new UserException(_h('You did not complete the reCAPTCHA field'));
 
-            $captcha_response = $_POST['g-recaptcha-response'];
+            // Check CAPTCHA
             $captcha = new \ReCaptcha\ReCaptcha(CAPTCHA_SECRET);
-
-            // check captcha
-            $response = $captcha->verify($captcha_response, Util::getClientIp());
+            $response = $captcha->verify($_POST['g-recaptcha-response'], Util::getClientIp());
             if (!$response->isSuccess())
             {
                 // codes reference https://developers.google.com/recaptcha/docs/verify#error-code-reference
