@@ -63,7 +63,8 @@ class DBConnection
     {
         try
         {
-            $this->connection = new PDO(sprintf("mysql:host=%s;dbname=%s;charset=utf8mb4", DB_HOST, DB_NAME), DB_USER, DB_PASSWORD);
+            $this->connection =
+                new PDO(sprintf("mysql:host=%s;dbname=%s;charset=utf8mb4", DB_HOST, DB_NAME), DB_USER, DB_PASSWORD);
 
             // add database PDO collector
             if (Debug::isToolbarEnabled())
@@ -73,9 +74,13 @@ class DBConnection
             }
 
             if (!$this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION))
-                throw new DBException("setAttribute ATTR_ERRMODE failed");
+            {
+                throw new DBException("setAttribute ATTR_ERRMODE failed", ErrorType::DB_SET_ATTRIBUTE);
+            }
             if (!$this->connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC))
-                throw new DBException("setAttribute ATTR_DEFAULT_FETCH_MODE failed");
+            {
+                throw new DBException("setAttribute ATTR_DEFAULT_FETCH_MODE failed", ErrorType::DB_SET_ATTRIBUTE);
+            }
         }
         catch (Exception $e)
         {
@@ -86,19 +91,23 @@ class DBConnection
     /**
      * Build the parameters for the query method
      * This method takes an array(eg: [":name" => "Daniel", "date" => "NOW()"] and builds 2 additional arrays
-     * The keys that start with a ':' are escaped (are added to the $prepared_pairs, which in turn will be parsed to PDO).
-     * The other keys that are NOT prefixed with ':' will just be constant values (no escaping will be done)
+     * The keys that start with a ':' are escaped (are added to the $prepared_pairs, which in turn will be parsed to
+     * PDO). The other keys that are NOT prefixed with ':' will just be constant values (no escaping will be done)
      *
      * @param array $fields_data        associative array that maps column to value
      * @param array $prepared_pairs     return associative array for preparing the data
      *                                  Example of output: [":name" => "Daniel"]
      * @param array $column_value_pairs associative array of column => value pairs
      *                                  Example of output: ["name" => ":name", "date" => "17 May 2014"]
-     *                                  As shown in the example above the fields that are named parameters will have the column
-     *                                  normal as the rest (the unescaped params) but the value will be the named parameter itself
+     *                                  As shown in the example above the fields that are named parameters will have
+     *                                  the column normal as the rest (the unescaped params) but the value will be the
+     *                                  named parameter itself
      */
-    private static function buildQueryParams(array $fields_data, array &$prepared_pairs, array &$column_value_pairs = [])
-    {
+    private static function buildQueryParams(
+        array $fields_data,
+        array &$prepared_pairs,
+        array &$column_value_pairs = []
+    ) {
         // In our context field = column
         foreach ($fields_data as $field => $value)
         {
@@ -222,7 +231,8 @@ class DBConnection
      *
      * @param string $query          The sql string
      * @param int    $return_type    The type of return. Use the class constants
-     * @param array  $prepared_pairs An associative array having mapping between variables for prepared statements and values
+     * @param array  $prepared_pairs An associative array having mapping between variables for prepared statements and
+     *                               values
      * @param array  $data_types     variables in prepared statement for which data type should be explicitly mentioned
      *
      * @throws DBException
@@ -307,10 +317,15 @@ class DBConnection
                 trigger_error("Database Error");
             }
 
-            throw new DBException("Database error happened, yikes!", $e->errorInfo[0]);
+            throw DBException::get("Database error happened, yikes!", ErrorType::DB_GENERIC)->setSqlErrorCode(
+                $e->errorInfo[0]
+            );
         }
 
-        throw new DBException("Unexpected reach of end of query(). Possibly return_type was invalid");
+        throw new DBException(
+            "Unexpected reach of end of query(). Possibly return_type was invalid",
+            ErrorType::DB_GENERIC
+        );
     }
 
     /**
@@ -344,7 +359,7 @@ class DBConnection
         }
 
         // include and non escaped columns, eg: date => NOW()
-        $column_value_pairs = $prepared_pairs = array();
+        $column_value_pairs = $prepared_pairs = [];
         static::buildQueryParams($fields_data, $prepared_pairs, $column_value_pairs);
 
         // build the sql query
@@ -362,8 +377,8 @@ class DBConnection
      * Perform a update on the database. Helper method
      *
      * @param string $table           the table name
-     * @param string $where_statement the complete where statement, if any prepared columns are set here, they will not be included
-     *                                in the SET SQL
+     * @param string $where_statement the complete where statement, if any prepared columns are set here, they will not
+     *                                be included in the SET SQL
      * @param array  $fields_data     associative array that maps column to value
      *                                If you do not want to prepare a column do not put ":" in front of the key
      * @param array  $data_types      associative array that maps column to param_type
@@ -387,7 +402,7 @@ class DBConnection
         foreach ($column_value_pairs as $column => $value)
         {
             // ignore updating value from the where clause
-            if ($value[0] === ":"  && Util::str_contains($where_statement, $value))
+            if ($value[0] === ":" && Util::str_contains($where_statement, $value))
             {
                 continue;
             }

@@ -42,9 +42,47 @@ class BaseException extends Exception
     {
         parent::__construct($message, $code, $previous);
     }
+
+    /**
+     * Factory method
+     * @param string $message [optional] The Exception message to throw.
+     * @param int $code [optional] The Exception code. Default error code is UNKNOWN
+     * @param Exception $previous [optional] The previous exception used for the exception chaining.
+     * @return static
+     */
+    public static function get($message = "", $code = ErrorType::UNKNOWN, Exception $previous = null)
+    {
+        return new static($message, $code, $previous);
+    }
 }
 
-class DBException extends BaseException {}
+class DBException extends BaseException
+{
+    /**
+     * SQLSTATE error code (a five characters alphanumeric identifier defined in the ANSI SQL standard).
+     * @var string
+     */
+    private $sql_error_code;
+
+    /**
+     * @return string
+     */
+    public function getSqlErrorCode()
+    {
+        return $this->sql_error_code;
+    }
+
+    /**
+     * @param string $sql_error_code
+     * @return DBException
+     */
+    public function setSqlErrorCode($sql_error_code)
+    {
+        $this->sql_error_code = $sql_error_code;
+        return $this;
+    }
+}
+
 class BugException extends BaseException {}
 
 class UserException extends BaseException {}
