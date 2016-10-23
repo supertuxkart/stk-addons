@@ -162,15 +162,12 @@ class File extends Base
         static::deleteFileFS($parent . $this->path);
     }
 
-
     /**
-     * @param string $message
-     *
-     * @throws FileException
+     * @return FileException
      */
-    protected static function throwException($message)
+    public static function getException()
     {
-        throw new FileException($message);
+        return new FileException();
     }
 
     /**

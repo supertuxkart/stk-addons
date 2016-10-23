@@ -23,9 +23,18 @@ class ErrorType extends \MyCLabs\Enum\Enum
 {
     const UNKNOWN = 0;
 
-    const DB_CONNECT = 32; // can not connect to the database
-    const DB_SET_ATTRIBUTE = 33; // cannot set an attribute
-    const DB_GENERIC = 34; // generic error happened
+    const DB_CONNECT = 32;          // can not connect to the database
+    const DB_SET_ATTRIBUTE = 33;    // cannot set an attribute
+    const DB_GENERIC = 34;          // generic error happened
+    const DB_FIELD_EXISTS = 35;     // error trying to see if a value exists in the database see Base::existsField
+    const DB_GET_ROW = 36;          // error trying to get a result row from the database, see Base::getFromField
+    const DB_EMPTY_RESULT = 37;     // empty result returned from database
+    const DB_GET_ALL = 38;          // error trying to get all values from database, see Base::getAllFromTable
+
+    const USER_DB_EXCEPTION = 64;           // a database exception occurred while querying some user data
+    const USER_ADDON_TYPE_NOT_EXIST = 65;   // addon type does not exist for user
+
+    const VALIDATE_NOT_IN_CHAR_RANGE = 512;
 }
 
 
@@ -53,6 +62,46 @@ class BaseException extends Exception
     public static function get($message = "", $code = ErrorType::UNKNOWN, Exception $previous = null)
     {
         return new static($message, $code, $previous);
+    }
+
+    /**
+     * @param mixed $message
+     * @return static
+     */
+    public function setMessage($message)
+    {
+        $this->message = $message;
+        return $this;
+    }
+
+    /**
+     * @param mixed $code
+     * @return static
+     */
+    public function setCode($code)
+    {
+        $this->code = $code;
+        return $this;
+    }
+
+    /**
+     * @param mixed $file
+     * @return static
+     */
+    public function setFile($file)
+    {
+        $this->file = $file;
+        return $this;
+    }
+
+    /**
+     * @param mixed $line
+     * @return static
+     */
+    public function setLine($line)
+    {
+        $this->line = $line;
+        return $this;
     }
 }
 

@@ -240,7 +240,10 @@ class User extends Base
     {
         if (!Addon::isAllowedType($type))
         {
-            throw new UserException(sprintf("Addon type=%s does not exist", Addon::typeToString($type)));
+            throw new UserException(
+                sprintf("Addon type=%s does not exist", Addon::typeToString($type)),
+                ErrorType::USER_ADDON_TYPE_NOT_EXIST
+            );
         }
 
         try
@@ -262,7 +265,7 @@ class User extends Base
         }
         catch (DBException $e)
         {
-            throw new UserException(exception_message_db(_(" get the addons for a user")));
+            throw new UserException(exception_message_db(_("get the addons for a user")), ErrorType::USER_DB_EXCEPTION);
         }
 
         return $addons;
@@ -287,13 +290,11 @@ class User extends Base
     }
 
     /**
-     * @param string $message
-     *
-     * @throws UserException
+     * @return UserException
      */
-    protected static function throwException($message)
+    public static function getException()
     {
-        throw new UserException($message);
+        return  new UserException();
     }
 
     /**
@@ -325,7 +326,7 @@ class User extends Base
         catch (UserException $e)
         {
             static::logout();
-            throw new UserException($e->getMessage());
+            throw $e;
         }
 
         $id = $user->getId();

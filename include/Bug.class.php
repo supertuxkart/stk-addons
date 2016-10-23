@@ -790,13 +790,11 @@ class Bug extends Base
     }
 
     /**
-     * @param string $message
-     *
-     * @throws BugException
+     * @return BugException
      */
-    protected static function throwException($message)
+    public static function getException()
     {
-        throw new BugException($message);
+        return new BugException();
     }
 
     /**

@@ -1246,13 +1246,11 @@ class Addon extends Base
     }
 
     /**
-     * @param string $message
-     *
-     * @throws AddonException
+     * @return AddonException
      */
-    protected static function throwException($message)
+    public static function getException()
     {
-        throw new AddonException($message);
+        return new AddonException();
     }
 
     /**

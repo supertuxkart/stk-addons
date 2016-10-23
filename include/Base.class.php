@@ -1,7 +1,8 @@
 <?php
+
 /**
- * copyright 2012 Stephen Just <stephenjust@users.sf.net>
- *           2014 Daniel Butum <danibutum at gmail dot com>
+ * copyright 2012        Stephen Just <stephenjust@users.sf.net>
+ *           2014 - 2016 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stk-addons.
  *
  * stk-addons is free software: you can redistribute it and/or modify
@@ -17,22 +18,31 @@
  * You should have received a copy of the GNU General Public License
  * along with stk-addons. If not, see <http://www.gnu.org/licenses/>.
  */
+interface IBaseException
+{
+    /**
+     * Get this class exception, this is overridden in classes who implement this
+     * @return BaseException
+     */
+    static function getException();
+}
 
 /**
  * Abstract base class to all primitives
  */
-abstract class Base
+abstract class Base implements IBaseException
 {
     /**
      * Throw a custom exception
      *
      * @param string $message
+     * @param int    $code [optional] The Exception code. Default error code is UNKNOWN
      *
      * @throws BaseException
      */
-    protected static function throwException($message)
+    private static final function throwException($message, $code = ErrorType::UNKNOWN)
     {
-        throw new BaseException($message);
+        throw static::getException()->setMessage($message)->setCode($code);
     }
 
     /**
@@ -71,8 +81,9 @@ abstract class Base
 
         if ($length < $min_field || $length > $max_field)
         {
-            $message = sprintf(_h("The %s must be between %s and %s characters long"), $field_name, $min_field, $max_field);
-            static::throwException($message);
+            $message =
+                sprintf(_h("The %s must be between %s and %s characters long"), $field_name, $min_field, $max_field);
+            static::throwException($message, ErrorType::VALIDATE_NOT_IN_CHAR_RANGE);
         }
     }
 
@@ -112,15 +123,15 @@ abstract class Base
                 [$prepared_field => $value_type] // bind value
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
-            static::throwException(exception_message_db(_("retrieve the singleton")));
+            static::throwException(exception_message_db(_("retrieve the singleton")), ErrorType::DB_GET_ROW);
         }
 
         // empty result
         if (!$data)
         {
-            static::throwException($empty_message);
+            static::throwException($empty_message, ErrorType::DB_EMPTY_RESULT);
         }
 
         return $data;
@@ -148,9 +159,12 @@ abstract class Base
                 [":" . $field => $value_type]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
-            static::throwException(exception_message_db(sprintf(_("see if a '%s' exists."), $table)));
+            static::throwException(
+                exception_message_db(sprintf(_("see if a '%s' exists."), $table)),
+                ErrorType::DB_FIELD_EXISTS
+            );
         }
 
         return $count !== 0;
@@ -195,9 +209,9 @@ abstract class Base
                 $data = DBConnection::get()->query($query, DBConnection::FETCH_ALL);
             }
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
-            static::throwException(exception_message_db(_("select all data from table")));
+            static::throwException(exception_message_db(_("select all data from table")), ErrorType::DB_GET_ALL);
         }
 
         return $data;
