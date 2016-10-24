@@ -22,7 +22,7 @@
 /**
  * Class User
  */
-class User extends Base
+class User extends Base implements IAsXML
 {
     const MIN_PASSWORD = 8;
 
@@ -294,7 +294,7 @@ class User extends Base
      */
     public static function getException()
     {
-        return  new UserException();
+        return new UserException();
     }
 
     /**

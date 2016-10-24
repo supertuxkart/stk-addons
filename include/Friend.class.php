@@ -21,7 +21,7 @@
 /**
  * Friend class
  */
-class Friend
+class Friend implements IAsXML
 {
     /**
      * @var int

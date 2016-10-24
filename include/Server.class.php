@@ -21,7 +21,7 @@
 /**
  * Server class
  */
-class Server
+class Server implements IAsXML
 {
     /**
      * The server id

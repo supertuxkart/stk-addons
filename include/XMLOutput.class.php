@@ -1,7 +1,7 @@
 <?php
 /**
  * copyright 2013      Glenn De Jonghe
- *           2014-2015 Daniel Butum <danibutum at gmail dot com>
+ *           2014-2016 Daniel Butum <danibutum at gmail dot com>
  * This file is part of SuperTuxKart
  *
  * stk-addons is free software: you can redistribute it and/or modify
@@ -17,6 +17,15 @@
  * You should have received a copy of the GNU General Public License
  * along with stk-addons. If not, see <http://www.gnu.org/licenses/>.
  */
+
+interface IAsXML
+{
+    /**
+     * Get the object as a XML string
+     * @return mixed
+     */
+    function asXML();
+}
 
 /**
  * XMLOutput class, handles all the XML writing behaviour for the API
