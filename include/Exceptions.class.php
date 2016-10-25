@@ -48,20 +48,23 @@ class ErrorType extends \MyCLabs\Enum\Enum
     const USER_SENDING_CREATE_EMAIL = 78;   // while sending create account email
     const USER_INACTIVE_ACCOUNT = 79;       // account is not active
 
-    const VALIDATE_NOT_IN_CHAR_RANGE = 512;             // string is not in min/max char string range
-    const VALIDATE_USERNAME_NOT_EXISTS = 513;           // username does not exist
-    const VALIDATE_USERNAME_TAKEN = 514;                // username is already taken (it exists *ahem*)
-    const VALIDATE_EMAIL_NOT_EXISTS = 515;              // email does not exist
-    const VALIDATE_EMAIL_TAKEN = 516;                   // email is already taken
-    const VALIDATE_USERNAME_OR_PASSWORD = 517;          // username or password is invalid
-    const VALIDATE_USERNAME_AND_EMAIL = 518;            // username and email not found
-    const VALIDATE_MULTIPLE_USERNAME_AND_EMAIL = 519;   // multiple accounts with the same username and email combination
-    const VALIDATE_USERNAME = 520;                      // username is not made of proper length and alphanumeric chars
-    const VALIDATE_EMAIL_LONG = 521;                    // email too long
-    const VALIDATE_EMAIL = 522;                         // not a valid email address
-    const VALIDATE_PASSWORDS_MATCH = 523;               // passwords do not match
-    const VALIDATE_HOMEPAGE_URL = 524;                  // homepage is not a valid url
-    const VALIDATE_HOMEPAGE_LONG = 525;                 // homepage is too long
+    const VALIDATE_NOT_IN_CHAR_RANGE = 500;             // string is not in min/max char string range
+    const VALIDATE_PASSWORDS_MATCH = 501;               // passwords do not match
+
+    const VALIDATE_USERNAME = 530;                      // username is not made of proper length and alphanumeric chars
+    const VALIDATE_USERNAME_NOT_EXISTS = 531;           // username does not exist
+    const VALIDATE_USERNAME_TAKEN = 532;                // username is already taken (it exists *ahem*)
+    const VALIDATE_USERNAME_OR_PASSWORD = 533;          // username or password is invalid
+    const VALIDATE_USERNAME_AND_EMAIL = 534;            // username and email not found
+    const VALIDATE_MULTIPLE_USERNAME_AND_EMAIL = 535;   // multiple accounts with the same username and email combination
+
+    const VALIDATE_EMAIL_NOT_EXISTS = 540;              // email does not exist
+    const VALIDATE_EMAIL_TAKEN = 541;                   // email is already taken
+    const VALIDATE_EMAIL_LONG = 542;                    // email too long
+    const VALIDATE_EMAIL = 543;                         // not a valid email address
+
+    const VALIDATE_HOMEPAGE_URL = 550;                  // homepage is not a valid url
+    const VALIDATE_HOMEPAGE_LONG = 551;                 // homepage is too long
 }
 
 
