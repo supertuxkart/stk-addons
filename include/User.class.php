@@ -414,7 +414,7 @@ class User extends Base implements IAsXML
         }
         catch (DBException $e)
         {
-            throw new UserException(exception_message_db(_("validate your session")));
+            throw new UserException(exception_message_db(_("validate your session")), ErrorType::USER_VALID_SESSION);
         }
 
         if ($count !== 1)
@@ -631,7 +631,7 @@ class User extends Base implements IAsXML
         }
         catch (DBException $e)
         {
-            throw new UserException(exception_message_db(_('perform your search query')));
+            throw new UserException(exception_message_db(_('perform your search query')), ErrorType::USER_SEARCH);
         }
 
         $matched_users = [];
@@ -808,7 +808,7 @@ class User extends Base implements IAsXML
         }
         catch (DBException $e)
         {
-            throw new UserException(exception_message_db(_("count the number of users")));
+            throw new UserException(exception_message_db(_("count the number of users")), ErrorType::USER_COUNT);
         }
 
         return $count;
@@ -847,7 +847,10 @@ class User extends Base implements IAsXML
         $can_edit = static::hasPermissionOnRole($user->getRole());
         if (!$is_owner && !$can_edit)
         {
-            throw new UserException(_h("You do not have the permission to update the profile"));
+            throw new UserException(
+                _h("You do not have the permission to update the profile"),
+                ErrorType::USER_INVALID_PERMISSION
+            );
         }
 
         // update session
@@ -868,7 +871,7 @@ class User extends Base implements IAsXML
         }
         catch (DBException $e)
         {
-            throw new UserException(exception_message_db(_('update your profile')));
+            throw new UserException(exception_message_db(_('update your profile')), ErrorType::USER_UPDATE_PROFILE);
         }
     }
 
@@ -887,13 +890,16 @@ class User extends Base implements IAsXML
         // validate
         if (!AccessControl::isRole($role_name))
         {
-            throw new UserException(_h("The specified role is not valid"));
+            throw new UserException(_h("The specified role is not valid"), ErrorType::USER_INVALID_ROLE);
         }
 
         $canEdit = static::hasPermissionOnRole($role_name);
         if (!$canEdit)
         {
-            throw new UserException(_h("You do not have the permission to edit the role"));
+            throw new UserException(
+                _h("You do not have the permission to edit the role"),
+                ErrorType::USER_INVALID_PERMISSION
+            );
         }
 
         // also does validation
@@ -902,7 +908,7 @@ class User extends Base implements IAsXML
         // can not edit your own role
         if ($user->getId() === static::getLoggedId())
         {
-            throw new UserException(_h("You can not edit your own role"));
+            throw new UserException(_h("You can not edit your own role"), ErrorType::USER_INVALID_PERMISSION);
         }
 
         // update, manually set the active status, the verification will be cleaned by a cron job, see Verification::cron
@@ -925,7 +931,7 @@ class User extends Base implements IAsXML
         }
         catch (DBException $e)
         {
-            throw new UserException(exception_message_db(_('update your role')));
+            throw new UserException(exception_message_db(_('update your role')), ErrorType::USER_UPDATE_ROLE);
         }
     }
 
@@ -967,7 +973,10 @@ class User extends Base implements IAsXML
         catch (DBException $e)
         {
             static::logout();
-            throw new UserException(exception_message_db(_('record the last login time')));
+            throw new UserException(
+                exception_message_db(_('record the last login time')),
+                ErrorType::USER_UPDATE_LAST_LOGIN
+            );
         }
 
         return $user['date_login'];
@@ -1000,12 +1009,12 @@ class User extends Base implements IAsXML
         }
         catch (DBException $e)
         {
-            throw new UserException(exception_message_db(_('change your password')));
+            throw new UserException(exception_message_db(_('change your password')), ErrorType::USER_CHANGE_PASSWORD);
         }
 
         if (!$count)
         {
-            throw new UserException("Change password no rows affected");
+            throw new UserException("Change password no rows affected", ErrorType::USER_CHANGE_PASSWORD);
         }
     }
 
@@ -1032,7 +1041,10 @@ class User extends Base implements IAsXML
             // only user can change his password
             if ($user->getId() !== $user_id)
             {
-                throw new UserException(_h('You do not have the permission to change the password'));
+                throw new UserException(
+                    _h('You do not have the permission to change the password'),
+                    ErrorType::USER_INVALID_PERMISSION
+                );
             }
 
             static::changePassword($user_id, $new_password);
@@ -1042,7 +1054,7 @@ class User extends Base implements IAsXML
         catch (DBException $e)
         {
             DBConnection::get()->rollback();
-            throw new UserException(exception_message_db(_('change your password')));
+            throw new UserException(exception_message_db(_('change your password')), ErrorType::USER_CHANGE_PASSWORD);
         }
     }
 
@@ -1075,7 +1087,10 @@ class User extends Base implements IAsXML
         }
         catch (DBException $e)
         {
-            throw new UserException(exception_message_db(_('activate your user account')));
+            throw new UserException(
+                exception_message_db(_('activate your user account')),
+                ErrorType::USER_ACTIVATE_ACCOUNT
+            );
         }
 
         Verification::delete($user_id);
@@ -1115,13 +1130,17 @@ class User extends Base implements IAsXML
             catch (SMailException $e)
             {
                 Log::newEvent('Password reset email for "' . $username . '" could not be sent.');
-                throw new UserException($e->getMessage() . ' ' . _h('Please contact a website administrator.'));
+                throw new UserException(
+                    $e->getMessage() . ' ' . _h('Please contact a website administrator.'),
+                    ErrorType::USER_SENDING_RECOVER_EMAIL
+                );
             }
         }
         catch (DBException $e)
         {
             throw new UserException(
-                exception_message_db(_('validate your username and email address for password reset'))
+                exception_message_db(_('validate your username and email address for password reset')),
+                ErrorType::USER_SENDING_RECOVER_EMAIL
             );
         }
 
@@ -1164,11 +1183,14 @@ class User extends Base implements IAsXML
         }
         catch (DBException $e)
         {
-            throw new UserException(exception_message_db(_('validate your username')));
+            throw new UserException(
+                exception_message_db(_('validate your username')),
+                ErrorType::VALIDATE_USERNAME_NOT_EXISTS
+            );
         }
         if ($result)
         {
-            throw new UserException(_h('This username is already taken.'));
+            throw new UserException(_h('This username is already taken.'), ErrorType::VALIDATE_USERNAME_TAKEN);
         }
 
         // Make sure the email address is unique
@@ -1184,11 +1206,14 @@ class User extends Base implements IAsXML
         }
         catch (DBException $e)
         {
-            throw new UserException(exception_message_db(_('validate your email address')));
+            throw new UserException(
+                exception_message_db(_('validate your email address')),
+                ErrorType::VALIDATE_EMAIL_NOT_EXISTS
+            );
         }
         if ($result)
         {
-            throw new UserException(_h('This email address is already taken.'));
+            throw new UserException(_h('This email address is already taken.'), ErrorType::VALIDATE_EMAIL_TAKEN);
         }
 
         // No exception occurred - continue with registration
@@ -1222,12 +1247,15 @@ class User extends Base implements IAsXML
             catch (SMailException $e)
             {
                 Log::newEvent("Registration email for user '$username' with id '$user_id' failed.");
-                throw new UserException($e->getMessage() . ' ' . _h('Please contact a website administrator.'));
+                throw new UserException(
+                    $e->getMessage() . ' ' . _h('Please contact a website administrator.'),
+                    ErrorType::USER_SENDING_CREATE_EMAIL
+                );
             }
         }
         catch (DBException $e)
         {
-            throw new UserException(exception_message_db(_('create your account')));
+            throw new UserException(exception_message_db(_('create your account')), ErrorType::USER_CREATE_ACCOUNT);
         }
 
         Log::newEvent("Registration submitted for user '$username' with id '$user_id'.");
@@ -1265,7 +1293,7 @@ class User extends Base implements IAsXML
 
         if (!$user->isActive())
         {
-            throw new UserException(_h("Your account is not active"));
+            throw new UserException(_h("Your account is not active"), ErrorType::USER_INACTIVE_ACCOUNT);
         }
 
         return $user;
@@ -1304,7 +1332,7 @@ class User extends Base implements IAsXML
         }
         catch (UserException $e)
         {
-            throw new UserException(_h("Username or password is invalid"));
+            throw new UserException(_h("Username or password is invalid"), ErrorType::VALIDATE_USERNAME_OR_PASSWORD);
         }
 
         // the field value exists, so something about the user is true
@@ -1314,7 +1342,7 @@ class User extends Base implements IAsXML
         $salt = Util::getSaltFromPassword($db_password_hash);
         if (Util::getPasswordHash($password, $salt) !== $db_password_hash)
         {
-            throw new UserException(_h("Username or password is invalid"));
+            throw new UserException(_h("Username or password is invalid"), ErrorType::VALIDATE_USERNAME_OR_PASSWORD);
         }
 
         return $user;
@@ -1346,11 +1374,17 @@ class User extends Base implements IAsXML
 
         if (!$users)
         {
-            throw new UserException(_h('Username and email address combination not found.'));
+            throw new UserException(
+                _h('Username and email address combination not found.'),
+                ErrorType::VALIDATE_USERNAME_AND_EMAIL
+            );
         }
         if (count($users) > 1)
         {
-            throw new UserException(_h("Multiple accounts with the same username and email combination."));
+            throw new UserException(
+                _h("Multiple accounts with the same username and email combination."),
+                ErrorType::VALIDATE_MULTIPLE_USERNAME_AND_EMAIL
+            );
         }
 
         return $users[0]['id'];
@@ -1380,7 +1414,8 @@ class User extends Base implements IAsXML
         if (!preg_match("/^[a-z0-9\.\-\_$space]+$/i", $username))
         {
             throw new UserException(
-                _h('Your username can only contain alphanumeric characters, periods, dashes and underscores')
+                _h('Your username can only contain alphanumeric characters, periods, dashes and underscores'),
+                ErrorType::VALIDATE_USERNAME
             );
         }
     }
@@ -1412,7 +1447,7 @@ class User extends Base implements IAsXML
         // check if they match
         if ($new_password !== $new_password_verify)
         {
-            throw new UserException(_h('Passwords do not match'));
+            throw new UserException(_h('Passwords do not match'), ErrorType::VALIDATE_PASSWORDS_MATCH);
         }
     }
 
@@ -1439,12 +1474,15 @@ class User extends Base implements IAsXML
     {
         if (!Util::isEmail($email))
         {
-            throw new UserException(h(sprintf(_('"%s" is not a valid email address.'), $email)));
+            throw new UserException(
+                h(sprintf(_('"%s" is not a valid email address.'), $email)),
+                ErrorType::VALIDATE_EMAIL
+            );
         }
 
         if (mb_strlen($email) > static::MAX_EMAIL)
         {
-            throw new UserException(_h("Email is to long."));
+            throw new UserException(_h("Email is to long."), ErrorType::VALIDATE_EMAIL_LONG);
         }
     }
 
@@ -1459,12 +1497,12 @@ class User extends Base implements IAsXML
     {
         if (!Util::isURL($homepage))
         {
-            throw new UserException(_h("Homepage url is not valid"));
+            throw new UserException(_h("Homepage url is not valid"), ErrorType::VALIDATE_HOMEPAGE_URL);
         }
 
         if (mb_strlen($homepage) > static::MAX_HOMEPAGE)
         {
-            throw new UserException(_h("Homepage is to long."));
+            throw new UserException(_h("Homepage is to long."), ErrorType::VALIDATE_HOMEPAGE_LONG);
         }
     }
 }

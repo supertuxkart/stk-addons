@@ -26,15 +26,42 @@ class ErrorType extends \MyCLabs\Enum\Enum
     const DB_CONNECT = 32;          // can not connect to the database
     const DB_SET_ATTRIBUTE = 33;    // cannot set an attribute
     const DB_GENERIC = 34;          // generic error happened
-    const DB_FIELD_EXISTS = 35;     // error trying to see if a value exists in the database see Base::existsField
-    const DB_GET_ROW = 36;          // error trying to get a result row from the database, see Base::getFromField
+    const DB_FIELD_EXISTS = 35;     // trying to see if a value exists in the database see Base::existsField
+    const DB_GET_ROW = 36;          // trying to get a result row from the database, see Base::getFromField
     const DB_EMPTY_RESULT = 37;     // empty result returned from database
-    const DB_GET_ALL = 38;          // error trying to get all values from database, see Base::getAllFromTable
+    const DB_GET_ALL = 38;          // trying to get all values from database, see Base::getAllFromTable
 
-    const USER_DB_EXCEPTION = 64;           // a database exception occurred while querying some user data
+    const USER_DB_EXCEPTION = 64;           // a generic database exception occurred while querying some user data
     const USER_ADDON_TYPE_NOT_EXIST = 65;   // addon type does not exist for user
+    const USER_VALID_SESSION = 66;          // invalid session
+    const USER_SEARCH = 67;                 // while user searching
+    const USER_COUNT = 68;                  // while counting number of users
+    const USER_INVALID_PERMISSION = 69;     // invalid permission
+    const USER_UPDATE_PROFILE = 70;         // while updating profile
+    const USER_INVALID_ROLE = 71;           // invalid role
+    const USER_UPDATE_ROLE = 72;            // while updating role
+    const USER_UPDATE_LAST_LOGIN = 73;      // update last login
+    const USER_CHANGE_PASSWORD = 74;        // while changing password
+    const USER_ACTIVATE_ACCOUNT = 75;       // while activating account
+    const USER_SENDING_RECOVER_EMAIL = 76;  // sending recover email
+    const USER_CREATE_ACCOUNT = 77;         // while creating account
+    const USER_SENDING_CREATE_EMAIL = 78;   // while sending create account email
+    const USER_INACTIVE_ACCOUNT = 79;       // account is not active
 
-    const VALIDATE_NOT_IN_CHAR_RANGE = 512;
+    const VALIDATE_NOT_IN_CHAR_RANGE = 512;             // string is not in min/max char string range
+    const VALIDATE_USERNAME_NOT_EXISTS = 513;           // username does not exist
+    const VALIDATE_USERNAME_TAKEN = 514;                // username is already taken (it exists *ahem*)
+    const VALIDATE_EMAIL_NOT_EXISTS = 515;              // email does not exist
+    const VALIDATE_EMAIL_TAKEN = 516;                   // email is already taken
+    const VALIDATE_USERNAME_OR_PASSWORD = 517;          // username or password is invalid
+    const VALIDATE_USERNAME_AND_EMAIL = 518;            // username and email not found
+    const VALIDATE_MULTIPLE_USERNAME_AND_EMAIL = 519;   // multiple accounts with the same username and email combination
+    const VALIDATE_USERNAME = 520;                      // username is not made of proper length and alphanumeric chars
+    const VALIDATE_EMAIL_LONG = 521;                    // email too long
+    const VALIDATE_EMAIL = 522;                         // not a valid email address
+    const VALIDATE_PASSWORDS_MATCH = 523;               // passwords do not match
+    const VALIDATE_HOMEPAGE_URL = 524;                  // homepage is not a valid url
+    const VALIDATE_HOMEPAGE_LONG = 525;                 // homepage is too long
 }
 
 

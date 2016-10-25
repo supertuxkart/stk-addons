@@ -43,10 +43,12 @@ class XMLOutput extends XMLWriter
 
     /**
      * Insert XML as a string.
+     * @param string $xml_string the xml string to write
+     * @return bool
      */
-    public function insert($xml)
+    public function insert($xml_string)
     {
-        return $this->writeRaw($xml);
+        return $this->writeRaw($xml_string);
     }
 
     /**
