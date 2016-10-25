@@ -1,4 +1,5 @@
 <?php
+
 /**
  * copyright 2015 - 2016 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stk-addons.
@@ -16,11 +17,31 @@
  * You should have received a copy of the GNU General Public License
  * along with stk-addons. If not, see <http://www.gnu.org/licenses/>.
  */
-
 class ExceptionsTest extends PHPUnit_Framework_TestCase
 {
+    public function testUniqueConstantValues()
+    {
+        $array = ErrorType::toArray();
+        $map = [];
+        foreach ($array as $key => $value)
+        {
+            // already exists, NOT unique!
+            if (isset($map[$value]))
+            {
+                $this->fail(
+                    sprintf("Enum ErrorType has a duplicate key value, %s is the same as %s", $key, $map[$value])
+                );
+            }
+            else
+            {
+                $map[$value] = $key;
+            }
+        }
+    }
+
     /**
      * @param $exception BaseException
+     *
      * @dataProvider providerAllExceptions
      */
     public function testThrowExceptionWithCode($exception)
@@ -41,6 +62,7 @@ class ExceptionsTest extends PHPUnit_Framework_TestCase
 
     /**
      * @param $exception BaseException
+     *
      * @dataProvider providerAllExceptions
      */
     public function testThrowExceptionWithoutCode($exception)
