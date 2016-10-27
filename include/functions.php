@@ -68,6 +68,7 @@ function exit_json_success($message, array $other_values = [])
  * Get the default exception message when something is wrong with the database
  *
  * @param string $message
+ *
  * @return string
  */
 function exception_message_db($message)

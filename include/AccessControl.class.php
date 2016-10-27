@@ -141,7 +141,7 @@ class AccessControl
         {
             DBConnection::get()->insert("roles", [":name" => $role_name]);
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new AccessControlException(exception_message_db('add a role'));
         }
@@ -182,7 +182,7 @@ class AccessControl
                 ]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new AccessControlException(exception_message_db('add a role'));
         }
@@ -210,7 +210,7 @@ class AccessControl
         {
             $count = DBConnection::get()->count("users", "`role_id` = :role_id", [":role_id" => $role_id]);
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new AccessControlException(exception_message_db("count users"));
         }
@@ -225,7 +225,7 @@ class AccessControl
         {
             DBConnection::get()->delete("roles", "`id` = :id", [":id" => $role_id]);
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new AccessControlException(exception_message_db("delete a role"));
         }
@@ -268,7 +268,7 @@ class AccessControl
                 DBConnection::FETCH_ALL
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new AccessControlException(exception_message_db(_('retrieve roles')));
         }
@@ -333,7 +333,7 @@ class AccessControl
                 DBConnection::FETCH_ALL
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new AccessControlException(exception_message_db(_('retrieve permissions')));
         }
@@ -396,7 +396,7 @@ class AccessControl
                 [":role_id" => DBConnection::PARAM_INT]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new AccessControlException(exception_message_db(_('clean the role permissions')));
         }
@@ -413,7 +413,7 @@ class AccessControl
                 DBConnection::NOTHING
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new AccessControlException(exception_message_db(_('insert new permissions')));
         }

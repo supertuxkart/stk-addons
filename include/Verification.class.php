@@ -48,15 +48,17 @@ class Verification
                 [':user_id' => DBConnection::PARAM_INT]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new VerificationException(exception_message_db(_('validate verification information')));
         }
         if ($count !== 1)
         {
-            throw new VerificationException(_h(
-                "Verification failed. Either the supplied user doesn't exist, the account doesn't need verification (anymore), or the verification code is incorrect."
-            ));
+            throw new VerificationException(
+                _h(
+                    "Verification failed. Either the supplied user doesn't exist, the account doesn't need verification (anymore), or the verification code is incorrect."
+                )
+            );
         }
     }
 
@@ -78,7 +80,7 @@ class Verification
                 [':user_id' => DBConnection::PARAM_INT]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new VerificationException(exception_message_db(_("delete verification entry")));
         }
@@ -115,7 +117,7 @@ class Verification
                 [':user_id' => DBConnection::PARAM_INT]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new VerificationException(exception_message_db(_("generate verification entry")));
         }
@@ -151,7 +153,7 @@ class Verification
             );
 
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new VerificationException($e->getMessage());
         }
@@ -174,7 +176,7 @@ class Verification
             );
 
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new VerificationException($e->getMessage());
         }

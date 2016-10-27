@@ -142,7 +142,7 @@ class Bug extends Base
                 [":bug_id" => $this->id]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new BugException(exception_message_db(_("fetch bug comments")));
         }
@@ -339,7 +339,11 @@ class Bug extends Base
      */
     public static function getAll($limit = -1, $current_page = 1)
     {
-        return static::getAllFromTable("SELECT * FROM " . DB_PREFIX . "bugs ORDER BY `date_edit` DESC, `id` ASC", $limit, $current_page);
+        return static::getAllFromTable(
+            "SELECT * FROM " . DB_PREFIX . "bugs ORDER BY `date_edit` DESC, `id` ASC",
+            $limit,
+            $current_page
+        );
     }
 
     /**
@@ -367,7 +371,7 @@ class Bug extends Base
                 [":id" => DBConnection::PARAM_INT]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new BugException(exception_message_db(_("get a bug record")));
         }
@@ -400,7 +404,7 @@ class Bug extends Base
                 [":id" => DBConnection::PARAM_INT]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new BugException(exception_message_db(_("fetch a bug comments data")));
         }
@@ -431,7 +435,8 @@ class Bug extends Base
             throw new BugException(_h("The search term is empty"));
         }
 
-        $query = "SELECT id, addon_id, title, date_edit, date_close, close_id, close_reason FROM `" . DB_PREFIX . "bugs`";
+        $query =
+            "SELECT id, addon_id, title, date_edit, date_close, close_id, close_reason FROM `" . DB_PREFIX . "bugs`";
 
         // search in description
         if ($search_description)
@@ -473,7 +478,7 @@ class Bug extends Base
             );
 
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new BugException(exception_message_db(_("search bugs")));
         }
@@ -519,7 +524,7 @@ class Bug extends Base
                 ]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new BugException(exception_message_db(_("create a bug")));
         }
@@ -562,7 +567,7 @@ class Bug extends Base
                 ]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new BugException(exception_message_db(_("create a bug comment")));
         }
@@ -610,7 +615,7 @@ class Bug extends Base
                 [":id" => DBConnection::PARAM_INT]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new BugException(exception_message_db(_("update a bug")));
         }
@@ -653,7 +658,7 @@ class Bug extends Base
                 [":id" => DBConnection::PARAM_INT]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new BugException(exception_message_db(_("update a bug comment")));
         }
@@ -706,7 +711,7 @@ class Bug extends Base
                 ]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new BugException(exception_message_db(_("close a bug")));
         }
@@ -744,7 +749,7 @@ class Bug extends Base
                 [":id" => DBConnection::PARAM_INT]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new BugException(exception_message_db(_("delete a bug")));
         }
@@ -783,7 +788,7 @@ class Bug extends Base
                 [":id" => DBConnection::PARAM_INT]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new BugException(exception_message_db(_("delete a bug comment")));
         }
@@ -847,6 +852,11 @@ class Bug extends Base
      */
     public static function validateCloseReason($close_reason)
     {
-        static::validateFieldLength(_h("close reason"), $close_reason, static::MIN_CLOSE_REASON, static::MAX_CLOSE_REASON);
+        static::validateFieldLength(
+            _h("close reason"),
+            $close_reason,
+            static::MIN_CLOSE_REASON,
+            static::MAX_CLOSE_REASON
+        );
     }
 }

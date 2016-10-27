@@ -123,7 +123,7 @@ class ClientSession
                 ]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new ClientSessionException(exception_message_db(_('stop a server')));
         }
@@ -174,7 +174,7 @@ class ClientSession
 
             DBConnection::get()->commit();
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             DBConnection::get()->rollback();
             throw new ClientSessionException(exception_message_db(_('fetch notifications')));
@@ -217,7 +217,7 @@ class ClientSession
                 [':peerid' => DBConnection::PARAM_INT]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new ClientSessionException(exception_message_db(_('get a peer\'s public address.')));
         }
@@ -280,7 +280,7 @@ class ClientSession
             {
                 return [];
             }
-                
+
             $connection_requests = DBConnection::get()->query(
                 "SELECT s.user_id, c.ip, c.private_port, c.port
                 FROM `" . DB_PREFIX . "server_conn` s
@@ -315,7 +315,7 @@ class ClientSession
                 // TODO Perhaps check if $count and $index are equal
             }
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new ClientSessionException(exception_message_db(_('fetch server connection requests')));
         }
@@ -386,7 +386,7 @@ class ClientSession
                 [':user_id' => DBConnection::PARAM_INT]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new ClientSessionExpiredException(exception_message_db(_('to sign out')));
         }
@@ -427,7 +427,7 @@ class ClientSession
 
             DBConnection::get()->commit();
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new ClientSessionExpiredException(exception_message_db(_('log out')));
         }
@@ -459,7 +459,7 @@ class ClientSession
                 [':user_id' => DBConnection::PARAM_INT, ':server_id' => DBConnection::PARAM_INT]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new ClientSessionConnectException(exception_message_db(_('request a server connection')));
         }
@@ -507,7 +507,7 @@ class ClientSession
                 [':user_id' => DBConnection::PARAM_INT, ':server_id' => DBConnection::PARAM_INT]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new ClientSessionConnectException(exception_message_db(_('quick join a server')));
         }
@@ -552,7 +552,7 @@ class ClientSession
                 ]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new ClientSessionException(exception_message_db(_('cast your host vote')));
         }
@@ -590,7 +590,7 @@ class ClientSession
                 ]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new ClientSessionException(exception_message_db(_('update your status')));
         }
@@ -634,7 +634,7 @@ class ClientSession
 
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new ClientSessionException(exception_message_db(_('set your public address')));
         }
@@ -669,7 +669,7 @@ class ClientSession
                 [':user_id' => DBConnection::PARAM_INT]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new ClientSessionException(exception_message_db(_('unset your public address')));
         }
@@ -708,7 +708,7 @@ class ClientSession
                 [':user_id' => DBConnection::PARAM_INT]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new ClientSessionException(exception_message_db(_('verify session')));
         }
@@ -751,7 +751,7 @@ class ClientSession
         {
             $user = User::validateCredentials($password, $username, User::CREDENTIAL_USERNAME, true);
         }
-        catch(UserException $e)
+        catch (UserException $e)
         {
             throw new ClientSessionConnectException($e->getMessage());
         }
@@ -781,7 +781,7 @@ class ClientSession
             }
             User::updateLoginTime($user_id);
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new ClientSessionConnectException(exception_message_db(_('create your session')));
         }
@@ -820,7 +820,7 @@ class ClientSession
                 ]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new ClientSessionException($e->getMessage());
         }
@@ -838,7 +838,7 @@ class ClientSession
                 [":seconds" => DBConnection::PARAM_INT]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new ClientSessionException($e->getMessage());
         }

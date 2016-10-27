@@ -1,4 +1,5 @@
 <?php
+
 /**
  * copyright 2013      Glenn De Jonghe
  *           2014-2016 Daniel Butum <danibutum at gmail dot com>
@@ -17,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with stk-addons. If not, see <http://www.gnu.org/licenses/>.
  */
-
 interface IAsXML
 {
     /**
@@ -43,7 +43,9 @@ class XMLOutput extends XMLWriter
 
     /**
      * Insert XML as a string.
+     *
      * @param string $xml_string the xml string to write
+     *
      * @return bool
      */
     public function insert($xml_string)

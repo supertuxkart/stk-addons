@@ -72,7 +72,7 @@ class Statistic
         {
             $data = DBConnection::get()->query($select_query, DBConnection::FETCH_ALL);
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new StatisticException(exception_message_db(_("create a section for statistics")));
         }
@@ -303,7 +303,7 @@ class Statistic
             {
                 $data = DBConnection::get()->query($select_query, DBConnection::FETCH_ALL);
             }
-            catch(DBException $e)
+            catch (DBException $e)
             {
                 throw new StatisticException(exception_message_db(_("select the data, to build a chart")));
             }
@@ -378,7 +378,7 @@ class Statistic
                 ]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new StatisticException(exception_message_db(_('get the most downloaded addons')));
         }
@@ -413,7 +413,7 @@ class Statistic
                 DBConnection::FETCH_ALL
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new StatisticException(exception_message_db(_('get the newest addons')));
         }
@@ -443,7 +443,7 @@ class Statistic
         {
             $count = DBConnection::get()->count("client_sessions", '`is_online` = 1');
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new StatisticException(exception_message_db(_('count the number of online users')));
         }

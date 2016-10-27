@@ -53,7 +53,7 @@ class Log
                 [':user_id' => $user_id_type]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new LogException(exception_message_db(_('log a new event')));
         }
@@ -88,7 +88,7 @@ class Log
                 [':limit' => DBConnection::PARAM_INT]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new LogException(exception_message_db(_('fetch the log entries')));
         }
@@ -116,7 +116,7 @@ class Log
                 DBConnection::FETCH_ALL
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new LogException(exception_message_db(_('load unemailed logs')));
         }
@@ -138,7 +138,7 @@ class Log
                 DBConnection::NOTHING
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new LogException(exception_message_db(_('mark log messages as mailed')));
         }

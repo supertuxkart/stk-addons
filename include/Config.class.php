@@ -114,7 +114,7 @@ class Config
                     DBConnection::FETCH_ALL
                 );
             }
-            catch(DBException $e)
+            catch (DBException $e)
             {
                 trigger_error($e->getMessage());
 
@@ -176,7 +176,7 @@ class Config
                 ]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             trigger_error($e->getMessage());
 

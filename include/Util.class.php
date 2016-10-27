@@ -322,6 +322,7 @@ MSG;
     /**
      * Do a HTTP redirect to the STK error page
      * TODO add message option
+     *
      * @param int  $error     the http error
      * @param bool $permanent is the request permanent or not.
      */
@@ -442,7 +443,8 @@ MSG;
     /**
      * Returns ip address of the client
      *
-     * Source : http://stackoverflow.com/questions/1634782/what-is-the-most-accurate-way-to-retrieve-a-users-correct-ip-address-in-php?
+     * Source :
+     * http://stackoverflow.com/questions/1634782/what-is-the-most-accurate-way-to-retrieve-a-users-correct-ip-address-in-php?
      * @return string|bool return the ip of the user or false in case of error
      */
     public static function getClientIp()
@@ -554,6 +556,7 @@ MSG;
      * Check if valid email
      *
      * @param string $email
+     *
      * @return bool
      */
     public static function isEmail($email)
@@ -565,6 +568,7 @@ MSG;
      * Check if valid url
      *
      * @param string $url
+     *
      * @return bool
      */
     public static function isURL($url)
@@ -576,11 +580,13 @@ MSG;
      * Check if valid IPv4 or IPv6 address, except private ranges and reserved ranges
      *
      * @param string $ip
+     *
      * @return bool
      */
     public static function isIP($ip)
     {
         $flags = FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE;
+
         return filter_var($ip, FILTER_VALIDATE_IP, $flags) !== false;
     }
 
@@ -641,9 +647,10 @@ MSG;
      * Generates a string of random characters.
      *
      * @param   integer $length             The length of the string to generate
-     * @param   boolean $human_friendly     Whether or not to make the string human friendly by removing characters that can be
-     *                                      confused with other characters (O and 0, l and 1, etc)
-     * @param   boolean $include_symbols    Whether or not to include symbols in the string. Can not be enabled if $human_friendly is true
+     * @param   boolean $human_friendly     Whether or not to make the string human friendly by removing characters
+     *                                      that can be confused with other characters (O and 0, l and 1, etc)
+     * @param   boolean $include_symbols    Whether or not to include symbols in the string. Can not be enabled if
+     *                                      $human_friendly is true
      * @param   boolean $no_duplicate_chars Whether or not to only use characters once in the string.
      *
      * @throws LengthException
@@ -754,7 +761,7 @@ MSG;
         {
             $file = File::getFromPath($file_path);
         }
-        catch(FileException $e)
+        catch (FileException $e)
         {
             header('HTTP/1.1 404 Not Found');
             if (DEBUG_MODE)
@@ -859,7 +866,11 @@ MSG;
         }
 
         // Create a record of the cached file
-        Cache::createFile($cache_name, $file->getAddonId(), sprintf('w=%d,h=%d', $width_destination, $height_destination));
+        Cache::createFile(
+            $cache_name,
+            $file->getAddonId(),
+            sprintf('w=%d,h=%d', $width_destination, $height_destination)
+        );
     }
 
     /**

@@ -38,7 +38,7 @@ class Cache
         {
             File::deleteDirFS(CACHE_PATH, $exclude_regex);
         }
-        catch(FileException $e)
+        catch (FileException $e)
         {
             throw new CacheException($e->getMessage());
         }
@@ -60,7 +60,7 @@ class Cache
                 DBConnection::get()->delete("cache", "`file` = :file", [':file' => $cache_item['file']]);
             }
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new CacheException(exception_message_db(_("empty the cache")));
         }
@@ -98,7 +98,7 @@ class Cache
                 {
                     File::deleteFileFS(CACHE_PATH . $cache_item['file']);
                 }
-                catch(FileException $e)
+                catch (FileException $e)
                 {
                     Log::newEvent($e->getMessage());
 
@@ -108,7 +108,7 @@ class Cache
                 DBConnection::get()->delete("cache", "`file` = :file", [':file' => $cache_item['file']]);
             }
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             return false;
         }
@@ -141,7 +141,7 @@ class Cache
                 ]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             return false;
         }
@@ -169,7 +169,7 @@ class Cache
                 [':file' => (string)$path]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             return [];
         }
@@ -192,7 +192,7 @@ class Cache
         {
             $file = File::getFromID($id);
         }
-        catch(FileException $e)
+        catch (FileException $e)
         {
             // image does with tha id does not exist in the database
             return [

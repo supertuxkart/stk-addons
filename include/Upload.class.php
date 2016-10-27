@@ -140,10 +140,10 @@ class Upload
     /**
      * Constructor
      *
-     * @param array  $file_record
+     * @param array $file_record
      * @param string $addon_name
-     * @param int    $addon_type
-     * @param int    $expected_type see File::SOURCE, FILE::ADDON
+     * @param int $addon_type
+     * @param int $expected_type see File::SOURCE, FILE::ADDON
      * @param string $moderator_message
      */
     public function __construct($file_record, $addon_name, $addon_type, $expected_type, $moderator_message)
@@ -189,7 +189,7 @@ class Upload
         {
             File::deleteDirFS($this->temp_file_dir);
         }
-        catch(FileException $e)
+        catch (FileException $e)
         {
             throw new UploadException($e->getMessage());
         }
@@ -262,19 +262,19 @@ class Upload
                 static::removeInvalidFiles();
                 static::parseFiles();
             }
-            catch(FileException $e)
+            catch (FileException $e)
             {
                 try
                 {
                     File::deleteFileFS($this->temp_file_fullpath);
                     throw new UploadException("File Exception: " . $e->getMessage());
                 }
-                catch(FileException $e)
+                catch (FileException $e)
                 {
                     throw new UploadException("File Exception: " . $e->getMessage());
                 }
             }
-            catch(ParserException $e)
+            catch (ParserException $e)
             {
                 throw new UploadException("Parser Exception: " . $e->getMessage());
             }
@@ -292,13 +292,14 @@ class Upload
             File::move($this->temp_file_fullpath, $this->upload_file_dir . $this->upload_file_name);
             File::createImage($this->upload_file_dir . $this->upload_file_name, $this->addon_id);
         }
-        catch(FileException $e)
+        catch (FileException $e)
         {
             throw new UploadException($e->getMessage());
         }
 
         $this->success[] = _h('Successfully uploaded image.');
-        $this->success[] = File::link(Addon::buildPermalink($this->addon_type, $this->addon_id), _h('Continue to addon.'));
+        $this->success[] =
+            File::link(Addon::buildPermalink($this->addon_type, $this->addon_id), _h('Continue to addon.'));
     }
 
     /**
@@ -310,7 +311,9 @@ class Upload
         // Make sure the parser found a license file, and load it into the xml attributes
         if (empty($this->properties['license_file']))
         {
-            throw new UploadException(_h('A valid License.txt file was not found. Please add it to your archive and re-submit.'));
+            throw new UploadException(
+                _h('A valid License.txt file was not found. Please add it to your archive and re-submit.')
+            );
         }
 
         if (!$this->addon_type || !Addon::isAllowedType($this->addon_type))
@@ -354,10 +357,13 @@ class Upload
                 $addon = Addon::get($this->addon_id);
                 $this->properties['addon_revision'] = $addon->getMaxRevisionID() + 1;
             }
-            catch(AddonException $e)
+            catch (AddonException $e)
             {
                 throw new UploadException(
-                    sprintf(_h("Can not upload revision because the addon with name = '%s' does not exist"), h($this->addon_id))
+                    sprintf(
+                        _h("Can not upload revision because the addon with name = '%s' does not exist"),
+                        h($this->addon_id)
+                    )
                 );
             }
 
@@ -365,9 +371,11 @@ class Upload
             {
                 $addon->checkUserEditPermissions();
             }
-            catch(AddonException $e)
+            catch (AddonException $e)
             {
-                throw new UploadException(_h('You do not have the necessary permissions to upload a revision for this addon'));
+                throw new UploadException(
+                    _h('You do not have the necessary permissions to upload a revision for this addon')
+                );
             }
         }
         else // new addon
@@ -422,21 +430,27 @@ class Upload
             }
             writeXML();
         }
-        catch(AddonException $e)
+        catch (AddonException $e)
         {
             // TODO add undo methods for steps above
             throw new UploadException($e->getMessage());
         }
 
         $this->success[] =
-            _h('Your add-on was uploaded successfully. It will be reviewed by our moderators before becoming publicly available.');
-        $this->success[] = '<a href="?type=' . $this->addon_type . '&amp;name=' . $this->addon_id . '&amp;upload-type=source">' .
+            _h(
+                'Your add-on was uploaded successfully. It will be reviewed by our moderators before becoming publicly available.'
+            );
+        $this->success[] =
+            '<a href="?type=' . $this->addon_type . '&amp;name=' . $this->addon_id . '&amp;upload-type=source">' .
             _h('Click here to upload the sources to your add-on now.')
             . '</a>';
         $this->success[] = _h(
             '(Uploading the sources to your add-on enables others to improve your work and also ensure your add-on will not be lost in the future if new SuperTuxKart versions are not compatible with the current format.)'
         );
-        $this->success[] = File::link(Addon::buildPermalink($this->addon_type, $this->addon_id), _h('Click here to view your add-on.'));
+        $this->success[] = File::link(
+            Addon::buildPermalink($this->addon_type, $this->addon_id),
+            _h('Click here to view your add-on.')
+        );
     }
 
     /**
@@ -458,7 +472,9 @@ class Upload
 
         if (!file_exists($image_file))
         {
-            throw new UploadException(_h("A screenshot/icon file does not exist in the archive(file name is case sensitive)"));
+            throw new UploadException(
+                _h("A screenshot/icon file does not exist in the archive(file name is case sensitive)")
+            );
         }
 
         // Get image file extension
@@ -480,7 +496,7 @@ class Upload
         {
             $this->properties['image_file'] = File::createFileDB($this->addon_id, File::IMAGE, $image_path);
         }
-        catch(FileException $e)
+        catch (FileException $e)
         {
             File::deleteFileFS($this->properties['image_path']);
             throw new UploadException($e->getMessage());
@@ -500,7 +516,7 @@ class Upload
                 File::newImageFromQuads($this->properties['quad_file'], $this->addon_id);
             }
         }
-        catch(FileException $e)
+        catch (FileException $e)
         {
             throw new UploadException($e->getMessage());
         }
@@ -520,7 +536,7 @@ class Upload
         {
             File::compress($this->temp_file_dir, $this->upload_file_dir . $this->upload_file_name);
         }
-        catch(FileException $e)
+        catch (FileException $e)
         {
             throw new UploadException(_h('Failed to re-pack archive file. Reason: ' . $e->getMessage()));
         }
@@ -528,9 +544,10 @@ class Upload
         // Record addon's file in database
         try
         {
-            $this->properties['xml_attributes']['file_id'] = File::createFileDB($this->addon_id, $filetype, $this->upload_file_name);
+            $this->properties['xml_attributes']['file_id'] =
+                File::createFileDB($this->addon_id, $filetype, $this->upload_file_name);
         }
-        catch(FileException $e)
+        catch (FileException $e)
         {
             File::deleteFileFS($this->upload_file_dir . $this->upload_file_name);
             throw new UploadException($e->getMessage());
@@ -546,8 +563,10 @@ class Upload
         $invalid_files = File::removeInvalidFiles($this->temp_file_dir, $this->expected_file_type === static::SOURCE);
         if ($invalid_files)
         {
-            $this->warnings[] = _h('Some invalid files were found in the uploaded add-on. These files have been removed from the archive:')
-                . ' ' . h(implode(', ', $invalid_files));
+            $this->warnings[] = _h(
+                                    'Some invalid files were found in the uploaded add-on. These files have been removed from the archive:'
+                                )
+                                . ' ' . h(implode(', ', $invalid_files));
             if (DEBUG_MODE)
             {
                 trigger_error(Util::array_last($this->warnings));
@@ -650,7 +669,7 @@ class Upload
         if (!File::imageCheck($this->temp_file_dir))
         {
             $this->warnings[] = _h('Some images in this add-on do not have dimensions that are a power of two.') . ' ' .
-                _h('This may cause display errors on some video cards.');
+                                _h('This may cause display errors on some video cards.');
             $this->properties['status'] += F_TEX_NOT_POWER_OF_2;
         }
 

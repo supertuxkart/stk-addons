@@ -50,7 +50,7 @@ class SMail
                 throw new SMailException($this->mail->ErrorInfo);
             }
         }
-        catch(phpmailerException $e)
+        catch (phpmailerException $e)
         {
             throw new SMailException($e->getMessage());
         }
@@ -73,7 +73,7 @@ class SMail
                 throw new SMailException(sprintf("Address '%s' is already used.", h($address)));
             }
         }
-        catch(phpmailerException $e)
+        catch (phpmailerException $e)
         {
             throw new SMailException($e->getMessage());
         }
@@ -153,7 +153,7 @@ EMAIL;
 
             $this->mail->setFrom($admin_email, "STK-Addons Administrator");
         }
-        catch(phpmailerException $e)
+        catch (phpmailerException $e)
         {
             throw new SMailException($e->getMessage());
         }

@@ -66,7 +66,9 @@ class AddonXMLParser extends Parser
         $reader = xml_parser_create();
         if (!xml_parse_into_struct($reader, $this->file_contents, $values, $index))
         {
-            throw new XMLParserException('XML Error: ' . xml_error_string(xml_get_error_code($reader)) . ' - file: ' . $this->file_name);
+            throw new XMLParserException(
+                'XML Error: ' . xml_error_string(xml_get_error_code($reader)) . ' - file: ' . $this->file_name
+            );
         }
 
         $this->file_type = $values[0]['tag'];

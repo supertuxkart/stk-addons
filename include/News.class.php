@@ -43,7 +43,7 @@ class News
                 DBConnection::FETCH_ALL
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new NewsException(exception_message_db(_("fetch dynamic news entries")));
         }
@@ -122,7 +122,7 @@ class News
                     ]
                 );
             }
-            catch(DBException $e)
+            catch (DBException $e)
             {
                 throw new NewsException(exception_message_db(_("create dynamic news entry")));
             }
@@ -207,7 +207,7 @@ class News
                 DBConnection::FETCH_ALL
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             return [];
         }
@@ -241,7 +241,7 @@ class News
                 DBConnection::FETCH_ALL
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             return [];
         }
@@ -268,7 +268,7 @@ class News
                 DBConnection::FETCH_ALL
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             return [];
         }
@@ -298,14 +298,16 @@ class News
 
             if ($count_condition_check !== 3)
             {
-                throw new NewsException('Version comparison should contain three tokens, only found: ' . $count_condition_check);
+                throw new NewsException(
+                    'Version comparison should contain three tokens, only found: ' . $count_condition_check
+                );
             }
 
             try
             {
                 Validate::versionString($condition_check[2]);
             }
-            catch(ValidateException $e)
+            catch (ValidateException $e)
             {
                 throw new NewsException($e->getMessage());
             }
@@ -332,7 +334,7 @@ class News
                 ]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new NewsException(exception_message_db(_('create a news entry')));
         }
@@ -351,7 +353,7 @@ class News
         {
             DBConnection::get()->delete("news", "`id` = :id", [":id" => $id], [":id" => DBConnection::PARAM_INT]);
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new NewsException(exception_message_db(_("delete a news entry")));
         }

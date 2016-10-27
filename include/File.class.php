@@ -153,7 +153,7 @@ class File extends Base
                 [':file_id' => DBConnection::PARAM_INT]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new FileException(exception_message_db(_h("delete a file")));
         }
@@ -244,7 +244,7 @@ class File extends Base
                 );
             }
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new FileException(exception_message_db(_h("get all the files of addon")));
         }
@@ -280,7 +280,7 @@ class File extends Base
                 DBConnection::FETCH_ALL
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             return false;
         }
@@ -390,7 +390,7 @@ class File extends Base
                 ]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new FileException(exception_message_db(_('change file approval status')));
         }
@@ -707,11 +707,13 @@ class File extends Base
         }
         if (!$overwrite && file_exists($new_name))
         {
-            throw new FileException(sprintf(
-                "Failed to move file '%s 'to new location('%s') because it already exists",
-                $old_name,
-                $new_name
-            ));
+            throw new FileException(
+                sprintf(
+                    "Failed to move file '%s 'to new location('%s') because it already exists",
+                    $old_name,
+                    $new_name
+                )
+            );
         }
 
         if (rename($old_name, $new_name) === false)
@@ -801,7 +803,7 @@ class File extends Base
                 [':date' => date('Y-m-d')]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new FileException(exception_message_db(_('read the deletion queue')));
         }
@@ -816,7 +818,7 @@ class File extends Base
                 $message .= 'Deleted file ' . $file["id"] . "<br />\n";
                 Log::newEvent('Processed queued deletion of file ' . $file["id"]);
             }
-            catch(FileException $e)
+            catch (FileException $e)
             {
                 Log::newEvent("Failed to delete queued file: " . $file["id"]);
                 continue;
@@ -938,7 +940,7 @@ class File extends Base
                 ]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new FileException(exception_message_db(_('create file')));
         }
@@ -950,7 +952,7 @@ class File extends Base
                 DBConnection::FETCH_FIRST
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new FileException(exception_message_db(_("select file id from procedure")));
         }
@@ -983,7 +985,7 @@ class File extends Base
                     [":file_name" => 'images/' . $file_name]
                 );
             }
-            catch(DBException $e)
+            catch (DBException $e)
             {
                 throw new FileException(exception_message_db(_("delete an existing image")));
             }
@@ -1016,7 +1018,7 @@ class File extends Base
                 $image->scale($image_max_dimension, $image_max_dimension);
                 $image->save($image_path);
             }
-            catch(SImageException $e)
+            catch (SImageException $e)
             {
                 throw new FileException($e->getMessage());
             }
@@ -1027,7 +1029,7 @@ class File extends Base
         {
             static::createFileDB($addon_id, static::IMAGE, 'images/' . $file_name);
         }
-        catch(FileException $e)
+        catch (FileException $e)
         {
             static::deleteFileFS($image_path);
             throw new FileException($e->getMessage());
@@ -1221,7 +1223,7 @@ class File extends Base
                 [":file_id" => DBConnection::PARAM_INT]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new FileException(exception_message_db("mark file for delete"));
         }
@@ -1237,7 +1239,8 @@ class File extends Base
     public static function rewrite($link)
     {
         // Don't rewrite external links
-        $has_prefix = Util::isHTTPS() ? (mb_substr($link, 0, 8) === 'https://') : (mb_substr($link, 0, 7) === 'http://');
+        $has_prefix =
+            Util::isHTTPS() ? (mb_substr($link, 0, 8) === 'https://') : (mb_substr($link, 0, 7) === 'http://');
 
         if ($has_prefix && mb_substr($link, 0, mb_strlen(ROOT_LOCATION)) !== ROOT_LOCATION)
         {
@@ -1336,7 +1339,7 @@ class File extends Base
                 [':path' => $file_path]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new FileException(exception_message_db("increment the download number"));
         }

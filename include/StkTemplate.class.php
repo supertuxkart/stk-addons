@@ -247,7 +247,10 @@ class StkTemplate extends Template
         if (Debug::isToolbarEnabled())
         {
             $renderer = Debug::getToolbar()->getJavascriptRenderer();
-            $this->smarty->assign('debug_toolbar', ['header' => $renderer->renderHead(), 'footer' => $renderer->render()]);
+            $this->smarty->assign(
+                'debug_toolbar',
+                ['header' => $renderer->renderHead(), 'footer' => $renderer->render()]
+            );
         }
         else
         {
@@ -298,8 +301,8 @@ class StkTemplate extends Template
     /**
      * Add a script file to the page from the web
      *
-     * @param string $src      the js file location
-     * @param bool   $ie       see if this script is for IE only, add it as a conditional
+     * @param string $src the js file location
+     * @param bool   $ie  see if this script is for IE only, add it as a conditional
      *
      * @return $this
      */

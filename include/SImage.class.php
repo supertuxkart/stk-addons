@@ -94,6 +94,7 @@ class SImage
 
     /**
      * @param string $path to the image file
+     *
      * @throws SImageException if file does not exist or is not a file
      */
     public function setPath($path)

@@ -90,7 +90,7 @@ class Rating
             $this->avg_rating = (float)$result['avg_vote'];
             $this->count_ratings = (int)$result['count_vote'];
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             if (DEBUG_MODE)
             {
@@ -135,7 +135,7 @@ class Rating
             );
 
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new RatingsException(exception_message_db(_('fetch your vote')));
         }
@@ -187,7 +187,7 @@ class Rating
         {
             DBConnection::get()->delete("votes", "`addon_id` = :addon_id", [':addon_id' => $this->addon_id]);
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             return false;
         }
@@ -218,6 +218,7 @@ class Rating
      * Get the average rating
      *
      * @param bool $force_fetch force the fetch of the average rating
+     *
      * @return int Average rating
      */
     public function getAvgRating($force_fetch = false)
@@ -231,6 +232,7 @@ class Rating
      * Gets the percentage of total possible rating value
      *
      * @param bool $force_fetch force the fetch of the average rating
+     *
      * @return int percent value
      */
     public function getAvgRatingPercent($force_fetch = false)
@@ -244,6 +246,7 @@ class Rating
      * Get the number of ratings
      *
      * @param bool $force_fetch force the fetch of the average rating
+     *
      * @return integer Number of ratings
      */
     public function getNumRatings($force_fetch = false)
@@ -285,8 +288,8 @@ class Rating
     /**
      * Add a vote for a user
      *
-     * @param float  $vote
-     * @param int    $user_id
+     * @param float $vote
+     * @param int   $user_id
      *
      * @throws RatingsException
      * @return boolean new vote or not
@@ -314,7 +317,7 @@ class Rating
                 [':user_id' => DBConnection::PARAM_INT]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new RatingsException(exception_message_db(_('perform your vote')));
         }

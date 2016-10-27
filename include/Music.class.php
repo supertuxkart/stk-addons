@@ -163,7 +163,7 @@ class Music
                 DBConnection::FETCH_ALL
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             return [];
         }
@@ -213,7 +213,7 @@ class Music
             $this->file_md5 = $track_info['file_md5'];
             $this->xml_file = $track_info['xml_filename'];
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             return;
         }

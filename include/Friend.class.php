@@ -182,7 +182,7 @@ class Friend implements IAsXML
                 [":user_id" => DBConnection::PARAM_INT]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new FriendException(exception_message_db(_('fetch online friends')));
         }
@@ -261,7 +261,7 @@ class Friend implements IAsXML
                 );
             }
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new FriendException(exception_message_db(_('fetch friends')));
         }
@@ -385,7 +385,7 @@ class Friend implements IAsXML
                 DBConnection::get()->commit();
             }
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             DBConnection::get()->rollback();
             throw new FriendException(exception_message_db(_('add a friend request')));
@@ -416,7 +416,7 @@ class Friend implements IAsXML
                 [':asker' => DBConnection::PARAM_INT, ':receiver' => DBConnection::PARAM_INT]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new FriendException(exception_message_db(_('accept a friend request')));
         }
@@ -448,7 +448,7 @@ class Friend implements IAsXML
                 [':asker' => DBConnection::PARAM_INT, ':receiver' => DBConnection::PARAM_INT]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new FriendException(exception_message_db($message_error));
         }

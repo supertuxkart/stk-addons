@@ -43,7 +43,7 @@ class Achievement
                 [':user_id' => DBConnection::PARAM_INT]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new AchievementException(exception_message_db(_('fetch the achieved achievements')));
         }
@@ -81,7 +81,7 @@ class Achievement
                 [':user_id' => DBConnection::PARAM_INT]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new AchievementException(exception_message_db(_('fetch the achieved achievements')));
         }
@@ -121,7 +121,9 @@ class Achievement
             // TODO find if this error code is for every database or only MYSQL
             if ($e->getSqlErrorCode() == "23503")
             {
-                throw new AchievementException(_h("Provided an id of an achievement that doesn't exist in the database."));
+                throw new AchievementException(
+                    _h("Provided an id of an achievement that doesn't exist in the database.")
+                );
             }
             else
             {

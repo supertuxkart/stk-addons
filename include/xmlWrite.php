@@ -125,7 +125,7 @@ function generateAssetXML()
                         R.`revision`, R.`format`, R.`image_id`,
                         R.`icon_id`, R.`status`, U.`username`
                 FROM " . DB_PREFIX . "addons A
-                    LEFT JOIN " . DB_PREFIX  . "addon_revisions R
+                    LEFT JOIN " . DB_PREFIX . "addon_revisions R
                         ON A.`id` = R.`addon_id`
                     LEFT JOIN " . DB_PREFIX . "users U
                         ON A.`uploader` = U.`id`
@@ -145,7 +145,7 @@ function generateAssetXML()
                 {
                     $file_path = File::getFromID($addon['file_id'])->getPath();
                 }
-                catch(FileException $e)
+                catch (FileException $e)
                 {
                     trigger_error('Error finding addon file for ' . $addon['name'], E_USER_WARNING);
                     echo '<span class="warning">An error occurred locating add-on: ' . $addon['name'] . '</span><br />';
@@ -154,7 +154,8 @@ function generateAssetXML()
                 if (!file_exists(UP_PATH . $file_path))
                 {
                     trigger_error('File not found for ' . $addon['name'], E_USER_WARNING);
-                    echo '<span class="warning">' . _h('The following file could not be found:') . ' ' . $file_path . '</span><br />';
+                    echo '<span class="warning">' . _h('The following file could not be found:') . ' ' . $file_path .
+                         '</span><br />';
                     continue;
                 }
 
@@ -175,7 +176,7 @@ function generateAssetXML()
                         $writer->writeAttribute('image', DOWNLOAD_LOCATION . $image_path);
                     }
                 }
-                catch(FileException $e)
+                catch (FileException $e)
                 {
                     Log::newEvent($e->getMessage());
                 }
@@ -190,7 +191,7 @@ function generateAssetXML()
                             $writer->writeAttribute('icon', DOWNLOAD_LOCATION . $icon_path);
                         }
                     }
-                    catch(FileException $e)
+                    catch (FileException $e)
                     {
                         Log::newEvent($e->getMessage());
                     }
@@ -225,7 +226,7 @@ function generateAssetXML()
                 $writer->endElement(); // close <$type>
             }
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new AddonException('Failed to load addon records for writing XML!');
         }
@@ -343,10 +344,11 @@ function generateAssetXML2()
                         {
                             $file_path = File::getFromID($addon_rev['file_id'])->getPath();
                         }
-                        catch(FileException $e)
+                        catch (FileException $e)
                         {
                             trigger_error('Error finding addon file for ' . $addon['name'], E_USER_WARNING);
-                            echo '<span class="warning">An error occurred locating add-on: ' . $addon['name'] . '</span><br />';
+                            echo '<span class="warning">An error occurred locating add-on: ' . $addon['name'] .
+                                 '</span><br />';
                             continue;
                         }
                         if (!file_exists(UP_PATH . $file_path))
@@ -376,7 +378,7 @@ function generateAssetXML2()
                                 $writer->writeAttribute('image', DOWNLOAD_LOCATION . $image_path);
                             }
                         }
-                        catch(FileException $e)
+                        catch (FileException $e)
                         {
                             Log::newEvent($e->getMessage());
                         }
@@ -391,7 +393,7 @@ function generateAssetXML2()
                                     $writer->writeAttribute('icon', DOWNLOAD_LOCATION . $icon_path);
                                 }
                             }
-                            catch(FileException $e)
+                            catch (FileException $e)
                             {
                                 Log::newEvent($e->getMessage());
                             }
@@ -400,7 +402,7 @@ function generateAssetXML2()
                         $writer->fullEndElement(); // close <revision>
                     }
                 }
-                catch(DBException $e)
+                catch (DBException $e)
                 {
                     $writer->fullEndElement(); // close <addon>
                     continue;
@@ -411,7 +413,7 @@ function generateAssetXML2()
 
             $writer->fullEndElement(); // close <$type>, <kart>, etc
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new AddonException('Failed to load addon records for writing XML!');
         }
@@ -462,6 +464,7 @@ function writeNewsXML()
 function writeAssetXML()
 {
     $count = File::write(ASSETS_XML_PATH, generateAssetXML());
+
     //$count += File::write(ASSETS2_XML_PATH, generateAssetXML2());
 
 

@@ -132,7 +132,7 @@ class Addon extends Base
                 [':id' => $this->id]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new AddonException(exception_message_db(_('load revisions')));
         }
@@ -168,7 +168,9 @@ class Addon extends Base
 
         if (!$this->latest_revision)
         {
-            throw new AddonException(_h("Did not found latest revision (possibly wrong status). This should never happen"));
+            throw new AddonException(
+                _h("Did not found latest revision (possibly wrong status). This should never happen")
+            );
         }
     }
 
@@ -256,7 +258,7 @@ class Addon extends Base
         {
             DBConnection::get()->insert('addon_revisions', $fields_data);
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new AddonException(exception_message_db($exception_message));
         }
@@ -284,7 +286,7 @@ class Addon extends Base
         {
             $file_image = File::getFromID($attributes['image']);
         }
-        catch(FileException $e)
+        catch (FileException $e)
         {
             throw new AddonException($e->getMessage());
         }
@@ -363,7 +365,7 @@ class Addon extends Base
             {
                 $file->delete();
             }
-            catch(FileException $e)
+            catch (FileException $e)
             {
                 throw new AddonException($e->getMessage());
             }
@@ -375,7 +377,7 @@ class Addon extends Base
         {
             DBConnection::get()->delete("addons", "`id` = :id", [":id" => $this->id]);
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new AddonException(exception_message_db(_('remove addon')));
         }
@@ -414,7 +416,7 @@ class Addon extends Base
         {
             File::queueDelete($this->revisions[$rev]['file']);
         }
-        catch(FileException $e)
+        catch (FileException $e)
         {
             throw new AddonException(_h('The add-on file could not be queued for deletion.'));
         }
@@ -431,7 +433,7 @@ class Addon extends Base
                 ]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new AddonException(exception_message_db(_('delete a revision')));
         }
@@ -660,7 +662,7 @@ class Addon extends Base
                 ]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new AddonException(exception_message_db(_('look up file ID')));
         }
@@ -677,7 +679,7 @@ class Addon extends Base
         {
             $file_path = File::getFromID($file_id)->getPath();
         }
-        catch(FileException $e)
+        catch (FileException $e)
         {
             throw new AddonException(_h('The requested file does not have an associated file record.'));
         }
@@ -751,7 +753,7 @@ class Addon extends Base
                 ]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new AddonException(exception_message_db(_('update the description')));
         }
@@ -784,7 +786,7 @@ class Addon extends Base
                 ]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new AddonException(exception_message_db(_('update the designer')));
         }
@@ -820,7 +822,7 @@ class Addon extends Base
                 ]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new AddonException(exception_message_db(_('update the image/icon')));
         }
@@ -877,7 +879,7 @@ class Addon extends Base
             Validate::versionString($start_ver);
             Validate::versionString($end_ver);
         }
-        catch(ValidateException $e)
+        catch (ValidateException $e)
         {
             throw new AddonException($e->getMessage());
         }
@@ -896,7 +898,7 @@ class Addon extends Base
                 ]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new AddonException(exception_message_db(_('set the min/max include versions')));
         }
@@ -930,7 +932,7 @@ class Addon extends Base
                 ]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new AddonException(exception_message_db(_('update the license')));
         }
@@ -963,7 +965,7 @@ class Addon extends Base
                 ]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new AddonException(exception_message_db(_('update the name')));
         }
@@ -1007,7 +1009,7 @@ class Addon extends Base
                     ]
                 );
             }
-            catch(DBException $e)
+            catch (DBException $e)
             {
                 throw new AddonException(exception_message_db(_('update add-on status')));
             }
@@ -1037,7 +1039,7 @@ class Addon extends Base
                 [':user_id' => DBConnection::PARAM_INT]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new AddonException(exception_message_db(_('find user record')));
         }
@@ -1046,7 +1048,7 @@ class Addon extends Base
         {
             SMail::get()->addonNoteNotification($user['email'], $this->name, $email_body);
         }
-        catch(SMailException $e)
+        catch (SMailException $e)
         {
             throw new AddonException('Failed to send email to user. ' . $e->getMessage());
         }
@@ -1234,7 +1236,7 @@ class Addon extends Base
                     ]
                 );
             }
-            catch(DBException $e)
+            catch (DBException $e)
             {
                 throw new AddonException(exception_message_db(_('update add-on status')));
             }
@@ -1318,7 +1320,7 @@ class Addon extends Base
                 [':id' => $id]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             return "";
         }
@@ -1360,7 +1362,7 @@ class Addon extends Base
                 [':id' => $id]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             return "";
         }
@@ -1621,7 +1623,7 @@ class Addon extends Base
                 [':search_query' => '%' . $search_query . '%']
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new AddonException(exception_message_db(_('search for add-on')));
         }
@@ -1717,7 +1719,7 @@ class Addon extends Base
                 $db_types
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new AddonException(exception_message_db(_("select all addons from the database")));
         }
@@ -1773,7 +1775,8 @@ class Addon extends Base
      * @param string $id                 Addon ID
      * @param string $type               Add-on type
      * @param array  $attributes         Contains properties of the add-on. Must have the
-     *                                   following elements: name, designer, license, image, file_id, status, missing_textures
+     *                                   following elements: name, designer, license, image, file_id, status,
+     *                                   missing_textures
      *
      * @return Addon
      * @throws AddonException
@@ -1812,7 +1815,7 @@ class Addon extends Base
         {
             DBConnection::get()->insert("addons", $fields_data);
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new AddonException(exception_message_db(_('create your add-on')));
         }
@@ -1835,7 +1838,7 @@ class Addon extends Base
         {
             SMail::get()->moderatorNotification($title, h($body));
         }
-        catch(SMailException $e)
+        catch (SMailException $e)
         {
             throw new AddonException($e->getMessage());
         }
@@ -1844,7 +1847,9 @@ class Addon extends Base
     /**
      * Send moderator notification for a new addon upload
      *
-     * @param null|string $username the username who uploaded the addon, if null the default will be the currently logged in user
+     * @param null|string $username the username who uploaded the addon, if null the default will be the currently
+     *                              logged in user
+     *
      * @throws AddonException
      */
     public function sendMailModeratorNewAddon($username = null)
@@ -1866,7 +1871,9 @@ class Addon extends Base
     /**
      * Send moderator notification for a new revision upload
      *
-     * @param null|string $username the username who uploaded the addon, if null the default will be the currently logged in user
+     * @param null|string $username the username who uploaded the addon, if null the default will be the currently
+     *                              logged in user
+     *
      * @throws AddonException
      */
     public function sendMailModeratorNewRevision($username = null)
@@ -1918,7 +1925,7 @@ class Addon extends Base
         {
             $count = DBConnection::get()->count("addons", "`type` = :type", [":type" => $type]);
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new AddonException(exception_message_db(_("count the number of addons")));
         }

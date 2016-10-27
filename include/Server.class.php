@@ -45,7 +45,7 @@ class Server implements IAsXML
      * @var int
      */
     private $max_players;
-    
+
     /**
      * The server's IP address
      * @var int
@@ -57,13 +57,13 @@ class Server implements IAsXML
      * @var int
      */
     private $port;
-    
+
     /**
      * The server's private port
      * @var int
      */
     private $private_port;
-    
+
     /**
      *
      * @param array $data an associative array retrieved from the database
@@ -182,7 +182,7 @@ class Server implements IAsXML
                 ]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new ServerException(exception_message_db(_('create a server')));
         }
@@ -215,7 +215,7 @@ class Server implements IAsXML
                 [":id" => DBConnection::PARAM_INT]
             );
         }
-        catch(DBException $e)
+        catch (DBException $e)
         {
             throw new ServerException(exception_message_db(_('retrieve a server')));
         }

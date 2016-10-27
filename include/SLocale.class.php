@@ -127,7 +127,7 @@ class SLocale
         // change language cookie for next request only if language is different
         if ($cookie_lang !== $locale)
         {
-            if(!setcookie(static::LANG_KEY, $locale, time() + static::COOKIE_LIFETIME, "/"))
+            if (!setcookie(static::LANG_KEY, $locale, time() + static::COOKIE_LIFETIME, "/"))
             {
                 trigger_error("Failed to set locale language cookie");
             }
