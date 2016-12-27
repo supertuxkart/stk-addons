@@ -171,9 +171,10 @@ class Session
     /**
      * Start a session, only if was no previous started
      *
-     * @param string $name the name of the session identifier
+     * @param string $name the name of the session identifier/cookie name
+     * @param int $lifetime_sec the session cookie lifetime in seconds, the default is 6 hours
      */
-    public static function start($name = "STK_SESSID")
+    public static function start($name = "STK_SESSID", $lifetime_sec = 21600)
     {
         if (static::isStarted())
         {
@@ -181,7 +182,13 @@ class Session
         }
 
         session_name($name);
-        if (!session_start())
+        if (session_start())
+        {
+            // apparently session_set_cookie_params does not work, see first comment on this page
+            // https://secure.php.net/manual/ro/function.session-set-cookie-params.php
+            setcookie(session_name(), session_id(), time() + $lifetime_sec);
+        }
+        else
         {
             trigger_error("Session failed to start");
         }
