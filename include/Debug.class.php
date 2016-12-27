@@ -35,12 +35,16 @@ class Debug
         // prevent information leakage
         if (!static::isToolbarEnabled())
         {
+            // should we panic here?
             return null;
         }
 
         if (!static::$debug_toolbar)
         {
             static::$debug_toolbar = new DebugBar\StandardDebugBar();
+
+            //static::$debug_toolbar->setStorage(new DebugBar\Storage\FileStorage(ROOT_PATH));
+            //static::$debug_toolbar->addCollector(new DebugBar\DataCollector\MessagesCollector('test'));
         }
 
         return static::$debug_toolbar;
@@ -53,7 +57,15 @@ class Debug
 
     public static function addMessage($message)
     {
-        static::getToolbar()['messages']->addMessage($message);
+        if (DEBUG_MODE)
+        {
+            error_log('STK-ADDONS - '. $message);
+        }
+
+        if (static::isToolbarEnabled())
+        {
+            static::getToolbar()['messages']->addMessage($message);
+        }
     }
 
     /**

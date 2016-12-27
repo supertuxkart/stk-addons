@@ -1,3 +1,4 @@
+#!/usr/bin/php -q
 <?php
 /**
  * Copyright 2015 - 2016  Daniel Butum <danibutum at gmail dot com>

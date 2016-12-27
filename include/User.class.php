@@ -385,10 +385,7 @@ class User extends Base implements IAsXML
             // One or more of the session variables was not set - this may be an issue, so force logout
             if (!Session::user()->has($key))
             {
-                if (DEBUG_MODE)
-                {
-                    trigger_error(sprintf("Session key = '%s' was not set", $key));
-                }
+                Debug::addMessage(sprintf("Session key = '%s' was not set", $key));
                 static::logout();
 
                 return;

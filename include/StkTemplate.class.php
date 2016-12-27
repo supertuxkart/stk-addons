@@ -82,6 +82,12 @@ class StkTemplate extends Template
     private $user_css_includes = [];
 
     /**
+     * Flag that indicates to show ajax debug messages or not
+     * @var boolean
+     */
+    private $debug_ajax = false;
+
+    /**
      * Return a instance of the class, factory method
      *
      * @param string      $template_file
@@ -246,6 +252,9 @@ class StkTemplate extends Template
         // Enable debug toolbar
         if (Debug::isToolbarEnabled())
         {
+            // the header and footer area used only in one place (header.tpl and footer.tpl)
+            // so calling render in all templates is a little overkill
+            Debug::getToolbar()->collect();
             $renderer = Debug::getToolbar()->getJavascriptRenderer();
             $this->smarty->assign(
                 'debug_toolbar',
@@ -400,6 +409,45 @@ class StkTemplate extends Template
         $this->addScriptInclude("util.js");
 
         return $this;
+    }
+
+    /**
+     * @param boolean $debug_ajax
+     *
+     * @return $this
+     */
+    public function setDebugAjax($debug_ajax)
+    {
+        $this->debug_ajax = $debug_ajax;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        $return = parent::__toString();
+
+        // Debug ajax see http://phpdebugbar.com/docs/rendering.html#the-javascript-object
+        if (Debug::isToolbarEnabled())
+        {
+            if ($this->debug_ajax || Util::isAJAXRequest())
+            {
+                $return .= Debug::getToolbar()->getJavascriptRenderer()->render(false);
+            }
+        }
+
+        return $return;
+    }
+
+    /**
+     * @return string
+     */
+    public function toString()
+    {
+        return (string)$this;
     }
 
     /**

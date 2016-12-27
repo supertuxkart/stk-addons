@@ -722,13 +722,11 @@ MSG;
     public static function resizeImage($file_path, $orig_size = null)
     {
         // file is invalid
+        Debug::addMessage('Called Util::resizeImage');
         if (!$file_path)
         {
             header('HTTP/1.1 404 Not Found');
-            if (DEBUG_MODE)
-            {
-                echo "file is empty";
-            }
+            Debug::addMessage('Called Util::resizeImage with an empty file_path');
 
             return;
         }
@@ -764,10 +762,7 @@ MSG;
         catch (FileException $e)
         {
             header('HTTP/1.1 404 Not Found');
-            if (DEBUG_MODE)
-            {
-                echo sprintf("%s does not exist in the database", $file_path);
-            }
+            Debug::addMessage(sprintf("%s does not exist in the database", $file_path));
 
             return;
         }
@@ -776,10 +771,7 @@ MSG;
         if (!file_exists($local_path))
         {
             header('HTTP/1.1 404 Not Found');
-            if (DEBUG_MODE)
-            {
-                echo sprintf("%s does not exist on the disk", $file_path);
-            }
+            Debug::addMessage(sprintf("%s does not exist on the disk", $file_path));
 
             return;
         }

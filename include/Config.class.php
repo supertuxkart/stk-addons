@@ -116,7 +116,7 @@ class Config
             }
             catch (DBException $e)
             {
-                trigger_error($e->getMessage());
+                Debug::addMessage($e->getMessage());
 
                 return null;
             }
@@ -178,7 +178,7 @@ class Config
         }
         catch (DBException $e)
         {
-            trigger_error($e->getMessage());
+            Debug::addMessage($e->getMessage());
 
             return false;
         }

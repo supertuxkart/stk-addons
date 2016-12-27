@@ -647,10 +647,7 @@ class File extends Base
     {
         if (!file_exists($path) || !is_dir($path))
         {
-            if (DEBUG_MODE)
-            {
-                trigger_error(sprintf("%s does not exist or is not a directory"), $path);
-            }
+            Debug::addMessage(sprintf("%s does not exist or is not a directory", $path));
 
             return [];
         }

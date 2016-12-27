@@ -567,10 +567,7 @@ class Upload
                                     'Some invalid files were found in the uploaded add-on. These files have been removed from the archive:'
                                 )
                                 . ' ' . h(implode(', ', $invalid_files));
-            if (DEBUG_MODE)
-            {
-                trigger_error(Util::array_last($this->warnings));
-            }
+            Debug::addMessage(Util::array_last($this->warnings));
         }
     }
 

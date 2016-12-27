@@ -92,10 +92,7 @@ class Rating
         }
         catch (DBException $e)
         {
-            if (DEBUG_MODE)
-            {
-                trigger_error($e->getMessage());
-            }
+            Debug::addMessage($e->getMessage());
 
             $this->avg_rating = 0.0;
             $this->count_ratings = 0;

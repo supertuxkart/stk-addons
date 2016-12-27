@@ -121,7 +121,7 @@ class SLocale
         putenv("LC_ALL=$locale.UTF-8");
         if (setlocale(LC_ALL, $locale . ".UTF-8") === false)
         {
-            trigger_error(sprintf("Set locale has failed for '%s'. No localization is possible", $locale));
+            Debug::addMessage(sprintf("Set locale has failed for '%s'. No localization is possible", $locale));
         }
 
         // change language cookie for next request only if language is different
@@ -130,7 +130,7 @@ class SLocale
             // TODO, use Session class to set cookies application wise?
             if (!setcookie(static::LANG_KEY, $locale, time() + static::COOKIE_LIFETIME, "/"))
             {
-                trigger_error("Failed to set locale language cookie");
+                Debug::addMessage("Failed to set locale language cookie");
             }
             $_COOKIE[static::LANG_KEY] = $locale;
         }

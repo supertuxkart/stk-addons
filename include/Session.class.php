@@ -100,7 +100,7 @@ class Session
     {
         if (!static::isStarted())
         {
-            trigger_error(sprintf("Can not build session object = '%s' without starting the session", $this->key));
+            Debug::addMessage(sprintf("Can not build session object = '%s' without starting the session", $this->key));
 
             return $this;
         }
@@ -144,7 +144,7 @@ class Session
     {
         if (!static::isStarted())
         {
-            trigger_error("Session failed to clear because it was not started");
+            Debug::addMessage("Session failed to clear because it was not started");
 
             return;
         }
@@ -165,7 +165,7 @@ class Session
 
         if (!session_destroy())
         {
-            trigger_error("Session failed to destroy");
+            Debug::addMessage("Session failed to destroy");
         }
     }
 
@@ -191,7 +191,7 @@ class Session
         }
         else
         {
-            trigger_error("Session failed to start");
+            Debug::addMessage("Session failed to start");
         }
     }
 
@@ -213,7 +213,7 @@ class Session
     {
         if (!session_regenerate_id(false))
         {
-            trigger_error("Session failed to regenerate id");
+            Debug::addMessage("Session failed to regenerate id");
         }
     }
 }

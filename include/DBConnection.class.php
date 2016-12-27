@@ -204,7 +204,7 @@ class DBConnection
             return $this->connection->commit();
         }
 
-        trigger_error("Did a commit while not having a transaction running!");
+        Debug::addMessage("Did a commit while not having a transaction running!");
 
         return false;
     }
@@ -221,7 +221,7 @@ class DBConnection
             return $this->connection->rollback();
         }
 
-        trigger_error("Did a rollback while not having a transaction running!");
+        Debug::addMessage("Did a rollback while not having a transaction running!");
 
         return false;
     }
@@ -247,7 +247,7 @@ class DBConnection
     ) {
         if (DEBUG_MODE && !in_array($return_type, static::getReturnTypes()))
         {
-            trigger_error("Return type is invalid");
+            Debug::addMessage("Return type is invalid");
             exit;
         }
 
@@ -294,9 +294,9 @@ class DBConnection
             if ($this->isInTransaction())
             {
                 $success = $this->connection->rollback();
-                if (DEBUG_MODE && !$success)
+                if (!$success)
                 {
-                    trigger_error("A PDO exception occurred during during a transaction, but the rollback failed");
+                    Debug::addMessage("A PDO exception occurred during during a transaction, but the rollback failed");
                 }
             }
 
@@ -314,7 +314,7 @@ class DBConnection
                 );
                 echo "Fields data: <br>";
                 var_dump($prepared_pairs);
-                trigger_error("Database Error");
+                Debug::addMessage("Database Error");
             }
 
             throw DBException::get("Database error happened, yikes!", ErrorType::DB_GENERIC)->setSqlErrorCode(

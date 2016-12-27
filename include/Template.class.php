@@ -19,11 +19,12 @@
  */
 
 /**
- * Create a template object
+ * Create a template object. This class is just a simple wrapper around a smarty instance.
  */
 class Template
 {
     /**
+     * The smarty instance used
      * @var Smarty
      */
     protected $smarty;
@@ -34,11 +35,13 @@ class Template
     protected static $locale;
 
     /**
+     * The template file
      * @var string
      */
     private $file;
 
     /**
+     * The template directory
      * @var string
      */
     private $directory;
@@ -48,11 +51,6 @@ class Template
      * @var boolean
      */
     private $minify = true;
-
-    /**
-     * @var boolean
-     */
-    private $debug_ajax = false;
 
     /**
      * Template constructor.
@@ -164,18 +162,6 @@ class Template
     }
 
     /**
-     * @param boolean $debug_ajax
-     *
-     * @return $this
-     */
-    public function setDebugAjax($debug_ajax)
-    {
-        $this->debug_ajax = $debug_ajax;
-
-        return $this;
-    }
-
-    /**
      * Setup function for children to override
      */
     protected function setup() { throw new TemplateException("Not Implemented"); }
@@ -216,7 +202,7 @@ class Template
     {
         if ($this->directory === null)
         {
-            throw new TemplateException('You cannot select a template file until you select a template.');
+            throw new TemplateException('You cannot select a template file until you select a template directory.');
         }
         if (!file_exists($this->directory . $file_name))
         {
@@ -279,24 +265,11 @@ class Template
             ob_start();
             $this->smarty->display($this->file, $this->directory);
 
-            // Debug ajax see http://phpdebugbar.com/docs/rendering.html#the-javascript-object
-            if (Debug::isToolbarEnabled())
-            {
-                if ($this->debug_ajax || Util::isAJAXRequest())
-                {
-                    echo Debug::getToolbar()->getJavascriptRenderer()->render(false);
-                }
-            }
-
             return ob_get_clean();
         }
         catch (SmartyException $e)
         {
-            if (DEBUG_MODE)
-            {
-                trigger_error("Template error: ");
-                var_dump($e);
-            }
+            Debug::addMessage("Template error = " . var_export($e));
 
             return sprintf("Template Error: %s", $e->getMessage());
         }
