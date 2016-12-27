@@ -333,6 +333,7 @@ class User extends Base implements IAsXML
         $role = $user->getRole();
 
         // init session vars
+        Session::regenerateID();
         $session = Session::user();
         $session->init()
             ->set("id", $id)
@@ -351,6 +352,7 @@ class User extends Base implements IAsXML
     {
         Session::flush();
         Session::destroy();
+        Session::regenerateID();
         Session::start(); // restart session
     }
 
@@ -1016,6 +1018,8 @@ class User extends Base implements IAsXML
         {
             throw new UserException("Change password no rows affected", ErrorType::USER_CHANGE_PASSWORD);
         }
+
+        Session::regenerateID();
     }
 
     /**
@@ -1056,6 +1060,8 @@ class User extends Base implements IAsXML
             DBConnection::get()->rollback();
             throw new UserException(exception_message_db(_('change your password')), ErrorType::USER_CHANGE_PASSWORD);
         }
+
+        Session::regenerateID();
     }
 
     /**

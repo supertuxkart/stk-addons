@@ -18,6 +18,7 @@
  */
 
 /**
+ * TODO maybe use https://github.com/auraphp/Aura.Session over this (flash, CSRF and tests)?
  * Handle the session for the web user
  */
 class Session
@@ -201,5 +202,18 @@ class Session
     public static function isStarted()
     {
         return session_status() === PHP_SESSION_ACTIVE;
+    }
+
+
+    /**
+     *  Update the current session id with a newly generated one
+     * TODO avoid lost session like the examples here? https://secure.php.net/manual/en/function.session-regenerate-id.php
+     */
+    public static function regenerateID()
+    {
+        if (!session_regenerate_id(false))
+        {
+            trigger_error("Session failed to regenerate id");
+        }
     }
 }
