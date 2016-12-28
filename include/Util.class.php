@@ -715,11 +715,11 @@ MSG;
      * Resize an image, and send the new resized image to the user with http headers
      *
      * @param string $file_path
-     * @param int    $orig_size the size of the image
+     * @param int    $size_type the image size type, see SImage::SIZE_
      *
      * @return null
      */
-    public static function resizeImage($file_path, $orig_size = null)
+    public static function resizeImage($file_path, $size_type = null)
     {
         // file is invalid
         Debug::addMessage('Called Util::resizeImage');
@@ -732,27 +732,8 @@ MSG;
             return;
         }
 
-        // Determine image size
-        switch ($orig_size)
-        {
-            case SImage::SIZE_SMALL:
-                $size = 25;
-                break;
-
-            case SImage::SIZE_MEDIUM:
-                $size = 75;
-                break;
-
-            case SImage::SIZE_BIG:
-                $size = 300;
-                break;
-
-            default:
-                $size = 100;
-                break;
-        }
-
-        $cache_name = Cache::cachePrefix($orig_size) . basename($file_path);
+        $size = SImage::sizeToInt($size_type);
+        $cache_name = Cache::getCachePrefix($size_type) . basename($file_path);
         $local_path = UP_PATH . $file_path; // all images should be in our upload directory
 
         // Check if image exists in the database

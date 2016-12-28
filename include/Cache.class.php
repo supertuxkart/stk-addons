@@ -194,7 +194,7 @@ class Cache
     }
 
     /**
-     * Check if a cache file exist (based on database record of its existence)
+     * Check if a cache file exists in the database, filesystem
      * This method silently fails
      *
      * @param string $filename
@@ -233,8 +233,6 @@ class Cache
      */
     public static function getImage($id, $size = null)
     {
-        Debug::addMessage('Cache::getImage');
-
         try
         {
             $file = File::getFromID($id);
@@ -255,7 +253,7 @@ class Cache
             'exists'      => true
         ];
 
-        $cache_prefix = Cache::cachePrefix($size);
+        $cache_prefix = Cache::getCachePrefix($size);
 
         // image exists in cache
         $filename = $cache_prefix . $file->getFileName();
@@ -278,26 +276,8 @@ class Cache
      *
      * @return string
      */
-    public static function cachePrefix($size)
+    public static function getCachePrefix($size)
     {
-        if (!$size)
-        {
-            return '';
-        }
-
-        if ($size === SImage::SIZE_BIG)
-        {
-            return '300--';
-        }
-        if ($size === SImage::SIZE_MEDIUM)
-        {
-            return '75--';
-        }
-        if ($size === SImage::SIZE_SMALL)
-        {
-            return '25--';
-        }
-
-        return '100--';
+        return sprintf("%d--", SImage::sizeToInt($size));
     }
 }

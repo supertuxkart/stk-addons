@@ -137,7 +137,7 @@ class AddonViewer
         }
 
         // Get image url
-        $image = Cache::getImage($this->addon->getImage(), SImage::SIZE_BIG);
+        $image = Cache::getImage($this->addon->getImage(), SImage::SIZE_LARGE);
         if ($this->addon->getImage() !== Addon::NO_IMAGE && $image['exists'] == true && $image['is_approved'] == true)
         {
             $tpl['image_url'] = $image['url'];

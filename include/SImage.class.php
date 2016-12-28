@@ -1,7 +1,7 @@
 <?php
 /**
- * copyright 2012 Stephen Just <stephenjust@users.sf.net>
- *           2014 Daniel Butum <danibutum at gmail dot com>
+ * copyright 2012        Stephen Just <stephenjust@users.sf.net>
+ *           2014 - 2016 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stk-addons.
  *
  * stk-addons is free software: you can redistribute it and/or modify
@@ -20,24 +20,38 @@
 
 /**
  * Class to hold all image-manipulation operations
- * @author Stephen
  */
 class SImage
 {
     /**
-     * @const int
+     * Small image type
      */
     const SIZE_SMALL = 1;
 
     /**
-     * @const int
+     * Medium image type
      */
     const SIZE_MEDIUM = 2;
 
     /**
-     * @const int
+     * Large image type
      */
-    const SIZE_BIG = 3;
+    const SIZE_LARGE = 3;
+
+    /**
+     * Default size of the image type
+     */
+    const SIZE_DEFAULT = 4;
+
+    /**
+     * PNG image type
+     */
+    const TYPE_PNG = IMAGETYPE_PNG;
+
+    /**
+     * JPEG image type
+     */
+    const TYPE_JPEG = IMAGETYPE_JPEG;
 
     /**
      * The full path to the image
@@ -46,7 +60,7 @@ class SImage
     private $path;
 
     /**
-     * The image formatL jpeg, png
+     * The image format: jpeg, png
      * @var int
      */
     private $format;
@@ -253,5 +267,53 @@ class SImage
         imagecopyresampled($destination, $this->imageData, 0, 0, 0, 0, $new_x, $new_y, $old_x, $old_y);
 
         $this->imageData = $destination;
+    }
+
+    /**
+     * @param int $size see SIZE_*
+     *
+     * @return int
+     */
+    public static function sizeToInt($size)
+    {
+        $size = (int)$size;
+        switch ($size)
+        {
+            case static::SIZE_SMALL:
+                return 25;
+
+            case static::SIZE_MEDIUM:
+                return 75;
+
+            case static::SIZE_LARGE:
+                return 300;
+
+            default:
+                return 100;
+        }
+    }
+
+    /**
+     * @param $number
+     *
+     * @return int
+     */
+    public static function intToSize($number)
+    {
+        $number = (int)$number;
+        switch ($number)
+        {
+            case 25:
+                return static::SIZE_SMALL;
+
+            case 75:
+                return static::SIZE_MEDIUM;
+
+            case 300:
+                return static::SIZE_LARGE;
+
+            default:
+                return static::SIZE_DEFAULT;
+        }
     }
 }

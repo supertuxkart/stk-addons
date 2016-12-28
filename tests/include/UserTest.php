@@ -20,6 +20,9 @@
 class UserTest extends PHPUnit_Framework_TestCase
 {
 
+    /**
+     * @return array
+     */
     public function providerTestUsernameValid()
     {
         return [
@@ -36,6 +39,8 @@ class UserTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param string $username
+     *
      * @dataProvider providerTestUsernameValid
      */
     public function testUsernameValid($username)
@@ -44,6 +49,9 @@ class UserTest extends PHPUnit_Framework_TestCase
     }
 
 
+    /**
+     * @return array
+     */
     public function providerTestUsernameThrowsException()
     {
         return [
@@ -58,8 +66,10 @@ class UserTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param string $username
+     *
      * @dataProvider providerTestUsernameThrowsException
-     * @@expectedException UserException
+     *               @@expectedException UserException
      */
     public function testUsernameThrowsException($username)
     {
@@ -67,6 +77,9 @@ class UserTest extends PHPUnit_Framework_TestCase
     }
 
 
+    /**
+     * @return array
+     */
     public function providerTestUsernameValidWithSpace()
     {
         return [

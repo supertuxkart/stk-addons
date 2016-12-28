@@ -30,6 +30,8 @@ class ValidateTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param string $box
+     *
      * @dataProvider providerTestCheckboxThrowsException
      * @expectedException UserException
      */
@@ -55,6 +57,10 @@ class ValidateTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param bool  $is_empty
+     * @param array $pool
+     * @param array $params
+     *
      * @dataProvider providerTestEnsureInput
      */
     public function testEnsureInput($is_empty, $pool, $params)
@@ -93,6 +99,8 @@ class ValidateTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param string $version
+     *
      * @dataProvider providerTestVersionStringThrowsException
      * @expectedException ValidateException
      */
@@ -102,6 +110,8 @@ class ValidateTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param string $version
+     *
      * @dataProvider providerTestVersionStringNoThrowsException
      */
     public function testVersionStringNoThrowsException($version)
