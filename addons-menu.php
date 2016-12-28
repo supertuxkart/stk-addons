@@ -25,12 +25,13 @@ try
     $type = isset($_GET['type']) ? Addon::stringToType($_GET['type']) : null;
     $sort = isset($_GET['sort']) ? $_GET['sort'] : Addon::SORT_FEATURED;
     $order = isset($_GET['order']) ? $_GET['order'] : null;
+    $addon_name = empty($_GET['name']) ? null : $_GET['name'];
 
     $current_page = PaginationTemplate::getPageNumber();
     $limit = PaginationTemplate::getLimitNumber();
 
     $addons = Addon::getAll($type, $limit, $current_page, $sort, $order);
-    $template_addons = Addon::filterMenuTemplate($addons, empty($_GET['name']) ? null : $_GET['name']);
+    $template_addons = Addon::filterMenuTemplate($addons, $addon_name);
 
     $pagination = PaginationTemplate::get()
         ->setItemsPerPage($limit)

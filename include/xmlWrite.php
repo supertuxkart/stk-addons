@@ -147,13 +147,14 @@ function generateAssetXML()
                 }
                 catch (FileException $e)
                 {
-                    trigger_error('Error finding addon file for ' . $addon['name'], E_USER_WARNING);
+                    trigger_error('Error finding addon file in the database for addon = ' . $addon['name'], E_USER_WARNING);
                     echo '<span class="warning">An error occurred locating add-on: ' . $addon['name'] . '</span><br />';
                     continue;
                 }
+
                 if (!file_exists(UP_PATH . $file_path))
                 {
-                    trigger_error('File not found for ' . $addon['name'], E_USER_WARNING);
+                    trigger_error('File not found on the local filesystem for addona = ' . $addon['name'], E_USER_WARNING);
                     echo '<span class="warning">' . _h('The following file could not be found:') . ' ' . $file_path .
                          '</span><br />';
                     continue;

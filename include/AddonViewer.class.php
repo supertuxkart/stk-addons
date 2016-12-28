@@ -138,7 +138,7 @@ class AddonViewer
 
         // Get image url
         $image = Cache::getImage($this->addon->getImage(), SImage::SIZE_BIG);
-        if ($this->addon->getImage() != 0 && $image['exists'] == true && $image['is_approved'] == true)
+        if ($this->addon->getImage() !== Addon::NO_IMAGE && $image['exists'] == true && $image['is_approved'] == true)
         {
             $tpl['image_url'] = $image['url'];
         }
@@ -236,11 +236,13 @@ class AddonViewer
             if ($this->can_edit)
             {
                 // has_icon, current icon is not already the icon
-                if ($this->addon->getType() === Addon::KART && $this->addon->getImage(true) !== $image->getId())
+                if ($this->addon->getType() === Addon::KART && $this->addon->getIcon() !== $image->getId())
                 {
                     $image_tpl["has_icon"] = true;
                 }
-                if ($this->addon->getImage() !== $image->getId()) // current image is not already the image
+
+                // current image is not already the image
+                if ($this->addon->getImage() !== $image->getId())
                 {
                     $image_tpl["has_image"] = true;
                 }

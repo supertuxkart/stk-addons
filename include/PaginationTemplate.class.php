@@ -128,7 +128,7 @@ class PaginationTemplate extends Template
     public static function getLimitNumber($default_limit = null)
     {
         // set default if not already set
-        if (is_null($default_limit)) $default_limit = static::MIN_LIMIT_ITEMS;
+        if (!$default_limit) $default_limit = static::MIN_LIMIT_ITEMS;
 
         if (!empty($_GET[static::LIMIT_ARGUMENT]))
         {

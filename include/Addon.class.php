@@ -23,21 +23,50 @@
  */
 class Addon extends Base
 {
+    /**
+     * The type id for the kart
+     */
     const KART = 1;
 
+    /**
+     * The type id for the track
+     */
     const TRACK = 2;
 
+    /**
+     * The type id for the arena
+     */
     const ARENA = 3;
 
+    /**
+     * Sort type for featured
+     */
     const SORT_FEATURED = "featured";
 
+    /**
+     * Sort type for alphabetical
+     */
     const SORT_ALPHABETICAL = "alphabetical";
 
+    /**
+     * Sort type for date
+     */
     const SORT_DATE = "date";
 
+    /**
+     * Sort ascending
+     */
     const ORDER_ASC = "asc";
 
+    /**
+     * Sort descending
+     */
     const ORDER_DESC = "desc";
+
+    /**
+     * Default value for no image set for icon/image fields.
+     */
+    const NO_IMAGE = 0;
 
     /**
      * @var string
@@ -195,6 +224,9 @@ class Addon extends Base
         $this->permalink = static::buildPermalink($this->type, $this->id);
         $this->include_min = $data['min_include_ver'];
         $this->include_max = $data['max_include_ver'];
+
+        $this->image = static::NO_IMAGE;
+        $this->icon = static::NO_IMAGE;
 
         // load revisions
         if ($load_revisions)
@@ -452,16 +484,22 @@ class Addon extends Base
     }
 
     /**
-     * Get the id of image if $icon is set or the id of the icon
-     *
-     * @param bool $icon
+     * Get the id of the image
      *
      * @return int
      */
-    public function getImage($icon = false)
+    public function getImage()
     {
-        if (!$icon) return $this->image;
+        return $this->image;
+    }
 
+    /**
+     * Get the id of the icon
+     *
+     * @return int
+     */
+    public function getIcon()
+    {
         return $this->icon;
     }
 
@@ -471,14 +509,6 @@ class Addon extends Base
     public function getDateCreation()
     {
         return $this->date_creation;
-    }
-
-    /**
-     * @return int
-     */
-    public function getIcon()
-    {
-        return $this->icon;
     }
 
     /**
@@ -1504,32 +1534,6 @@ class Addon extends Base
 
         foreach ($addons as $addon)
         {
-            // Get link icon
-            if ($addon->getType() === static::KART)
-            {
-                // Make sure an icon file is set for kart
-                if ($addon->getImage(true) != 0)
-                {
-                    $im = Cache::getImage($addon->getImage(true), SImage::SIZE_SMALL);
-                    if ($im['exists'] && $im['is_approved'])
-                    {
-                        $icon = $im['url'];
-                    }
-                    else
-                    {
-                        $icon = IMG_LOCATION . 'kart-icon.png';
-                    }
-                }
-                else
-                {
-                    $icon = IMG_LOCATION . 'kart-icon.png';
-                }
-            }
-            else
-            {
-                $icon = IMG_LOCATION . 'track-icon.png';
-            }
-
             // Approved?
             if ($addon->hasApprovedRevision())
             {
@@ -1544,6 +1548,24 @@ class Addon extends Base
             {
                 // do not show
                 continue;
+            }
+
+            // Get link icon
+            $icon = IMG_LOCATION . 'track-icon.png';
+            if ($addon->getType() === static::KART)
+            {
+                $icon = IMG_LOCATION . 'kart-icon.png';
+
+                // Make sure an icon file is set for kart
+                $icon_id = $addon->getIcon();
+                if ($icon_id !== Addon::NO_IMAGE)
+                {
+                    $im = Cache::getImage($icon_id, SImage::SIZE_SMALL);
+                    if ($im['exists'] && $im['is_approved'])
+                    {
+                        $icon = $im['url'];
+                    }
+                }
             }
 
             // is currently selected
@@ -1721,7 +1743,7 @@ class Addon extends Base
         }
         catch (DBException $e)
         {
-            throw new AddonException(exception_message_db(_("select all addons from the database")));
+            throw new AddonException(exception_message_db(_("SELECT ALL addons FROM the DATABASE")));
         }
 
         $return = [];

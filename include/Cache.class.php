@@ -2,7 +2,7 @@
 
 /**
  * Copyright 2011-2013 Stephen Just <stephenjust@users.sf.net>
- *           2014-2015 Daniel Butum <danibutum at gmail dot com>
+ *           2014-2016 Daniel Butum <danibutum at gmail dot com>
  * This file is part of stk-addons.
  *
  * stk-addons is free software: you can redistribute it and/or modify
@@ -26,14 +26,39 @@
 class Cache
 {
     /**
-     * Empty the cache folder, leave certain files in place
+     * The default image if the desired image does not exist
+     */
+    const NOT_FOUND_IMAGE = 'notfound.png';
+
+    /**
+     * Do not touch the graph_files and the .gitignore file
+     */
+    const DEFAULT_EXCLUDE_REGEX = '/^^(cache_graph_.*\.json)|\.gitignore$/i';
+
+    /**
+     * Empty the cache in the filesystem and database, leave certain files in place
      *
-     * @param string $exclude_regex files to exclude regex
+     * @param string $exclude_regex files to exclude regex, uses the static::DEFAULT_EXCLUDE_REGEX if null
      *
      * @throws CacheException
      */
-    public static function clear($exclude_regex = '/^^(cache_graph_.*\.json)|\.gitignore$/i')
+    public static function clear($exclude_regex = null)
     {
+        static::clearFS($exclude_regex);
+        static::clearDB($exclude_regex);
+    }
+
+    /**
+     * Empty the cache in the filesystem only, leave certain files in place
+     *
+     * @param string $exclude_regex files to exclude regex, uses the static::DEFAULT_EXCLUDE_REGEX if null
+     *
+     * @throws CacheException
+     */
+    public static function clearFS($exclude_regex = null)
+    {
+        if (!$exclude_regex) $exclude_regex = static::DEFAULT_EXCLUDE_REGEX;
+
         try
         {
             File::deleteDirFS(CACHE_PATH, $exclude_regex);
@@ -42,16 +67,28 @@ class Cache
         {
             throw new CacheException($e->getMessage());
         }
+    }
+
+    /**
+     * Empty the cache in the database only, leave certain files in place
+     *
+     * @param string $exclude_regex files to exclude regex, uses the static::DEFAULT_EXCLUDE_REGEX if null
+     *
+     * @throws CacheException
+     */
+    public static function clearDB($exclude_regex = null)
+    {
+        if (!$exclude_regex) $exclude_regex = static::DEFAULT_EXCLUDE_REGEX;
 
         try
         {
             $cache_list = DBConnection::get()->query(
-                'SELECT `file`
-                 FROM `' . DB_PREFIX . 'cache`',
+                'SELECT `file` FROM `' . DB_PREFIX . 'cache`',
                 DBConnection::FETCH_ALL
             );
             foreach ($cache_list as $cache_item)
             {
+                // matches exclude regex, ignore
                 if (preg_match($exclude_regex, $cache_item['file']))
                 {
                     continue;
@@ -101,6 +138,9 @@ class Cache
                 catch (FileException $e)
                 {
                     Log::newEvent($e->getMessage());
+                    Debug::addMessage(
+                        'Cache::clearAddon failed to delete the cache file = ' . CACHE_PATH . $cache_item['file']
+                    );
 
                     return false;
                 }
@@ -110,6 +150,8 @@ class Cache
         }
         catch (DBException $e)
         {
+            Debug::addMessage('Cache::clearAddon database error');
+
             return false;
         }
 
@@ -143,6 +185,8 @@ class Cache
         }
         catch (DBException $e)
         {
+            Debug::addMessage('Cache::createFile database error');
+
             return false;
         }
 
@@ -153,41 +197,44 @@ class Cache
      * Check if a cache file exist (based on database record of its existence)
      * This method silently fails
      *
-     * @param string $path Relative to upload root
+     * @param string $filename
      *
-     * @return array Empty array on failure, array with 'path', 'addon' otherwise
+     * @return bool
      */
-    public static function fileExists($path)
+    public static function fileExists($filename)
     {
         try
         {
-            $result = DBConnection::get()->query(
-                'SELECT *
-                FROM `' . DB_PREFIX . 'cache`
-                WHERE `file` = :file',
-                DBConnection::FETCH_ALL,
-                [':file' => (string)$path]
-            );
+            // TODO add an exists method
+            $count_db = DBConnection::get()->count('cache', '`file` = :file', [':file' => $filename]);
         }
         catch (DBException $e)
         {
-            return [];
-        }
+            Debug::addMessage('Cache::fileExists database error');
 
-        return $result;
+            return false;
+        }
+        if (!$count_db) return false;
+
+        $local_path = CACHE_PATH . $filename;
+        if (!file_exists($local_path)) return false;
+
+        return true;
     }
 
     /**
      * Get image properties for a cacheable image
      *
      * @param int $id   the id of the file
-     * @param int $size image size, see SImage::SIZE_
+     * @param int $size image size, see SImage::SIZE_*
      *
      * @return array
      * @throws CacheException
      */
     public static function getImage($id, $size = null)
     {
+        Debug::addMessage('Cache::getImage');
+
         try
         {
             $file = File::getFromID($id);
@@ -196,7 +243,7 @@ class Cache
         {
             // image does with tha id does not exist in the database
             return [
-                'url'         => IMG_LOCATION . 'notfound.png',
+                'url'         => IMG_LOCATION . static::NOT_FOUND_IMAGE,
                 'is_approved' => true,
                 'exists'      => false
             ];
@@ -208,16 +255,18 @@ class Cache
             'exists'      => true
         ];
 
-        $cache_prefix = $size ? Cache::cachePrefix($size) : "";
+        $cache_prefix = Cache::cachePrefix($size);
 
         // image exists in cache
-        $basename = basename($file->getPath());
-        if (static::fileExists($cache_prefix . $basename))
+        $filename = $cache_prefix . $file->getFileName();
+        if (static::fileExists($filename))
         {
-            $return['url'] = CACHE_LOCATION . $cache_prefix . $basename;
+            Debug::addMessage('true: ' . $filename);
+            $return['url'] = CACHE_LOCATION . $filename;
         }
         else // create new cache by resizing the image
         {
+            Debug::addMessage('false');
             $return['url'] = ROOT_LOCATION . 'image.php?size=' . $size . '&amp;pic=' . $file->getPath();
         }
 

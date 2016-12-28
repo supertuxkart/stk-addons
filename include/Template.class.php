@@ -129,7 +129,7 @@ class Template
      */
     public static function getTemplateDirectoryVersion($template_dir = null)
     {
-        if (is_null($template_dir))
+        if (!$template_dir)
         {
             return TPL_PATH;
         }

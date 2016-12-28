@@ -127,11 +127,21 @@ class File extends Base
     }
 
     /**
+     * Get the full path of the file, can also contain directory names
      * @return string
      */
     public function getPath()
     {
         return $this->path;
+    }
+
+    /**
+     * Get the filename of the file from the path
+     * @return string
+     */
+    public function getFileName()
+    {
+        return basename($this->path);
     }
 
     /**
