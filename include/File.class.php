@@ -300,7 +300,7 @@ class File extends Base
         $folder = UP_PATH;
         foreach (static::ls($folder) as $entry)
         {
-            if (is_dir($folder . $entry)) // ignore folders
+            if (static::isDirectory($folder . $entry)) // ignore folders
             {
                 continue;
             }
@@ -310,7 +310,7 @@ class File extends Base
         $folder = UP_PATH . 'images' . DS;
         foreach (static::ls($folder) as $entry)
         {
-            if (is_dir($folder . $entry))
+            if (static::isDirectory($folder . $entry))
             {
                 continue;
             }
@@ -351,26 +351,6 @@ class File extends Base
         }
 
         return $return_files;
-    }
-
-    /**
-     * Get the files in a specified path
-     *
-     * @param string $path
-     * @param bool   $has_dots flag that indicates the output has also the .. and . directory listings
-     *
-     * @return array of all files and directories
-     * @throws FileException
-     */
-    public static function ls($path, $has_dots = false)
-    {
-        $files = scandir($path);
-        if ($files === false)
-        {
-            throw new FileException(_h("Path is not a directory"));
-        }
-
-        return $has_dots ? $files : array_diff($files, ['..', '.']);
     }
 
     /**
@@ -516,7 +496,7 @@ class File extends Base
         // Find files to add to archive
         foreach (static::ls($directory) as $file)
         {
-            if (is_dir($directory . $file))
+            if (static::isDirectory($directory . $file))
             {
                 continue;
             }
@@ -546,14 +526,14 @@ class File extends Base
      */
     public static function flattenDirectory($current_dir, $destination_dir)
     {
-        if (!is_dir($current_dir) || !is_dir($destination_dir))
+        if (!static::isDirectory($current_dir) || !static::isDirectory($destination_dir))
         {
             throw new FileException(_h('Invalid source or destination directory.'));
         }
 
         foreach (static::ls($current_dir) as $file)
         {
-            if (is_dir($current_dir . $file))
+            if (static::isDirectory($current_dir . $file))
             {
                 static::flattenDirectory($current_dir . $file . DS, $destination_dir);
                 static::deleteDirFS($current_dir . $file);
@@ -580,7 +560,7 @@ class File extends Base
         {
             return false;
         }
-        if (!is_dir($path))
+        if (!static::isDirectory($path))
         {
             return false;
         }
@@ -612,7 +592,7 @@ class File extends Base
 
         foreach (static::ls($path) as $file)
         {
-            if (is_dir($path . $file))
+            if (static::isDirectory($path . $file))
             {
                 continue;
             }
@@ -655,7 +635,7 @@ class File extends Base
      */
     public static function removeInvalidFiles($path, $source = false)
     {
-        if (!file_exists($path) || !is_dir($path))
+        if (!file_exists($path) || !static::isDirectory($path))
         {
             Debug::addMessage(sprintf("%s does not exist or is not a directory", $path));
 
@@ -677,7 +657,7 @@ class File extends Base
         foreach (static::ls($path) as $file)
         {
             // Don't check current and parent directory
-            if (is_dir($path . $file))
+            if (static::isDirectory($path . $file))
             {
                 continue;
             }
@@ -694,6 +674,39 @@ class File extends Base
         }
 
         return $removed_files;
+    }
+
+    /**
+     * Get the directory contents of specified path
+     *
+     * @param string $path
+     * @param bool   $has_dots flag that indicates the output has also the .. and . directory listings
+     *
+     * @return array of all files and directories
+     * @throws FileException
+     */
+    public static function ls($path, $has_dots = false)
+    {
+        $files = scandir($path);
+        if ($files === false)
+        {
+            throw new FileException(_h("Path is not a directory"));
+        }
+
+        return $has_dots ? $files : array_diff($files, ['..', '.']);
+    }
+
+
+    /**
+     * Tells whether the path is a directory
+     *
+     * @param string $path
+     *
+     * @return bool
+     */
+    public static function isDirectory($path)
+    {
+        return is_dir($path);
     }
 
     /**
@@ -848,7 +861,7 @@ class File extends Base
     {
         // Make sure we are looking at a directory
         $dir = rtrim($dir, DS);
-        if (!is_dir($dir))
+        if (!static::isDirectory($dir))
         {
             return null;
         }
@@ -856,7 +869,7 @@ class File extends Base
         foreach (static::ls($dir) as $file)
         {
             // Check if our item is a subfolder
-            if (is_dir($dir . DS . $file))
+            if (static::isDirectory($dir . DS . $file))
             {
                 $last_mod = filemtime($dir . DS . $file . DS . '.');
 
@@ -882,7 +895,7 @@ class File extends Base
     {
         // Make sure we are looking at a directory
         $dir = rtrim($dir, DS);
-        if (!is_dir($dir))
+        if (!static::isDirectory($dir))
         {
             throw new FileException(sprintf("'%s' is not a directory", $dir));
         }
@@ -902,7 +915,7 @@ class File extends Base
 
             // delete file or directory
             $file_path = $dir . DS . $file;
-            if (is_dir($file_path))
+            if (static::isDirectory($file_path))
             {
                 static::deleteDirFS($file_path);
             }
