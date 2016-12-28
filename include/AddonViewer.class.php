@@ -275,20 +275,20 @@ class AddonViewer
         {
             $config = [
                 "status" => [
-                    "alpha_img"   => Util::getImageLabel(_h('Alpha')),
-                    "beta_img"    => Util::getImageLabel(_h('Beta')),
-                    "rc_img"      => Util::getImageLabel(_h('Release-Candidate')),
-                    "latest_img"  => Util::getImageLabel(_h('Latest')),
-                    "invalid_img" => Util::getImageLabel(_h('Invalid Textures'))
+                    "alpha_img"   => SImage::getImageLabel(_h('Alpha')),
+                    "beta_img"    => SImage::getImageLabel(_h('Beta')),
+                    "rc_img"      => SImage::getImageLabel(_h('Release-Candidate')),
+                    "latest_img"  => SImage::getImageLabel(_h('Latest')),
+                    "invalid_img" => SImage::getImageLabel(_h('Invalid Textures'))
                 ]
             ];
 
             if ($this->user_has_permission)
             {
-                $config["status"]["approve_img"] = Util::getImageLabel(_h('Approved'));
-                $config["status"]["invisible_img"] = Util::getImageLabel(_h('Invisible'));
-                $config["status"]["dfsg_img"] = Util::getImageLabel(_h('DFSG Compliant'));
-                $config["status"]["featured_img"] = Util::getImageLabel(_h('Featured'));
+                $config["status"]["approve_img"] = SImage::getImageLabel(_h('Approved'));
+                $config["status"]["invisible_img"] = SImage::getImageLabel(_h('Invisible'));
+                $config["status"]["dfsg_img"] = SImage::getImageLabel(_h('DFSG Compliant'));
+                $config["status"]["featured_img"] = SImage::getImageLabel(_h('Featured'));
             }
 
             $tpl['config'] = $config;

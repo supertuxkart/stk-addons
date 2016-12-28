@@ -696,7 +696,6 @@ class File extends Base
         return $has_dots ? $files : array_diff($files, ['..', '.']);
     }
 
-
     /**
      * Tells whether the path is a directory
      *

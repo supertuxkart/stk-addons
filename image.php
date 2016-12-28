@@ -21,4 +21,4 @@ require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
 
 $size = empty($_GET['size']) ? null : $_GET['size'];
 $file = empty($_GET['pic']) ? null : $_GET['pic'];
-Util::resizeImage($file, (int)$size);
+SImage::resizeImage($file, (int)$size);

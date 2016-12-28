@@ -90,12 +90,12 @@ class SImage
         {
             case IMAGETYPE_PNG:
                 $source = imagecreatefrompng($this->path);
-                $this->format = IMAGETYPE_PNG;
+                $this->format = static::TYPE_PNG;
                 break;
 
             case IMAGETYPE_JPEG:
                 $source = imagecreatefromjpeg($this->path);
-                $this->format = IMAGETYPE_JPEG;
+                $this->format = static::TYPE_JPEG;
                 break;
 
             default:
@@ -132,11 +132,11 @@ class SImage
      */
     public function save($file_path)
     {
-        if ($this->format === IMAGETYPE_PNG)
+        if ($this->format === static::TYPE_PNG)
         {
             imagepng($this->imageData, $file_path);
         }
-        elseif ($this->format === IMAGETYPE_JPEG)
+        elseif ($this->format === static::TYPE_JPEG)
         {
             imagejpeg($this->imageData, $file_path);
         }
@@ -267,6 +267,198 @@ class SImage
         imagecopyresampled($destination, $this->imageData, 0, 0, 0, 0, $new_x, $new_y, $old_x, $old_y);
 
         $this->imageData = $destination;
+    }
+
+    /**
+     * Resize an image, and send the new resized image to the user with http headers
+     *
+     * @param string $file_path
+     * @param int    $size_type the image size type, see SImage::SIZE_
+     *
+     * @return null
+     */
+    public static function resizeImage($file_path, $size_type = null)
+    {
+        // file is invalid
+        Debug::addMessage('Called Util::resizeImage');
+
+        if (!$file_path)
+        {
+            header('HTTP/1.1 404 Not Found');
+            Debug::addMessage('Called Util::resizeImage with an empty file_path');
+
+            return;
+        }
+
+        $size = SImage::sizeToInt($size_type);
+        $cache_name = Cache::getCachePrefix($size_type) . basename($file_path);
+        $local_path = UP_PATH . $file_path; // all images should be in our upload directory
+
+        // Check if image exists in the database
+        try
+        {
+            $file = File::getFromPath($file_path);
+        }
+        catch (FileException $e)
+        {
+            Debug::addMessage(sprintf("%s does not exist in the database", $file_path));
+            header('HTTP/1.1 404 Not Found');
+
+            return;
+        }
+
+        // file does not exist on disk
+        if (!file_exists($local_path))
+        {
+            Debug::addMessage(sprintf("%s does not exist on the disk", $file_path));
+            header('HTTP/1.1 404 Not Found');
+
+            return;
+        }
+
+        // Check if a cached version is available
+        if (Cache::fileExists($cache_name))
+        {
+            header('Cached-Image: true');
+            header('Location: ' . CACHE_LOCATION . $cache_name);
+
+            return;
+        }
+
+        // Start processing the original file
+        $image_info = getimagesize($local_path);
+        switch ($image_info[2])
+        {
+            case IMAGETYPE_PNG:
+                $source = imagecreatefrompng($local_path);
+                $format = 'png';
+                break;
+
+            case IMAGETYPE_JPEG:
+                $source = imagecreatefromjpeg($local_path);
+                $format = 'jpg';
+                break;
+
+            default:
+                $source = imagecreatefrompng(IMG_LOCATION . 'notfound.png');
+                $format = 'png';
+                break;
+        }
+
+        // Get length and width of original image
+        $width_source = imagesx($source);
+        $height_source = imagesy($source);
+        if ($width_source > $height_source)
+        {
+            $width_destination = $size;
+            $height_destination = $size * $height_source / $width_source;
+        }
+        else // $width_source <= $height_source
+        {
+            $height_destination = $size;
+            $width_destination = $size * $width_source / $height_source;
+        }
+
+        // Create new canvas
+        $destination = imagecreatetruecolor($width_destination, $height_destination);
+
+        // Preserve transparency
+        imagealphablending($destination, false);
+        imagesavealpha($destination, true);
+        $transparent_bg = imagecolorallocatealpha($destination, 255, 255, 255, 127);
+        imagefilledrectangle($destination, 0, 0, $width_destination, $height_destination, $transparent_bg);
+
+        // Resize image
+        imagecopyresampled(
+            $destination,
+            $source,
+            0,
+            0,
+            0,
+            0,
+            $width_destination,
+            $height_destination,
+            $width_source,
+            $height_source
+        );
+
+        // Display image and cache the result
+        header('Cached-Image: false');
+        if ($format === 'png')
+        {
+            header('Content-Type: image/png');
+            imagepng($destination, CACHE_PATH . $cache_name, 9);
+            imagepng($destination, null, 9);
+        }
+        else
+        {
+            header("Content-Type: image/jpeg");
+            imagejpeg($destination, CACHE_PATH . $cache_name, 90);
+            imagejpeg($destination, null, 90);
+        }
+
+        // Create a record of the cached file
+        Cache::createFile(
+            $cache_name,
+            $file->getAddonId(),
+            sprintf('w=%d,h=%d', $width_destination, $height_destination)
+        );
+    }
+
+    public static function createImageLabel($text)
+    {
+        $write_dir = CACHE_PATH;
+
+        $text_no_accent = preg_replace('/\W/s', '_', $text); // remove some accents
+        $image_name = 'im_' . $text_no_accent . '.png';
+
+        if (!file_exists($write_dir . $image_name))
+        {
+            $text_size = 11;
+            $text_angle = 90;
+            $font = FONTS_PATH . 'DejaVuSans.ttf';
+            $bbox = imagettfbbox($text_size, $text_angle, $font, $text);
+
+            $min_x = min([$bbox[0], $bbox[2], $bbox[4], $bbox[6]]);
+            $max_x = max([$bbox[0], $bbox[2], $bbox[4], $bbox[6]]);
+            $min_y = min([$bbox[1], $bbox[3], $bbox[5], $bbox[7]]);
+            $max_y = max([$bbox[1], $bbox[3], $bbox[5], $bbox[7]]);
+
+            $width = $max_x - $min_x + 2;
+            $height = $max_y - $min_y + 2;
+
+            $image = imagecreatetruecolor($width, $height);
+
+            // set color and transparency
+            $bg_color = imagecolorallocate($image, 0, 0, 0);
+            imagecolortransparent($image, $bg_color);
+            $text_color = imagecolorallocate($image, 2, 2, 2);
+
+            // set text
+            imagettftext($image, $text_size, $text_angle, $width, $height, $text_color, $font, $text);
+
+            // create the image in the write dir
+            imagepng($image, $write_dir . $image_name);
+            imagedestroy($image);
+        }
+
+        return [
+            'dir' => CACHE_LOCATION,
+            'file' => $image_name,
+        ];
+    }
+
+    /**
+     * Get the image label of some text, if the image label for that text does not exist, then create it
+     *
+     * @param string $text the label text
+     *
+     * @return string the img tag that points to our image text
+     */
+    public static function getImageLabel($text)
+    {
+        $path = static::createImageLabel($text);
+        return sprintf('<img src="%s" alt="%s" />', $path['dir'] . $path['file'], $text);
     }
 
     /**
