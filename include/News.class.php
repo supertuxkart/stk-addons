@@ -145,7 +145,7 @@ class News
             return null;
         }
 
-        $xml_content = file_get_contents($feed_url);
+        $xml_content = FileSystem::fileGetContents($feed_url);
         if (!$xml_content)
         {
             return null;

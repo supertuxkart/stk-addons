@@ -113,7 +113,7 @@ class SImage
      */
     public function setPath($path)
     {
-        if (!file_exists($path))
+        if (!FileSystem::exists($path))
         {
             throw new SImageException(_h('Path does not exist on the filesystem'));
         }
@@ -308,7 +308,7 @@ class SImage
         }
 
         // file does not exist on disk
-        if (!file_exists($local_path))
+        if (!FileSystem::exists($local_path))
         {
             Debug::addMessage(sprintf("%s does not exist on the disk", $file_path));
             header('HTTP/1.1 404 Not Found');
@@ -412,7 +412,7 @@ class SImage
         $text_no_accent = preg_replace('/\W/s', '_', $text); // remove some accents
         $image_name = 'im_' . $text_no_accent . '.png';
 
-        if (!file_exists($write_dir . $image_name))
+        if (!FileSystem::exists($write_dir . $image_name))
         {
             $text_size = 11;
             $text_angle = 90;

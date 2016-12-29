@@ -287,9 +287,9 @@ class Statistic
 
         // cache file
         $is_cached = false;
-        if (file_exists($cache_path))
+        if (FileSystem::exists($cache_path))
         {
-            $modified_time = filemtime($cache_path);
+            $modified_time = FileSystem::fileModificationTime($cache_path, false);
             if (!Util::isOldEnough($modified_time, Util::SECONDS_IN_A_DAY)) // cache is not old
             {
                 $is_cached = true;

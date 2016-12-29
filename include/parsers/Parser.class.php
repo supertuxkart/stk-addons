@@ -65,7 +65,7 @@ abstract class Parser
         {
             $binary = $this->binary_file;
         }
-        if (!file_exists($file))
+        if (!FileSystem::exists($file))
         {
             throw new ParserException('File not found');
         }
@@ -76,15 +76,18 @@ abstract class Parser
             $read_flag .= 'b';
         }
 
-        $handle = fopen($file, $read_flag);
-        if (!$handle)
+        try
+        {
+            $handle = FileSystem::fileOpen($file, $read_flag);
+        }
+        catch (FileException $e)
         {
             throw new ParserException('Error opening file');
         }
 
         $this->file_name = basename($file);
         $this->file = $handle;
-        $this->file_size = filesize($file);
+        $this->file_size = FileSystem::fileSize($file);
 
         $this->writeable = $write;
         $this->_loadFile();

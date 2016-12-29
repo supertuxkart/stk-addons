@@ -46,7 +46,7 @@ function generateNewsXML()
     // Reference assets.xml
     $writer->startElement('include');
     $writer->writeAttribute('file', ASSETS_XML_LOCATION);
-    $writer->writeAttribute('mtime', filemtime(ASSETS_XML_PATH));
+    $writer->writeAttribute('mtime', FileSystem::fileModificationTime(ASSETS_XML_PATH, false));
     $writer->endElement();
 
     // Refresh dynamic news entries
@@ -143,7 +143,7 @@ function generateAssetXML()
 
                 try
                 {
-                    $file_path = File::getFromID($addon['file_id'])->getPath();
+                    $relative_path = File::getFromID($addon['file_id'])->getPath();
                 }
                 catch (FileException $e)
                 {
@@ -152,10 +152,11 @@ function generateAssetXML()
                     continue;
                 }
 
-                if (!file_exists(UP_PATH . $file_path))
+                $absolute_path = UP_PATH . $relative_path;
+                if (!FileSystem::exists($absolute_path))
                 {
                     trigger_error('File not found on the local filesystem for addona = ' . $addon['name'], E_USER_WARNING);
-                    echo '<span class="warning">' . _h('The following file could not be found:') . ' ' . $file_path .
+                    echo '<span class="warning">' . _h('The following file could not be found:') . ' ' . $relative_path .
                          '</span><br />';
                     continue;
                 }
@@ -163,7 +164,7 @@ function generateAssetXML()
                 $writer->startElement($type);
                 $writer->writeAttribute('id', $addon['id']);
                 $writer->writeAttribute('name', $addon['name']);
-                $writer->writeAttribute('file', DOWNLOAD_LOCATION . $file_path);
+                $writer->writeAttribute('file', DOWNLOAD_LOCATION . $relative_path);
                 $writer->writeAttribute('date', strtotime($addon['date']));
                 $writer->writeAttribute('uploader', $addon['username']);
                 $writer->writeAttribute('designer', $addon['designer']);
@@ -172,7 +173,7 @@ function generateAssetXML()
                 try
                 {
                     $image_path = File::getFromID($addon['image_id'])->getPath();
-                    if (file_exists(UP_PATH . $image_path))
+                    if (FileSystem::exists(UP_PATH . $image_path))
                     {
                         $writer->writeAttribute('image', DOWNLOAD_LOCATION . $image_path);
                     }
@@ -187,7 +188,7 @@ function generateAssetXML()
                     try
                     {
                         $icon_path = File::getFromID($addon['icon_id'])->getPath();
-                        if (file_exists(UP_PATH . $icon_path))
+                        if (FileSystem::exists(UP_PATH . $icon_path))
                         {
                             $writer->writeAttribute('icon', DOWNLOAD_LOCATION . $icon_path);
                         }
@@ -201,7 +202,7 @@ function generateAssetXML()
                 $writer->writeAttribute('format', $addon['format']);
                 $writer->writeAttribute('revision', $addon['revision']);
                 $writer->writeAttribute('status', $addon['status']);
-                $writer->writeAttribute('size', filesize(UP_PATH . $file_path));
+                $writer->writeAttribute('size', FileSystem::fileSize($absolute_path, false));
                 $writer->writeAttribute('min-include-version', $addon['min_include_ver']);
                 $writer->writeAttribute('max-include-version', $addon['max_include_ver']);
 
@@ -343,7 +344,7 @@ function generateAssetXML2()
 
                         try
                         {
-                            $file_path = File::getFromID($addon_rev['file_id'])->getPath();
+                            $relative_path = File::getFromID($addon_rev['file_id'])->getPath();
                         }
                         catch (FileException $e)
                         {
@@ -352,29 +353,31 @@ function generateAssetXML2()
                                  '</span><br />';
                             continue;
                         }
-                        if (!file_exists(UP_PATH . $file_path))
+
+                        $absolute_path = UP_PATH . $relative_path;
+                        if (!FileSystem::exists(UP_PATH . $relative_path))
                         {
                             trigger_error('File not found for ' . $addon['name'], E_USER_WARNING);
                             echo '<span class="warning">' . _h(
                                     'The following file could not be found:'
-                                ) . ' ' . $file_path . '</span><br />';
+                                ) . ' ' . $relative_path . '</span><br />';
                             continue;
                         }
 
                         $writer->startElement('revision');
 
-                        $writer->writeAttribute('file', DOWNLOAD_LOCATION . $file_path);
+                        $writer->writeAttribute('file', DOWNLOAD_LOCATION . $relative_path);
                         $writer->writeAttribute('date', strtotime($addon_rev['creation_date']));
                         $writer->writeAttribute('format', $addon_rev['format']);
                         $writer->writeAttribute('revision', $addon_rev['revision']);
                         $writer->writeAttribute('status', $addon_rev['status']);
-                        $writer->writeAttribute('size', filesize(UP_PATH . $file_path));
+                        $writer->writeAttribute('size', FileSystem::fileSize($absolute_path, false));
 
                         // Add image and icon to record
                         try
                         {
                             $image_path = File::getFromID($addon_rev['image_id'])->getPath();
-                            if (file_exists(UP_PATH . $image_path))
+                            if (FileSystem::exists(UP_PATH . $image_path))
                             {
                                 $writer->writeAttribute('image', DOWNLOAD_LOCATION . $image_path);
                             }
@@ -389,7 +392,7 @@ function generateAssetXML2()
                             try
                             {
                                 $icon_path = File::getFromID($addon_rev['icon'])->getPath();
-                                if (file_exists(UP_PATH . $icon_path))
+                                if (FileSystem::exists(UP_PATH . $icon_path))
                                 {
                                     $writer->writeAttribute('icon', DOWNLOAD_LOCATION . $icon_path);
                                 }
@@ -426,7 +429,7 @@ function generateAssetXML2()
     $music_items = Music::getAllByTitle();
     foreach ($music_items as $music)
     {
-        if (!file_exists(UP_PATH . 'music' . DS . $music->getFile()))
+        if (!FileSystem::exists(UP_PATH . 'music' . DS . $music->getFile()))
         {
             trigger_error('File ' . UP_PATH . 'music' . DS . $music->getFile() . ' not found!', E_USER_WARNING);
             continue;
@@ -440,7 +443,7 @@ function generateAssetXML2()
         $writer->writeAttribute('gain', sprintf('%.3F', $music->getGain()));
         $writer->writeAttribute('length', $music->getLength());
         $writer->writeAttribute('file', DOWNLOAD_LOCATION . 'music/' . $music->getFile());
-        $writer->writeAttribute('size', filesize(UP_PATH . 'music' . DS . $music->getFile()));
+        $writer->writeAttribute('size', FileSystem::fileSize(UP_PATH . 'music' . DS . $music->getFile(), false));
         $writer->writeAttribute('xml-filename', $music->getXmlFile());
         $writer->endElement();
     }
@@ -459,12 +462,12 @@ function generateAssetXML2()
 
 function writeNewsXML()
 {
-    return File::write(NEWS_XML_PATH, generateNewsXML());
+    return FileSystem::filePutContents(NEWS_XML_PATH, generateNewsXML());
 }
 
 function writeAssetXML()
 {
-    $count = File::write(ASSETS_XML_PATH, generateAssetXML());
+    $count = FileSystem::filePutContents(ASSETS_XML_PATH, generateAssetXML());
 
     //$count += File::write(ASSETS2_XML_PATH, generateAssetXML2());
 

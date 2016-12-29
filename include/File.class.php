@@ -169,7 +169,7 @@ class File extends Base
         }
 
         // delete from filesystem
-        static::deleteFileFS($parent . $this->path);
+        FileSystem::removeFile($parent . $this->path);
     }
 
     /**
@@ -298,9 +298,9 @@ class File extends Base
         // Look-up all existing files on the disk
         $fs_files = [];
         $folder = UP_PATH;
-        foreach (static::ls($folder) as $entry)
+        foreach (FileSystem::ls($folder) as $entry)
         {
-            if (static::isDirectory($folder . $entry)) // ignore folders
+            if (FileSystem::isDirectory($folder . $entry)) // ignore folders
             {
                 continue;
             }
@@ -308,9 +308,9 @@ class File extends Base
         }
 
         $folder = UP_PATH . 'images' . DS;
-        foreach (static::ls($folder) as $entry)
+        foreach (FileSystem::ls($folder) as $entry)
         {
-            if (static::isDirectory($folder . $entry))
+            if (FileSystem::isDirectory($folder . $entry))
             {
                 continue;
             }
@@ -400,154 +400,6 @@ class File extends Base
     }
 
     /**
-     * Extract an archive file.
-     *
-     * @param string $file        the file to extract
-     * @param string $destination the directory where to extract
-     * @param string $file_ext    the archive extension
-     *
-     * @throws FileException
-     */
-    public static function extractArchive($file, $destination, $file_ext)
-    {
-        if (!file_exists($file))
-        {
-            throw new FileException(_h('The file to extract does not exist.'));
-        }
-
-        // Extract archive
-        switch ($file_ext)
-        {
-            // Handle archives using ZipArchive class
-            case 'zip':
-                $archive = new ZipArchive;
-
-                if (!$archive->open($file))
-                {
-                    throw new FileException(_h('Could not open archive file. It may be corrupted.'));
-                }
-                if (!$archive->extractTo($destination))
-                {
-                    throw new FileException(_h('Failed to extract archive file.') . ' (zip)');
-                }
-
-                $archive->close();
-                static::deleteFileFS($file); // delete file archive from inside folder
-                break;
-
-            // Handle archives using Archive_Tar class
-            case 'tar':
-            case 'tar.gz':
-            case 'tgz':
-            case 'gz':
-            case 'tbz':
-            case 'tar.bz2':
-            case 'bz2':
-                $compression = null;
-                if ($file_ext === 'tar.gz' || $file_ext === 'tgz' || $file_ext === 'gz')
-                {
-                    $compression = 'gz';
-                }
-                elseif ($file_ext === 'tbz' || $file_ext === 'tar.bz2' || $file_ext === 'bz2')
-                {
-                    $compression = 'bz2';
-                }
-
-                $archive = new Archive_Tar($file, $compression);
-                if (!$archive)
-                {
-                    throw new FileException(_h('Could not open archive file. It may be corrupted.'));
-                }
-                if (!$archive->extract($destination))
-                {
-                    throw new FileException(_h('Failed to extract archive file.') . ' (' . $compression . ')');
-                }
-                static::deleteFileFS($file); // delete file archive from inside folder
-                break;
-
-            default:
-                throw new FileException(_h('Unknown archive type.'));
-        }
-    }
-
-    /**
-     * Add a directory to a zip archive
-     *
-     * @param string $directory
-     * @param string $filename
-     *
-     * @throws FileException
-     */
-    public static function compress($directory, $filename)
-    {
-        $zip = new ZipArchive();
-
-
-        if (file_exists($filename))
-        {
-            static::deleteFileFS($filename, false);
-        }
-
-        if ($zip->open($filename, ZIPARCHIVE::CREATE) !== true)
-        {
-            throw new FileException("Cannot open <$filename>");
-        }
-
-        // Find files to add to archive
-        foreach (static::ls($directory) as $file)
-        {
-            if (static::isDirectory($directory . $file))
-            {
-                continue;
-            }
-            if (!$zip->addFile($directory . $file, $file))
-            {
-                throw new FileException("Can't add this file: " . $file);
-            }
-            if (!file_exists($directory . $file))
-            {
-                throw new FileException("Can't add this file (it doesn't exist): " . $file);
-            }
-        }
-
-        if (!$zip->close())
-        {
-            throw new FileException("Can't close the zip");
-        }
-    }
-
-    /**
-     * Reduce the directory tree to a single level
-     *
-     * @param string $current_dir
-     * @param string $destination_dir
-     *
-     * @throws FileException
-     */
-    public static function flattenDirectory($current_dir, $destination_dir)
-    {
-        if (!static::isDirectory($current_dir) || !static::isDirectory($destination_dir))
-        {
-            throw new FileException(_h('Invalid source or destination directory.'));
-        }
-
-        foreach (static::ls($current_dir) as $file)
-        {
-            if (static::isDirectory($current_dir . $file))
-            {
-                static::flattenDirectory($current_dir . $file . DS, $destination_dir);
-                static::deleteDirFS($current_dir . $file);
-                continue;
-            }
-
-            if ($current_dir !== $destination_dir)
-            {
-                static::move($current_dir . $file, $destination_dir . $file);
-            }
-        }
-    }
-
-    /**
      * Check that all image sizes are power of 2 and that they have the correct MIME type
      *
      * @param string $path the path to an image
@@ -556,11 +408,11 @@ class File extends Base
      */
     public static function imageCheck($path)
     {
-        if (!file_exists($path))
+        if (!FileSystem::exists($path))
         {
             return false;
         }
-        if (!static::isDirectory($path))
+        if (!FileSystem::isDirectory($path))
         {
             return false;
         }
@@ -590,9 +442,9 @@ class File extends Base
             $image_file_ext[] = 'xpm';
         }
 
-        foreach (static::ls($path) as $file)
+        foreach (FileSystem::ls($path) as $file)
         {
-            if (static::isDirectory($path . $file))
+            if (FileSystem::isDirectory($path . $file))
             {
                 continue;
             }
@@ -635,7 +487,7 @@ class File extends Base
      */
     public static function removeInvalidFiles($path, $source = false)
     {
-        if (!file_exists($path) || !static::isDirectory($path))
+        if (!FileSystem::exists($path) || !FileSystem::isDirectory($path))
         {
             Debug::addMessage(sprintf("%s does not exist or is not a directory", $path));
 
@@ -654,10 +506,10 @@ class File extends Base
         $approved_types = Util::commaStringToArray($approved_types);
 
         $removed_files = [];
-        foreach (static::ls($path) as $file)
+        foreach (FileSystem::ls($path) as $file)
         {
             // Don't check current and parent directory
-            if (static::isDirectory($path . $file))
+            if (FileSystem::isDirectory($path . $file))
             {
                 continue;
             }
@@ -669,135 +521,11 @@ class File extends Base
             if (!preg_match('/\.(' . implode('|', $approved_types) . ')$/i', $file))
             {
                 $removed_files[] = basename($file);
-                static::deleteFileFS($file);
+                FileSystem::removeFile($file);
             }
         }
 
         return $removed_files;
-    }
-
-    /**
-     * Get the directory contents of specified path
-     *
-     * @param string $path
-     * @param bool   $has_dots flag that indicates the output has also the .. and . directory listings
-     *
-     * @return array of all files and directories
-     * @throws FileException
-     */
-    public static function ls($path, $has_dots = false)
-    {
-        $files = scandir($path);
-        if ($files === false)
-        {
-            throw new FileException(_h("Path is not a directory"));
-        }
-
-        return $has_dots ? $files : array_diff($files, ['..', '.']);
-    }
-
-    /**
-     * Tells whether the path is a directory
-     *
-     * @param string $path
-     *
-     * @return bool
-     */
-    public static function isDirectory($path)
-    {
-        return is_dir($path);
-    }
-
-    /**
-     * Move a file or directory
-     *
-     * @param string $old_name
-     * @param string $new_name
-     * @param bool   $overwrite flat that indicates to overwrite $new_name if it exists
-     *
-     * @throws FileException
-     */
-    public static function move($old_name, $new_name, $overwrite = true)
-    {
-        // validate
-        if ($old_name === $new_name)
-        {
-            throw new FileException("Old name is the same as new name");
-        }
-        if (!$overwrite && file_exists($new_name))
-        {
-            throw new FileException(
-                sprintf(
-                    "Failed to move file '%s 'to new location('%s') because it already exists",
-                    $old_name,
-                    $new_name
-                )
-            );
-        }
-
-        if (rename($old_name, $new_name) === false)
-        {
-            throw new FileException(sprintf("Failed to move file '%s' to '%s'.", $old_name, $new_name));
-        }
-    }
-
-
-    /**
-     * Write to a file in the filesystem, safely. Create the file if it does not exist
-     *
-     * @param string $file    the filename in the system
-     * @param string $content the content to write
-     *
-     * @return bool return true on success, false otherwise
-     */
-    public static function write($file, $content)
-    {
-        // If file doesn't exist, create it
-        if (!file_exists($file))
-        {
-            if (!touch($file))
-            {
-                return false;
-            }
-        }
-
-        $fhandle = fopen($file, 'w');
-        if (!$fhandle)
-        {
-            return false;
-        }
-        if (!fwrite($fhandle, $content))
-        {
-            return false;
-        }
-        fclose($fhandle);
-
-        return true;
-    }
-
-    /**
-     * Delete a file from the filesystem
-     *
-     * @param string $file_name  the file to delete
-     * @param bool   $check_file flag that indicates to check the file before trying to remove it
-     *
-     * @throws FileException
-     */
-    public static function deleteFileFS($file_name, $check_file = true)
-    {
-        if ($check_file && !is_file($file_name) && !is_link($file_name))
-        {
-            throw new FileException(sprintf("'%s' is not a file/link", $file_name));
-        }
-        if ($check_file && !file_exists($file_name))
-        {
-            throw new FileException(sprintf("'%s' file does not exist", $file_name));
-        }
-
-        if (unlink($file_name) === false)
-        {
-            throw new FileException(sprintf("Failed to delete file '%s'", $file_name));
-        }
     }
 
     /**
@@ -845,93 +573,6 @@ class File extends Base
         }
 
         return $message;
-    }
-
-    /**
-     * Delete subdirectories of a folder which have not been modified recently
-     *
-     * @param string $dir
-     * @param int    $max_age in milliseconds
-     *
-     * @return null
-     * @throws FileException
-     */
-    public static function deleteOldSubdirectories($dir, $max_age)
-    {
-        // Make sure we are looking at a directory
-        $dir = rtrim($dir, DS);
-        if (!static::isDirectory($dir))
-        {
-            return null;
-        }
-
-        foreach (static::ls($dir) as $file)
-        {
-            // Check if our item is a subfolder
-            if (static::isDirectory($dir . DS . $file))
-            {
-                $last_mod = filemtime($dir . DS . $file . DS . '.');
-
-                // Check if our folder is old enough to delete
-                if (Util::isOldEnough($last_mod, $max_age))
-                {
-                    static::deleteDirFS($dir . DS . $file);
-                }
-            }
-        }
-    }
-
-    /**
-     * Recursively delete a directory. This does not touch the database.
-     *
-     * @param string      $dir           the directory to delete
-     * @param string|null $exclude_regex files that match this regex are excluded and if this is not
-     *                                   null
-     *
-     * @throws FileException
-     */
-    public static function deleteDirFS($dir, $exclude_regex = null)
-    {
-        // Make sure we are looking at a directory
-        $dir = rtrim($dir, DS);
-        if (!static::isDirectory($dir))
-        {
-            throw new FileException(sprintf("'%s' is not a directory", $dir));
-        }
-
-        $directory = dir($dir);
-        while (($file = $directory->read()) !== false)
-        {
-            if ($file === '.' || $file === '..')
-            {
-                continue;
-            }
-
-            if ($exclude_regex && preg_match($exclude_regex, $file))
-            {
-                continue;
-            }
-
-            // delete file or directory
-            $file_path = $dir . DS . $file;
-            if (static::isDirectory($file_path))
-            {
-                static::deleteDirFS($file_path);
-            }
-            else
-            {
-                static::deleteFileFS($file_path);
-            }
-        }
-        $directory->close();
-
-        if (!$exclude_regex) // remove root directory only if no exclude regex was given
-        {
-            if (rmdir($dir) === false)
-            {
-                throw new FileException(sprintf("Failed to remove '%s' directory", $dir));
-            }
-        }
     }
 
     /**
@@ -993,7 +634,7 @@ class File extends Base
     {
         // Delete the existing image by this name
         $file_name = basename($file_name);
-        if (file_exists(UP_PATH . 'images' . DS . $file_name))
+        if (FileSystem::exists(UP_PATH . 'images' . DS . $file_name))
         {
             try
             {
@@ -1019,7 +660,7 @@ class File extends Base
         if (!$image_info)
         {
             // Image is not read-able - must be corrupt or otherwise invalid
-            static::deleteFileFS($image_path);
+            FileSystem::removeFile($image_path);
             throw new FileException(_h('The uploaded image file is invalid.'));
         }
 
@@ -1050,7 +691,7 @@ class File extends Base
         }
         catch (FileException $e)
         {
-            static::deleteFileFS($image_path);
+            FileSystem::removeFile($image_path);
             throw new FileException($e->getMessage());
         }
     }
@@ -1068,7 +709,7 @@ class File extends Base
         $reader = xml_parser_create();
 
         // Remove whitespace at beginning and end of file
-        $xml_content = trim(file_get_contents($quad_file));
+        $xml_content = trim(FileSystem::fileGetContents($quad_file));
 
         if (!xml_parse_into_struct($reader, $xml_content, $vals, $index))
         {
@@ -1318,25 +959,6 @@ class File extends Base
         $tab_string = $tab_index ? "" : " tabindex=\"-1\"";
 
         return sprintf('<a href="%s"%s>%s</a>', $href, $tab_string, $label);
-    }
-
-    /**
-     * Generate a unique file name for a file in directory
-     *
-     * @param string $directory the directory where the file resides
-     * @param string $extension the extension of the file
-     *
-     * @return string the unique file name in directory
-     */
-    public static function generateUniqueFileName($directory, $extension)
-    {
-        // TODO use tempnam
-        do
-        {
-            $filename = uniqid(mt_rand());
-        } while (file_exists($directory . $filename . '.' . $extension));
-
-        return $filename;
     }
 
     /**

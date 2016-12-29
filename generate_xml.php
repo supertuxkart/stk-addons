@@ -21,8 +21,8 @@
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
 
 $xml = writeAssetXML();
-echo 'Asset xml written: ' . $xml . '<br />';
+echo 'Asset xml written: ' . $xml . ' bytes<br />';
 
 $xml = writeNewsXML();
-echo 'News xml written: ' . $xml . '<br />';
+echo 'News xml written: ' . $xml . ' bytes<br />';
 

@@ -61,7 +61,7 @@ class Cache
 
         try
         {
-            File::deleteDirFS(CACHE_PATH, $exclude_regex);
+            FileSystem::removeDirectory(CACHE_PATH, false, $exclude_regex);
         }
         catch (FileException $e)
         {
@@ -133,7 +133,7 @@ class Cache
             {
                 try
                 {
-                    File::deleteFileFS(CACHE_PATH . $cache_item['file']);
+                    FileSystem::removeFile(CACHE_PATH . $cache_item['file']);
                 }
                 catch (FileException $e)
                 {
@@ -217,7 +217,7 @@ class Cache
         if (!$count_db) return false;
 
         $local_path = CACHE_PATH . $filename;
-        if (!file_exists($local_path)) return false;
+        if (!FileSystem::exists($local_path)) return false;
 
         return true;
     }

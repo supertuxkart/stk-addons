@@ -23,6 +23,6 @@ require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
 
 $tpl = StkTemplate::get('about.tpl')->setMinify(false);
 $tpl->assignTitle(_h('About'));
-$tpl->assign('about', ['credits' => ['content' => file_get_contents("CREDITS")]]);
+$tpl->assign('about', ['credits' => ['content' => FileSystem::fileGetContents("CREDITS")]]);
 
 echo $tpl;

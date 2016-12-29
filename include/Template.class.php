@@ -139,7 +139,7 @@ class Template
         }
 
         $dir = ROOT_PATH . 'tpl' . DS . $template_dir . DS;
-        if (file_exists($dir) && File::isDirectory($dir))
+        if (FileSystem::exists($dir) && FileSystem::isDirectory($dir))
         {
             return $dir;
         }
@@ -204,7 +204,7 @@ class Template
         {
             throw new TemplateException('You cannot select a template file until you select a template directory.');
         }
-        if (!file_exists($this->directory . $file_name))
+        if (!FileSystem::exists($this->directory . $file_name))
         {
             throw new TemplateException(sprintf('Could not find template file "%s".', h($file_name)));
         }

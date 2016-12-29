@@ -187,7 +187,7 @@ class Upload
     {
         try
         {
-            File::deleteDirFS($this->temp_file_dir);
+            FileSystem::removeDirectory($this->temp_file_dir);
         }
         catch (FileException $e)
         {
@@ -257,8 +257,8 @@ class Upload
             // load the data from the archive, and validate it
             try
             {
-                File::extractArchive($this->temp_file_fullpath, $this->temp_file_dir, $this->file_ext);
-                File::flattenDirectory($this->temp_file_dir, $this->temp_file_dir);
+                FileSystem::extractFromArchive($this->temp_file_fullpath, $this->temp_file_dir, $this->file_ext);
+                FileSystem::flattenDirectory($this->temp_file_dir);
                 static::removeInvalidFiles();
                 static::parseFiles();
             }
@@ -266,7 +266,7 @@ class Upload
             {
                 try
                 {
-                    File::deleteFileFS($this->temp_file_fullpath);
+                    FileSystem::removeFile($this->temp_file_fullpath);
                     throw new UploadException("File Exception: " . $e->getMessage());
                 }
                 catch (FileException $e)
@@ -289,7 +289,7 @@ class Upload
     {
         try
         {
-            File::move($this->temp_file_fullpath, $this->upload_file_dir . $this->upload_file_name);
+            FileSystem::move($this->temp_file_fullpath, $this->upload_file_dir . $this->upload_file_name);
             File::createImage($this->upload_file_dir . $this->upload_file_name, $this->addon_id);
         }
         catch (FileException $e)
@@ -346,7 +346,8 @@ class Upload
         {
             throw new UploadException(_h("The archive does not contain any addon information"));
         }
-        $this->properties['xml_attributes']['license'] = h(file_get_contents($this->properties['license_file'], false));
+        $this->properties['xml_attributes']['license'] =
+            h(FileSystem::fileGetContents($this->properties['license_file'], false));
 
         // new revision
         $addon = null;
@@ -470,7 +471,7 @@ class Upload
         }
         $image_file = $this->temp_file_dir . $image_file;
 
-        if (!file_exists($image_file))
+        if (!FileSystem::exists($image_file))
         {
             throw new UploadException(
                 _h("A screenshot/icon file does not exist in the archive(file name is case sensitive)")
@@ -486,7 +487,7 @@ class Upload
         $image_ext = $image_ext[1];
 
         // Save file to local filesystem, TODO maybe find a way to use generateUploadFilename
-        $file_id = File::generateUniqueFileName(UP_PATH . 'images' . DS, $image_ext);
+        $file_id = FileSystem::generateUniqueFileName(UP_PATH . 'images' . DS, $image_ext);
         $image_path = 'images' . DS . $file_id . '.' . $image_ext;
         $this->properties['image_path'] = UP_PATH . $image_path;
         copy($image_file, $this->properties['image_path']);
@@ -498,7 +499,7 @@ class Upload
         }
         catch (FileException $e)
         {
-            File::deleteFileFS($this->properties['image_path']);
+            FileSystem::removeFile($this->properties['image_path']);
             throw new UploadException($e->getMessage());
         }
     }
@@ -534,7 +535,7 @@ class Upload
         // Pack zip file
         try
         {
-            File::compress($this->temp_file_dir, $this->upload_file_dir . $this->upload_file_name);
+            FileSystem::compressToArchive($this->temp_file_dir, $this->upload_file_dir . $this->upload_file_name);
         }
         catch (FileException $e)
         {
@@ -549,7 +550,7 @@ class Upload
         }
         catch (FileException $e)
         {
-            File::deleteFileFS($this->upload_file_dir . $this->upload_file_name);
+            FileSystem::removeFile($this->upload_file_dir . $this->upload_file_name);
             throw new UploadException($e->getMessage());
         }
     }
@@ -580,7 +581,7 @@ class Upload
      */
     private function generateUploadFilename($file_ext)
     {
-        $file_id = File::generateUniqueFileName($this->upload_file_dir, $file_ext);
+        $file_id = FileSystem::generateUniqueFileName($this->upload_file_dir, $file_ext);
         $this->upload_file_name = $file_id . "." . $file_ext;
     }
 
@@ -595,7 +596,7 @@ class Upload
         $b3d_textures = [];
 
         // Loop through all files
-        foreach (File::ls($this->temp_file_dir) as $file)
+        foreach (FileSystem::ls($this->temp_file_dir) as $file)
         {
             // Parse any B3D models
             if (preg_match('/\.b3d$/i', $file))
@@ -675,7 +676,7 @@ class Upload
         $missing_textures = [];
         foreach ($this->properties['b3d_textures'] as $tex)
         {
-            if (!file_exists($this->temp_file_dir . $tex))
+            if (!FileSystem::exists($this->temp_file_dir . $tex))
             {
                 $missing_textures[] = $tex;
             }
@@ -711,7 +712,7 @@ class Upload
         {
             throw new UploadException(_h("Failed to move uploaded file '%s' "), $from);
         }
-        if (!file_exists($to))
+        if (!FileSystem::exists($to))
         {
             throw new UploadException('The file was not moved. This should never happen!');
         }
