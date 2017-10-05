@@ -720,6 +720,11 @@ class File extends Base
         $quads = [];
         foreach ($vals as $val)
         {
+            if ($val['tag'] != 'QUAD')
+            {
+                continue;
+            }
+            
             if ($val['type'] === 'close' || $val['type'] === 'comment')
             {
                 continue;
