@@ -5,6 +5,11 @@ platform. The official location of the production website is http://addons.super
 ## Build Status
 [![Build Status](https://travis-ci.org/leyyin/stk-addons.svg?branch=master)](https://travis-ci.org/leyyin/stk-addons)
 
+## Branches
+The **[master branch](https://github.com/supertuxkart/stk-addons)** contains the latest code, not stable or production ready.
+
+The **[production branch](https://github.com/supertuxkart/stk-addons/tree/production)** contains stable code that is ready for production (the live addons server is based on this branch).
+
 ## Installation
 The whole installation procedure can be seen in the [INSTALL.md](INSTALL.md) file.
 
