@@ -11,13 +11,13 @@ before_script:
   - composer self-update
   - composer install
   
-notifications:
-  irc:
-    channels:
-      - "irc.freenode.org#supertuxkart"
-    skip_join: false
-    use_notice: true
-    template:
-      - "[%{repository}#%{branch} @%{commit}] %{author}): %{message}"
-      - "Diff: %{compare_url}"
-      - "Build: %{build_url}"
+#notifications:
+#  irc:
+#    channels:
+#      - "irc.freenode.org#supertuxkart"
+#    skip_join: false
+#    use_notice: true
+#    template:
+#      - "[%{repository}#%{branch} @%{commit}] %{author}): %{message}"
+#      - "Diff: %{compare_url}"
+#      - "Build: %{build_url}"
