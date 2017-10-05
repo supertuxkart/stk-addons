@@ -194,7 +194,6 @@ class FileSystem
         }
     }
 
-
     /**
      * Opens a file or URL
      *
@@ -232,7 +231,6 @@ class FileSystem
             throw new FileException("Failed to close file");
         }
     }
-
 
     /**
      * Binary-safe file write
@@ -290,7 +288,6 @@ class FileSystem
         return $size;
     }
 
-
     /**
      * Gets file/directory modification time
      *
@@ -342,7 +339,6 @@ class FileSystem
         return $bytes_written;
     }
 
-
     /**
      * Reads entire file into a string
      *
@@ -368,7 +364,6 @@ class FileSystem
 
         return $read_data;
     }
-
 
     /**
      * Sets access and modification time of file
@@ -480,7 +475,6 @@ class FileSystem
     {
         if ($filename)
         {
-
             clearstatcache(true, $filename);
         }
         else
@@ -553,7 +547,6 @@ class FileSystem
     public static function compressToArchive($directory, $filename)
     {
         $zip = new ZipArchive();
-
 
         if (static::exists($filename))
         {

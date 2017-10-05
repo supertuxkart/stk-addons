@@ -78,9 +78,6 @@ if ($pop_kart !== null)
     );
 }
 
-//echo @is_file();
-//scandir('/fdsfdsdfs/fsdfds');
-//print_r(error_get_last());
 $tpl->assign('news_messages', $news_messages);
 echo $tpl;
 

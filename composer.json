@@ -20,7 +20,7 @@
         "myclabs/php-enum": "^1.5"
     },
     "require-dev": {
-        "phpunit/phpunit": "@stable",
+        "phpunit/phpunit": "~5.7",
         "phpunit/dbunit": "@stable",
         "phpmd/phpmd" : "@stable",
         "maximebf/debugbar": "1.*"

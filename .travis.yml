@@ -5,7 +5,7 @@ php:
   - 7.0
   - 7.1
 
-script: phpunit --configuration phpunit.xml
+script: ./vendor/bin/phpunit --configuration phpunit.xml
 
 before_script:
   - composer self-update

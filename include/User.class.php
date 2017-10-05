@@ -352,8 +352,8 @@ class User extends Base implements IAsXML
     {
         Session::flush();
         Session::destroy();
-        Session::regenerateID();
         Session::start(); // restart session
+        Session::regenerateID();
     }
 
     /**
