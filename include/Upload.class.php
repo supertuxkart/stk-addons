@@ -167,7 +167,7 @@ class Upload
         $this->temp_file_fullpath = $this->temp_file_dir . $this->file_name;
 
         // Clean up old temp files to make room for new upload
-        File::deleteOldSubdirectories(TMP_PATH . 'stk-uploads', Util::SECONDS_IN_A_HOUR);
+        FileSystem::deleteOldSubdirectories(TMP_PATH . 'stk-uploads', Util::SECONDS_IN_A_HOUR);
 
         $this->doUpload();
     }

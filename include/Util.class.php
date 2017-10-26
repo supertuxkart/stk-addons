@@ -136,6 +136,19 @@ class Util
     }
 
     /**
+     * Checks if the given key or index exists in the array
+     *
+     * @param array $array
+     * @param mixed $key
+     *
+     * @return bool return true if the given key is set in the array. key can be any value possible for an array index.
+     */
+    public static function array_key_exists(array $array, $key)
+    {
+        return isset($array[$key]) || array_key_exists($array, $key);
+    }
+
+    /**
      * Output buffer a file and return it's content
      *
      * @param $path
@@ -399,8 +412,21 @@ MSG;
         foreach ($hashes as $hash)
         {
             $hash = explode("=", $hash);
-            // key => value
-            $vars[$hash[0]] = $hash[1];
+            $len_hash = count($hash);
+
+            // At least the key exists
+            if ($len_hash != 0)
+            {
+                $key = $hash[0];
+
+                $value = '';
+                // the value exists
+                if  ($len_hash >= 1)
+                    $value = $hash[1];
+
+                // key => value
+                $vars[$key] = $value;
+            }
         }
 
         return $vars;
