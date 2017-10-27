@@ -163,11 +163,13 @@ class Upload
         static::checkUploadError($file_record['error']);
         $this->file_ext = static::checkUploadExtension($this->file_name, $this->expected_file_type);
 
-        $this->temp_file_dir = TMP_PATH . 'stk-uploads' . DS . time() . '-' . $this->file_name . DS;
+        $STK_UPLOADS_PATH = TMP_PATH . 'stk-uploads';
+        $this->temp_file_dir = $STK_UPLOADS_PATH . DS . time() . '-' . $this->file_name . DS;
         $this->temp_file_fullpath = $this->temp_file_dir . $this->file_name;
 
         // Clean up old temp files to make room for new upload
-        FileSystem::deleteOldSubdirectories(TMP_PATH . 'stk-uploads', Util::SECONDS_IN_A_HOUR);
+        if (FileSystem::isDirectory($STK_UPLOADS_PATH))
+            FileSystem::deleteOldSubdirectories($STK_UPLOADS_PATH, Util::SECONDS_IN_A_HOUR);
 
         $this->doUpload();
     }
@@ -496,6 +498,8 @@ class Upload
         try
         {
             $this->properties['image_file'] = File::createFileDB($this->addon_id, File::IMAGE, $image_path);
+            if (DEBUG_MODE)
+                Assert::true(count(File::getAllAddon($this->addon_id, File::IMAGE)) > 0);
         }
         catch (FileException $e)
         {
@@ -553,6 +557,9 @@ class Upload
             FileSystem::removeFile($this->upload_file_dir . $this->upload_file_name);
             throw new UploadException($e->getMessage());
         }
+
+        if (DEBUG_MODE)
+            Assert::true(count(File::getAllAddon($this->addon_id, $filetype)) > 0);
     }
 
     /**

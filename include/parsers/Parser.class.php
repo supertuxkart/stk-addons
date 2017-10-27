@@ -82,7 +82,10 @@ abstract class Parser
         }
         catch (FileException $e)
         {
-            throw new ParserException('Error opening file');
+            if (DEBUG_MODE)
+                throw new ParserException($e->getMessage());
+            else
+                throw new ParserException('Error opening file = ' . $file);
         }
 
         $this->file_name = basename($file);

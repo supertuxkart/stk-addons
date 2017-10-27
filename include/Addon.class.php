@@ -1941,7 +1941,7 @@ class Addon extends Base
      */
     public static function count($type)
     {
-        assert(static::isAllowedType($type));
+        Assert::true(static::isAllowedType($type));
 
         try
         {

@@ -429,7 +429,7 @@ class AccessControl
      */
     public static function setLevel($permission)
     {
-        assert(static::isPermission($permission) === true);
+        Assert::true(static::isPermission($permission));
 
         if (!User::hasPermission($permission))
         {

@@ -68,7 +68,7 @@ class News
             [
                 "new"     => News::getLatestBlogPost(),
                 "exists"  => false,
-                "message" => "Latest post on stkblog.net: "
+                "message" => "Latest post on blog.supertuxkart.net"
             ],
         ];
 
@@ -145,11 +145,10 @@ class News
             return null;
         }
 
-        $xml_content = FileSystem::fileGetContents($feed_url);
+        // TODO log on failure
+        $xml_content = @file_get_contents($feed_url);
         if (!$xml_content)
-        {
             return null;
-        }
 
         $reader = xml_parser_create();
         if (!xml_parse_into_struct($reader, $xml_content, $values, $index))

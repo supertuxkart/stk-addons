@@ -182,9 +182,9 @@ class Convert
         try
         {
             $count_v2 = static::count_table($from_table);
-            assert(static::$db->beginTransaction());
+            Assert::true(static::$db->beginTransaction());
             static::$db->query($insert_sql);
-            assert(static::$db->commit());
+            Assert::true(static::$db->commit());
             $count_v3 = static::count_table($to_table);
 
             if ($check_integrity && $count_v2 !== $count_v3)
@@ -231,9 +231,9 @@ class Convert
         echo "Emptying $table ";
         try
         {
-            assert(static::$db->beginTransaction());
+            Assert::true(static::$db->beginTransaction());
             static::$db->query("SET FOREIGN_KEY_CHECKS=0; TRUNCATE TABLE `$table`; SET FOREIGN_KEY_CHECKS = 1;");
-            assert(static::$db->commit());
+            Assert::true(static::$db->commit());
         }
         catch (Exception $e)
         {
@@ -337,7 +337,7 @@ Convert::copy_table_one_to_one_sql(
 );
 
 // Non normal users count is equal
-assert(
+Assert::true(
     Convert::$db->query(
         "SELECT COUNT(*) FROM `v2_users` WHERE `role` != 'user'",
         DBConnection::FETCH_FIRST_COLUMN

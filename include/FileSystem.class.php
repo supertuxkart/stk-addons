@@ -67,7 +67,12 @@ class FileSystem
         if (@rename($old_name, $new_name) === false)
         {
             throw new FileException(
-                sprintf('Failed to move/rename "%s" to "%s". error = "%s"', $old_name, $new_name, error_get_last())
+                sprintf(
+                    'Failed to move/rename "%s" to "%s". error = "%s"',
+                    $old_name,
+                    $new_name,
+                    static::getLastErrorString()
+                )
             );
         }
     }
@@ -90,7 +95,7 @@ class FileSystem
         if (@unlink($file_name) === false)
         {
             throw new FileException(
-                sprintf('Failed to delete file = "%s", error = "%s"', $file_name, error_get_last())
+                sprintf('Failed to delete file = "%s", error = "%s"', $file_name, static::getLastErrorString())
             );
         }
 
@@ -152,7 +157,7 @@ class FileSystem
             if (@rmdir($directory) === false)
             {
                 throw new FileException(
-                    sprintf('Failed to remove directory = "%s", error = "%s"', $directory, error_get_last())
+                    sprintf('Failed to remove directory = "%s", error = "%s"', $directory, static::getLastErrorString())
                 );
             }
         }
@@ -206,12 +211,13 @@ class FileSystem
      */
     public static function fileOpen($filename, $mode, $use_include_path = false)
     {
-        $handle = @fopen($$filename, $mode, $use_include_path);
+        $handle = @fopen($filename, $mode, $use_include_path);
 
         if ($handle === false)
         {
-            $error = error_get_last();
-            throw new FileException("Failed to open file = '$filename' with mode = '$mode', error = '$error'");
+            throw new FileException(
+                "Failed to open file = '$filename' with mode = '$mode', error = " . static::getLastErrorString()
+            );
         }
 
         return $handle;
@@ -281,8 +287,9 @@ class FileSystem
         $size = @filesize($filename);
         if ($size === false)
         {
-            $error = error_get_last();
-            throw new FileException("Failed to get the file size of file = '$filename', error = '$error'");
+            throw new FileException(
+                "Failed to get the file size of file = '$filename', error = " . static::getLastErrorString()
+            );
         }
 
         return $size;
@@ -307,8 +314,10 @@ class FileSystem
         $modification_time = @filemtime($filename);
         if ($modification_time === false)
         {
-            $error = error_get_last();
-            throw new FileException("Failed to get the file modification time of file = '$filename', error = '$error'");
+            throw new FileException(
+                "Failed to get the file modification time of file = '$filename', error = " .
+                static::getLastErrorString()
+            );
         }
 
         return $modification_time;
@@ -358,8 +367,9 @@ class FileSystem
         $read_data = @file_get_contents($filename, $use_include_path);
         if ($read_data === false)
         {
-            $error = error_get_last();
-            throw new FileException("Failed to get contents of file = '$filename', error = '$error'");
+            throw new FileException(
+                "Failed to get contents of file = '$filename', error = " . static::getLastErrorString()
+            );
         }
 
         return $read_data;
@@ -651,5 +661,16 @@ class FileSystem
             default:
                 throw new FileException(_h('Unknown archive type.'));
         }
+    }
+
+    /**
+     * Helper function to return the last error string
+     * @return mixed
+     */
+    private static function getLastErrorString()
+    {
+        $error = error_get_last();
+
+        return DEBUG_MODE ? print_r($error, true) : $error['message'];
     }
 }

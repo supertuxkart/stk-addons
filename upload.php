@@ -139,10 +139,18 @@ if (isset($_GET["submit"])) // form submitted
         }
         catch(Exception $e)
         {
-            $tpl->assign(
-                "errors",
-                'Unexpected exception: ' . $e->getMessage() . '<strong>If this is ever visible, that\'s a bug!</strong>'
-            );
+            if (DEBUG_MODE)
+            {
+                // Let the fancy UI catch it.
+                throw $e;
+            }
+            else
+            {
+                $tpl->assign(
+                    "errors",
+                    'Unexpected exception: ' . $e->getMessage() . '<strong>If this is ever visible, that\'s a bug!</strong>'
+                );
+            }
         }
     }
     else

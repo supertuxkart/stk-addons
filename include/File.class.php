@@ -189,6 +189,9 @@ class File extends Base
      */
     public static function getFromID($file_id)
     {
+        if (DEBUG_MODE)
+            Assert::integerish($file_id);
+
         $data = static::getFromField(
             "SELECT * FROM " . DB_PREFIX . "files",
             "id",

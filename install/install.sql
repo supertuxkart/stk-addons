@@ -398,7 +398,7 @@ CREATE TABLE IF NOT EXISTS `v3_addons` (
     `creation_date`   TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `designer`        VARCHAR(64)  NOT NULL,
     `props`           INT UNSIGNED NOT NULL DEFAULT '0',
-    `description`     VARCHAR(140) NOT NULL,
+    `description`     VARCHAR(140)          DEFAULT NULL,
     `license`         TEXT,
     `min_include_ver` VARCHAR(16)           DEFAULT NULL,
     `max_include_ver` VARCHAR(16)           DEFAULT NULL,
