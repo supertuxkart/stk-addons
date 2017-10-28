@@ -143,6 +143,7 @@ function generateAssetXML()
                 // TODO handle addons that do not have files :(
                 if (!isset($addon['file_id']))
                 {
+                    Debug::addMessage(sprintf("Addon with id = %s does not have a valid file_id", $addon['id']));
                     continue;
                 }
 
@@ -153,20 +154,14 @@ function generateAssetXML()
                 }
                 catch (FileException $e)
                 {
-                    if (DEBUG_MODE)
-                        throw $e;
-
-                    trigger_error('Error finding addon file in the database for addon = ' . $addon['name'], E_USER_WARNING);
-                    echo '<span class="warning">An error occurred locating add-on: ' . $addon['name'] . '</span><br />';
+                    error_log('Error finding addon file in the database for addon = ' . $addon['name'] );
                     continue;
                 }
 
                 $absolute_path = UP_PATH . $relative_path;
                 if (!FileSystem::exists($absolute_path))
                 {
-                    trigger_error('File not found on the local filesystem for addona = ' . $addon['name'], E_USER_WARNING);
-                    echo '<span class="warning">' . _h('The following file could not be found:') . ' ' . $relative_path .
-                         '</span><br />';
+                    error_log('File not found on the local filesystem for addon = ' . $addon['name']);
                     continue;
                 }
 
@@ -192,7 +187,7 @@ function generateAssetXML()
                     }
                     catch (FileException $e)
                     {
-                        Log::newEvent($e->getMessage());
+                        StkLog::newEvent($e->getMessage());
                     }
                 }
 
@@ -210,7 +205,7 @@ function generateAssetXML()
                     }
                     catch (FileException $e)
                     {
-                        Log::newEvent($e->getMessage());
+                        StkLog::newEvent($e->getMessage());
                     }
                 }
 
@@ -364,7 +359,7 @@ function generateAssetXML()
 //                        }
 //                        catch (FileException $e)
 //                        {
-//                            trigger_error('Error finding addon file for ' . $addon['name'], E_USER_WARNING);
+//                            user_error('Error finding addon file for ' . $addon['name'], E_USER_WARNING);
 //                            echo '<span class="warning">An error occurred locating add-on: ' . $addon['name'] .
 //                                 '</span><br />';
 //                            continue;
@@ -373,7 +368,7 @@ function generateAssetXML()
 //                        $absolute_path = UP_PATH . $relative_path;
 //                        if (!FileSystem::exists(UP_PATH . $relative_path))
 //                        {
-//                            trigger_error('File not found for ' . $addon['name'], E_USER_WARNING);
+//                            user_error('File not found for ' . $addon['name'], E_USER_WARNING);
 //                            echo '<span class="warning">' . _h(
 //                                    'The following file could not be found:'
 //                                ) . ' ' . $relative_path . '</span><br />';
@@ -400,7 +395,7 @@ function generateAssetXML()
 //                        }
 //                        catch (FileException $e)
 //                        {
-//                            Log::newEvent($e->getMessage());
+//                            StkLog::newEvent($e->getMessage());
 //                        }
 //
 //                        if ($type_int === Addon::KART)
@@ -415,7 +410,7 @@ function generateAssetXML()
 //                            }
 //                            catch (FileException $e)
 //                            {
-//                                Log::newEvent($e->getMessage());
+//                                StkLog::newEvent($e->getMessage());
 //                            }
 //                        }
 //
@@ -447,7 +442,7 @@ function generateAssetXML()
 //    {
 //        if (!FileSystem::exists(UP_PATH . 'music' . DS . $music->getFile()))
 //        {
-//            trigger_error('File ' . UP_PATH . 'music' . DS . $music->getFile() . ' not found!', E_USER_WARNING);
+//            user_error('File ' . UP_PATH . 'music' . DS . $music->getFile() . ' not found!', E_USER_WARNING);
 //            continue;
 //        }
 //
@@ -485,7 +480,6 @@ function writeAssetXML()
 {
     $count = FileSystem::filePutContents(ASSETS_XML_PATH, generateAssetXML());
     //$count += File::write(ASSETS2_XML_PATH, generateAssetXML2());
-
     return $count;
 }
 

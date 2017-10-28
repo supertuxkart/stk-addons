@@ -18,6 +18,11 @@
  * You should have received a copy of the GNU General Public License
  * along with stk-addons. If not, see <http://www.gnu.org/licenses/>.
  */
+
+/**
+ * Class Debug used only when DEBUG_MODE is enabled
+ * If DEBUG_TOOLBAR is also enabled it also logs to that
+ */
 class Debug
 {
     /**
@@ -52,20 +57,22 @@ class Debug
 
     public static function addException(Exception $e)
     {
-        static::getToolbar()['exceptions']->addException($e);
+        if (!DEBUG_MODE)
+            return;
+
+        error_log('STK-ADDONS: ' . $e);
+        if (static::isToolbarEnabled())
+            static::getToolbar()['exceptions']->addException($e);
     }
 
     public static function addMessage($message)
     {
-        if (DEBUG_MODE)
-        {
-            error_log('STK-ADDONS - '. $message);
-        }
+        if (!DEBUG_MODE)
+            return;
 
+        error_log('STK-ADDONS: '. $message);
         if (static::isToolbarEnabled())
-        {
             static::getToolbar()['messages']->addMessage($message);
-        }
     }
 
     /**

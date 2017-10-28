@@ -242,7 +242,7 @@ switch ($_GET['view'])
 
     case 'logs':
         $tpl = StkTemplate::get("manage/page/logs.tpl");
-        $tpl_data = ["items" => Log::getEvents()];
+        $tpl_data = ["items" => StkLog::getEvents()];
 
         $tpl->assign("logs", $tpl_data);
         break;

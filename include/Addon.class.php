@@ -354,7 +354,7 @@ class Addon extends Base
             _('create add-on revision')
         );
 
-        Log::newEvent("New add-on revision for '{$attributes['name']}'");
+        StkLog::newEvent("New add-on revision for '{$attributes['name']}'");
     }
 
     /**
@@ -414,7 +414,7 @@ class Addon extends Base
             throw new AddonException(exception_message_db(_('remove addon')));
         }
 
-        Log::newEvent("Deleted add-on '{$this->name}'");
+        StkLog::newEvent("Deleted add-on '{$this->name}'");
     }
 
     /**
@@ -470,7 +470,7 @@ class Addon extends Base
             throw new AddonException(exception_message_db(_('delete a revision')));
         }
 
-        Log::newEvent('Deleted revision ' . $rev . ' of \'' . $this->name . '\'');
+        StkLog::newEvent('Deleted revision ' . $rev . ' of \'' . $this->name . '\'');
     }
 
     /**
@@ -1083,7 +1083,7 @@ class Addon extends Base
             throw new AddonException('Failed to send email to user. ' . $e->getMessage());
         }
 
-        Log::newEvent("Added notes to '{$this->name}'");
+        StkLog::newEvent("Added notes to '{$this->name}'");
 
         return $this;
     }
@@ -1272,7 +1272,7 @@ class Addon extends Base
             }
         }
 
-        Log::newEvent("Set status for add-on '{$this->name}'");
+        StkLog::newEvent("Set status for add-on '{$this->name}'");
 
         return $this;
     }
@@ -1491,7 +1491,7 @@ class Addon extends Base
     {
         if (!is_string($id))
         {
-            trigger_error("ID is not a string");
+            user_error("ID is not a string");
 
             return false;
         }
@@ -1841,7 +1841,7 @@ class Addon extends Base
         {
             throw new AddonException(exception_message_db(_('create your add-on')));
         }
-        Log::newEvent("New add-on '{$attributes['name']}'");
+        StkLog::newEvent("New add-on '{$attributes['name']}'");
 
         return static::get($id, false);
     }

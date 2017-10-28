@@ -1097,7 +1097,7 @@ class User extends Base implements IAsXML
         }
 
         Verification::delete($user_id);
-        Log::newEvent("User with ID '{$user_id}' activated.");
+        StkLog::newEvent("User with ID '{$user_id}' activated.");
     }
 
     /**
@@ -1132,7 +1132,7 @@ class User extends Base implements IAsXML
             }
             catch (SMailException $e)
             {
-                Log::newEvent('Password reset email for "' . $username . '" could not be sent.');
+                StkLog::newEvent('Password reset email for "' . $username . '" could not be sent.');
                 throw new UserException(
                     $e->getMessage() . ' ' . _h('Please contact a website administrator.'),
                     ErrorType::USER_SENDING_RECOVER_EMAIL
@@ -1147,7 +1147,7 @@ class User extends Base implements IAsXML
             );
         }
 
-        Log::newEvent("Password reset request for user '$username'");
+        StkLog::newEvent("Password reset request for user '$username'");
     }
 
     /**
@@ -1249,7 +1249,7 @@ class User extends Base implements IAsXML
             }
             catch (SMailException $e)
             {
-                Log::newEvent("Registration email for user '$username' with id '$user_id' failed.");
+                StkLog::newEvent("Registration email for user '$username' with id '$user_id' failed.");
                 throw new UserException(
                     $e->getMessage() . ' ' . _h('Please contact a website administrator.'),
                     ErrorType::USER_SENDING_CREATE_EMAIL
@@ -1261,7 +1261,7 @@ class User extends Base implements IAsXML
             throw new UserException(exception_message_db(_('create your account')), ErrorType::USER_CREATE_ACCOUNT);
         }
 
-        Log::newEvent("Registration submitted for user '$username' with id '$user_id'.");
+        StkLog::newEvent("Registration submitted for user '$username' with id '$user_id'.");
     }
 
     /**

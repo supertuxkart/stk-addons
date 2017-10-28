@@ -25,7 +25,7 @@ log_email();
 echo "Executed at: " . date('d/m/Y H:i:s', time()) . "\n";
 function log_email()
 {
-    $events = Log::getUnemailedEvents();
+    $events = StkLog::getUnemailedEvents();
     if (count($events) === 0)
     {
         print "No new log messages to email.\n";
@@ -50,11 +50,11 @@ function log_email()
     }
     catch (SMailException $e)
     {
-        Log::newEvent($e->getMessage());
+        StkLog::newEvent($e->getMessage());
         exit;
     }
 
-    Log::setAllEventsMailed();
+    StkLog::setAllEventsMailed();
 
     print "Sent log message email.\n";
 }

@@ -44,12 +44,12 @@ if (DEBUG_MODE)
 {
     // This does not show parse errors, to show those edit the php.ini file and edit the display_errors value
     error_reporting(E_ALL);
-    ini_set('display_errors', 1);
+    ini_set('display_errors', true);
 }
 else
 {
     error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
-    ini_set('display_errors', 0);
+    ini_set('display_errors', false);
 }
 
 // useful for phpunit testing
@@ -148,9 +148,9 @@ define('API_VERSION', 'v2');
 if (!TEST_MODE)
 {
     // set string encoding
-    if (mb_internal_encoding('UTF-8') !== true) trigger_error('mb_internal_encoding failed');
-    if (mb_regex_encoding('UTF-8') !== true) trigger_error('mb_regex_encoding failed');
-    if (mb_language('uni') !== true) trigger_error('mb_language failed');
+    if (mb_internal_encoding('UTF-8') !== true) user_error('mb_internal_encoding failed');
+    if (mb_regex_encoding('UTF-8') !== true) user_error('mb_regex_encoding failed');
+    if (mb_language('uni') !== true) user_error('mb_language failed');
 
     // disable external entity loading
     libxml_disable_entity_loader(true);

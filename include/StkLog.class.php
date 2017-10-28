@@ -19,9 +19,10 @@
  */
 
 /**
- * Log class
+ * StkLog application specific events on the `logs` table.
+ * DO NOT USE THIS FOR error logging.
  */
-class Log
+class StkLog
 {
     /**
      * Add an event to the event log

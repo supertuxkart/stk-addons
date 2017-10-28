@@ -566,11 +566,11 @@ class File extends Base
             {
                 static::getFromID($file["id"])->delete();
                 $message .= 'Deleted file ' . $file["id"] . "<br />\n";
-                Log::newEvent('Processed queued deletion of file ' . $file["id"]);
+                StkLog::newEvent('Processed queued deletion of file ' . $file["id"]);
             }
             catch (FileException $e)
             {
-                Log::newEvent("Failed to delete queued file: " . $file["id"]);
+                StkLog::newEvent("Failed to delete queued file: " . $file["id"]);
                 continue;
             }
         }

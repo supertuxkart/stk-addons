@@ -141,9 +141,7 @@ class News
         // TODO cache result, maybe add to cron job
         $feed_url = Config::get(Config::FEED_BLOG);
         if (!$feed_url)
-        {
             return null;
-        }
 
         // TODO log on failure
         $xml_content = @file_get_contents($feed_url);
@@ -153,8 +151,7 @@ class News
         $reader = xml_parser_create();
         if (!xml_parse_into_struct($reader, $xml_content, $values, $index))
         {
-            Log::newEvent('Failed to get feed. XML Error: ' . xml_error_string(xml_get_error_code($reader)));
-
+            StkLog::newEvent('Failed to get feed. XML Error: ' . xml_error_string(xml_get_error_code($reader)));
             return null;
         }
         xml_parser_free($reader);
@@ -171,9 +168,7 @@ class News
         }
 
         if ($start_search === -1)
-        {
             return null;
-        }
 
         $article_title = null;
         for ($i = $start_search; $i < $values_count; $i++)
