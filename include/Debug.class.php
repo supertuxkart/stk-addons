@@ -19,6 +19,13 @@
  * along with stk-addons. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use DebugBar\DataCollector\ExceptionsCollector;
+use DebugBar\DataCollector\MemoryCollector;
+use DebugBar\DataCollector\MessagesCollector;
+use DebugBar\DataCollector\PhpInfoCollector;
+use DebugBar\DataCollector\RequestDataCollector;
+use DebugBar\DataCollector\TimeDataCollector;
+
 /**
  * Class Debug used only when DEBUG_MODE is enabled
  * If DEBUG_TOOLBAR is also enabled it also logs to that
@@ -46,7 +53,13 @@ class Debug
 
         if (!static::$debug_toolbar)
         {
-            static::$debug_toolbar = new DebugBar\StandardDebugBar();
+            static::$debug_toolbar = new DebugBar\DebugBar();
+            static::$debug_toolbar->addCollector(new PhpInfoCollector());
+            static::$debug_toolbar->addCollector(new MessagesCollector());
+            static::$debug_toolbar->addCollector(new RequestDataCollector());
+            static::$debug_toolbar->addCollector(new TimeDataCollector());
+            static::$debug_toolbar->addCollector(new MemoryCollector());
+            static::$debug_toolbar->addCollector(new ExceptionsCollector());
 
             //static::$debug_toolbar->setStorage(new DebugBar\Storage\FileStorage(ROOT_PATH));
             //static::$debug_toolbar->addCollector(new DebugBar\DataCollector\MessagesCollector('test'));
@@ -55,24 +68,28 @@ class Debug
         return static::$debug_toolbar;
     }
 
-    public static function addException(Exception $e)
+    public static function addException(Exception $e, $add_to_error_log = true)
     {
         if (!DEBUG_MODE)
             return;
 
-        error_log('STK-ADDONS: ' . $e);
+        if ($add_to_error_log)
+            error_log('STK-ADDONS: ' . $e);
+
         if (static::isToolbarEnabled())
             static::getToolbar()['exceptions']->addException($e);
     }
 
-    public static function addMessage($message)
+    public static function addMessage($message, $log_level = LogLevel::INFO, $add_to_error_log = true)
     {
         if (!DEBUG_MODE)
             return;
 
-        error_log('STK-ADDONS: '. $message);
+        if ($add_to_error_log)
+            error_log('STK-ADDONS: '. $message);
+
         if (static::isToolbarEnabled())
-            static::getToolbar()['messages']->addMessage($message);
+            static::getToolbar()['messages']->addMessage($message, $log_level);
     }
 
     /**

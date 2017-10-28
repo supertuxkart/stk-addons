@@ -28,11 +28,19 @@ class StkLog
      * Add an event to the event log
      *
      * @param string $message Event description
+     * @param string $log_level the log level used
      *
      * @throws LogException
      */
-    public static function newEvent($message)
+    public static function newEvent($message, $log_level = LogLevel::INFO)
     {
+        // everything besides INFO and NOTICE is an error
+        if ($log_level !== LogLevel::INFO && $log_level != LogLevel::NOTICE)
+        {
+            Debug::addMessage($message, $log_level,false);
+            error_log(sprintf("%s: %s", $log_level, $message));
+        }
+
         try
         {
             $user_id = User::getLoggedId();
@@ -72,7 +80,7 @@ class StkLog
     {
         if (!is_int($limit))
         {
-            throw new LogException('$number must be an integer.');
+            throw new LogException('$limit must be an integer.');
         }
 
         try

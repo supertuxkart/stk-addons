@@ -570,7 +570,7 @@ class File extends Base
             }
             catch (FileException $e)
             {
-                StkLog::newEvent("Failed to delete queued file: " . $file["id"]);
+                StkLog::newEvent("Failed to delete queued file: " . $file["id"], LogLevel::ERROR);
                 continue;
             }
         }

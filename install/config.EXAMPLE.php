@@ -184,5 +184,3 @@ if (!TEST_MODE)
     }
 }
 
-// Aliases
-class Assert extends \Webmozart\Assert\Assert {}

@@ -137,7 +137,7 @@ class Cache
                 }
                 catch (FileException $e)
                 {
-                    StkLog::newEvent($e->getMessage());
+                    error_log($e);
                     Debug::addMessage(
                         'Cache::clearAddon failed to delete the cache file = ' . CACHE_PATH . $cache_item['file']
                     );

@@ -50,7 +50,7 @@ function log_email()
     }
     catch (SMailException $e)
     {
-        StkLog::newEvent($e->getMessage());
+        StkLog::newEvent($e->getMessage(), LogLevel::ERROR);
         exit;
     }
 

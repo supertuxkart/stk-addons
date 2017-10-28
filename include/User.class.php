@@ -303,7 +303,7 @@ class User extends Base implements IAsXML
      */
     private static function getSQLAll()
     {
-        return "SELECT U.*, R.name as role_name
+        return "SELECT U.*, R.name AS role_name
                 FROM " . DB_PREFIX . "users U
                 INNER JOIN " . DB_PREFIX . "roles R
                     ON U.role_id = R.id ";
@@ -1132,7 +1132,7 @@ class User extends Base implements IAsXML
             }
             catch (SMailException $e)
             {
-                StkLog::newEvent('Password reset email for "' . $username . '" could not be sent.');
+                StkLog::newEvent('Password reset email for "' . $username . '" could not be sent.', LogLevel::ERROR);
                 throw new UserException(
                     $e->getMessage() . ' ' . _h('Please contact a website administrator.'),
                     ErrorType::USER_SENDING_RECOVER_EMAIL

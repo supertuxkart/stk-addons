@@ -187,7 +187,7 @@ function generateAssetXML()
                     }
                     catch (FileException $e)
                     {
-                        StkLog::newEvent($e->getMessage());
+                        error_log($e);
                     }
                 }
 
@@ -205,7 +205,7 @@ function generateAssetXML()
                     }
                     catch (FileException $e)
                     {
-                        StkLog::newEvent($e->getMessage());
+                        error_log($e);
                     }
                 }
 
