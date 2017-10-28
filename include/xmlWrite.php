@@ -141,14 +141,12 @@ function generateAssetXML()
                     continue;
 
                 // TODO handle addons that do not have files :(
-                if (!isset($addons['file_id']) || !isset($addon['image_id']))
+                if (!isset($addon['file_id']))
                 {
                     continue;
                 }
 
-                $file_id = $addons['file_id'];
-                $image_id = $addon['image_id'];
-
+                $file_id = $addon['file_id'];
                 try
                 {
                     $relative_path = File::getFromID($file_id)->getPath();
@@ -181,17 +179,21 @@ function generateAssetXML()
                 $writer->writeAttribute('designer', $addon['designer']);
                 $writer->writeAttribute('description', $addon['description']);
 
-                try
+                // TODO handle addons that do not have an image :(
+                if (isset($addon['image_id']))
                 {
-                    $image_path = File::getFromID($image_id)->getPath();
-                    if (FileSystem::exists(UP_PATH . $image_path))
+                    try
                     {
-                        $writer->writeAttribute('image', DOWNLOAD_LOCATION . $image_path);
+                        $image_path = File::getFromID($addon['image_id'])->getPath();
+                        if (FileSystem::exists(UP_PATH . $image_path))
+                        {
+                            $writer->writeAttribute('image', DOWNLOAD_LOCATION . $image_path);
+                        }
                     }
-                }
-                catch (FileException $e)
-                {
-                    Log::newEvent($e->getMessage());
+                    catch (FileException $e)
+                    {
+                        Log::newEvent($e->getMessage());
+                    }
                 }
 
                 if ($type_int === Addon::KART)
