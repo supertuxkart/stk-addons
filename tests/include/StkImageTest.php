@@ -17,17 +17,17 @@
  * along with stk-addons. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SImageTest extends PHPUnit_Framework_TestCase
+class StkImageTest extends PHPUnit_Framework_TestCase
 {
     public function providerTestSizeToInt()
     {
         return [
-            [100, SImage::sizeToInt(SImage::SIZE_DEFAULT)],
-            [100, SImage::sizeToInt('9999')],
-            [100, SImage::sizeToInt(514949489)],
-            [25, SImage::sizeToInt(SImage::SIZE_SMALL)],
-            [75, SImage::sizeToInt(SImage::SIZE_MEDIUM)],
-            [300, SImage::sizeToInt(SImage::SIZE_LARGE)],
+            [100, StkImage::sizeToInt(StkImage::SIZE_DEFAULT)],
+            [100, StkImage::sizeToInt('9999')],
+            [100, StkImage::sizeToInt(514949489)],
+            [25, StkImage::sizeToInt(StkImage::SIZE_SMALL)],
+            [75, StkImage::sizeToInt(StkImage::SIZE_MEDIUM)],
+            [300, StkImage::sizeToInt(StkImage::SIZE_LARGE)],
 
         ];
     }
@@ -46,11 +46,11 @@ class SImageTest extends PHPUnit_Framework_TestCase
     public function providerTestIntToSize()
     {
         return [
-            [SImage::SIZE_DEFAULT, SImage::intToSize('999999')],
-            [SImage::SIZE_DEFAULT, SImage::intToSize(5454488)],
-            [SImage::SIZE_SMALL, SImage::intToSize(25)],
-            [SImage::SIZE_MEDIUM, SImage::intToSize(75)],
-            [SImage::SIZE_LARGE, SImage::intToSize(300)]
+            [StkImage::SIZE_DEFAULT, StkImage::intToSize('999999')],
+            [StkImage::SIZE_DEFAULT, StkImage::intToSize(5454488)],
+            [StkImage::SIZE_SMALL, StkImage::intToSize(25)],
+            [StkImage::SIZE_MEDIUM, StkImage::intToSize(75)],
+            [StkImage::SIZE_LARGE, StkImage::intToSize(300)]
         ];
     }
 

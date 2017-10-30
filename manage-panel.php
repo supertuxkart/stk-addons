@@ -75,7 +75,7 @@ switch ($_GET['view'])
                 if (!$image->isApproved())
                 {
                     $unapproved[] =
-                        '<img src="' . ROOT_LOCATION . 'image.php?size=' . SImage::SIZE_MEDIUM . '&pic=' . $image->getPath() . '" />';
+                        '<img src="' . ROOT_LOCATION . 'image.php?size=' . StkImage::SIZE_MEDIUM . '&pic=' . $image->getPath() . '" />';
                 }
             }
             // add to view

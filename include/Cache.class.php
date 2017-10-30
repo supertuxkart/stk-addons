@@ -226,7 +226,7 @@ class Cache
      * Get image properties for a cacheable image
      *
      * @param int $id   the id of the file
-     * @param int $size image size, see SImage::SIZE_*
+     * @param int $size image size, see StkImage::SIZE_*
      *
      * @return array
      * @throws CacheException
@@ -278,6 +278,6 @@ class Cache
      */
     public static function getCachePrefix($size)
     {
-        return sprintf("%d--", SImage::sizeToInt($size));
+        return sprintf("%d--", StkImage::sizeToInt($size));
     }
 }

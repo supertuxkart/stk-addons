@@ -555,7 +555,7 @@ class File extends Base
             // Image is too large. Scale it.
             try
             {
-                $image = new SImage($image_path);
+                $image = new StkImage($image_path);
                 $image->scale($image_max_dimension, $image_max_dimension);
                 $image->save($image_path);
             }
@@ -587,7 +587,7 @@ class File extends Base
      */
     public static function createImageFromQuadsXML($quad_file, $addon_id)
     {
-        $image_path = SImage::createImageFromQuadsXML($quad_file, $addon_id);
+        $image_path = StkImage::createImageFromQuadsXML($quad_file, $addon_id);
 
         // Add image record to add-on
         static::createImage($image_path, $addon_id);

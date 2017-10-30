@@ -24,9 +24,9 @@ class CacheTest extends PHPUnit_Framework_TestCase
         return [
             ['100--', Cache::getCachePrefix(999)],
             ['100--', Cache::getCachePrefix(-999)],
-            ['300--', Cache::getCachePrefix(SImage::SIZE_LARGE)],
-            ['75--', Cache::getCachePrefix(SImage::SIZE_MEDIUM)],
-            ['25--', Cache::getCachePrefix(SImage::SIZE_SMALL)]
+            ['300--', Cache::getCachePrefix(StkImage::SIZE_LARGE)],
+            ['75--', Cache::getCachePrefix(StkImage::SIZE_MEDIUM)],
+            ['25--', Cache::getCachePrefix(StkImage::SIZE_SMALL)]
         ];
     }
 

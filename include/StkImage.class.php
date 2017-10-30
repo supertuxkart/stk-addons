@@ -21,7 +21,7 @@
 /**
  * Class to hold all image-manipulation operations
  */
-class SImage
+class StkImage
 {
     /**
      * Small image type
@@ -273,7 +273,7 @@ class SImage
      * Resize an image, and send the new resized image to the user with http headers
      *
      * @param string $file_path
-     * @param int    $size_type the image size type, see SImage::SIZE_
+     * @param int    $size_type the image size type, see StkImage::SIZE_
      *
      * @return null
      */
@@ -288,7 +288,7 @@ class SImage
             return;
         }
 
-        $size = SImage::sizeToInt($size_type);
+        $size = StkImage::sizeToInt($size_type);
         $cache_name = Cache::getCachePrefix($size_type) . basename($file_path);
         $local_path = UP_PATH . $file_path; // all images should be in our upload directory
 

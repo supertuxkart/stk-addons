@@ -137,7 +137,7 @@ class AddonViewer
         }
 
         // Get image url
-        $image = Cache::getImage($this->addon->getImage(), SImage::SIZE_LARGE);
+        $image = Cache::getImage($this->addon->getImage(), StkImage::SIZE_LARGE);
         if ($this->addon->getImage() !== Addon::NO_IMAGE && $image['exists'] == true && $image['is_approved'] == true)
         {
             $tpl['image_url'] = $image['url'];
@@ -222,7 +222,7 @@ class AddonViewer
                 continue;
             }
 
-            $image_cache = Cache::getImage($image->getId(), SImage::SIZE_MEDIUM);
+            $image_cache = Cache::getImage($image->getId(), StkImage::SIZE_MEDIUM);
             $image_tpl = [
                 "has_icon"    => false,
                 "has_image"   => false,
@@ -275,20 +275,20 @@ class AddonViewer
         {
             $config = [
                 "status" => [
-                    "alpha_img"   => SImage::getImageLabel(_h('Alpha')),
-                    "beta_img"    => SImage::getImageLabel(_h('Beta')),
-                    "rc_img"      => SImage::getImageLabel(_h('Release-Candidate')),
-                    "latest_img"  => SImage::getImageLabel(_h('Latest')),
-                    "invalid_img" => SImage::getImageLabel(_h('Invalid Textures'))
+                    "alpha_img"   => StkImage::getImageLabel(_h('Alpha')),
+                    "beta_img"    => StkImage::getImageLabel(_h('Beta')),
+                    "rc_img"      => StkImage::getImageLabel(_h('Release-Candidate')),
+                    "latest_img"  => StkImage::getImageLabel(_h('Latest')),
+                    "invalid_img" => StkImage::getImageLabel(_h('Invalid Textures'))
                 ]
             ];
 
             if ($this->user_has_permission)
             {
-                $config["status"]["approve_img"] = SImage::getImageLabel(_h('Approved'));
-                $config["status"]["invisible_img"] = SImage::getImageLabel(_h('Invisible'));
-                $config["status"]["dfsg_img"] = SImage::getImageLabel(_h('DFSG Compliant'));
-                $config["status"]["featured_img"] = SImage::getImageLabel(_h('Featured'));
+                $config["status"]["approve_img"] = StkImage::getImageLabel(_h('Approved'));
+                $config["status"]["invisible_img"] = StkImage::getImageLabel(_h('Invisible'));
+                $config["status"]["dfsg_img"] = StkImage::getImageLabel(_h('DFSG Compliant'));
+                $config["status"]["featured_img"] = StkImage::getImageLabel(_h('Featured'));
             }
 
             $tpl['config'] = $config;

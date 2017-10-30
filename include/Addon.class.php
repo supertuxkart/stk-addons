@@ -1560,7 +1560,7 @@ class Addon extends Base
                 $icon_id = $addon->getIcon();
                 if ($icon_id !== Addon::NO_IMAGE)
                 {
-                    $im = Cache::getImage($icon_id, SImage::SIZE_SMALL);
+                    $im = Cache::getImage($icon_id, StkImage::SIZE_SMALL);
                     if ($im['exists'] && $im['is_approved'])
                     {
                         $icon = $im['url'];
