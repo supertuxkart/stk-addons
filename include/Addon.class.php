@@ -1665,7 +1665,7 @@ class Addon extends Base
                 if ($e->getCode() == ErrorType::ADDON_REVISION_MISSING)
                 {
                     // ignore corrupt addon
-                    Debug::addMessage("No revision for addon = " . $addon['name']);
+                    Debug::addMessage("No revision for addon = " . $addon['id']);
                 }
                 else
                 {

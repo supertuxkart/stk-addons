@@ -26,6 +26,7 @@
  */
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
+header("Content-Type: application/json");
 // Quit if no ID was passed
 if (!isset($_GET['id']))
 {

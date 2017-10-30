@@ -233,18 +233,23 @@ function getByID(id) {
 /**
  * Parse a json string
  *
- * @param {string} raw_string the json string
+ * @param {string|object} raw_string_or_object the json string
  *
  * @return {object} the parsed json data, or empty object if there was an error, and message written to the console
  */
-function parseJSON(raw_string) {
+function parseJSON(raw_string_or_object) {
+    // already an object return
+    if (_.isObject(raw_string_or_object)) {
+        return raw_string_or_object;
+    }
+
     var jData = {}; // silently fail on the client side
 
     try {
-        jData = JSON.parse(raw_string);
+        jData = JSON.parse(raw_string_or_object);
     } catch (e) {
         console.error("Parson JSON error: ", e);
-        console.error("Raw string: ", raw_string);
+        console.error("Raw string: ", raw_string_or_object);
     }
 
     return jData;

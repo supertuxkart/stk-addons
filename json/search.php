@@ -20,6 +20,7 @@
  */
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
+header("Content-Type: application/json");
 if (empty($_GET["data-type"]))
 {
     exit_json_error("data-type param is not defined or is empty");

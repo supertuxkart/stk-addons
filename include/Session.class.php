@@ -187,7 +187,7 @@ class Session
         {
             // apparently session_set_cookie_params does not work, see first comment on this page
             // https://secure.php.net/manual/ro/function.session-set-cookie-params.php
-            setcookie(session_name(), session_id(), time() + $lifetime_sec);
+            setcookie(session_name(), session_id(), time() + $lifetime_sec, "/");
         }
         else
         {

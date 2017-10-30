@@ -174,7 +174,7 @@
             EMPTY_FUNCTION, "GET");
     });
 
-    // addon proprieties changed
+    // addon properties changed
     addonFormSubmit("#addon-edit-props", function(data) {
         jsonCallback(data, function() {
             // update view

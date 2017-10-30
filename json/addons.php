@@ -20,13 +20,14 @@
  */
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
+header("Content-Type: application/json");
 if (empty($_POST["action"]))
 {
     exit_json_error("action param is not defined or is empty");
 }
 if (!User::isLoggedIn())
 {
-    exit_json_error("You are not logged in");
+    exit_json_error("You are not logged in.");
 }
 
 

@@ -20,6 +20,7 @@
  */
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
+header("Content-Type: application/json");
 if (empty($_GET['addon-id']))
 {
     exit_json_error('No addon id provided');
