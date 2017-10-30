@@ -30,7 +30,7 @@ class Template
     protected $smarty;
 
     /**
-     * @var SLocale
+     * @var StkLocale
      */
     protected static $locale;
 
@@ -62,7 +62,7 @@ class Template
     {
         if (!static::$locale)
         {
-            static::$locale = new SLocale();
+            static::$locale = new StkLocale();
         }
 
         $this->createSmartyInstance();

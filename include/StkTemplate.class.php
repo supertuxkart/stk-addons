@@ -192,7 +192,7 @@ class StkTemplate extends Template
     private function setupLanguageMenu()
     {
         // Language menu
-        $languages = SLocale::getLanguages();
+        $languages = StkLocale::getLanguages();
         $data = [
             "label" => _h('Languages'),
             "items" => []

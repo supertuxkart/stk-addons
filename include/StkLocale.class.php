@@ -19,10 +19,10 @@
  */
 
 /**
- * Class SLocale
+ * Class StkLocale
  * Note that PHP has a built-in Locale class in the newest versions of PHP
  */
-class SLocale
+class StkLocale
 {
     /**
      * Cookie lifetime in seconds representing a year
