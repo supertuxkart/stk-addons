@@ -128,6 +128,21 @@ function loadContent($content, url, params, callback, request_type) {
 }
 
 /**
+ * Same as the onFormSubmit function but this stops the form from submitting and calls the provided callback instead
+ *
+ * @param {string} form_identifier string representing the form unique identifier, usually id, eg: #main-bugs
+ * @param {function} callback function that is called instead of the form submit
+ * @param {jQuery} $container a jQuery object representing a parent of the form
+ */
+function onFormSubmitPrevent(form_identifier, callback, $container) {
+    $container.off("submit", form_identifier);
+    $container.on("submit", form_identifier, function(e) {
+        e.preventDefault();
+        callback();
+    });
+}
+
+/**
  * Handle event when there is form submit
  *
  * @param {string} form_identifier string representing the form unique identifier, usually id, eg: #main-bugs

@@ -27,7 +27,8 @@
         $addon_body = $("#addon-body"),
         $addon_menu = $("#addon-menu"),
         $addon_sort = $("#addon-sort"),
-        $search_by = $("#addon-search-by"),
+        $filter_search_by = $("#addon-search-by"),
+        $input_search_by = $("#addon-search-val"),
         original_menu;
 
     function addonFormSubmit(form_identifier, callback_success) {
@@ -38,10 +39,12 @@
 
     $('.multiselect').multiselect({});
 
-    // search form
-    $("#addon-search-val").keyup(function() {
-        var query = this.value;
-        if (query.length <= 2) { // only if length is 3 or greater
+    /**
+     * On search event
+     */
+    function onSearch() {
+        var query = $input_search_by.val();
+        if (query.length <= 1) { // only if length is 2 or greater
             // restore original menu
             if (!_.isEmpty(original_menu)) {
                 $addon_menu.html(original_menu);
@@ -52,13 +55,19 @@
         }
 
         // flags is empty
-        if ($search_by.val() === null) {
+        if ($filter_search_by.val() === null) {
             growlError("Please select a filter for searching");
             return;
         }
 
         // search
-        $.get(SEARCH_URL, {"data-type": "addon", "addon-type": addon_type, "query": query, "flags": $search_by.val(), "return-html": true},
+        $.get(SEARCH_URL, {
+                "data-type"  : "addon",
+                "addon-type" : addon_type,
+                "query"      : query,
+                "flags"      : $filter_search_by.val(),
+                "return-html": true
+            },
             function(data) {
                 jsonCallback(data, function(jData) {
                     if (_.isEmpty(original_menu)) { // keep original menu
@@ -67,9 +76,19 @@
                     $addon_menu.html(jData["addons-html"]);
 
                     return false;
+                }, function(jData) {
+                    console.error(jData["error"]);
+
+                    return false;
                 });
             });
-    });
+    }
+
+    // search form
+    $input_search_by.keyup(onSearch);
+
+    // prevent form submit
+    onFormSubmitPrevent("#addon-search-form", onSearch, /*parent =*/ $("#body-wrapper"));
 
     // left panel user addon clicked
     $addon_menu.on("click", "a.addon-list", function() {
@@ -151,8 +170,8 @@
             $span.addClass("glyphicon " + icon_add);
         }
 
-        loadContent($addon_menu, "addons-menu.php", {type: addon_type, sort: sort_type, order: sort_order}, function() {
-        }, "GET");
+        loadContent($addon_menu, "addons-menu.php", {type: addon_type, sort: sort_type, order: sort_order},
+            EMPTY_FUNCTION, "GET");
     });
 
     // addon proprieties changed
