@@ -446,6 +446,11 @@ class File extends Base
                 StkLog::newEvent("Failed to delete queued file: " . $file["id"], LogLevel::ERROR);
                 continue;
             }
+            catch (FileSystemException $e)
+            {
+                StkLog::newEvent("Failed to delete queued file: " . $file["id"], LogLevel::ERROR);
+                continue;
+            }
         }
 
         return $message;
@@ -461,7 +466,7 @@ class File extends Base
      * @return int the id of the inserted file
      * @throws FileException
      */
-    public static function createFileDB($addon_id, $file_type, $file_path)
+    public static function createFileInDatabase($addon_id, $file_type, $file_path)
     {
         try
         {
@@ -563,7 +568,7 @@ class File extends Base
         // Add database record for image
         try
         {
-            static::createFileDB($addon_id, static::IMAGE, 'images/' . $file_name);
+            static::createFileInDatabase($addon_id, static::IMAGE, 'images/' . $file_name);
         }
         catch (FileException $e)
         {
@@ -580,166 +585,12 @@ class File extends Base
      *
      * @throws FileException|FileSystemException
      */
-    public static function newImageFromQuads($quad_file, $addon_id)
+    public static function createImageFromQuadsXML($quad_file, $addon_id)
     {
-        $reader = xml_parser_create();
-
-        // Remove whitespace at beginning and end of file
-        $xml_content = trim(FileSystem::fileGetContents($quad_file));
-
-        if (!xml_parse_into_struct($reader, $xml_content, $vals, $index))
-        {
-            throw new FileException('XML Error: ' . xml_error_string(xml_get_error_code($reader)));
-        }
-
-        // Cycle through all of the xml file's elements
-        $quads = [];
-        foreach ($vals as $val)
-        {
-            if ($val['tag'] != 'QUAD')
-            {
-                continue;
-            }
-            
-            if ($val['type'] === 'close' || $val['type'] === 'comment')
-            {
-                continue;
-            }
-
-            if (isset($val['attributes']))
-            {
-                if (isset($val['attributes']['INVISIBLE']) && $val['attributes']['INVISIBLE'] === 'yes')
-                {
-                    continue;
-                }
-                if (isset($val['attributes']['DIRECTION']))
-                {
-                    unset($val['attributes']['DIRECTION']);
-                }
-                $quads[] = array_values($val['attributes']);
-            }
-        }
-        $quads_count = count($quads);
-
-        // Replace references to other quads with proper coordinates
-        for ($i = 0; $i < $quads_count; $i++)
-        {
-            for ($j = 0; $j <= 3; $j++)
-            {
-                if (preg_match('/^([0-9]+)\:([0-9])$/', $quads[$i][$j], $matches))
-                {
-                    $quads[$i][$j] = $quads[$matches[1]][$matches[2]];
-                }
-            }
-        }
-
-        // Split coordinates into arrays
-        $y_min = null;
-        $y_max = null;
-        $x_min = null;
-        $x_max = null;
-        $z_min = null;
-        $z_max = null;
-        for ($i = 0; $i < $quads_count; $i++)
-        {
-            for ($j = 0; $j <= 3; $j++)
-            {
-                $quads[$i][$j] = explode(' ', $quads[$i][$j]);
-                if (count($quads[$i][$j]) !== 3)
-                {
-                    throw new FileException('Unexpected number of points for quad ' . $i . '.');
-                }
-
-                // Check max/min y-value
-                if ($quads[$i][$j][1] > $y_max || $y_max === null)
-                {
-                    $y_max = $quads[$i][$j][1];
-                }
-                if ($quads[$i][$j][1] < $y_min || $y_min === null)
-                {
-                    $y_min = $quads[$i][$j][1];
-                }
-
-                // Check max/min x-value
-                if ($quads[$i][$j][0] > $x_max || $x_max === null)
-                {
-                    $x_max = $quads[$i][$j][0];
-                }
-                if ($quads[$i][$j][0] < $x_min || $x_min === null)
-                {
-                    $x_min = $quads[$i][$j][0];
-                }
-
-                // Check max/min x-value
-                if ($quads[$i][$j][2] > $z_max || $z_max === null)
-                {
-                    $z_max = $quads[$i][$j][2];
-                }
-                if ($quads[$i][$j][2] < $z_min || $z_min === null)
-                {
-                    $z_min = $quads[$i][$j][2];
-                }
-            }
-        }
-
-        // Convert y-values to a number from 0-255, and x and z-values to 0-1023
-        $y_range = $y_max - $y_min + 1;
-        $x_range = $x_max - $x_min + 1;
-        $z_range = $z_max - $z_min + 1;
-        for ($i = 0; $i < $quads_count; $i++)
-        {
-            for ($j = 0; $j <= 3; $j++)
-            {
-                $y = $quads[$i][$j][1] - $y_min;
-                $y = $y / $y_range * 255;
-                $quads[$i][$j][1] = (int)$y;
-
-                $quads[$i][$j][0] = (int)(($quads[$i][$j][0] - $x_min) / $x_range * 1023);
-                $quads[$i][$j][2] = (int)(1024 - (($quads[$i][$j][2] - $z_min) / $z_range * 1023));
-            }
-        }
-
-        // Prepare the image
-        $image = imagecreatetruecolor(1024, 1024);
-        imagealphablending($image, false);
-        imagesavealpha($image, true);
-
-        // Set up colors
-        $color = [];
-        for ($i = 0; $i <= 255; $i++)
-        {
-            $color[$i] = imagecolorallocate($image, (int)($i / 1.5), (int)($i / 1.5), $i);
-        }
-        $bg = imagecolorallocatealpha($image, 255, 255, 255, 127);
-        imagefilledrectangle($image, 0, 0, 1023, 1023, $bg);
-
-        // Paint quads
-        for ($i = 0; $i < $quads_count; $i++)
-        {
-            $color_index = (int)(($quads[$i][0][1] + $quads[$i][1][1] + $quads[$i][2][1] + $quads[$i][3][1]) / 4);
-            imagefilledpolygon(
-                $image, // image
-                [ // points
-                  $quads[$i][0][0],
-                  $quads[$i][0][2],
-                  $quads[$i][1][0],
-                  $quads[$i][1][2],
-                  $quads[$i][2][0],
-                  $quads[$i][2][2],
-                  $quads[$i][3][0],
-                  $quads[$i][3][2]
-                ],
-                4, // num_points
-                $color[$color_index] // color
-            );
-        }
-
-        // Save output file
-        $out_file = UP_PATH . 'images' . DS . $addon_id . '_map.png';
-        imagepng($image, $out_file);
+        $image_path = SImage::createImageFromQuadsXML($quad_file, $addon_id);
 
         // Add image record to add-on
-        static::createImage($out_file, $addon_id);
+        static::createImage($image_path, $addon_id);
     }
 
     /**
@@ -768,78 +619,6 @@ class File extends Base
         {
             throw new FileException(exception_message_db("mark file for delete"));
         }
-    }
-
-    /**
-     * Modify an the internal link using the apache_rewrites config from the database
-     *
-     * @param string $link
-     *
-     * @return string
-     */
-    public static function rewrite($link)
-    {
-        // Don't rewrite external links
-        $has_prefix =
-            Util::isHTTPS() ? (mb_substr($link, 0, 8) === 'https://') : (mb_substr($link, 0, 7) === 'http://');
-
-        if ($has_prefix && mb_substr($link, 0, mb_strlen(ROOT_LOCATION)) !== ROOT_LOCATION)
-        {
-            return $link;
-        }
-
-        $link = str_replace(ROOT_LOCATION, null, $link);
-        $rules = Config::get(Config::APACHE_REWRITES);
-        $rules = preg_split('/(\\r)?\\n/', $rules);
-
-        foreach ($rules as $rule)
-        {
-            // Check for invalid lines
-            if (!preg_match('/^([^\ ]+) ([^\ ]+)( L)?$/i', $rule, $parts))
-            {
-                continue;
-            }
-
-            // Check rewrite regular expression
-            $search = '@' . $parts[1] . '@i';
-            $new_link = $parts[2];
-            if (!preg_match($search, $link, $matches))
-            {
-                continue;
-            }
-
-            $matches_count = count($matches);
-            for ($i = 1; $i < $matches_count; $i++)
-            {
-                $new_link = str_replace('$' . $i, $matches[$i], $new_link);
-            }
-            $link = $new_link;
-
-            if (isset($parts[3]) && ($parts[3] === ' L'))
-            {
-                break;
-            }
-        }
-
-        return ROOT_LOCATION . $link;
-    }
-
-    /**
-     * Return an link html element
-     *
-     * @param string $href
-     * @param string $label
-     * @param bool   $rewrite
-     * @param bool   $tab_index flag to add it to tab index
-     *
-     * @return string
-     */
-    public static function link($href, $label, $rewrite = true, $tab_index = true)
-    {
-        $href = $rewrite ? static::rewrite($href) : $href;
-        $tab_string = $tab_index ? "" : " tabindex=\"-1\"";
-
-        return sprintf('<a href="%s"%s>%s</a>', $href, $tab_string, $label);
     }
 
     /**

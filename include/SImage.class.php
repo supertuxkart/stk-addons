@@ -280,8 +280,6 @@ class SImage
     public static function resizeImage($file_path, $size_type = null)
     {
         // file is invalid
-        Debug::addMessage('Called Util::resizeImage');
-
         if (!$file_path)
         {
             header('HTTP/1.1 404 Not Found');
@@ -405,6 +403,13 @@ class SImage
         );
     }
 
+    /**
+     * Crates an image with the text provided.
+     *
+     * @param $text
+     *
+     * @return array
+     */
     public static function createImageLabel($text)
     {
         $write_dir = CACHE_PATH;
@@ -446,6 +451,175 @@ class SImage
             'dir' => CACHE_LOCATION,
             'file' => $image_name,
         ];
+    }
+
+    /**
+     * Create a new image from a quad file
+     *
+     * @param string $quad_file the path to the XML quad file
+     * @param int    $addon_id  the addon id this quad file belongs to.
+     *
+     * @throws FileSystemException
+     * @return string   the path to the new created image
+     */
+    public static function createImageFromQuadsXML($quad_file, $addon_id)
+    {
+        $reader = xml_parser_create();
+
+        // Remove whitespace at beginning and end of file
+        $xml_content = trim(FileSystem::fileGetContents($quad_file));
+        if (!xml_parse_into_struct($reader, $xml_content, $values, $index))
+        {
+            throw new FileSystemException('XML Error: ' . xml_error_string(xml_get_error_code($reader)));
+        }
+
+        // Cycle through all of the xml file's elements
+        $quads = [];
+        foreach ($values as $val)
+        {
+            if ($val['tag'] != 'QUAD')
+            {
+                continue;
+            }
+
+            if ($val['type'] === 'close' || $val['type'] === 'comment')
+            {
+                continue;
+            }
+
+            if (isset($val['attributes']))
+            {
+                if (isset($val['attributes']['INVISIBLE']) && $val['attributes']['INVISIBLE'] === 'yes')
+                {
+                    continue;
+                }
+                if (isset($val['attributes']['DIRECTION']))
+                {
+                    unset($val['attributes']['DIRECTION']);
+                }
+                $quads[] = array_values($val['attributes']);
+            }
+        }
+        $quads_count = count($quads);
+
+        // Replace references to other quads with proper coordinates
+        for ($i = 0; $i < $quads_count; $i++)
+        {
+            for ($j = 0; $j <= 3; $j++)
+            {
+                if (preg_match('/^([0-9]+)\:([0-9])$/', $quads[$i][$j], $matches))
+                {
+                    $quads[$i][$j] = $quads[$matches[1]][$matches[2]];
+                }
+            }
+        }
+
+        // Split coordinates into arrays
+        $y_min = null;
+        $y_max = null;
+        $x_min = null;
+        $x_max = null;
+        $z_min = null;
+        $z_max = null;
+        for ($i = 0; $i < $quads_count; $i++)
+        {
+            for ($j = 0; $j <= 3; $j++)
+            {
+                $quads[$i][$j] = explode(' ', $quads[$i][$j]);
+                if (count($quads[$i][$j]) !== 3)
+                {
+                    throw new FileSystemException('Unexpected number of points for quad ' . $i . '.');
+                }
+
+                // Check max/min y-value
+                if ($quads[$i][$j][1] > $y_max || $y_max === null)
+                {
+                    $y_max = $quads[$i][$j][1];
+                }
+                if ($quads[$i][$j][1] < $y_min || $y_min === null)
+                {
+                    $y_min = $quads[$i][$j][1];
+                }
+
+                // Check max/min x-value
+                if ($quads[$i][$j][0] > $x_max || $x_max === null)
+                {
+                    $x_max = $quads[$i][$j][0];
+                }
+                if ($quads[$i][$j][0] < $x_min || $x_min === null)
+                {
+                    $x_min = $quads[$i][$j][0];
+                }
+
+                // Check max/min x-value
+                if ($quads[$i][$j][2] > $z_max || $z_max === null)
+                {
+                    $z_max = $quads[$i][$j][2];
+                }
+                if ($quads[$i][$j][2] < $z_min || $z_min === null)
+                {
+                    $z_min = $quads[$i][$j][2];
+                }
+            }
+        }
+
+        // Convert y-values to a number from 0-255, and x and z-values to 0-1023
+        $y_range = $y_max - $y_min + 1;
+        $x_range = $x_max - $x_min + 1;
+        $z_range = $z_max - $z_min + 1;
+        for ($i = 0; $i < $quads_count; $i++)
+        {
+            for ($j = 0; $j <= 3; $j++)
+            {
+                $y = $quads[$i][$j][1] - $y_min;
+                $y = $y / $y_range * 255;
+                $quads[$i][$j][1] = (int)$y;
+
+                $quads[$i][$j][0] = (int)(($quads[$i][$j][0] - $x_min) / $x_range * 1023);
+                $quads[$i][$j][2] = (int)(1024 - (($quads[$i][$j][2] - $z_min) / $z_range * 1023));
+            }
+        }
+
+        // Prepare the image
+        $image = imagecreatetruecolor(1024, 1024);
+        imagealphablending($image, false);
+        imagesavealpha($image, true);
+
+        // Set up colors
+        $color = [];
+        for ($i = 0; $i <= 255; $i++)
+        {
+            $color[$i] = imagecolorallocate($image, (int)($i / 1.5), (int)($i / 1.5), $i);
+        }
+        $bg = imagecolorallocatealpha($image, 255, 255, 255, 127);
+        imagefilledrectangle($image, 0, 0, 1023, 1023, $bg);
+
+        // Paint quads
+        for ($i = 0; $i < $quads_count; $i++)
+        {
+            $color_index = (int)(($quads[$i][0][1] + $quads[$i][1][1] + $quads[$i][2][1] + $quads[$i][3][1]) / 4);
+            imagefilledpolygon(
+                $image, // image
+                [ // points
+                  $quads[$i][0][0],
+                  $quads[$i][0][2],
+                  $quads[$i][1][0],
+                  $quads[$i][1][2],
+                  $quads[$i][2][0],
+                  $quads[$i][2][2],
+                  $quads[$i][3][0],
+                  $quads[$i][3][2]
+                ],
+                4, // num_points
+                $color[$color_index] // color
+            );
+        }
+
+        // Save output file
+        $out_file = UP_PATH . 'images' . DS . $addon_id . '_map.png';
+        imagepng($image, $out_file);
+
+        return $out_file;
     }
 
     /**

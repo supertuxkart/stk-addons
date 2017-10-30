@@ -35,17 +35,17 @@ $tpl->assign(
     'index_menu',
     [
         [
-            'href'  => File::rewrite('addons.php?type=' . $type_kart),
+            'href'  => URL::rewriteFromConfig('addons.php?type=' . $type_kart),
             'label' => _h('Karts'),
             'type'  => $type_kart
         ],
         [
-            'href'  => File::rewrite('addons.php?type=' . $type_track),
+            'href'  => URL::rewriteFromConfig('addons.php?type=' . $type_track),
             'label' => _h('Tracks'),
             'type'  => $type_track
         ],
         [
-            'href'  => File::rewrite('addons.php?type=' . $type_arena),
+            'href'  => URL::rewriteFromConfig('addons.php?type=' . $type_arena),
             'label' => _h('Arenas'),
             'type'  => $type_arena
         ],

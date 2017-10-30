@@ -302,7 +302,7 @@ class Addon extends Base
      * @param array  $attributes contains name, designer, license, version, image, file_id, status, missing_textures
      * @param string $moderator_message
      *
-     * @throws AddonException
+     * @throws AddonException|FileSystemException|FileException
      */
     public function createRevision(array $attributes, $moderator_message)
     {
@@ -397,7 +397,7 @@ class Addon extends Base
             {
                 $file->delete();
             }
-            catch (FileException $e)
+            catch (Exception $e)
             {
                 throw new AddonException($e->getMessage());
             }
@@ -1581,7 +1581,7 @@ class Addon extends Base
                 "name"        => h($addon->getName()),
                 "real_url"    => $addon->getPermalink(),
                 "image_src"   => $icon,
-                "disp"        => File::rewrite($addon->getPermalink())
+                "disp"        => URL::rewriteFromConfig($addon->getPermalink())
             ];
         }
 

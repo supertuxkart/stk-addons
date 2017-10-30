@@ -164,19 +164,19 @@ class StkTemplate extends Template
         // TODO make top menu more dynamic
         $menu = [
             'welcome' => h(sprintf(_h('Welcome, %s'), User::getLoggedRealName())),
-            'home'    => File::rewrite('index.php'),
-            'login'   => File::rewrite('login.php'),
-            'logout'  => File::rewrite('login.php?action=logout'),
-            'users'   => File::rewrite('users.php'),
-            'upload'  => File::rewrite('upload.php'),
-            'manage'  => File::rewrite('manage.php'),
+            'home'    => URL::rewriteFromConfig('index.php'),
+            'login'   => URL::rewriteFromConfig('login.php'),
+            'logout'  => URL::rewriteFromConfig('login.php?action=logout'),
+            'users'   => URL::rewriteFromConfig('users.php'),
+            'upload'  => URL::rewriteFromConfig('upload.php'),
+            'manage'  => URL::rewriteFromConfig('manage.php'),
             'bugs'    => BUGS_LOCATION,
-            'karts'   => File::rewrite('addons.php?type=' . Addon::typeToString(Addon::KART)),
-            'tracks'  => File::rewrite('addons.php?type=' . Addon::typeToString(Addon::TRACK)),
-            'arenas'  => File::rewrite('addons.php?type=' . Addon::typeToString(Addon::ARENA)),
-            'about'   => File::rewrite('about.php'),
+            'karts'   => URL::rewriteFromConfig('addons.php?type=' . Addon::typeToString(Addon::KART)),
+            'tracks'  => URL::rewriteFromConfig('addons.php?type=' . Addon::typeToString(Addon::TRACK)),
+            'arenas'  => URL::rewriteFromConfig('addons.php?type=' . Addon::typeToString(Addon::ARENA)),
+            'about'   => URL::rewriteFromConfig('about.php'),
             'stats'   => STATS_LOCATION,
-            'privacy' => File::rewrite('privacy.php'),
+            'privacy' => URL::rewriteFromConfig('privacy.php'),
         ];
 
         // if the user can edit addons then he can access the manage panel
@@ -566,5 +566,22 @@ class StkTemplate extends Template
         $this->addScriptInclude("flot.tooltip/js/jquery.flot.tooltip.min.js", LIBS_LOCATION);
 
         return $this;
+    }
+
+    /**
+     * Return an hyperlink HTML element wit the provide params
+     *
+     * @param string $href
+     * @param string $label
+     * @param bool   $rewrite
+     * @param bool   $tab_index flag to add it to tab index
+     *
+     * @return string
+     */
+    public static function makeHTMLHyperLink($href, $label, $rewrite = true, $tab_index = true)
+    {
+        $href = $rewrite ? URL::rewriteFromConfig($href) : $href;
+        $tab_string = $tab_index ? "" : " tabindex=\"-1\"";
+        return sprintf('<a href="%s"%s>%s</a>', $href, $tab_string, $label);
     }
 }

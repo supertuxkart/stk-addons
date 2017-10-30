@@ -151,7 +151,7 @@ class AddonViewer
             'submitter'     => h($addonUser->getUserName()),
             'revision'      => $latestRev['revision'],
             'compatibility' => Util::getVersionFormat($latestRev['format'], $this->addon->getType()),
-            'link'          => File::rewrite($this->addon->getLink())
+            'link'          => URL::rewriteFromConfig($this->addon->getLink())
         ];
         $tpl['info'] = $info;
         if (Addon::isTextureInvalid($latestRev['status']))

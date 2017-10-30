@@ -329,8 +329,10 @@ class Upload
         File::createImage($this->upload_file_dir . $this->upload_file_name, $this->addon_id);
 
         $this->success[] = _h('Successfully uploaded image.');
-        $this->success[] =
-            File::link(Addon::buildPermalink($this->addon_type, $this->addon_id), _h('Continue to addon.'));
+        $this->success[] = StkTemplate::makeHTMLHyperLink(
+            Addon::buildPermalink($this->addon_type, $this->addon_id),
+            _h('Continue to addon.')
+        );
     }
 
     /**
@@ -367,7 +369,10 @@ class Upload
             $this->storeUploadArchive(File::SOURCE);
 
             $this->success[] = _h('Successfully uploaded source archive.');
-            $this->success[] = File::link(Addon::buildPermalink($this->addon_type, $this->addon_id), _h('Continue.'));
+            $this->success[] = StkTemplate::makeHTMLHyperLink(
+                Addon::buildPermalink($this->addon_type, $this->addon_id),
+                _h('Continue.')
+            );
 
             return;
         }
@@ -472,7 +477,7 @@ class Upload
         $this->success[] = _h(
             '(Uploading the sources to your add-on enables others to improve your work and also ensure your add-on will not be lost in the future if new SuperTuxKart versions are not compatible with the current format.)'
         );
-        $this->success[] = File::link(
+        $this->success[] = StkTemplate::makeHTMLHyperLink(
             Addon::buildPermalink($this->addon_type, $this->addon_id),
             _h('Click here to view your add-on.')
         );
@@ -519,7 +524,7 @@ class Upload
         // Record image file in database
         try
         {
-            $this->properties['image_file'] = File::createFileDB($this->addon_id, File::IMAGE, $image_path);
+            $this->properties['image_file'] = File::createFileInDatabase($this->addon_id, File::IMAGE, $image_path);
             if (DEBUG_MODE)
             {
                 Assert::true(count(File::getAllAddon($this->addon_id, File::IMAGE)) > 0);
@@ -534,13 +539,13 @@ class Upload
 
     /**
      * Create an image file from the quad file, if it exists
-     * @throws FileException
+     * @throws FileException|FileSystemException
      */
     private function storeUploadQuadFile()
     {
         if (isset($this->properties['quad_file']))
         {
-            File::newImageFromQuads($this->properties['quad_file'], $this->addon_id);
+            File::createImageFromQuadsXML($this->properties['quad_file'], $this->addon_id);
         }
     }
 
@@ -567,7 +572,7 @@ class Upload
         try
         {
             $this->properties['xml_attributes']['file_id'] =
-                File::createFileDB($this->addon_id, $filetype, $this->upload_file_name);
+                File::createFileInDatabase($this->addon_id, $filetype, $this->upload_file_name);
         }
         catch (FileException $e)
         {

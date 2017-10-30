@@ -31,7 +31,7 @@ if (isset($_POST["return_to"]))
 {
     $return_to_url = $_POST["return_to"];
 }
-elseif (isset($_GET["return_to"]))
+else if (isset($_GET["return_to"]))
 {
     // decode the get
     $return_to_url = urldecode($_GET["return_to"]);
@@ -53,10 +53,10 @@ $login_form = [
     'username'    => ['min' => User::MIN_USERNAME, 'max' => User::MAX_USERNAME, 'value' => h($username)],
     'password'    => ['min' => User::MIN_PASSWORD, 'max' => User::MAX_PASSWORD],
     'return_to'   => $return_to_url,
-    'form_action' => File::rewrite('login.php?action=submit'),
+    'form_action' => URL::rewriteFromConfig('login.php?action=submit'),
     'links'       => [
-        'register'       => File::link('register.php', _h('Sign up here.')),
-        'reset_password' => File::link('password-reset.php', _h('(forgot password)'), true, false)
+        'register'       => StkTemplate::makeHTMLHyperLink('register.php', _h('Sign up here.')),
+        'reset_password' => StkTemplate::makeHTMLHyperLink('password-reset.php', _h('(forgot password)'), true, false)
     ]
 ];
 
@@ -86,7 +86,7 @@ switch ($action)
         {
             User::login($username, $password);
         }
-        catch(UserException $e)
+        catch (UserException $e)
         {
             $login_form['display'] = true;
             $errors = $e->getMessage();

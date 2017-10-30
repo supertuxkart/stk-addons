@@ -1,6 +1,6 @@
 <?php
 /**
- * copyright 2017 SuperTuxKart-Team
+ * Copyright 2017 SuperTuxKart-Team
  *
  * This file is part of stk-addons.
  *

@@ -53,7 +53,7 @@ class FileSystem
      */
     public static function rename($old_name, $new_name, $overwrite = false)
     {
-        if (!$overwrite && FileSystem::exists($new_name))
+        if (!$overwrite && static::exists($new_name))
         {
             throw new FileSystemException(
                 sprintf(
@@ -676,11 +676,11 @@ class FileSystem
      */
     public static function checkImagesAreValid($path)
     {
-        if (!FileSystem::exists($path))
+        if (!static::exists($path))
         {
             return false;
         }
-        if (!FileSystem::isDirectory($path))
+        if (!static::isDirectory($path))
         {
             return false;
         }
@@ -715,9 +715,9 @@ class FileSystem
             return false;
         }
 
-        foreach (FileSystem::ls($path) as $file)
+        foreach (static::ls($path) as $file)
         {
-            if (FileSystem::isDirectory($path . $file))
+            if (static::isDirectory($path . $file))
             {
                 continue;
             }
@@ -749,6 +749,8 @@ class FileSystem
 
         return true;
     }
+
+
 
     /**
      * Helper function to return the last error string
