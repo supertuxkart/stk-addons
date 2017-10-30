@@ -48,6 +48,9 @@ class ErrorType extends \MyCLabs\Enum\Enum
     const USER_SENDING_CREATE_EMAIL = 78;   // while sending create account email
     const USER_INACTIVE_ACCOUNT = 79;       // account is not active
 
+    const ADDON_DB_EXCEPTION = 100;           // a generic database exception occurred while querying some addon data
+    const ADDON_REVISION_MISSING = 101;      // the addon Revision is missing, corrupt
+
     const VALIDATE_NOT_IN_CHAR_RANGE = 500;             // string is not in min/max char string range
     const VALIDATE_PASSWORDS_MATCH = 501;               // passwords do not match
 

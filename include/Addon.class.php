@@ -163,12 +163,15 @@ class Addon extends Base
         }
         catch (DBException $e)
         {
-            throw new AddonException(exception_message_db(_('load revisions')));
+            throw new AddonException(exception_message_db(_('load revisions')), ErrorType::ADDON_DB_EXCEPTION);
         }
 
         if (!$revisions)
         {
-            throw new AddonException(_h('No revisions of this add-on exist. This should never happen.'));
+            throw new AddonException(
+                _h('No revisions of this add-on exist. This should never happen.'),
+                ErrorType::ADDON_REVISION_MISSING
+            );
         }
 
         foreach ($revisions as $rev)
@@ -1539,7 +1542,7 @@ class Addon extends Base
             {
                 $class = '';
             }
-            elseif ($has_permission || $addon->isUserOwner())
+            else if ($has_permission || $addon->isUserOwner())
             {
                 // not approved, see of we are logged in and we have permission
                 $class = ' disabled';
@@ -1653,7 +1656,22 @@ class Addon extends Base
         $return_addons = [];
         foreach ($addons as $addon)
         {
-            $return_addons[] = new static($addon);
+            try
+            {
+                $return_addons[] = new static($addon);
+            }
+            catch (AddonException $e)
+            {
+                if ($e->getCode() == ErrorType::ADDON_REVISION_MISSING)
+                {
+                    // ignore corrupt addon
+                    Debug::addMessage("No revision for addon = " . $addon['name']);
+                }
+                else
+                {
+                    throw $e;
+                }
+            }
         }
 
         return $return_addons;
