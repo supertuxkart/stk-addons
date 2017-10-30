@@ -481,57 +481,6 @@ class File extends Base
     }
 
     /**
-     * Remove invalid files from the path that are not allowed extensions
-     *
-     * @param string $path
-     * @param bool   $source flag that indicates the removal of invalid source extensions
-     *
-     * @return array of removed file names
-     */
-    public static function removeInvalidFiles($path, $source = false)
-    {
-        if (!FileSystem::exists($path) || !FileSystem::isDirectory($path))
-        {
-            Debug::addMessage(sprintf("%s does not exist or is not a directory", $path));
-
-            return [];
-        }
-
-        // Make a list of approved file types
-        if ($source === false)
-        {
-            $approved_types = Config::get(Config::ALLOWED_ADDON_EXTENSIONS);
-        }
-        else
-        {
-            $approved_types = Config::get(Config::ALLOWED_SOURCE_EXTENSIONS);
-        }
-        $approved_types = Util::commaStringToArray($approved_types);
-
-        $removed_files = [];
-        foreach (FileSystem::ls($path) as $file)
-        {
-            // Don't check current and parent directory
-            if (FileSystem::isDirectory($path . $file))
-            {
-                continue;
-            }
-
-            // Make sure the whole path is there
-            $file = $path . $file;
-
-            // Remove files with unapproved extensions
-            if (!preg_match('/\.(' . implode('|', $approved_types) . ')$/i', $file))
-            {
-                $removed_files[] = basename($file);
-                FileSystem::removeFile($file);
-            }
-        }
-
-        return $removed_files;
-    }
-
-    /**
      * Delete the queued files form the database and from the filesystem
      *
      * @throws FileException

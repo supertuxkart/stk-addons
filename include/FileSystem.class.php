@@ -175,7 +175,10 @@ class FileSystem
     public static function flattenDirectory($current_dir, $destination_dir = null)
     {
         // use current directory as the destination
-        if (!$destination_dir) $destination_dir = $current_dir;
+        if (!$destination_dir)
+        {
+            $destination_dir = $current_dir;
+        }
 
         if (!static::isDirectory($current_dir) || !static::isDirectory($destination_dir))
         {
@@ -605,7 +608,7 @@ class FileSystem
     {
         if (!static::exists($file))
         {
-            throw new FileException(_h('The file to extract does not exist.'));
+            throw new FileException(sprintf(_h('The file = `%s` to extract does not exist.'), $file));
         }
 
         // Extract archive
@@ -641,7 +644,7 @@ class FileSystem
                 {
                     $compression = 'gz';
                 }
-                elseif ($file_ext === 'tbz' || $file_ext === 'tar.bz2' || $file_ext === 'bz2')
+                else if ($file_ext === 'tbz' || $file_ext === 'tar.bz2' || $file_ext === 'bz2')
                 {
                     $compression = 'bz2';
                 }

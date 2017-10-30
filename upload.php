@@ -55,7 +55,10 @@ if (isset($_GET["submit"])) // form submitted
     {
         $upload_form["display"] = false;
         $tpl->assign("upload", $upload_form);
-        $tpl->assign("errors", _h("You did not submit anything/Maximum POST size exceeded(your file is too large!)"));
+        $tpl->assign(
+            "errors",
+            _h("You did not submit anything/Maximum POST (upload) size exceeded (your file is too large!)")
+        );
 
         exit($tpl);
     }
@@ -133,11 +136,11 @@ if (isset($_GET["submit"])) // form submitted
             $tpl->assign("success", $upload->getSuccessMessage());
 
         }
-        catch(UploadException $e)
+        catch (UploadException $e)
         {
             $tpl->assign("errors", $e->getMessage());
         }
-        catch(Exception $e)
+        catch (Exception $e)
         {
             if (DEBUG_MODE)
             {
@@ -148,7 +151,8 @@ if (isset($_GET["submit"])) // form submitted
             {
                 $tpl->assign(
                     "errors",
-                    'Unexpected exception: ' . $e->getMessage() . '<strong>If this is ever visible, that\'s a bug!</strong>'
+                    'Unexpected exception: ' . $e->getMessage() .
+                    '<strong>If this is ever visible, that\'s a bug!</strong>'
                 );
             }
         }
@@ -158,7 +162,9 @@ if (isset($_GET["submit"])) // form submitted
         $upload_form["display"] = false;
         $tpl->assign(
             "errors",
-            _h('Your response to the agreement was unacceptable. You may not upload this content to the STK Addons website.')
+            _h(
+                'Your response to the agreement was unacceptable. You may not upload this content to the STK Addons website.'
+            )
         );
     }
 }

@@ -140,11 +140,13 @@ class Upload
     /**
      * Constructor
      *
-     * @param array $file_record
+     * @param array  $file_record
      * @param string $addon_name
-     * @param int $addon_type
-     * @param int $expected_type see File::SOURCE, FILE::ADDON
+     * @param int    $addon_type
+     * @param int    $expected_type see File::SOURCE, FILE::ADDON
      * @param string $moderator_message
+     *
+     * @throws UploadException
      */
     public function __construct($file_record, $addon_name, $addon_type, $expected_type, $moderator_message)
     {
@@ -169,9 +171,26 @@ class Upload
 
         // Clean up old temp files to make room for new upload
         if (FileSystem::isDirectory($STK_UPLOADS_PATH))
+        {
             FileSystem::deleteOldSubdirectories($STK_UPLOADS_PATH, Util::SECONDS_IN_A_HOUR);
+        }
 
-        $this->doUpload();
+        try
+        {
+            $this->doUpload();
+        }
+        catch (ParserException $e)
+        {
+            throw new UploadException("Parser Exception: " . $e->getMessage());
+        }
+        catch (FileException $e)
+        {
+            throw new UploadException("File Exception: " . $e->getMessage());
+        }
+        catch (AddonException $e)
+        {
+            throw new UploadException("Addon Exception: " . $e->getMessage());
+        }
     }
 
     /**
@@ -179,7 +198,14 @@ class Upload
      */
     public function __destruct()
     {
-        $this->removeTempFiles();
+        try
+        {
+            $this->removeTempFiles();
+        }
+        catch (FileException $e)
+        {
+            throw new UploadException("File Exception: " . $e->getMessage());
+        }
     }
 
     /**
@@ -187,14 +213,7 @@ class Upload
      */
     public function removeTempFiles()
     {
-        try
-        {
-            FileSystem::removeDirectory($this->temp_file_dir);
-        }
-        catch (FileException $e)
-        {
-            throw new UploadException($e->getMessage());
-        }
+        FileSystem::removeDirectory($this->temp_file_dir);
     }
 
     /**
@@ -222,7 +241,19 @@ class Upload
      */
     private function doUpload()
     {
-        $this->prepareUploadedFiles();
+        try
+        {
+            $this->prepareUploadedFiles();
+        }
+        catch (FileException $e)
+        {
+            // try to clean up
+            if (FileSystem::exists($this->temp_file_fullpath))
+            {
+                FileSystem::removeFile($this->temp_file_fullpath);
+            }
+            throw $e;
+        }
 
         // treat images separately
         if ($this->expected_file_type === static::IMAGE)
@@ -242,7 +273,7 @@ class Upload
     /**
      * Relocate uploaded files to a 'scratch' directory.
      * If the uploaded file is compressed, decompress it.
-     * @throws UploadException
+     * @throws UploadException|FileException
      */
     private function prepareUploadedFiles()
     {
@@ -257,29 +288,28 @@ class Upload
         if ($this->expected_file_type !== static::IMAGE) // archive
         {
             // load the data from the archive, and validate it
+
+            // unarchive it first
+            FileSystem::extractFromArchive($this->temp_file_fullpath, $this->temp_file_dir, $this->file_ext);
+            // Flatten directories
+            // TODO check if we want this :/
             try
             {
-                FileSystem::extractFromArchive($this->temp_file_fullpath, $this->temp_file_dir, $this->file_ext);
                 FileSystem::flattenDirectory($this->temp_file_dir);
-                static::removeInvalidFiles();
-                static::parseFiles();
             }
             catch (FileException $e)
             {
-                try
-                {
-                    FileSystem::removeFile($this->temp_file_fullpath);
-                    throw new UploadException("File Exception: " . $e->getMessage());
-                }
-                catch (FileException $e)
-                {
-                    throw new UploadException("File Exception: " . $e->getMessage());
-                }
+                throw new FileException(
+                    sprintf(
+                        "Error while trying to flatten the archive. 
+                This might happen because files from subdirectories have the same name as files from the root directory. Error = `%s`",
+                        $e->getMessage()
+                    )
+                );
             }
-            catch (ParserException $e)
-            {
-                throw new UploadException("Parser Exception: " . $e->getMessage());
-            }
+
+            static::removeInvalidFiles();
+            static::parseFiles();
         }
     }
 
@@ -397,14 +427,7 @@ class Upload
 
         if (!$is_revision) // add new addon
         {
-            try
-            {
-                $addon = Addon::create($this->addon_id, $this->addon_type, $this->properties['xml_attributes']);
-            }
-            catch (AddonException $e)
-            {
-                throw new UploadException($e->getMessage());
-            }
+            $addon = Addon::create($this->addon_id, $this->addon_type, $this->properties['xml_attributes']);
         }
 
         // add additional addon data to database
@@ -436,7 +459,7 @@ class Upload
         catch (AddonException $e)
         {
             // TODO add undo methods for steps above
-            throw new UploadException($e->getMessage());
+            throw $e;
         }
 
         $this->success[] =
@@ -499,31 +522,26 @@ class Upload
         {
             $this->properties['image_file'] = File::createFileDB($this->addon_id, File::IMAGE, $image_path);
             if (DEBUG_MODE)
+            {
                 Assert::true(count(File::getAllAddon($this->addon_id, File::IMAGE)) > 0);
+            }
         }
         catch (FileException $e)
         {
             FileSystem::removeFile($this->properties['image_path']);
-            throw new UploadException($e->getMessage());
+            throw $e;
         }
     }
 
     /**
      * Create an image file from the quad file, if it exists
-     * @throws UploadException
+     * @throws FileException
      */
     private function storeUploadQuadFile()
     {
-        try
+        if (isset($this->properties['quad_file']))
         {
-            if (isset($this->properties['quad_file']))
-            {
-                File::newImageFromQuads($this->properties['quad_file'], $this->addon_id);
-            }
-        }
-        catch (FileException $e)
-        {
-            throw new UploadException($e->getMessage());
+            File::newImageFromQuads($this->properties['quad_file'], $this->addon_id);
         }
     }
 
@@ -532,7 +550,7 @@ class Upload
      *
      * @param int $filetype
      *
-     * @throws UploadException
+     * @throws FileException|UploadException
      */
     private function storeUploadArchive($filetype)
     {
@@ -555,11 +573,13 @@ class Upload
         catch (FileException $e)
         {
             FileSystem::removeFile($this->upload_file_dir . $this->upload_file_name);
-            throw new UploadException($e->getMessage());
+            throw $e;
         }
 
         if (DEBUG_MODE)
+        {
             Assert::true(count(File::getAllAddon($this->addon_id, $filetype)) > 0);
+        }
     }
 
     /**
@@ -568,7 +588,41 @@ class Upload
     private function removeInvalidFiles()
     {
         // Check for invalid files
-        $invalid_files = File::removeInvalidFiles($this->temp_file_dir, $this->expected_file_type === static::SOURCE);
+        $path = $this->temp_file_dir;
+
+        $invalid_files = [];
+        if (!FileSystem::exists($path) || !FileSystem::isDirectory($path))
+        {
+            Debug::addMessage(sprintf("%s does not exist or is not a directory", $path));
+        }
+        else
+        {
+            $is_source = $this->expected_file_type === static::SOURCE;
+            // Make a list of approved file types
+            $approved_types = $is_source ? Config::get(Config::ALLOWED_SOURCE_EXTENSIONS) :
+                Config::get(Config::ALLOWED_ADDON_EXTENSIONS);
+            $approved_types = Util::commaStringToArray($approved_types);
+            foreach (FileSystem::ls($path) as $file)
+            {
+                // Don't check current and parent directory
+                if (FileSystem::isDirectory($path . $file))
+                {
+                    continue;
+                }
+
+                // Make sure the whole path is there
+                $file = $path . $file;
+
+                // Remove files with unapproved extensions
+                if (!preg_match('/\.(' . implode('|', $approved_types) . ')$/i', $file))
+                {
+                    $invalid_files[] = basename($file);
+                    FileSystem::removeFile($file);
+                }
+            }
+        }
+
+        // Remove invalid files from the path that are not allowed extensions
         if ($invalid_files)
         {
             $this->warnings[] = _h(
