@@ -1130,7 +1130,7 @@ class User extends Base implements IAsXML
                     'password-reset.php'
                 );
             }
-            catch (SMailException $e)
+            catch (StkMailException $e)
             {
                 StkLog::newEvent('Password reset email for "' . $username . '" could not be sent.', LogLevel::ERROR);
                 throw new UserException(
@@ -1247,7 +1247,7 @@ class User extends Base implements IAsXML
             {
                 StkMail::get()->newAccountNotification($email, $user_id, $username, $verification_code, 'register.php');
             }
-            catch (SMailException $e)
+            catch (StkMailException $e)
             {
                 StkLog::newEvent("Registration email for user '$username' with id '$user_id' failed.");
                 throw new UserException(

@@ -559,7 +559,7 @@ class File extends Base
                 $image->scale($image_max_dimension, $image_max_dimension);
                 $image->save($image_path);
             }
-            catch (SImageException $e)
+            catch (StkImageException $e)
             {
                 throw new FileException($e->getMessage());
             }

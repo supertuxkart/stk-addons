@@ -184,8 +184,9 @@ class StatisticException extends BaseException {}
 class AchievementException extends BaseException {}
 class FriendException extends BaseException {}
 class AccessControlException extends BaseException {}
-class SImageException extends BaseException {}
-class SMailException extends BaseException {}
+
+class StkImageException extends BaseException {}
+class StkMailException extends BaseException {}
 
 class ParserException extends BaseException {}
 class XMLParserException extends ParserException {}

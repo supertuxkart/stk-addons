@@ -78,7 +78,7 @@ class StkImage
     /**
      * @param string $image_path
      *
-     * @throws SImageException
+     * @throws StkImageException
      */
     public function __construct($image_path)
     {
@@ -99,7 +99,7 @@ class StkImage
                 break;
 
             default:
-                throw new SImageException('Unsupported image format.');
+                throw new StkImageException('Unsupported image format.');
         }
 
         $this->info = $image_info;
@@ -109,17 +109,17 @@ class StkImage
     /**
      * @param string $path to the image file
      *
-     * @throws SImageException if file does not exist or is not a file
+     * @throws StkImageException if file does not exist or is not a file
      */
     public function setPath($path)
     {
         if (!FileSystem::exists($path))
         {
-            throw new SImageException(_h('Path does not exist on the filesystem'));
+            throw new StkImageException(_h('Path does not exist on the filesystem'));
         }
         if (!FileSystem::isFile($path))
         {
-            throw new SImageException(_h('Path does not point to a file.'));
+            throw new StkImageException(_h('Path does not point to a file.'));
         }
 
         $this->path = $path;
@@ -150,13 +150,13 @@ class StkImage
      * @param int $min_x > 1
      * @param int $min_y > 1
      *
-     * @throws SImageException
+     * @throws StkImageException
      */
     public function scale($max_x, $max_y, $min_x = 1, $min_y = 1)
     {
         if (($max_x < $min_x && $max_x !== 0) || $max_y < $min_y && $max_y !== 0)
         {
-            throw new SImageException('Maximum dimension is less than minimum dimension. Cannot scale image.');
+            throw new StkImageException('Maximum dimension is less than minimum dimension. Cannot scale image.');
         }
 
         $old_x = $this->info[0];
@@ -164,7 +164,7 @@ class StkImage
 
         if ($old_y == 0 || $old_x == 0)
         {
-            throw new SImageException('Image dimensions cannot be 0. Failed to scale image.');
+            throw new StkImageException('Image dimensions cannot be 0. Failed to scale image.');
         }
 
         if ($max_x === 0)

@@ -1078,7 +1078,7 @@ class Addon extends Base
         {
             StkMail::get()->addonNoteNotification($user['email'], $this->name, $email_body);
         }
-        catch (SMailException $e)
+        catch (StkMailException $e)
         {
             throw new AddonException('Failed to send email to user. ' . $e->getMessage());
         }
@@ -1860,7 +1860,7 @@ class Addon extends Base
         {
             StkMail::get()->moderatorNotification($title, h($body));
         }
-        catch (SMailException $e)
+        catch (StkMailException $e)
         {
             throw new AddonException($e->getMessage());
         }

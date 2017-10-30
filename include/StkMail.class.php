@@ -39,7 +39,7 @@ class StkMail
     /**
      * PHPMailer send method wrapper, that handles errors and exceptions
      *
-     * @throws SMailException
+     * @throws StkMailException
      */
     private function send()
     {
@@ -47,12 +47,12 @@ class StkMail
         {
             if (!$this->mail->send())
             {
-                throw new SMailException($this->mail->ErrorInfo);
+                throw new StkMailException($this->mail->ErrorInfo);
             }
         }
         catch (phpmailerException $e)
         {
-            throw new SMailException($e->getMessage());
+            throw new StkMailException($e->getMessage());
         }
     }
 
@@ -62,7 +62,7 @@ class StkMail
      * @param string $address
      * @param string $name
      *
-     * @throws SMailException
+     * @throws StkMailException
      */
     private function addAddress($address, $name = "")
     {
@@ -70,12 +70,12 @@ class StkMail
         {
             if (!$this->mail->addAddress($address, $name))
             {
-                throw new SMailException(sprintf("Address '%s' is already used.", h($address)));
+                throw new StkMailException(sprintf("Address '%s' is already used.", h($address)));
             }
         }
         catch (phpmailerException $e)
         {
-            throw new SMailException($e->getMessage());
+            throw new StkMailException($e->getMessage());
         }
     }
 
@@ -111,7 +111,7 @@ EMAIL;
     /**
      * The constructor
      *
-     * @throws SMailException
+     * @throws StkMailException
      */
     public function __construct()
     {
@@ -148,14 +148,14 @@ EMAIL;
             $admin_email = Config::get(Config::EMAIL_ADMIN);
             if (!$admin_email)
             {
-                throw new SMailException("The admin email is not set. Could not send email.");
+                throw new StkMailException("The admin email is not set. Could not send email.");
             }
 
             $this->mail->setFrom($admin_email, "STK-Addons Administrator");
         }
         catch (phpmailerException $e)
         {
-            throw new SMailException($e->getMessage());
+            throw new StkMailException($e->getMessage());
         }
 
         $this->mail->isHTML(true);
@@ -187,7 +187,7 @@ EMAIL;
      * @param string $ver_code
      * @param string $ver_page
      *
-     * @throws SMailException
+     * @throws StkMailException
      */
     public function newAccountNotification($email, $user_id, $username, $ver_code, $ver_page)
     {
@@ -217,7 +217,7 @@ EMAIL;
      * @param string $ver_code
      * @param string $ver_page
      *
-     * @throws SMailException
+     * @throws StkMailException
      */
     public function passwordResetNotification($email, $user_id, $username, $ver_code, $ver_page)
     {
@@ -245,7 +245,7 @@ EMAIL;
      * @param string $addon_name
      * @param string $notes
      *
-     * @throws SMailException
+     * @throws StkMailException
      */
     public function addonNoteNotification($email, $addon_name, $notes)
     {
@@ -266,14 +266,14 @@ EMAIL;
      * @param string $subject
      * @param string $message_html
      *
-     * @throws SMailException
+     * @throws StkMailException
      */
     public function moderatorNotification($subject, $message_html)
     {
         $mail_address = Config::get(Config::EMAIL_LIST);
         if (!$mail_address)
         {
-            throw new SMailException('No moderator mailing-list email is set.');
+            throw new StkMailException('No moderator mailing-list email is set.');
         }
 
         $this->addAddress($mail_address);
