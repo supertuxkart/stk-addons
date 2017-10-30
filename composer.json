@@ -18,7 +18,8 @@
         "ext-mbstring": "*",
         "ext-mcrypt": "*",
         "myclabs/php-enum": "^1.5",
-        "webmozart/assert": "^1.2"
+        "webmozart/assert": "^1.2",
+        "nategood/commando": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "~5.7",
