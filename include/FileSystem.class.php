@@ -29,14 +29,14 @@ class FileSystem
      * @param string $new_name  the new filename or directory
      * @param bool   $overwrite flag that indicates to overwrite $new_name if it exists
      *
-     * @throws FileException
+     * @throws FileSystemException
      */
     public static function move($old_name, $new_name, $overwrite = false)
     {
         // validate
         if ($old_name === $new_name)
         {
-            throw new FileException('Old name is the same as new name');
+            throw new FileSystemException('Old name is the same as new name');
         }
 
         static::rename($old_name, $new_name, $overwrite);
@@ -49,13 +49,13 @@ class FileSystem
      * @param string $new_name  the new filename or directory
      * @param bool   $overwrite flag that indicates to overwrite $new_name if it exists
      *
-     * @throws FileException
+     * @throws FileSystemException
      */
     public static function rename($old_name, $new_name, $overwrite = false)
     {
         if (!$overwrite && FileSystem::exists($new_name))
         {
-            throw new FileException(
+            throw new FileSystemException(
                 sprintf(
                     'Failed to move file = "%s" to new location = "%s" because it already exists',
                     $old_name,
@@ -66,7 +66,7 @@ class FileSystem
 
         if (@rename($old_name, $new_name) === false)
         {
-            throw new FileException(
+            throw new FileSystemException(
                 sprintf(
                     'Failed to move/rename "%s" to "%s". error = "%s"',
                     $old_name,
@@ -83,18 +83,18 @@ class FileSystem
      * @param string $file_name  the file to delete
      * @param bool   $check_file flag that indicates to check the file before trying to remove it
      *
-     * @throws FileException
+     * @throws FileSystemException
      */
     public static function removeFile($file_name, $check_file = true)
     {
         if ($check_file && !static::isFile($file_name) && !static::isSymbolicLink($file_name))
         {
-            throw new FileException(sprintf('"%s" is not a file/link or it does not exist', $file_name));
+            throw new FileSystemException(sprintf('"%s" is not a file/link or it does not exist', $file_name));
         }
 
         if (@unlink($file_name) === false)
         {
-            throw new FileException(
+            throw new FileSystemException(
                 sprintf('Failed to delete file = "%s", error = "%s"', $file_name, static::getLastErrorString())
             );
         }
@@ -112,7 +112,7 @@ class FileSystem
      *                                     files, then the root dir won't be removed as there are still some files
      *                                     inside the directory.
      *
-     * @throws FileException
+     * @throws FileSystemException
      */
     public static function removeDirectory($directory, $remove_root_dir = true, $exclude_regex = null)
     {
@@ -120,7 +120,7 @@ class FileSystem
         $directory = rtrim($directory, DS);
         if (!static::isDirectory($directory))
         {
-            throw new FileException(sprintf('"%s" is not a directory', $directory));
+            throw new FileSystemException(sprintf('"%s" is not a directory', $directory));
         }
 
         $found_regex = false;
@@ -156,7 +156,7 @@ class FileSystem
         {
             if (@rmdir($directory) === false)
             {
-                throw new FileException(
+                throw new FileSystemException(
                     sprintf('Failed to remove directory = "%s", error = "%s"', $directory, static::getLastErrorString())
                 );
             }
@@ -170,7 +170,7 @@ class FileSystem
      * @param string $destination_dir the final destination of the flattened files, it can be another directory, or if
      *                                null it is the $current_dir, so the files are flattened in place
      *
-     * @throws FileException
+     * @throws FileSystemException
      */
     public static function flattenDirectory($current_dir, $destination_dir = null)
     {
@@ -182,7 +182,7 @@ class FileSystem
 
         if (!static::isDirectory($current_dir) || !static::isDirectory($destination_dir))
         {
-            throw new FileException(_h('Invalid source or destination directory.'));
+            throw new FileSystemException(_h('Invalid source or destination directory.'));
         }
 
         foreach (static::ls($current_dir) as $file)
@@ -210,7 +210,7 @@ class FileSystem
      * @param bool   $use_include_path if true it searches in the include path for the file
      *
      * @return resource the file handle
-     * @throws FileException
+     * @throws FileSystemException
      */
     public static function fileOpen($filename, $mode, $use_include_path = false)
     {
@@ -218,7 +218,7 @@ class FileSystem
 
         if ($handle === false)
         {
-            throw new FileException(
+            throw new FileSystemException(
                 "Failed to open file = '$filename' with mode = '$mode', error = " . static::getLastErrorString()
             );
         }
@@ -231,13 +231,13 @@ class FileSystem
      *
      * @param resource $handle a file system pointer resource
      *
-     * @throws FileException
+     * @throws FileSystemException
      */
     public static function fileClose(resource $handle)
     {
         if (fclose($handle) === false)
         {
-            throw new FileException("Failed to close file");
+            throw new FileSystemException("Failed to close file");
         }
     }
 
@@ -250,7 +250,7 @@ class FileSystem
      *                         or the end of string is reached, whichever comes first
      *
      * @return int the number of bytes written on success
-     * @throws FileException
+     * @throws FileSystemException
      */
     public static function fileWrite(resource $handle, $string, $length = null)
     {
@@ -258,13 +258,13 @@ class FileSystem
 
         if ($bytes_written === false)
         {
-            throw new FileException("Failed to write to file");
+            throw new FileSystemException("Failed to write to file");
         }
 
         // TODO probably should check if bytes_written < min(len(string), length)
         if ($string && $bytes_written === 0)
         {
-            throw new FileException("Failed to write any bytes to the file");
+            throw new FileSystemException("Failed to write any bytes to the file");
         }
 
         return $bytes_written;
@@ -277,20 +277,20 @@ class FileSystem
      * @param bool   $check    performs checks on the file
      *
      * @return int returns the size of the file in bytes
-     * @throws FileException
+     * @throws FileSystemException
      */
     public static function fileSize($filename, $check = true)
     {
         if ($check && !static::exists($filename))
         {
-            throw new FileException("Trying to get file size of a file that does not exist, file = '$filename'");
+            throw new FileSystemException("Trying to get file size of a file that does not exist, file = '$filename'");
         }
         // TODO maybe check if it is a directory?
 
         $size = @filesize($filename);
         if ($size === false)
         {
-            throw new FileException(
+            throw new FileSystemException(
                 "Failed to get the file size of file = '$filename', error = " . static::getLastErrorString()
             );
         }
@@ -305,19 +305,19 @@ class FileSystem
      * @param bool   $check    performs checks on the file
      *
      * @return int returns the time the file was last modified, the time is returned as a Unix timestamp
-     * @throws FileException
+     * @throws FileSystemException
      */
     public static function fileModificationTime($filename, $check = true)
     {
         if ($check && !static::exists($filename))
         {
-            throw new FileException("Trying to get file size of a file that does not exist, file = '$filename'");
+            throw new FileSystemException("Trying to get file size of a file that does not exist, file = '$filename'");
         }
 
         $modification_time = @filemtime($filename);
         if ($modification_time === false)
         {
-            throw new FileException(
+            throw new FileSystemException(
                 "Failed to get the file modification time of file = '$filename', error = " .
                 static::getLastErrorString()
             );
@@ -337,7 +337,7 @@ class FileSystem
      *                         https://secure.php.net/manual/en/function.file-put-contents.php
      *
      * @return int the number of bytes written on success
-     * @throws FileException
+     * @throws FileSystemException
      */
     public static function filePutContents($filename, $content, $flags = 0)
     {
@@ -345,7 +345,7 @@ class FileSystem
 
         if ($bytes_written === false)
         {
-            throw new FileException("Failed to write to file = '$filename'");
+            throw new FileSystemException("Failed to write to file = '$filename'");
         }
 
         return $bytes_written;
@@ -358,19 +358,19 @@ class FileSystem
      * @param bool   $use_include_path search the file in the include path
      *
      * @return string the read data
-     * @throws FileException
+     * @throws FileSystemException
      */
     public static function fileGetContents($filename, $use_include_path = false)
     {
         if (!static::exists($filename))
         {
-            throw new FileException("Trying to get file contents of a file that does not exist, file = '$filename'");
+            throw new FileSystemException("Trying to get file contents of a file that does not exist, file = '$filename'");
         }
 
         $read_data = @file_get_contents($filename, $use_include_path);
         if ($read_data === false)
         {
-            throw new FileException(
+            throw new FileSystemException(
                 "Failed to get contents of file = '$filename', error = " . static::getLastErrorString()
             );
         }
@@ -387,7 +387,7 @@ class FileSystem
      *                              Otherwise, it is set to the value passed to the time parameter. If neither are
      *                              present, the current system time is used.
      *
-     * @throws FileException
+     * @throws FileSystemException
      */
     public static function touch($filename, $time = null, $access_time = null)
     {
@@ -402,7 +402,7 @@ class FileSystem
 
         if ($touch === false)
         {
-            throw new FileException("Failed to touch file = '$filename'");
+            throw new FileSystemException("Failed to touch file = '$filename'");
         }
     }
 
@@ -413,14 +413,14 @@ class FileSystem
      * @param bool   $has_dots flag that indicates the output has also the .. and . directory listings
      *
      * @return array of all files and directories
-     * @throws FileException
+     * @throws FileSystemException
      */
     public static function ls($path, $has_dots = false)
     {
         $files = scandir($path);
         if ($files === false)
         {
-            throw new FileException(_h('Path is not a directory'));
+            throw new FileSystemException(_h('Path is not a directory'));
         }
 
         return $has_dots ? $files : array_diff($files, ['..', '.']);
@@ -521,7 +521,7 @@ class FileSystem
      * @param string $dir
      * @param int    $max_age the max age since modification in milliseconds
      *
-     * @throws FileException
+     * @throws FileSystemException
      */
     public static function deleteOldSubdirectories($dir, $max_age)
     {
@@ -529,7 +529,7 @@ class FileSystem
         $dir = rtrim($dir, DS);
         if (!static::isDirectory($dir))
         {
-            throw new FileException(sprintf('The path specified is not a directory = "%s"', $dir));
+            throw new FileSystemException(sprintf('The path specified is not a directory = "%s"', $dir));
         }
 
         foreach (static::ls($dir) as $file)
@@ -555,7 +555,7 @@ class FileSystem
      * @param string $directory
      * @param string $filename
      *
-     * @throws FileException
+     * @throws FileSystemException
      */
     public static function compressToArchive($directory, $filename)
     {
@@ -568,7 +568,7 @@ class FileSystem
 
         if ($zip->open($filename, ZIPARCHIVE::CREATE) !== true)
         {
-            throw new FileException("Cannot open filename = '$filename'");
+            throw new FileSystemException("Cannot open filename = '$filename'");
         }
 
         // Find files to add to archive
@@ -581,17 +581,17 @@ class FileSystem
 
             if (!$zip->addFile($directory . $file, $file))
             {
-                throw new FileException("Can't add this file = '$file' to the archive");
+                throw new FileSystemException("Can't add this file = '$file' to the archive");
             }
             if (!static::exists($directory . $file))
             {
-                throw new FileException("Can't add this file = '$file' as it doesn't exist");
+                throw new FileSystemException("Can't add this file = '$file' as it doesn't exist");
             }
         }
 
         if (!$zip->close())
         {
-            throw new FileException("Can't close the zip");
+            throw new FileSystemException("Can't close the zip");
         }
     }
 
@@ -602,13 +602,13 @@ class FileSystem
      * @param string $destination the directory where to extract to
      * @param string $file_ext    the archive extension
      *
-     * @throws FileException
+     * @throws FileSystemException
      */
     public static function extractFromArchive($file, $destination, $file_ext)
     {
         if (!static::exists($file))
         {
-            throw new FileException(sprintf(_h('The file = `%s` to extract does not exist.'), $file));
+            throw new FileSystemException(sprintf(_h('The file = `%s` to extract does not exist.'), $file));
         }
 
         // Extract archive
@@ -620,11 +620,11 @@ class FileSystem
 
                 if (!$archive->open($file))
                 {
-                    throw new FileException(_h('Could not open archive file. It may be corrupted.'));
+                    throw new FileSystemException(_h('Could not open archive file. It may be corrupted.'));
                 }
                 if (!$archive->extractTo($destination))
                 {
-                    throw new FileException(_h('Failed to extract archive file.') . ' (zip)');
+                    throw new FileSystemException(_h('Failed to extract archive file.') . ' (zip)');
                 }
 
                 $archive->close();
@@ -652,18 +652,102 @@ class FileSystem
                 $archive = new Archive_Tar($file, $compression);
                 if (!$archive)
                 {
-                    throw new FileException(_h('Could not open archive file. It may be corrupted.'));
+                    throw new FileSystemException(_h('Could not open archive file. It may be corrupted.'));
                 }
                 if (!$archive->extract($destination))
                 {
-                    throw new FileException(_h('Failed to extract archive file.') . ' (' . $compression . ')');
+                    throw new FileSystemException(_h('Failed to extract archive file.') . ' (' . $compression . ')');
                 }
                 static::removeFile($file); // delete file archive from inside folder
                 break;
 
             default:
-                throw new FileException(_h('Unknown archive type.'));
+                throw new FileSystemException(_h('Unknown archive type.'));
         }
+    }
+
+    /**
+     * Check that all image sizes are power of 2 and that they have the correct MIME type
+     *
+     * @param string $path the path to an image
+     *
+     * @throws FileSystemException
+     * @return bool     true if all images are valid, false otherwise
+     */
+    public static function checkImagesAreValid($path)
+    {
+        if (!FileSystem::exists($path))
+        {
+            return false;
+        }
+        if (!FileSystem::isDirectory($path))
+        {
+            return false;
+        }
+
+        // Check supported image types
+        $image_types = imagetypes();
+        $image_file_ext = [];
+        if ($image_types & IMG_GIF)
+        {
+            $image_file_ext[] = 'gif';
+        }
+        if ($image_types & IMG_PNG)
+        {
+            $image_file_ext[] = 'png';
+        }
+        if ($image_types & IMG_JPG)
+        {
+            $image_file_ext[] = 'jpg';
+            $image_file_ext[] = 'jpeg';
+        }
+        if ($image_types & IMG_WBMP)
+        {
+            $image_file_ext[] = 'wbmp';
+        }
+        if ($image_types & IMG_XPM)
+        {
+            $image_file_ext[] = 'xpm';
+        }
+        // Can't identify image
+        if (empty($image_file_ext))
+        {
+            return false;
+        }
+
+        foreach (FileSystem::ls($path) as $file)
+        {
+            if (FileSystem::isDirectory($path . $file))
+            {
+                continue;
+            }
+
+            // Make sure the whole path is there
+            $file = $path . $file;
+
+            // Don't check files that aren't images
+            if (!preg_match('/\.(' . implode('|', $image_file_ext) . ')$/i', $file))
+            {
+                continue;
+            }
+
+            // If we're still in the loop, there is an image to check
+            $image_size = getimagesize($file);
+            $image_width = $image_size[0];
+            $image_height = $image_size[1];
+
+            // Make sure dimensions are powers of 2. By using: num & (num - 1)
+            if (($image_width & ($image_width - 1)) || ($image_width <= 0))
+            {
+                return false;
+            }
+            if (($image_height & ($image_height - 1)) || ($image_height <= 0))
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**

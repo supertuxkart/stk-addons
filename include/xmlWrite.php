@@ -242,6 +242,10 @@ function generateAssetXML()
         {
             throw new AddonException('Failed to load addon records for writing XML!');
         }
+        catch (Exception $e)
+        {
+            throw new AddonException('Unknown error occured while loading addons');
+        }
     }
 
     // End document tag

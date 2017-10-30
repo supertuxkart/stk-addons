@@ -169,19 +169,23 @@ class Upload
         $this->temp_file_dir = $STK_UPLOADS_PATH . DS . time() . '-' . $this->file_name . DS;
         $this->temp_file_fullpath = $this->temp_file_dir . $this->file_name;
 
-        // Clean up old temp files to make room for new upload
-        if (FileSystem::isDirectory($STK_UPLOADS_PATH))
-        {
-            FileSystem::deleteOldSubdirectories($STK_UPLOADS_PATH, Util::SECONDS_IN_A_HOUR);
-        }
-
         try
         {
+            // Clean up old temp files to make room for new upload
+            if (FileSystem::isDirectory($STK_UPLOADS_PATH))
+            {
+                FileSystem::deleteOldSubdirectories($STK_UPLOADS_PATH, Util::SECONDS_IN_A_HOUR);
+            }
+
             $this->doUpload();
         }
         catch (ParserException $e)
         {
             throw new UploadException("Parser Exception: " . $e->getMessage());
+        }
+        catch (FileSystemException $e)
+        {
+            throw new UploadException("FileSystem Exception: " . $e->getMessage());
         }
         catch (FileException $e)
         {
@@ -202,14 +206,15 @@ class Upload
         {
             $this->removeTempFiles();
         }
-        catch (FileException $e)
+        catch (FileSystemException $e)
         {
-            throw new UploadException("File Exception: " . $e->getMessage());
+            throw new UploadException("FileSystem Exception: " . $e->getMessage());
         }
     }
 
     /**
      * Remove all the files from the temporary directory
+     * @throws FileSystemException
      */
     public function removeTempFiles()
     {
@@ -245,7 +250,7 @@ class Upload
         {
             $this->prepareUploadedFiles();
         }
-        catch (FileException $e)
+        catch (FileSystemException $e)
         {
             // try to clean up
             if (FileSystem::exists($this->temp_file_fullpath))
@@ -273,7 +278,7 @@ class Upload
     /**
      * Relocate uploaded files to a 'scratch' directory.
      * If the uploaded file is compressed, decompress it.
-     * @throws UploadException|FileException
+     * @throws UploadException|FileSystemException
      */
     private function prepareUploadedFiles()
     {
@@ -291,15 +296,16 @@ class Upload
 
             // unarchive it first
             FileSystem::extractFromArchive($this->temp_file_fullpath, $this->temp_file_dir, $this->file_ext);
+
             // Flatten directories
             // TODO check if we want this :/
             try
             {
                 FileSystem::flattenDirectory($this->temp_file_dir);
             }
-            catch (FileException $e)
+            catch (FileSystemException $e)
             {
-                throw new FileException(
+                throw new FileSystemException(
                     sprintf(
                         "Error while trying to flatten the archive. 
                 This might happen because files from subdirectories have the same name as files from the root directory. Error = `%s`",
@@ -315,19 +321,12 @@ class Upload
 
     /**
      * Perform the upload of an image
-     * @throws UploadException
+     * @throws UploadException|FileSystemException|FileException
      */
     private function doImageUpload()
     {
-        try
-        {
-            FileSystem::move($this->temp_file_fullpath, $this->upload_file_dir . $this->upload_file_name);
-            File::createImage($this->upload_file_dir . $this->upload_file_name, $this->addon_id);
-        }
-        catch (FileException $e)
-        {
-            throw new UploadException($e->getMessage());
-        }
+        FileSystem::move($this->temp_file_fullpath, $this->upload_file_dir . $this->upload_file_name);
+        File::createImage($this->upload_file_dir . $this->upload_file_name, $this->addon_id);
 
         $this->success[] = _h('Successfully uploaded image.');
         $this->success[] =
@@ -481,7 +480,7 @@ class Upload
 
     /**
      * Upload the image file
-     * @throws UploadException
+     * @throws UploadException|FileException|FileSystemException
      */
     private function storeUploadImage()
     {
@@ -550,7 +549,7 @@ class Upload
      *
      * @param int $filetype
      *
-     * @throws FileException|UploadException
+     * @throws FileException|FileSystemException|UploadException
      */
     private function storeUploadArchive($filetype)
     {
@@ -559,7 +558,7 @@ class Upload
         {
             FileSystem::compressToArchive($this->temp_file_dir, $this->upload_file_dir . $this->upload_file_name);
         }
-        catch (FileException $e)
+        catch (FileSystemException $e)
         {
             throw new UploadException(_h('Failed to re-pack archive file. Reason: ' . $e->getMessage()));
         }
@@ -584,6 +583,7 @@ class Upload
 
     /**
      * Remove all the files that are considered invalid
+     * @throws FileSystemException
      */
     private function removeInvalidFiles()
     {
@@ -601,6 +601,11 @@ class Upload
             // Make a list of approved file types
             $approved_types = $is_source ? Config::get(Config::ALLOWED_SOURCE_EXTENSIONS) :
                 Config::get(Config::ALLOWED_ADDON_EXTENSIONS);
+            if (!$approved_types)
+            {
+                throw new FileSystemException("Can't get config values from database. Should never happen.");
+            }
+
             $approved_types = Util::commaStringToArray($approved_types);
             foreach (FileSystem::ls($path) as $file)
             {
@@ -650,6 +655,8 @@ class Upload
      * Parse the b3d, xml, license.txt file
      * Will modify the following keys from the proprieties:
      *  - xml_attributes, addon_file, license_file, quad_file, status, b3d_textures, missing_textures
+     *
+     * @throws FileSystemException
      */
     private function parseFiles()
     {
@@ -725,7 +732,7 @@ class Upload
         $this->properties['status'] = 0;
 
         // Check to make sure all image dimensions are powers of 2
-        if (!File::imageCheck($this->temp_file_dir))
+        if (!FileSystem::checkImagesAreValid($this->temp_file_dir))
         {
             $this->warnings[] = _h('Some images in this add-on do not have dimensions that are a power of two.') . ' ' .
                                 _h('This may cause display errors on some video cards.');

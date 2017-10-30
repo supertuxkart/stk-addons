@@ -117,7 +117,7 @@ class SImage
         {
             throw new SImageException(_h('Path does not exist on the filesystem'));
         }
-        if (!is_file($path))
+        if (!FileSystem::isFile($path))
         {
             throw new SImageException(_h('Path does not point to a file.'));
         }

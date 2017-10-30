@@ -150,7 +150,7 @@ class File extends Base
      * @param string $parent the parent directory of the file in filesystem
      *
      * @return boolean true on success, false otherwise
-     * @throws FileException
+     * @throws FileException|FileSystemException
      */
     public function delete($parent = UP_PATH)
     {
@@ -275,6 +275,7 @@ class File extends Base
      * Get all files from the database and filesystem
      * This method will silently fail
      *
+     * @throws FileException|FileSystemException
      * @return array of all file
      */
     public static function getAllFiles()
@@ -295,7 +296,8 @@ class File extends Base
         }
         catch (DBException $e)
         {
-            return false;
+            // TODO error here
+            return [];
         }
 
         // Look-up all existing files on the disk
@@ -403,84 +405,6 @@ class File extends Base
     }
 
     /**
-     * Check that all image sizes are power of 2 and that they have the correct MIME type
-     *
-     * @param string $path the path to an image
-     *
-     * @return bool
-     */
-    public static function imageCheck($path)
-    {
-        if (!FileSystem::exists($path))
-        {
-            return false;
-        }
-        if (!FileSystem::isDirectory($path))
-        {
-            return false;
-        }
-
-        // Check supported image types
-        $image_types = imagetypes();
-        $image_file_ext = [];
-        if ($image_types & IMG_GIF)
-        {
-            $image_file_ext[] = 'gif';
-        }
-        if ($image_types & IMG_PNG)
-        {
-            $image_file_ext[] = 'png';
-        }
-        if ($image_types & IMG_JPG)
-        {
-            $image_file_ext[] = 'jpg';
-            $image_file_ext[] = 'jpeg';
-        }
-        if ($image_types & IMG_WBMP)
-        {
-            $image_file_ext[] = 'wbmp';
-        }
-        if ($image_types & IMG_XPM)
-        {
-            $image_file_ext[] = 'xpm';
-        }
-
-        foreach (FileSystem::ls($path) as $file)
-        {
-            if (FileSystem::isDirectory($path . $file))
-            {
-                continue;
-            }
-
-            // Make sure the whole path is there
-            $file = $path . $file;
-
-            // Don't check files that aren't images
-            if (!preg_match('/\.(' . implode('|', $image_file_ext) . ')$/i', $file))
-            {
-                continue;
-            }
-
-            // If we're still in the loop, there is an image to check
-            $image_size = getimagesize($file);
-            $image_width = $image_size[0];
-            $image_height = $image_size[1];
-
-            // Make sure dimensions are powers of 2. By using: num & (num - 1)
-            if (($image_width & ($image_width - 1)) || ($image_width <= 0))
-            {
-                return false;
-            }
-            if (($image_height & ($image_height - 1)) || ($image_height <= 0))
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
      * Delete the queued files form the database and from the filesystem
      *
      * @throws FileException
@@ -580,7 +504,7 @@ class File extends Base
      * @param string $file_name the name of the image
      * @param int    $addon_id  the addon_id that this image belongs tp
      *
-     * @throws FileException
+     * @throws FileException|FileSystemException
      */
     public static function createImage($file_name, $addon_id)
     {
@@ -654,7 +578,7 @@ class File extends Base
      * @param string $quad_file
      * @param int    $addon_id
      *
-     * @throws FileException
+     * @throws FileException|FileSystemException
      */
     public static function newImageFromQuads($quad_file, $addon_id)
     {

@@ -139,7 +139,7 @@ class Template
         }
 
         $dir = ROOT_PATH . 'tpl' . DS . $template_dir . DS;
-        if (FileSystem::exists($dir) && FileSystem::isDirectory($dir))
+        if (FileSystem::isDirectory($dir))
         {
             return $dir;
         }

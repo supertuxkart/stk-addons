@@ -172,6 +172,7 @@ class ValidateException extends UserException {}
 class AddonException extends BaseException {}
 
 class FileException extends BaseException {}
+class FileSystemException extends BaseException {}
 class UploadException extends BaseException {}
 class NewsException extends  BaseException {}
 class RatingsException extends BaseException {}

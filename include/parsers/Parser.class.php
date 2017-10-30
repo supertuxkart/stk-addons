@@ -80,7 +80,7 @@ abstract class Parser
         {
             $handle = FileSystem::fileOpen($file, $read_flag);
         }
-        catch (FileException $e)
+        catch (FileSystemException $e)
         {
             if (DEBUG_MODE)
                 throw new ParserException($e->getMessage());

@@ -63,7 +63,7 @@ class Cache
         {
             FileSystem::removeDirectory(CACHE_PATH, false, $exclude_regex);
         }
-        catch (FileException $e)
+        catch (FileSystemException $e)
         {
             throw new CacheException($e->getMessage());
         }
@@ -135,7 +135,7 @@ class Cache
                 {
                     FileSystem::removeFile(CACHE_PATH . $cache_item['file']);
                 }
-                catch (FileException $e)
+                catch (FileSystemException $e)
                 {
                     error_log($e);
                     Debug::addMessage(
