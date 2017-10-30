@@ -1076,7 +1076,7 @@ class Addon extends Base
 
         try
         {
-            SMail::get()->addonNoteNotification($user['email'], $this->name, $email_body);
+            StkMail::get()->addonNoteNotification($user['email'], $this->name, $email_body);
         }
         catch (SMailException $e)
         {
@@ -1847,7 +1847,7 @@ class Addon extends Base
     }
 
     /**
-     * Wrapper for SMail::moderatorNotification which sends an email to the moderators list
+     * Wrapper for StkMail::moderatorNotification which sends an email to the moderators list
      *
      * @param string $title the email subject
      * @param string $body  the email body in html
@@ -1858,7 +1858,7 @@ class Addon extends Base
     {
         try
         {
-            SMail::get()->moderatorNotification($title, h($body));
+            StkMail::get()->moderatorNotification($title, h($body));
         }
         catch (SMailException $e)
         {

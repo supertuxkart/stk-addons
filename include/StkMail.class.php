@@ -19,9 +19,9 @@
  */
 
 /**
- * Class SMail
+ * Class StkMail
  */
-class SMail
+class StkMail
 {
     /**
      * Hold the mail instance

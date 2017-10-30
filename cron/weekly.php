@@ -46,7 +46,7 @@ function log_email()
 
     try
     {
-        SMail::get()->moderatorNotification('Weekly log update', $content);
+        StkMail::get()->moderatorNotification('Weekly log update', $content);
     }
     catch (SMailException $e)
     {

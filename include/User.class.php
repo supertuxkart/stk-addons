@@ -1122,7 +1122,7 @@ class User extends Base implements IAsXML
             // Send verification email
             try
             {
-                SMail::get()->passwordResetNotification(
+                StkMail::get()->passwordResetNotification(
                     $email,
                     $user_id,
                     $username,
@@ -1245,7 +1245,7 @@ class User extends Base implements IAsXML
             // Send verification email
             try
             {
-                SMail::get()->newAccountNotification($email, $user_id, $username, $verification_code, 'register.php');
+                StkMail::get()->newAccountNotification($email, $user_id, $username, $verification_code, 'register.php');
             }
             catch (SMailException $e)
             {
