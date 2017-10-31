@@ -1,8 +1,6 @@
 <?php
 /**
- * Copyright        2009 Lucas Baudin <xapantu@gmail.com>
- *           2011 - 2014 Stephen Just <stephenjust@gmail.com>
- *           2014 - 2016 Daniel Butum <danibutum at gmail dot com>
+ * Copyright 2009 - 2017 SuperTuxKart-Team
  *
  * This file is part of stk-addons.
  *
@@ -21,22 +19,22 @@
  */
 
 // Make sure that this does not end with a trailing slash, and does not have a prefix in front
-$ROOT_LOCATION = 'addons.supertuxkart.net';
+const DOMAIN_NAME = 'addons.supertuxkart.net';
 
 // WARNING!!!! turn OFF in the production server.
 // Enable this when you want detailed debugging output.
 // WARNING!!!! turn OFF in the production server.
 define('DEBUG_MODE', false);
 
+// Enable the debug toolbar, will only work when in DEBUG_MODE.
+// WARNING!!! Never enable in the production server
+define('DEBUG_TOOLBAR', false);
+
 // Enable maintenance mode, will disable all requests and redirect to an HTML page
 define('MAINTENANCE_MODE', false);
 
 // Indicate if the certificate is signed by an authority
-define('IS_SSL_CERTIFICATE_VALID', false);
-
-// Enable the debug toolbar, will only work when in DEBUG_MODE.
-// WARNING!!! Never enable in the production server
-define('DEBUG_TOOLBAR', false);
+const IS_SSL_CERTIFICATE_VALID = false;
 
 // set default values
 ini_set('html_errors', 'On');
@@ -60,91 +58,91 @@ if (!defined('CRON_MODE')) define('CRON_MODE', false);
 if (!defined('API_MODE')) define('API_MODE', false);
 
 // Paths on the local filesystem
-define('DS', DIRECTORY_SEPARATOR);
-define('ROOT_PATH', __DIR__ . DS);
-define('INCLUDE_PATH', ROOT_PATH . 'include' . DS);
-define('TPL_PATH', ROOT_PATH . 'tpl' . DS . 'default' . DS); // Template properties
+const DS = DIRECTORY_SEPARATOR;
+const ROOT_PATH = __DIR__ . DS;
+const INCLUDE_PATH = ROOT_PATH . 'include' . DS;
+const TPL_PATH = ROOT_PATH . 'tpl' . DS . 'default' . DS; // Template properties
 define('TMP_PATH', sys_get_temp_dir() . DS); // define temporary directory path
-define('UPLOAD_PATH', ROOT_PATH . 'dl' . DS);
-define('UP_PATH', UPLOAD_PATH);
-define('BUGS_PATH', ROOT_PATH . 'bugs' . DS);
-define('STATS_PATH', ROOT_PATH . 'stats' . DS);
-define('ASSETS_PATH', ROOT_PATH . 'assets' . DS);
-define('CACHE_PATH', ASSETS_PATH . 'cache' . DS); // cache for images/html/template
-define('FONTS_PATH', ASSETS_PATH . 'fonts' . DS);
+const UPLOAD_PATH = ROOT_PATH . 'dl' . DS;
+const UP_PATH = UPLOAD_PATH;
+const BUGS_PATH = ROOT_PATH . 'bugs' . DS;
+const STATS_PATH = ROOT_PATH . 'stats' . DS;
+const ASSETS_PATH = ROOT_PATH . 'assets' . DS;
+const CACHE_PATH = ASSETS_PATH . 'cache' . DS; // cache for images/html/template
+const FONTS_PATH = ASSETS_PATH . 'fonts' . DS;
 
-define('NEWS_XML_PATH', UP_PATH . 'xml' . DS . 'news.xml');
-define('ASSETS_XML_PATH', UP_PATH . 'xml' . DS . 'assets.xml');
-define('ASSETS2_XML_PATH', UP_PATH . 'xml' . DS . 'assets2.xml');
+const NEWS_XML_PATH = UP_PATH . 'xml' . DS . 'news.xml';
+const ASSETS_XML_PATH = UP_PATH . 'xml' . DS . 'assets.xml';
+const ASSETS2_XML_PATH = UP_PATH . 'xml' . DS . 'assets2.xml';
 
 // Location urls
 if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')
 {
-    define('ROOT_LOCATION', 'https://' . $ROOT_LOCATION . '/');
+    define('ROOT_LOCATION', 'https://' . DOMAIN_NAME . '/');
 }
 else
 {
-    define('ROOT_LOCATION', 'http://' . $ROOT_LOCATION . '/');
+    define('ROOT_LOCATION', 'http://' . DOMAIN_NAME . '/');
 }
 
-define('DOWNLOAD_LOCATION', ROOT_LOCATION . 'dl/');
-define('DOWNLOAD_XML_LOCATION', DOWNLOAD_LOCATION . 'xml/');
-define('DOWNLOAD_ASSETS_LOCATION', DOWNLOAD_LOCATION);
-define('NEWS_XM_LOCATION', DOWNLOAD_XML_LOCATION . 'news.xml');
-define('ASSETS_XML_LOCATION', DOWNLOAD_XML_LOCATION . 'assets.xml');
-define('ASSETS2_XML_LOCATION', DOWNLOAD_XML_LOCATION . 'assets.xml');
-define('BUGS_LOCATION', ROOT_LOCATION . 'bugs/');
-define('STATS_LOCATION', ROOT_LOCATION . 'stats/');
-define('ASSETS_LOCATION', ROOT_LOCATION . 'assets/');
-define('CACHE_LOCATION', ASSETS_LOCATION . 'cache/');
-define('LIBS_LOCATION', ASSETS_LOCATION . 'libs/');
-define('IMG_LOCATION', ASSETS_LOCATION . 'img/');
-define('JS_LOCATION', ASSETS_LOCATION . 'js/');
-define('CSS_LOCATION', ASSETS_LOCATION . 'css/');
+const DOWNLOAD_LOCATION = ROOT_LOCATION . 'dl/';
+const DOWNLOAD_XML_LOCATION = DOWNLOAD_LOCATION . 'xml/';
+const DOWNLOAD_ASSETS_LOCATION = DOWNLOAD_LOCATION;
+const NEWS_XM_LOCATION = DOWNLOAD_XML_LOCATION . 'news.xml';
+const ASSETS_XML_LOCATION = DOWNLOAD_XML_LOCATION . 'assets.xml';
+const ASSETS2_XML_LOCATION = DOWNLOAD_XML_LOCATION . 'assets.xml';
+const BUGS_LOCATION = ROOT_LOCATION . 'bugs/';
+const STATS_LOCATION = ROOT_LOCATION . 'stats/';
+const ASSETS_LOCATION = ROOT_LOCATION . 'assets/';
+const CACHE_LOCATION = ASSETS_LOCATION . 'cache/';
+const LIBS_LOCATION = ASSETS_LOCATION . 'libs/';
+const IMG_LOCATION = ASSETS_LOCATION . 'img/';
+const JS_LOCATION = ASSETS_LOCATION . 'js/';
+const CSS_LOCATION = ASSETS_LOCATION . 'css/';
 
 // CAPTCHA properties, Register API keys at https://www.google.com/recaptcha/admin
-define('CAPTCHA_SITE_KEY', '');
-define('CAPTCHA_SECRET', '');
+const CAPTCHA_SITE_KEY = null;
+const CAPTCHA_SECRET = null;
 
-// Database proprieties
-define('DB_USER', 'stk_addons');
-define('DB_PASSWORD', '');
-define('DB_NAME', 'stk_addons');
-define('DB_HOST', 'localhost');
+// Database properties
+const DB_USER = 'stk_addons';
+const DB_PASSWORD = 'your super secret password';
+const DB_NAME = 'stk_addons';
+const DB_HOST = 'localhost';
 // should not be modified
 const DB_VERSION = 'v3';
 const DB_PREFIX = DB_VERSION . '_';
 
-// Mail proprieties
-define('IS_SMTP', false); // true for 'smtp' and false for 'sendmail'
-define('SENDMAIL_PATH', null); // Path to sendmail if your sendmail path is not standard
-define('SMTP_HOST', null); // SMTP server host
-define('SMTP_PORT', null); // SMTP server port (usually 25)
-define('SMTP_PREFIX', 'ssl'); // usually ssl or tls
-define('SMTP_AUTH', null); // Whether or not to use SMTP authentication, true/false
-define('SMTP_USER', null); // SMTP username
-define('SMTP_PASS', null); // SMTP password
+// Mail properties
+const IS_SMTP = false; // true for 'smtp' and false for 'sendmail'
+const SENDMAIL_PATH = null; // Path to sendmail if your sendmail path is not standard
+const SMTP_HOST = null; // SMTP server host
+const SMTP_PORT = null; // SMTP server port (usually 25)
+const SMTP_PREFIX = 'ssl'; // usually ssl or tls
+const SMTP_AUTH = null; // Whether or not to use SMTP authentication, true/false
+const SMTP_USER = null; // SMTP username
+const SMTP_PASS = null; // SMTP password
 
 // Add-On Flags
 //
 // Do not change existing flags! Doing so will cause errors with existing add-ons, and possible game incompatibility.
 // To add new flags, create a new constant, and set it to the next power of 2. The current database schema allows 24 flags.
-define('F_APPROVED', 1);
-define('F_ALPHA', 2);
-define('F_BETA', 4);
-define('F_RC', 8);
-define('F_INVISIBLE', 16);
-define('F_RESERVED2', 32); // Reserved for future use
-define('F_DFSG', 64);
-define('F_FEATURED', 128);
-define('F_LATEST', 256);
-define('F_TEX_NOT_POWER_OF_2', 512);
+const F_APPROVED = 1;
+const F_ALPHA = 2;
+const F_BETA = 4;
+const F_RC = 8;
+const F_INVISIBLE = 16;
+const F_RESERVED2 = 32; // Reserved for future use
+const F_DFSG = 64;
+const F_FEATURED = 128;
+const F_LATEST = 256;
+const F_TEX_NOT_POWER_OF_2 = 512;
 
 // API
 // this should be changed depending where you have the api, for api.supertuxkart.net is should be empty string
 // for addons.supertuxkart.net/api, this is the default location
-define('API_LOCATION', '/api');
-define('API_VERSION', 'v2');
+const API_LOCATION = '/api';
+const API_VERSION = 'v2';
 
 // auto load stuff, when testing we do this manually
 if (!TEST_MODE)
