@@ -61,6 +61,13 @@ Then after getting the updated translate `po` files from https://www.transifex.c
 ## Contributing
 All contributions are welcome: ideas, patches, documentation, bug reports, complaints, etc!
 
+### Git message conventions
+Some messages include the prefix `[tag]` at the beginning of the commit message, if present these mean
+that you need to make manual modifications to your code/infrastructure for it to work with that commit.
+- `[C]` - modified the config file, update your `config.php` file accordingly
+- `[D]` - updated the composer/bower dependencies, run the appropriate bower/composer update commands
+- `[S]` - updated the SQL schema, modify your SQL schema accordingly
+
 The PHP coding standard is heavily based on [PSR-2](http://www.php-fig.org/psr/psr-2/), with some modifications:
 * The line limit is 120 characters.
 * Opening braces for control structures MUST go on the next line, and closing braces MUST go on the next line after the body.
