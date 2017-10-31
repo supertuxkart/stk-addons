@@ -293,8 +293,10 @@ to generate them. Edit the config.php file and set the respective keys in CAPTCH
 CAPTCHA_SECRET. Reload the page after this.</p>
 MSG;
 
-            exit(StkTemplate::get('error-page.tpl')
-                ->assign('error', ['title' => 'Add your captcha keys', 'message' => $message])->toString());
+            exit(
+            StkTemplate::get('error-page.tpl')
+                ->assign('error', ['title' => 'Add your captcha keys', 'message' => $message])->toString()
+            );
         }
     }
 
@@ -342,128 +344,6 @@ MSG;
     public static function redirectError($error, $permanent = false)
     {
         static::redirectTo(ROOT_LOCATION . sprintf("error.php?e=%d", (int)$error), $permanent);
-    }
-
-    /**
-     * Get url address
-     *
-     * @param bool $request_params      retrieve the url tih the GET params
-     * @param bool $request_script_name retrieve the url with only the script name
-     *
-     * Possible usage: getCurrentUrl(true, false) - the default, get the full url
-     *                 getCurrentUrl(false, true) - get the url without the GET params only the script name
-     *                 getCurrentUrl(false, false) - get the url's directory path only
-     *
-     * @return string
-     */
-    public static function getCurrentUrl($request_params = true, $request_script_name = false)
-    {
-        // begin buildup
-        $page_url = "http";
-
-        // add for ssl secured connections
-        if (static::isHTTPS())
-        {
-            $page_url .= "s";
-        }
-        $page_url .= "://";
-
-        // find the end part of the url
-        if ($request_params) // full url with requests
-        {
-            $end_url = $_SERVER["REQUEST_URI"];
-        }
-        elseif ($request_script_name) // full url without requests
-        {
-            $end_url = $_SERVER["SCRIPT_NAME"];
-        }
-        else // url directory path
-        {
-            $end_url = dirname($_SERVER["SCRIPT_NAME"]) . "/";
-        }
-
-        // add host
-        $page_url .= $_SERVER["SERVER_NAME"];
-
-        if ((int)$_SERVER["SERVER_PORT"] !== 80)
-        {
-            $page_url .= ":" . $_SERVER["SERVER_PORT"] . $end_url;
-        }
-        else
-        {
-            $page_url .= $end_url;
-        }
-
-        return $page_url;
-    }
-
-    /**
-     * Get an hash map of all the url vars where the key is the name
-     *
-     * @param string $query
-     *
-     * @return array
-     */
-    public static function getQueryVars($query)
-    {
-        // build vars
-        $vars = [];
-        $hashes = explode("&", $query);
-        foreach ($hashes as $hash)
-        {
-            $hash = explode("=", $hash);
-            $len_hash = count($hash);
-
-            // At least the key exists
-            if ($len_hash != 0)
-            {
-                $key = $hash[0];
-
-                $value = '';
-                // the value exists
-                if  ($len_hash >= 1)
-                    $value = $hash[1];
-
-                // key => value
-                $vars[$key] = $value;
-            }
-        }
-
-        return $vars;
-    }
-
-    /**
-     * Removes an item or list from the query string.
-     *
-     * @param string|array $keys Query key or keys to remove.
-     * @param string       $url
-     *
-     * @return string
-     */
-    public static function removeQueryArguments(array $keys, $url)
-    {
-        $parsed = parse_url($url);
-        $url = rtrim($url, "?&");
-
-        // the query is empty
-        if (empty($parsed["query"]))
-        {
-            return $url . "?";
-        }
-
-        $vars = static::getQueryVars($parsed["query"]);
-
-        // remove query
-        foreach ($keys as $key)
-        {
-            unset($vars[$key]);
-        }
-
-        $query = empty($vars) ? "" : http_build_query($vars) . "&";
-
-        $new_url = $parsed["scheme"] . "://" . $parsed["host"] . $parsed["path"] . "?" . $query;
-
-        return $new_url;
     }
 
     /**

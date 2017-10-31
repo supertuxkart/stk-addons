@@ -33,8 +33,8 @@ if (isset($_POST["return_to"]))
 }
 else if (isset($_GET["return_to"]))
 {
-    // decode the get
-    $return_to_url = urldecode($_GET["return_to"]);
+    // already decoded
+    $return_to_url = $_GET["return_to"];
 }
 // prevent foreign domain
 if (!Util::str_starts_with($return_to_url, ROOT_LOCATION))

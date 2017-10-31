@@ -63,7 +63,7 @@ $tpl_data = [
 
 $can_edit = User::hasPermission(AccessControl::PERM_EDIT_BUGS);
 $tpl->assign("bug", $tpl_data)
-    ->assign("current_url", urlencode(Util::getCurrentUrl(false, false)))
+    ->assign("current_url", URL::encode(URL::getCurrent(false, false)))
     ->assign("can_add_comment", User::hasPermission(AccessControl::PERM_ADD_BUG_COMMENT))
     ->assign("can_edit_bug", (User::getLoggedId() === $tpl_data["id"]) || $can_edit)
     ->assign("can_delete_bug", $can_edit)

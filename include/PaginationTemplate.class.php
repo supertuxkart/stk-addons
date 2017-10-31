@@ -186,7 +186,7 @@ class PaginationTemplate extends Template
         // set default page, if not set already
         if (!$this->page_url)
         {
-            $this->page_url = Util::removeQueryArguments([static::PAGE_ARGUMENT], Util::getCurrentUrl());
+            $this->page_url = URL::removeQueryArguments([static::PAGE_ARGUMENT], URL::getCurrent());
         }
 
         // see if we build the ... on one direction or the other

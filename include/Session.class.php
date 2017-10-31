@@ -204,7 +204,6 @@ class Session
         return session_status() === PHP_SESSION_ACTIVE;
     }
 
-
     /**
      *  Update the current session id with a newly generated one
      * TODO avoid lost session like the examples here? https://secure.php.net/manual/en/function.session-regenerate-id.php
