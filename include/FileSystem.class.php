@@ -760,6 +760,6 @@ class FileSystem
     {
         $error = error_get_last();
 
-        return DEBUG_MODE ? print_r($error, true) : $error['message'];
+        return DEBUG_MODE ? var_export($error, true) : $error['message'];
     }
 }

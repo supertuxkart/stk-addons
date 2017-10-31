@@ -21,48 +21,68 @@ require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
 $tpl = StkTemplate::get("stats/page/files.tpl");
 
-$query_images = "SELECT `addon_id`, AT.`name_singular` as `addon_type`, `path`, `date_added`, `is_approved`, `downloads`
-    FROM `" . DB_PREFIX . "files` F
-    INNER JOIN " . DB_PREFIX . "addons A
+$query_images = <<<SQL
+    SELECT `addon_id`, AT.`name_singular` AS `addon_type`, `path`, DATE(`date_added`) AS `date_added`, 
+            `is_approved`, `downloads`
+    FROM `{DB_VERSION}_files` F
+    INNER JOIN `{DB_VERSION}_addons` A
         ON A.id = F.addon_id
-    INNER JOIN " . DB_PREFIX . "addon_types AT
+    INNER JOIN `{DB_VERSION}_addon_types` AT
         ON A.`type` = AT.`type`
     WHERE F.`type` = '1'
-    ORDER BY `addon_id` ASC, `date_added` ASC";
+    ORDER BY `addon_id` ASC, `date_added` ASC
+SQL;
 
-$query_source = "SELECT `addon_id`, AT.`name_singular` as `addon_type`, `path`, `date_added`, `is_approved`, `downloads`
-    FROM `" . DB_PREFIX . "files` F
-    INNER JOIN " . DB_PREFIX . "addons A
+
+$query_source = <<<SQL
+    SELECT `addon_id`, AT.`name_singular` AS `addon_type`, `path`, DATE(`date_added`) AS `date_added`, 
+            `is_approved`, `downloads`
+    FROM `{DB_VERSION}_files` F
+    INNER JOIN `{DB_VERSION}_addons` A
         ON A.id = F.addon_id
-    INNER JOIN " . DB_PREFIX . "addon_types AT
+    INNER JOIN `{DB_VERSION}_addon_types` AT
         ON A.`type` = AT.`type`
     WHERE F.`type` = '2'
-    ORDER BY `addon_id` ASC, `date_added` ASC";
+    ORDER BY `addon_id` ASC, `date_added` ASC
+SQL;
 
-$query_file_downloads_month_30 = "SELECT `date`, SUM(`value`) AS count
-    FROM `" . DB_PREFIX . "stats`
+$query_file_downloads_month_30 = <<<SQL
+    SELECT `date`, SUM(`value`) AS count
+    FROM `{DB_VERSION}_stats`
     WHERE `date` >= CURDATE() - INTERVAL 30 DAY
     GROUP BY `date`
-    ORDER BY `date` DESC";
+    ORDER BY `date` DESC
+SQL;
 
-$query_file_downloads_months_12 = "SELECT CONCAT(MONTHNAME(`date`), ' ', YEAR(`date`)) AS `month`, SUM(`value`) AS count
-    FROM `" . DB_PREFIX . "stats`
+$query_file_downloads_months_12 = <<<SQL
+    SELECT MONTHNAME(`date`) AS `month`, YEAR(`date`) AS `year`, SUM(`value`) AS count
+    FROM `{DB_VERSION}_stats`
     WHERE `date` >= CURDATE() - INTERVAL 1 YEAR
-    GROUP BY `month`
-    ORDER BY `date` DESC";
+    GROUP BY `year`, MONTH(`date`), `month`
+    ORDER BY `year` DESC, MONTH(`date`) DESC
+SQL;
 
-$query_downloads_addon_type = "SELECT AT.`name_plural` as `addon_type`, SUM(`downloads`)
-    FROM `" . DB_PREFIX . "files` F
-    INNER JOIN " . DB_PREFIX . "addons A
+$file_type_addon = File::ADDON;
+$query_downloads_addon_type = <<<SQL
+    SELECT AT.`name_plural` AS `addon_type`, SUM(`downloads`)
+    FROM `{DB_VERSION}_files` F
+    INNER JOIN `{DB_VERSION}_addons` A
         ON A.id = F.addon_id
-    INNER JOIN " . DB_PREFIX . "addon_types AT
+    INNER JOIN `{DB_VERSION}_addon_types` AT
         ON A.`type` = AT.`type`
-    WHERE F.`type` = '3'
-    GROUP BY `addon_type`";
+    WHERE F.`type` = '$file_type_addon'
+    GROUP BY `addon_type`
+SQL;
+
 
 $tpl_data = [
     "sections" => [
-        Statistic::getChart($query_downloads_addon_type, Statistic::CHART_PIE, "File Downloads (by add-on type)", "files_pie"),
+        Statistic::getChart(
+            $query_downloads_addon_type,
+            Statistic::CHART_PIE,
+            "File Downloads (by add-on type)",
+            "files_pie"
+        ),
         Statistic::getSection($query_file_downloads_month_30, "File Downloads in the Last 30 Days"),
         Statistic::getSection($query_file_downloads_months_12, "File Downloads per Month in the Last 12 Months"),
         Statistic::getSection($query_images, "Images"),

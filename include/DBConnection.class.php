@@ -251,6 +251,9 @@ class DBConnection
             exit;
         }
 
+        // Replace {DB_VERSION} macro with the actual version number
+        $query = str_ireplace('{DB_VERSION}', DB_VERSION, $query);
+
         try
         {
             $sth = $this->connection->prepare($query);
@@ -304,7 +307,10 @@ class DBConnection
             // error info array info https://secure.php.net/manual/en/pdostatement.errorinfo.php
             if (DEBUG_MODE)
             {
-                var_dump($e->errorInfo);
+                $str_errorInfo = var_export($e->errorInfo, true);
+                $str_prepared_pairs = var_export($prepared_pairs, true);
+
+                printf("<p>Raw errorInfoArray:</p><pre>%s</pre>", $str_errorInfo);
                 printf(
                     "SQLSTATE ERR: %s<br>\nDriver specific error code: %s<br>\nDriver specific error message: %s<br>\nQuery: %s<br>",
                     $e->errorInfo[0],
@@ -312,9 +318,8 @@ class DBConnection
                     isset($e->errorInfo[2]) ? $e->errorInfo[2] : "",
                     $query
                 );
-                echo "Fields data: <br>";
-                var_dump($prepared_pairs);
-                Debug::addMessage("Database Error");
+                printf("<p>Fields data (aka prepared pairs): </p><pre>%s</pre>", $str_prepared_pairs);
+                Debug::addMessage("Database Error: \nerrorInfo = " . $str_errorInfo);
             }
 
             throw DBException::get("Database error happened, yikes!", ErrorType::DB_GENERIC)->setSqlErrorCode(

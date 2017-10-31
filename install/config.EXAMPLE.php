@@ -111,7 +111,9 @@ define('DB_USER', 'stk_addons');
 define('DB_PASSWORD', '');
 define('DB_NAME', 'stk_addons');
 define('DB_HOST', 'localhost');
-define('DB_PREFIX', 'v3_'); // should not be modified
+// should not be modified
+const DB_VERSION = 'v3';
+const DB_PREFIX = DB_VERSION . '_';
 
 // Mail proprieties
 define('IS_SMTP', false); // true for 'smtp' and false for 'sendmail'

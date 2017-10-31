@@ -73,7 +73,10 @@
     };
 
     // sort all tables
-    $(".table-sort").DataTable();
+    $(".table-sort").DataTable({
+        /* No ordering applied by DataTables during initialisation */
+        "order": []
+    });
 
     // all pie charts
     $(".stats-pie-chart").each(function() {

@@ -74,6 +74,7 @@ class Statistic
         }
         catch (DBException $e)
         {
+            Debug::addException($e);
             throw new StatisticException(exception_message_db(_("create a section for statistics")));
         }
 
