@@ -194,6 +194,7 @@ class StkMailException extends BaseException {}
 class ParserException extends BaseException {}
 class XMLParserException extends ParserException {}
 class B3DException extends ParserException {}
+class SPMException extends ParserException {}
 
 class ClientSessionException extends BaseException {}
 class ClientSessionConnectException extends ClientSessionException {}

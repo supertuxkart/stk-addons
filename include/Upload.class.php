@@ -679,6 +679,14 @@ class Upload
                 $b3d_textures = array_merge($b3d_parse->listTextures(), $b3d_textures);
             }
 
+            // Parse any SPM models
+            if (preg_match('/\.spm$/i', $file))
+            {
+                $spm_parse = new SPMParser();
+                $spm_parse->loadFile($this->temp_file_dir . $file);
+                $b3d_textures = array_merge($spm_parse->listTextures(), $b3d_textures);
+            }
+
             // Parse any XML files
             if (preg_match('/\.xml/i', $file))
             {
