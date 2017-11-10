@@ -46,6 +46,15 @@ else
     echo text_success('register_globals Disabled.');
 }
 
+if (defined("PDO::MYSQL_ATTR_LOCAL_INFILE"))
+{
+    echo text_success('MySQL extension Available.');
+}
+else
+{
+    echo text_error('MySQL extension Not Available');
+}
+
 if (extension_loaded("zip"))
 {
     echo text_success('Zip Available.');

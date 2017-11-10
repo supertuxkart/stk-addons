@@ -12,7 +12,8 @@ The script file located there (`index.php`) will show which dependencies are mis
 
 Install all package dependencies in a Debian system with the following command:
 ```
-sudo apt-get install php php-mysql mysql-server apache2 php-mcrypt php-mbstring php-gd php-zip php-gettext
+sudo apt-get install php php-mysql php-mcrypt php-mbstring php-gd php-zip php-gettext
+sudo apt-get install mysql-server apache2
 ```
 
 PHP dependencies are handled by [composer](https://getcomposer.org/) (install it if you do not have it already).

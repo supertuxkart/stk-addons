@@ -92,7 +92,7 @@ class Upload
     private $temp_file_fullpath;
 
     /**
-     * Hold the data from the zip archive. b3d files, license, texture etc
+     * Hold the data from the zip archive. b3d files, spm_files, license, texture etc
      * @var array
      */
     private $properties = [];
@@ -657,8 +657,8 @@ class Upload
     }
 
     /**
-     * Parse the b3d, xml, license.txt file
-     * Will modify the following keys from the proprieties:
+     * Parse the b3d, spm, xml, license.txt file
+     * Will modify the following keys from the properties:
      *  - xml_attributes, addon_file, license_file, quad_file, status, b3d_textures, missing_textures
      *
      * @throws FileSystemException
@@ -666,7 +666,7 @@ class Upload
     private function parseFiles()
     {
         // Initialize counters
-        $b3d_textures = [];
+        $textures = [];
 
         // Loop through all files
         foreach (FileSystem::ls($this->temp_file_dir) as $file)
@@ -676,7 +676,7 @@ class Upload
             {
                 $b3d_parse = new B3DParser();
                 $b3d_parse->loadFile($this->temp_file_dir . $file);
-                $b3d_textures = array_merge($b3d_parse->listTextures(), $b3d_textures);
+                $textures = array_merge($b3d_parse->listTextures(), $textures);
             }
 
             // Parse any SPM models
@@ -684,7 +684,7 @@ class Upload
             {
                 $spm_parse = new SPMParser();
                 $spm_parse->loadFile($this->temp_file_dir . $file);
-                $b3d_textures = array_merge($spm_parse->listTextures(), $b3d_textures);
+                $textures = array_merge($spm_parse->listTextures(), $textures);
             }
 
             // Parse any XML files
@@ -753,9 +753,9 @@ class Upload
         }
 
         // List missing textures
-        $this->properties['b3d_textures'] = $b3d_textures;
+        $this->properties['textures'] = $textures;
         $missing_textures = [];
-        foreach ($this->properties['b3d_textures'] as $tex)
+        foreach ($textures as $tex)
         {
             if (!FileSystem::exists($this->temp_file_dir . $tex))
             {

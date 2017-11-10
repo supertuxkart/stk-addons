@@ -27,8 +27,9 @@ class SPMParser extends Parser
      * @var bool
      */
     protected $binary_file = true;
+
     /**
-     * @var unsigned short
+     * @var int
      */
     private $material_count = 0;
 
@@ -37,6 +38,9 @@ class SPMParser extends Parser
      */
     protected function _loadFile()
     {
+        // See https://github.com/supertuxkart/stk-code/blob/master/src/graphics/sp_mesh_loader.cpp
+        // for reference
+
         // Read the file header
         fseek($this->file, 0);
         $read = fread($this->file, 2);
@@ -83,6 +87,7 @@ class SPMParser extends Parser
             {
                 $textures[] = fread($this->file, $tex_one_size);
             }
+
             $read_two = fread($this->file, 1);
             $byte_two = unpack('C', $read_two);
             $tex_two_size = $byte_two[1];
