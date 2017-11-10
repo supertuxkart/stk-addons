@@ -4,7 +4,7 @@ usage. However, you can manually install all dependencies, database tables and
 settings.
 
 ## Dependencies
-First of all, you need a the apache webserver with PHP `5.6+` and MySQL server `v5.5.3+`.
+You need a the apache webserver with PHP `7.1+` (only version tested and supported) and MySQL server `v5.5.3+`.
 Most features will also work with other webservers, but there is no support for them.
 
 To get a list of the additional PHP packages needed, point your web browser to the `install/` directory.
