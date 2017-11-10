@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with stk-addons. If not, see <http://www.gnu.org/licenses/>.
  */
+declare(strict_types=1);
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
 $tpl = StkTemplate::get("stats/page/files.tpl");
@@ -32,7 +33,6 @@ $query_images = <<<SQL
     WHERE F.`type` = '1'
     ORDER BY `addon_id` ASC, `date_added` ASC
 SQL;
-
 
 $query_source = <<<SQL
     SELECT `addon_id`, AT.`name_singular` AS `addon_type`, `path`, DATE(`date_added`) AS `date_added`, 

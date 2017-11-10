@@ -17,44 +17,54 @@
  * You should have received a copy of the GNU General Public License
  * along with stk-addons. If not, see <http://www.gnu.org/licenses/>.
  */
+declare(strict_types=1);
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
 $tpl = StkTemplate::get("stats/page/addons.tpl");
+$file_type_addon = File::ADDON;
 
-$query_addon_revisions = "SELECT `addon_id`, AT.`name_singular` as `addon_type`, `path`, `date_added`, `downloads`
-    FROM `" . DB_PREFIX . "addons` A
-    INNER JOIN " . DB_PREFIX . "files F
+$query_addon_revisions = <<<SQL
+    SELECT `addon_id`, AT.`name_singular` as `addon_type`, `path`, `date_added`, `downloads`
+    FROM `{DB_VERSION}_addons` A
+    INNER JOIN `{DB_VERSION}_files` F
         ON A.id = F.addon_id
-    INNER JOIN " . DB_PREFIX . "addon_types AT
+    INNER JOIN `{DB_VERSION}_addon_types` AT
         ON A.`type` = AT.`type`
-    WHERE F.`type` = 'addon'
-    ORDER BY `addon_id` ASC, `date_added` ASC";
+    WHERE F.`type` = '$file_type_addon'
+    ORDER BY `addon_id` ASC, `date_added` ASC
+SQL;
 
-$query_addon_cumulative = "SELECT A.`id`, AT.`name_singular` as `type`, A.`name`, SUM(F.`downloads`) AS `dl_count`
-    FROM `" . DB_PREFIX . "addons` A
-    INNER JOIN `" . DB_PREFIX . "files` F
+$query_addon_cumulative = <<<SQL
+    SELECT A.`id`, AT.`name_singular` as `type`, A.`name`, SUM(F.`downloads`) AS `dl_count`
+    FROM `{DB_VERSION}_addons` A
+    INNER JOIN `{DB_VERSION}_files` F
         ON A.id = F.addon_id
-    INNER JOIN " . DB_PREFIX . "addon_types AT
+    INNER JOIN `{DB_VERSION}_addon_types` AT
         ON A.`type` = AT.`type`
     WHERE A.`id` = F.`addon_id`
-    AND F.`type` = 'addon'
+    AND F.`type` = '$file_type_addon'
     GROUP BY A.`id`
-    ORDER BY A.`id` ASC";
+    ORDER BY A.`id` ASC
+SQL;
 
-$query_addon_user = "SELECT A.`id`, AT.`name_singular` as `type`, A.`name`, U.`username` AS `uploader`,
-    A.`creation_date`, A.`designer`, A.`description`, A.`license`
-    FROM `" . DB_PREFIX . "addons` A
-    INNER JOIN `" . DB_PREFIX . "users` U
+$query_addon_user = <<<SQL
+    SELECT A.`id`, AT.`name_singular` as `type`, A.`name`, U.`username` AS `uploader`,
+        A.`creation_date`, A.`designer`, A.`description`, A.`license`
+    FROM `{DB_VERSION}_addons` A
+    INNER JOIN `{DB_VERSION}_users` U
         ON A.`uploader` = U.`id`
-    INNER JOIN " . DB_PREFIX . "addon_types AT
+    INNER JOIN `{DB_VERSION}_addon_types` AT
         ON A.`type` = AT.`type`
-    ORDER BY A.`id` ASC";
+    ORDER BY A.`id` ASC
+SQL;
 
-$query_addon_type = "SELECT AT.`name_plural` as `type`, COUNT(`id`) AS `count`
-    FROM `" . DB_PREFIX . "addons` A
-    INNER JOIN " . DB_PREFIX . "addon_types AT
+$query_addon_type = <<<SQL
+    SELECT AT.`name_plural` as `type`, COUNT(`id`) AS `count`
+    FROM `{DB_VERSION}_addons` A
+    INNER JOIN `{DB_VERSION}_addon_types` AT
         ON A.`type` = AT.`type`
-    GROUP BY `type`";
+    GROUP BY `type`
+SQL;
 
 $tpl_data = [
     "sections" => [

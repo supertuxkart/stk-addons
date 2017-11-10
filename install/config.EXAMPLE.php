@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with stk-addons. If not, see <http://www.gnu.org/licenses/>.
  */
+declare(strict_types=1);
 
 // Make sure that this does not end with a trailing slash, and does not have a prefix in front
 const DOMAIN_NAME = 'addons.supertuxkart.net';
@@ -42,12 +43,12 @@ if (DEBUG_MODE)
 {
     // This does not show parse errors, to show those edit the php.ini file and edit the display_errors value
     error_reporting(E_ALL);
-    ini_set('display_errors', true);
+    ini_set('display_errors', "true");
 }
 else
 {
     error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
-    ini_set('display_errors', false);
+    ini_set('display_errors', "false");
 }
 
 // useful for phpunit testing

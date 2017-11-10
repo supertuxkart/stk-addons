@@ -17,35 +17,40 @@
  * You should have received a copy of the GNU General Public License
  * along with stk-addons. If not, see <http://www.gnu.org/licenses/>.
  */
+declare(strict_types=1);
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
 $tpl = StkTemplate::get("stats/page/clients.tpl");
 
-$uaVer1y_query = "SELECT `label`, `date`, SUM(`value`) FROM (
+$query_version = <<<SQL
+    SELECT `label`, `date`, SUM(`value`) FROM (
         SELECT SUBSTRING_INDEX(SUBSTRING(`type`, 21), ' ', 1) AS `label`, `date`, `value`
-        FROM `" . DB_PREFIX . "stats`
+        FROM `{DB_VERSION}_stats`
         WHERE `date` >= CURDATE() - INTERVAL 1 YEAR
         AND `type` LIKE 'uagent %'
         ORDER BY `date` DESC
     ) AS `t`
     GROUP BY `t`.`date`, `t`.`label`
-    ORDER BY `t`.`date` DESC, `t`.`label` DESC";
+    ORDER BY `t`.`date` DESC, `t`.`label` DESC
+SQL;
 
-$uaTime1y_query = "SELECT CASE WHEN `label` = '' THEN 'Unknown' ELSE `label` END AS `label`, `date`, SUM(`value`) FROM (
-        SELECT TRIM(REPLACE(REPLACE(REPLACE(`type`, SUBSTRING_INDEX(`type`,' ',2),''),')',''),'(',''))
-        AS `label`, `date`, `value`
-        FROM `" . DB_PREFIX . "stats`
-        WHERE `date` >= CURDATE() - INTERVAL 1 YEAR
-        AND `type` LIKE 'uagent %'
-        ORDER BY `date` DESC
-    ) AS `t`
+$query_time = <<<SQL
+    SELECT CASE WHEN `label` = '' THEN 'Unknown' ELSE `label` END AS `label`, `date`, SUM(`value`) FROM (
+            SELECT TRIM(REPLACE(REPLACE(REPLACE(`type`, SUBSTRING_INDEX(`type`,' ',2),''),')',''),'(',''))
+            AS `label`, `date`, `value`
+            FROM `{DB_VERSION}_stats`
+            WHERE `date` >= CURDATE() - INTERVAL 1 YEAR
+            AND `type` LIKE 'uagent %'
+            ORDER BY `date` DESC
+        ) AS `t`
     GROUP BY `t`.`date`,`t`.`label`
-    ORDER BY `t`.`date` DESC, `t`.`label` DESC";
+    ORDER BY `t`.`date` DESC, `t`.`label` DESC
+SQL;
 
 $tpl_data = [
     "sections" => [
-        Statistic::getChart($uaVer1y_query, Statistic::CHART_TIME, "File Downloads per Version in the Last Year", "downloads_version_year"),
-        Statistic::getChart($uaTime1y_query, Statistic::CHART_TIME, "File Downloads per OS in the Last Year", "downloads_os_year")
+        Statistic::getChart($query_version, Statistic::CHART_TIME, "File Downloads per Version in the Last Year", "downloads_version_year"),
+        Statistic::getChart($query_time, Statistic::CHART_TIME, "File Downloads per OS in the Last Year", "downloads_os_year")
     ]
 ];
 

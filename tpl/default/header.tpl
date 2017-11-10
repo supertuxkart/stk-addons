@@ -2,11 +2,16 @@
 <html>
 <head>
     <title>{$title|default:"SuperTuxKart Add-ons"}</title>
-    <meta charset="UTF-8" />
+
+    {* Set character encoding for the document *}
+    <meta charset="utf-8">
     {foreach $meta_tags as $meta_field => $meta_content}
         <meta http-equiv="{$meta_field}" content="{$meta_content}">
     {/foreach}
-    <meta http-equiv="X-UA-Compatible" content="IE=9" />
+
+    {* Instruct Internet Explorer to use its latest rendering engine *}
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
     <meta name="viewport" content="width=device-width, initial-scale=1">
     {foreach $css_includes as $css}
         {if empty($css.media)}
@@ -15,6 +20,8 @@
             <link rel="stylesheet" media="{$css.media}" href="{$css.href}">
         {/if}
     {/foreach}
+
+    {* Favicon *}
     <link rel="shortcut icon" href="/favicon.ico">
     <link rel="icon" sizes="16x16 32x32 64x64" href="/favicon.ico">
     <link rel="icon" type="image/png" sizes="196x196" href="{$favicon_location}favicon-192.png">

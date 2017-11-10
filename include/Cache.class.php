@@ -33,7 +33,7 @@ class Cache
     /**
      * Do not touch the graph_files and the .gitignore file
      */
-    const DEFAULT_EXCLUDE_REGEX = '/^^(cache_graph_.*\.json)|\.gitignore$/i';
+    const DEFAULT_EXCLUDE_REGEX = '/\.gitignore$/i';
 
     /**
      * Empty the cache in the filesystem and database, leave certain files in place
