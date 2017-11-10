@@ -628,18 +628,25 @@ MSG;
     public static function getVersionFormat($format, $addon_type)
     {
         $format = (int)$format;
+        $latest_development_string = _h("Latest development version");
         switch ($addon_type)
         {
             case Addon::KART:
                 // latest version number should be set here
-                // https://svn.code.sf.net/p/supertuxkart/code/media/trunk/blender_25/stk_kart.py
+                // https://svn.code.sf.net/p/supertuxkart/code/media/trunk/blender_26/stk_kart.py
                 if ($format === 1)
                 {
                     return 'Pre-0.7';
                 }
                 if ($format === 2)
                 {
-                    return '0.7.0 - ' . _h("Latest development version");
+                    return '0.7.0 - ' . $latest_development_string;
+                }
+
+                // Added SPM file format
+                if ($format === 3)
+                {
+                    return '0.9.3 - ' . $latest_development_string;
                 }
 
                 return _h('Unknown');
@@ -648,7 +655,7 @@ MSG;
             case Addon::TRACK:
             case Addon::ARENA:
                 // latest version number should be set here
-                // https://svn.code.sf.net/p/supertuxkart/code/media/trunk/blender_25/stk_track.py
+                // https://svn.code.sf.net/p/supertuxkart/code/media/trunk/blender_26/stk_track.py
                 if ($format === 1 || $format === 2)
                 {
                     return 'Pre-0.7';
@@ -659,7 +666,13 @@ MSG;
                 }
                 if ($format === 6)
                 {
-                    return '0.9.0 - ' . _h("Latest development version");
+                    return '0.9.0 - ' . $latest_development_string;
+                }
+
+                // Added SPM file format
+                if ($format === 7)
+                {
+                    return '0.9.3 - ' . $latest_development_string;
                 }
 
                 return _h('Unknown');
