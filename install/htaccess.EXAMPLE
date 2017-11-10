@@ -35,10 +35,10 @@ RewriteRule ^dl/(.+) /download.php?file=$1 [NC,L]
 
 # cache images docs for 14 days
 <IfModule mod_headers.c>
-<FilesMatch "\.(ico|jpg|jpeg|png|gif)$">
-  Header set Cache-Control "max-age=1209600, public, must-revalidate"
-  Header unset Last-Modified
-</FilesMatch>
+    <FilesMatch "\.(ico|jpg|jpeg|png|gif)$">
+      Header set Cache-Control "max-age=1209600, public, must-revalidate"
+      Header unset Last-Modified
+    </FilesMatch>
 </IfModule>
 
 # attempt to gzip output

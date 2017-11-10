@@ -68,6 +68,8 @@ that you need to make manual modifications to your code/infrastructure for it to
 - `[D]` - updated the composer/bower dependencies, run the appropriate bower/composer update commands
 - `[S]` - updated the SQL schema, modify your SQL schema accordingly
 
+
+### PHP
 The PHP coding standard is heavily based on [PSR-2](http://www.php-fig.org/psr/psr-2/), with some modifications:
 * The line limit is 120 characters.
 * Opening braces for control structures MUST go on the next line, and closing braces MUST go on the next line after the body.
@@ -81,6 +83,8 @@ else
     foo();
 }
 ```
+
+### Other
 
 For JavaScript, CSS, and SQL you should use 4 spaces, not tabs.
 The JavaScript coding standard is based on http://javascript.crockford.com/code.html and the

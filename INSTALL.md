@@ -71,7 +71,7 @@ or with ```mysql -u root -p -h DATABASE_HOST DATABASE_NAME < install/install.sql
 ## Finish
 Copy the `install/config.EXAMPLE.php` to the root of the project and rename it to `config.php`.
 
-Change the `$ROOT_LOCATION` variable to match the location of your website. Otherwise, JavaScript and CSS will not work.
+Se the `DOMAIN_NAME` constant to match the location of your website, otherwise JavaScript and CSS will not work.
 
 Setting `DEBUG_MODE` to `true` can help you debugging by showing additional information. You should disable it in the production
 environment. 
@@ -80,9 +80,15 @@ Change the database settings according to your configuration, then go the projec
 
 If you also want the registration page to work you must change the keys `CAPTCHA_SITE_KEY` and `CAPTCHA_SECRET` in the `config.php`.
 
+Some example Apache and Nginx conf files are inside the `install/` directory, those are configured to make
+the instance available locally when going to the url `stk-addons.localhost`.
+
+For the example configs to work properly add the following line `127.0.0.1   stk-addons.localhost` inside
+the `/etc/hosts` files (or whatever hosts file your platform uses).
+
 ## API (optional)
 The API is required for in-game access to the add-on system. It only works if URL rewriting is enabled (see below).
-In the default configuration, the API resides in a subfolder of the website (`/api`), but on the production STK Addons server, it's in a sub-domain (`api.stkaddons.net`).
+In the default configuration, the API resides in a subfolder of the website (`/api`).
 
 ## URL Rewriting (optional)
 We make heavy use of URL rewriting (the download statistics, the API, nice URL paths). Make sure that `mod_rewrite` is installed and enabled.
