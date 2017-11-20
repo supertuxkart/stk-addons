@@ -68,7 +68,7 @@ class News
             [
                 "new"     => News::getLatestBlogPost(),
                 "exists"  => false,
-                "message" => "Latest post on blog.supertuxkart.net"
+                "message" => "Latest post on blog.supertuxkart.net: "
             ],
         ];
 
