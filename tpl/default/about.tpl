@@ -10,13 +10,6 @@
         <a href="http://supertuxkart.sourceforge.net/">{t}Website{/t}</a> | <a href="http://sourceforge.net/donate/index.php?group_id=202302">{t}Donate{/t}</a>
     </p>
 
-    <h2>TuxFamily</h2>
-    <p>{t}TuxFamily is a non-profit organization. It provides free services for projects and contents dealing with the free software philosophy (free as in free speech, not as in free beer). They accept any project released under a free license (GPL, BSD, CC-BY-SA, Art Libre...).{/t}</p>
-    <p>{t}TuxFamily operates the servers on which STKAddons runs, for free. Because of them, we can provide the add-on service for SuperTuxKart. Each month, over a million downloads are made by SuperTuxKart players. We thank them very much for their generosity to us and to other open source projects.{/t}</p>
-    <p>
-        <a href="http://tuxfamily.org/">{t}Website{/t}</a> | <a href="http://tuxfamily.org/en/support">{t}Donate{/t}</a>
-    </p>
-
     <h2>{t}Credits{/t}</h2>
     <pre>{$about.credits.content}</pre>
 </div>
