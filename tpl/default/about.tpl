@@ -7,7 +7,7 @@
     <p>{t 1='50' 2='60' 3='15'}SuperTuxKart now has over %1 karts, %2 tracks, and %3 arenas available in-game thanks to the add-on service.{/t}</p>
     <p>{t}Of course, the artists who create all of this content must be thanked too. Without them, the add-on website would not be as great as it is today.{/t}</p>
     <p>
-        <a href="http://supertuxkart.sourceforge.net/">{t}Website{/t}</a> | <a href="http://sourceforge.net/donate/index.php?group_id=202302">{t}Donate{/t}</a>
+        <a href="https://supertuxkart.net/">{t}Website{/t}</a> | <a href="https://supertuxkart.net/Donate">{t}Donate{/t}</a>
     </p>
 
     <h2>{t}Credits{/t}</h2>
