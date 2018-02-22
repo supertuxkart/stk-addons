@@ -84,11 +84,13 @@ class ClientSession
      *
      * @return Server
      */
-    public function createServer($ip, $port, $private_port, $server_name, $max_players)
+    public function createServer($ip, $port, $private_port, $server_name,
+        $max_players, $difficulty, $game_mode)
     {
         $this->setPublicAddress($ip, $port, $private_port);
 
-        return Server::create($ip, $port, $private_port, $this->user->getId(), $server_name, $max_players);
+        return Server::create($ip, $port, $private_port, $this->user->getId(),
+            $server_name, $max_players, $difficulty, $game_mode);
     }
 
     /**
@@ -257,7 +259,7 @@ class ClientSession
      * @return array
      * @throws ClientSessionException
      */
-    public function getServerConnectionRequests($ip, $port)
+    public function getServerConnectionRequests($ip, $port, $current_players)
     {
         try
         {
@@ -280,6 +282,23 @@ class ClientSession
             {
                 return [];
             }
+
+            // Update this server info (atm last poll and and current players joined)
+            DBConnection::get()->query(
+                "UPDATE `" . DB_PREFIX . "servers`
+                SET `last_poll_time` = :new_time, `current_players` = :current_players
+                WHERE `id` = :server_id",
+                DBConnection::NOTHING,
+                [
+                    ':server_id'       => $server_id['id'],
+                    ':new_time'        => time(),
+                    ':current_players' => $current_players
+                ],
+                [
+                    ':server_id'       => DBConnection::PARAM_INT,
+                    ':new_time'        => DBConnection::PARAM_INT,
+                    ':current_players' => DBConnection::PARAM_INT
+                ]);
 
             $connection_requests = DBConnection::get()->query(
                 "SELECT s.user_id, c.ip, c.private_port, c.port

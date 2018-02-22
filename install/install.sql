@@ -306,10 +306,13 @@ CREATE TABLE IF NOT EXISTS `v3_servers` (
     `id`              INT UNSIGNED      NOT NULL AUTO_INCREMENT,
     `host_id`         INT UNSIGNED      NOT NULL,
     `name`            VARCHAR(64)       NOT NULL,
+    `last_poll_time`  INT               NOT NULL,
     `ip`              INT UNSIGNED      NOT NULL DEFAULT '0',
     `port`            SMALLINT UNSIGNED NOT NULL DEFAULT '0',
     `private_port`    SMALLINT UNSIGNED NOT NULL DEFAULT '0',
     `max_players`     TINYINT UNSIGNED  NOT NULL DEFAULT '0',
+    `difficulty`      TINYINT UNSIGNED  NOT NULL DEFAULT '0',
+    `game_mode`       TINYINT UNSIGNED  NOT NULL DEFAULT '0',
     `current_players` TINYINT UNSIGNED  NOT NULL DEFAULT '0'
     COMMENT 'Isn''t exact. Just to show in the server-list, where it doesn''t need to be exact.',
     PRIMARY KEY (`id`),
