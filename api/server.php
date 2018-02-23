@@ -40,13 +40,16 @@ try
                 $private_port = isset($_POST['private_port']) ? utf8_encode($_POST['private_port']) : null;
                 $server_name = isset($_POST['name']) ? utf8_encode($_POST['name']) : "";
                 $max_players = isset($_POST['max_players']) ? (int)$_POST['max_players'] : 0;
-                
+                $difficulty = isset($_POST['$difficulty']) ? (int)$_POST['$difficulty'] : 0;
+                $game_mode = isset($_POST['$game_mode']) ? (int)$_POST['$game_mode'] : 0;
                 $server = ClientSession::get($token, $userid)->createServer(
                     $address,
                     $port,
                     $private_port,
                     $server_name, 
-                    $max_players
+                    $max_players,
+                    $difficulty,
+                    $game_mode
                 );
 
                 $output->startElement('create');
@@ -215,8 +218,9 @@ try
                 $token = isset($_POST['token']) ? utf8_encode($_POST['token']) : null;
                 $address = isset($_POST['address']) ? utf8_encode($_POST['address']) : null;
                 $port = isset($_POST['port']) ? utf8_encode($_POST['port']) : null;
+                $current_players = isset($_POST['current_players']) ? (int)$_POST['current_players'] : 0;
 
-                $requests = ClientSession::get($token, $userid)->getServerConnectionRequests($address, $port);
+                $requests = ClientSession::get($token, $userid)->getServerConnectionRequests($address, $port, $current_players);
 
                 $output->startElement('poll-connection-requests');
                     $output->writeAttribute('success', 'yes');

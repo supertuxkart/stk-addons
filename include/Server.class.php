@@ -145,8 +145,19 @@ class Server implements IAsXML
      * @return Server
      * @throws ServerException
      */
-    public static function create($ip, $port, $private_port, $user_id, $server_name, $max_players)
+    public static function create($ip, $port, $private_port, $user_id,
+        $server_name, $max_players, $difficulty, $game_mode)
     {
+        // Clean non-polled servers < 15 seconds before
+        $timeout = time() - 15;
+        DBConnection::get()->query(
+            "DELETE FROM `" . DB_PREFIX . "servers`
+            WHERE `last_poll_time` < :time",
+            DBConnection::NOTHING,
+            [ ':time'   => $timeout ],
+            [ ':time'   => DBConnection::PARAM_INT]
+        );
+
         $max_players = (int)$max_players;
 
         try
@@ -162,26 +173,38 @@ class Server implements IAsXML
             }
 
             $result = DBConnection::get()->query(
-                "INSERT INTO `" . DB_PREFIX . "servers` (host_id, ip, port, private_port, name, max_players)
-                VALUES (:host_id, :ip, :port, :private_port, :name, :max_players)",
+                "INSERT INTO `" . DB_PREFIX . "servers` (host_id, name,
+                last_poll_time, ip, port, private_port, max_players,
+                difficulty, game_mode)
+                VALUES (:host_id, :name, :last_poll_time, :ip, :port,
+                :private_port, :max_players, :difficulty, :game_mode)",
                 DBConnection::ROW_COUNT,
                 [
-                    ':host_id'      => $user_id,
-                    ':ip'           => $ip, // do not use (int) or it truncates to 127.255.255.255
-                    ':port'         => $port,
-                    ':private_port' => $private_port,
-                    ':name'         => $server_name,
-                    ':max_players'  => $max_players
+                    ':host_id'        => $user_id,
+                    ':name'           => $server_name,
+                    ':last_poll_time' => time(),
+                    // Do not use (int) or it truncates to 127.255.255.255
+                    ':ip'             => $ip,
+                    ':port'           => $port,
+                    ':private_port'   => $private_port,
+                    ':max_players'    => $max_players,
+                    ':difficulty'     => $difficulty,
+                    ':game_mode'      => $game_mode
                 ],
                 [
-                    ':host_id'      => DBConnection::PARAM_INT,
-                    ':ip'           => DBConnection::PARAM_INT,
-                    ':port'         => DBConnection::PARAM_INT,
-                    ':private_port' => DBConnection::PARAM_INT,
-                    ':max_players'  => DBConnection::PARAM_INT,
+                    ':host_id'        => DBConnection::PARAM_INT,
+                    ':name'           => DBConnection::PARAM_STR,
+                    ':last_poll_time' => DBConnection::PARAM_INT,
+                    ':ip'             => DBConnection::PARAM_INT,
+                    ':port'           => DBConnection::PARAM_INT,
+                    ':private_port'   => DBConnection::PARAM_INT,
+                    ':max_players'    => DBConnection::PARAM_INT,
+                    ':difficulty'     => DBConnection::PARAM_INT,
+                    ':game_mode'      => DBConnection::PARAM_INT
                 ]
             );
         }
+
         catch (DBException $e)
         {
             throw new ServerException(exception_message_db(_('create a server')));
