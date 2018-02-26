@@ -40,8 +40,8 @@ try
                 $private_port = isset($_POST['private_port']) ? utf8_encode($_POST['private_port']) : null;
                 $server_name = isset($_POST['name']) ? utf8_encode($_POST['name']) : "";
                 $max_players = isset($_POST['max_players']) ? (int)$_POST['max_players'] : 0;
-                $difficulty = isset($_POST['$difficulty']) ? (int)$_POST['$difficulty'] : 0;
-                $game_mode = isset($_POST['$game_mode']) ? (int)$_POST['$game_mode'] : 0;
+                $difficulty = isset($_POST['difficulty']) ? (int)$_POST['difficulty'] : 0;
+                $game_mode = isset($_POST['game_mode']) ? (int)$_POST['game_mode'] : 0;
                 $server = ClientSession::get($token, $userid)->createServer(
                     $address,
                     $port,

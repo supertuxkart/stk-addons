@@ -164,6 +164,8 @@ class Server implements IAsXML
      * @param int    $user_id
      * @param string $server_name
      * @param int    $max_players
+     * @param int    $difficulty
+     * @param int    $game_mode
      *
      * @return Server
      * @throws ServerException
@@ -171,20 +173,18 @@ class Server implements IAsXML
     public static function create($ip, $port, $private_port, $user_id,
         $server_name, $max_players, $difficulty, $game_mode)
     {
-        // Clean non-polled servers < 15 seconds before
-        $timeout = time() - 15;
-        DBConnection::get()->query(
-            "DELETE FROM `" . DB_PREFIX . "servers`
-            WHERE `last_poll_time` < :time",
-            DBConnection::NOTHING,
-            [ ':time'   => $timeout ],
-            [ ':time'   => DBConnection::PARAM_INT]
-        );
-
-        $max_players = (int)$max_players;
-
         try
         {
+            // Clean non-polled servers < 15 seconds before
+            $timeout = time() - 15;
+            DBConnection::get()->query(
+                "DELETE FROM `" . DB_PREFIX . "servers`
+                WHERE `last_poll_time` < :time",
+                DBConnection::NOTHING,
+                [ ':time'   => $timeout ],
+                [ ':time'   => DBConnection::PARAM_INT]
+            );
+
             $count = DBConnection::get()->query(
                 "SELECT `id` FROM `" . DB_PREFIX . "servers` WHERE `ip`= :ip AND `port`= :port ",
                 DBConnection::ROW_COUNT,
