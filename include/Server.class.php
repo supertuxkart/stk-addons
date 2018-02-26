@@ -63,6 +63,23 @@ class Server implements IAsXML
      * @var int
      */
     private $private_port;
+    
+    /**
+     * The server's difficulty
+     * @var int
+     */
+    private $difficulty;
+    
+    /**
+     * The server's game mode
+     * @var int
+     */
+    private $game_mode;
+    
+    /**
+     * @var int
+     */
+    private $current_players;
 
     /**
      *
@@ -77,6 +94,9 @@ class Server implements IAsXML
         $this->ip = (int)$data["ip"];
         $this->port = (int)$data["port"];
         $this->private_port = (int)$data["private_port"];
+        $this->difficulty = (int)$data["difficulty"];
+        $this->game_mode = (int)$data["game_mode"];
+        $this->current_players = (int)$data["current_players"];
     }
 
     /**
@@ -127,6 +147,9 @@ class Server implements IAsXML
         $server_xml->writeAttribute("ip", $this->ip);
         $server_xml->writeAttribute("port", $this->port);
         $server_xml->writeAttribute("private_port", $this->private_port);
+        $server_xml->writeAttribute("difficulty", $this->difficulty);
+        $server_xml->writeAttribute("game_mode", $this->game_mode);
+        $server_xml->writeAttribute("current_players", $this->current_players);
         $server_xml->endElement();
 
         return $server_xml->asString();
