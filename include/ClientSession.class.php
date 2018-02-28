@@ -81,6 +81,8 @@ class ClientSession
      * @param int    $private_port
      * @param string $server_name
      * @param int    $max_players
+     * @param int    $difficulty
+     * @param int    $game_mode
      *
      * @return Server
      */
