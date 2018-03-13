@@ -313,7 +313,9 @@ CREATE TABLE IF NOT EXISTS `v3_servers` (
     `max_players`     TINYINT UNSIGNED  NOT NULL DEFAULT '0',
     `difficulty`      TINYINT UNSIGNED  NOT NULL DEFAULT '0',
     `game_mode`       TINYINT UNSIGNED  NOT NULL DEFAULT '0',
-    `current_players` TINYINT UNSIGNED  NOT NULL DEFAULT '0'
+    `current_players` TINYINT UNSIGNED  NOT NULL DEFAULT '0',
+    `password`        TINYINT UNSIGNED  NOT NULL DEFAULT '0',
+    `version`         TINYINT UNSIGNED  NOT NULL DEFAULT '1'
     COMMENT 'Isn''t exact. Just to show in the server-list, where it doesn''t need to be exact.',
     PRIMARY KEY (`id`),
     KEY `key_hostid` (`host_id`),

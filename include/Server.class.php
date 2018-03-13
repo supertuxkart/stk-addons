@@ -63,23 +63,33 @@ class Server implements IAsXML
      * @var int
      */
     private $private_port;
-    
+
     /**
      * The server's difficulty
      * @var int
      */
     private $difficulty;
-    
+
     /**
      * The server's game mode
      * @var int
      */
     private $game_mode;
-    
+
     /**
      * @var int
      */
     private $current_players;
+
+    /**
+     * @var int
+     */
+    private $password;
+
+    /**
+     * @var int
+     */
+    private $version;
 
     /**
      *
@@ -97,6 +107,8 @@ class Server implements IAsXML
         $this->difficulty = (int)$data["difficulty"];
         $this->game_mode = (int)$data["game_mode"];
         $this->current_players = (int)$data["current_players"];
+        $this->password = (int)$data["password"];
+        $this->version = (int)$data["version"];
     }
 
     /**
@@ -150,6 +162,8 @@ class Server implements IAsXML
         $server_xml->writeAttribute("difficulty", $this->difficulty);
         $server_xml->writeAttribute("game_mode", $this->game_mode);
         $server_xml->writeAttribute("current_players", $this->current_players);
+        $server_xml->writeAttribute("password", $this->password);
+        $server_xml->writeAttribute("version", $this->version);
         $server_xml->endElement();
 
         return $server_xml->asString();
@@ -166,12 +180,14 @@ class Server implements IAsXML
      * @param int    $max_players
      * @param int    $difficulty
      * @param int    $game_mode
+     * @param int    $password
+     * @param int    $version
      *
      * @return Server
      * @throws ServerException
      */
     public static function create($ip, $port, $private_port, $user_id,
-        $server_name, $max_players, $difficulty, $game_mode)
+        $server_name, $max_players, $difficulty, $game_mode, $password, $version)
     {
         try
         {
@@ -198,9 +214,10 @@ class Server implements IAsXML
             $result = DBConnection::get()->query(
                 "INSERT INTO `" . DB_PREFIX . "servers` (host_id, name,
                 last_poll_time, ip, port, private_port, max_players,
-                difficulty, game_mode)
+                difficulty, game_mode, password, version)
                 VALUES (:host_id, :name, :last_poll_time, :ip, :port,
-                :private_port, :max_players, :difficulty, :game_mode)",
+                :private_port, :max_players, :difficulty, :game_mode,
+                :password, :version)",
                 DBConnection::ROW_COUNT,
                 [
                     ':host_id'        => $user_id,
@@ -212,7 +229,9 @@ class Server implements IAsXML
                     ':private_port'   => $private_port,
                     ':max_players'    => $max_players,
                     ':difficulty'     => $difficulty,
-                    ':game_mode'      => $game_mode
+                    ':game_mode'      => $game_mode,
+                    ':password'       => $password,
+                    ':version'        => $version
                 ],
                 [
                     ':host_id'        => DBConnection::PARAM_INT,
@@ -223,7 +242,9 @@ class Server implements IAsXML
                     ':private_port'   => DBConnection::PARAM_INT,
                     ':max_players'    => DBConnection::PARAM_INT,
                     ':difficulty'     => DBConnection::PARAM_INT,
-                    ':game_mode'      => DBConnection::PARAM_INT
+                    ':game_mode'      => DBConnection::PARAM_INT,
+                    ':password'       => DBConnection::PARAM_INT,
+                    ':version'        => DBConnection::PARAM_INT
                 ]
             );
         }

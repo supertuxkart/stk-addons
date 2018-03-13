@@ -83,16 +83,18 @@ class ClientSession
      * @param int    $max_players
      * @param int    $difficulty
      * @param int    $game_mode
+     * @param int    $password
+     * @param int    $version
      *
      * @return Server
      */
     public function createServer($ip, $port, $private_port, $server_name,
-        $max_players, $difficulty, $game_mode)
+        $max_players, $difficulty, $game_mode, $password, $version)
     {
         $this->setPublicAddress($ip, $port, $private_port);
 
         return Server::create($ip, $port, $private_port, $this->user->getId(),
-            $server_name, $max_players, $difficulty, $game_mode);
+            $server_name, $max_players, $difficulty, $game_mode, $password, $version);
     }
 
     /**

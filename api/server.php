@@ -42,6 +42,8 @@ try
                 $max_players = isset($_POST['max_players']) ? (int)$_POST['max_players'] : 0;
                 $difficulty = isset($_POST['difficulty']) ? (int)$_POST['difficulty'] : 0;
                 $game_mode = isset($_POST['game_mode']) ? (int)$_POST['game_mode'] : 0;
+                $password = isset($_POST['password']) ? (int)$_POST['password'] : 0;
+                $version = isset($_POST['version']) ? (int)$_POST['version'] : 1;
                 $server = ClientSession::get($token, $userid)->createServer(
                     $address,
                     $port,
@@ -49,7 +51,9 @@ try
                     $server_name, 
                     $max_players,
                     $difficulty,
-                    $game_mode
+                    $game_mode,
+                    $password,
+                    $version
                 );
 
                 $output->startElement('create');
