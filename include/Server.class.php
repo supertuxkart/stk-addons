@@ -19,22 +19,77 @@
  */
 
 /**
- * Data field in database that is not returned
- * @var array
- */
-define('SERVER_PRIVATE_FIELD', array('last_poll_time'));
-
-/**
  * Server class
  */
-
 class Server implements IAsXML
 {
     /**
-     * The server array data from database
-     * @var array
+     * The server id
+     * @var int
      */
-    private $data_array;
+    private $id;
+
+    /**
+     * The user who created the server
+     * @var int
+     */
+    private $host_id;
+
+    /**
+     * The server name
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @var int
+     */
+    private $max_players;
+
+    /**
+     * The server's IP address
+     * @var int
+     */
+    private $ip;
+
+    /**
+     * The server's public port
+     * @var int
+     */
+    private $port;
+
+    /**
+     * The server's private port
+     * @var int
+     */
+    private $private_port;
+
+    /**
+     * The server's difficulty
+     * @var int
+     */
+    private $difficulty;
+
+    /**
+     * The server's game mode
+     * @var int
+     */
+    private $game_mode;
+
+    /**
+     * @var int
+     */
+    private $current_players;
+
+    /**
+     * @var int
+     */
+    private $password;
+
+    /**
+     * @var int
+     */
+    private $version;
 
     /**
      *
@@ -42,7 +97,50 @@ class Server implements IAsXML
      */
     private function __construct(array $data)
     {
-        $this->data_array = $data;
+        $this->id = (int)$data["id"];
+        $this->host_id = (int)$data["host_id"];
+        $this->name = $data["name"];
+        $this->max_players = (int)$data["max_players"];
+        $this->ip = (int)$data["ip"];
+        $this->port = (int)$data["port"];
+        $this->private_port = (int)$data["private_port"];
+        $this->difficulty = (int)$data["difficulty"];
+        $this->game_mode = (int)$data["game_mode"];
+        $this->current_players = (int)$data["current_players"];
+        $this->password = (int)$data["password"];
+        $this->version = (int)$data["version"];
+    }
+
+    /**
+     * @return int
+     */
+    public function getServerId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getHostId()
+    {
+        return $this->host_id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMaxPlayers()
+    {
+        return $this->max_players;
     }
 
     /**
@@ -54,13 +152,20 @@ class Server implements IAsXML
     {
         $server_xml = new XMLOutput();
         $server_xml->startElement('server');
-        foreach ($this->data_array as $key => $value)
-        {
-            if (in_array($key, SERVER_PRIVATE_FIELD))
-                continue;
-            $server_xml->writeAttribute($key, $value);
-        }
+        $server_xml->writeAttribute("id", $this->id);
+        $server_xml->writeAttribute("hostid", $this->host_id);
+        $server_xml->writeAttribute("name", $this->name);
+        $server_xml->writeAttribute("max_players", $this->max_players);
+        $server_xml->writeAttribute("ip", $this->ip);
+        $server_xml->writeAttribute("port", $this->port);
+        $server_xml->writeAttribute("private_port", $this->private_port);
+        $server_xml->writeAttribute("difficulty", $this->difficulty);
+        $server_xml->writeAttribute("game_mode", $this->game_mode);
+        $server_xml->writeAttribute("current_players", $this->current_players);
+        $server_xml->writeAttribute("password", $this->password);
+        $server_xml->writeAttribute("version", $this->version);
         $server_xml->endElement();
+
         return $server_xml->asString();
     }
 
