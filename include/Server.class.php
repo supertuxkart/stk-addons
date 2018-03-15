@@ -101,7 +101,7 @@ class Server implements IAsXML
         $this->host_id = (int)$data["host_id"];
         $this->name = $data["name"];
         $this->max_players = (int)$data["max_players"];
-        $this->ip = (int)$data["ip"];
+        $this->ip = $data["ip"];
         $this->port = (int)$data["port"];
         $this->private_port = (int)$data["private_port"];
         $this->difficulty = (int)$data["difficulty"];
@@ -153,7 +153,7 @@ class Server implements IAsXML
         $server_xml = new XMLOutput();
         $server_xml->startElement('server');
         $server_xml->writeAttribute("id", $this->id);
-        $server_xml->writeAttribute("hostid", $this->host_id);
+        $server_xml->writeAttribute("host_id", $this->host_id);
         $server_xml->writeAttribute("name", $this->name);
         $server_xml->writeAttribute("max_players", $this->max_players);
         $server_xml->writeAttribute("ip", $this->ip);
