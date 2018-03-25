@@ -92,6 +92,18 @@ class Server implements IAsXML
     private $version;
 
     /**
+     * @var array
+     * Latitude and longitude in float of server itself
+     */
+    private $coordinates;
+
+    /**
+     * @var array
+     * Latitude and longitude in float of client which is getting the list of servers.
+     */
+    private $client_coordinates;
+
+    /**
      *
      * @param array $data an associative array retrieved from the database
      */
@@ -109,6 +121,9 @@ class Server implements IAsXML
         $this->current_players = (int)$data["current_players"];
         $this->password = (int)$data["password"];
         $this->version = (int)$data["version"];
+        $this->coordinates = array($data["latitude"], $data["longitude"]);
+        // Set by each get-all later, this is a placeholder for the validation of server creation
+        $this->client_coordinates = array(1000.0, 1000.0);
     }
 
     /**
@@ -117,6 +132,11 @@ class Server implements IAsXML
     public function getServerId()
     {
         return $this->id;
+    }
+
+    public function setClientCoordinates($coordinates)
+    {
+        $this->client_coordinates = $coordinates;
     }
 
     /**
@@ -144,6 +164,56 @@ class Server implements IAsXML
     }
 
     /**
+     * Get the latitude and longitude of an IP
+     * @return array of latitude and longitude in float
+     */
+    public static function getIPCoordinates($ip)
+    {
+        try
+        {
+            $result = DBConnection::get()->query(
+                "SELECT * FROM `" . DB_PREFIX . "ip_mapping`
+                WHERE `ipstart` <= :ip AND `ipend` >= :ip ORDER BY `ipstart` DESC LIMIT 1;",
+                DBConnection::FETCH_FIRST,
+                [':ip' => $ip],
+                [":ip" => DBConnection::PARAM_INT]
+            );
+        }
+        catch (DBException $e)
+        {
+            throw new ServerException(exception_message_db(_('finding ip coordinates')));
+        }
+
+        if (!$result)
+        {
+            return array(1000.0, 1000.0);
+        }
+        return array($result["latitude"], $result["longitude"]);
+    }
+
+    /**
+     * Get distance in miles between two coordinates using Haversine formula
+     * if any coordinates is not between -+90 (latitude) or -+ 180 (longitude) return -1.0
+     * @return float
+     */
+    public static function getDistance(array $c1, array $c2)
+    {
+        if (abs($c1[0]) > 90.0 || abs($c2[0]) > 90.0 ||
+            abs($c1[1]) > 180.0 || abs($c2[1]) > 180.0)
+            return -1.0;
+        $earth_radius = 3958.755;
+        $lat_from = deg2rad($c1[0]);
+        $lon_from = deg2rad($c1[1]);
+        $lat_to = deg2rad($c2[0]);
+        $lon_to = deg2rad($c2[1]);
+        $lat_delta = $lat_to - $lat_from;
+        $lon_delta = $lon_to - $lon_from;
+        $angle = 2 * asin(sqrt(pow(sin($lat_delta / 2), 2) +
+            cos($lat_from) * cos($lat_to) * pow(sin($lon_delta / 2), 2)));
+        return $angle * $earth_radius;
+    }
+
+    /**
      * Get server as xml output
      *
      * @return string
@@ -164,6 +234,8 @@ class Server implements IAsXML
         $server_xml->writeAttribute("current_players", $this->current_players);
         $server_xml->writeAttribute("password", $this->password);
         $server_xml->writeAttribute("version", $this->version);
+        $server_xml->writeAttribute("distance",
+            Server::getDistance($this->client_coordinates, $this->coordinates));
         $server_xml->endElement();
 
         return $server_xml->asString();
@@ -211,13 +283,14 @@ class Server implements IAsXML
                 throw new ServerException(_('Specified server already exists.'));
             }
 
+            $server_coordinates = Server::getIPCoordinates($ip);
             $result = DBConnection::get()->query(
                 "INSERT INTO `" . DB_PREFIX . "servers` (host_id, name,
                 last_poll_time, ip, port, private_port, max_players,
-                difficulty, game_mode, password, version)
+                difficulty, game_mode, password, version, latitude, longitude)
                 VALUES (:host_id, :name, :last_poll_time, :ip, :port,
                 :private_port, :max_players, :difficulty, :game_mode,
-                :password, :version)",
+                :password, :version, :latitude, :longitude)",
                 DBConnection::ROW_COUNT,
                 [
                     ':host_id'        => $user_id,
@@ -231,7 +304,9 @@ class Server implements IAsXML
                     ':difficulty'     => $difficulty,
                     ':game_mode'      => $game_mode,
                     ':password'       => $password,
-                    ':version'        => $version
+                    ':version'        => $version,
+                    ':latitude'       => strval($server_coordinates[0]),
+                    ':longitude'      => strval($server_coordinates[1])
                 ],
                 [
                     ':host_id'        => DBConnection::PARAM_INT,
@@ -244,7 +319,9 @@ class Server implements IAsXML
                     ':difficulty'     => DBConnection::PARAM_INT,
                     ':game_mode'      => DBConnection::PARAM_INT,
                     ':password'       => DBConnection::PARAM_INT,
-                    ':version'        => DBConnection::PARAM_INT
+                    ':version'        => DBConnection::PARAM_INT,
+                    ':latitude'       => DBConnection::PARAM_STR,
+                    ':longitude'      => DBConnection::PARAM_STR
                 ]
             );
         }
@@ -315,9 +392,12 @@ class Server implements IAsXML
         // build xml
         $partial_output = new XMLOutput();
         $partial_output->startElement('servers');
+        $client_ip = ip2long($_SERVER['REMOTE_ADDR']);
+        $client_coordinates = Server::getIPCoordinates($client_ip);
         foreach ($servers as $server_result)
         {
             $server = new self($server_result);
+            $server->setClientCoordinates($client_coordinates);
             $partial_output->insert($server->asXML());
         }
         $partial_output->endElement();

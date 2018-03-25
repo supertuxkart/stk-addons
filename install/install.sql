@@ -315,7 +315,9 @@ CREATE TABLE IF NOT EXISTS `v3_servers` (
     `game_mode`       TINYINT UNSIGNED  NOT NULL DEFAULT '0',
     `current_players` TINYINT UNSIGNED  NOT NULL DEFAULT '0',
     `password`        TINYINT UNSIGNED  NOT NULL DEFAULT '0',
-    `version`         TINYINT UNSIGNED  NOT NULL DEFAULT '1'
+    `version`         TINYINT UNSIGNED  NOT NULL DEFAULT '1',
+    `latitude`        FLOAT NOT NULL DEFAULT '0.0',
+    `longitude`       FLOAT NOT NULL DEFAULT '0.0'
     COMMENT 'Isn''t exact. Just to show in the server-list, where it doesn''t need to be exact.',
     PRIMARY KEY (`id`),
     KEY `key_hostid` (`host_id`),
@@ -703,3 +705,23 @@ CREATE TABLE IF NOT EXISTS `v3_stats` (
     ENGINE = InnoDB
     DEFAULT CHARSET = utf8mb4
     COLLATE = utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------------------------------
+-- --------------------------------------------------------------------------------
+--
+-- Table structure for ip to latitude and longitude map `v3_ip_mapping`
+--
+CREATE TABLE IF NOT EXISTS `v3_ip_mapping` (
+    `ipstart` INT UNSIGNED NOT NULL,
+    `ipend` INT UNSIGNED NOT NULL,
+    `latitude` FLOAT NOT NULL,
+    `longitude` FLOAT NOT NULL,
+    PRIMARY KEY (`ipstart`),
+    UNIQUE KEY `ipstart` (`ipstart`),
+    UNIQUE KEY `ipend` (`ipend`)
+)
+    ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4
+    COLLATE = utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------------------------------
