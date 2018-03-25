@@ -1343,10 +1343,19 @@ class User extends Base implements IAsXML
 
         // verify if password is correct
         $salt = Util::getSaltFromPassword($db_password_hash);
-        if (Util::getPasswordHash($password, $salt) !== $db_password_hash)
+
+        try
         {
-            throw new UserException(_h("Username or password is invalid"), ErrorType::VALIDATE_USERNAME_OR_PASSWORD);
+            if (Util::getPasswordHash($password, $salt) !== $db_password_hash)
+            {
+                throw new UserException(_h("Username or password is invalid"), ErrorType::VALIDATE_USERNAME_OR_PASSWORD);
+            }
         }
+        catch (DBException $e)
+        {
+            throw new UserException($e);
+        }
+
 
         return $user;
     }

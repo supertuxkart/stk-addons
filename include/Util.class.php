@@ -526,14 +526,23 @@ MSG;
      * @param string      $raw_password the plain password
      * @param null|string $salt         optional, give it own salt
      *
+     * @throws DBException  if it can't find  enough entropy for salt
      * @return string
      */
     public static function getPasswordHash($raw_password, $salt = null)
     {
         if (!$salt) // generate our own salt
         {
-            // when we retrieve it from the database it will be already utf8, because we encoded it as utf8
-            $salt = utf8_encode(mcrypt_create_iv(static::SALT_LENGTH, MCRYPT_DEV_URANDOM));
+            try
+            {
+                // when we retrieve it from the database it will be already utf8, because we encoded it as utf8
+                $salt = utf8_encode(random_bytes(static::SALT_LENGTH));
+            }
+            catch (Exception $e)
+            {
+                throw new DBException($e);
+            }
+
         }
 
         return $salt . hash("sha256", $salt . $raw_password);

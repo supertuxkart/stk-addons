@@ -45,7 +45,7 @@ switch ($_POST["action"])
         {
             User::updateProfile($user_id, $homepage, $real_name);
         }
-        catch(UserException $e)
+        catch (UserException $e)
         {
             exit_json_error($e->getMessage());
         }
@@ -67,7 +67,7 @@ switch ($_POST["action"])
         {
             User::updateRole($user_id, $role, $available);
         }
-        catch(UserException $e)
+        catch (UserException $e)
         {
             exit_json_error($e->getMessage());
         }
@@ -83,9 +83,14 @@ switch ($_POST["action"])
 
         try
         {
-            User::verifyAndChangePassword($_POST["old-pass"], $_POST["new-pass"], $_POST["new-pass-verify"], User::getLoggedId());
+            User::verifyAndChangePassword(
+                $_POST["old-pass"],
+                $_POST["new-pass"],
+                $_POST["new-pass-verify"],
+                User::getLoggedId()
+            );
         }
-        catch(UserException $e)
+        catch (UserException $e)
         {
             exit_json_error($e->getMessage());
         }
@@ -103,7 +108,7 @@ switch ($_POST["action"])
         {
             Friend::friendRequest(User::getLoggedId(), (int)$_POST["friend-id"]);
         }
-        catch(FriendException $e)
+        catch (FriendException $e)
         {
             exit_json_error($e->getMessage());
         }
@@ -122,7 +127,7 @@ switch ($_POST["action"])
         {
             Friend::removeFriend(User::getLoggedId(), (int)$_POST["friend-id"]);
         }
-        catch(FriendException $e)
+        catch (FriendException $e)
         {
             exit_json_error($e->getMessage());
         }
@@ -141,7 +146,7 @@ switch ($_POST["action"])
         {
             Friend::acceptFriendRequest((int)$_POST["friend-id"], User::getLoggedId());
         }
-        catch(FriendException $e)
+        catch (FriendException $e)
         {
             exit_json_error($e->getMessage());
         }
@@ -160,7 +165,7 @@ switch ($_POST["action"])
         {
             Friend::declineFriendRequest((int)$_POST["friend-id"], User::getLoggedId());
         }
-        catch(FriendException $e)
+        catch (FriendException $e)
         {
             exit_json_error($e->getMessage());
         }
@@ -179,7 +184,7 @@ switch ($_POST["action"])
         {
             Friend::cancelFriendRequest(User::getLoggedId(), (int)$_POST["friend-id"]);
         }
-        catch(FriendException $e)
+        catch (FriendException $e)
         {
             exit_json_error($e->getMessage());
         }

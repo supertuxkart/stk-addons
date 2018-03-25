@@ -103,7 +103,7 @@ CREATE TABLE IF NOT EXISTS `v3_users` (
     `password`      CHAR(96)                 NOT NULL,
     `realname`      VARCHAR(64)              NOT NULL,
     `email`         VARCHAR(64)              NOT NULL,
-    `is_active`     BOOL                     NOT NULL,
+    `is_active`     BOOL                     NOT NULL DEFAULT '0',
     `date_login`    TIMESTAMP                NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `date_register` DATE                     NOT NULL,
     `homepage`      VARCHAR(64)                       DEFAULT NULL,
