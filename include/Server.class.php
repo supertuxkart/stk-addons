@@ -186,7 +186,7 @@ class Server implements IAsXML
     }
 
     /**
-     * Get distance in miles between two coordinates using Haversine formula:
+     * Get distance between two coordinates using Haversine formula:
      * https://en.wikipedia.org/wiki/Haversine_formula
      * Notice: Haversine formula does not take into account that earth is a
      * spheroid (not a perfect sphere) so it has some small inaccuracies.
@@ -195,7 +195,7 @@ class Server implements IAsXML
      */
     public static function getDistance($lat_from_degree, $lon_from_degree,
                                        $lat_to_degree, $lon_to_degree,
-                                       $earth_radius = 3958.755)
+                                       $earth_radius = 6371.0)
     {
         if (is_null($lat_from_degree) || is_null($lon_from_degree) ||
             is_null($lat_to_degree) || is_null($lon_to_degree))
