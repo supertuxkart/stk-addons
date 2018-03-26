@@ -497,6 +497,32 @@ MSG;
     }
 
     /**
+     * @param float $latitude
+     *
+     * @return bool
+     */
+    public static function isLatitude($latitude)
+    {
+        $latitude = (float)$latitude;
+
+        // Latitude is in the range [-90, 90]
+        return !(abs($latitude) > 90.0);
+    }
+
+    /**
+     * @param float $longitude
+     *
+     * @return bool
+     */
+    public static function isLongitude($longitude)
+    {
+        $longitude = (float)$longitude;
+
+        // Longitude is in the range [-180, 180]
+        return !(abs($longitude) > 180.0);
+    }
+
+    /**
      * Checks if the password is salted
      *
      * @param string $hash_password the hash value of a password
@@ -702,6 +728,51 @@ MSG;
     public static function commaStringToArray($string)
     {
         return array_map("trim", explode(',', $string));
+    }
+
+
+    /**
+     * Get distance between two coordinates using Haversine formula:
+     * https://en.wikipedia.org/wiki/Haversine_formula
+     * Notice: Haversine formula does not take into account that earth is a
+     * spheroid (not a perfect sphere) so it has some small inaccuracies.
+     * if any coordinates is NULL return -1.0
+     *
+     * @param float $lat_from_degree
+     * @param float $lon_from_degree
+     * @param float $lat_to_degree
+     * @param float $lon_to_degree
+     * @param float $earth_radius
+     *
+     * @return float
+     */
+    public static function getDistance(
+        $lat_from_degree,
+        $lon_from_degree,
+        $lat_to_degree,
+        $lon_to_degree,
+        $earth_radius = 6371.0
+    ) {
+        if (!static::isLatitude($lat_from_degree) || !static::isLongitude($lon_from_degree) ||
+            !static::isLatitude($lat_to_degree) || !static::isLongitude($lon_to_degree))
+        {
+            return -1.0;
+        }
+
+        $lat_from = deg2rad($lat_from_degree);
+        $lon_from = deg2rad($lon_from_degree);
+        $lat_to = deg2rad($lat_to_degree);
+        $lon_to = deg2rad($lon_to_degree);
+        $lat_delta = $lat_to - $lat_from;
+        $lon_delta = $lon_to - $lon_from;
+        $angle = 2 * asin(
+                sqrt(
+                    pow(sin($lat_delta / 2), 2) +
+                    cos($lat_from) * cos($lat_to) * pow(sin($lon_delta / 2), 2)
+                )
+            );
+
+        return $angle * $earth_radius;
     }
 }
  

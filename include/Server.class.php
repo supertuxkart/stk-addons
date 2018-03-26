@@ -92,14 +92,14 @@ class Server implements IAsXML
     private $version;
 
     /**
-     * @var array
      * Latitude of IP in float of server (null if not in database)
+     * @var float
      */
     private $latitude;
 
     /**
-     * @var array
      * Longitude of IP in float of server (null if not in database)
+     * @var float
      */
     private $longitude;
 
@@ -160,13 +160,15 @@ class Server implements IAsXML
     /**
      * Get the latitude and longitude of an IP
      * @return array of latitude and longitude in float, or null if not in database
+     *
+     * @param int $ip
      */
     public static function getIPCoordinates($ip)
     {
         try
         {
             $result = DBConnection::get()->query(
-                "SELECT * FROM `" . DB_PREFIX . "ip_mapping`
+                "SELECT * FROM `{DB_VERSION}_ipv4_mapping`
                 WHERE `ip_start` <= :ip AND `ip_end` >= :ip ORDER BY `ip_start` DESC LIMIT 1;",
                 DBConnection::FETCH_FIRST,
                 [':ip' => $ip],
@@ -175,40 +177,16 @@ class Server implements IAsXML
         }
         catch (DBException $e)
         {
-            throw new ServerException(exception_message_db(_('finding ip coordinates')));
+            Debug::addException($e);
+            return [0.0, 0.0];
         }
 
         if (!$result)
         {
-            return [NULL, NULL];
+            return [0.0, 0.0];
         }
-        return [$result["latitude"], $result["longitude"]];
-    }
 
-    /**
-     * Get distance between two coordinates using Haversine formula:
-     * https://en.wikipedia.org/wiki/Haversine_formula
-     * Notice: Haversine formula does not take into account that earth is a
-     * spheroid (not a perfect sphere) so it has some small inaccuracies.
-     * if any coordinates is NULL return -1.0
-     * @return float
-     */
-    public static function getDistance($lat_from_degree, $lon_from_degree,
-                                       $lat_to_degree, $lon_to_degree,
-                                       $earth_radius = 6371.0)
-    {
-        if (is_null($lat_from_degree) || is_null($lon_from_degree) ||
-            is_null($lat_to_degree) || is_null($lon_to_degree))
-            return -1.0;
-        $lat_from = deg2rad($lat_from_degree);
-        $lon_from = deg2rad($lon_from_degree);
-        $lat_to = deg2rad($lat_to_degree);
-        $lon_to = deg2rad($lon_to_degree);
-        $lat_delta = $lat_to - $lat_from;
-        $lon_delta = $lon_to - $lon_from;
-        $angle = 2 * asin(sqrt(pow(sin($lat_delta / 2), 2) +
-            cos($lat_from) * cos($lat_to) * pow(sin($lon_delta / 2), 2)));
-        return $angle * $earth_radius;
+        return [$result["latitude"], $result["longitude"]];
     }
 
     /**
@@ -217,6 +195,21 @@ class Server implements IAsXML
      * @return string
      */
     public function asXML()
+    {
+        $client_ip = ip2long(Util::getClientIp());
+        $client_coordinates = Server::getIPCoordinates($client_ip);
+        return $this->asXMLFromClientLocation($client_coordinates[0], $client_coordinates[1]);
+    }
+
+    /**
+     * Version of asXML so that we can cache the client location.
+     *
+     * @param $client_latitude
+     * @param $client_longitude
+     *
+     * @return string
+     */
+    public function asXMLFromClientLocation($client_latitude, $client_longitude)
     {
         $server_xml = new XMLOutput();
         $server_xml->startElement('server');
@@ -232,11 +225,10 @@ class Server implements IAsXML
         $server_xml->writeAttribute("current_players", $this->current_players);
         $server_xml->writeAttribute("password", $this->password);
         $server_xml->writeAttribute("version", $this->version);
-        $client_ip = ip2long(Util::getClientIp());
-        $client_coordinates = Server::getIPCoordinates($client_ip);
-        $server_xml->writeAttribute("distance",
-            Server::getDistance($client_coordinates[0], $client_coordinates[1],
-            $this->latitude, $this->longitude));
+        $server_xml->writeAttribute(
+            "distance",
+            Util::getDistance($client_latitude, $client_longitude, $this->latitude, $this->longitude)
+        );
         $server_xml->endElement();
 
         return $server_xml->asString();
@@ -259,9 +251,18 @@ class Server implements IAsXML
      * @return Server
      * @throws ServerException
      */
-    public static function create($ip, $port, $private_port, $user_id,
-        $server_name, $max_players, $difficulty, $game_mode, $password, $version)
-    {
+    public static function create(
+        $ip,
+        $port,
+        $private_port,
+        $user_id,
+        $server_name,
+        $max_players,
+        $difficulty,
+        $game_mode,
+        $password,
+        $version
+    ) {
         try
         {
             // Clean non-polled servers < 15 seconds before
@@ -270,8 +271,8 @@ class Server implements IAsXML
                 "DELETE FROM `{DB_VERSION}_servers`
                 WHERE `last_poll_time` < :time",
                 DBConnection::NOTHING,
-                [ ':time'   => $timeout ],
-                [ ':time'   => DBConnection::PARAM_INT]
+                [':time' => $timeout],
+                [':time' => DBConnection::PARAM_INT]
             );
 
             $count = DBConnection::get()->query(
@@ -380,14 +381,26 @@ class Server implements IAsXML
     /**
      * Get all servers as xml output
      *
+     * @throws ServerException
      * @return string
      */
     public static function getServersAsXML()
     {
-        $servers = DBConnection::get()->query(
-            "SELECT * FROM `{DB_VERSION}_servers`",
-            DBConnection::FETCH_ALL
-        );
+        $servers = [];
+        try
+        {
+            $servers = DBConnection::get()->query(
+                "SELECT * FROM `{DB_VERSION}_servers`",
+                DBConnection::FETCH_ALL
+            );
+        }
+        catch (DBException $e)
+        {
+            throw new ServerException($e);
+        }
+
+        $client_ip = ip2long(Util::getClientIp());
+        $client_coordinates = Server::getIPCoordinates($client_ip);
 
         // build xml
         $partial_output = new XMLOutput();
@@ -395,7 +408,7 @@ class Server implements IAsXML
         foreach ($servers as $server_result)
         {
             $server = new self($server_result);
-            $partial_output->insert($server->asXML());
+            $partial_output->insert($server->asXMLFromClientLocation($client_coordinates[0], $client_coordinates[1]));
         }
         $partial_output->endElement();
 

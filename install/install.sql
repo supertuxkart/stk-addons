@@ -709,14 +709,14 @@ CREATE TABLE IF NOT EXISTS `v3_stats` (
 -- --------------------------------------------------------------------------------
 -- --------------------------------------------------------------------------------
 --
--- Table structure for ip to latitude and longitude map `v3_ip_mapping`
+-- Table structure for ip to latitude and longitude map `v3_ipv4_mapping`
 -- see tools/generate-ip-mappings.py for generation
 --
-CREATE TABLE IF NOT EXISTS `v3_ip_mapping` (
-    `ip_start` INT UNSIGNED NOT NULL,
-    `ip_end` INT UNSIGNED NOT NULL,
-    `latitude` FLOAT NOT NULL,
-    `longitude` FLOAT NOT NULL,
+CREATE TABLE IF NOT EXISTS `v3_ipv4_mapping` (
+    `ip_start`  INT UNSIGNED NOT NULL,
+    `ip_end`    INT UNSIGNED NOT NULL,
+    `latitude`  FLOAT        NOT NULL DEFAULT '0.0',
+    `longitude` FLOAT        NOT NULL DEFAULT '0.0',
     PRIMARY KEY (`ip_start`),
     UNIQUE KEY `ip_start` (`ip_start`),
     UNIQUE KEY `ip_end` (`ip_end`)
