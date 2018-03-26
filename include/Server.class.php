@@ -93,15 +93,15 @@ class Server implements IAsXML
 
     /**
      * @var array
-     * Latitude and longitude in float of server itself
+     * Latitude of IP in float of server (null if not in database)
      */
-    private $coordinates;
+    private $latitude;
 
     /**
      * @var array
-     * Latitude and longitude in float of client which is getting the list of servers.
+     * Longitude of IP in float of server (null if not in database)
      */
-    private $client_coordinates;
+    private $longitude;
 
     /**
      *
@@ -121,9 +121,8 @@ class Server implements IAsXML
         $this->current_players = (int)$data["current_players"];
         $this->password = (int)$data["password"];
         $this->version = (int)$data["version"];
-        $this->coordinates = array($data["latitude"], $data["longitude"]);
-        // Set by each get-all later, this is a placeholder for the validation of server creation
-        $this->client_coordinates = array(1000.0, 1000.0);
+        $this->latitude = $data["latitude"];
+        $this->longitude = $data["longitude"];
     }
 
     /**
@@ -132,11 +131,6 @@ class Server implements IAsXML
     public function getServerId()
     {
         return $this->id;
-    }
-
-    public function setClientCoordinates($coordinates)
-    {
-        $this->client_coordinates = $coordinates;
     }
 
     /**
@@ -165,7 +159,7 @@ class Server implements IAsXML
 
     /**
      * Get the latitude and longitude of an IP
-     * @return array of latitude and longitude in float
+     * @return array of latitude and longitude in float, or null if not in database
      */
     public static function getIPCoordinates($ip)
     {
@@ -173,7 +167,7 @@ class Server implements IAsXML
         {
             $result = DBConnection::get()->query(
                 "SELECT * FROM `" . DB_PREFIX . "ip_mapping`
-                WHERE `ipstart` <= :ip AND `ipend` >= :ip ORDER BY `ipstart` DESC LIMIT 1;",
+                WHERE `ip_start` <= :ip AND `ip_end` >= :ip ORDER BY `ip_start` DESC LIMIT 1;",
                 DBConnection::FETCH_FIRST,
                 [':ip' => $ip],
                 [":ip" => DBConnection::PARAM_INT]
@@ -186,26 +180,30 @@ class Server implements IAsXML
 
         if (!$result)
         {
-            return array(1000.0, 1000.0);
+            return [NULL, NULL];
         }
-        return array($result["latitude"], $result["longitude"]);
+        return [$result["latitude"], $result["longitude"]];
     }
 
     /**
-     * Get distance in miles between two coordinates using Haversine formula
-     * if any coordinates is not between -+90 (latitude) or -+ 180 (longitude) return -1.0
+     * Get distance in miles between two coordinates using Haversine formula:
+     * https://en.wikipedia.org/wiki/Haversine_formula
+     * Notice: Haversine formula does not take into account that earth is a
+     * spheroid (not a perfect sphere) so it has some small inaccuracies.
+     * if any coordinates is NULL return -1.0
      * @return float
      */
-    public static function getDistance(array $c1, array $c2)
+    public static function getDistance($lat_from_degree, $lon_from_degree,
+                                       $lat_to_degree, $lon_to_degree,
+                                       $earth_radius = 3958.755)
     {
-        if (abs($c1[0]) > 90.0 || abs($c2[0]) > 90.0 ||
-            abs($c1[1]) > 180.0 || abs($c2[1]) > 180.0)
+        if (is_null($lat_from_degree) || is_null($lon_from_degree) ||
+            is_null($lat_to_degree) || is_null($lon_to_degree))
             return -1.0;
-        $earth_radius = 3958.755;
-        $lat_from = deg2rad($c1[0]);
-        $lon_from = deg2rad($c1[1]);
-        $lat_to = deg2rad($c2[0]);
-        $lon_to = deg2rad($c2[1]);
+        $lat_from = deg2rad($lat_from_degree);
+        $lon_from = deg2rad($lon_from_degree);
+        $lat_to = deg2rad($lat_to_degree);
+        $lon_to = deg2rad($lon_to_degree);
         $lat_delta = $lat_to - $lat_from;
         $lon_delta = $lon_to - $lon_from;
         $angle = 2 * asin(sqrt(pow(sin($lat_delta / 2), 2) +
@@ -234,8 +232,11 @@ class Server implements IAsXML
         $server_xml->writeAttribute("current_players", $this->current_players);
         $server_xml->writeAttribute("password", $this->password);
         $server_xml->writeAttribute("version", $this->version);
+        $client_ip = ip2long(Util::getClientIp());
+        $client_coordinates = Server::getIPCoordinates($client_ip);
         $server_xml->writeAttribute("distance",
-            Server::getDistance($this->client_coordinates, $this->coordinates));
+            Server::getDistance($client_coordinates[0], $client_coordinates[1],
+            $this->latitude, $this->longitude));
         $server_xml->endElement();
 
         return $server_xml->asString();
@@ -305,8 +306,8 @@ class Server implements IAsXML
                     ':game_mode'      => $game_mode,
                     ':password'       => $password,
                     ':version'        => $version,
-                    ':latitude'       => strval($server_coordinates[0]),
-                    ':longitude'      => strval($server_coordinates[1])
+                    ':latitude'       => $server_coordinates[0],
+                    ':longitude'      => $server_coordinates[1]
                 ],
                 [
                     ':host_id'        => DBConnection::PARAM_INT,
@@ -392,12 +393,9 @@ class Server implements IAsXML
         // build xml
         $partial_output = new XMLOutput();
         $partial_output->startElement('servers');
-        $client_ip = ip2long($_SERVER['REMOTE_ADDR']);
-        $client_coordinates = Server::getIPCoordinates($client_ip);
         foreach ($servers as $server_result)
         {
             $server = new self($server_result);
-            $server->setClientCoordinates($client_coordinates);
             $partial_output->insert($server->asXML());
         }
         $partial_output->endElement();
