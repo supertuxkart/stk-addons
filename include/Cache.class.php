@@ -83,7 +83,7 @@ class Cache
         try
         {
             $cache_list = DBConnection::get()->query(
-                'SELECT `file` FROM `' . DB_PREFIX . 'cache`',
+                'SELECT `file` FROM `{DB_VERSION}_cache`',
                 DBConnection::FETCH_ALL
             );
             foreach ($cache_list as $cache_item)
@@ -124,7 +124,7 @@ class Cache
         {
             $cache_list = DBConnection::get()->query(
                 'SELECT `file`
-                FROM `' . DB_PREFIX . 'cache`
+                FROM `{DB_VERSION}_cache`
                 WHERE `addon_id` = :addon_id',
                 DBConnection::FETCH_ALL,
                 [':addon_id' => $addon]

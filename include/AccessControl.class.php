@@ -264,7 +264,7 @@ class AccessControl
         try
         {
             $roles = DBConnection::get()->query(
-                "SELECT * FROM " . DB_PREFIX . "roles",
+                "SELECT * FROM `{DB_VERSION}_roles`",
                 DBConnection::FETCH_ALL
             );
         }
@@ -292,7 +292,15 @@ class AccessControl
      */
     public static function isRole($role_name)
     {
-        return in_array($role_name, static::getRoleNames());
+        try
+        {
+            return in_array($role_name, static::getRoleNames());
+        }
+        catch (AccessControlException $e)
+        {
+            Debug::addException($e);
+            return false;
+        }
     }
 
     /**
@@ -327,8 +335,8 @@ class AccessControl
         {
             $roles_permissions = DBConnection::get()->query(
                 "SELECT R.name, P.permission
-                FROM `" . DB_PREFIX . "roles` R
-                INNER JOIN `" . DB_PREFIX . "role_permissions` P
+                FROM `{DB_VERSION}_roles` R
+                INNER JOIN `{DB_VERSION}_role_permissions` P
                     ON R.`id` = P.`role_id`",
                 DBConnection::FETCH_ALL
             );
@@ -406,8 +414,7 @@ class AccessControl
         {
             DBConnection::get()->query(
                 sprintf(
-                    "INSERT INTO %s (`role_id`, `permission`) VALUES %s",
-                    DB_PREFIX . "role_permissions",
+                    "INSERT INTO {DB_VERSION}_role_permissions (`role_id`, `permission`) VALUES %s",
                     implode(", ", $insert_values)
                 ),
                 DBConnection::NOTHING
@@ -423,9 +430,6 @@ class AccessControl
      * Set access level restriction on a page, redirect if no permission
      *
      * @param string $permission
-     *
-     * @return bool
-     * @throws AccessControlException
      */
     public static function setLevel($permission)
     {

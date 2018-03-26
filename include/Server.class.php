@@ -194,7 +194,7 @@ class Server implements IAsXML
             // Clean non-polled servers < 15 seconds before
             $timeout = time() - 15;
             DBConnection::get()->query(
-                "DELETE FROM `" . DB_PREFIX . "servers`
+                "DELETE FROM `{DB_VERSION}_servers`
                 WHERE `last_poll_time` < :time",
                 DBConnection::NOTHING,
                 [ ':time'   => $timeout ],
@@ -202,7 +202,7 @@ class Server implements IAsXML
             );
 
             $count = DBConnection::get()->query(
-                "SELECT `id` FROM `" . DB_PREFIX . "servers` WHERE `ip`= :ip AND `port`= :port ",
+                "SELECT `id` FROM `{DB_VERSION}_servers` WHERE `ip`= :ip AND `port`= :port ",
                 DBConnection::ROW_COUNT,
                 [':ip' => $ip, ':port' => $port]
             );
@@ -212,7 +212,7 @@ class Server implements IAsXML
             }
 
             $result = DBConnection::get()->query(
-                "INSERT INTO `" . DB_PREFIX . "servers` (host_id, name,
+                "INSERT INTO `{DB_VERSION}_servers` (host_id, name,
                 last_poll_time, ip, port, private_port, max_players,
                 difficulty, game_mode, password, version)
                 VALUES (:host_id, :name, :last_poll_time, :ip, :port,
@@ -275,7 +275,7 @@ class Server implements IAsXML
         try
         {
             $result = DBConnection::get()->query(
-                "SELECT * FROM `" . DB_PREFIX . "servers`
+                "SELECT * FROM `{DB_VERSION}_servers`
                 WHERE `id`= :id",
                 DBConnection::FETCH_ALL,
                 [':id' => $id],
@@ -307,8 +307,7 @@ class Server implements IAsXML
     public static function getServersAsXML()
     {
         $servers = DBConnection::get()->query(
-            "SELECT *
-            FROM `" . DB_PREFIX . "servers`",
+            "SELECT * FROM `{DB_VERSION}_servers`",
             DBConnection::FETCH_ALL
         );
 

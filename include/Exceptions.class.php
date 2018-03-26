@@ -19,6 +19,7 @@
  */
 
 
+// TODO use this
 class ErrorType extends \MyCLabs\Enum\Enum
 {
     const UNKNOWN = 0;

@@ -109,8 +109,7 @@ class Config
             try
             {
                 $configs = DBConnection::get()->query(
-                    'SELECT `name`, `value`' .
-                    'FROM `' . DB_PREFIX . 'config`',
+                    'SELECT `name`, `value` FROM `{DB_VERSION}_config`',
                     DBConnection::FETCH_ALL
                 );
             }
@@ -164,11 +163,9 @@ class Config
         try
         {
             DBConnection::get()->query(
-                'INSERT INTO `' . DB_PREFIX . 'config` ' .
-                '(`name`, `value`) ' .
-                'VALUES ' .
-                '(:name, :value) ' .
-                'ON DUPLICATE KEY UPDATE `value` = :value',
+                'INSERT INTO `{DB_VERSION}_config` (`name`, `value`)
+                VALUES (:name, :value)
+                ON DUPLICATE KEY UPDATE `value` = :value',
                 DBConnection::NOTHING,
                 [
                     ':name'  => $config_name,

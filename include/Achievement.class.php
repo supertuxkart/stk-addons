@@ -36,7 +36,7 @@ class Achievement
         try
         {
             $achievements = DBConnection::get()->query(
-                "SELECT `achievement_id` FROM " . DB_PREFIX . "achieved
+                "SELECT `achievement_id` FROM `{DB_VERSION}_achieved`
                 WHERE `user_id` = :user_id",
                 DBConnection::FETCH_ALL,
                 [':user_id' => $user_id],
@@ -72,8 +72,8 @@ class Achievement
         {
             $achievements = DBConnection::get()->query(
                 "SELECT A.id, A.name
-                FROM " . DB_PREFIX . "achieved AS AC
-                INNER JOIN " . DB_PREFIX . "achievements AS A
+                FROM `{DB_VERSION}_achieved` AS AC
+                INNER JOIN `{DB_VERSION}_achievements` AS A
                     ON AC.achievement_id = A.id
                 WHERE `user_id` = :user_id",
                 DBConnection::FETCH_ALL,
@@ -102,7 +102,7 @@ class Achievement
         try
         {
             DBConnection::get()->query(
-                "INSERT INTO `" . DB_PREFIX . "achieved` (`user_id`, `achievement_id`)
+                "INSERT INTO `{DB_VERSION}_achieved` (`user_id`, `achievement_id`)
                 VALUES (:user_id, :achievement_id)
                 ON DUPLICATE KEY UPDATE `user_id` = :user_id",
                 DBConnection::NOTHING,

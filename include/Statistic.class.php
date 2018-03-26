@@ -365,8 +365,8 @@ class Statistic
         {
             $download_counts = DBConnection::get()->query(
                 'SELECT A.name as addon_name
-                FROM `' . DB_PREFIX . 'files` F
-                INNER JOIN ' . DB_PREFIX . 'addons A
+                FROM `{DB_VERSION}_files` F
+                INNER JOIN `{DB_VERSION}_addons` A
                     ON F.`addon_id` =  A.`id`
                 WHERE A.`type` = :addon_type
                 AND F.`type` = :file_type
@@ -405,8 +405,8 @@ class Statistic
 
             $addons = DBConnection::get()->query(
                 'SELECT `a`.`name`, `a`.type
-                FROM `' . DB_PREFIX . 'addons` `a`
-                LEFT JOIN `' . DB_PREFIX . 'addon_revisions` `r`
+                FROM `{DB_VERSION}_addons` `a`
+                LEFT JOIN `{DB_VERSION}_addon_revisions` `r`
                     ON `a`.`id` = `r`.`addon_id`
                 WHERE `r`.`status` & ' . F_APPROVED . '
                 ORDER BY `a`.`creation_date` DESC

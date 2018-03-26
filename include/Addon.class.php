@@ -154,7 +154,7 @@ class Addon extends Base
         {
             $revisions = DBConnection::get()->query(
                 'SELECT *
-                FROM `' . DB_PREFIX . 'addon_revisions`
+                FROM `{DB_VERSION}_addon_revisions`
                 WHERE `addon_id` = :id
                 ORDER BY `revision` ASC',
                 DBConnection::FETCH_ALL,
@@ -685,7 +685,7 @@ class Addon extends Base
         {
             $file_id_lookup = DBConnection::get()->query(
                 'SELECT `file_id`
-                FROM `' . DB_PREFIX . 'addon_revisions`
+                FROM `{DB_VERSION}_addon_revisions`
                 WHERE `addon_id` = :addon_id
                 AND `revision` = :revision',
                 DBConnection::FETCH_FIRST,
@@ -776,7 +776,7 @@ class Addon extends Base
         try
         {
             DBConnection::get()->query(
-                'UPDATE `' . DB_PREFIX . 'addons`
+                'UPDATE `{DB_VERSION}_addons`
                  SET `description` = :description
                  WHERE `id` = :id',
                 DBConnection::NOTHING,
@@ -809,7 +809,7 @@ class Addon extends Base
         try
         {
             DBConnection::get()->query(
-                'UPDATE `' . DB_PREFIX . 'addons`
+                'UPDATE `{DB_VERSION}_addons`
                 SET `designer` = :designer
                 WHERE `id` = :id',
                 DBConnection::NOTHING,
@@ -844,7 +844,7 @@ class Addon extends Base
         try
         {
             DBConnection::get()->query(
-                "UPDATE `" . DB_PREFIX . "addon_revisions`
+                "UPDATE `{DB_VERSION}_addon_revisions`
                 SET `" . $field . "` = :image_or_icon
                 WHERE `addon_id` = :addon_id
                 AND `status` & " . F_LATEST,
@@ -920,7 +920,7 @@ class Addon extends Base
         try
         {
             DBConnection::get()->query(
-                'UPDATE `' . DB_PREFIX . 'addons`
+                'UPDATE `{DB_VERSION}_addons`
                 SET `min_include_ver` = :start_ver, `max_include_ver` = :end_ver
                 WHERE `id` = :addon_id',
                 DBConnection::NOTHING,
@@ -955,7 +955,7 @@ class Addon extends Base
         try
         {
             DBConnection::get()->query(
-                'UPDATE `' . DB_PREFIX . 'addons`
+                'UPDATE `{DB_VERSION}_addons`
                 SET `license` = :license
                 WHERE `id` = :addon_id',
                 DBConnection::NOTHING,
@@ -988,7 +988,7 @@ class Addon extends Base
         try
         {
             DBConnection::get()->query(
-                'UPDATE `' . DB_PREFIX . 'addons`
+                'UPDATE `{DB_VERSION}_addons`
                 SET `name` = :name
                 WHERE `id` = :addon_id',
                 DBConnection::NOTHING,
@@ -1030,7 +1030,7 @@ class Addon extends Base
             try
             {
                 DBConnection::get()->query(
-                    'UPDATE `' . DB_PREFIX . 'addon_revisions`
+                    'UPDATE `{DB_VERSION}_addon_revisions`
                     SET `moderator_note` = :moderator_note
                     WHERE `addon_id` = :addon_id
                     AND `revision` = :revision',
@@ -1064,7 +1064,7 @@ class Addon extends Base
         {
             $user = DBConnection::get()->query(
                 'SELECT `username`, `email`
-                FROM `' . DB_PREFIX . 'users`
+                FROM `{DB_VERSION}_users`
                 WHERE `id` = :user_id
                 LIMIT 1',
                 DBConnection::FETCH_FIRST,
@@ -1253,7 +1253,7 @@ class Addon extends Base
             try
             {
                 DBConnection::get()->query(
-                    'UPDATE `' . DB_PREFIX . 'addon_revisions`
+                    'UPDATE `{DB_VERSION}_addon_revisions`
                     SET `status` = :status
                     WHERE `addon_id` = :addon_id
                     AND `revision` = :revision',
@@ -1300,7 +1300,7 @@ class Addon extends Base
     public static function get($addon_id, $load_revisions = true)
     {
         $data = static::getFromField(
-            "SELECT * FROM " . DB_PREFIX . "addons",
+            "SELECT * FROM `{DB_VERSION}_addons`",
             "id",
             $addon_id,
             DBConnection::PARAM_STR,
@@ -1346,7 +1346,7 @@ class Addon extends Base
         {
             $addon = DBConnection::get()->query(
                 'SELECT `name`
-                FROM `' . DB_PREFIX . 'addons`
+                FROM `{DB_VERSION}_addons`
                 WHERE `id` = :id
                 LIMIT 1',
                 DBConnection::FETCH_FIRST,
@@ -1388,7 +1388,7 @@ class Addon extends Base
         {
             $addon = DBConnection::get()->query(
                 'SELECT `type`
-                FROM `' . DB_PREFIX . 'addons`
+                FROM `{DB_VERSION}_addons`
                 WHERE `id` = :id
                 LIMIT 1',
                 DBConnection::FETCH_FIRST,
@@ -1619,7 +1619,7 @@ class Addon extends Base
         }
 
         // build query
-        $query = "SELECT * FROM `" . DB_PREFIX . "addons` WHERE";
+        $query = "SELECT * FROM `{DB_VERSION}_addons` WHERE";
         if ($type !== "all") // search for specific addon
         {
             $query .= sprintf(" (`type` = '%d') AND", $type_int);
@@ -1698,8 +1698,8 @@ class Addon extends Base
 
         // build query
         $query = 'SELECT `a`.`id`, (`r`.`status` & ' . F_FEATURED . ') AS `featured`, `r`.`creation_date` as `date`
-                  FROM `' . DB_PREFIX . 'addons` `a`
-                  LEFT JOIN `' . DB_PREFIX . 'addon_revisions` `r`
+                  FROM `{DB_VERSION}_addons` `a`
+                  LEFT JOIN `{DB_VERSION}_addon_revisions` `r`
                   ON `a`.`id` = `r`.`addon_id`
                   WHERE `a`.`type` = :type
                   AND `r`.`status` & :latest_bit ';

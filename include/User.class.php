@@ -250,8 +250,8 @@ class User extends Base implements IAsXML
         {
             $addons = DBConnection::get()->query(
                 'SELECT `a`.*, `r`.`status`
-                FROM `' . DB_PREFIX . 'addons` `a`
-                LEFT JOIN `' . DB_PREFIX . 'addon_revisions` `r`
+                FROM `{DB_VERSION}_addons` `a`
+                LEFT JOIN `{DB_VERSION}_addon_revisions` `r`
                     ON `a`.`id` = `r`.`addon_id`
                 WHERE `a`.`uploader` = :uploader
                     AND `a`.`type` = :addon_type',
@@ -304,8 +304,8 @@ class User extends Base implements IAsXML
     private static function getSQLAll()
     {
         return "SELECT U.*, R.name AS role_name
-                FROM " . DB_PREFIX . "users U
-                INNER JOIN " . DB_PREFIX . "roles R
+                FROM `{DB_VERSION}_users` U
+                INNER JOIN `{DB_VERSION}_roles` R
                     ON U.role_id = R.id ";
     }
 
@@ -335,14 +335,21 @@ class User extends Base implements IAsXML
         // init session vars
         Session::regenerateID();
         $session = Session::user();
-        $session->init()
-            ->set("id", $id)
-            ->set("username", $user->getUserName())
-            ->set("realname", $user->getRealName())
-            ->set("date_login", static::updateLoginTime($id))
-            ->set("role", $role)
-            ->set("permissions", AccessControl::getPermissions($role));
-        static::setFriends(Friend::getFriendsOf($id, true));
+        try
+        {
+            $session->init()
+                ->set("id", $id)
+                ->set("username", $user->getUserName())
+                ->set("realname", $user->getRealName())
+                ->set("date_login", static::updateLoginTime($id))
+                ->set("role", $role)
+                ->set("permissions", AccessControl::getPermissions($role));
+            static::setFriends(Friend::getFriendsOf($id, true));
+        }
+        catch (Exception $e)
+        {
+            throw new UserException($e);
+        }
     }
 
     /**
@@ -398,7 +405,7 @@ class User extends Base implements IAsXML
         {
             $count = DBConnection::get()->query(
                 "SELECT *
-    	        FROM `" . DB_PREFIX . "users`
+    	        FROM `{DB_VERSION}_users`
                 WHERE `username` = :username
                 AND `date_login` = :date_login
                 AND `realname` = :realname
@@ -769,16 +776,24 @@ class User extends Base implements IAsXML
             return true;
         }
 
-        // user can edit other users
-        if ($can_edit_users)
+        try
         {
-            $other_role_permission = AccessControl::getPermissions($role);
-
-            // other role is not an admin one, this means we can can edit
-            if (!in_array(AccessControl::PERM_EDIT_ADMINS, $other_role_permission))
+            // user can edit other users
+            if ($can_edit_users)
             {
-                return true; // user has permission on role
+                $other_role_permission = AccessControl::getPermissions($role);
+
+                // other role is not an admin one, this means we can can edit
+                if (!in_array(AccessControl::PERM_EDIT_ADMINS, $other_role_permission))
+                {
+                    return true; // user has permission on role
+                }
             }
+        }
+        catch (AccessControlException $e)
+        {
+            Debug::addException($e);
+            return false;
         }
 
         return false; // user does not have permission on role
@@ -932,6 +947,11 @@ class User extends Base implements IAsXML
         {
             throw new UserException(exception_message_db(_('update your role')), ErrorType::USER_UPDATE_ROLE);
         }
+        catch (AccessControlException $e)
+        {
+            Debug::addException($e);
+            throw new UserException($e);
+        }
     }
 
     /**
@@ -954,7 +974,7 @@ class User extends Base implements IAsXML
         {
             // TODO use one query
             DBConnection::get()->query(
-                "UPDATE `" . DB_PREFIX . "users`
+                "UPDATE `{DB_VERSION}_users`
                 SET `date_login` = NOW()
                 WHERE `id` = :user_id",
                 DBConnection::NOTHING,
@@ -963,7 +983,7 @@ class User extends Base implements IAsXML
 
             $user = DBConnection::get()->query(
                 "SELECT `date_login`
-                FROM `" . DB_PREFIX . "users`
+                FROM `{DB_VERSION}_users`
                 WHERE `id` = :user_id",
                 DBConnection::FETCH_FIRST,
                 [':user_id' => $user_id]
@@ -995,7 +1015,7 @@ class User extends Base implements IAsXML
         try
         {
             $count = DBConnection::get()->query(
-                "UPDATE `" . DB_PREFIX . "users`
+                "UPDATE `{DB_VERSION}_users`
                 SET `password`   = :password
     	        WHERE `id` = :user_id",
                 DBConnection::ROW_COUNT,
@@ -1075,7 +1095,7 @@ class User extends Base implements IAsXML
         try
         {
             $count = DBConnection::get()->query(
-                "UPDATE `" . DB_PREFIX . "users`
+                "UPDATE `{DB_VERSION}_users`
                 SET `is_active` = '1'
     	        WHERE `id` = :user_id",
                 DBConnection::ROW_COUNT,
@@ -1178,7 +1198,7 @@ class User extends Base implements IAsXML
         {
             $result = $db->query(
                 "SELECT `username`
-    	        FROM `" . DB_PREFIX . "users`
+    	        FROM `{DB_VERSION}_users`
     	        WHERE `username` LIKE :username",
                 DBConnection::FETCH_FIRST,
                 [':username' => $username]
@@ -1201,7 +1221,7 @@ class User extends Base implements IAsXML
         {
             $result = $db->query(
                 "SELECT `email`
-    	        FROM `" . DB_PREFIX . "users`
+    	        FROM `{DB_VERSION}_users`
     	        WHERE `email` LIKE :email",
                 DBConnection::FETCH_FIRST,
                 [':email' => $email]
@@ -1371,18 +1391,26 @@ class User extends Base implements IAsXML
      */
     public static function validateUsernameEmail($username, $email)
     {
-        $users = DBConnection::get()->query(
-            "SELECT `id`
-	        FROM `" . DB_PREFIX . "users`
-	        WHERE `username` = :username
-            AND `email` = :email
-            AND `is_active` = 1",
-            DBConnection::FETCH_ALL,
-            [
-                ':username' => $username,
-                ':email'    => $email
-            ]
-        );
+        $users = [];
+        try
+        {
+            $users = DBConnection::get()->query(
+                "SELECT `id`
+                FROM `{DB_VERSION}_users`
+                WHERE `username` = :username
+                AND `email` = :email
+                AND `is_active` = 1",
+                DBConnection::FETCH_ALL,
+                [
+                    ':username' => $username,
+                    ':email'    => $email
+                ]
+            );
+        }
+        catch (DBException $e)
+        {
+            throw new UserException($e);
+        }
 
         if (!$users)
         {

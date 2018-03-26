@@ -413,14 +413,13 @@ class FileSystem
      * @param bool   $has_dots flag that indicates the output has also the .. and . directory listings
      *
      * @return array of all files and directories
-     * @throws FileSystemException
      */
     public static function ls($path, $has_dots = false)
     {
         $files = scandir($path);
         if ($files === false)
         {
-            throw new FileSystemException(_h('Path is not a directory'));
+            Debug::addException(new FileSystemException(_h('Path is not a directory')));
         }
 
         return $has_dots ? $files : array_diff($files, ['..', '.']);
@@ -671,7 +670,6 @@ class FileSystem
      *
      * @param string $path the path to an image
      *
-     * @throws FileSystemException
      * @return bool     true if all images are valid, false otherwise
      */
     public static function checkImagesAreValid($path)

@@ -158,7 +158,7 @@ class Music
         try
         {
             $tracks = DBConnection::get()->query(
-                'SELECT `id` FROM `' . DB_PREFIX . 'music`
+                'SELECT `id` FROM `{DB_VERSION}_music`
                 ORDER BY `title` ASC',
                 DBConnection::FETCH_ALL
             );
@@ -192,7 +192,7 @@ class Music
         try
         {
             $track_info = DBConnection::get()->query(
-                'SELECT * FROM `' . DB_PREFIX . 'music`
+                'SELECT * FROM `{DB_VERSION}_music`
                 WHERE `id` = :id',
                 DBConnection::FETCH_FIRST,
                 [':id' => $id],

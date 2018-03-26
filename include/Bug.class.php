@@ -134,8 +134,8 @@ class Bug extends Base
         {
             $comments = DBConnection::get()->query(
                 "SELECT c.*, u.username AS user_name
-                FROM `" . DB_PREFIX . "bugs_comments` c
-                    LEFT JOIN `" . DB_PREFIX . "users` u ON c.user_id = u.id
+                FROM `{DB_VERSION}_bugs_comments` c
+                    LEFT JOIN `{DB_VERSION}_users` u ON c.user_id = u.id
                 WHERE c.bug_id = :bug_id
                 ORDER BY c.date ASC",
                 DBConnection::FETCH_ALL,
@@ -340,7 +340,7 @@ class Bug extends Base
     public static function getAll($limit = -1, $current_page = 1)
     {
         return static::getAllFromTable(
-            "SELECT * FROM " . DB_PREFIX . "bugs ORDER BY `date_edit` DESC, `id` ASC",
+            "SELECT * FROM `{DB_VERSION}_bugs` ORDER BY `date_edit` DESC, `id` ASC",
             $limit,
             $current_page
         );
@@ -361,10 +361,10 @@ class Bug extends Base
         {
             $data = DBConnection::get()->query(
                 "SELECT
-                    (SELECT `username` FROM " . DB_PREFIX . "users WHERE id = B.user_id) AS user_username,
-                    (SELECT `username` FROM " . DB_PREFIX . "users WHERE id = B.close_id) AS close_username,
+                    (SELECT `username` FROM `{DB_VERSION}_users` WHERE id = B.user_id) AS user_username,
+                    (SELECT `username` FROM `{DB_VERSION}_users` WHERE id = B.close_id) AS close_username,
                     B.*
-                FROM " . DB_PREFIX . "bugs AS B
+                FROM `{DB_VERSION}_bugs` AS B
                 WHERE B.id = :id",
                 DBConnection::FETCH_FIRST,
                 [":id" => $bug_id],
@@ -397,7 +397,7 @@ class Bug extends Base
         try
         {
             $comment = DBConnection::get()->query(
-                "SELECt * FROM " . DB_PREFIX . "bugs_comments
+                "SELECt * FROM `{DB_VERSION}_bugs_comments`
                 WHERE `id` = :id LIMIT 1",
                 DBConnection::FETCH_FIRST,
                 [":id" => $comment_id],
@@ -435,8 +435,7 @@ class Bug extends Base
             throw new BugException(_h("The search term is empty"));
         }
 
-        $query =
-            "SELECT id, addon_id, title, date_edit, date_close, close_id, close_reason FROM `" . DB_PREFIX . "bugs`";
+        $query = "SELECT id, addon_id, title, date_edit, date_close, close_id, close_reason FROM `{DB_VERSION}_bugs`";
 
         // search in description
         if ($search_description)

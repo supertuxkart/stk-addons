@@ -149,7 +149,6 @@ class File extends Base
      *
      * @param string $parent the parent directory of the file in filesystem
      *
-     * @return boolean true on success, false otherwise
      * @throws FileException|FileSystemException
      */
     public function delete($parent = UP_PATH)
@@ -193,7 +192,7 @@ class File extends Base
             Assert::integerish($file_id);
 
         $data = static::getFromField(
-            "SELECT * FROM " . DB_PREFIX . "files",
+            "SELECT * FROM `{DB_VERSION}_files`",
             "id",
             $file_id,
             DBConnection::PARAM_INT,
@@ -213,7 +212,7 @@ class File extends Base
     public static function getFromPath($file_path)
     {
         $data = static::getFromField(
-            "SELECT * FROM " . DB_PREFIX . "files",
+            "SELECT * FROM `{DB_VERSION}_files`",
             "path",
             $file_path,
             DBConnection::PARAM_STR,
@@ -239,7 +238,7 @@ class File extends Base
             if ($file_type)
             {
                 $files = DBConnection::get()->query(
-                    'SELECT * FROM `' . DB_PREFIX . "files` WHERE `addon_id` = :id AND `type` = :type",
+                    'SELECT * FROM `{DB_VERSION}_files` WHERE `addon_id` = :id AND `type` = :type',
                     DBConnection::FETCH_ALL,
                     [
                         ":id"   => $addon_id,
@@ -251,7 +250,7 @@ class File extends Base
             else
             {
                 $files = DBConnection::get()->query(
-                    'SELECT * FROM `' . DB_PREFIX . "files` WHERE `addon_id` = :id",
+                    'SELECT * FROM `{DB_VERSION}_files` WHERE `addon_id` = :id',
                     DBConnection::FETCH_ALL,
                     [":id" => $addon_id]
                 );
@@ -285,10 +284,10 @@ class File extends Base
         {
             $db_files = DBConnection::get()->query(
                 'SELECT F.*, FT.`name` as `type_string`, A.`type` as addon_type
-                FROM `' . DB_PREFIX . 'files` F
-                INNER JOIN ' . DB_PREFIX . 'addons A
+                FROM `{DB_VERSION}_files` F
+                INNER JOIN `{DB_VERSION}_addons` A
                     ON F.`addon_id` =  A.`id`
-                INNER JOIN ' . DB_PREFIX . 'file_types FT
+                INNER JOIN `{DB_VERSION}_file_types` FT
                     ON FT.`type` = F.`type`
                 ORDER BY `addon_id` ASC',
                 DBConnection::FETCH_ALL
@@ -371,7 +370,7 @@ class File extends Base
         try
         {
             DBConnection::get()->query(
-                'UPDATE `' . DB_PREFIX . 'files`
+                'UPDATE `{DB_VERSION}_files`
                 SET `is_approved` = :is_approved
                 WHERE `id` = :file_id',
                 DBConnection::NOTHING,
@@ -418,8 +417,8 @@ class File extends Base
         {
             $queued_files = DBConnection::get()->query(
                 "SELECT F.`id`
-                FROM `" . DB_PREFIX . "files_delete` D
-                INNER JOIN " . DB_PREFIX . "files F
+                FROM `{DB_VERSION}_files_delete` D
+                INNER JOIN `{DB_VERSION}_files` F
                     ON F.id = D.file_id
                 WHERE D.`date_delete` <= :date AND D.`date_delete` <> '0000-00-00'",
                 DBConnection::FETCH_ALL,
@@ -471,7 +470,7 @@ class File extends Base
         try
         {
             DBConnection::get()->query(
-                "CALL `" . DB_PREFIX . "create_file_record`
+                "CALL `{DB_VERSION}_create_file_record`
                 (:addon_id, :file_type, :file_path, @result_id)",
                 DBConnection::NOTHING,
                 [
@@ -520,7 +519,7 @@ class File extends Base
             try
             {
                 DBConnection::get()->query(
-                    'DELETE FROM `' . DB_PREFIX . 'files`
+                    'DELETE FROM `{DB_VERSION}_files`
                     WHERE `path` = :file_name',
                     DBConnection::NOTHING,
                     [":file_name" => 'images/' . $file_name]
@@ -633,7 +632,7 @@ class File extends Base
         try
         {
             DBConnection::get()->query(
-                "UPDATE `" . DB_PREFIX . "files`
+                "UPDATE `{DB_VERSION}_files`
                 SET `downloads` = `downloads` + 1
                 WHERE `path` = :path",
                 DBConnection::NOTHING,

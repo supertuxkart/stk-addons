@@ -81,7 +81,7 @@ class Rating
         {
             $result = DBConnection::get()->query(
                 'SELECT AVG(vote) as avg_vote, COUNT(*) as count_vote
-                FROM `' . DB_PREFIX . 'votes`
+                FROM `{DB_VERSION}_votes`
                 WHERE `addon_id` = :addon_id',
                 DBConnection::FETCH_FIRST,
                 [':addon_id' => $this->addon_id]
@@ -120,7 +120,7 @@ class Rating
         {
             $result = DBConnection::get()->query(
                 "SELECT `vote`
-                FROM `" . DB_PREFIX . "votes`
+                FROM `{DB_VERSION}_votes`
                 WHERE `user_id` = :user_id
                 AND `addon_id` = :addon_id",
                 DBConnection::FETCH_FIRST,
@@ -301,7 +301,7 @@ class Rating
         try
         {
             DBConnection::get()->query(
-                "INSERT INTO `" . DB_PREFIX . "votes`
+                "INSERT INTO `{DB_VERSION}_votes`
                 (`user_id`, `addon_id`, `vote`)
                 VALUES (:user_id, :addon_id, :rating)
                 ON DUPLICATE KEY UPDATE vote = :rating",

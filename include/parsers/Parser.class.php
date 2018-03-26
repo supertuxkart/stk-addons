@@ -90,7 +90,15 @@ abstract class Parser
 
         $this->file_name = basename($file);
         $this->file = $handle;
-        $this->file_size = FileSystem::fileSize($file);
+
+        try
+        {
+            $this->file_size = FileSystem::fileSize($file);
+        }
+        catch (FileSystemException $e)
+        {
+            throw new ParserException($e);
+        }
 
         $this->writeable = $write;
         $this->_loadFile();

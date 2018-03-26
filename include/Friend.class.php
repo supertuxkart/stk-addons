@@ -161,22 +161,26 @@ class Friend implements IAsXML
      */
     public static function getOnlineFriendsOf($user_id)
     {
+        $sql_query = <<<SQL
+    SELECT `{DB_VERSION}_friends`.asker_id AS friend_id
+    FROM `{DB_VERSION}_friends`, `{DB_VERSION}_client_sessions`
+    WHERE   `{DB_VERSION}_friends`.receiver_id = :user_id
+        AND `{DB_VERSION}_friends`.is_request = 0
+        AND `{DB_VERSION}_client_sessions`.uid = `{DB_VERSION}_friends`.asker_id
+        AND `{DB_VERSION}_client_sessions`.is_online = 1
+UNION
+    SELECT `{DB_VERSION}_friends`.receiver_id AS friend_id
+    FROM `{DB_VERSION}_friends`, `{DB_VERSION}_client_sessions`
+    WHERE   `{DB_VERSION}_friends`.asker_id = :user_id
+        AND `{DB_VERSION}_friends`.is_request = 0
+        AND `{DB_VERSION}_client_sessions`.uid = `{DB_VERSION}_friends`.receiver_id
+        AND `{DB_VERSION}_client_sessions`.is_online = 1
+SQL;
+
         try
         {
             $friends = DBConnection::get()->query(
-                "   SELECT " . DB_PREFIX . "friends.asker_id AS friend_id
-                    FROM " . DB_PREFIX . "friends, " . DB_PREFIX . "client_sessions
-                    WHERE   " . DB_PREFIX . "friends.receiver_id = :user_id
-                        AND " . DB_PREFIX . "friends.is_request = 0
-                        AND " . DB_PREFIX . "client_sessions.uid = " . DB_PREFIX . "friends.asker_id
-                        AND " . DB_PREFIX . "client_sessions.is_online = 1
-                UNION
-                    SELECT " . DB_PREFIX . "friends.receiver_id AS friend_id
-                    FROM " . DB_PREFIX . "friends, " . DB_PREFIX . "client_sessions
-                    WHERE   " . DB_PREFIX . "friends.asker_id = :user_id
-                        AND " . DB_PREFIX . "friends.is_request = 0
-                        AND " . DB_PREFIX . "client_sessions.uid = " . DB_PREFIX . "friends.receiver_id
-                        AND " . DB_PREFIX . "client_sessions.is_online = 1",
+                $sql_query,
                 DBConnection::FETCH_ALL,
                 [":user_id" => $user_id],
                 [":user_id" => DBConnection::PARAM_INT]
@@ -214,23 +218,26 @@ class Friend implements IAsXML
             // TODO clean selects, use JOIN instead of listing selects in the from clause
             if ($is_self) // get all users if we are the logged in user
             {
+                $sql_query = <<<SQL
+    SELECT `{DB_VERSION}_friends`.date AS date, 
+           `{DB_VERSION}_friends`.is_request AS is_request, 
+           `{DB_VERSION}_friends`.asker_id AS friend_id,
+           `{DB_VERSION}_users`.username AS friend_name, 1 AS is_asker
+    FROM `{DB_VERSION}_friends`, `{DB_VERSION}_users`
+    WHERE   `{DB_VERSION}_friends`.receiver_id = :user_id
+        AND `{DB_VERSION}_users`.id = `{DB_VERSION}_friends`.asker_id
+UNION
+    SELECT `{DB_VERSION}_friends`.date AS date, 
+           `{DB_VERSION}_friends`.is_request AS is_request,
+           `{DB_VERSION}_friends`.receiver_id AS friend_id,
+           `{DB_VERSION}_users`.username AS friend_name, 0 AS is_asker
+    FROM `{DB_VERSION}_friends`, `{DB_VERSION}_users`
+    WHERE   `{DB_VERSION}_friends`.asker_id = :user_id
+        AND `{DB_VERSION}_users`.id = `{DB_VERSION}_friends`.receiver_id
+    ORDER BY date ASC
+SQL;
                 $friends = DBConnection::get()->query(
-                    "   SELECT " . DB_PREFIX . "friends.date AS date, "
-                    . DB_PREFIX . "friends.is_request AS is_request, "
-                    . DB_PREFIX . "friends.asker_id AS friend_id, "
-                    . DB_PREFIX . "users.username AS friend_name, 1 AS is_asker
-                        FROM " . DB_PREFIX . "friends, " . DB_PREFIX . "users
-                        WHERE   " . DB_PREFIX . "friends.receiver_id = :user_id
-                            AND " . DB_PREFIX . "users.id = " . DB_PREFIX . "friends.asker_id
-                    UNION
-                        SELECT " . DB_PREFIX . "friends.date AS date, "
-                    . DB_PREFIX . "friends.is_request AS is_request, "
-                    . DB_PREFIX . "friends.receiver_id AS friend_id, "
-                    . DB_PREFIX . "users.username AS friend_name, 0 AS is_asker
-                        FROM " . DB_PREFIX . "friends, " . DB_PREFIX . "users
-                        WHERE " . DB_PREFIX . "friends.asker_id = :user_id
-                            AND " . DB_PREFIX . "users.id = " . DB_PREFIX . "friends.receiver_id
-                        ORDER BY date ASC",
+                    $sql_query,
                     DBConnection::FETCH_ALL,
                     [":user_id" => $user_id],
                     [":user_id" => DBConnection::PARAM_INT]
@@ -238,23 +245,26 @@ class Friend implements IAsXML
             }
             else // get only the accepted friends, viewing other user profile
             {
+                $sql_query = <<<SQL
+    SELECT `{DB_VERSION}_friends`.date AS date, 
+           `{DB_VERSION}_friends`.asker_id AS friend_id,
+           `{DB_VERSION}_users`.username AS friend_name
+    FROM `{DB_VERSION}_friends`, `{DB_VERSION}_users`
+    WHERE   `{DB_VERSION}_friends`.receiver_id = :user_id
+        AND `{DB_VERSION}_users`.id = `{DB_VERSION}_friends`.asker_id
+        AND `{DB_VERSION}_friends`.is_request = 0
+UNION
+    SELECT `{DB_VERSION}_friends`.date AS date,
+           `{DB_VERSION}_friends`.receiver_id AS friend_id,
+           `{DB_VERSION}_users`.username AS friend_name
+    FROM `{DB_VERSION}_friends`, `{DB_VERSION}_users`
+    WHERE   `{DB_VERSION}_friends`.asker_id = :user_id
+        AND `{DB_VERSION}_users`.id = `{DB_VERSION}_friends`.receiver_id
+        AND `{DB_VERSION}_friends`.is_request = 0
+    ORDER BY date ASC
+SQL;
                 $friends = DBConnection::get()->query(
-                    "   SELECT " . DB_PREFIX . "friends.date AS date, "
-                    . DB_PREFIX . "friends.asker_id AS friend_id, "
-                    . DB_PREFIX . "users.username AS friend_name
-                        FROM " . DB_PREFIX . "friends, " . DB_PREFIX . "users
-                        WHERE   " . DB_PREFIX . "friends.receiver_id = :user_id
-                            AND " . DB_PREFIX . "users.id = " . DB_PREFIX . "friends.asker_id
-                            AND " . DB_PREFIX . "friends.is_request = 0
-                    UNION
-                        SELECT " . DB_PREFIX . "friends.date AS date, "
-                    . DB_PREFIX . "friends.receiver_id AS friend_id, "
-                    . DB_PREFIX . "users.username AS friend_name
-                        FROM " . DB_PREFIX . "friends, " . DB_PREFIX . "users
-                        WHERE   " . DB_PREFIX . "friends.asker_id = :user_id
-                            AND " . DB_PREFIX . "users.id = " . DB_PREFIX . "friends.receiver_id
-                            AND " . DB_PREFIX . "friends.is_request = 0
-                        ORDER BY date ASC",
+                    $sql_query,
                     DBConnection::FETCH_ALL,
                     [":user_id" => $user_id],
                     [":user_id" => DBConnection::PARAM_INT]
@@ -329,7 +339,7 @@ class Friend implements IAsXML
 
             // see if request already exists
             $result = DBConnection::get()->query(
-                "SELECT asker_id, receiver_id FROM `" . DB_PREFIX . "friends`
+                "SELECT asker_id, receiver_id FROM `{DB_VERSION}_friends`
                 WHERE (asker_id = :asker AND receiver_id = :receiver)
                 OR (asker_id = :receiver AND receiver_id = :asker)",
                 DBConnection::FETCH_FIRST,
@@ -358,7 +368,7 @@ class Friend implements IAsXML
             {
                 // add friend request
                 DBConnection::get()->query(
-                    "INSERT INTO `" . DB_PREFIX . "friends` (asker_id, receiver_id)
+                    "INSERT INTO `{DB_VERSION}_friends` (asker_id, receiver_id)
                     VALUES (:asker, :receiver)
                     ON DUPLICATE KEY UPDATE asker_id = :asker",
                     DBConnection::ROW_COUNT,
@@ -371,7 +381,7 @@ class Friend implements IAsXML
 
                 // add notification
                 DBConnection::get()->query(
-                    "INSERT INTO `" . DB_PREFIX . "notifications` (`to`, `from`, `type`)
+                    "INSERT INTO `{DB_VERSION}_notifications` (`to`, `from`, `type`)
                     VALUES (:to, :from, 'f_request')
                     ON DUPLICATE KEY UPDATE `to` = :to",
                     DBConnection::ROW_COUNT,
@@ -405,7 +415,7 @@ class Friend implements IAsXML
         try
         {
             DBConnection::get()->query(
-                "UPDATE `" . DB_PREFIX . "friends`
+                "UPDATE `{DB_VERSION}_friends`
                 SET is_request = 0
                 WHERE asker_id = :asker AND receiver_id = :receiver",
                 DBConnection::ROW_COUNT,
@@ -438,7 +448,7 @@ class Friend implements IAsXML
         try
         {
             $count = DBConnection::get()->query(
-                "DELETE FROM `" . DB_PREFIX . "friends`
+                "DELETE FROM `{DB_VERSION}_friends`
                 WHERE asker_id = :asker AND receiver_id = :receiver",
                 DBConnection::ROW_COUNT,
                 [

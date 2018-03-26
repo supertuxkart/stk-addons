@@ -37,7 +37,7 @@ class Verification
         {
             $count = DBConnection::get()->query(
                 "SELECT `user_id`
-    	        FROM `" . DB_PREFIX . "verification`
+    	        FROM `{DB_VERSION}_verification`
     	        WHERE `user_id` = :user_id
                 AND `code` = :code",
                 DBConnection::ROW_COUNT,
@@ -106,7 +106,7 @@ class Verification
         {
             $verification_code = Util::getRandomString(12);
             DBConnection::get()->query(
-                "INSERT INTO `" . DB_PREFIX . "verification` (`user_id`,`code`)
+                "INSERT INTO `{DB_VERSION}_verification` (`user_id`,`code`)
                 VALUES(:user_id, :code)
                 ON DUPLICATE KEY UPDATE code = :code",
                 DBConnection::ROW_COUNT,
@@ -140,8 +140,8 @@ class Verification
         {
             DBConnection::get()->query(
                 "DELETE U
-                FROM `" . DB_PREFIX . "verification` V
-                INNER JOIN `" . DB_PREFIX . "users` U
+                FROM `{DB_VERSION}_verification` V
+                INNER JOIN `{DB_VERSION}_users` U
                     ON V.user_id = U.id
                 WHERE
                     is_active = 0
@@ -163,8 +163,8 @@ class Verification
         {
             DBConnection::get()->query(
                 "DELETE V
-                FROM `" . DB_PREFIX . "verification` V
-                INNER JOIN `" . DB_PREFIX . "users` U
+                FROM `{DB_VERSION}_verification` V
+                INNER JOIN `{DB_VERSION}_users` U
                     ON V.user_id = U.id
                 WHERE
                     is_active = 1

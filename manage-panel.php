@@ -168,7 +168,7 @@ switch ($_GET['view'])
         $tpl = StkTemplate::get("manage/page/clients.tpl");
         $tpl_data = [
             "items" => DBConnection::get()->query(
-                    'SELECT * FROM ' . DB_PREFIX . 'clients
+                    'SELECT * FROM `{DB_VERSION}_clients`
                     ORDER BY `agent_string` ASC',
                     DBConnection::FETCH_ALL
                 )
@@ -206,7 +206,7 @@ switch ($_GET['view'])
                     try
                     {
                         $rev_files = DBConnection::get()->query(
-                            'SELECT * FROM `' . DB_PREFIX . 'addon_revisions`
+                            'SELECT * FROM `{DB_VERSION}_addon_revisions`
                             WHERE `file_id` = :id',
                             DBConnection::FETCH_ALL,
                             [':id' => $file["id"]]

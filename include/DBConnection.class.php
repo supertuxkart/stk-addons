@@ -369,8 +369,8 @@ class DBConnection
 
         // build the sql query
         $query = sprintf(
-            "INSERT INTO %s (%s) VALUES (%s)",
-            DB_PREFIX . $table,
+            "INSERT INTO `{DB_VERSION}_%s` (%s) VALUES (%s)",
+            $table,
             '`' . implode("`, `", array_keys($column_value_pairs)) . '`', // use back ticks for reserved mysql keywords
             implode(", ", array_values($column_value_pairs))
         ); // TODO add on duplicate key
@@ -416,7 +416,7 @@ class DBConnection
         }
         $set_string = rtrim($set_string, ", ");
 
-        $query = sprintf("UPDATE %s SET %s WHERE %s", DB_PREFIX . $table, $set_string, $where_statement);
+        $query = sprintf("UPDATE `{DB_VERSION}_%s` SET %s WHERE %s", $table, $set_string, $where_statement);
 
         return $this->query($query, static::ROW_COUNT, $prepared_pairs, $data_types);
     }
@@ -444,7 +444,7 @@ class DBConnection
         $prepared_pairs = [];
         static::buildQueryParams($fields_data, $prepared_pairs);
 
-        $query = sprintf("DELETE FROM %s WHERE %s", DB_PREFIX . $table, $where_statement);
+        $query = sprintf("DELETE FROM `{DB_VERSION}_%s` WHERE %s", $table, $where_statement);
 
         return $this->query($query, static::ROW_COUNT, $prepared_pairs, $data_types);
     }
@@ -472,7 +472,7 @@ class DBConnection
         $prepared_pairs = [];
         static::buildQueryParams($fields_data, $prepared_pairs);
 
-        $query = sprintf("SELECT COUNT(*) FROM %s", DB_PREFIX . $table);
+        $query = sprintf("SELECT COUNT(*) FROM `{DB_VERSION}_%s`", $table);
         if ($where_statement)
         {
             $query .= sprintf(" WHERE %s", $where_statement);

@@ -37,7 +37,7 @@ if (preg_match('#^(SuperTuxKart/[a-z0-9\\.\\-_]+)( \\(.*\\))?$#', $user_agent, $
     try
     {
         DBConnection::get()->query(
-            'INSERT IGNORE INTO `' . DB_PREFIX . 'clients`
+            'INSERT IGNORE INTO `{DB_VERSION}_clients`
             (`agent_string`)
             VALUES
             (:uagent)',
@@ -55,7 +55,7 @@ if (preg_match('#^(SuperTuxKart/[a-z0-9\\.\\-_]+)( \\(.*\\))?$#', $user_agent, $
     try
     {
         DBConnection::get()->query(
-            'INSERT INTO `' . DB_PREFIX . 'stats`
+            'INSERT INTO `{DB_VERSION}_stats`
              (`type`,`date`,`value`)
              VALUES
              (:type, CURDATE(), 1)

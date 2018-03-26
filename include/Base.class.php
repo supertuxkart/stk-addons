@@ -145,6 +145,7 @@ abstract class Base implements IBaseException
      * @param mixed  $value      field value
      * @param int    $value_type type of the value
      *
+     * @throws BaseException
      * @return bool
      */
     protected static function existsField($table, $field, $value, $value_type = DBConnection::PARAM_STR)
@@ -177,6 +178,7 @@ abstract class Base implements IBaseException
      * @param int    $limit        number of retrievals, -1 for all
      * @param int    $current_page the current page
      *
+     * @throws BaseException
      * @return array
      */
     protected static function getAllFromTable($query, $limit = -1, $current_page = 1)

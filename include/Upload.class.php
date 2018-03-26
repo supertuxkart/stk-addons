@@ -321,7 +321,7 @@ class Upload
 
     /**
      * Perform the upload of an image
-     * @throws UploadException|FileSystemException|FileException
+     * @throws FileSystemException|FileException
      */
     private function doImageUpload()
     {
@@ -647,8 +647,6 @@ class Upload
      * Generate a random file name for our upload_file_name attribute
      *
      * @param string $file_ext optional param
-     *
-     * @throws UploadException if the upload directory is not set
      */
     private function generateUploadFilename($file_ext)
     {
@@ -661,7 +659,7 @@ class Upload
      * Will modify the following keys from the properties:
      *  - xml_attributes, addon_file, license_file, quad_file, status, b3d_textures, missing_textures
      *
-     * @throws FileSystemException
+     * @throws UploadException
      */
     private function parseFiles()
     {
@@ -671,27 +669,41 @@ class Upload
         // Loop through all files
         foreach (FileSystem::ls($this->temp_file_dir) as $file)
         {
-            // Parse any B3D models
-            if (preg_match('/\.b3d$/i', $file))
+            try
             {
-                $b3d_parse = new B3DParser();
-                $b3d_parse->loadFile($this->temp_file_dir . $file);
-                $textures = array_merge($b3d_parse->listTextures(), $textures);
-            }
+                // Parse any B3D models
+                if (preg_match('/\.b3d$/i', $file))
+                {
+                    $b3d_parse = new B3DParser();
+                    $b3d_parse->loadFile($this->temp_file_dir . $file);
+                    $textures = array_merge($b3d_parse->listTextures(), $textures);
+                }
 
-            // Parse any SPM models
-            if (preg_match('/\.spm$/i', $file))
+                // Parse any SPM models
+                if (preg_match('/\.spm$/i', $file))
+                {
+                    $spm_parse = new SPMParser();
+                    $spm_parse->loadFile($this->temp_file_dir . $file);
+                    $textures = array_merge($spm_parse->listTextures(), $textures);
+                }
+            }
+            catch (ParserException $e)
             {
-                $spm_parse = new SPMParser();
-                $spm_parse->loadFile($this->temp_file_dir . $file);
-                $textures = array_merge($spm_parse->listTextures(), $textures);
+                throw new UploadException($e);
             }
 
             // Parse any XML files
             if (preg_match('/\.xml/i', $file))
             {
                 $xml_parse = new AddonXMLParser();
-                $xml_parse->loadFile($this->temp_file_dir . $file);
+                try
+                {
+                    $xml_parse->loadFile($this->temp_file_dir . $file);
+                }
+                catch (ParserException $e)
+                {
+                    Debug::addException($e);
+                }
                 $xml_type = $xml_parse->getType();
 
                 if ($xml_type === 'TRACK' || $xml_type === 'KART')
@@ -769,14 +781,22 @@ class Upload
 
     /**
      * Rewrite the addon file with the revision attribute
+     * @throws UploadException
      */
     private function editInfoFile()
     {
-        $xml_parse = new AddonXMLParser();
-        $xml_parse->loadFile($this->properties['addon_file'], true);
-        $xml_parse->setAttribute('groups', 'Add-Ons');
-        $xml_parse->setAttribute('revision', $this->properties['addon_revision']);
-        $xml_parse->writeAttributes();
+        try
+        {
+            $xml_parse = new AddonXMLParser();
+            $xml_parse->loadFile($this->properties['addon_file'], true);
+            $xml_parse->setAttribute('groups', 'Add-Ons');
+            $xml_parse->setAttribute('revision', $this->properties['addon_revision']);
+            $xml_parse->writeAttributes();
+        }
+        catch (ParserException|XMLParserException $e)
+        {
+            throw new UploadException($e);
+        }
     }
 
     /**

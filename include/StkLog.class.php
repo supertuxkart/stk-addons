@@ -29,8 +29,6 @@ class StkLog
      *
      * @param string $message Event description
      * @param string $log_level the log level used
-     *
-     * @throws LogException
      */
     public static function newEvent($message, $log_level = LogLevel::INFO)
     {
@@ -52,7 +50,7 @@ class StkLog
             }
 
             DBConnection::get()->query(
-                "INSERT INTO " . DB_PREFIX . "logs (`user_id`, `message`)
+                "INSERT INTO `{DB_VERSION}_logs` (`user_id`, `message`)
                 VALUES (:user_id, :message)",
                 DBConnection::NOTHING,
                 [
@@ -64,7 +62,7 @@ class StkLog
         }
         catch (DBException $e)
         {
-            throw new LogException(exception_message_db(_('log a new event')));
+            Debug::addException(new LogException(exception_message_db(_('log a new event'))));
         }
     }
 
@@ -87,8 +85,8 @@ class StkLog
         {
             $events = DBConnection::get()->query(
                 'SELECT L.`date`, L.`user_id`, L.`message`, U.`username`
-                FROM `' . DB_PREFIX . 'logs` L
-                LEFT JOIN `' . DB_PREFIX . 'users` U
+                FROM `{DB_VERSION}_logs` L
+                LEFT JOIN `{DB_VERSION}_users` U
                     ON L.`user_id` = U.`id`
                 ORDER BY L.`date` DESC
                 LIMIT :limit',
@@ -117,8 +115,8 @@ class StkLog
         {
             $events = DBConnection::get()->query(
                 'SELECT L.`date`, L.`user_id`, L.`message`, U.`name`
-                FROM `' . DB_PREFIX . 'logs` L
-                LEFT JOIN `' . DB_PREFIX . 'users` U
+                FROM `{DB_VERSION}_logs` L
+                LEFT JOIN `{DB_VERSION}_users` U
                     ON L.`user_id` = U.`id`
                 WHERE L.`is_emailed` = 0
                 ORDER BY L.`date` DESC',
@@ -143,7 +141,7 @@ class StkLog
         try
         {
             DBConnection::get()->query(
-                'UPDATE `' . DB_PREFIX . 'logs` SET `is_emailed` = 1',
+                'UPDATE `{DB_VERSION}_logs` SET `is_emailed` = 1',
                 DBConnection::NOTHING
             );
         }

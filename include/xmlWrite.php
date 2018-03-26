@@ -125,10 +125,10 @@ function generateAssetXML()
                 "SELECT A.*, R.`file_id`, R.`creation_date` AS `date`,
                         R.`revision`, R.`format`, R.`image_id`,
                         R.`icon_id`, R.`status`, U.`username`
-                FROM " . DB_PREFIX . "addons A
-                    LEFT JOIN " . DB_PREFIX . "addon_revisions R
+                FROM `{DB_VERSION}_addons` A
+                    LEFT JOIN `{DB_VERSION}_addon_revisions` R
                         ON A.`id` = R.`addon_id`
-                    LEFT JOIN " . DB_PREFIX . "users U
+                    LEFT JOIN `{DB_VERSION}_users` U
                         ON A.`uploader` = U.`id`
                 WHERE A.`type` = " . $type_int,
                 DBConnection::FETCH_ALL
@@ -300,8 +300,8 @@ function generateAssetXML()
 //            // we do not need to escape the $type variable because it is defined above
 //            $addons = DBConnection::get()->query(
 //                "SELECT `A`.*, `U`.`username`
-//                FROM `" . DB_PREFIX . "addons` A
-//                LEFT JOIN `" . DB_PREFIX . "users` U
+//                FROM `{DB_VERSION}_addons` A
+//                LEFT JOIN `{DB_VERSION}_users` U
 //                    ON A.`uploader` = U.`id`
 //                WHERE A.`type` = " . $type_int,
 //                DBConnection::FETCH_ALL
@@ -344,7 +344,7 @@ function generateAssetXML()
 //                try
 //                {
 //                    $addon_revs = DBConnection::get()->query(
-//                        'SELECT * FROM `' . DB_PREFIX . 'addon_revisions` WHERE `addon_id` = :id',
+//                        'SELECT * FROM `{DB_VERSION}_addon_revisions` WHERE `addon_id` = :id',
 //                        DBConnection::FETCH_ALL,
 //                        [":id" => $addon['id']]
 //                    );

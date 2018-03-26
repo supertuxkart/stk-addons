@@ -114,7 +114,7 @@ class ClientSession
 
             // now setup the serv info
             $count = DBConnection::get()->query(
-                "DELETE FROM `" . DB_PREFIX . "servers`
+                "DELETE FROM `{DB_VERSION}_servers`
                 WHERE `ip`= :ip AND `port`= :port AND `host_id`= :id",
                 DBConnection::ROW_COUNT,
                 [
@@ -164,14 +164,14 @@ class ClientSession
             DBConnection::get()->beginTransaction();
 
             $result = DBConnection::get()->query(
-                "SELECT `from`, `type` FROM `" . DB_PREFIX . "notifications`
+                "SELECT `from`, `type` FROM `{DB_VERSION}_notifications`
                 WHERE `to` = :to",
                 DBConnection::FETCH_ALL,
                 [':to' => $this->user->getId()],
                 [':to' => DBConnection::PARAM_INT]
             );
             DBConnection::get()->query(
-                "DELETE FROM `" . DB_PREFIX . "notifications`
+                "DELETE FROM `{DB_VERSION}_notifications`
                 WHERE `to` = :to",
                 DBConnection::NOTHING,
                 [':to' => $this->user->getId()],
@@ -216,7 +216,7 @@ class ClientSession
             // Query the database to set the ip and port
             $result = DBConnection::get()->query(
                 "SELECT `ip`, `port`, `private_port`
-                FROM `" . DB_PREFIX . "client_sessions`
+                FROM `{DB_VERSION}_client_sessions`
                 WHERE `uid` = :peerid",
                 DBConnection::FETCH_ALL,
                 [':peerid' => $peer_id],
@@ -268,7 +268,7 @@ class ClientSession
         try
         {
             $server_id = DBConnection::get()->query(
-                "SELECT `id` FROM `" . DB_PREFIX . "servers`
+                "SELECT `id` FROM `{DB_VERSION}_servers`
                 WHERE `host_id` = :host_id AND `ip` = :ip AND `port` = :port LIMIT 1",
                 DBConnection::FETCH_FIRST,
                 [
@@ -289,7 +289,7 @@ class ClientSession
 
             // Update this server info (atm last poll and and current players joined)
             DBConnection::get()->query(
-                "UPDATE `" . DB_PREFIX . "servers`
+                "UPDATE `{DB_VERSION}_servers`
                 SET `last_poll_time` = :new_time, `current_players` = :current_players
                 WHERE `id` = :server_id",
                 DBConnection::NOTHING,
@@ -306,8 +306,8 @@ class ClientSession
 
             $connection_requests = DBConnection::get()->query(
                 "SELECT s.user_id, c.ip, c.private_port, c.port
-                FROM `" . DB_PREFIX . "server_conn` s
-                INNER JOIN `" . DB_PREFIX . "client_sessions` c ON c.uid = s.user_id
+                FROM `{DB_VERSION}_server_conn` s
+                INNER JOIN `{DB_VERSION}_client_sessions` c ON c.uid = s.user_id
                 WHERE s.`server_id` = :server_id AND s.`is_request` = '1'",
                 DBConnection::FETCH_ALL,
                 [':server_id' => $server_id['id']],
@@ -329,7 +329,7 @@ class ClientSession
             if ($index > 0)
             {
                 DBConnection::get()->query(
-                    "UPDATE `" . DB_PREFIX . "server_conn`
+                    "UPDATE `{DB_VERSION}_server_conn`
                     SET `is_request` = 0
                     WHERE " . implode(" OR ", $query_parts),
                     DBConnection::ROW_COUNT,
@@ -399,7 +399,7 @@ class ClientSession
         try
         {
             DBConnection::get()->query(
-                "DELETE FROM `" . DB_PREFIX . "client_sessions`
+                "DELETE FROM `{DB_VERSION}_client_sessions`
     	        WHERE `cid` = :session_id AND uid = :user_id",
                 DBConnection::ROW_COUNT,
                 [
@@ -425,7 +425,7 @@ class ClientSession
             DBConnection::get()->beginTransaction();
 
             $client = DBConnection::get()->query(
-                "SELECT `is_save` FROM `" . DB_PREFIX . "client_sessions`
+                "SELECT `is_save` FROM `{DB_VERSION}_client_sessions`
     	        WHERE `cid` = :session_id AND uid = :user_id",
                 DBConnection::FETCH_FIRST,
                 [
@@ -470,7 +470,7 @@ class ClientSession
         try
         {
             $count = DBConnection::get()->query(
-                "INSERT INTO `" . DB_PREFIX . "server_conn` (server_id, user_id, is_request)
+                "INSERT INTO `{DB_VERSION}_server_conn` (server_id, user_id, is_request)
                 VALUES (:server_id, :user_id, 1)
                 ON DUPLICATE KEY 
                 UPDATE is_request = '1', server_id = :server_id",
@@ -508,7 +508,7 @@ class ClientSession
             // Query the database to add the request entry
             $server = DBConnection::get()->query(
                 "SELECT `id`, `host_id`, `ip`, `port`, `private_port`
-                FROM `" . DB_PREFIX . "servers`
+                FROM `{DB_VERSION}_servers`
                 LIMIT 1",
                 DBConnection::FETCH_FIRST
             );
@@ -519,7 +519,7 @@ class ClientSession
             }
 
             DBConnection::get()->query(
-                "INSERT INTO `" . DB_PREFIX . "server_conn` (server_id, user_id, is_request)
+                "INSERT INTO `{DB_VERSION}_server_conn` (server_id, user_id, is_request)
                 VALUES (:server_id, :user_id, 1)
                 ON DUPLICATE KEY UPDATE is_request = '1'",
                 DBConnection::NOTHING,
@@ -559,7 +559,7 @@ class ClientSession
         {
             // TODO find out if host_id is a server or user
             DBConnection::get()->query(
-                "INSERT INTO `" . DB_PREFIX . "host_votes` (`user_id`, `host_id`, `vote`)
+                "INSERT INTO `{DB_VERSION}_host_votes` (`user_id`, `host_id`, `vote`)
                 VALUES (:user_id, :host_id, :vote)
                 ON DUPLICATE KEY UPDATE `vote` = :vote",
                 DBConnection::ROW_COUNT,
@@ -598,7 +598,7 @@ class ClientSession
         {
             // sometimes the MYSQL 'ON UPDATE' does not fire because the online value is the same
             DBConnection::get()->query(
-                "UPDATE `" . DB_PREFIX . "client_sessions`
+                "UPDATE `{DB_VERSION}_client_sessions`
                 SET `is_online` = :is_online, `last-online` = NOW()
                 WHERE `uid` = :id",
                 DBConnection::ROW_COUNT,
@@ -637,7 +637,7 @@ class ClientSession
         {
             // Query the database to set the ip and port
             $count = DBConnection::get()->query(
-                "UPDATE `" . DB_PREFIX . "client_sessions`
+                "UPDATE `{DB_VERSION}_client_sessions`
                 SET `ip` = :ip , `port` = :port, `private_port` = :private_port
                 WHERE `uid` = :user_id AND `cid` = :token",
                 DBConnection::ROW_COUNT,
@@ -681,7 +681,7 @@ class ClientSession
         try
         {
             $count = DBConnection::get()->query(
-                "UPDATE `" . DB_PREFIX . "client_sessions`
+                "UPDATE `{DB_VERSION}_client_sessions`
                 SET `ip` = '0' , `port` = '0'
                 WHERE `uid` = :user_id AND `cid` = :token",
                 DBConnection::ROW_COUNT,
@@ -721,7 +721,7 @@ class ClientSession
         try
         {
             $session_info = DBConnection::get()->query(
-                "SELECT * FROM `" . DB_PREFIX . "client_sessions`
+                "SELECT * FROM `{DB_VERSION}_client_sessions`
                 WHERE cid = :sessionid AND uid = :user_id",
                 DBConnection::FETCH_ALL,
                 [
@@ -784,7 +784,7 @@ class ClientSession
             $session_id = Util::getClientSessionId();
             $user_id = $user->getId();
             $count = DBConnection::get()->query(
-                "INSERT INTO `" . DB_PREFIX . "client_sessions` (cid, uid, is_save, `last-online`)
+                "INSERT INTO `{DB_VERSION}_client_sessions` (cid, uid, is_save, `last-online`)
                 VALUES (:session_id, :user_id, :is_save, NOW())
                 ON DUPLICATE KEY UPDATE cid = :session_id, is_online = 1",
                 DBConnection::ROW_COUNT,

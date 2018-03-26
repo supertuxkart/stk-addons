@@ -112,7 +112,6 @@ const DB_NAME = 'stk_addons';
 const DB_HOST = 'localhost';
 // should not be modified
 const DB_VERSION = 'v3';
-const DB_PREFIX = DB_VERSION . '_';
 
 // Mail properties
 const IS_SMTP = false; // true for 'smtp' and false for 'sendmail'

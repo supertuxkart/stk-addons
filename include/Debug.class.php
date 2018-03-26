@@ -40,7 +40,6 @@ class Debug
 
     /**
      * @return DebugBar\StandardDebugBar|null
-     * @throws AccessControlException
      */
     public static function getToolbar()
     {
@@ -53,13 +52,21 @@ class Debug
 
         if (!static::$debug_toolbar)
         {
-            static::$debug_toolbar = new DebugBar\DebugBar();
-            static::$debug_toolbar->addCollector(new PhpInfoCollector());
-            static::$debug_toolbar->addCollector(new MessagesCollector());
-            static::$debug_toolbar->addCollector(new RequestDataCollector());
-            static::$debug_toolbar->addCollector(new TimeDataCollector());
-            static::$debug_toolbar->addCollector(new MemoryCollector());
-            static::$debug_toolbar->addCollector(new ExceptionsCollector());
+            try
+            {
+                static::$debug_toolbar = new DebugBar\DebugBar();
+                static::$debug_toolbar->addCollector(new PhpInfoCollector());
+                static::$debug_toolbar->addCollector(new MessagesCollector());
+                static::$debug_toolbar->addCollector(new RequestDataCollector());
+                static::$debug_toolbar->addCollector(new TimeDataCollector());
+                static::$debug_toolbar->addCollector(new MemoryCollector());
+                static::$debug_toolbar->addCollector(new ExceptionsCollector());
+            }
+            catch (\DebugBar\DebugBarException $e)
+            {
+
+            }
+
 
             //static::$debug_toolbar->setStorage(new DebugBar\Storage\FileStorage(ROOT_PATH));
             //static::$debug_toolbar->addCollector(new DebugBar\DataCollector\MessagesCollector('test'));
@@ -68,18 +75,31 @@ class Debug
         return static::$debug_toolbar;
     }
 
-    public static function addException(Exception $e, $add_to_error_log = true)
+    /**
+     * Add an exception to the debug log
+     *
+     * @param Exception $exception
+     * @param bool      $add_to_error_log
+     */
+    public static function addException(Exception $exception, $add_to_error_log = true)
     {
         if (!DEBUG_MODE)
             return;
 
         if ($add_to_error_log)
-            error_log('STK-ADDONS: ' . $e);
+            error_log('STK-ADDONS: ' . $exception);
 
         if (static::isToolbarEnabled())
-            static::getToolbar()['exceptions']->addException($e);
+            static::getToolbar()['exceptions']->addException($exception);
     }
 
+    /**
+     * Add an message to the debug log
+     *
+     * @param        $message
+     * @param string $log_level
+     * @param bool   $add_to_error_log
+     */
     public static function addMessage($message, $log_level = LogLevel::INFO, $add_to_error_log = true)
     {
         if (!DEBUG_MODE)

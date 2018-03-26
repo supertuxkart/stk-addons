@@ -37,7 +37,7 @@ class News
         {
             $dynamic_entries = DBConnection::get()->query(
                 'SELECT *
-                FROM `' . DB_PREFIX . 'news`
+                FROM `{DB_VERSION}_news`
                 WHERE `is_dynamic` = 1
                 ORDER BY `id` ASC',
                 DBConnection::FETCH_ALL
@@ -204,7 +204,7 @@ class News
         try
         {
             $items = DBConnection::get()->query(
-                'SELECT `content` FROM `' . DB_PREFIX . 'news`
+                'SELECT `content` FROM `{DB_VERSION}_news`
                 WHERE `is_active` = 1
                 AND `is_web_display` = 1
                 ORDER BY `date` DESC',
@@ -237,8 +237,8 @@ class News
         {
             $news = DBConnection::get()->query(
                 "SELECT N.*, `U`.`username` AS `author`
-                FROM " . DB_PREFIX . "news N
-                LEFT JOIN `" . DB_PREFIX . "users` U
+                FROM `{DB_VERSION}_news` N
+                LEFT JOIN `{DB_VERSION}_users` U
                     ON N.`author_id` = U.`id`
                 WHERE N.`is_active` = '1'
                     ORDER BY `date` DESC",
@@ -265,8 +265,8 @@ class News
         {
             $news = DBConnection::get()->query(
                 'SELECT N.*, U.`username` AS `author`
-                FROM `' . DB_PREFIX . 'news` N
-                LEFT JOIN `' . DB_PREFIX . 'users` U
+                FROM `{DB_VERSION}_news` N
+                LEFT JOIN `{DB_VERSION}_users` U
                     ON N.`author_id` = U.`id`
                 ORDER BY `date` DESC',
                 DBConnection::FETCH_ALL
