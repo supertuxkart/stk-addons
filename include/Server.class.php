@@ -92,6 +92,18 @@ class Server implements IAsXML
     private $version;
 
     /**
+     * @var array
+     * Latitude of IP in float of server (null if not in database)
+     */
+    private $latitude;
+
+    /**
+     * @var array
+     * Longitude of IP in float of server (null if not in database)
+     */
+    private $longitude;
+
+    /**
      *
      * @param array $data an associative array retrieved from the database
      */
@@ -109,6 +121,8 @@ class Server implements IAsXML
         $this->current_players = (int)$data["current_players"];
         $this->password = (int)$data["password"];
         $this->version = (int)$data["version"];
+        $this->latitude = $data["latitude"];
+        $this->longitude = $data["longitude"];
     }
 
     /**
@@ -144,6 +158,60 @@ class Server implements IAsXML
     }
 
     /**
+     * Get the latitude and longitude of an IP
+     * @return array of latitude and longitude in float, or null if not in database
+     */
+    public static function getIPCoordinates($ip)
+    {
+        try
+        {
+            $result = DBConnection::get()->query(
+                "SELECT * FROM `" . DB_PREFIX . "ip_mapping`
+                WHERE `ip_start` <= :ip AND `ip_end` >= :ip ORDER BY `ip_start` DESC LIMIT 1;",
+                DBConnection::FETCH_FIRST,
+                [':ip' => $ip],
+                [":ip" => DBConnection::PARAM_INT]
+            );
+        }
+        catch (DBException $e)
+        {
+            throw new ServerException(exception_message_db(_('finding ip coordinates')));
+        }
+
+        if (!$result)
+        {
+            return [NULL, NULL];
+        }
+        return [$result["latitude"], $result["longitude"]];
+    }
+
+    /**
+     * Get distance between two coordinates using Haversine formula:
+     * https://en.wikipedia.org/wiki/Haversine_formula
+     * Notice: Haversine formula does not take into account that earth is a
+     * spheroid (not a perfect sphere) so it has some small inaccuracies.
+     * if any coordinates is NULL return -1.0
+     * @return float
+     */
+    public static function getDistance($lat_from_degree, $lon_from_degree,
+                                       $lat_to_degree, $lon_to_degree,
+                                       $earth_radius = 6371.0)
+    {
+        if (is_null($lat_from_degree) || is_null($lon_from_degree) ||
+            is_null($lat_to_degree) || is_null($lon_to_degree))
+            return -1.0;
+        $lat_from = deg2rad($lat_from_degree);
+        $lon_from = deg2rad($lon_from_degree);
+        $lat_to = deg2rad($lat_to_degree);
+        $lon_to = deg2rad($lon_to_degree);
+        $lat_delta = $lat_to - $lat_from;
+        $lon_delta = $lon_to - $lon_from;
+        $angle = 2 * asin(sqrt(pow(sin($lat_delta / 2), 2) +
+            cos($lat_from) * cos($lat_to) * pow(sin($lon_delta / 2), 2)));
+        return $angle * $earth_radius;
+    }
+
+    /**
      * Get server as xml output
      *
      * @return string
@@ -164,6 +232,11 @@ class Server implements IAsXML
         $server_xml->writeAttribute("current_players", $this->current_players);
         $server_xml->writeAttribute("password", $this->password);
         $server_xml->writeAttribute("version", $this->version);
+        $client_ip = ip2long(Util::getClientIp());
+        $client_coordinates = Server::getIPCoordinates($client_ip);
+        $server_xml->writeAttribute("distance",
+            Server::getDistance($client_coordinates[0], $client_coordinates[1],
+            $this->latitude, $this->longitude));
         $server_xml->endElement();
 
         return $server_xml->asString();
@@ -211,13 +284,14 @@ class Server implements IAsXML
                 throw new ServerException(_('Specified server already exists.'));
             }
 
+            $server_coordinates = Server::getIPCoordinates($ip);
             $result = DBConnection::get()->query(
                 "INSERT INTO `{DB_VERSION}_servers` (host_id, name,
                 last_poll_time, ip, port, private_port, max_players,
-                difficulty, game_mode, password, version)
+                difficulty, game_mode, password, version, latitude, longitude)
                 VALUES (:host_id, :name, :last_poll_time, :ip, :port,
                 :private_port, :max_players, :difficulty, :game_mode,
-                :password, :version)",
+                :password, :version, :latitude, :longitude)",
                 DBConnection::ROW_COUNT,
                 [
                     ':host_id'        => $user_id,
@@ -231,7 +305,9 @@ class Server implements IAsXML
                     ':difficulty'     => $difficulty,
                     ':game_mode'      => $game_mode,
                     ':password'       => $password,
-                    ':version'        => $version
+                    ':version'        => $version,
+                    ':latitude'       => $server_coordinates[0],
+                    ':longitude'      => $server_coordinates[1]
                 ],
                 [
                     ':host_id'        => DBConnection::PARAM_INT,
@@ -244,7 +320,9 @@ class Server implements IAsXML
                     ':difficulty'     => DBConnection::PARAM_INT,
                     ':game_mode'      => DBConnection::PARAM_INT,
                     ':password'       => DBConnection::PARAM_INT,
-                    ':version'        => DBConnection::PARAM_INT
+                    ':version'        => DBConnection::PARAM_INT,
+                    ':latitude'       => DBConnection::PARAM_STR,
+                    ':longitude'      => DBConnection::PARAM_STR
                 ]
             );
         }
