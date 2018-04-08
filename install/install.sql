@@ -316,8 +316,8 @@ CREATE TABLE IF NOT EXISTS `v3_servers` (
     `current_players` TINYINT UNSIGNED  NOT NULL DEFAULT '0',
     `password`        TINYINT UNSIGNED  NOT NULL DEFAULT '0',
     `version`         TINYINT UNSIGNED  NOT NULL DEFAULT '1',
-    `latitude`        FLOAT             NULL,
-    `longitude`       FLOAT             NULL
+    `latitude`        FLOAT             NOT NULL DEFAULT '0.0',
+    `longitude`       FLOAT             NOT NULL DEFAULT '0.0'
     COMMENT 'Isn''t exact. Just to show in the server-list, where it doesn''t need to be exact.',
     PRIMARY KEY (`id`),
     KEY `key_hostid` (`host_id`),

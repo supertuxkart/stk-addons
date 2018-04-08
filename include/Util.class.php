@@ -351,7 +351,7 @@ MSG;
      *
      * Source :
      * http://stackoverflow.com/questions/1634782/what-is-the-most-accurate-way-to-retrieve-a-users-correct-ip-address-in-php?
-     * @return string|bool return the ip of the user or false in case of error
+     * @return string return the ip of the user empty string in case of error.
      */
     public static function getClientIp()
     {
@@ -375,7 +375,7 @@ MSG;
             }
         }
 
-        return !empty($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : false;
+        return !empty($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
     }
 
     /**
@@ -497,6 +497,29 @@ MSG;
     }
 
     /**
+     * @param float $a
+     * @param float $b
+     * @param float $delta
+     *
+     * @return bool
+     */
+    public static function areFloatsNearlyEqual($a, $b, $delta = 0.000001)
+    {
+        return abs($a - $b) < $delta;
+    }
+
+    /**
+     * @param float $a
+     * @param float $delta
+     *
+     * @return bool
+     */
+    public static function isFloatNearlyZero($a, $delta = 0.000001)
+    {
+        return abs($a) < $delta;
+    }
+
+    /**
      * @param float $latitude
      *
      * @return bool
@@ -520,6 +543,35 @@ MSG;
 
         // Longitude is in the range [-180, 180]
         return !(abs($longitude) > 180.0);
+    }
+
+    /**
+     * Checks if the latitude and longitude are in the correct range
+     *
+     * @param float $latitude
+     * @param float $longitude
+     *
+     * @return bool
+     */
+    public static function isCoordinates($latitude, $longitude)
+    {
+        return static::isLatitude($latitude) && static::isLongitude($longitude);
+    }
+
+    /**
+     * Checks if the coordinates correspond to the null island [0, 0]
+     * https://en.wikipedia.org/wiki/Null_Island
+     *
+     * Nothing lives there so this should not be a valid coordinates.
+     *
+     * @param float $lat_from_degree
+     * @param float $lon_from_degree
+     *
+     * @return bool
+     */
+    public static function isNullIslandCoordinates($lat_from_degree, $lon_from_degree)
+    {
+        return static::isFloatNearlyZero($lat_from_degree) && static::isFloatNearlyZero($lon_from_degree);
     }
 
     /**
@@ -730,13 +782,11 @@ MSG;
         return array_map("trim", explode(',', $string));
     }
 
-
     /**
      * Get distance between two coordinates using Haversine formula:
      * https://en.wikipedia.org/wiki/Haversine_formula
      * Notice: Haversine formula does not take into account that earth is a
      * spheroid (not a perfect sphere) so it has some small inaccuracies.
-     * if any coordinates is NULL return -1.0
      *
      * @param float $lat_from_degree
      * @param float $lon_from_degree
@@ -744,7 +794,8 @@ MSG;
      * @param float $lon_to_degree
      * @param float $earth_radius
      *
-     * @return float
+     * @return float if the coordinates are not in the valid range OR the coordinates are the null island it
+     *               returns -1 as the distance.
      */
     public static function getDistance(
         $lat_from_degree,
@@ -753,8 +804,10 @@ MSG;
         $lon_to_degree,
         $earth_radius = 6371.0
     ) {
-        if (!static::isLatitude($lat_from_degree) || !static::isLongitude($lon_from_degree) ||
-            !static::isLatitude($lat_to_degree) || !static::isLongitude($lon_to_degree))
+        if (!static::isCoordinates($lat_from_degree, $lon_from_degree) ||
+            !static::isCoordinates($lat_to_degree, $lon_to_degree) ||
+            static::isNullIslandCoordinates($lat_from_degree, $lon_from_degree) ||
+            static::isNullIslandCoordinates($lat_to_degree, $lon_to_degree))
         {
             return -1.0;
         }

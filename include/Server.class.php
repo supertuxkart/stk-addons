@@ -92,13 +92,13 @@ class Server implements IAsXML
     private $version;
 
     /**
-     * Latitude of IP in float of server (null if not in database)
+     * Latitude of IP in float of server (0.0 if not in database)
      * @var float
      */
     private $latitude;
 
     /**
-     * Longitude of IP in float of server (null if not in database)
+     * Longitude of IP in float of server (0.0 if not in database)
      * @var float
      */
     private $longitude;
@@ -159,7 +159,8 @@ class Server implements IAsXML
 
     /**
      * Get the latitude and longitude of an IP
-     * @return array of latitude and longitude in float, or null if not in database
+     * @return array of latitude and longitude.
+     *         If location does not exist it returns coordinates [0, 0] (null island)
      *
      * @param int $ip
      */
@@ -190,12 +191,13 @@ class Server implements IAsXML
     }
 
     /**
-     * Get the latitude and longitude of an IP
-     * @return array of latitude and longitude in string, or null if not in database
+     * Get the latitude and longitude of an IP represented as a string
+     * @return array of latitude and longitude in string.
+     *         If location does not exist it returns coordinates [0, 0] (null island)
      *
-     * @param int $ip
+     * @param string $ip_string eg: 127.0.0.1
      */
-    public static function getIPCoordinatesFromString($ip)
+    public static function getIPCoordinatesFromString($ip_string)
     {
         try
         {
@@ -204,7 +206,7 @@ class Server implements IAsXML
                 WHERE `ip_start` <= INET_ATON(:ip) AND `ip_end` >= INET_ATON(:ip)
                 ORDER BY `ip_start` DESC LIMIT 1;",
                 DBConnection::FETCH_FIRST,
-                [':ip' => $ip],
+                [':ip' => $ip_string],
                 [":ip" => DBConnection::PARAM_STR]
             );
         }
