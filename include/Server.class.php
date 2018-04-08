@@ -190,14 +190,46 @@ class Server implements IAsXML
     }
 
     /**
+     * Get the latitude and longitude of an IP
+     * @return array of latitude and longitude in string, or null if not in database
+     *
+     * @param int $ip
+     */
+    public static function getIPCoordinatesFromString($ip)
+    {
+        try
+        {
+            $result = DBConnection::get()->query(
+                "SELECT * FROM `{DB_VERSION}_ipv4_mapping`
+                WHERE `ip_start` <= INET_ATON(:ip) AND `ip_end` >= INET_ATON(:ip)
+                ORDER BY `ip_start` DESC LIMIT 1;",
+                DBConnection::FETCH_FIRST,
+                [':ip' => $ip],
+                [":ip" => DBConnection::PARAM_STR]
+            );
+        }
+        catch (DBException $e)
+        {
+            Debug::addException($e);
+            return [0.0, 0.0];
+        }
+
+        if (!$result)
+        {
+            return [0.0, 0.0];
+        }
+
+        return [$result["latitude"], $result["longitude"]];
+    }
+
+    /**
      * Get server as xml output
      *
      * @return string
      */
     public function asXML()
     {
-        $client_ip = ip2long(Util::getClientIp());
-        $client_coordinates = Server::getIPCoordinates($client_ip);
+        $client_coordinates = Server::getIPCoordinatesFromString(Util::getClientIp());
         return $this->asXMLFromClientLocation($client_coordinates[0], $client_coordinates[1]);
     }
 
@@ -399,8 +431,7 @@ class Server implements IAsXML
             throw new ServerException($e);
         }
 
-        $client_ip = ip2long(Util::getClientIp());
-        $client_coordinates = Server::getIPCoordinates($client_ip);
+        $client_coordinates = Server::getIPCoordinatesFromString(Util::getClientIp());
 
         // build xml
         $partial_output = new XMLOutput();
