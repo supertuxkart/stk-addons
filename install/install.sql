@@ -43,7 +43,8 @@ CREATE TABLE IF NOT EXISTS `v3_roles` (
 INSERT INTO `v3_roles` (`id`, `name`) VALUES
     (1, 'user'),
     (2, 'moderator'),
-    (3, 'admin')
+    (3, 'admin'),
+    (4, 'server_hoster')
 ON DUPLICATE KEY UPDATE `id` = VALUES(`id`), `name` = VALUES(`name`);
 
 -- --------------------------------------------------------------------------------
@@ -88,7 +89,11 @@ INSERT INTO `v3_role_permissions` (`role_id`, `permission`) VALUES
     (3, 'edit_users'),
     (3, 'edit_settings'),
     (3, 'edit_permissions'),
-    (3, 'edit_admins')
+    (3, 'edit_admins'),
+    (4, 'view_basic_page'),
+    (4, 'official_servers'),
+    (4, 'submit_rankings')
+
 ON DUPLICATE KEY UPDATE `role_id` = VALUES(`role_id`), `permission` = VALUES(`permission`);
 
 -- --------------------------------------------------------------------------------
@@ -707,7 +712,6 @@ CREATE TABLE IF NOT EXISTS `v3_stats` (
     COLLATE = utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------------------------------
--- --------------------------------------------------------------------------------
 --
 -- Table structure for ip to latitude and longitude map `v3_ipv4_mapping`
 -- see tools/generate-ip-mappings.py for generation
@@ -726,3 +730,18 @@ CREATE TABLE IF NOT EXISTS `v3_ipv4_mapping` (
     COLLATE = utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------------------------------
+--
+-- Table structure for player ranking scores `v3_rankings`
+--
+CREATE TABLE IF NOT EXISTS `v3_rankings` (
+    `id`             INT UNSIGNED NOT NULL,
+    `scores`         DOUBLE NOT NULL,
+    `max_scores`     DOUBLE NOT NULL,
+    `num_races_done` DOUBLE NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `id` (`id`),
+    UNIQUE KEY `scores` (`scores`)
+)
+    ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4
+    COLLATE = utf8mb4_unicode_ci;

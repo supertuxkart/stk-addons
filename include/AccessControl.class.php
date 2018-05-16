@@ -85,6 +85,16 @@ class AccessControl
     const PERM_EDIT_SETTINGS = "edit_settings";
 
     /**
+     * @var string
+     */
+    const PERM_OFFICIAL_SERVERS = "official_servers";
+
+    /**
+     * @var string
+     */
+    const PERM_SUMBIT_RANKINGS = "submit_rankings";
+
+    /**
      * Cache for the roles, with key name of the role and value the id of the role
      *
      * @var array
@@ -113,7 +123,9 @@ class AccessControl
             static::PERM_EDIT_USERS,
             static::PERM_EDIT_SETTINGS,
             static::PERM_EDIT_PERMISSIONS,
-            static::PERM_EDIT_ADMINS
+            static::PERM_EDIT_ADMINS,
+            static::PERM_OFFICIAL_SERVERS,
+            static::PERM_SUMBIT_RANKINGS
         ];
     }
 
