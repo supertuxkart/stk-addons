@@ -493,6 +493,137 @@ try
             }
             break;
 
+        case 'get-ranking':
+            try
+            {
+                $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
+                $token = isset($_POST['token']) ? $_POST['token'] : "";
+                $session = ClientSession::get($token, $userid);
+
+                $id = isset($_POST['id']) ? (int)$_POST['id'] : 0;
+                $ranking = User::getRanking($id);
+
+                $output->startElement('get-ranking');
+                    $output->writeAttribute('success', 'yes');
+                    $output->writeAttribute('info', '');
+                    $output->writeAttribute('scores', $ranking['scores']);
+                    $output->writeAttribute('max-scores', $ranking['max_scores']);
+                    $output->writeAttribute('num-races-done', $ranking['num_races_done']);
+                    $output->writeAttribute('rank', $ranking['rank']);
+                $output->endElement();
+            }
+            catch(Exception $e)
+            {
+                $output->startElement('get-ranking');
+                    $output->writeAttribute('success', 'no');
+                    $output->writeAttribute(
+                        'info',
+                        h($e->getMessage())
+                    );
+                $output->endElement();
+            }
+            break;
+
+        case 'top-players':
+            try
+            {
+                $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
+                $token = isset($_POST['token']) ? $_POST['token'] : "";
+                $session = ClientSession::get($token, $userid);
+
+                $ntop = isset($_POST['ntop']) ? (int)$_POST['ntop'] : 10;
+                $list = User::getTopPlayersFromRanking($ntop);
+
+                $output->startElement('top-players');
+                    $output->writeAttribute('success', 'yes');
+                    $output->writeAttribute('info', '');
+                    if (!$list)
+                        $output->writeAttribute('players', 0);
+                    else
+                    {
+                        $player_size = sizeof($list);
+                        $output->writeAttribute('players', $player_size);
+                        for ($i = 0; $i < $player_size; $i++)
+                        {
+                            $output->startElement('player');
+                                $output->writeAttribute('username', $list[$i]['username']);
+                                $output->writeAttribute('scores', $list[$i]['scores']);
+                                $output->writeAttribute('max-scores', $list[$i]['max_scores']);
+                                $output->writeAttribute('num-races-done', $list[$i]['num_races_done']);
+                                $output->writeAttribute('rank', $list[$i]['rank']);
+                            $output->endElement();
+                        }
+                    }
+                $output->endElement();
+            }
+            catch(Exception $e)
+            {
+                $output->startElement('top-players');
+                    $output->writeAttribute('success', 'no');
+                    $output->writeAttribute(
+                        'info',
+                        h($e->getMessage())
+                    );
+                $output->endElement();
+            }
+            break;
+
+        case 'submit-ranking':
+            try
+            {
+                $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
+                $token = isset($_POST['token']) ? $_POST['token'] : "";
+                $session = ClientSession::get($token, $userid);
+
+                $id_for_ranked = isset($_POST['id']) ? (int)$_POST['id'] : null;
+                $new_scores = isset($_POST['scores']) ? $_POST['scores'] : null;
+                $new_max_scores = isset($_POST['max-scores']) ? $_POST['max-scores'] : null;
+                $new_num_races_done = isset($_POST['num-races-done']) ? (int)$_POST['num-races-done'] : null;
+                User::submitRanking($session->getUser(), $id_for_ranked, $new_scores, $new_max_scores,
+                    $new_num_races_done);
+
+                $output->startElement('submit-ranking');
+                    $output->writeAttribute('success', 'yes');
+                    $output->writeAttribute('info', '');
+                $output->endElement();
+            }
+            catch(Exception $e)
+            {
+                $output->startElement('submit-ranking');
+                    $output->writeAttribute('success', 'no');
+                    $output->writeAttribute(
+                        'info',
+                        h($e->getMessage())
+                    );
+                $output->endElement();
+            }
+            break;
+
+        case 'reset-ranking':
+            try
+            {
+                $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
+                $token = isset($_POST['token']) ? $_POST['token'] : "";
+                $session = ClientSession::get($token, $userid);
+                User::resetRanking($session->getUser());
+
+                $output->startElement('reset-ranking');
+                    $output->writeAttribute('success', 'yes');
+                    $output->writeAttribute('info', '');
+                $output->endElement();
+            }
+            catch(Exception $e)
+            {
+                $output->startElement('reset-ranking');
+                    $output->writeAttribute('success', 'no');
+                    $output->writeAttribute(
+                        'info',
+                        h($e->getMessage())
+                    );
+                $output->endElement();
+            }
+            break;
+
         default:
             $output->addErrorElement('request', 'Invalid action. Action = ' . h($_POST['action']));
             break;
