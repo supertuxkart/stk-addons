@@ -91,6 +91,9 @@ INSERT INTO `v3_role_permissions` (`role_id`, `permission`) VALUES
     (3, 'edit_permissions'),
     (3, 'edit_admins'),
     (4, 'view_basic_page'),
+    (4, 'add_addon'),
+    (4, 'add_bug'),
+    (4, 'add_bug_comment'),
     (4, 'official_servers'),
     (4, 'submit_rankings')
 
@@ -737,10 +740,12 @@ CREATE TABLE IF NOT EXISTS `v3_rankings` (
     `id`             INT UNSIGNED NOT NULL,
     `scores`         DOUBLE NOT NULL,
     `max_scores`     DOUBLE NOT NULL,
-    `num_races_done` DOUBLE NOT NULL,
+    `num_races_done` INT UNSIGNED NOT NULL,
     PRIMARY KEY (`id`),
-    UNIQUE KEY `id` (`id`),
-    UNIQUE KEY `scores` (`scores`)
+    KEY `scores` (`scores`),
+    CONSTRAINT `v3_rankings_ibfk_1` FOREIGN KEY (`id`) REFERENCES `v3_users` (`id`)
+        ON DELETE CASCADE
+        ON UPDATE NO ACTION
 )
     ENGINE = InnoDB
     DEFAULT CHARSET = utf8mb4
