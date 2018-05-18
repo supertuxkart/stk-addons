@@ -42,6 +42,7 @@
                         <li><a href="{$menu.manage}">{t}Manage{/t}</a></li>
                     {/if}
                     <li><a href="{$menu.stats}">{t}Stats{/t}</a></li>
+                    <li><a href="{$menu.rankings}">{t}Player Rankings{/t}</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li id="lang-menu">{include file="./menu-lang.tpl"}</li>
