@@ -1633,9 +1633,8 @@ class User extends Base implements IAsXML
      *
      * @throws UserException
      */
-    public static function resetRanking($user)
+    public static function resetRanking($permission)
     {
-        $permission = AccessControl::getPermissions($user->getRole());
         if (!in_array(AccessControl::PERM_SUMBIT_RANKINGS, $permission))
         {
             throw new UserException("Invalid user to reset ranking", ErrorType::USER_INVALID_PERMISSION);
@@ -1661,9 +1660,8 @@ class User extends Base implements IAsXML
      *
      * @throws UserException
      */
-    public static function submitRanking($user, $id_for_ranked, $new_scores, $new_max_scores, $new_num_races_done)
+    public static function submitRanking($permission, $id_for_ranked, $new_scores, $new_max_scores, $new_num_races_done)
     {
-        $permission = AccessControl::getPermissions($user->getRole());
         if (!in_array(AccessControl::PERM_SUMBIT_RANKINGS, $permission))
         {
             throw new UserException("Invalid user to sumbit ranking", ErrorType::USER_INVALID_PERMISSION);

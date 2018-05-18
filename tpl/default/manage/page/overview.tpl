@@ -33,3 +33,5 @@
 {else}
     <p>{t}No unapproved source archives.{/t}</p><br>
 {/if}
+
+<button type="button" id="reset-ranking-btn" class="btn btn-danger">Reset Player Ranking</button>

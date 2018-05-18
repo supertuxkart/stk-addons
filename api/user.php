@@ -574,12 +574,13 @@ try
                 $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
                 $token = isset($_POST['token']) ? $_POST['token'] : "";
                 $session = ClientSession::get($token, $userid);
+                $permission = AccessControl::getPermissions($session->getUser()->getRole());
 
                 $id_for_ranked = isset($_POST['id']) ? (int)$_POST['id'] : null;
                 $new_scores = isset($_POST['scores']) ? $_POST['scores'] : null;
                 $new_max_scores = isset($_POST['max-scores']) ? $_POST['max-scores'] : null;
                 $new_num_races_done = isset($_POST['num-races-done']) ? (int)$_POST['num-races-done'] : null;
-                User::submitRanking($session->getUser(), $id_for_ranked, $new_scores, $new_max_scores,
+                User::submitRanking($permission, $id_for_ranked, $new_scores, $new_max_scores,
                     $new_num_races_done);
 
                 $output->startElement('submit-ranking');
@@ -605,7 +606,8 @@ try
                 $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
                 $token = isset($_POST['token']) ? $_POST['token'] : "";
                 $session = ClientSession::get($token, $userid);
-                User::resetRanking($session->getUser());
+                $permission = AccessControl::getPermissions($session->getUser()->getRole());
+                User::resetRanking($permission);
 
                 $output->startElement('reset-ranking');
                     $output->writeAttribute('success', 'yes');
