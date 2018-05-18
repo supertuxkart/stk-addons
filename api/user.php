@@ -537,23 +537,21 @@ try
                 $output->startElement('top-players');
                     $output->writeAttribute('success', 'yes');
                     $output->writeAttribute('info', '');
-                    if (!$list)
-                        $output->writeAttribute('players', 0);
-                    else
-                    {
-                        $player_size = sizeof($list);
-                        $output->writeAttribute('players', $player_size);
-                        for ($i = 0; $i < $player_size; $i++)
+                    $output->startElement('players');
+                        if (is_array($list))
                         {
-                            $output->startElement('player');
-                                $output->writeAttribute('username', $list[$i]['username']);
-                                $output->writeAttribute('scores', $list[$i]['scores']);
-                                $output->writeAttribute('max-scores', $list[$i]['max_scores']);
-                                $output->writeAttribute('num-races-done', $list[$i]['num_races_done']);
-                                $output->writeAttribute('rank', $list[$i]['rank']);
-                            $output->endElement();
+                            foreach ($list as $player)
+                            {
+                                $output->startElement('player');
+                                    $output->writeAttribute('username', $player['username']);
+                                    $output->writeAttribute('scores', $player['scores']);
+                                    $output->writeAttribute('max-scores', $player['max_scores']);
+                                    $output->writeAttribute('num-races-done', $player['num_races_done']);
+                                    $output->writeAttribute('rank', $player['rank']);
+                                $output->endElement();
+                            }
                         }
-                    }
+                    $output->endElement();
                 $output->endElement();
             }
             catch(Exception $e)
