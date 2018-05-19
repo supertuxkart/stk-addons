@@ -26,10 +26,14 @@ $tpl = StkTemplate::get('rankings.tpl')
 $tpl->assignTitle(_h('Player Rankings'));
 
 $query_rankings = <<<SQL
-    SELECT username, scores,
-    FIND_IN_SET(scores, (SELECT GROUP_CONCAT(DISTINCT scores ORDER BY scores DESC)
-    FROM `{DB_VERSION}_rankings`))
-    AS rank FROM `{DB_VERSION}_rankings`
+    SELECT
+        FIND_IN_SET(scores,
+            (SELECT GROUP_CONCAT(DISTINCT scores ORDER BY scores DESC)
+            FROM `{DB_VERSION}_rankings`)
+        ) AS rank,
+        username,
+        scores
+    FROM `{DB_VERSION}_rankings`
     ORDER BY rank
 SQL;
 

@@ -1558,10 +1558,17 @@ class User extends Base implements IAsXML
         try
         {
             $result = DBConnection::get()->query(
-                "SELECT id, username, scores, max_scores, num_races_done,
-                FIND_IN_SET(scores, (SELECT GROUP_CONCAT(DISTINCT scores ORDER BY scores DESC)
-                FROM `{DB_VERSION}_rankings`))
-                AS rank FROM `{DB_VERSION}_rankings`
+                "SELECT
+                    FIND_IN_SET(scores,
+                        (SELECT GROUP_CONCAT(DISTINCT scores ORDER BY scores DESC)
+                        FROM `{DB_VERSION}_rankings`)
+                    ) AS rank,
+                    id,
+                    username,
+                    scores,
+                    max_scores,
+                    num_races_done
+                FROM `{DB_VERSION}_rankings`
                 ORDER BY rank LIMIT :ntop",
                 DBConnection::FETCH_ALL,
                 [':ntop' => $ntop],
@@ -1592,10 +1599,18 @@ class User extends Base implements IAsXML
         try
         {
             $result = DBConnection::get()->query(
-                "SELECT id, username, scores, max_scores, num_races_done,
-                FIND_IN_SET(scores, (SELECT GROUP_CONCAT(DISTINCT scores ORDER BY scores DESC)
-                FROM `{DB_VERSION}_rankings`))
-                AS rank FROM `{DB_VERSION}_rankings` WHERE `id` = :id",
+                "SELECT
+                    FIND_IN_SET(scores,
+                        (SELECT GROUP_CONCAT(DISTINCT scores ORDER BY scores DESC)
+                        FROM `{DB_VERSION}_rankings`)
+                    ) AS rank,
+                    id,
+                    username,
+                    scores,
+                    max_scores,
+                    num_races_done
+                FROM `{DB_VERSION}_rankings`
+                WHERE `id` = :id",
                 DBConnection::FETCH_FIRST,
                 [':id' => $id],
                 [':id' => DBConnection::PARAM_INT]
