@@ -50,7 +50,7 @@ class StkLog
             }
 
             DBConnection::get()->query(
-                "INSERT INTO `{DB_VERSION}_logs` (`user_id`, `message`)
+                "INSERT IGNORE INTO `{DB_VERSION}_logs` (`user_id`, `message`)
                 VALUES (:user_id, :message)",
                 DBConnection::NOTHING,
                 [

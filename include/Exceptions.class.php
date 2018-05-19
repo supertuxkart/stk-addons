@@ -48,6 +48,7 @@ class ErrorType extends \MyCLabs\Enum\Enum
     const USER_CREATE_ACCOUNT = 77;         // while creating account
     const USER_SENDING_CREATE_EMAIL = 78;   // while sending create account email
     const USER_INACTIVE_ACCOUNT = 79;       // account is not active
+    const USER_DELETE_ACCOUNT = 80;         // delete user account
 
     const ADDON_DB_EXCEPTION = 100;           // a generic database exception occurred while querying some addon data
     const ADDON_REVISION_MISSING = 101;      // the addon Revision is missing, corrupt

@@ -84,10 +84,10 @@ switch ($_POST["action"])
         try
         {
             User::verifyAndChangePassword(
+                User::getLoggedId(),
                 $_POST["old-pass"],
                 $_POST["new-pass"],
-                $_POST["new-pass-verify"],
-                User::getLoggedId()
+                $_POST["new-pass-verify"]
             );
         }
         catch (UserException $e)
@@ -96,6 +96,33 @@ switch ($_POST["action"])
         }
 
         exit_json_success(_h("Your password has been changed"));
+        break;
+
+    case "delete-account":
+        if (Validate::ensureNotEmpty($_POST, ["password", "verify-phrase"]))
+        {
+            exit_json_error(_h("One or more fields are empty"));
+        }
+
+        // Verify phrase does not match
+        if ($_POST["verify-phrase"] !== "DELETE/". User::getLoggedUserName())
+        {
+            exit_json_error(_h("Verify phrase does not match. Please type it as shown."));
+        }
+
+        try
+        {
+            User::verifyAndDelete(
+                User::getLoggedId(),
+                $_POST["password"]
+            );
+        }
+        catch (UserException $e)
+        {
+            exit_json_error($e->getMessage());
+        }
+
+        exit_json_success(_h("Your account has been deleted. Cya."));
         break;
 
     case "send-friend": // send friend request

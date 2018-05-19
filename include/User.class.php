@@ -520,8 +520,8 @@ class User extends Base implements IAsXML
      *
      * @param int $user_id
      *
-     * @throws UserException
      * @return User
+     * @throws UserException
      */
     public static function getFromID($user_id)
     {
@@ -542,8 +542,8 @@ class User extends Base implements IAsXML
      *
      * @param string $username
      *
-     * @throws UserException
      * @return User
+     * @throws UserException
      */
     public static function getFromUserName($username)
     {
@@ -857,7 +857,7 @@ class User extends Base implements IAsXML
         $user = static::getFromID($user_id);
 
         // verify permissions
-        $is_owner = (static::getLoggedId() === $user->getId());
+        $is_owner = static::getLoggedId() === $user->getId();
         $can_edit = static::hasPermissionOnRole($user->getRole());
         if (!$is_owner && !$can_edit)
         {
@@ -1002,15 +1002,75 @@ class User extends Base implements IAsXML
     }
 
     /**
+     * Deletes the user account.
+     * Use with care. NOTE: Should user verifyAndDelete
+     *
+     * @param int $user_id
+     *
+     * @throws UserException
+     */
+    protected static function delete($user_id)
+    {
+        try
+        {
+            DBConnection::get()->delete(
+                "users",
+                "`id` = :id",
+                [":id" => $user_id],
+                [":id" => DBConnection::PARAM_INT]
+            );
+        }
+        catch (DBException $e)
+        {
+            throw new UserException(exception_message_db(_('delete user account')), ErrorType::USER_DELETE_ACCOUNT);
+        }
+
+        StkLog::newEvent("User with ID '{$user_id}' DELETED.");
+        static::logout();
+    }
+
+    /**
+     * @param $user_id
+     * @param $password
+     *
+     * @throws UserException
+     */
+    public static function verifyAndDelete($user_id, $password)
+    {
+        // Only the user logged into the can delete his account
+        if (static::getLoggedId() !== $user_id)
+        {
+            throw new UserException(
+                _h('You do not have the permission to change the password'),
+                ErrorType::USER_INVALID_PERMISSION
+            );
+        }
+
+        try
+        {
+            DBConnection::get()->beginTransaction();
+            static::validateCredentials($password, $user_id, static::CREDENTIAL_ID);
+            static::delete($user_id);
+            DBConnection::get()->commit();
+        }
+        catch (UserException $e)
+        {
+            DBConnection::get()->rollback();
+            throw $e;
+        }
+    }
+
+
+    /**
      * Change the password of the supplied user.
-     * Use with care
+     * Use with care. NOTE: Use verifyAndChangePassword
      *
      * @param int    $user_id
      * @param string $new_password the new password hash
      *
      * @throws UserException
      */
-    public static function changePassword($user_id, $new_password)
+    protected static function changePassword($user_id, $new_password)
     {
         try
         {
@@ -1042,43 +1102,31 @@ class User extends Base implements IAsXML
     /**
      * Verify and change to a new password
      *
+     * @param int    $user_id
      * @param string $current_password
      * @param string $new_password
      * @param string $new_password_verify
-     * @param int    $user_id
      *
      * @throws UserException
      */
-    public static function verifyAndChangePassword($current_password, $new_password, $new_password_verify, $user_id)
+    public static function verifyAndChangePassword($user_id, $current_password, $new_password, $new_password_verify)
     {
         static::validateNewPassword($new_password, $new_password_verify);
 
+        // NOTE: we do not verify the web session user as we use this function from the game API too
         try
         {
             DBConnection::get()->beginTransaction();
-
-            $user = static::validateCredentials($current_password, $user_id, static::CREDENTIAL_ID);
-
-            // only user can change his password
-            if ($user->getId() !== $user_id)
-            {
-                throw new UserException(
-                    _h('You do not have the permission to change the password'),
-                    ErrorType::USER_INVALID_PERMISSION
-                );
-            }
-
+            // Credentials are ok, so we can change this users password
+            static::validateCredentials($current_password, $user_id, static::CREDENTIAL_ID);
             static::changePassword($user_id, $new_password);
-
             DBConnection::get()->commit();
         }
-        catch (DBException $e)
+        catch (UserException $e)
         {
             DBConnection::get()->rollback();
-            throw new UserException(exception_message_db(_('change your password')), ErrorType::USER_CHANGE_PASSWORD);
+            throw $e;
         }
-
-        Session::regenerateID();
     }
 
     /**
@@ -1169,6 +1217,7 @@ class User extends Base implements IAsXML
 
         StkLog::newEvent("Password reset request for user '$username'");
     }
+
 
     /**
      * Register a new user account
@@ -1363,7 +1412,6 @@ class User extends Base implements IAsXML
 
         // verify if password is correct
         $salt = Util::getSaltFromPassword($db_password_hash);
-
         try
         {
             if (Util::getPasswordHash($password, $salt) !== $db_password_hash)
@@ -1375,7 +1423,6 @@ class User extends Base implements IAsXML
         {
             throw new UserException($e);
         }
-
 
         return $user;
     }

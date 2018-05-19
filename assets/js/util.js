@@ -345,6 +345,14 @@ function refreshPage() {
 }
 
 /**
+ * Redirects to the homepage
+ * @param {float|int} [seconds] delay in redirection, default is 0
+ */
+function redirectToHomePage(seconds) {
+    redirectTo("/", seconds);
+}
+
+/**
  * Check if it is a wysiwyg5 editor
  *
  * @param {jQuery} $editor_container should contain the editor

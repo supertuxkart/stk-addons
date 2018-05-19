@@ -223,4 +223,13 @@
         });
     });
 
+    // DELETE account form
+    userFormSubmit("#user-delete-account", function(data) {
+        jsonCallback(data, function() {
+            // clear password field
+            $("#user-change-password").find("input[type=password]").val("");
+            redirectToHomePage(5);
+        });
+    });
+
 })(jQuery, ROOT_LOCATION, JSON_LOCATION);
