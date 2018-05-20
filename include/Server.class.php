@@ -265,14 +265,7 @@ class Server implements IAsXML
         );
         $user = User::getFromID($this->host_id);
         $permission = AccessControl::getPermissions($user->getRole());
-        if (in_array(AccessControl::PERM_OFFICIAL_SERVERS, $permission))
-        {
-            $server_xml->writeAttribute("official", true);
-        }
-        else
-        {
-            $server_xml->writeAttribute("official", false);
-        }
+        $server_xml->writeAttribute("official", in_array(AccessControl::PERM_OFFICIAL_SERVERS, $permission));
         $server_xml->endElement();
 
         return $server_xml->asString();

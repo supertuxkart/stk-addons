@@ -188,6 +188,7 @@ class StatisticException extends BaseException {}
 class AchievementException extends BaseException {}
 class FriendException extends BaseException {}
 class AccessControlException extends BaseException {}
+class RankingException extends BaseException {}
 
 class StkImageException extends BaseException {}
 class StkMailException extends BaseException {}

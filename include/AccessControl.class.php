@@ -85,6 +85,7 @@ class AccessControl
     const PERM_EDIT_SETTINGS = "edit_settings";
 
     /**
+     * The user with this permission will be able to display his server with official tag
      * @var string
      */
     const PERM_OFFICIAL_SERVERS = "official_servers";

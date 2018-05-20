@@ -247,7 +247,7 @@ switch ($_POST["action"])
     case "reset-ranking":
             try
             {
-                User::resetRanking(User::getPermissions());
+                Ranking::resetRanking(User::getPermissions());
             }
             catch(Exception $e)
             {

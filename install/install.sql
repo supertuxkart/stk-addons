@@ -739,21 +739,15 @@ CREATE TABLE IF NOT EXISTS `v3_ipv4_mapping` (
 -- Table structure for player ranking scores `v3_rankings`
 --
 CREATE TABLE IF NOT EXISTS `v3_rankings` (
-    `id`             INT UNSIGNED NOT NULL,
-    `username`       VARCHAR(30) CHARACTER SET ascii NOT NULL,
+    `user_id`        INT UNSIGNED NOT NULL,
     `scores`         DOUBLE NOT NULL,
     `max_scores`     DOUBLE NOT NULL,
     `num_races_done` INT UNSIGNED NOT NULL,
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `username` (`username`),
+    PRIMARY KEY (`user_id`),
     KEY `scores` (`scores`),
-    CONSTRAINT `v3_rankings_ibfk_1` FOREIGN KEY (`id`) REFERENCES `v3_users` (`id`)
+    CONSTRAINT `v3_rankings_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `v3_users` (`id`)
         ON DELETE CASCADE
-        ON UPDATE NO ACTION,
-    CONSTRAINT `v3_rankings_ibfk_2` FOREIGN KEY (`username`) REFERENCES `v3_users`
-        (`username`)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE
+        ON UPDATE NO ACTION
 )
     ENGINE = InnoDB
     DEFAULT CHARSET = utf8mb4
