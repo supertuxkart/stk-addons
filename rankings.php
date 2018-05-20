@@ -30,11 +30,14 @@ $query_rankings = <<<SQL
         FIND_IN_SET(scores,
             (SELECT GROUP_CONCAT(DISTINCT scores ORDER BY scores DESC)
             FROM `{DB_VERSION}_rankings`)
-        ) AS rank,
-        username,
-        scores
+        ) AS Rank,
+        username `Username`,
+        scores `Scores`,
+        max_scores `Maximum scores obtained`,
+        num_races_done `Races done`
     FROM `{DB_VERSION}_rankings`
-    ORDER BY rank
+    INNER JOIN `{DB_VERSION}_users` ON `{DB_VERSION}_rankings`.user_id = `{DB_VERSION}_users`.id
+    ORDER BY Rank
 SQL;
 
 $player_data = [ "sections" => [ Statistic::getSection($query_rankings) ] ];
