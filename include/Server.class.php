@@ -263,6 +263,9 @@ class Server implements IAsXML
             "distance",
             Util::getDistance($client_latitude, $client_longitude, $this->latitude, $this->longitude)
         );
+        $user = User::getFromID($this->host_id);
+        $permission = AccessControl::getPermissions($user->getRole());
+        $server_xml->writeAttribute("official", in_array(AccessControl::PERM_OFFICIAL_SERVERS, $permission));
         $server_xml->endElement();
 
         return $server_xml->asString();

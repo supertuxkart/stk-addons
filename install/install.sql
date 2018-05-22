@@ -43,7 +43,8 @@ CREATE TABLE IF NOT EXISTS `v3_roles` (
 INSERT INTO `v3_roles` (`id`, `name`) VALUES
     (1, 'user'),
     (2, 'moderator'),
-    (3, 'admin')
+    (3, 'admin'),
+    (4, 'server_hoster')
 ON DUPLICATE KEY UPDATE `id` = VALUES(`id`), `name` = VALUES(`name`);
 
 -- --------------------------------------------------------------------------------
@@ -79,6 +80,7 @@ INSERT INTO `v3_role_permissions` (`role_id`, `permission`) VALUES
     (2, 'edit_addons'),
     (2, 'edit_bugs'),
     (2, 'edit_users'),
+    (2, 'submit_rankings'),
     (3, 'view_basic_page'),
     (3, 'add_addon'),
     (3, 'add_bug'),
@@ -88,7 +90,15 @@ INSERT INTO `v3_role_permissions` (`role_id`, `permission`) VALUES
     (3, 'edit_users'),
     (3, 'edit_settings'),
     (3, 'edit_permissions'),
-    (3, 'edit_admins')
+    (3, 'edit_admins'),
+    (3, 'submit_rankings'),
+    (4, 'view_basic_page'),
+    (4, 'add_addon'),
+    (4, 'add_bug'),
+    (4, 'add_bug_comment'),
+    (4, 'official_servers'),
+    (4, 'submit_rankings')
+
 ON DUPLICATE KEY UPDATE `role_id` = VALUES(`role_id`), `permission` = VALUES(`permission`);
 
 -- --------------------------------------------------------------------------------
@@ -707,7 +717,6 @@ CREATE TABLE IF NOT EXISTS `v3_stats` (
     COLLATE = utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------------------------------
--- --------------------------------------------------------------------------------
 --
 -- Table structure for ip to latitude and longitude map `v3_ipv4_mapping`
 -- see tools/generate-ip-mappings.py for generation
@@ -726,3 +735,20 @@ CREATE TABLE IF NOT EXISTS `v3_ipv4_mapping` (
     COLLATE = utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------------------------------
+--
+-- Table structure for player ranking scores `v3_rankings`
+--
+CREATE TABLE IF NOT EXISTS `v3_rankings` (
+    `user_id`        INT UNSIGNED NOT NULL,
+    `scores`         DOUBLE NOT NULL,
+    `max_scores`     DOUBLE NOT NULL,
+    `num_races_done` INT UNSIGNED NOT NULL,
+    PRIMARY KEY (`user_id`),
+    KEY `scores` (`scores`),
+    CONSTRAINT `v3_rankings_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `v3_users` (`id`)
+        ON DELETE CASCADE
+        ON UPDATE NO ACTION
+)
+    ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4
+    COLLATE = utf8mb4_unicode_ci;

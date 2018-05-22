@@ -182,6 +182,14 @@
         });
     });
 
+    $manage_body.on("click", "#reset-ranking-btn", function() {
+        modalDelete("Are you sure you want to reset player ranking?", function() {
+            $.post(json_url, {"action": "reset-ranking"}, function(data) {
+            jsonCallback(data);
+            });
+        });
+    });
+
     onPageLoad();
 
 })(jQuery, ROOT_LOCATION);
