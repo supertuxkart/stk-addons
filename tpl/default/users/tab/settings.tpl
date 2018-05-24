@@ -109,8 +109,7 @@
                 <div class="bs-callout bs-callout-warning bg-warning">
                     <p class="help-block">
                         {t}Once you delete your account, there is no going back. Please be certain.{/t}
-                        <br>
-                        {t}If you uploaded any addons, their owner will be set to no one and still be available on the website.{/t}
+
                     </p>
                 </div>
                 <div class="bs-callout bs-callout-warning bg-warning">
@@ -146,12 +145,14 @@
                     <div class="bs-callout bs-callout-warning bg-warning">
                         <p class="help-block">
                             {t}You have addons uploaded. You can choose to also remove these with your account.{/t}
+                            <br>
+                            {t}Otherwise they will still be available on the website.{/t}
                         </p>
                     </div>
 
                     <div class="bs-callout bs-callout-warning bg-warning">
                         <p class="help-block">
-                            The following addons will be removed:
+                            The following addons can be removed:
                         </p>
                         <p>
                         <ul>
