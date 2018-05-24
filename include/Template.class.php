@@ -267,7 +267,7 @@ class Template
 
             return ob_get_clean();
         }
-        catch (SmartyException $e)
+        catch (SmartyException|TemplateException|Exception $e)
         {
             Debug::addMessage("Template error = " . var_export($e));
 

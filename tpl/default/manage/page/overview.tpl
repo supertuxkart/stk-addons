@@ -27,7 +27,8 @@
 {if !empty($overview.archives)}
     {foreach $overview.archives as $archive}
         <strong><a href="{$archive.href}">{$archive.name}</a></strong><br>
-        {t count=$archive.unapproved|@count 1=$archive.unapproved plural="%1 Files"}%1 File{/t}
+        {*{t count=$archive.unapproved|@count plural="%1 Files"}%1 File{/t}*}
+        {$archive.unapproved} Files
         <br><br>
     {/foreach}
 {else}
