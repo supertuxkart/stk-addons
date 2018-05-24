@@ -99,10 +99,12 @@
         </form>
     </div>
     {/if}
+    <hr>
     {if $is_owner}
     <div class="bs-callout bs-callout-danger bg-danger">
         <h3 class="text-danger">{t}Delete Account{/t}</h3>
         <form class="form-horizontal" id="user-delete-account">
+
             <div class="form-group">
                 <div class="bs-callout bs-callout-warning bg-warning">
                     <p class="help-block">
@@ -114,6 +116,9 @@
                 <div class="bs-callout bs-callout-warning bg-warning">
                     <p class="help-block">{t}This action cannot be undone. WE ARE SERIOUS. HERE BE DRAGONS.{/t}</p>
                 </div>
+            </div>
+
+            <div class="form-group">
                 <label class="col-md-2 control-label" for="user-settings-delete-pass">
                     {t}Password{/t}
                 </label>
@@ -135,6 +140,44 @@
                     {t}Please type this verify phrase to confirm:{/t} <strong>DELETE/{$user.username}</strong>
                 </span>
             </div>
+
+            {if $user.has_addons }
+                <div class="form-group">
+                    <div class="bs-callout bs-callout-warning bg-warning">
+                        <p class="help-block">
+                            {t}You have addons uploaded. You can choose to also remove these with your account.{/t}
+                        </p>
+                    </div>
+
+                    <div class="bs-callout bs-callout-warning bg-warning">
+                        <p class="help-block">
+                            The following addons will be removed:
+                        </p>
+                        <p>
+                        <ul>
+                        {foreach $user.addon_types as $addon_type}
+                            {if !empty($addon_type.items)}
+                                {foreach $addon_type.items as $item}
+                                    <li>
+                                        <a href="addons.php?type={$addon_type.name}&amp;name={$item.id}">{$item.name|escape}</a>
+                                    </li>
+                                {/foreach}
+                            {/if}
+                        {/foreach}
+                        </ul>
+                        </p>
+                    </div>
+
+                    <div class="col-md-offset-2 col-md-10">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" checked id="user-settings-delete-addons" name="delete-addons" {$user.settings.elevate.activated|default:""}> {t}Delete ALL addons{/t}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            {/if}
+
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-2">
                     <input type="hidden" name="action" value="delete-account">

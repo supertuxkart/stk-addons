@@ -144,14 +144,23 @@ class AddonViewer
         }
 
         // build info table
-        $addonUser = User::getFromID($this->addon->getUploaderId());
+        $submiter = "DELETED user";
+        $is_deleted_user = true;
+        if ($this->addon->hasUploader())
+        {
+            $addonUser = User::getFromID($this->addon->getUploaderId());
+            $submiter = $addonUser->getUserName();
+            $is_deleted_user = false;
+        }
+
         $latestRev = $this->addon->getLatestRevision();
         $info = [
-            'upload_date'   => $latestRev['timestamp'],
-            'submitter'     => h($addonUser->getUserName()),
-            'revision'      => $latestRev['revision'],
-            'compatibility' => Util::getVersionFormat($latestRev['format'], $this->addon->getType()),
-            'link'          => URL::rewriteFromConfig($this->addon->getLink())
+            'upload_date'     => $latestRev['timestamp'],
+            'submitter'       => h($submiter),
+            'is_deleted_user' => $is_deleted_user,
+            'revision'        => $latestRev['revision'],
+            'compatibility'   => Util::getVersionFormat($latestRev['format'], $this->addon->getType()),
+            'link'            => URL::rewriteFromConfig($this->addon->getLink())
         ];
         $tpl['info'] = $info;
         if (Addon::isTextureInvalid($latestRev['status']))

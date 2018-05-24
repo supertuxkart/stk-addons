@@ -41,7 +41,13 @@
                 </tr>
                 <tr>
                     <td><strong>{t}Submitted by{/t}</strong></td>
-                    <td><a href="users.php?user={$addon.info.submitter}">{$addon.info.submitter}</a></td>
+                    <td>
+                        {if $addon.info.is_deleted_user}
+                            {$addon.info.submitter}
+                        {else}
+                            <a href="users.php?user={$addon.info.submitter}">{$addon.info.submitter}</a>
+                        {/if}
+                    </td>
                 </tr>
                 <tr>
                     <td><strong>{t}Revision{/t}</strong></td>

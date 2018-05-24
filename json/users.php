@@ -110,11 +110,13 @@ switch ($_POST["action"])
             exit_json_error(_h("Verify phrase does not match. Please type it as shown."));
         }
 
+        $delete_addons = Util::isCheckboxChecked($_POST, "delete-addons");
         try
         {
             User::verifyAndDelete(
                 User::getLoggedId(),
-                $_POST["password"]
+                $_POST["password"],
+                $delete_addons
             );
         }
         catch (UserException $e)

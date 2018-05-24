@@ -257,7 +257,7 @@ CREATE TABLE IF NOT EXISTS `v3_logs` (
     PRIMARY KEY (`id`),
     KEY `key_user_id` (`user_id`),
     CONSTRAINT `v3_logs_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `v3_users` (`id`)
-        ON DELETE NO ACTION
+        ON DELETE SET NULL
         ON UPDATE NO ACTION
 )
     ENGINE = InnoDB

@@ -229,7 +229,6 @@ class Cache
      * @param int $size image size, see StkImage::SIZE_*
      *
      * @return array
-     * @throws CacheException
      */
     public static function getImage($id, $size = null)
     {

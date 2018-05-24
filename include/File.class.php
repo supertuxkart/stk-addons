@@ -169,6 +169,7 @@ class File extends Base
 
         // delete from filesystem
         FileSystem::removeFile($parent . $this->path);
+        StkLog::newEvent(sprintf("Deleted file '%s'", $parent . $this->path));
     }
 
     /**

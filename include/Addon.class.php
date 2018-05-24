@@ -385,6 +385,7 @@ class Addon extends Base
     /**
      * Delete an add-on record and all associated files and ratings
      *
+     *
      * @throws AddonException
      */
     public function delete()
@@ -393,17 +394,23 @@ class Addon extends Base
         Cache::clearAddon($this->id);
 
         // Remove files associated with this addon
-        $files = File::getAllAddon($this->id);
-        foreach ($files as $file)
+        try
         {
-            try
+            $files = File::getAllAddon($this->id);
+
+            // Remove after database
+            foreach ($files as $file)
             {
                 $file->delete();
             }
-            catch (Exception $e)
-            {
-                throw new AddonException($e->getMessage());
-            }
+        }
+        catch (FileException $e)
+        {
+            throw new AddonException($e->getMessage());
+        }
+        catch (Exception $e)
+        {
+            throw new AddonException($e->getMessage());
         }
 
         // Remove addon entry
@@ -636,11 +643,20 @@ class Addon extends Base
     /**
      * Get the id of the uploader
      *
-     * @return int the id of the uploader
+     * @return int|null the id of the uploader
      */
     public function getUploaderId()
     {
         return $this->uploader_id;
+    }
+
+    /**
+     * Does this addon has a valid uploader?
+     * @return bool
+     */
+    public function hasUploader()
+    {
+        return $this->uploader_id != null;
     }
 
     /**
@@ -1772,6 +1788,43 @@ class Addon extends Base
         }
 
         return $return;
+    }
+
+    /**
+     * Gets all the addons that belong to this user
+     *
+     * @param int $user_id
+     *
+     * @throws AddonException
+     * @return Addon[] array of addons that belong to this user
+     */
+    public static function getAllAddonsOfUser($user_id)
+    {
+        $addons_data = [];
+        $addons = [];
+        try
+        {
+            $addons_data = DBConnection::get()->query(
+                'SELECT *
+                FROM `{DB_VERSION}_addons`
+                WHERE `uploader` = :user_id',
+                DBConnection::FETCH_ALL,
+                [':user_id' => $user_id],
+                [':user_id' => DBConnection::PARAM_INT]
+            );
+
+        }
+        catch (DBException $e)
+        {
+            throw new AddonException(exception_message_db(_('get all addons of user')));
+        }
+
+        foreach ($addons_data as $data)
+        {
+            $addons[] = new static($data, false);
+        }
+
+        return $addons;
     }
 
     /**

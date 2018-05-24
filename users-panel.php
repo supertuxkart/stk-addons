@@ -90,6 +90,7 @@ else // build buttons
 $tpl->assign("logged_friend", $logged_friend);
 
 // fill users addons
+$tpl_data['has_addons'] = false;
 foreach (Addon::getAllowedTypes() as $type)
 {
     switch ($type)
@@ -154,8 +155,10 @@ foreach (Addon::getAllowedTypes() as $type)
 
     // add to user template data
     $addon_type["items"] = $addons_tpl;
+    $tpl_data['has_addons'] = $tpl_data['has_addons'] || !empty($addon_type["items"]);
     $tpl_data["addon_types"][] = $addon_type;
 }
+
 
 // can change the users role and activation field
 // only if we are not the active user and have the permission

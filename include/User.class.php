@@ -271,6 +271,7 @@ class User extends Base implements IAsXML
         return $addons;
     }
 
+
     /**
      * Get the user as a xml structure
      *
@@ -1030,12 +1031,38 @@ class User extends Base implements IAsXML
     }
 
     /**
-     * @param $user_id
-     * @param $password
+     * Deletes all addons of this user account
+     *
+     * @param int $user_id
      *
      * @throws UserException
      */
-    public static function verifyAndDelete($user_id, $password)
+    protected static function deleteAllAddons($user_id)
+    {
+        try
+        {
+            $addons = Addon::getAllAddonsOfUser($user_id);
+            foreach ($addons as $addon)
+            {
+                $addon->delete();
+            }
+        }
+        catch (AddonException $e)
+        {
+            throw new UserException($e->getMessage());
+        }
+    }
+
+    /**
+     * Verify and delete user
+     *
+     * @param int $user_id
+     * @param string $password
+     * @param bool $delete_addons
+     *
+     * @throws UserException
+     */
+    public static function verifyAndDelete($user_id, $password, $delete_addons)
     {
         // Only the user logged into the can delete his account
         if (static::getLoggedId() !== $user_id)
@@ -1050,7 +1077,18 @@ class User extends Base implements IAsXML
         {
             DBConnection::get()->beginTransaction();
             static::validateCredentials($password, $user_id, static::CREDENTIAL_ID);
+
+            // Delete addons
+            if ($delete_addons)
+            {
+                static::deleteAllAddons($user_id);
+            }
+            // else
+            // Addons uploader will be set to null
+
+            // Delete user
             static::delete($user_id);
+
             DBConnection::get()->commit();
         }
         catch (UserException $e)
