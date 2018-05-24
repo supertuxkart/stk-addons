@@ -623,7 +623,34 @@ try
                 $output->endElement();
             }
             break;
+        case 'validate-player':
+            try
+            {
+                $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
+                $token = isset($_POST['token']) ? $_POST['token'] : "";
+                $session = ClientSession::get($token, $userid);
+                $id = isset($_POST['id']) ? (int)$_POST['id'] : 0;
 
+                $permission = AccessControl::getPermissions($session->getUser()->getRole());
+                $result = ClientSession::getSessionIDAndNameForValidation($permission, $id);
+                $output->startElement('validate-player');
+                    $output->writeAttribute('success', 'yes');
+                    $output->writeAttribute('info', '');
+                    $output->writeAttribute('token', $result['cid']);
+                    $output->writeAttribute('username', $result['username']);
+                $output->endElement();
+            }
+            catch(Exception $e)
+            {
+                $output->startElement('validate-player');
+                    $output->writeAttribute('success', 'no');
+                    $output->writeAttribute(
+                        'info',
+                        h($e->getMessage())
+                    );
+                $output->endElement();
+            }
+            break;
         default:
             $output->addErrorElement('request', 'Invalid action. Action = ' . h($_POST['action']));
             break;
