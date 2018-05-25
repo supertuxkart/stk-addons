@@ -866,4 +866,39 @@ class ClientSession
             throw new ClientSessionException($e->getMessage());
         }
     }
+
+    /**
+     * Get the session id and name of user (called only by user with PERM_OFFICIAL_SERVERS),
+     * which will be used as decryption. This is used to validate player joining official servers
+     *
+     * @param Permissions from user $user_permissions
+     * @param int $uid
+     *
+     * return session id and user name in array
+     * @throws ClientSessionException
+     */
+    public static function getSessionIDAndNameForValidation($user_permissions, $uid)
+    {
+        if (!in_array(AccessControl::PERM_OFFICIAL_SERVERS, $user_permissions))
+        {
+            throw new ClientSessionException("Invalid user to validate player", ErrorType::USER_INVALID_PERMISSION);
+        }
+        try
+        {
+            $result = DBConnection::get()->query(
+                "SELECT cid, username FROM `{DB_VERSION}_client_sessions` INNER JOIN `{DB_VERSION}_users` ON
+                `{DB_VERSION}_client_sessions`.uid = `{DB_VERSION}_users`.id WHERE uid = :uid;",
+                DBConnection::FETCH_FIRST,
+                [':uid' => $uid],
+                [':uid' => DBConnection::PARAM_INT]
+            );
+        }
+        catch (DBException $e)
+        {
+            throw new ClientSessionException(exception_message_db(_('get user session')));
+        }
+        if (!$result)
+            throw new ClientSessionException(_('No such user'));
+        return $result;
+    }
 }
