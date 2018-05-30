@@ -91,8 +91,6 @@ class ClientSession
     public function createServer($ip, $port, $private_port, $server_name,
         $max_players, $difficulty, $game_mode, $password, $version)
     {
-        $this->setPublicAddress($ip, $port, $private_port);
-
         return Server::create($ip, $port, $private_port, $this->user->getId(),
             $server_name, $max_players, $difficulty, $game_mode, $password, $version);
     }
@@ -109,9 +107,6 @@ class ClientSession
     {
         try
         {
-            // empty the public ip:port
-            $this->setPublicAddress(0, 0, 0);
-
             // now setup the serv info
             $count = DBConnection::get()->query(
                 "DELETE FROM `{DB_VERSION}_servers`
@@ -200,45 +195,50 @@ class ClientSession
     }
 
     /**
-     * Get the public address of a player
+     * Set the key to join server with client ip and port
      *
-     * @param int $peer_id id of the peer
+     * @param int $server_id id of the server
+     * @param int $address ip of client
+     * @param int $port port of client
+     * @param char $key aes 128 bit key in base64 of client
+     * @param char $iv initialization vector of the aes key
      *
      * @return array the ip and port of the player
      * @throws ClientSessionException if the request fails
      */
-    public function getPeerAddress($peer_id)
+    public function setJoinServerKey($server_id, $address, $port, $key, $iv)
     {
         try
         {
-            //FIXME :   A check should be done that the requester is the host of a server
-            //          the requestee has joined. (Else anybody with an account could call this with the correct POST parameters)
-            // Query the database to set the ip and port
-            $result = DBConnection::get()->query(
-                "SELECT `ip`, `port`, `private_port`
-                FROM `{DB_VERSION}_client_sessions`
-                WHERE `uid` = :peerid",
-                DBConnection::FETCH_ALL,
-                [':peerid' => $peer_id],
-                [':peerid' => DBConnection::PARAM_INT]
+            DBConnection::get()->query(
+                "INSERT INTO `{DB_VERSION}_server_conn`
+                (`user_id`, `server_id`, `ip`, `port`, `aes_key`, `iv`) VALUES
+                (:user_id, :server_id, :ip, :port, :aes_key, :iv)
+                ON DUPLICATE KEY UPDATE `server_id` = :server_id,
+                `ip` = :ip, `port`= :port, `aes_key` = :aes_key, `iv` = :iv",
+                DBConnection::ROW_COUNT,
+                [
+                    ':user_id'   => $this->user->getId(),
+                    ':server_id' => $server_id,
+                    ':ip'        => $address,
+                    ':port'      => $port,
+                    ':aes_key'   => $key,
+                    ':iv'        => $iv
+                ],
+                [
+                    ':user_id'   => DBConnection::PARAM_INT,
+                    ':server_id' => DBConnection::PARAM_INT,
+                    ':ip'        => DBConnection::PARAM_INT,
+                    ':port'      => DBConnection::PARAM_INT,
+                    ':aes_key'   => DBConnection::PARAM_STR,
+                    ':iv'        => DBConnection::PARAM_STR
+                ]
             );
         }
         catch (DBException $e)
         {
-            throw new ClientSessionException(exception_message_db(_('get a peer\'s public address.')));
+            throw new ClientSessionException(exception_message_db(_('set join server key.')));
         }
-
-        $size = count($result);
-        if ($size === 0)
-        {
-            throw new ClientSessionException(_h('That user is not signed in.'));
-        }
-        elseif ($size > 1)
-        {
-            throw new ClientSessionException(_h('Too many users match the request'));
-        }
-
-        return $result[0];
     }
 
     /**
@@ -305,10 +305,10 @@ class ClientSession
                 ]);
 
             $connection_requests = DBConnection::get()->query(
-                "SELECT s.user_id, c.ip, c.private_port, c.port
-                FROM `{DB_VERSION}_server_conn` s
-                INNER JOIN `{DB_VERSION}_client_sessions` c ON c.uid = s.user_id
-                WHERE s.`server_id` = :server_id AND s.`is_request` = '1'",
+                "SELECT `user_id`, `server_id`, `ip`, `port`, `aes_key`, `iv`, `username`
+                FROM `{DB_VERSION}_server_conn` INNER JOIN `{DB_VERSION}_users`
+                ON `{DB_VERSION}_server_conn`.user_id = `{DB_VERSION}_users`.id
+                WHERE `server_id` = :server_id",
                 DBConnection::FETCH_ALL,
                 [':server_id' => $server_id['id']],
                 [':server_id' => DBConnection::PARAM_INT]
@@ -329,8 +329,7 @@ class ClientSession
             if ($index > 0)
             {
                 DBConnection::get()->query(
-                    "UPDATE `{DB_VERSION}_server_conn`
-                    SET `is_request` = 0
+                    "DELETE FROM `{DB_VERSION}_server_conn`
                     WHERE " . implode(" OR ", $query_parts),
                     DBConnection::ROW_COUNT,
                     $parameters
@@ -456,89 +455,6 @@ class ClientSession
         }
     }
 
-
-    /**
-     * Create a server connection
-     *
-     * @param $server_id
-     *
-     * @return array|int|null
-     * @throws ClientSessionConnectException
-     */
-    public function requestServerConnection($server_id)
-    {
-        try
-        {
-            $count = DBConnection::get()->query(
-                "INSERT INTO `{DB_VERSION}_server_conn` (server_id, user_id, is_request)
-                VALUES (:server_id, :user_id, 1)
-                ON DUPLICATE KEY 
-                UPDATE is_request = '1', server_id = :server_id",
-                DBConnection::ROW_COUNT,
-                [
-                    ':user_id'   => $this->user->getId(),
-                    ':server_id' => $server_id
-                ],
-                [':user_id' => DBConnection::PARAM_INT, ':server_id' => DBConnection::PARAM_INT]
-            );
-        }
-        catch (DBException $e)
-        {
-            throw new ClientSessionConnectException(exception_message_db(_('request a server connection')));
-        }
-
-        if ($count > 2 || $count < 0)
-        {
-            throw new ClientSessionConnectException(h("requestServerConnection: Unexpected error occurred"));
-        }
-
-        return $count;
-    }
-
-    /**
-     * Join a server
-     *
-     * @return mixed
-     * @throws ClientSessionConnectException
-     */
-    public function quickJoin()
-    {
-        try
-        {
-            // Query the database to add the request entry
-            $server = DBConnection::get()->query(
-                "SELECT `id`, `host_id`, `ip`, `port`, `private_port`
-                FROM `{DB_VERSION}_servers`
-                LIMIT 1",
-                DBConnection::FETCH_FIRST
-            );
-
-            if (!$server)
-            {
-                throw new ClientSessionConnectException(_h('No server found'));
-            }
-
-            DBConnection::get()->query(
-                "INSERT INTO `{DB_VERSION}_server_conn` (server_id, user_id, is_request)
-                VALUES (:server_id, :user_id, 1)
-                ON DUPLICATE KEY UPDATE is_request = '1'",
-                DBConnection::NOTHING,
-                [
-                    ':user_id'   => $this->user->getId(),
-                    ':server_id' => $server['id']
-                ],
-                [':user_id' => DBConnection::PARAM_INT, ':server_id' => DBConnection::PARAM_INT]
-            );
-        }
-        catch (DBException $e)
-        {
-            throw new ClientSessionConnectException(exception_message_db(_('quick join a server')));
-        }
-
-        return $server;
-    }
-
-
     /**
      * Vote on a server,
      *
@@ -619,92 +535,6 @@ class ClientSession
         }
 
         return $this;
-    }
-
-    /**
-     * Sets the public address of a player
-     *
-     * @param int $ip           user ip
-     * @param int $port         user port
-     * @param int $private_port the private port (for LANs and special NATs)
-     *
-     * @throws ClientSessionException if the request fails
-     * @return ClientSession
-     */
-    public function setPublicAddress($ip, $port, $private_port)
-    {
-        try
-        {
-            // Query the database to set the ip and port
-            $count = DBConnection::get()->query(
-                "UPDATE `{DB_VERSION}_client_sessions`
-                SET `ip` = :ip , `port` = :port, `private_port` = :private_port
-                WHERE `uid` = :user_id AND `cid` = :token",
-                DBConnection::ROW_COUNT,
-                [
-                    ':ip'           => $ip,
-                    ':port'         => $port,
-                    ':private_port' => $private_port,
-                    ':user_id'      => $this->user->getId(),
-                    ':token'        => $this->session_id
-                ],
-                [
-                    ':ip'           => DBConnection::PARAM_INT,
-                    ':port'         => DBConnection::PARAM_INT,
-                    ':private_port' => DBConnection::PARAM_INT,
-                    ':user_id'      => DBConnection::PARAM_INT,
-                ]
-
-            );
-        }
-        catch (DBException $e)
-        {
-            throw new ClientSessionException(exception_message_db(_('set your public address')));
-        }
-
-        // if count = 0 that may be a re-update of an existing key
-        if ($count > 1)
-        {
-            throw new ClientSessionException(_h('Could not set the ip:port'));
-        }
-
-        return $this;
-    }
-
-    /**
-     * Unset the public address of a user
-     *
-     * @throws ClientSessionException if the request fails
-     */
-    public function unsetPublicAddress()
-    {
-        try
-        {
-            $count = DBConnection::get()->query(
-                "UPDATE `{DB_VERSION}_client_sessions`
-                SET `ip` = '0' , `port` = '0'
-                WHERE `uid` = :user_id AND `cid` = :token",
-                DBConnection::ROW_COUNT,
-                [
-                    ':user_id' => $this->user->getId(),
-                    ':token'   => $this->session_id
-                ],
-                [':user_id' => DBConnection::PARAM_INT]
-            );
-        }
-        catch (DBException $e)
-        {
-            throw new ClientSessionException(exception_message_db(_('unset your public address')));
-        }
-
-        if ($count === 0)
-        {
-            throw new ClientSessionException(_h('ID:Token must be wrong.'));
-        }
-        elseif ($count > 1)
-        {
-            throw new ClientSessionException(_h('Weird count of updates'));
-        }
     }
 
     /**
