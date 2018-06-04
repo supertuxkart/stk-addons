@@ -297,9 +297,6 @@ CREATE TABLE IF NOT EXISTS `v3_client_sessions` (
     `cid`          CHAR(24)          NOT NULL,
     `is_online`    BOOL              NOT NULL DEFAULT '1',
     `is_save`      BOOL              NOT NULL DEFAULT '0',
-    `ip`           INT UNSIGNED      NOT NULL DEFAULT '0',
-    `private_port` SMALLINT UNSIGNED NOT NULL DEFAULT '0',
-    `port`         SMALLINT UNSIGNED NOT NULL DEFAULT '0',
     `last-online`  TIMESTAMP         NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`uid`),
     UNIQUE KEY `key_session` (`uid`, `cid`)
@@ -344,9 +341,12 @@ CREATE TABLE IF NOT EXISTS `v3_servers` (
 -- Table structure for table `v3_server_conn`
 --
 CREATE TABLE IF NOT EXISTS `v3_server_conn` (
-    `user_id`    INT UNSIGNED NOT NULL,
-    `server_id`  INT UNSIGNED NOT NULL,
-    `is_request` BOOL         NOT NULL DEFAULT '1',
+    `user_id`    INT UNSIGNED      NOT NULL,
+    `server_id`  INT UNSIGNED      NOT NULL,
+    `ip`         INT UNSIGNED      NOT NULL,
+    `port`       SMALLINT UNSIGNED NOT NULL,
+    `aes_key`    CHAR(24)          NOT NULL,
+    `aes_iv`     CHAR(24)          NOT NULL,
     PRIMARY KEY (`user_id`),
     KEY `key_server_id` (`server_id`),
     CONSTRAINT `v3_server_conn_ibfk_1` FOREIGN KEY (`server_id`) REFERENCES `v3_servers` (`id`)

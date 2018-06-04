@@ -67,28 +67,6 @@ try
                 $output->addErrorElement('create', $e->getMessage());
             }
             break;
-
-        case 'set':
-            try
-            {
-                $userid = isset($_POST['userid']) ? utf8_encode($_POST['userid']) : null;
-                $token = isset($_POST['token']) ? utf8_encode($_POST['token']) : null;
-                $address = isset($_POST['address']) ? utf8_encode($_POST['address']) : null;
-                $private_port = isset($_POST['private_port']) ? utf8_encode($_POST['private_port']) : null;
-                $port = isset($_POST['port']) ? utf8_encode($_POST['port']) : null;
-
-                ClientSession::get($token, $userid)->setPublicAddress($address, $port, $private_port);
-
-                $output->startElement('set');
-                    $output->writeAttribute('success', 'yes');
-                    $output->writeAttribute('info', '');
-                $output->endElement();
-            }
-            catch(Exception $e)
-            {
-                $output->addErrorElement('set', $e->getMessage());
-            }
-            break;
         
         case 'stop': // stop a server
             try
@@ -111,49 +89,6 @@ try
             }
             break;
 
-        case 'unset':
-            try
-            {
-                $userid = isset($_POST['userid']) ? utf8_encode($_POST['userid']) : null;
-                $token = isset($_POST['token']) ? utf8_encode($_POST['token']) : null;
-
-                ClientSession::get($token, $userid)->unsetPublicAddress();
-
-                $output->startElement('unset');
-                    $output->writeAttribute('success', 'yes');
-                    $output->writeAttribute('info', '');
-                $output->endElement();
-            }
-            catch(Exception $e)
-            {
-                $output->addErrorElement('unset', $e->getMessage());
-            }
-            break;
-
-        case 'get': // get the client info
-            try
-            {
-                $userid = isset($_POST['userid']) ? utf8_encode($_POST['userid']) : null;
-                $token = isset($_POST['token']) ? utf8_encode($_POST['token']) : null;
-                $peer_id = isset($_POST['peer_id']) ? utf8_encode($_POST['peer_id']) : null;
-
-                $session = ClientSession::get($token, $userid);
-                $result = $session->getPeerAddress($peer_id);
-
-                $output->startElement('get');
-                    $output->writeAttribute('success', 'yes');
-                    $output->writeAttribute('info', '');
-                    $output->writeAttribute('ip', $result['ip']);
-                    $output->writeAttribute('port', $result['port']);
-                    $output->writeAttribute('private_port', $result['private_port']);
-                $output->endElement();
-            }
-            catch(Exception $e)
-            {
-                $output->addErrorElement('get', $e->getMessage());
-            }
-            break;
-
         case 'get-all': // get all the servers list
             try
             {
@@ -171,47 +106,28 @@ try
             }
             break;
 
-        case 'quick-join':
+        case 'join-server-key':
             try
             {
                 $userid = isset($_POST['userid']) ? (int)utf8_encode($_POST['userid']) : null;
                 $token = isset($_POST['token']) ? utf8_encode($_POST['token']) : null;
+                $server_id = isset($_POST['server-id']) ? (int)utf8_encode($_POST['server-id']) : null;
+                $address = isset($_POST['address']) ? utf8_encode($_POST['address']) : null;
+                $port = isset($_POST['port']) ? utf8_encode($_POST['port']) : null;
+                $aes_key = isset($_POST['aes-key']) ? utf8_encode($_POST['aes-key']) : null;
+                $aes_iv = isset($_POST['aes-iv']) ? utf8_encode($_POST['aes-iv']) : null;
 
-                $result = ClientSession::get($token, $userid)->quickJoin();
+                ClientSession::get($token, $userid)
+                    ->setJoinServerKey($server_id, $address, $port, $aes_key, $aes_iv);
 
-                $output->startElement('quick-join');
+                $output->startElement('join-server-key');
                     $output->writeAttribute('success', 'yes');
-                    $output->writeAttribute('info', '');
-                    $output->writeAttribute('hostid', $result['host_id']);
-                    $output->writeAttribute('ip', $result['ip']);
-                    $output->writeAttribute('port', $result['port']);
-                    $output->writeAttribute('private_port', $result['private_port']);
-                $output->endElement();
-            }
-            catch(Exception $e)
-            {
-                $output->addErrorElement('quick-join', $e->getMessage());
-            }
-            break;
-
-        case 'request-connection':
-            try
-            {
-                $userid = isset($_POST['userid']) ? (int)utf8_encode($_POST['userid']) : null;
-                $token = isset($_POST['token']) ? utf8_encode($_POST['token']) : null;
-                $server_id = isset($_POST['server_id']) ? (int)utf8_encode($_POST['server_id']) : null;
-
-                ClientSession::get($token, $userid)->requestServerConnection($server_id);
-
-                $output->startElement('request-connection');
-                    $output->writeAttribute('success', 'yes');
-                    $output->writeAttribute('serverid', $server_id);
                     $output->writeAttribute('info', '');
                 $output->endElement();
             }
             catch(Exception $e)
             {
-                $output->addErrorElement('request-connection', $e->getMessage());
+                $output->addErrorElement('join-server-key', $e->getMessage());
             }
             break;
 
@@ -235,9 +151,11 @@ try
                         {
                             $output->startElement('user');
                                 $output->writeAttribute("id", $request['user_id']);
+                                $output->writeAttribute("username", $request['username']);
                                 $output->writeAttribute("ip", $request['ip']);
                                 $output->writeAttribute("port", $request['port']);
-                                $output->writeAttribute("private_port", $request['private_port']);
+                                $output->writeAttribute("aes-key", $request['aes_key']);
+                                $output->writeAttribute("aes-iv", $request['aes_iv']);
                             $output->endElement();
                         }
                     $output->endElement();
