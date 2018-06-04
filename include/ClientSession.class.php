@@ -200,30 +200,29 @@ class ClientSession
      * @param int $server_id id of the server
      * @param int $address ip of client
      * @param int $port port of client
-     * @param char $key aes 128 bit key in base64 of client
-     * @param char $iv initialization vector of the aes key
+     * @param char $aes_key aes 128 bit key of client in base64
+     * @param char $aes_iv initialization vector of the aes key in base64
      *
-     * @return array the ip and port of the player
-     * @throws ClientSessionException if the request fails
+     * @throws ClientSessionException if setting join key fails
      */
-    public function setJoinServerKey($server_id, $address, $port, $key, $iv)
+    public function setJoinServerKey($server_id, $address, $port, $aes_key, $aes_iv)
     {
         try
         {
             DBConnection::get()->query(
                 "INSERT INTO `{DB_VERSION}_server_conn`
-                (`user_id`, `server_id`, `ip`, `port`, `aes_key`, `iv`) VALUES
-                (:user_id, :server_id, :ip, :port, :aes_key, :iv)
+                (`user_id`, `server_id`, `ip`, `port`, `aes_key`, `aes_iv`) VALUES
+                (:user_id, :server_id, :ip, :port, :aes_key, :aes_iv)
                 ON DUPLICATE KEY UPDATE `server_id` = :server_id,
-                `ip` = :ip, `port`= :port, `aes_key` = :aes_key, `iv` = :iv",
-                DBConnection::ROW_COUNT,
+                `ip` = :ip, `port`= :port, `aes_key` = :aes_key, `aes_iv` = :aes_iv",
+                DBConnection::NOTHING,
                 [
                     ':user_id'   => $this->user->getId(),
                     ':server_id' => $server_id,
                     ':ip'        => $address,
                     ':port'      => $port,
-                    ':aes_key'   => $key,
-                    ':iv'        => $iv
+                    ':aes_key'   => $aes_key,
+                    ':aes_iv'    => $aes_iv
                 ],
                 [
                     ':user_id'   => DBConnection::PARAM_INT,
@@ -231,7 +230,7 @@ class ClientSession
                     ':ip'        => DBConnection::PARAM_INT,
                     ':port'      => DBConnection::PARAM_INT,
                     ':aes_key'   => DBConnection::PARAM_STR,
-                    ':iv'        => DBConnection::PARAM_STR
+                    ':aes_iv'    => DBConnection::PARAM_STR
                 ]
             );
         }
@@ -305,8 +304,9 @@ class ClientSession
                 ]);
 
             $connection_requests = DBConnection::get()->query(
-                "SELECT `user_id`, `server_id`, `ip`, `port`, `aes_key`, `iv`, `username`
-                FROM `{DB_VERSION}_server_conn` INNER JOIN `{DB_VERSION}_users`
+                "SELECT `user_id`, `server_id`, `ip`, `port`, `aes_key`, `aes_iv`, `username`
+                FROM `{DB_VERSION}_server_conn`
+                INNER JOIN `{DB_VERSION}_users`
                 ON `{DB_VERSION}_server_conn`.user_id = `{DB_VERSION}_users`.id
                 WHERE `server_id` = :server_id",
                 DBConnection::FETCH_ALL,
