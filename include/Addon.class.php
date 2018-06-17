@@ -7,6 +7,7 @@
  * stk-addons is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
+
  * (at your option) any later version.
  *
  * stk-addons is distributed in the hope that it will be useful,
@@ -109,12 +110,12 @@ class Addon extends Base
     private $license;
 
     /**
-     * @var int
+     * @var string
      */
     private $include_min;
 
     /**
-     * @var int
+     * @var string
      */
     private $include_max;
 
@@ -486,7 +487,7 @@ class Addon extends Base
     /**
      * Get the id of the addon
      *
-     * @return int
+     * @return string
      */
     public function getId()
     {
@@ -915,8 +916,8 @@ class Addon extends Base
     /**
      * Set the addon include versions
      *
-     * @param $start_ver
-     * @param $end_ver
+     * @param string $start_ver
+     * @param string $end_ver
      *
      * @return static
      * @throws AddonException
@@ -1839,7 +1840,7 @@ class Addon extends Base
         $addon_id = static::cleanId($name);
         if (!$addon_id)
         {
-            return false;
+            throw new InvalidArgumentException('Invalid addon ID.');
         }
 
         // Check database
@@ -1866,7 +1867,7 @@ class Addon extends Base
      * Create a new add-on record. To create the first addon revision, call $this->createRevisionFirst
      *
      * @param string $id                 Addon ID
-     * @param string $type               Add-on type
+     * @param int $type               Add-on type
      * @param array  $attributes         Contains properties of the add-on. Must have the
      *                                   following elements: name, designer, license, image, file_id, status,
      *                                   missing_textures

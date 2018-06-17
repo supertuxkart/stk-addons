@@ -565,7 +565,7 @@ class FileSystem
             static::removeFile($filename, false);
         }
 
-        if ($zip->open($filename, ZIPARCHIVE::CREATE) !== true)
+        if ($zip->open($filename, ZipArchive::CREATE) !== true)
         {
             throw new FileSystemException("Cannot open filename = '$filename'");
         }

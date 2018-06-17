@@ -98,7 +98,7 @@ abstract class Base implements IBaseException
      * @param string|null $prepared_field optional name for the prepared field
      *
      * @return array the data from the database
-     * @throws mixed
+     * @throws BaseException
      */
     protected static function getFromField(
         $query,

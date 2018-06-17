@@ -40,7 +40,7 @@ class ExceptionsTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param $exception BaseException
+     * @param BaseException $exception
      *
      * @dataProvider providerAllExceptions
      */
@@ -61,7 +61,7 @@ class ExceptionsTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param $exception BaseException
+     * @param BaseException $exception
      *
      * @dataProvider providerAllExceptions
      */

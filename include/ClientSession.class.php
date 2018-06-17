@@ -200,8 +200,8 @@ class ClientSession
      * @param int $server_id id of the server
      * @param int $address ip of client
      * @param int $port port of client
-     * @param char $aes_key aes 128 bit key of client in base64
-     * @param char $aes_iv initialization vector of the aes key in base64
+     * @param string $aes_key aes 128 bit key of client in base64
+     * @param string $aes_iv initialization vector of the aes key in base64
      *
      * @throws ClientSessionException if setting join key fails
      */

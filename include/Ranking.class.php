@@ -27,7 +27,7 @@ class Ranking
      *
      * @param int $topn
      *
-     * @return list of player infos with rank in array
+     * @return array list of player infos with rank in array
      */
     public static function getTopPlayersFromRanking($topn)
     {
@@ -54,11 +54,11 @@ class Ranking
         }
         catch (DBException $e)
         {
-            return null;
+            return [];
         }
         if (!$result)
         {
-            return null;
+            return [];
         }
         return $result;
     }
@@ -66,7 +66,7 @@ class Ranking
     /**
      * Get initial ranking for all players
      *
-     * @return initial ranking with scores data in array
+     * @return array initial ranking with scores data in array
      */
     public static function getInitialRanking()
     {
@@ -84,7 +84,7 @@ class Ranking
      *
      * @param int $user_id
      *
-     * @return player info with rank
+     * @return array player info with rank
      */
     public static function getRanking($user_id)
     {
@@ -121,7 +121,7 @@ class Ranking
     /**
      * Reset ranking of all players (called only by user with PERM_SUMBIT_RANKINGS)
      *
-     * @param Permissions from user $user_permissions
+     * @param array $user_permissions Permissions from user
      *
      * @throws RankingException
      */
@@ -144,7 +144,7 @@ class Ranking
     /**
      * Submit new ranking of a player (called only by user with PERM_SUMBIT_RANKINGS)
      *
-     * @param Permissions from user $user_permissions
+     * @param array $user_permissions Permissions from user
      * @param int $id_for_ranked
      * @param double $new_scores
      * @param double $new_max_scores

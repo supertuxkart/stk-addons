@@ -30,7 +30,7 @@ abstract class Parser
 
     /**
      * The file resource
-     * @var resource
+     * @var resource|null
      */
     protected $file;
 

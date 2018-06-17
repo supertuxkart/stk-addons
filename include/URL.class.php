@@ -82,8 +82,8 @@ class URL
     /**
      * Removes an item or list from the query string.
      *
-     * @param string|array $keys Query key or keys to remove.
-     * @param string       $url  The url to remove them from
+     * @param string[] $keys Query key or keys to remove.
+     * @param string   $url  The url to remove them from
      *
      * @return string
      */

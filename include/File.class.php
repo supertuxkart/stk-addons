@@ -409,7 +409,7 @@ class File extends Base
      *
      * @throws FileException
      *
-     * @return boolean
+     * @return string
      */
     public static function deleteQueuedFiles()
     {

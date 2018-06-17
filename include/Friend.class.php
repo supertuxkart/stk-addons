@@ -154,7 +154,7 @@ class Friend implements IAsXML
     /**
      * Get a space separated string of friend id's
      *
-     * @param $user_id
+     * @param int $user_id
      *
      * @return int[] array of friend id's
      * @throws FriendException

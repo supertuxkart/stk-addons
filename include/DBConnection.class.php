@@ -32,7 +32,7 @@ class DBConnection
 
     /**
      * The singleton used for the database connection
-     * @var DBConnection
+     * @var DBConnection|null
      */
     private static $instance;
 
@@ -237,7 +237,7 @@ class DBConnection
      *
      * @throws DBException
      *
-     * @return array|int|null depending of the return type
+     * @return array|int|string|null depending of the return type
      */
     public function query(
         $query,
@@ -336,7 +336,7 @@ class DBConnection
     /**
      * Get the last id inserted into the database
      *
-     * @return string
+     * @return int|string
      */
     public function lastInsertId()
     {

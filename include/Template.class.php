@@ -30,7 +30,7 @@ class Template
     protected $smarty;
 
     /**
-     * @var StkLocale
+     * @var StkLocale|null
      */
     protected static $locale;
 
@@ -150,7 +150,7 @@ class Template
     /**
      * Enable or disable minify
      *
-     * @param $minify
+     * @param bool $minify
      *
      * @return $this
      */

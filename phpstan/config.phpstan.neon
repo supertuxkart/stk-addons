@@ -1,0 +1,50 @@
+parameters:
+    autoload_files:
+        - phpstan/config.example_install_for_phpstan.php
+
+    autoload_directories:
+        - tests/include
+
+    ignoreErrors:
+        - '~^Parameter \$handle of method FileSystem::(?:fileClose|fileWrite)\(\) has invalid typehint type resource\.$~'
+        - '~^PHPDoc tag @param for parameter \$handle with type resource is incompatible with native type resource$~'
+
+    rules:
+        #- PHPStan\Rules\BooleansInConditions\BooleanInBooleanAndRule
+        #- PHPStan\Rules\BooleansInConditions\BooleanInBooleanNotRule
+        #- PHPStan\Rules\BooleansInConditions\BooleanInBooleanOrRule
+        #- PHPStan\Rules\BooleansInConditions\BooleanInElseIfConditionRule
+        #- PHPStan\Rules\BooleansInConditions\BooleanInIfConditionRule
+        #- PHPStan\Rules\BooleansInConditions\BooleanInTernaryOperatorRule
+        #- PHPStan\Rules\DisallowedConstructs\DisallowedEmptyRule
+        - PHPStan\Rules\DisallowedConstructs\DisallowedImplicitArrayCreationRule
+        #- PHPStan\Rules\Methods\MissingMethodParameterTypehintRule
+        #- PHPStan\Rules\Methods\MissingMethodReturnTypehintRule
+        - PHPStan\Rules\Methods\WrongCaseOfInheritedMethodRule
+        - PHPStan\Rules\Operators\OperandsInArithmeticAdditionRule
+        - PHPStan\Rules\Operators\OperandsInArithmeticDivisionRule
+        - PHPStan\Rules\Operators\OperandsInArithmeticExponentiationRule
+        - PHPStan\Rules\Operators\OperandsInArithmeticModuloRule
+        - PHPStan\Rules\Operators\OperandsInArithmeticMultiplicationRule
+        - PHPStan\Rules\Operators\OperandsInArithmeticSubtractionRule
+        - PHPStan\Rules\Properties\MissingPropertyTypehintRule
+        - PHPStan\Rules\StrictCalls\DynamicCallOnStaticMethodsRule
+        #- PHPStan\Rules\StrictCalls\StrictFunctionCallsRule
+        - PHPStan\Rules\SwitchConditions\MatchingTypeInSwitchCaseConditionRule
+
+    services:
+        -
+            class: PHPStan\Rules\BooleansInConditions\BooleanRuleHelper
+        -
+            class: PHPStan\Rules\Operators\OperatorRuleHelper
+
+    dynamicConstantNames:
+        - API_MODE
+        - CRON_MODE
+        - DEBUG_MODE
+        - DEBUG_TOOLBAR
+        - IS_SMTP
+        - IS_SSL_CERTIFICATE_VALID
+        - MAINTENANCE_MODE
+        - SENDMAIL_PATH
+        - TEST_MODE

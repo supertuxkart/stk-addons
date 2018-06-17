@@ -34,12 +34,12 @@ class Debug
 {
     /**
      * Singleton instance of the debug toolbar;
-     * @var DebugBar\StandardDebugBar
+     * @var DebugBar\DebugBar|null
      */
     public static $debug_toolbar;
 
     /**
-     * @return DebugBar\StandardDebugBar|null
+     * @return DebugBar\DebugBar|null
      */
     public static function getToolbar()
     {
@@ -96,7 +96,7 @@ class Debug
     /**
      * Add an message to the debug log
      *
-     * @param        $message
+     * @param string $message
      * @param string $log_level
      * @param bool   $add_to_error_log
      */

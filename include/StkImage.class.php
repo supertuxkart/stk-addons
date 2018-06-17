@@ -275,7 +275,7 @@ class StkImage
      * @param string $file_path
      * @param int    $size_type the image size type, see StkImage::SIZE_
      *
-     * @return null
+     * @return void
      */
     public static function resizeImage($file_path, $size_type = null)
     {
@@ -406,7 +406,7 @@ class StkImage
     /**
      * Crates an image with the text provided.
      *
-     * @param $text
+     * @param string $text
      *
      * @return array
      */
@@ -636,7 +636,7 @@ class StkImage
     }
 
     /**
-     * @param int $size see SIZE_*
+     * @param int|string $size see SIZE_*
      *
      * @return int
      */
@@ -660,7 +660,7 @@ class StkImage
     }
 
     /**
-     * @param $number
+     * @param int|string $number
      *
      * @return int
      */

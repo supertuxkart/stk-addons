@@ -110,7 +110,7 @@ class Upload
     private $upload_file_name;
 
     /**
-     * @var int
+     * @var string
      */
     private $addon_id;
 

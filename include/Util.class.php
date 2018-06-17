@@ -151,7 +151,7 @@ class Util
     /**
      * Output buffer a file and return it's content
      *
-     * @param $path
+     * @param string $path
      *
      * @return string
      */
@@ -343,7 +343,7 @@ MSG;
      */
     public static function redirectError($error, $permanent = false)
     {
-        static::redirectTo(ROOT_LOCATION . sprintf("error.php?e=%d", (int)$error), $permanent);
+        static::redirectTo(ROOT_LOCATION . sprintf("error.php?e=%d", $error), $permanent);
     }
 
     /**
@@ -526,8 +526,6 @@ MSG;
      */
     public static function isLatitude($latitude)
     {
-        $latitude = (float)$latitude;
-
         // Latitude is in the range [-90, 90]
         return !(abs($latitude) > 90.0);
     }
@@ -539,8 +537,6 @@ MSG;
      */
     public static function isLongitude($longitude)
     {
-        $longitude = (float)$longitude;
-
         // Longitude is in the range [-180, 180]
         return !(abs($longitude) > 180.0);
     }
@@ -707,14 +703,13 @@ MSG;
     /**
      * Get the stk version formatted
      *
-     * @param int    $format the version format
-     * @param string $addon_type
+     * @param int $format the version format
+     * @param int $addon_type
      *
      * @return string
      */
     public static function getVersionFormat($format, $addon_type)
     {
-        $format = (int)$format;
         $latest_development_string = _h("Latest development version");
         switch ($addon_type)
         {
@@ -828,4 +823,3 @@ MSG;
         return $angle * $earth_radius;
     }
 }
- 

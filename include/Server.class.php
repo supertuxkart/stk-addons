@@ -192,7 +192,7 @@ class Server implements IAsXML
 
     /**
      * Get the latitude and longitude of an IP represented as a string
-     * @return array of latitude and longitude in string.
+     * @return float[] of latitude and longitude in string.
      *         If location does not exist it returns coordinates [0, 0] (null island)
      *
      * @param string $ip_string eg: 127.0.0.1
@@ -238,8 +238,8 @@ class Server implements IAsXML
     /**
      * Version of asXML so that we can cache the client location.
      *
-     * @param $client_latitude
-     * @param $client_longitude
+     * @param float $client_latitude
+     * @param float $client_longitude
      *
      * @return string
      */

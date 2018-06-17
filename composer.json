@@ -25,10 +25,15 @@
         "phpunit/phpunit": "~5.7",
         "phpunit/dbunit": "@stable",
         "phpmd/phpmd" : "@stable",
-        "maximebf/debugbar": "1.*"
+        "maximebf/debugbar": "1.*",
+        "phpstan/phpstan": "^0.10",
+        "phpstan/phpstan-strict-rules": "^0.10"
     },
     "autoload": {
         "classmap": ["include/"],
         "files": ["include/functions.php", "include/xmlWrite.php"]
+    },
+    "scripts": {
+        "phpstan": "phpstan analyse --level=4 -c phpstan/config.phpstan.neon api cron include tests"
     }
 }
