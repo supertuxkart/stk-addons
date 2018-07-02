@@ -145,7 +145,7 @@ class Util
      */
     public static function array_key_exists(array $array, $key)
     {
-        return isset($array[$key]) || array_key_exists($array, $key);
+        return isset($array[$key]) || array_key_exists($key, $array);
     }
 
     /**
