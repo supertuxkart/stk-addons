@@ -459,7 +459,7 @@ class File extends Base
     /**
      * Create a new file in the database table
      *
-     * @param int    $addon_id
+     * @param string $addon_id
      * @param int    $file_type
      * @param string $file_path
      *
@@ -507,7 +507,7 @@ class File extends Base
      * If the image is to large it will be scaled down
      *
      * @param string $file_name the name of the image
-     * @param int    $addon_id  the addon_id that this image belongs tp
+     * @param string $addon_id  the addon_id that this image belongs tp
      *
      * @throws FileException|FileSystemException
      */
@@ -581,7 +581,7 @@ class File extends Base
      * Create a new image from a quad file
      *
      * @param string $quad_file
-     * @param int    $addon_id
+     * @param string $addon_id
      *
      * @throws FileException|FileSystemException
      */

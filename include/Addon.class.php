@@ -593,7 +593,7 @@ class Addon extends Base
     /**
      * Get the current status of the latest revision
      *
-     * @return string
+     * @return int
      */
     public function getStatus()
     {
@@ -1852,7 +1852,7 @@ class Addon extends Base
             {
                 $next_num = (int)$matches[1];
                 $next_num++;
-                $addon_id = str_replace($matches[1], $next_num, $addon_id);
+                $addon_id = str_replace($matches[1], (string)$next_num, $addon_id);
             }
             else
             {

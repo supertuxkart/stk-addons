@@ -31,7 +31,7 @@ function _h($message)
 }
 
 /**
- * Macro function for htmlspecialchar() with additional options
+ * Macro function for htmlspecialchars() with additional options
  *
  * @param string $message
  *

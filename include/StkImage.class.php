@@ -457,7 +457,7 @@ class StkImage
      * Create a new image from a quad file
      *
      * @param string $quad_file the path to the XML quad file
-     * @param int    $addon_id  the addon id this quad file belongs to.
+     * @param string $addon_id  the addon id this quad file belongs to.
      *
      * @throws FileSystemException
      * @return string   the path to the new created image

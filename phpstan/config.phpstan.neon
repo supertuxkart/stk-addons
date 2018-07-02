@@ -6,8 +6,8 @@ parameters:
         - tests/include
 
     ignoreErrors:
-        - '~^Parameter \$handle of method FileSystem::(?:fileClose|fileWrite)\(\) has invalid typehint type resource\.$~'
-        - '~^PHPDoc tag @param for parameter \$handle with type resource is incompatible with native type resource$~'
+        - '~^Parameter \#2 \$value of method XMLWriter::writeAttribute\(\) expects string, (bool|float|int|\(int\|false\)) given\.$~'
+        - '~^Parameter \#2 \$callback of method Smarty_Internal_TemplateBase::registerFilter\(\) expects callback, string given\.$~'
 
     rules:
         #- PHPStan\Rules\BooleansInConditions\BooleanInBooleanAndRule

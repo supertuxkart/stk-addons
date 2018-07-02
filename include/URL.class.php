@@ -183,7 +183,7 @@ class URL
             return $link;
         }
 
-        $link = str_replace(ROOT_LOCATION, null, $link);
+        $link = str_replace(ROOT_LOCATION, '', $link);
         $rules = Config::get(Config::APACHE_REWRITES);
         $rules = preg_split('/(\\r)?\\n/', $rules);
 
