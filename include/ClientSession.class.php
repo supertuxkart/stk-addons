@@ -464,13 +464,13 @@ class ClientSession
      * @return int
      * @throws ClientSessionException
      */
-    public function setHostVote($host_id, $vote)
+    public function setHostVote(int $host_id, int $vote)
     {
-        $vote = (int)$vote;
-        if ($vote !== 1 || $vote !== -1)
+        if ($vote !== 1 && $vote !== -1)
         {
             throw new ClientSessionException(_h("Invalid vote. Your rating has to be either -1 or 1."));
         }
+
         try
         {
             // TODO find out if host_id is a server or user
