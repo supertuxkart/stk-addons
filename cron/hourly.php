@@ -19,14 +19,8 @@
  */
 define('CRON_MODE', true);
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
+require_once __DIR__ . '/../vendor/autoload.php';
 
 echo "Executed at: " . date('d/m/Y H:i:s', time()) . "\n";
-try
-{
-    ClientSession::cron(5*60 /* 5 minutes */, 3600*24*30 /* 1 month */);
-    echo "SUCCESS \n";
-}
-catch (ClientSessionException $e)
-{
-    echo "ERROR: \n" . $e->getMessage();
-}
+
+HourlyCron::run();

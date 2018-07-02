@@ -19,42 +19,8 @@
  */
 define('CRON_MODE', true);
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
-
-log_email();
+require_once __DIR__ . '/../vendor/autoload.php';
 
 echo "Executed at: " . date('d/m/Y H:i:s', time()) . "\n";
-function log_email()
-{
-    $events = StkLog::getUnemailedEvents();
-    if (count($events) === 0)
-    {
-        print "No new log messages to email.\n";
 
-        return;
-    }
-
-    $table = '<table><thead><tr><th>Date</th><th>User</th><th>Description</th></tr></thead><tbody>';
-    foreach ($events AS $event)
-    {
-        $table .= '<tr><td>' . $event['date'] . '</td><td>' . strip_tags($event['name']) . '</td><td>' . strip_tags(
-                $event['message']
-            ) . '</td></tr>';
-    }
-    $table .= '</tbody></table>';
-
-    $content = 'The following events have occurred in the last 7 days:<br />' . $table;
-
-    try
-    {
-        StkMail::get()->moderatorNotification('Weekly log update', $content);
-    }
-    catch (StkMailException $e)
-    {
-        StkLog::newEvent($e->getMessage(), LogLevel::ERROR);
-        exit;
-    }
-
-    StkLog::setAllEventsMailed();
-
-    print "Sent log message email.\n";
-}
+WeeklyCron::run();

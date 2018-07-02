@@ -30,10 +30,13 @@
         "phpstan/phpstan-strict-rules": "^0.10"
     },
     "autoload": {
-        "classmap": ["include/"],
+        "classmap": [
+            "include/",
+            "cron/src"
+        ],
         "files": ["include/functions.php", "include/xmlWrite.php"]
     },
     "scripts": {
-        "phpstan": "phpstan analyse --level=4 -c phpstan/config.phpstan.neon api cron include tests"
+        "phpstan": "phpstan analyse --level=4 -c phpstan/config.phpstan.neon api cron/src include tests"
     }
 }
