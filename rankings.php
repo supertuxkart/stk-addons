@@ -32,8 +32,8 @@ $query_rankings = <<<SQL
             FROM `{DB_VERSION}_rankings`)
         ) AS Rank,
         username `Username`,
-        scores `Scores`,
-        max_scores `Maximum scores obtained`,
+        ROUND(scores, 2) `Scores`,
+        ROUND(max_scores, 2) `Maximum scores obtained`,
         num_races_done `Races done`
     FROM `{DB_VERSION}_rankings`
     INNER JOIN `{DB_VERSION}_users` ON `{DB_VERSION}_rankings`.user_id = `{DB_VERSION}_users`.id
