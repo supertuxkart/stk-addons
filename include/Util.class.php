@@ -629,7 +629,7 @@ MSG;
      */
     public static function getClientSessionId()
     {
-        return mb_substr(md5(uniqid(mt_rand(), true)), 0, 24);
+        return mb_substr(md5(uniqid((string)mt_rand(), true)), 0, 24);
     }
 
     /**
