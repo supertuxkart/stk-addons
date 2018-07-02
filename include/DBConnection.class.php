@@ -173,7 +173,7 @@ class DBConnection
      */
     public function isInTransaction()
     {
-        return (bool)$this->connection->inTransaction();
+        return $this->connection->inTransaction();
     }
 
     /**

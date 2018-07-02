@@ -649,10 +649,7 @@ class FileSystem
                 }
 
                 $archive = new Archive_Tar($file, $compression);
-                if (!$archive)
-                {
-                    throw new FileSystemException(_h('Could not open archive file. It may be corrupted.'));
-                }
+
                 if (!$archive->extract($destination))
                 {
                     throw new FileSystemException(_h('Failed to extract archive file.') . ' (' . $compression . ')');
