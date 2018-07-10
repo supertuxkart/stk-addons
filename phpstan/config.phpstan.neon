@@ -10,6 +10,7 @@ parameters:
         - phpstan
         - tools
         - vendor
+        - upload.php
 
     ignoreErrors:
         - '~^Parameter \#2 \$value of method XMLWriter::writeAttribute\(\) expects string, (bool|float|int|\(int\|false\)) given\.$~'
@@ -24,8 +25,10 @@ parameters:
         #- PHPStan\Rules\BooleansInConditions\BooleanInTernaryOperatorRule
         #- PHPStan\Rules\DisallowedConstructs\DisallowedEmptyRule
         - PHPStan\Rules\DisallowedConstructs\DisallowedImplicitArrayCreationRule
-        #- PHPStan\Rules\Methods\MissingMethodParameterTypehintRule
-        #- PHPStan\Rules\Methods\MissingMethodReturnTypehintRule
+        - PHPStan\Rules\Functions\MissingFunctionParameterTypehintRule
+        - PHPStan\Rules\Functions\MissingFunctionReturnTypehintRule
+        - PHPStan\Rules\Methods\MissingMethodParameterTypehintRule
+        - PHPStan\Rules\Methods\MissingMethodReturnTypehintRule
         - PHPStan\Rules\Methods\WrongCaseOfInheritedMethodRule
         - PHPStan\Rules\Operators\OperandsInArithmeticAdditionRule
         - PHPStan\Rules\Operators\OperandsInArithmeticDivisionRule
