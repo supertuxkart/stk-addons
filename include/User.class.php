@@ -1108,7 +1108,7 @@ final class User extends Base implements IAsXML
      *
      * @throws UserException
      */
-    protected static function changePassword($user_id, $new_password)
+    public static function changePassword($user_id, $new_password)
     {
         try
         {

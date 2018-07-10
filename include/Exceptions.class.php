@@ -178,7 +178,26 @@ class AddonException extends BaseException {}
 
 class FileException extends BaseException {}
 class FileSystemException extends BaseException {}
-class UploadException extends BaseException {}
+class UploadException extends BaseException
+{
+    /**
+     * @var string|null
+     */
+    public $from;
+
+    /**
+     * @var string|null
+     */
+    public $to;
+
+    public function __construct(string $message = "", ?string $from = null, ?string $to = null, Exception $previous = null)
+    {
+        parent::__construct($message, (int)$from, $previous);
+
+        $this->from = $from;
+        $this->to = $to;
+    }
+}
 class NewsException extends  BaseException {}
 class RatingsException extends BaseException {}
 class TemplateException extends BaseException {}

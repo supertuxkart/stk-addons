@@ -274,7 +274,7 @@ class Server implements IAsXML
     /**
      * Create server
      *
-     * @param string $ip
+     * @param int $ip
      * @param int    $port
      * @param int    $private_port
      * @param int    $user_id

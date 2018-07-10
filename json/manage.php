@@ -154,7 +154,7 @@ switch ($_POST["action"])
         break;
 
     case "add-news": // add a new news entry
-        $errors = array_merge(Validate::ensureNotEmpty($_POST, ["message"], Validate::ensureIsSet($_POST, ["condition"])));
+        $errors = array_merge(Validate::ensureNotEmpty($_POST, ["message"]), Validate::ensureIsSet($_POST, ["condition"]));
         if ($errors)
         {
             exit_json_error(implode("<br>", $errors));

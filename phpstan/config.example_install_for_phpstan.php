@@ -52,7 +52,7 @@ else
 }
 
 // useful for phpunit testing
-if (!defined('TEST_MODE')) define('TEST_MODE', false);
+if (!defined('TEST_MODE')) define('TEST_MODE', true);
 // useful for cron jobs
 if (!defined('CRON_MODE')) define('CRON_MODE', false);
 // useful for the API
@@ -102,8 +102,8 @@ const JS_LOCATION = ASSETS_LOCATION . 'js/';
 const CSS_LOCATION = ASSETS_LOCATION . 'css/';
 
 // CAPTCHA properties, Register API keys at https://www.google.com/recaptcha/admin
-const CAPTCHA_SITE_KEY = null;
-const CAPTCHA_SECRET = null;
+const CAPTCHA_SITE_KEY = '';
+const CAPTCHA_SECRET = '';
 
 // Database properties
 const DB_USER = 'stk_addons';

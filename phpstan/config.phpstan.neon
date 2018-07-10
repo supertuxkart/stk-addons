@@ -5,6 +5,12 @@ parameters:
     autoload_directories:
         - tests/include
 
+    excludes_analyse:
+        - install
+        - phpstan
+        - tools
+        - vendor
+
     ignoreErrors:
         - '~^Parameter \#2 \$value of method XMLWriter::writeAttribute\(\) expects string, (bool|float|int|\(int\|false\)) given\.$~'
         - '~^Parameter \#2 \$callback of method Smarty_Internal_TemplateBase::registerFilter\(\) expects callback, string given\.$~'

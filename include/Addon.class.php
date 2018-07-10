@@ -1496,7 +1496,7 @@ class Addon extends Base
                 return "arenas";
 
             default:
-                return sprintf("<type '%s' not recognized>", h($type));
+                return sprintf("<type '%s' not recognized>", h((string)$type));
         }
     }
 

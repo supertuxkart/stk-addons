@@ -37,6 +37,6 @@
         "files": ["include/functions.php", "include/xmlWrite.php"]
     },
     "scripts": {
-        "phpstan": "phpstan analyse --level=5 -c phpstan/config.phpstan.neon api cron/src include tests"
+        "phpstan": "phpstan analyse --level=5 -c phpstan/config.phpstan.neon ."
     }
 }
