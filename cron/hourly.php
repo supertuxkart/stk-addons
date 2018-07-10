@@ -19,7 +19,6 @@
  */
 define('CRON_MODE', true);
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
-require_once __DIR__ . '/../vendor/autoload.php';
 
 echo "Executed at: " . date('d/m/Y H:i:s', time()) . "\n";
 
