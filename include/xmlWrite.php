@@ -154,7 +154,7 @@ function generateAssetXML()
                 }
                 catch (FileException $e)
                 {
-                    error_log('Error finding addon file in the database for addon = ' . $addon['name'] );
+                    error_log('Error finding addon file in the database for addon = ' . $addon['name']);
                     continue;
                 }
 

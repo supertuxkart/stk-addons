@@ -64,7 +64,6 @@ class Debug
             }
             catch (\DebugBar\DebugBarException $e)
             {
-
             }
 
 

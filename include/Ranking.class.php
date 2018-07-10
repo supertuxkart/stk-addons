@@ -152,9 +152,13 @@ class Ranking
      *
      * @throws RankingException
      */
-    public static function submitRanking($user_permissions, $id_for_ranked, $new_scores, $new_max_scores,
-                                         $new_num_races_done)
-    {
+    public static function submitRanking(
+        $user_permissions,
+        $id_for_ranked,
+        $new_scores,
+        $new_max_scores,
+        $new_num_races_done
+    ) {
         if (!in_array(AccessControl::PERM_SUMBIT_RANKINGS, $user_permissions))
         {
             throw new RankingException("Invalid user to sumbit ranking", ErrorType::USER_INVALID_PERMISSION);

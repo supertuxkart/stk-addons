@@ -48,7 +48,7 @@ try
                     $address,
                     $port,
                     $private_port,
-                    $server_name, 
+                    $server_name,
                     $max_players,
                     $difficulty,
                     $game_mode,

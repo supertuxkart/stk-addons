@@ -18,14 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with stk-addons. If not, see <http://www.gnu.org/licenses/>.
  */
-interface IAsXML
-{
-    /**
-     * Get the object as a XML string
-     * @return mixed
-     */
-    function asXML();
-}
 
 /**
  * XMLOutput class, handles all the XML writing behaviour for the API

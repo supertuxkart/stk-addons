@@ -134,7 +134,6 @@ if (isset($_GET["submit"])) // form submitted
             $upload = new Upload($_FILES['file_addon'], $addon_name, $addon_type, $expected_type, $moderator_message);
             $tpl->assign("warnings", $upload->getWarningMessage());
             $tpl->assign("success", $upload->getSuccessMessage());
-
         }
         catch (UploadException $e)
         {
@@ -163,7 +162,8 @@ if (isset($_GET["submit"])) // form submitted
         $tpl->assign(
             "errors",
             _h(
-                'Your response to the agreement was unacceptable. You may not upload this content to the STK Addons website.'
+                'Your response to the agreement was unacceptable.' .
+                'You may not upload this content to the STK Addons website.'
             )
         );
     }

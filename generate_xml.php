@@ -25,4 +25,3 @@ echo 'Asset xml written: ' . $xml . ' bytes<br />';
 
 $xml = writeNewsXML();
 echo 'News xml written: ' . $xml . ' bytes<br />';
-

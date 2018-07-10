@@ -1740,7 +1740,6 @@ class Addon extends Base
             default: // default
                 $sort_direction = "ASC";
                 break;
-
         }
         switch ($sort_type)
         {
@@ -1813,7 +1812,6 @@ class Addon extends Base
                 [':user_id' => $user_id],
                 [':user_id' => DBConnection::PARAM_INT]
             );
-
         }
         catch (DBException $e)
         {

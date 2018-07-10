@@ -198,7 +198,7 @@ class UploadException extends BaseException
         $this->to = $to;
     }
 }
-class NewsException extends  BaseException {}
+class NewsException extends BaseException {}
 class RatingsException extends BaseException {}
 class TemplateException extends BaseException {}
 class ServerException extends BaseException {}
@@ -221,4 +221,3 @@ class SPMException extends ParserException {}
 class ClientSessionException extends BaseException {}
 class ClientSessionConnectException extends ClientSessionException {}
 class ClientSessionExpiredException extends ClientSessionException {}
-

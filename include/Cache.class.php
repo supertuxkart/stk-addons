@@ -129,7 +129,7 @@ class Cache
                 DBConnection::FETCH_ALL,
                 [':addon_id' => $addon]
             );
-            foreach ($cache_list AS $cache_item)
+            foreach ($cache_list as $cache_item)
             {
                 try
                 {

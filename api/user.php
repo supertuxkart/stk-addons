@@ -68,7 +68,6 @@ try
                     }
                     $output->writeAttribute('info', '');
                 $output->endElement();
-
             }
             catch(Exception $e)
             {
@@ -94,7 +93,6 @@ try
                     $output->writeAttribute('userid', $session->getUser()->getId());
                     $output->writeAttribute('info', '');
                 $output->endElement();
-
             }
             catch(Exception $e)
             {
@@ -485,7 +483,6 @@ try
                     $output->writeAttribute('success', 'yes');
                     $output->writeAttribute('info', '');
                 $output->endElement();
-
             }
             catch(Exception $e)
             {
@@ -581,8 +578,7 @@ try
                 $new_scores = isset($_POST['scores']) ? $_POST['scores'] : null;
                 $new_max_scores = isset($_POST['max-scores']) ? $_POST['max-scores'] : null;
                 $new_num_races_done = isset($_POST['num-races-done']) ? (int)$_POST['num-races-done'] : null;
-                Ranking::submitRanking($permission, $id_for_ranked, $new_scores, $new_max_scores,
-                    $new_num_races_done);
+                Ranking::submitRanking($permission, $id_for_ranked, $new_scores, $new_max_scores, $new_num_races_done);
 
                 $output->startElement('submit-ranking');
                     $output->writeAttribute('success', 'yes');

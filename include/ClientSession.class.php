@@ -88,11 +88,29 @@ class ClientSession
      *
      * @return Server
      */
-    public function createServer($ip, $port, $private_port, $server_name,
-        $max_players, $difficulty, $game_mode, $password, $version)
-    {
-        return Server::create($ip, $port, $private_port, $this->user->getId(),
-            $server_name, $max_players, $difficulty, $game_mode, $password, $version);
+    public function createServer(
+        $ip,
+        $port,
+        $private_port,
+        $server_name,
+        $max_players,
+        $difficulty,
+        $game_mode,
+        $password,
+        $version
+    ) {
+        return Server::create(
+            $ip,
+            $port,
+            $private_port,
+            $this->user->getId(),
+            $server_name,
+            $max_players,
+            $difficulty,
+            $game_mode,
+            $password,
+            $version
+        );
     }
 
     /**
@@ -301,7 +319,8 @@ class ClientSession
                     ':server_id'       => DBConnection::PARAM_INT,
                     ':new_time'        => DBConnection::PARAM_INT,
                     ':current_players' => DBConnection::PARAM_INT
-                ]);
+                ]
+            );
 
             $connection_requests = DBConnection::get()->query(
                 "SELECT `user_id`, `server_id`, `ip`, `port`, `aes_key`, `aes_iv`, `username`

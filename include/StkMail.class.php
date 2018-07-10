@@ -131,7 +131,7 @@ EMAIL;
             $this->mail->Host = SMTP_HOST;
             $this->mail->Port = SMTP_PORT;
             $this->mail->Username = SMTP_USER;
-            $this->mail->Password = SMTP_PASS;;
+            $this->mail->Password = SMTP_PASS;
         }
         else // use sendmail
         {

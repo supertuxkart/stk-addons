@@ -14,11 +14,11 @@ final class WeeklyCron
         }
 
         $table = '<table><thead><tr><th>Date</th><th>User</th><th>Description</th></tr></thead><tbody>';
-        foreach ($events AS $event)
+        foreach ($events as $event)
         {
             $table .= '<tr><td>' . $event['date'] . '</td><td>' . strip_tags($event['name']) . '</td><td>' . strip_tags(
-                    $event['message']
-                ) . '</td></tr>';
+                $event['message']
+            ) . '</td></tr>';
         }
         $table .= '</tbody></table>';
 

@@ -143,5 +143,3 @@ else
 {
     exit_string("Something broke");
 }
-
-

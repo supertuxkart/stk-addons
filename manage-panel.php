@@ -168,10 +168,10 @@ switch ($_GET['view'])
         $tpl = StkTemplate::get("manage/page/clients.tpl");
         $tpl_data = [
             "items" => DBConnection::get()->query(
-                    'SELECT * FROM `{DB_VERSION}_clients`
-                    ORDER BY `agent_string` ASC',
-                    DBConnection::FETCH_ALL
-                )
+                'SELECT * FROM `{DB_VERSION}_clients`
+                ORDER BY `agent_string` ASC',
+                DBConnection::FETCH_ALL
+            )
         ];
 
         $tpl->assign("clients", $tpl_data);
