@@ -17,7 +17,7 @@
  * along with stk-addons. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ValidateTest extends \PHPUnit_Framework_TestCase
+class ValidateTest extends \PHPUnit\Framework\TestCase
 {
     public function providerTestCheckboxThrowsException()
     {

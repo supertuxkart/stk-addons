@@ -17,7 +17,7 @@
  * along with stk-addons. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class UserTest extends PHPUnit_Framework_TestCase
+class UserTest extends \PHPUnit\Framework\TestCase
 {
 
     /**

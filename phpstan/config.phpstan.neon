@@ -57,3 +57,11 @@ parameters:
         - MAINTENANCE_MODE
         - SENDMAIL_PATH
         - TEST_MODE
+
+includes:
+    # phpunit extension and rules
+    - ../vendor/phpstan/phpstan-phpunit/extension.neon
+    - ../vendor/phpstan/phpstan-phpunit/rules.neon
+
+    # webmozart/assert extension
+    - ../vendor/phpstan/phpstan-webmozart-assert/extension.neon

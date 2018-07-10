@@ -17,7 +17,7 @@
  * along with stk-addons. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class StkImageTest extends PHPUnit_Framework_TestCase
+class StkImageTest extends \PHPUnit\Framework\TestCase
 {
     public function providerTestSizeToInt()
     {
