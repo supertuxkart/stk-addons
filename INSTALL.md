@@ -1,3 +1,11 @@
+# Installation via docker-compose
+We have Dockerfile and docker-compose files for automated installation of whole website.
+Only needed is to run command `docker-composer up` and you are ready to visit `http://localhost:680/`.
+For development purposes we recommend to run
+`docker-compose -f docker-compose.yml -f docker-compose.dev.yml up`
+which loads additionally docker-compose.dev.yml file, that mounts sources so you do not need to
+rebuild container with every change.
+
 # Installation
 This software has no automated installation mechanism as it is not intended for wide
 usage. However, you can manually install all dependencies, database tables and

@@ -20,7 +20,7 @@
 declare(strict_types=1);
 
 // Make sure that this does not end with a trailing slash, and does not have a prefix in front
-const DOMAIN_NAME = 'addons.supertuxkart.net';
+$DOMAIN_NAME = $_SERVER['SERVER_NAME'] . (!in_array($_SERVER['SERVER_PORT'], ['80', '443'], true) ? ':' . $_SERVER['SERVER_PORT'] : '');
 
 // WARNING!!!! turn OFF in the production server.
 // Enable this when you want detailed debugging output.
@@ -79,11 +79,11 @@ const ASSETS2_XML_PATH = UP_PATH . 'xml' . DS . 'assets2.xml';
 // Location urls
 if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')
 {
-    define('ROOT_LOCATION', 'https://' . DOMAIN_NAME . '/');
+    define('ROOT_LOCATION', 'https://' . $DOMAIN_NAME . '/');
 }
 else
 {
-    define('ROOT_LOCATION', 'http://' . DOMAIN_NAME . '/');
+    define('ROOT_LOCATION', 'http://' . $DOMAIN_NAME . '/');
 }
 
 const DOWNLOAD_LOCATION = ROOT_LOCATION . 'dl/';
@@ -109,7 +109,7 @@ const CAPTCHA_SECRET = null;
 const DB_USER = 'stk_addons';
 const DB_PASSWORD = 'your super secret password';
 const DB_NAME = 'stk_addons';
-const DB_HOST = 'localhost';
+const DB_HOST = 'database';
 // should not be modified
 const DB_VERSION = 'v3';
 
