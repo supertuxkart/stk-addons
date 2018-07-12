@@ -1,0 +1,67 @@
+parameters:
+    autoload_files:
+        - phpstan/config.example_install_for_phpstan.php
+
+    autoload_directories:
+        - tests/include
+
+    excludes_analyse:
+        - install
+        - phpstan
+        - tools
+        - vendor
+        - upload.php
+
+    ignoreErrors:
+        - '~^Parameter \#2 \$value of method XMLWriter::writeAttribute\(\) expects string, (bool|float|int|\(int\|false\)) given\.$~'
+        - '~^Parameter \#2 \$callback of method Smarty_Internal_TemplateBase::registerFilter\(\) expects callback, string given\.$~'
+
+    rules:
+        #- PHPStan\Rules\BooleansInConditions\BooleanInBooleanAndRule
+        #- PHPStan\Rules\BooleansInConditions\BooleanInBooleanNotRule
+        #- PHPStan\Rules\BooleansInConditions\BooleanInBooleanOrRule
+        #- PHPStan\Rules\BooleansInConditions\BooleanInElseIfConditionRule
+        #- PHPStan\Rules\BooleansInConditions\BooleanInIfConditionRule
+        #- PHPStan\Rules\BooleansInConditions\BooleanInTernaryOperatorRule
+        #- PHPStan\Rules\DisallowedConstructs\DisallowedEmptyRule
+        - PHPStan\Rules\DisallowedConstructs\DisallowedImplicitArrayCreationRule
+        - PHPStan\Rules\Functions\MissingFunctionParameterTypehintRule
+        - PHPStan\Rules\Functions\MissingFunctionReturnTypehintRule
+        - PHPStan\Rules\Methods\MissingMethodParameterTypehintRule
+        - PHPStan\Rules\Methods\MissingMethodReturnTypehintRule
+        - PHPStan\Rules\Methods\WrongCaseOfInheritedMethodRule
+        - PHPStan\Rules\Operators\OperandsInArithmeticAdditionRule
+        - PHPStan\Rules\Operators\OperandsInArithmeticDivisionRule
+        - PHPStan\Rules\Operators\OperandsInArithmeticExponentiationRule
+        - PHPStan\Rules\Operators\OperandsInArithmeticModuloRule
+        - PHPStan\Rules\Operators\OperandsInArithmeticMultiplicationRule
+        - PHPStan\Rules\Operators\OperandsInArithmeticSubtractionRule
+        - PHPStan\Rules\Properties\MissingPropertyTypehintRule
+        - PHPStan\Rules\StrictCalls\DynamicCallOnStaticMethodsRule
+        #- PHPStan\Rules\StrictCalls\StrictFunctionCallsRule
+        - PHPStan\Rules\SwitchConditions\MatchingTypeInSwitchCaseConditionRule
+
+    services:
+        -
+            class: PHPStan\Rules\BooleansInConditions\BooleanRuleHelper
+        -
+            class: PHPStan\Rules\Operators\OperatorRuleHelper
+
+    dynamicConstantNames:
+        - API_MODE
+        - CRON_MODE
+        - DEBUG_MODE
+        - DEBUG_TOOLBAR
+        - IS_SMTP
+        - IS_SSL_CERTIFICATE_VALID
+        - MAINTENANCE_MODE
+        - SENDMAIL_PATH
+        - TEST_MODE
+
+includes:
+    # phpunit extension and rules
+    - ../vendor/phpstan/phpstan-phpunit/extension.neon
+    - ../vendor/phpstan/phpstan-phpunit/rules.neon
+
+    # webmozart/assert extension
+    - ../vendor/phpstan/phpstan-webmozart-assert/extension.neon

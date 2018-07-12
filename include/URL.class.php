@@ -82,8 +82,8 @@ class URL
     /**
      * Removes an item or list from the query string.
      *
-     * @param string|array $keys Query key or keys to remove.
-     * @param string       $url  The url to remove them from
+     * @param string[] $keys Query key or keys to remove.
+     * @param string   $url  The url to remove them from
      *
      * @return string
      */
@@ -183,7 +183,7 @@ class URL
             return $link;
         }
 
-        $link = str_replace(ROOT_LOCATION, null, $link);
+        $link = str_replace(ROOT_LOCATION, '', $link);
         $rules = Config::get(Config::APACHE_REWRITES);
         $rules = preg_split('/(\\r)?\\n/', $rules);
 

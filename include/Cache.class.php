@@ -271,7 +271,7 @@ class Cache
     }
 
     /**
-     * @param string $size
+     * @param int|string $size
      *
      * @return string
      */

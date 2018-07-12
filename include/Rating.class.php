@@ -216,7 +216,7 @@ class Rating
      *
      * @param bool $force_fetch force the fetch of the average rating
      *
-     * @return int Average rating
+     * @return float Average rating
      */
     public function getAvgRating($force_fetch = false)
     {
@@ -285,8 +285,8 @@ class Rating
     /**
      * Add a vote for a user
      *
-     * @param float $vote
      * @param int   $user_id
+     * @param float $vote
      *
      * @throws RatingsException
      * @return boolean new vote or not
@@ -309,7 +309,7 @@ class Rating
                 [
                     ':addon_id' => $this->addon_id,
                     ':user_id'  => $user_id,
-                    ':rating'   => (float)$vote
+                    ':rating'   => $vote
                 ],
                 [':user_id' => DBConnection::PARAM_INT]
             );

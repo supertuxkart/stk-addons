@@ -17,7 +17,7 @@
  * along with stk-addons. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class CacheTest extends PHPUnit_Framework_TestCase
+class CacheTest extends \PHPUnit\Framework\TestCase
 {
     public function providerTestGetCachePrefix()
     {

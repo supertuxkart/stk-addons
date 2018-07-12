@@ -52,7 +52,7 @@ switch ($_GET['action'])
         // set rating
         try
         {
-            $rating->setUserVote(User::getLoggedId(), $_GET['rating']);
+            $rating->setUserVote(User::getLoggedId(), (float)$_GET['rating']);
         }
         catch(RatingsException $e)
         {

@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with stk-addons. If not, see <http://www.gnu.org/licenses/>.
  */
-class ExceptionsTest extends PHPUnit_Framework_TestCase
+class ExceptionsTest extends \PHPUnit\Framework\TestCase
 {
     public function testUniqueConstantValues()
     {
@@ -40,7 +40,7 @@ class ExceptionsTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param $exception BaseException
+     * @param BaseException $exception
      *
      * @dataProvider providerAllExceptions
      */
@@ -61,7 +61,7 @@ class ExceptionsTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param $exception BaseException
+     * @param BaseException $exception
      *
      * @dataProvider providerAllExceptions
      */

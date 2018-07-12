@@ -233,7 +233,7 @@ class FileSystem
      *
      * @throws FileSystemException
      */
-    public static function fileClose(resource $handle)
+    public static function fileClose($handle)
     {
         if (fclose($handle) === false)
         {
@@ -252,7 +252,7 @@ class FileSystem
      * @return int the number of bytes written on success
      * @throws FileSystemException
      */
-    public static function fileWrite(resource $handle, $string, $length = null)
+    public static function fileWrite($handle, $string, $length = null)
     {
         $bytes_written = $length ? fwrite($handle, $string, $length) : fwrite($handle, $string);
 
@@ -508,7 +508,7 @@ class FileSystem
         // TODO use the same length?
         do
         {
-            $filename = uniqid(mt_rand());
+            $filename = uniqid((string)mt_rand());
         } while (static::exists($directory . $filename . '.' . $extension));
 
         return $filename;
@@ -565,7 +565,7 @@ class FileSystem
             static::removeFile($filename, false);
         }
 
-        if ($zip->open($filename, ZIPARCHIVE::CREATE) !== true)
+        if ($zip->open($filename, ZipArchive::CREATE) !== true)
         {
             throw new FileSystemException("Cannot open filename = '$filename'");
         }
@@ -649,10 +649,7 @@ class FileSystem
                 }
 
                 $archive = new Archive_Tar($file, $compression);
-                if (!$archive)
-                {
-                    throw new FileSystemException(_h('Could not open archive file. It may be corrupted.'));
-                }
+
                 if (!$archive->extract($destination))
                 {
                     throw new FileSystemException(_h('Failed to extract archive file.') . ' (' . $compression . ')');

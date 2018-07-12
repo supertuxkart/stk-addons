@@ -21,23 +21,5 @@ define('CRON_MODE', true);
 require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
 echo "Executed at: " . date('d/m/Y H:i:s', time()) . "\n";
-try
-{
-    echo File::deleteQueuedFiles() . "\n";
-    writeXML();
-    echo "SUCCESS: File::deleteQueuedFiles \n";
-}
-catch (FileException $e)
-{
-    echo "ERROR: File::deleteQueuedFiles \n" . $e->getMessage();
-}
 
-try
-{
-    Verification::cron(7);
-    echo "SUCCESS: Verification::cron \n";
-}
-catch (VerificationException $e)
-{
-    echo "ERROR: Verification::cron \n" . $e->getMessage();
-}
+DailyCron::run();

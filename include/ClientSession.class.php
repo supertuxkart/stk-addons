@@ -200,8 +200,8 @@ class ClientSession
      * @param int $server_id id of the server
      * @param int $address ip of client
      * @param int $port port of client
-     * @param char $aes_key aes 128 bit key of client in base64
-     * @param char $aes_iv initialization vector of the aes key in base64
+     * @param string $aes_key aes 128 bit key of client in base64
+     * @param string $aes_iv initialization vector of the aes key in base64
      *
      * @throws ClientSessionException if setting join key fails
      */
@@ -464,13 +464,13 @@ class ClientSession
      * @return int
      * @throws ClientSessionException
      */
-    public function setHostVote($host_id, $vote)
+    public function setHostVote(int $host_id, int $vote)
     {
-        $vote = (int)$vote;
-        if ($vote !== 1 || $vote !== -1)
+        if ($vote !== 1 && $vote !== -1)
         {
             throw new ClientSessionException(_h("Invalid vote. Your rating has to be either -1 or 1."));
         }
+
         try
         {
             // TODO find out if host_id is a server or user

@@ -299,7 +299,7 @@ class AccessControl
     /**
      * Checks if a role is valid
      *
-     * @param,string $role_name
+     * @param string $role_name
      *
      * @return bool
      */
@@ -319,7 +319,7 @@ class AccessControl
     /**
      * Checks if a permission is valid
      *
-     * @param,string $permission
+     * @param string $permission
      *
      * @return bool
      */

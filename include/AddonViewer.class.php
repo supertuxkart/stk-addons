@@ -31,14 +31,14 @@ class AddonViewer
     private $addon;
 
     /**
-     * @var string
+     * @var array
      */
     private $latestRev;
 
     /**
      * @var Rating
      */
-    private $rating = false;
+    private $rating;
 
     /**
      * @var bool
@@ -159,7 +159,7 @@ class AddonViewer
             'submitter'       => h($submiter),
             'is_deleted_user' => $is_deleted_user,
             'revision'        => $latestRev['revision'],
-            'compatibility'   => Util::getVersionFormat($latestRev['format'], $this->addon->getType()),
+            'compatibility'   => Util::getVersionFormat((int)$latestRev['format'], $this->addon->getType()),
             'link'            => URL::rewriteFromConfig($this->addon->getLink())
         ];
         $tpl['info'] = $info;

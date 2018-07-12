@@ -17,7 +17,7 @@
  * along with stk-addons. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class DBExceptionTest extends PHPUnit_Framework_TestCase
+class DBExceptionTest extends \PHPUnit\Framework\TestCase
 {
     public function testThrowExceptionSqlCode()
     {

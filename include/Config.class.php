@@ -147,7 +147,7 @@ class Config
      * This method will silently fail
      *
      * @param string $config_name
-     * @param string $config_value
+     * @param int|string $config_value
      *
      * @return bool true on success, false otherwise
      */

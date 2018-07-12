@@ -3,12 +3,14 @@ language: php
 php:
   - 7.1
 
-script: ./vendor/bin/phpunit --configuration phpunit.xml
+script:
+  - ./vendor/bin/phpunit --configuration phpunit.xml
+  - composer phpstan
 
 before_script:
   - composer self-update
   - composer install
-  
+
 #notifications:
 #  irc:
 #    channels:

@@ -22,7 +22,7 @@
 /**
  * Class User
  */
-class User extends Base implements IAsXML
+final class User extends Base implements IAsXML
 {
     const MIN_PASSWORD = 8;
 
@@ -1108,7 +1108,7 @@ class User extends Base implements IAsXML
      *
      * @throws UserException
      */
-    protected static function changePassword($user_id, $new_password)
+    public static function changePassword($user_id, $new_password)
     {
         try
         {
@@ -1412,9 +1412,9 @@ class User extends Base implements IAsXML
     /**
      * Check the password length and check it against the database
      *
-     * @param string $password
-     * @param string $field_value
-     * @param int    $field_type
+     * @param string     $password
+     * @param int|string $field_value
+     * @param int        $field_type
      *
      * @return User
      * @throws UserException

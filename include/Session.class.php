@@ -30,7 +30,7 @@ class Session
     private $key;
 
     /**
-     * @param $key
+     * @param string $key
      */
     private function __construct($key)
     {

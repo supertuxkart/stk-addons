@@ -31,11 +31,11 @@ try
     switch ($action)
     {
         case 'poll':
+            $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
+            $token = isset($_POST['token']) ? $_POST['token'] : "";
+
             try
             {
-                $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
-                $token = isset($_POST['token']) ? $_POST['token'] : "";
-
                 $session = ClientSession::get($token, $userid);
 
                 $output->insert($session->poll());
@@ -47,12 +47,12 @@ try
             break;
 
         case 'connect':
+            $password = isset($_POST['password']) ? utf8_encode($_POST['password']) : "";
+            $username = isset($_POST['username']) ? utf8_encode($_POST['username']) : "";
+            $save_session = isset($_POST['save-session']) ? utf8_encode($_POST['save-session']) : "";
+
             try
             {
-                $password = isset($_POST['password']) ? utf8_encode($_POST['password']) : "";
-                $username = isset($_POST['username']) ? utf8_encode($_POST['username']) : "";
-                $save_session = isset($_POST['save-session']) ? utf8_encode($_POST['save-session']) : "";
-
                 $session = ClientSession::create($username, $password, $save_session === "true");
                 $achievements_string = $session->getAchievements();
 
@@ -77,11 +77,11 @@ try
             break;
 
         case 'saved-session':
+            $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
+            $token = isset($_POST['token']) ? $_POST['token'] : "";
+
             try
             {
-                $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
-                $token = isset($_POST['token']) ? $_POST['token'] : "";
-
                 $session = ClientSession::get($token, $userid);
                 $session->setOnline();
                 User::updateLoginTime($session->getUser()->getId());
@@ -103,12 +103,12 @@ try
             break;
 
         case 'get-friends-list':
+            $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
+            $token = isset($_POST['token']) ? $_POST['token'] : "";
+            $visitingid = isset($_POST['visitingid']) ? (int)$_POST['visitingid'] : 0;
+
             try
             {
-                $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
-                $token = isset($_POST['token']) ? $_POST['token'] : "";
-                $visitingid = isset($_POST['visitingid']) ? (int)$_POST['visitingid'] : 0;
-
                 $session = ClientSession::get($token, $userid);
                 $friends_xml = $session->getFriendsOf($visitingid);
 
@@ -126,12 +126,12 @@ try
             break;
 
         case 'get-achievements':
+            $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
+            $token = isset($_POST['token']) ? $_POST['token'] : "";
+            $visitingid = isset($_POST['visitingid']) ? (int)$_POST['visitingid'] : 0;
+
             try
             {
-                $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
-                $token = isset($_POST['token']) ? $_POST['token'] : "";
-                $visitingid = isset($_POST['visitingid']) ? (int)$_POST['visitingid'] : 0;
-
                 $session = ClientSession::get($token, $userid);
                 $achievements_string = $session->getAchievements($visitingid);
 
@@ -152,12 +152,12 @@ try
             break;
 
         case 'get-addon-vote':
+            $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
+            $token = isset($_POST['token']) ? $_POST['token'] : "";
+            $addonid = isset($_POST['addonid']) ? $_POST['addonid'] : "";
+
             try
             {
-                $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
-                $token = isset($_POST['token']) ? $_POST['token'] : "";
-                $addonid = isset($_POST['addonid']) ? $_POST['addonid'] : "";
-
                 $session = ClientSession::get($token, $userid);
                 $rating = Rating::get($addonid)->getUserVote($session->getUser()->getId());
 
@@ -183,13 +183,13 @@ try
             break;
 
         case 'set-addon-vote': // returns -1 if no vote found
+            $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
+            $token = isset($_POST['token']) ? $_POST['token'] : "";
+            $addonid = isset($_POST['addonid']) ? $_POST['addonid'] : "";
+            $rating = isset($_POST['rating']) ? (float)$_POST['rating'] : -1.0;
+
             try
             {
-                $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
-                $token = isset($_POST['token']) ? $_POST['token'] : "";
-                $addonid = isset($_POST['addonid']) ? $_POST['addonid'] : "";
-                $rating = isset($_POST['rating']) ? (float)$_POST['rating'] : -1.0;
-
                 $session = ClientSession::get($token, $userid);
                 $rating_object = Rating::get($addonid);
                 $rating_object->setUserVote($session->getUser()->getId(), $rating);
@@ -209,11 +209,11 @@ try
             break;
 
         case 'client-quit':
+            $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
+            $token = isset($_POST['token']) ? $_POST['token'] : "";
+
             try
             {
-                $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
-                $token = isset($_POST['token']) ? $_POST['token'] : "";
-
                 ClientSession::get($token, $userid)->clientQuit();
 
                 $output->startElement('client-quit');
@@ -228,11 +228,11 @@ try
             break;
 
         case 'disconnect':
+            $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
+            $token = isset($_POST['token']) ? $_POST['token'] : "";
+
             try
             {
-                $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
-                $token = isset($_POST['token']) ? $_POST['token'] : "";
-
                 ClientSession::get($token, $userid)->destroy();
 
                 $output->startElement('disconnect');
@@ -247,12 +247,12 @@ try
             break;
 
         case 'achieving':
+            $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
+            $token = isset($_POST['token']) ? $_POST['token'] : "";
+            $achievement_ids = isset($_POST['achievementid']) ? Util::commaStringToArray($_POST['achievementid']) : [];
+
             try
             {
-                $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
-                $token = isset($_POST['token']) ? $_POST['token'] : "";
-                $achievement_ids = isset($_POST['achievementid']) ? Util::commaStringToArray($_POST['achievementid']) : [];
-
                 foreach ($achievement_ids as $id)
                 {
                     ClientSession::get($token, $userid)->onAchieving((int)$id);
@@ -265,12 +265,12 @@ try
             break;
 
         case 'friend-request':
+            $friendid = isset($_POST['friendid']) ? (int)$_POST['friendid'] : 0;
+            $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
+            $token = isset($_POST['token']) ? $_POST['token'] : "";
+
             try
             {
-                $friendid = isset($_POST['friendid']) ? (int)$_POST['friendid'] : 0;
-                $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
-                $token = isset($_POST['token']) ? $_POST['token'] : "";
-
                 $session = ClientSession::get($token, $userid);
                 Friend::friendRequest($userid, $friendid);
 
@@ -294,12 +294,12 @@ try
             break;
 
         case 'accept-friend-request':
+            $friendid = isset($_POST['friendid']) ? (int)$_POST['friendid'] : 0;
+            $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
+            $token = isset($_POST['token']) ? $_POST['token'] : "";
+
             try
             {
-                $friendid = isset($_POST['friendid']) ? (int)$_POST['friendid'] : 0;
-                $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
-                $token = isset($_POST['token']) ? $_POST['token'] : "";
-
                 $session = ClientSession::get($token, $userid);
                 Friend::acceptFriendRequest($friendid, $userid);
 
@@ -323,12 +323,12 @@ try
             break;
 
         case 'decline-friend-request':
+            $friendid = isset($_POST['friendid']) ? (int)$_POST['friendid'] : 0;
+            $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
+            $token = isset($_POST['token']) ? $_POST['token'] : "";
+
             try
             {
-                $friendid = isset($_POST['friendid']) ? (int)$_POST['friendid'] : 0;
-                $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
-                $token = isset($_POST['token']) ? $_POST['token'] : "";
-
                 $session = ClientSession::get($token, $userid);
                 Friend::declineFriendRequest($friendid, $userid);
 
@@ -349,12 +349,12 @@ try
             break;
 
         case 'cancel-friend-request':
+            $friendid = isset($_POST['friendid']) ? (int)$_POST['friendid'] : 0;
+            $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
+            $token = isset($_POST['token']) ? $_POST['token'] : "";
+
             try
             {
-                $friendid = isset($_POST['friendid']) ? (int)$_POST['friendid'] : 0;
-                $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
-                $token = isset($_POST['token']) ? $_POST['token'] : "";
-
                 $session = ClientSession::get($token, $userid);
                 Friend::cancelFriendRequest($userid, $friendid);
 
@@ -375,12 +375,12 @@ try
             break;
 
         case 'remove-friend':
+            $friendid = isset($_POST['friendid']) ? (int)$_POST['friendid'] : 0;
+            $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
+            $token = isset($_POST['token']) ? $_POST['token'] : "";
+
             try
             {
-                $friendid = isset($_POST['friendid']) ? (int)$_POST['friendid'] : 0;
-                $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
-                $token = isset($_POST['token']) ? $_POST['token'] : "";
-
                 $session = ClientSession::get($token, $userid);
                 Friend::removeFriend($userid, $friendid);
 
@@ -401,12 +401,12 @@ try
             break;
 
         case 'user-search':
+            $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
+            $token = isset($_POST['token']) ? $_POST['token'] : "";
+            $search_string = isset($_POST['search-string']) ? $_POST['search-string'] : "";
+
             try
             {
-                $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
-                $token = isset($_POST['token']) ? $_POST['token'] : "";
-                $search_string = isset($_POST['search-string']) ? $_POST['search-string'] : "";
-
                 $session = ClientSession::get($token, $userid);
 
                 $output->startElement('user-search');
@@ -423,15 +423,15 @@ try
             break;
 
         case 'register':
+            $username = isset($_POST['username']) ? utf8_encode($_POST['username']) : "";
+            $password = isset($_POST['password']) ? utf8_encode($_POST['password']) : "";
+            $password_confirm = isset($_POST['password_confirm']) ? utf8_encode($_POST['password_confirm']) : "p";
+            $email = isset($_POST['email']) ? utf8_encode($_POST['email']) : "";
+            $realname = isset($_POST['realname']) ? utf8_encode($_POST['realname']) : $username; // use username as real name
+            $terms = isset($_POST['terms']) ? utf8_encode($_POST['terms']) : "";
+
             try
             {
-                $username = isset($_POST['username']) ? utf8_encode($_POST['username']) : "";
-                $password = isset($_POST['password']) ? utf8_encode($_POST['password']) : "";
-                $password_confirm = isset($_POST['password_confirm']) ? utf8_encode($_POST['password_confirm']) : "p";
-                $email = isset($_POST['email']) ? utf8_encode($_POST['email']) : "";
-                $realname = isset($_POST['realname']) ? utf8_encode($_POST['realname']) : $username; // use username as real name
-                $terms = isset($_POST['terms']) ? utf8_encode($_POST['terms']) : "";
-
                 User::register(
                     $username,
                     $password,
@@ -453,11 +453,11 @@ try
             break;
 
         case 'recover':
+            $username = isset($_POST['username']) ? utf8_encode($_POST['username']) : "";
+            $email = isset($_POST['email']) ? utf8_encode($_POST['email']) : "";
+
             try
             {
-                $username = isset($_POST['username']) ? utf8_encode($_POST['username']) : "";
-                $email = isset($_POST['email']) ? utf8_encode($_POST['email']) : "";
-
                 User::recover($username, $email);
 
                 $output->startElement('recover');
@@ -472,13 +472,13 @@ try
             break;
 
         case 'change-password':
+            $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
+            $current = isset($_POST['current']) ? $_POST['current'] : "";
+            $new1 = isset($_POST['new1']) ? $_POST['new1'] : "";
+            $new2 = isset($_POST['new2']) ? $_POST['new2'] : "";
+
             try
             {
-                $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
-                $current = isset($_POST['current']) ? $_POST['current'] : "";
-                $new1 = isset($_POST['new1']) ? $_POST['new1'] : "";
-                $new2 = isset($_POST['new2']) ? $_POST['new2'] : "";
-
                 User::verifyAndChangePassword($userid, $current, $new1, $new2);
 
                 $output->startElement('change-password');
@@ -494,10 +494,11 @@ try
             break;
 
         case 'get-ranking':
+            $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
+            $token = isset($_POST['token']) ? $_POST['token'] : "";
+
             try
             {
-                $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
-                $token = isset($_POST['token']) ? $_POST['token'] : "";
                 $session = ClientSession::get($token, $userid);
 
                 $id = isset($_POST['id']) ? (int)$_POST['id'] : 0;
@@ -525,10 +526,11 @@ try
             break;
 
         case 'top-players':
+            $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
+            $token = isset($_POST['token']) ? $_POST['token'] : "";
+
             try
             {
-                $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
-                $token = isset($_POST['token']) ? $_POST['token'] : "";
                 $session = ClientSession::get($token, $userid);
 
                 $ntop = isset($_POST['ntop']) ? (int)$_POST['ntop'] : 10;
@@ -567,10 +569,11 @@ try
             break;
 
         case 'submit-ranking':
+            $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
+            $token = isset($_POST['token']) ? $_POST['token'] : "";
+
             try
             {
-                $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
-                $token = isset($_POST['token']) ? $_POST['token'] : "";
                 $session = ClientSession::get($token, $userid);
                 $permission = AccessControl::getPermissions($session->getUser()->getRole());
 
@@ -599,10 +602,11 @@ try
             break;
 
         case 'reset-ranking':
+            $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
+            $token = isset($_POST['token']) ? $_POST['token'] : "";
+
             try
             {
-                $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
-                $token = isset($_POST['token']) ? $_POST['token'] : "";
                 $session = ClientSession::get($token, $userid);
                 $permission = AccessControl::getPermissions($session->getUser()->getRole());
                 Ranking::resetRanking($permission);

@@ -110,7 +110,7 @@ class Upload
     private $upload_file_name;
 
     /**
-     * @var int
+     * @var string
      */
     private $addon_id;
 
@@ -811,11 +811,11 @@ class Upload
     {
         if (move_uploaded_file($from, $to) === false)
         {
-            throw new UploadException(_h("Failed to move uploaded file '%s' "), $from);
+            throw new UploadException(_h("Failed to move uploaded file '%s' "), $from, $to);
         }
         if (!FileSystem::exists($to))
         {
-            throw new UploadException('The file was not moved. This should never happen!');
+            throw new UploadException('The file was not moved. This should never happen!', $from, $to);
         }
     }
 

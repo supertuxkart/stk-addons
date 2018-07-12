@@ -213,8 +213,8 @@ class StkTemplate extends Template
             else
             {
                 // Make sure any existing instances of lang are removed
-                $url = preg_replace('/(&(amp;)?)*lang=[a-z_]+/i', null, $url);
-                $url = preg_replace('/&(amp;)?$/i', null, $url);
+                $url = preg_replace('/(&(amp;)?)*lang=[a-z_]+/i', '', $url);
+                $url = preg_replace('/&(amp;)?$/i', '', $url);
                 $url .= '&amp;lang=' . $languages[$i][0];
                 $url = str_replace('?&amp;', '?', $url);
             }

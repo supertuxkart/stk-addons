@@ -18,7 +18,7 @@
  * along with stk-addons. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class URLTest extends PHPUnit_Framework_TestCase
+class URLTest extends \PHPUnit\Framework\TestCase
 {
     private static $valid_query_string = "second=value2&first=value&arr[0]=foo+bar&arr[1]=baz";
 

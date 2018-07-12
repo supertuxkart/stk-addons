@@ -204,7 +204,7 @@ class Bug extends Base
     }
 
     /**
-     * @return string
+     * @return int
      */
     public function getAddonId()
     {
