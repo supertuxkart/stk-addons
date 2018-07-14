@@ -37,6 +37,7 @@ class ExceptionsTest extends \PHPUnit\Framework\TestCase
                 $map[$value] = $key;
             }
         }
+        $this->addToAssertionCount(1);
     }
 
     /**

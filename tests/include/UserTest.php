@@ -46,6 +46,7 @@ class UserTest extends \PHPUnit\Framework\TestCase
     public function testUsernameValid($username)
     {
         User::validateUserName($username);
+        $this->addToAssertionCount(1);
     }
 
 
@@ -95,5 +96,6 @@ class UserTest extends \PHPUnit\Framework\TestCase
     public function testUsernameValidWithSpace($username)
     {
         User::validateUserName($username, true);
+        $this->addToAssertionCount(1);
     }
 }

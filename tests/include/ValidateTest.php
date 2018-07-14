@@ -117,5 +117,6 @@ class ValidateTest extends \PHPUnit\Framework\TestCase
     public function testVersionStringNoThrowsException($version)
     {
         Validate::versionString($version);
+        $this->addToAssertionCount(1);
     }
 }

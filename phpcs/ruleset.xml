@@ -1,6 +1,15 @@
 <?xml version="1.0"?>
-<ruleset name="Stk Addons">
+<ruleset name="STK Addons">
+    <!-- https://github.com/squizlabs/PHP_CodeSniffer/wiki/Annotated-ruleset.xml -->
+
+    <!-- Exclude some directories/files from the rule set -->
+    <exclude-pattern>assets/</exclude-pattern>
+    <exclude-pattern>config.php</exclude-pattern>
+
+    <arg name="colors"/>
+
     <rule ref="PSR2">
+
         <!-- TODO lines are longer than 120 characters everywhere, it is impossible to fix it now -->
         <exclude name="Generic.Files.LineLength.TooLong" />
         <!-- TODO snake_case method names everywhere, it is impossible to fix it now -->

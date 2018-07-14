@@ -289,16 +289,16 @@ class Server implements IAsXML
      * @throws ServerException
      */
     public static function create(
-        $ip,
-        $port,
-        $private_port,
-        $user_id,
+        int $ip,
+        int $port,
+        int $private_port,
+        int $user_id,
         $server_name,
-        $max_players,
-        $difficulty,
-        $game_mode,
-        $password,
-        $version
+        int $max_players,
+        int $difficulty,
+        int $game_mode,
+        int $password,
+        int $version
     ) {
         try
         {

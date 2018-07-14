@@ -68,7 +68,7 @@ class ClientSession
      *
      * @return string and xml string
      */
-    public function getFriendsOf($visiting_id)
+    public function getFriendsOf(int $visiting_id)
     {
         return Friend::getFriendsAsXML($visiting_id, $this->user->getId() === $visiting_id);
     }
@@ -86,18 +86,19 @@ class ClientSession
      * @param int    $password
      * @param int    $version
      *
+     * @throws ServerException
      * @return Server
      */
     public function createServer(
-        $ip,
-        $port,
-        $private_port,
+        int $ip,
+        int $port,
+        int $private_port,
         $server_name,
-        $max_players,
-        $difficulty,
-        $game_mode,
-        $password,
-        $version
+        int $max_players,
+        int $difficulty,
+        int $game_mode,
+        int $password,
+        int $version
     ) {
         return Server::create(
             $ip,
@@ -121,7 +122,7 @@ class ClientSession
      *
      * @throws ClientSessionException
      */
-    public function stopServer($ip, $port)
+    public function stopServer(int $ip, int $port)
     {
         try
         {
@@ -223,7 +224,7 @@ class ClientSession
      *
      * @throws ClientSessionException if setting join key fails
      */
-    public function setJoinServerKey($server_id, $address, $port, $aes_key, $aes_iv)
+    public function setJoinServerKey(int $server_id, int $address, int $port, string $aes_key, string $aes_iv)
     {
         try
         {
@@ -274,13 +275,14 @@ class ClientSession
     }
 
     /**
-     * @param string $ip
+     * @param int    $ip
      * @param int    $port
+     * @param int    $current_players
      *
      * @return array
      * @throws ClientSessionException
      */
-    public function getServerConnectionRequests($ip, $port, $current_players)
+    public function getServerConnectionRequests(int $ip, int $port, int $current_players)
     {
         try
         {
@@ -527,7 +529,7 @@ class ClientSession
      * @throws ClientSessionException
      * @return ClientSession
      */
-    public function setOnline($online = true)
+    public function setOnline(bool $online = true)
     {
         try
         {
@@ -565,7 +567,7 @@ class ClientSession
      * @return ClientSession
      * @throws ClientSessionExpiredException|ClientSessionException when session does not exist
      */
-    public static function get($session_id, $user_id)
+    public static function get(string $session_id, int $user_id)
     {
         try
         {

@@ -35,9 +35,9 @@ try
             {
                 $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
                 $token = isset($_POST['token']) ? $_POST['token'] : "";
-                $address = isset($_POST['address']) ? utf8_encode($_POST['address']) : null;
-                $port = isset($_POST['port']) ? utf8_encode($_POST['port']) : null;
-                $private_port = isset($_POST['private_port']) ? utf8_encode($_POST['private_port']) : null;
+                $address = isset($_POST['address']) ? (int)utf8_encode($_POST['address']) : null;
+                $port = isset($_POST['port']) ? (int)utf8_encode($_POST['port']) : null;
+                $private_port = isset($_POST['private_port']) ? (int)utf8_encode($_POST['private_port']) : null;
                 $server_name = isset($_POST['name']) ? utf8_encode($_POST['name']) : "";
                 $max_players = isset($_POST['max_players']) ? (int)$_POST['max_players'] : 0;
                 $difficulty = isset($_POST['difficulty']) ? (int)$_POST['difficulty'] : 0;
@@ -71,10 +71,10 @@ try
         case 'stop': // stop a server
             try
             {
-                $userid = isset($_POST['userid']) ? utf8_encode($_POST['userid']) : null;
+                $userid = isset($_POST['userid']) ? (int)utf8_encode($_POST['userid']) : 0;
                 $token = isset($_POST['token']) ? utf8_encode($_POST['token']) : null;
-                $address = isset($_POST['address']) ? utf8_encode($_POST['address']) : null;
-                $port = isset($_POST['port']) ? utf8_encode($_POST['port']) : null;
+                $address = isset($_POST['address']) ? (int)utf8_encode($_POST['address']) : 0;
+                $port = isset($_POST['port']) ? (int)utf8_encode($_POST['port']) : 0;
 
                 ClientSession::get($token, $userid)->stopServer($address, $port);
 
@@ -109,11 +109,11 @@ try
         case 'join-server-key':
             try
             {
-                $userid = isset($_POST['userid']) ? (int)utf8_encode($_POST['userid']) : null;
+                $userid = isset($_POST['userid']) ? (int)utf8_encode($_POST['userid']) : 0;
                 $token = isset($_POST['token']) ? utf8_encode($_POST['token']) : null;
-                $server_id = isset($_POST['server-id']) ? (int)utf8_encode($_POST['server-id']) : null;
-                $address = isset($_POST['address']) ? utf8_encode($_POST['address']) : null;
-                $port = isset($_POST['port']) ? utf8_encode($_POST['port']) : null;
+                $server_id = isset($_POST['server-id']) ? (int)utf8_encode($_POST['server-id']) : 0;
+                $address = isset($_POST['address']) ? (int)utf8_encode($_POST['address']) : 0;
+                $port = isset($_POST['port']) ? (int)utf8_encode($_POST['port']) : 0;
                 $aes_key = isset($_POST['aes-key']) ? utf8_encode($_POST['aes-key']) : null;
                 $aes_iv = isset($_POST['aes-iv']) ? utf8_encode($_POST['aes-iv']) : null;
 
@@ -134,13 +134,14 @@ try
         case 'poll-connection-requests':
             try
             {
-                $userid = isset($_POST['userid']) ? (int)utf8_encode($_POST['userid']) : null;
+                $userid = isset($_POST['userid']) ? (int)utf8_encode($_POST['userid']) : 0;
                 $token = isset($_POST['token']) ? utf8_encode($_POST['token']) : null;
-                $address = isset($_POST['address']) ? utf8_encode($_POST['address']) : null;
-                $port = isset($_POST['port']) ? utf8_encode($_POST['port']) : null;
+                $address = isset($_POST['address']) ? (int)utf8_encode($_POST['address']) : 0;
+                $port = isset($_POST['port']) ? (int)utf8_encode($_POST['port']) : 0;
                 $current_players = isset($_POST['current_players']) ? (int)$_POST['current_players'] : 0;
 
-                $requests = ClientSession::get($token, $userid)->getServerConnectionRequests($address, $port, $current_players);
+                $requests = ClientSession::get($token, $userid)
+                    ->getServerConnectionRequests($address, $port, $current_players);
 
                 $output->startElement('poll-connection-requests');
                     $output->writeAttribute('success', 'yes');
