@@ -16,7 +16,6 @@
         "ext-pdo": "*",
         "ext-gettext": "*",
         "ext-mbstring": "*",
-        "ext-mcrypt": "*",
         "myclabs/php-enum": "^1.5",
         "webmozart/assert": "^1.2",
         "nategood/commando": "*"

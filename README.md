@@ -23,10 +23,6 @@ There are several ways to solve this problem:
 to the user under which your webserver is running (usually www-data). The latter can be achieved using:
 ```sudo chown -R www-data:www-data <directory>```
 
-### Missing extension after install
-Sometimes even after you install `mcrypt` extension for PHP it tells you that it is disabled or not available.
-The solution is to enable it: `sudo php5enmod mcrypt && sudo service apache2 restart`
-
 ### Bower doesn't work
 If ```bower --version``` doesn't give any output, it hasn't found the nodejs installation. You can fix that with
 ```ln -s /usr/bin/nodejs /usr/bin/node```
