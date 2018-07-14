@@ -449,7 +449,7 @@ class Bug extends Base
 
         switch ($status)
         {
-            case "all";
+            case "all":
                 break;
 
             case "open":
@@ -475,7 +475,6 @@ class Bug extends Base
                 DBConnection::FETCH_ALL,
                 [":search_term" => '%' . $search_term . '%']
             );
-
         }
         catch (DBException $e)
         {

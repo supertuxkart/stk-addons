@@ -80,4 +80,3 @@ if ($pop_kart !== null)
 
 $tpl->assign('news_messages', $news_messages);
 echo $tpl;
-

@@ -28,7 +28,7 @@ if (empty($_GET["data-type"]))
 
 switch ($_GET["data-type"])
 {
-    case "addon";
+    case "addon":
         if (Validate::ensureNotEmpty($_GET, ["addon-type", "query", "flags"]))
         {
             exit_json_error("One or more fields are empty. This should never happen");

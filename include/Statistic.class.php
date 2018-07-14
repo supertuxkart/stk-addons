@@ -324,7 +324,7 @@ class Statistic
                     $data = static::getPieJSON($data, $columns, $count_columns);
                     break;
 
-                case static::CHART_TIME;
+                case static::CHART_TIME:
                     $data = static::getTimeJSON($data, $columns, $count_columns);
                     break;
 
@@ -402,7 +402,6 @@ class Statistic
     {
         try
         {
-
             $addons = DBConnection::get()->query(
                 'SELECT `a`.`name`, `a`.type
                 FROM `{DB_VERSION}_addons` `a`

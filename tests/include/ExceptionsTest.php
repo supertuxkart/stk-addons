@@ -57,7 +57,6 @@ class ExceptionsTest extends \PHPUnit\Framework\TestCase
                 $this->assertEquals($e->getCode(), $value);
             }
         }
-
     }
 
     /**

@@ -151,7 +151,6 @@ class Verification
                 [":days" => $days],
                 [":days" => DBConnection::PARAM_INT]
             );
-
         }
         catch (DBException $e)
         {
@@ -174,7 +173,6 @@ class Verification
                 [":days" => $days],
                 [":days" => DBConnection::PARAM_INT]
             );
-
         }
         catch (DBException $e)
         {

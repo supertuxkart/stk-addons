@@ -245,15 +245,15 @@ switch ($_POST["action"])
         exit_json_success("Settings saved");
         break;
     case "reset-ranking":
-            try
-            {
-                Ranking::resetRanking(User::getPermissions());
-            }
-            catch(Exception $e)
-            {
-                exit_json_error($e->getMessage());
-            }
-            exit_json_success("Successfully reset player ranking");
+        try
+        {
+            Ranking::resetRanking(User::getPermissions());
+        }
+        catch(Exception $e)
+        {
+            exit_json_error($e->getMessage());
+        }
+        exit_json_success("Successfully reset player ranking");
 
         break;
     case "clear-cache": // delete all the cache

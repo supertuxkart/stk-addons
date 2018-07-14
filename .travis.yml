@@ -6,6 +6,7 @@ php:
 script:
   - ./vendor/bin/phpunit --configuration phpunit.xml
   - composer phpstan
+  - composer phpcs
 
 before_script:
   - composer self-update

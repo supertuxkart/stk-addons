@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<ruleset name="Stk Addons">
+    <rule ref="PSR2">
+        <!-- TODO lines are longer than 120 characters everywhere, it is impossible to fix it now -->
+        <exclude name="Generic.Files.LineLength.TooLong" />
+        <!-- TODO snake_case method names everywhere, it is impossible to fix it now -->
+        <exclude name="PSR1.Methods.CamelCapsMethodName.NotCamelCaps" />
+
+        <!-- TODO multiple classes in one file everywhere, it is impossible to fix it now -->
+        <exclude name="PSR1.Classes.ClassDeclaration.MultipleClasses" />
+        <!-- TODO class declared with braces on same line as class name everywhere, it is impossible to fix it now -->
+        <exclude name="PSR2.Classes.ClassDeclaration.OpenBraceNewLine" />
+        <!-- TODO class declared with braces on same line as class name everywhere, it is impossible to fix it now -->
+        <exclude name="Squiz.WhiteSpace.ScopeClosingBrace.ContentBefore" />
+        <!-- TODO class declared with content before (spaces) everywhere, it is impossible to fix it now -->
+        <exclude name="Squiz.WhiteSpace.ScopeClosingBrace.ContentBefore" />
+
+        <!-- TODO "bad" indention in api files, because indent as xml output is -->
+        <exclude name="Generic.WhiteSpace.ScopeIndent.IncorrectExact" />
+
+        <!-- optional parameter in middle of function declaration - function abc ($p1, $p2 = true, $p3) -->
+        <exclude name="PEAR.Functions.ValidDefaultValue.NotAtEnd" />
+
+        <!-- Method name starts with underscore - function _loadFile -->
+        <exclude name="PSR2.Methods.MethodDeclaration.Underscore" />
+
+        <!-- function declaration with opening brace on next line -->
+        <exclude name="Squiz.Functions.MultiLineFunctionDeclaration.BraceOnNewLine" />
+
+        <!-- space in control structures -->
+        <exclude name="Squiz.ControlStructures.ControlSignature.SpaceAfterCloseParenthesis" />
+        <exclude name="Squiz.ControlStructures.ControlSignature.SpaceAfterCloseBrace" />
+        <exclude name="Squiz.ControlStructures.ControlSignature.SpaceAfterKeyword" />
+
+        <!-- allow class without namespace-->
+        <exclude name="PSR1.Classes.ClassDeclaration.MissingNamespace" />
+
+        <!-- allow inline control structures if (...) command;-->
+        <exclude name="Generic.ControlStructures.InlineControlStructure.NotAllowed" />
+
+        <!-- allow "else if" with space between "else" and "if" -->
+        <exclude name="PSR2.ControlStructures.ElseIfDeclaration.NotAllowed" />
+
+        <!-- allow class declaration with side effects together in one file -->
+        <exclude name="PSR1.Files.SideEffects.FoundWithSymbols" />
+    </rule>
+</ruleset>

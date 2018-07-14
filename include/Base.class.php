@@ -24,7 +24,7 @@ interface IBaseException
      * Get this class exception, this is overridden in classes who implement this
      * @return BaseException
      */
-    static function getException();
+    public static function getException();
 }
 
 /**
@@ -40,7 +40,7 @@ abstract class Base implements IBaseException
      *
      * @throws BaseException
      */
-    private static final function throwException($message, $code = ErrorType::UNKNOWN)
+    private static function throwException($message, $code = ErrorType::UNKNOWN)
     {
         throw static::getException()->setMessage($message)->setCode($code);
     }

@@ -130,7 +130,6 @@ class Rating
                 ],
                 [':user_id' => DBConnection::PARAM_INT]
             );
-
         }
         catch (DBException $e)
         {
@@ -262,7 +261,6 @@ class Rating
         if ($this->getNumRatings() === 1)
         {
             return $this->getNumRatings() . ' Vote';
-
         }
 
         return $this->getNumRatings() . ' Votes';

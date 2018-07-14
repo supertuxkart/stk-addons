@@ -35,7 +35,7 @@ class StkLog
         // everything besides INFO and NOTICE is an error
         if ($log_level !== LogLevel::INFO && $log_level != LogLevel::NOTICE)
         {
-            Debug::addMessage($message, $log_level,false);
+            Debug::addMessage($message, $log_level, false);
             error_log(sprintf("%s: %s", $log_level, $message));
         }
 

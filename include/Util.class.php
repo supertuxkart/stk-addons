@@ -294,8 +294,8 @@ CAPTCHA_SECRET. Reload the page after this.</p>
 MSG;
 
             exit(
-            StkTemplate::get('error-page.tpl')
-                ->assign('error', ['title' => 'Add your captcha keys', 'message' => $message])->toString()
+                StkTemplate::get('error-page.tpl')
+                    ->assign('error', ['title' => 'Add your captcha keys', 'message' => $message])->toString()
             );
         }
     }
@@ -616,7 +616,6 @@ MSG;
             {
                 throw new DBException($e);
             }
-
         }
 
         return $salt . hash("sha256", $salt . $raw_password);
@@ -814,11 +813,11 @@ MSG;
         $lat_delta = $lat_to - $lat_from;
         $lon_delta = $lon_to - $lon_from;
         $angle = 2 * asin(
-                sqrt(
-                    pow(sin($lat_delta / 2), 2) +
-                    cos($lat_from) * cos($lat_to) * pow(sin($lon_delta / 2), 2)
-                )
-            );
+            sqrt(
+                pow(sin($lat_delta / 2), 2) +
+                cos($lat_from) * cos($lat_to) * pow(sin($lon_delta / 2), 2)
+            )
+        );
 
         return $angle * $earth_radius;
     }

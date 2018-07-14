@@ -1630,7 +1630,6 @@ final class User extends Base implements IAsXML
             throw new UserException(_h("Homepage is to long."), ErrorType::VALIDATE_HOMEPAGE_LONG);
         }
     }
-
 }
 
 // start session and validate it

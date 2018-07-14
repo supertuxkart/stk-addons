@@ -164,7 +164,10 @@ class Template
     /**
      * Setup function for children to override
      */
-    protected function setup() { throw new TemplateException("Not Implemented"); }
+    protected function setup()
+    {
+        throw new TemplateException("Not Implemented");
+    }
 
     /**
      * Setup HTTP headers

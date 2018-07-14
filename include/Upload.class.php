@@ -636,9 +636,10 @@ class Upload
         if ($invalid_files)
         {
             $this->warnings[] = _h(
-                                    'Some invalid files were found in the uploaded add-on. These files have been removed from the archive:'
-                                )
-                                . ' ' . h(implode(', ', $invalid_files));
+                'Some invalid files were found in the uploaded add-on. These files have been removed from the archive:'
+            )
+            . ' '
+            . h(implode(', ', $invalid_files));
             Debug::addMessage(Util::array_last($this->warnings));
         }
     }
