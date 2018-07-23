@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+  www:
+    build: .
+    ports:
+      - 680:80
+
+  database:
+    image: mariadb
+    environment:
+      - MYSQL_ROOT_PASSWORD=root-secret-pw
+      - MYSQL_DATABASE=stk_addons
+      - MYSQL_HOST=database
+    volumes:
+      - db-data:/var/lib/mysql
+
+  adminer:
+    environment:
+      - ADMINER_DESIGN=nette
+    image: adminer
+    ports:
+      - "681:8080"
+
+  db-init:
+    build:
+      dockerfile: Dockerfile-db-init
+      context: .
+    environment:
+      - MYSQL_ROOT_PASSWORD=root-secret-pw
+      - MYSQL_USER=stk_addons
+      - MYSQL_USER_PASSWORD=your super secret password
+      - MYSQL_DATABASE=stk_addons
+      - MYSQL_HOST=database
+    command: [
+      "/docker-tools/wait-for-it.sh", "database:3306", "-t", "60",
+      "--",
+      "/docker-tools/init-db.sh"
+    ]
+    depends_on:
+      - database
+
+volumes:
+  db-data:

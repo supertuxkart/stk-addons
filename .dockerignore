@@ -1,0 +1,5 @@
+.git
+assets/libs
+phpstan
+tests
+vendor
