@@ -289,7 +289,7 @@ class Server implements IAsXML
      * @throws ServerException
      */
     public static function create(
-        int $ip,
+        $ip,
         int $port,
         int $private_port,
         int $user_id,

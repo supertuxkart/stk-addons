@@ -90,7 +90,7 @@ class ClientSession
      * @return Server
      */
     public function createServer(
-        int $ip,
+        $ip,
         int $port,
         int $private_port,
         $server_name,
@@ -122,7 +122,7 @@ class ClientSession
      *
      * @throws ClientSessionException
      */
-    public function stopServer(int $ip, int $port)
+    public function stopServer($ip, int $port)
     {
         try
         {
@@ -224,7 +224,7 @@ class ClientSession
      *
      * @throws ClientSessionException if setting join key fails
      */
-    public function setJoinServerKey(int $server_id, int $address, int $port, string $aes_key, string $aes_iv)
+    public function setJoinServerKey(int $server_id, $address, int $port, string $aes_key, string $aes_iv)
     {
         try
         {
@@ -282,7 +282,7 @@ class ClientSession
      * @return array
      * @throws ClientSessionException
      */
-    public function getServerConnectionRequests(int $ip, int $port, int $current_players)
+    public function getServerConnectionRequests($ip, int $port, int $current_players)
     {
         try
         {
