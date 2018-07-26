@@ -19,9 +19,6 @@
  */
 declare(strict_types=1);
 
-// Make sure that this does not end with a trailing slash, and does not have a prefix in front
-$DOMAIN_NAME = $_SERVER['SERVER_NAME'] . (!in_array($_SERVER['SERVER_PORT'], ['80', '443'], true) ? ':' . $_SERVER['SERVER_PORT'] : '');
-
 // WARNING!!!! turn OFF in the production server.
 // Enable this when you want detailed debugging output.
 // WARNING!!!! turn OFF in the production server.
@@ -57,6 +54,17 @@ if (!defined('TEST_MODE')) define('TEST_MODE', false);
 if (!defined('CRON_MODE')) define('CRON_MODE', false);
 // useful for the API
 if (!defined('API_MODE')) define('API_MODE', false);
+
+if (empty($_SERVER['SERVER_NAME']) || empty($_SERVER['SERVER_PORT']))
+{
+    // NOTE: We can't access the server name variable in cron mode
+    // Make sure that this does not end with a trailing slash, and does not have a prefix in front
+    $DOMAIN_NAME = 'stk-addons.localhost';
+}
+else
+{
+    $DOMAIN_NAME = $_SERVER['SERVER_NAME'] . (!in_array($_SERVER['SERVER_PORT'], ['80', '443'], true) ? ':' . $_SERVER['SERVER_PORT'] : '');
+}
 
 // Paths on the local filesystem
 const DS = DIRECTORY_SEPARATOR;
