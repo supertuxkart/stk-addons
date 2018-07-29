@@ -586,10 +586,10 @@ class StkImage
         imagesavealpha($image, true);
 
         // Set up colors
-        $color = [];
+        $colors = [];
         for ($i = 0; $i <= 255; $i++)
         {
-            $color[$i] = imagecolorallocate($image, (int)($i / 1.5), (int)($i / 1.5), $i);
+            $colors[$i] = imagecolorallocate($image, (int)($i / 1.5), (int)($i / 1.5), $i);
         }
         $bg = imagecolorallocatealpha($image, 255, 255, 255, 127);
         imagefilledrectangle($image, 0, 0, 1023, 1023, $bg);
@@ -611,7 +611,7 @@ class StkImage
                   $quads[$i][3][2]
                 ],
                 4, // num_points
-                $color[$color_index] // color
+                $colors[$color_index] // color
             );
         }
 

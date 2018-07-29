@@ -272,6 +272,23 @@ class Server implements IAsXML
     }
 
     /**
+     * Cleans all old servers
+     * @throws DBException
+     */
+    public static function cleanOldServers()
+    {
+        // Clean non-polled servers < 15 seconds before
+        $timeout = time() - 15;
+        DBConnection::get()->query(
+            "DELETE FROM `{DB_VERSION}_servers`
+                WHERE `last_poll_time` < :time",
+            DBConnection::NOTHING,
+            [':time' => $timeout],
+            [':time' => DBConnection::PARAM_INT]
+        );
+    }
+
+    /**
      * Create server
      *
      * @param int    $ip
@@ -302,16 +319,7 @@ class Server implements IAsXML
     ) {
         try
         {
-            // Clean non-polled servers < 15 seconds before
-            $timeout = time() - 15;
-            DBConnection::get()->query(
-                "DELETE FROM `{DB_VERSION}_servers`
-                WHERE `last_poll_time` < :time",
-                DBConnection::NOTHING,
-                [':time' => $timeout],
-                [':time' => DBConnection::PARAM_INT]
-            );
-
+            static::cleanOldServers();
             $count = DBConnection::get()->query(
                 "SELECT `id` FROM `{DB_VERSION}_servers` WHERE `ip`= :ip AND `port`= :port ",
                 DBConnection::ROW_COUNT,
@@ -379,6 +387,48 @@ class Server implements IAsXML
     }
 
     /**
+     * Stop a server by deleting it from the database
+     *
+     * @param int $ip   the server ip
+     * @param int $port the server port
+     * @param int $host_id the server owner
+     *
+     * @throws ServerException
+     */
+    public static function stop($ip, int $port, int $host_id)
+    {
+        try
+        {
+            // now setup the serv info
+            $count = DBConnection::get()->query(
+                "DELETE FROM `{DB_VERSION}_servers`
+                WHERE `ip`= :ip AND `port`= :port AND `host_id`= :id",
+                DBConnection::ROW_COUNT,
+                [
+                    ':ip'   => $ip,
+                    ':port' => $port,
+                    ':id'   => $host_id
+                ],
+                [
+                    ':ip'   => DBConnection::PARAM_INT,
+                    ':port' => DBConnection::PARAM_INT,
+                    ':id'   => DBConnection::PARAM_INT
+                ]
+            );
+            static::cleanOldServers();
+        }
+        catch (DBException $e)
+        {
+            throw new ServerException(exception_message_db(_('stop a server')));
+        }
+
+        if ($count !== 1)
+        {
+            throw new ServerException(_h('Not the good number of servers deleted.'));
+        }
+    }
+
+    /**
      * Get a server instance by id
      *
      * @param int $id
@@ -426,6 +476,7 @@ class Server implements IAsXML
         $servers = [];
         try
         {
+            static::cleanOldServers();
             $servers = DBConnection::get()->query(
                 "SELECT * FROM `{DB_VERSION}_servers`",
                 DBConnection::FETCH_ALL

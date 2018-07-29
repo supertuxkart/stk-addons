@@ -76,15 +76,15 @@ class ClientSession
     /**
      * Create a server instance
      *
-     * @param int    $ip
-     * @param int    $port
-     * @param int    $private_port
-     * @param string $server_name
-     * @param int    $max_players
-     * @param int    $difficulty
-     * @param int    $game_mode
-     * @param int    $password
-     * @param int    $version
+     * @param int       $ip
+     * @param int       $port
+     * @param int       $private_port
+     * @param string    $server_name
+     * @param int       $max_players
+     * @param int       $difficulty
+     * @param int       $game_mode
+     * @param int       $password
+     * @param int       $version
      *
      * @throws ServerException
      * @return Server
@@ -120,49 +120,29 @@ class ClientSession
      * @param int $ip   the server ip
      * @param int $port the server port
      *
-     * @throws ClientSessionException
+     * @throws ServerException
      */
     public function stopServer($ip, int $port)
     {
-        try
-        {
-            // now setup the serv info
-            $count = DBConnection::get()->query(
-                "DELETE FROM `{DB_VERSION}_servers`
-                WHERE `ip`= :ip AND `port`= :port AND `host_id`= :id",
-                DBConnection::ROW_COUNT,
-                [
-                    ':ip'   => $ip,
-                    ':port' => $port,
-                    ':id'   => $this->user->getId()
-                ],
-                [
-                    ':ip'   => DBConnection::PARAM_INT,
-                    ':port' => DBConnection::PARAM_INT,
-                    ':id'   => DBConnection::PARAM_INT
-                ]
-            );
-        }
-        catch (DBException $e)
-        {
-            throw new ClientSessionException(exception_message_db(_('stop a server')));
-        }
-
-        if ($count !== 1)
-        {
-            throw new ClientSessionException(_h('Not the good number of servers deleted.'));
-        }
+        return Server::stop($ip, $port, $this->user->getId());
     }
-
 
     /**
      * A space separated string of names
      *
+     * @throws ClientSessionException
      * @return string
      */
     public function getOnlineFriends()
     {
-        return implode(" ", Friend::getOnlineFriendsOf($this->user->getId()));
+        try
+        {
+            return implode(" ", Friend::getOnlineFriendsOf($this->user->getId()));
+        }
+        catch (FriendException $e)
+        {
+            throw new ClientSessionException($e);
+        }
     }
 
     /**
@@ -228,6 +208,7 @@ class ClientSession
     {
         try
         {
+            Server::cleanOldServers();
             DBConnection::get()->query(
                 "INSERT INTO `{DB_VERSION}_server_conn`
                 (`user_id`, `server_id`, `ip`, `port`, `aes_key`, `aes_iv`) VALUES
