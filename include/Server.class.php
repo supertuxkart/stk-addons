@@ -92,6 +92,11 @@ class Server implements IAsXML
     private $version;
 
     /**
+     * @var int
+     */
+    private $game_started;
+
+    /**
      * Latitude of IP in float of server (0.0 if not in database)
      * @var float
      */
@@ -121,6 +126,7 @@ class Server implements IAsXML
         $this->current_players = (int)$data["current_players"];
         $this->password = (int)$data["password"];
         $this->version = (int)$data["version"];
+        $this->game_started = (int)$data["game_started"];
         $this->latitude = $data["latitude"];
         $this->longitude = $data["longitude"];
     }
@@ -259,6 +265,7 @@ class Server implements IAsXML
         $server_xml->writeAttribute("current_players", $this->current_players);
         $server_xml->writeAttribute("password", $this->password);
         $server_xml->writeAttribute("version", $this->version);
+        $server_xml->writeAttribute("game_started", $this->game_started);
         $server_xml->writeAttribute(
             "distance",
             Util::getDistance($client_latitude, $client_longitude, $this->latitude, $this->longitude)

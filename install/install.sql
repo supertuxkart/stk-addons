@@ -322,7 +322,8 @@ CREATE TABLE IF NOT EXISTS `v3_servers` (
     `game_mode`       TINYINT UNSIGNED  NOT NULL DEFAULT '0',
     `current_players` TINYINT UNSIGNED  NOT NULL DEFAULT '0',
     `password`        TINYINT UNSIGNED  NOT NULL DEFAULT '0',
-    `version`         TINYINT UNSIGNED  NOT NULL DEFAULT '1',
+    `version`         INT UNSIGNED      NOT NULL DEFAULT '1',
+    `game_started`    TINYINT UNSIGNED  NOT NULL DEFAULT '0',
     `latitude`        FLOAT             NOT NULL DEFAULT '0.0',
     `longitude`       FLOAT             NOT NULL DEFAULT '0.0'
     COMMENT 'Isn''t exact. Just to show in the server-list, where it doesn''t need to be exact.',
