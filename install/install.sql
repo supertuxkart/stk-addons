@@ -674,7 +674,7 @@ CREATE TABLE IF NOT EXISTS `v3_config` (
 -- Dumping data for table `v3_config`
 --
 INSERT INTO `v3_config` (`name`, `value`) VALUES
-    ('allowed_addon_exts', 'b3d, bz2, gz, jpeg, jpg, music, ogg, png, spm, tar, tar.bz2, tar.gz, tbz, tgz, txt, xml, zip'),
+    ('allowed_addon_exts', 'as, b3d, bz2, gz, jpeg, jpg, music, ogg, png, spm, tar, tar.bz2, tar.gz, tbz, tgz, txt, xml, zip'),
     ('allowed_source_exts', 'as, b3d, blend, jpeg, jpg, music, ogg, png, rgb, spm, svg, txt, xcf, xml'),
     ('max_image_dimension', '2048'),
     ('blog_feed', 'http://supertuxkart.blogspot.com/feeds/posts/default')
