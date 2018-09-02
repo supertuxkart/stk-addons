@@ -348,6 +348,7 @@ CREATE TABLE IF NOT EXISTS `v3_server_conn` (
     `port`       SMALLINT UNSIGNED NOT NULL,
     `aes_key`    CHAR(24)          NOT NULL,
     `aes_iv`     CHAR(24)          NOT NULL,
+    `connected_since` INT          NOT NULL,
     PRIMARY KEY (`user_id`),
     KEY `key_server_id` (`server_id`),
     CONSTRAINT `v3_server_conn_ibfk_1` FOREIGN KEY (`server_id`) REFERENCES `v3_servers` (`id`)

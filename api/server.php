@@ -193,6 +193,23 @@ try
             }
             break;
 
+        case 'clear-user-joined-server':
+            try
+            {
+                $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
+                $token = isset($_POST['token']) ? $_POST['token'] : "";
+                ClientSession::get($token, $userid)->clearUserJoinedServer();
+
+                $output->startElement('clear-user-joined-server');
+                    $output->writeAttribute('success', 'yes');
+                $output->endElement();
+            }
+            catch(Exception $e)
+            {
+                $output->addErrorElement('clear-user-joined-server', $e->getMessage());
+            }
+            break;
+
         default:
             $output->addErrorElement('request', 'Invalid action. Action = ' . h($_POST['action']));
             break;

@@ -211,26 +211,28 @@ class ClientSession
             Server::cleanOldServers();
             DBConnection::get()->query(
                 "INSERT INTO `{DB_VERSION}_server_conn`
-                (`user_id`, `server_id`, `ip`, `port`, `aes_key`, `aes_iv`) VALUES
-                (:user_id, :server_id, :ip, :port, :aes_key, :aes_iv)
+                (`user_id`, `server_id`, `ip`, `port`, `aes_key`, `aes_iv`, `connected_since`) VALUES
+                (:user_id, :server_id, :ip, :port, :aes_key, :aes_iv, :connected_since)
                 ON DUPLICATE KEY UPDATE `server_id` = :server_id,
-                `ip` = :ip, `port`= :port, `aes_key` = :aes_key, `aes_iv` = :aes_iv",
+                `ip` = :ip, `port`= :port, `aes_key` = :aes_key, `connected_since` = :connected_since",
                 DBConnection::NOTHING,
                 [
-                    ':user_id'   => $this->user->getId(),
-                    ':server_id' => $server_id,
-                    ':ip'        => $address,
-                    ':port'      => $port,
-                    ':aes_key'   => $aes_key,
-                    ':aes_iv'    => $aes_iv
+                    ':user_id'         => $this->user->getId(),
+                    ':server_id'       => $server_id,
+                    ':ip'              => $address,
+                    ':port'            => $port,
+                    ':aes_key'         => $aes_key,
+                    ':aes_iv'          => $aes_iv,
+                    ':connected_since' => time(),
                 ],
                 [
-                    ':user_id'   => DBConnection::PARAM_INT,
-                    ':server_id' => DBConnection::PARAM_INT,
-                    ':ip'        => DBConnection::PARAM_INT,
-                    ':port'      => DBConnection::PARAM_INT,
-                    ':aes_key'   => DBConnection::PARAM_STR,
-                    ':aes_iv'    => DBConnection::PARAM_STR
+                    ':user_id'         => DBConnection::PARAM_INT,
+                    ':server_id'       => DBConnection::PARAM_INT,
+                    ':ip'              => DBConnection::PARAM_INT,
+                    ':port'            => DBConnection::PARAM_INT,
+                    ':aes_key'         => DBConnection::PARAM_STR,
+                    ':aes_iv'          => DBConnection::PARAM_STR,
+                    ':connected_since' => DBConnection::PARAM_INT
                 ]
             );
         }
@@ -308,39 +310,25 @@ class ClientSession
                 ]
             );
 
+            // Get all connection requests 45 seconds before
+            $timeout = time() - 45;
             $connection_requests = DBConnection::get()->query(
                 "SELECT `user_id`, `server_id`, `ip`, `port`, `aes_key`, `aes_iv`, `username`
                 FROM `{DB_VERSION}_server_conn`
                 INNER JOIN `{DB_VERSION}_users`
                 ON `{DB_VERSION}_server_conn`.user_id = `{DB_VERSION}_users`.id
-                WHERE `server_id` = :server_id",
+                WHERE `server_id` = :server_id AND `connected_since` > :timeout",
                 DBConnection::FETCH_ALL,
-                [':server_id' => $server_id['id']],
-                [':server_id' => DBConnection::PARAM_INT]
+                [
+                    ':server_id' => $server_id['id'],
+                    ':timeout'   => $timeout
+                ],
+                [
+                    ':server_id' => DBConnection::PARAM_INT,
+                    ':timeout'   => DBConnection::PARAM_INT
+                ]
             );
 
-            // Set the request bit to zero for all users we fetch
-            $index = 0;
-            $parameters = [];
-            $query_parts = [];
-            foreach ($connection_requests as $user)
-            {
-                $parameter = ":user_id" . $index;
-                $index++;
-                $query_parts[] = "`user_id` = " . $parameter;
-                $parameters[$parameter] = $user['user_id'];
-            }
-
-            if ($index > 0)
-            {
-                DBConnection::get()->query(
-                    "DELETE FROM `{DB_VERSION}_server_conn`
-                    WHERE " . implode(" OR ", $query_parts),
-                    DBConnection::ROW_COUNT,
-                    $parameters
-                );
-                // TODO Perhaps check if $count and $index are equal
-            }
         }
         catch (DBException $e)
         {
@@ -441,6 +429,7 @@ class ClientSession
 
             if ($client)
             {
+                $this->clearUserJoinedServer();
                 if ($client['is_save'] == 1)
                 {
                     $this->setOnline(false);
@@ -694,6 +683,28 @@ class ClientSession
                     "is_online" => 0
                 ],
                 [":seconds" => DBConnection::PARAM_INT]
+            );
+        }
+        catch (DBException $e)
+        {
+            throw new ClientSessionException($e->getMessage());
+        }
+    }
+
+    /**
+     * Clear the specific joined server of the current user id, called when a client leave wan server in STK
+     *     *
+     * @throws ClientSessionException
+     */
+    public function clearUserJoinedServer()
+    {
+        try
+        {
+            DBConnection::get()->delete(
+                "server_conn",
+                "`user_id` = :user_id",
+                [":user_id" => $this->user->getId()],
+                [":user_id" => DBConnection::PARAM_INT]
             );
         }
         catch (DBException $e)
