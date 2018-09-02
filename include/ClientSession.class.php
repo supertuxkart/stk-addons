@@ -684,6 +684,14 @@ class ClientSession
                 ],
                 [":seconds" => DBConnection::PARAM_INT]
             );
+
+            // Remove all server connection that is not currently online
+            DBConnection::get()->query(
+                "DELETE FROM `{DB_VERSION}_server_conn`
+                WHERE `user_id` NOT IN
+                (SELECT `uid` FROM `{DB_VERSION}_client_sessions`
+                WHERE `is_online` = 1)"
+            );
         }
         catch (DBException $e)
         {
