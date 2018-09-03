@@ -54,6 +54,8 @@ try
             try
             {
                 $session = ClientSession::create($username, $password, $save_session === "true");
+                // Clear previous joined server if any
+                $session->clearUserJoinedServer();
                 $achievements_string = $session->getAchievements();
 
                 $output->startElement('connect');
@@ -82,6 +84,8 @@ try
             try
             {
                 $session = ClientSession::get($token, $userid);
+                // Clear previous joined server if any
+                $session->clearUserJoinedServer();
                 $session->setOnline();
                 User::updateLoginTime($session->getUser()->getId());
 

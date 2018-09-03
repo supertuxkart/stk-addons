@@ -400,6 +400,7 @@ class ClientSession
                 ],
                 [':user_id' => DBConnection::PARAM_INT]
             );
+            $this->clearUserJoinedServer();
         }
         catch (DBException $e)
         {
@@ -429,13 +430,14 @@ class ClientSession
 
             if ($client)
             {
-                $this->clearUserJoinedServer();
                 if ($client['is_save'] == 1)
                 {
+                    $this->clearUserJoinedServer();
                     $this->setOnline(false);
                 }
                 else
                 {
+                    // destroy will clear user joined server too
                     $this->destroy();
                 }
             }
