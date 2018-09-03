@@ -110,9 +110,17 @@ class Server implements IAsXML
 
     /**
      *
-     * @param array $data an associative array retrieved from the database
+     * List of players in server with name and connected since time
+     * @var array
      */
-    private function __construct(array $data)
+    private $player_info;
+
+    /**
+     *
+     * @param array $data An associative array retrieved from the database
+     * @param array $pi Player list in server if exists
+     */
+    private function __construct(array $data, array $pi = [])
     {
         $this->id = (int)$data["id"];
         $this->host_id = (int)$data["host_id"];
@@ -129,6 +137,7 @@ class Server implements IAsXML
         $this->game_started = (int)$data["game_started"];
         $this->latitude = $data["latitude"];
         $this->longitude = $data["longitude"];
+        $this->player_info = $pi;
     }
 
     /**
@@ -253,26 +262,45 @@ class Server implements IAsXML
     {
         $server_xml = new XMLOutput();
         $server_xml->startElement('server');
-        $server_xml->writeAttribute("id", $this->id);
-        $server_xml->writeAttribute("host_id", $this->host_id);
-        $server_xml->writeAttribute("name", $this->name);
-        $server_xml->writeAttribute("max_players", $this->max_players);
-        $server_xml->writeAttribute("ip", $this->ip);
-        $server_xml->writeAttribute("port", $this->port);
-        $server_xml->writeAttribute("private_port", $this->private_port);
-        $server_xml->writeAttribute("difficulty", $this->difficulty);
-        $server_xml->writeAttribute("game_mode", $this->game_mode);
-        $server_xml->writeAttribute("current_players", $this->current_players);
-        $server_xml->writeAttribute("password", $this->password);
-        $server_xml->writeAttribute("version", $this->version);
-        $server_xml->writeAttribute("game_started", $this->game_started);
-        $server_xml->writeAttribute(
-            "distance",
-            Util::getDistance($client_latitude, $client_longitude, $this->latitude, $this->longitude)
-        );
-        $user = User::getFromID($this->host_id);
-        $permission = AccessControl::getPermissions($user->getRole());
-        $server_xml->writeAttribute("official", in_array(AccessControl::PERM_OFFICIAL_SERVERS, $permission));
+            $server_xml->startElement('server-info');
+                $server_xml->writeAttribute("id", $this->id);
+                $server_xml->writeAttribute("host_id", $this->host_id);
+                $server_xml->writeAttribute("name", $this->name);
+                $server_xml->writeAttribute("max_players", $this->max_players);
+                $server_xml->writeAttribute("ip", $this->ip);
+                $server_xml->writeAttribute("port", $this->port);
+                $server_xml->writeAttribute("private_port", $this->private_port);
+                $server_xml->writeAttribute("difficulty", $this->difficulty);
+                $server_xml->writeAttribute("game_mode", $this->game_mode);
+                $server_xml->writeAttribute("current_players", $this->current_players);
+                $server_xml->writeAttribute("password", $this->password);
+                $server_xml->writeAttribute("version", $this->version);
+                $server_xml->writeAttribute("game_started", $this->game_started);
+                $server_xml->writeAttribute(
+                    "distance",
+                    Util::getDistance($client_latitude, $client_longitude, $this->latitude, $this->longitude)
+                );
+                $user = User::getFromID($this->host_id);
+                $permission = AccessControl::getPermissions($user->getRole());
+                $server_xml->writeAttribute("official", in_array(AccessControl::PERM_OFFICIAL_SERVERS, $permission));
+            $server_xml->endElement();
+            $server_xml->startElement('players');
+                foreach ($this->player_info as $pi)
+                {
+                    $server_xml->startElement('player-info');
+                    $server_xml->writeAttribute("user-id", $pi["user_id"]);
+                    $server_xml->writeAttribute("username", $pi["username"]);
+                    $server_xml->writeAttribute("connected-since", $pi["connected_since"]);
+                    if ($pi["rank"] !== null)
+                    {
+                        $server_xml->writeAttribute("rank", $pi["rank"]);
+                        $server_xml->writeAttribute("scores", $pi["scores"]);
+                        $server_xml->writeAttribute("max-scores", $pi["max_scores"]);
+                        $server_xml->writeAttribute("num-races-done", $pi["num_races_done"]);
+                    }
+                    $server_xml->endElement();
+                }
+            $server_xml->endElement();
         $server_xml->endElement();
 
         return $server_xml->asString();
@@ -480,12 +508,26 @@ class Server implements IAsXML
      */
     public static function getServersAsXML()
     {
-        $servers = [];
+        $servers_with_users = [];
         try
         {
             static::cleanOldServers();
-            $servers = DBConnection::get()->query(
-                "SELECT * FROM `{DB_VERSION}_servers`",
+            $servers_with_users = DBConnection::get()->query(
+                "SELECT `{DB_VERSION}_servers`.id, `{DB_VERSION}_servers`.host_id, `{DB_VERSION}_servers`.name,
+                `{DB_VERSION}_servers`.ip, `{DB_VERSION}_servers`.port, `{DB_VERSION}_servers`.private_port,
+                `{DB_VERSION}_servers`.max_players, `{DB_VERSION}_servers`.difficulty, `{DB_VERSION}_servers`.game_mode,
+                `{DB_VERSION}_servers`.current_players, `{DB_VERSION}_servers`.password, `{DB_VERSION}_servers`.version,
+                `{DB_VERSION}_servers`.game_started, `{DB_VERSION}_servers`.latitude, `{DB_VERSION}_servers`.longitude,
+                `{DB_VERSION}_server_conn`.user_id, `{DB_VERSION}_server_conn`.connected_since,
+                `{DB_VERSION}_users`.username,
+                `{DB_VERSION}_rankings`.scores, `{DB_VERSION}_rankings`.max_scores, `{DB_VERSION}_rankings`.num_races_done,
+                FIND_IN_SET(scores, (SELECT GROUP_CONCAT(DISTINCT scores ORDER BY scores DESC)
+                FROM `{DB_VERSION}_rankings`)) AS rank
+                FROM `{DB_VERSION}_servers`
+                LEFT JOIN `{DB_VERSION}_server_conn` ON `{DB_VERSION}_servers`.id = `{DB_VERSION}_server_conn`.server_id
+                LEFT JOIN `{DB_VERSION}_users` ON `{DB_VERSION}_users`.id = `{DB_VERSION}_server_conn`.user_id
+                LEFT JOIN `{DB_VERSION}_rankings` ON `{DB_VERSION}_rankings`.user_id = `{DB_VERSION}_server_conn`.user_id
+                ORDER BY id",
                 DBConnection::FETCH_ALL
             );
         }
@@ -495,13 +537,31 @@ class Server implements IAsXML
         }
 
         $client_coordinates = Server::getIPCoordinatesFromString(Util::getClientIp());
+        $servers = [];
+        $users = [[]];
+        $current_id = -1;
+        $current_user_id = -1;
+        foreach ($servers_with_users as $server_user)
+        {
+            if ($current_id !== (int)$server_user["id"])
+            {
+                $current_id = (int)$server_user["id"];
+                $current_user_id++;
+                $users[] = [];
+                $servers[] = $server_user;
+            }
+            if ($server_user["username"] !== null && $server_user["connected_since"] !== null)
+                $users[$current_user_id][] = $server_user;
+        }
 
         // build xml
         $partial_output = new XMLOutput();
         $partial_output->startElement('servers');
+        $user_index = 0;
         foreach ($servers as $server_result)
         {
-            $server = new self($server_result);
+            $server = new self($server_result, $users[$user_index]);
+            $user_index++;
             $partial_output->insert($server->asXMLFromClientLocation($client_coordinates[0], $client_coordinates[1]));
         }
         $partial_output->endElement();
