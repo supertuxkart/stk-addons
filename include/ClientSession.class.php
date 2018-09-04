@@ -146,6 +146,33 @@ class ClientSession
     }
 
     /**
+     * Return server names if any friends joined
+     * @param array $friends list of friend
+     * @throws ClientSessionException
+     * @return array
+     */
+    public function getServersFriendsJoined($friends)
+    {
+        try
+        {
+            $query_parts = [];
+            foreach ($friends as $friend)
+                $query_parts[] = "`user_id` = " . $friend;
+            $result = DBConnection::get()->query(
+                "SELECT user_id, name FROM `{DB_VERSION}_server_conn`
+                INNER JOIN `{DB_VERSION}_servers` ON
+                `{DB_VERSION}_server_conn`.server_id = `{DB_VERSION}_servers`.id
+                WHERE " . implode(" OR ", $query_parts),
+                DBConnection::FETCH_ALL
+            );
+            return $result;
+        }
+        catch (DBException $e)
+        {
+            throw new ClientSessionException($e);
+        }
+    }
+    /**
      * Get all the user notifications
      *
      * @return array
@@ -346,7 +373,7 @@ class ClientSession
     public function poll()
     {
         $this->setOnline();
-        $online_friends = $this->getOnlineFriends();
+        $online_friends = Friend::getOnlineFriendsOf($this->user->getId());
         $notifications = $this->getNotifications();
 
         $partial_output = new XMLOutput();
@@ -356,7 +383,7 @@ class ClientSession
 
         if ($online_friends)
         {
-            $partial_output->writeAttribute('online', $online_friends);
+            $partial_output->writeAttribute('online', implode(" ", $online_friends));
         }
 
         if (!empty($notifications['f_request']))
@@ -366,8 +393,24 @@ class ClientSession
                 $partial_output->insert(User::getFromID($requester_id)->asXML('new_friend_request'));
             }
         }
-        $partial_output->endElement();
 
+        // For 0.9.4 usage, return the server names if any friends joined
+        if ($online_friends)
+        {
+            $server_list = $this->getServersFriendsJoined($online_friends);
+            if ($server_list)
+            {
+                foreach ($server_list as $server)
+                {
+                    $partial_output->startElement('friend-in-server');
+                        $partial_output->writeAttribute("id", $server["user_id"]);
+                        $partial_output->writeAttribute("name", $server["name"]);
+                    $partial_output->endElement();
+                }
+            }
+        }
+
+        $partial_output->endElement();
         return $partial_output->asString();
     }
 
