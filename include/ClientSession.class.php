@@ -240,8 +240,8 @@ class ClientSession
                 "INSERT INTO `{DB_VERSION}_server_conn`
                 (`user_id`, `server_id`, `ip`, `port`, `aes_key`, `aes_iv`, `connected_since`) VALUES
                 (:user_id, :server_id, :ip, :port, :aes_key, :aes_iv, :connected_since)
-                ON DUPLICATE KEY UPDATE `server_id` = :server_id,
-                `ip` = :ip, `port`= :port, `aes_key` = :aes_key, `connected_since` = :connected_since",
+                ON DUPLICATE KEY UPDATE `server_id` = :server_id, `ip` = :ip, `port`= :port,
+                `aes_key` = :aes_key, `aes_iv` = :aes_iv, `connected_since` = :connected_since",
                 DBConnection::NOTHING,
                 [
                     ':user_id'         => $this->user->getId(),
