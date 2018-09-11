@@ -317,6 +317,8 @@ class ClientSession
                 return [];
             }
 
+            // This will keep the server owner account online as long as his servers are up
+            $this->setOnline();
             // Update this server info (atm last poll and and current players joined)
             DBConnection::get()->query(
                 "UPDATE `{DB_VERSION}_servers`
