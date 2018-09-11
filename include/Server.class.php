@@ -291,6 +291,8 @@ class Server implements IAsXML
                     $server_xml->writeAttribute("user-id", $pi["user_id"]);
                     $server_xml->writeAttribute("username", $pi["username"]);
                     $server_xml->writeAttribute("connected-since", $pi["connected_since"]);
+                    $time_played = (float)(time() - (int)$pi["connected_since"]) / 60.0;
+                    $server_xml->writeAttribute("time-played", $time_played);
                     if ($pi["rank"] !== null)
                     {
                         $server_xml->writeAttribute("rank", $pi["rank"]);
