@@ -314,7 +314,7 @@ class ClientSession
             );
             if (!$server_id)
             {
-                return [];
+                throw new InvalidArgumentException(_h('Server id is not found.'));
             }
 
             // This will keep the server owner account online as long as his servers are up
