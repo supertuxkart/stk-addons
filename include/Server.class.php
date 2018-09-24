@@ -290,7 +290,6 @@ class Server implements IAsXML
                     $server_xml->startElement('player-info');
                     $server_xml->writeAttribute("user-id", $pi["user_id"]);
                     $server_xml->writeAttribute("username", $pi["username"]);
-                    $server_xml->writeAttribute("connected-since", $pi["connected_since"]);
                     $time_played = (float)(time() - (int)$pi["connected_since"]) / 60.0;
                     $server_xml->writeAttribute("time-played", $time_played);
                     if ($pi["rank"] !== null)
@@ -524,11 +523,13 @@ class Server implements IAsXML
                 `{DB_VERSION}_users`.username,
                 `{DB_VERSION}_rankings`.scores, `{DB_VERSION}_rankings`.max_scores, `{DB_VERSION}_rankings`.num_races_done,
                 FIND_IN_SET(scores, (SELECT GROUP_CONCAT(DISTINCT scores ORDER BY scores DESC)
-                FROM `{DB_VERSION}_rankings`)) AS rank
+                FROM `{DB_VERSION}_rankings`)) AS rank,
+                UNIX_TIMESTAMP(`{DB_VERSION}_client_sessions`.`last-online`) AS online_since
                 FROM `{DB_VERSION}_servers`
                 LEFT JOIN `{DB_VERSION}_server_conn` ON `{DB_VERSION}_servers`.id = `{DB_VERSION}_server_conn`.server_id
                 LEFT JOIN `{DB_VERSION}_users` ON `{DB_VERSION}_users`.id = `{DB_VERSION}_server_conn`.user_id
                 LEFT JOIN `{DB_VERSION}_rankings` ON `{DB_VERSION}_rankings`.user_id = `{DB_VERSION}_server_conn`.user_id
+                LEFT JOIN `{DB_VERSION}_client_sessions` ON `{DB_VERSION}_client_sessions`.uid = `{DB_VERSION}_server_conn`.user_id
                 ORDER BY id",
                 DBConnection::FETCH_ALL
             );
@@ -553,7 +554,14 @@ class Server implements IAsXML
                 $servers[] = $server_user;
             }
             if ($server_user["username"] !== null && $server_user["connected_since"] !== null)
-                $users[$current_user_id][] = $server_user;
+            {
+                // Skip non-polled player after 3 minutes
+                if ($server_user["online_since"] !== null &&
+                    $server_user["online_since"] + 180 > time())
+                {
+                    $users[$current_user_id][] = $server_user;
+                }
+            }
         }
 
         // build xml
