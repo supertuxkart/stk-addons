@@ -312,7 +312,7 @@ CREATE TABLE IF NOT EXISTS `v3_client_sessions` (
 CREATE TABLE IF NOT EXISTS `v3_servers` (
     `id`              INT UNSIGNED      NOT NULL AUTO_INCREMENT,
     `host_id`         INT UNSIGNED      NOT NULL,
-    `name`            VARCHAR(64)       NOT NULL,
+    `name`            VARCHAR(256)      NOT NULL,
     `last_poll_time`  INT               NOT NULL,
     `ip`              INT UNSIGNED      NOT NULL DEFAULT '0',
     `port`            SMALLINT UNSIGNED NOT NULL DEFAULT '0',
