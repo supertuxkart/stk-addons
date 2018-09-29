@@ -282,7 +282,7 @@ class Server implements IAsXML
                 );
                 $user = User::getFromID($this->host_id);
                 $permission = AccessControl::getPermissions($user->getRole());
-                $server_xml->writeAttribute("official", in_array(AccessControl::PERM_OFFICIAL_SERVERS, $permission));
+                $server_xml->writeAttribute("official", in_array(AccessControl::PERM_OFFICIAL_SERVERS, $permission) ? 1 : 0);
             $server_xml->endElement();
             $server_xml->startElement('players');
                 foreach ($this->player_info as $pi)
