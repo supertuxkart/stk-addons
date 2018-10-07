@@ -176,7 +176,8 @@ INSERT INTO `v3_achievements` (`id`, `name`) VALUES
     (8, 'Unstoppable'),
     (9, 'Banana Lover'),
     (10, 'It''s secret'),
-    (11, 'Mosquito Hunter')
+    (11, 'Mosquito Hunter'),
+    (12, 'Beyond Luck')
 ON DUPLICATE KEY UPDATE `id` = VALUES(`id`), `name` = VALUES(`name`);
 
 -- --------------------------------------------------------------------------------
