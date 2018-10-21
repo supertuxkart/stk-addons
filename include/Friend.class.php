@@ -152,7 +152,7 @@ class Friend implements IAsXML
     }
 
     /**
-     * Get a space separated string of friend id's
+     * Get a space separated string of friend id's within polled time 3 minutes
      *
      * @param int $user_id
      *
@@ -168,6 +168,7 @@ class Friend implements IAsXML
         AND `{DB_VERSION}_friends`.is_request = 0
         AND `{DB_VERSION}_client_sessions`.uid = `{DB_VERSION}_friends`.asker_id
         AND `{DB_VERSION}_client_sessions`.is_online = 1
+        AND `{DB_VERSION}_client_sessions`.`last-online` > NOW() - 180
 UNION
     SELECT `{DB_VERSION}_friends`.receiver_id AS friend_id
     FROM `{DB_VERSION}_friends`, `{DB_VERSION}_client_sessions`
@@ -175,6 +176,7 @@ UNION
         AND `{DB_VERSION}_friends`.is_request = 0
         AND `{DB_VERSION}_client_sessions`.uid = `{DB_VERSION}_friends`.receiver_id
         AND `{DB_VERSION}_client_sessions`.is_online = 1
+        AND `{DB_VERSION}_client_sessions`.`last-online` > NOW() - 180
 SQL;
 
         try
