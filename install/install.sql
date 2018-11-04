@@ -302,7 +302,7 @@ CREATE TABLE IF NOT EXISTS `v3_client_sessions` (
     PRIMARY KEY (`uid`),
     UNIQUE KEY `key_session` (`uid`, `cid`)
 )
-    ENGINE = MEMORY
+    ENGINE = InnoDB
     DEFAULT CHARSET = utf8mb4
     COLLATE = utf8mb4_unicode_ci;
 
