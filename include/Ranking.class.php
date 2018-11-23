@@ -35,18 +35,15 @@ class Ranking
         {
             $result = DBConnection::get()->query(
                 "SELECT
-                    FIND_IN_SET(scores,
-                        (SELECT GROUP_CONCAT(DISTINCT scores ORDER BY scores DESC)
-                        FROM `{DB_VERSION}_rankings`)
-                    ) AS rank,
+                    IF (@score=s.scores, @rank:=@rank, @rank:=@rank+1) rank,
                     user_id,
                     username,
-                    scores,
-                    max_scores,
+                    @score:=s.scores scores, max_scores,
                     num_races_done
-                FROM `{DB_VERSION}_rankings`
-                INNER JOIN `{DB_VERSION}_users` ON `{DB_VERSION}_rankings`.user_id = `{DB_VERSION}_users`.id
-                ORDER BY rank LIMIT :topn",
+                FROM `{DB_VERSION}_rankings` s
+                INNER JOIN `{DB_VERSION}_users` ON user_id = `{DB_VERSION}_users`.id,
+                (SELECT @score:=0, @rank:=0) r
+                ORDER BY scores DESC LIMIT :topn",
                 DBConnection::FETCH_ALL,
                 [':topn' => $topn],
                 [':topn' => DBConnection::PARAM_INT]
@@ -92,15 +89,15 @@ class Ranking
         {
             $result = DBConnection::get()->query(
                 "SELECT
-                    FIND_IN_SET(scores,
-                        (SELECT GROUP_CONCAT(DISTINCT scores ORDER BY scores DESC)
-                        FROM `{DB_VERSION}_rankings`)
-                    ) AS rank,
-                    user_id,
-                    scores,
-                    max_scores,
-                    num_races_done
-                FROM `{DB_VERSION}_rankings`
+                    a.user_id,
+                    a.scores,
+                    a.max_scores,
+                    a.num_races_done,
+                    (SELECT
+                        COUNT(DISTINCT scores)
+                    FROM `{DB_VERSION}_rankings` b
+                    WHERE a.`scores` < b.`scores`) + 1 rank
+                FROM `{DB_VERSION}_rankings` a
                 WHERE `user_id` = :user_id",
                 DBConnection::FETCH_FIRST,
                 [':user_id' => $user_id],

@@ -27,17 +27,16 @@ $tpl->assignTitle(_h('Player Rankings'));
 
 $query_rankings = <<<SQL
     SELECT
-        FIND_IN_SET(scores,
-            (SELECT GROUP_CONCAT(DISTINCT scores ORDER BY scores DESC)
-            FROM `{DB_VERSION}_rankings`)
-        ) AS Rank,
+        IF (@score=s.scores, @rank:=@rank, @rank:=@rank+1)
+        `Rank`,
         username `Username`,
-        ROUND(scores, 2) `Scores`,
+        ROUND(@score:=s.scores,2) `Scores`,
         ROUND(max_scores, 2) `Maximum scores obtained`,
         num_races_done `Races done`
-    FROM `{DB_VERSION}_rankings`
-    INNER JOIN `{DB_VERSION}_users` ON `{DB_VERSION}_rankings`.user_id = `{DB_VERSION}_users`.id
-    ORDER BY Rank
+    FROM `{DB_VERSION}_rankings` s
+    INNER JOIN `{DB_VERSION}_users` ON user_id = `{DB_VERSION}_users`.id,
+    (SELECT @score:=0, @rank:=0) r
+    ORDER BY Scores DESC;
 SQL;
 
 $player_data = [ "sections" => [ Statistic::getSection($query_rankings) ] ];
