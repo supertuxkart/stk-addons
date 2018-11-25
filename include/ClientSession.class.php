@@ -586,7 +586,7 @@ class ClientSession
      *
      * @return ClientSession
      * @throws ClientSessionExpiredException|ClientSessionException|UserException
-               when session does not exist, or when account is not active
+     *         when session does not exist, or when account is not active
      */
     public static function get(string $session_id, int $user_id)
     {

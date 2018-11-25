@@ -36,7 +36,7 @@ $query_rankings = <<<SQL
     FROM `{DB_VERSION}_rankings` s
     INNER JOIN `{DB_VERSION}_users` ON user_id = `{DB_VERSION}_users`.id,
     (SELECT @score:=0, @rank:=0) r
-    ORDER BY Scores DESC;
+    ORDER BY Scores DESC
 SQL;
 
 $player_data = [ "sections" => [ Statistic::getSection($query_rankings) ] ];

@@ -536,7 +536,7 @@ class Server implements IAsXML
                                (SELECT @score:=0, @rank:=0) r
                                ORDER BY scores DESC) AS rankings
                             ON ranking_of_user_id = `{DB_VERSION}_server_conn`.user_id
-                ORDER BY id;",
+                ORDER BY id",
                 DBConnection::FETCH_ALL
             );
         }
