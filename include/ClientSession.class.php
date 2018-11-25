@@ -585,7 +585,8 @@ class ClientSession
      * @param int    $user_id    user id
      *
      * @return ClientSession
-     * @throws ClientSessionExpiredException|ClientSessionException when session does not exist
+     * @throws ClientSessionExpiredException|ClientSessionException|UserException
+               when session does not exist, or when account is not active
      */
     public static function get(string $session_id, int $user_id)
     {
@@ -615,7 +616,10 @@ class ClientSession
         }
 
         // here an if statement will come for Guest and registered
-        return new static($session_info[0]["cid"], User::getFromID($user_id));
+        $user = User::getFromID($user_id);
+        if (!$user->isActive())
+            throw new UserException(_h("Your account is not active"), ErrorType::USER_INACTIVE_ACCOUNT);
+        return new static($session_info[0]["cid"], $user);
     }
 
     /**
