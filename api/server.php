@@ -170,6 +170,30 @@ try
             }
             break;
 
+        case 'update-config':
+            try
+            {
+                $userid = isset($_POST['userid']) ? (int)utf8_encode($_POST['userid']) : 0;
+                $token = isset($_POST['token']) ? utf8_encode($_POST['token']) : null;
+                $address = isset($_POST['address']) ? utf8_encode($_POST['address']) : 0;
+                $port = isset($_POST['port']) ? (int)utf8_encode($_POST['port']) : 0;
+                $new_difficulty = isset($_POST['new-difficulty']) ? (int)$_POST['new-difficulty'] : 0;
+                $new_game_mode = isset($_POST['new-game-mode']) ? (int)$_POST['new-game-mode'] : 3;
+
+                ClientSession::get($token, $userid)
+                    ->updateServerConfig($address, $port, $new_difficulty, $new_game_mode);
+
+                $output->startElement('update-config');
+                    $output->writeAttribute('success', 'yes');
+                    $output->writeAttribute('info', '');
+                $output->endElement();
+            }
+            catch(Exception $e)
+            {
+                $output->addErrorElement('update-config', $e->getMessage());
+            }
+            break;
+
         case 'vote': // vote on a server
             try
             {

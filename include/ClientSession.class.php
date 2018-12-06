@@ -771,4 +771,52 @@ class ClientSession
             throw new ClientSessionException($e->getMessage());
         }
     }
+
+    /**
+     * Update configuration of a server hosted by this user (atm only difficulty and game mode)
+     *
+     * @param int    $ip
+     * @param int    $port
+     * @param int    $new_difficulty
+     * @param int    $new_game_mode
+     *
+     * @return Server
+     * @throws ServerException
+     */
+    public function updateServerConfig($ip, int $port, int $new_difficulty, int $new_game_mode)
+    {
+        try
+        {
+            $count = DBConnection::get()->query(
+                "UPDATE `{DB_VERSION}_servers`
+                SET `difficulty` = :new_difficulty, `game_mode` = :new_game_mode
+                WHERE `ip`= :ip AND `port` = :port AND `host_id` = :host_id",
+                DBConnection::ROW_COUNT,
+                [
+                    ':ip'             => $ip,
+                    ':port'           => $port,
+                    ':new_difficulty' => $new_difficulty,
+                    ':new_game_mode'  => $new_game_mode,
+                    ':host_id'        => $this->user->getId()
+                ],
+                [
+                    ':ip'             => DBConnection::PARAM_INT,
+                    ':port'           => DBConnection::PARAM_INT,
+                    ':new_difficulty' => DBConnection::PARAM_INT,
+                    ':new_game_mode'  => DBConnection::PARAM_INT,
+                    ':host_id'        => DBConnection::PARAM_INT
+                ]
+            );
+        }
+        catch (DBException $e)
+        {
+            throw new ServerException(exception_message_db(_('update the server config')));
+        }
+
+        if ($count !== 1)
+        {
+            throw new ServerException(_h("Failed to update server config."));
+        }
+    }
+
 }
