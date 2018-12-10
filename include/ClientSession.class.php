@@ -654,6 +654,39 @@ class ClientSession
             throw new ClientSessionConnectException($e->getMessage());
         }
 
+        // allow saved session to be shared for different clients, so for example you can keep
+        // same account login both in android and desktop
+        // it will be success if the current saved session has been used within 3 days
+        if ($save_session)
+        {
+            try
+            {
+                $user_id = $user->getId();
+                $three_days_in_seconds = 3 * 24 * 60 * 60;
+                $existing_session =  DBConnection::get()->query(
+                    "SELECT `cid` FROM `{DB_VERSION}_client_sessions`
+                    WHERE `uid` = :user_id AND `is_save` = 1 AND
+                    (UNIX_TIMESTAMP() - UNIX_TIMESTAMP(`last-online`)) < :three_days",
+                    DBConnection::FETCH_FIRST,
+                    [
+                        ':user_id'    => $user_id,
+                        ':three_days' => $three_days_in_seconds
+                    ],
+                    [
+                        ':user_id'    => DBConnection::PARAM_INT,
+                        ':three_days' => DBConnection::PARAM_INT
+                    ]
+                );
+                if ($existing_session)
+                {
+                    return new static($existing_session['cid'], $user);
+                }
+            }
+            catch (UserException $e)
+            {
+                throw new ClientSessionConnectException($e->getMessage());
+            }
+        }
         try
         {
             $session_id = Util::getClientSessionId();
