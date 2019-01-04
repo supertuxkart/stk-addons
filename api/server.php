@@ -140,9 +140,10 @@ try
                 $port = isset($_POST['port']) ? (int)utf8_encode($_POST['port']) : 0;
                 $current_players = isset($_POST['current-players']) ? (int)$_POST['current-players'] : 0;
                 $game_started = isset($_POST['game-started']) ? (int)$_POST['game-started'] : 0;
+                $current_track = isset($_POST['current-track']) ? utf8_encode($_POST['current-track']) : "";
 
                 $requests = ClientSession::get($token, $userid)
-                    ->getServerConnectionRequests($address, $port, $current_players, $game_started);
+                    ->getServerConnectionRequests($address, $port, $current_players, $game_started, $current_track);
 
                 $output->startElement('poll-connection-requests');
                     $output->writeAttribute('success', 'yes');

@@ -327,6 +327,7 @@ CREATE TABLE IF NOT EXISTS `v3_servers` (
     `game_started`    TINYINT UNSIGNED  NOT NULL DEFAULT '0',
     `latitude`        FLOAT             NOT NULL DEFAULT '0.0',
     `longitude`       FLOAT             NOT NULL DEFAULT '0.0'
+    `current_track`   VARCHAR(64)       NOT NULL DEFAULT ''
     COMMENT 'Isn''t exact. Just to show in the server-list, where it doesn''t need to be exact.',
     PRIMARY KEY (`id`),
     KEY `key_hostid` (`host_id`),

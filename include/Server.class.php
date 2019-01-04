@@ -109,6 +109,12 @@ class Server implements IAsXML
     private $longitude;
 
     /**
+     * Current track playing in server
+     * @var string
+     */
+    private $current_track;
+
+    /**
      *
      * List of players in server with name and connected since time
      * @var array
@@ -137,6 +143,7 @@ class Server implements IAsXML
         $this->game_started = (int)$data["game_started"];
         $this->latitude = $data["latitude"];
         $this->longitude = $data["longitude"];
+        $this->current_track = $data["current_track"];
         $this->player_info = $pi;
     }
 
@@ -276,6 +283,7 @@ class Server implements IAsXML
                 $server_xml->writeAttribute("password", $this->password);
                 $server_xml->writeAttribute("version", $this->version);
                 $server_xml->writeAttribute("game_started", $this->game_started);
+                $server_xml->writeAttribute("current_track", $this->current_track);
                 $server_xml->writeAttribute(
                     "distance",
                     Util::getDistance($client_latitude, $client_longitude, $this->latitude, $this->longitude)
@@ -519,7 +527,7 @@ class Server implements IAsXML
                 `{DB_VERSION}_servers`.max_players, `{DB_VERSION}_servers`.difficulty, `{DB_VERSION}_servers`.game_mode,
                 `{DB_VERSION}_servers`.current_players, `{DB_VERSION}_servers`.password, `{DB_VERSION}_servers`.version,
                 `{DB_VERSION}_servers`.game_started, `{DB_VERSION}_servers`.latitude, `{DB_VERSION}_servers`.longitude,
-                `{DB_VERSION}_server_conn`.user_id, `{DB_VERSION}_server_conn`.connected_since,
+                `{DB_VERSION}_servers`.current_track, `{DB_VERSION}_server_conn`.user_id, `{DB_VERSION}_server_conn`.connected_since,
                 `{DB_VERSION}_users`.username, rank, scores, max_scores, num_races_done,
                 UNIX_TIMESTAMP(`{DB_VERSION}_client_sessions`.`last-online`) AS online_since
                 FROM `{DB_VERSION}_servers`

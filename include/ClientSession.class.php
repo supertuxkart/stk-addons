@@ -289,11 +289,13 @@ class ClientSession
      * @param int    $port
      * @param int    $current_players
      * @param int    $game_started
+     * @param string $current_track
      *
      * @return array
      * @throws ClientSessionException
      */
-    public function getServerConnectionRequests($ip, int $port, int $current_players, int $game_started)
+    public function getServerConnectionRequests($ip, int $port, int $current_players, int $game_started,
+                                                string $current_track)
     {
         try
         {
@@ -322,7 +324,8 @@ class ClientSession
             // Update this server info (atm last poll and and current players joined)
             DBConnection::get()->query(
                 "UPDATE `{DB_VERSION}_servers`
-                SET `last_poll_time` = :new_time, `current_players` = :current_players, `game_started` = :game_started
+                SET `last_poll_time` = :new_time, `current_players` = :current_players, `game_started` = :game_started,
+                `current_track` = :current_track
                 WHERE `id` = :server_id",
                 DBConnection::NOTHING,
                 [
@@ -330,12 +333,14 @@ class ClientSession
                     ':new_time'        => time(),
                     ':current_players' => $current_players,
                     ':game_started'    => $game_started,
+                    ':current_track'   => $current_track
                 ],
                 [
                     ':server_id'       => DBConnection::PARAM_INT,
                     ':new_time'        => DBConnection::PARAM_INT,
                     ':current_players' => DBConnection::PARAM_INT,
-                    ':game_started'    => DBConnection::PARAM_INT
+                    ':game_started'    => DBConnection::PARAM_INT,
+                    ':current_track'   => DBConnection::PARAM_STR
                 ]
             );
 
