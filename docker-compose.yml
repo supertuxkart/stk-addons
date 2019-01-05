@@ -4,7 +4,7 @@ services:
   www:
     build: .
     ports:
-      - 680:80
+      - 4680:80
 
   database:
     image: mariadb
@@ -20,7 +20,7 @@ services:
       - ADMINER_DESIGN=nette
     image: adminer
     ports:
-      - "681:8080"
+      - "4681:8080"
 
   db-init:
     build:

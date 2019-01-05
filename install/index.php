@@ -100,15 +100,6 @@ else
     echo text_error("mbstring Not Available");
 }
 
-if (extension_loaded("mcrypt"))
-{
-    echo text_success("mcrypt is Available");
-}
-else
-{
-    echo text_error("mcrypt Not Available");
-}
-
 // Check for GD
 if (extension_loaded('gd'))
 {

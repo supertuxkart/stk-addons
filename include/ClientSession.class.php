@@ -294,8 +294,7 @@ class ClientSession
      * @return array
      * @throws ClientSessionException
      */
-    public function getServerConnectionRequests($ip, int $port, int $current_players, int $game_started,
-                                                string $current_track)
+    public function getServerConnectionRequests($ip, int $port, int $current_players, int $game_started, string $current_track)
     {
         try
         {
@@ -362,7 +361,6 @@ class ClientSession
                     ':timeout'   => DBConnection::PARAM_INT
                 ]
             );
-
         }
         catch (DBException $e)
         {
@@ -856,5 +854,4 @@ class ClientSession
             throw new ServerException(_h("Failed to update server config."));
         }
     }
-
 }

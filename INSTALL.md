@@ -1,6 +1,8 @@
-# Installation via docker-compose
-We have Dockerfile and docker-compose files for automated installation of whole website.
-Only needed is to run command `docker-composer up` and you are ready to visit `http://localhost:680/`.
+# Installation via Docker & docker-compose
+We have [Dockerfile](./Dockerfile) and docker-compose files for automated installation of whole website.
+
+Only needed is to run command `docker-composer up` and you are ready to visit `http://localhost:4680/`.
+
 For development purposes we recommend to run
 `docker-compose -f docker-compose.yml -f docker-compose.dev.yml up`
 which loads additionally docker-compose.dev.yml file, that mounts sources so you do not need to
@@ -12,16 +14,39 @@ usage. However, you can manually install all dependencies, database tables and
 settings.
 
 ## Dependencies
-You need a the apache webserver with PHP `7.1+` (only version tested and supported) and MySQL server `v5.5.3+`.
+You need a the apache webserver with PHP `7.2+` (only version tested and supported) and MySQL server `v5.5.3+`.
 Most features will also work with other webservers, but there is no support for them.
 
 To get a list of the additional PHP packages needed, point your web browser to the `install/` directory.
 The script file located there (`index.php`) will show which dependencies are missing.
 
-Install all package dependencies in a Debian system with the following command:
+Install all package dependencies in a Ubuntu system with the following commands:
 ```
-sudo apt-get install php php-mysql php-mcrypt php-mbstring php-gd php-zip php-gettext
+# Some prerequisites
+sudo apt install apt-transport-https ca-certificates curl software-properties-common gnupg
+
+# First we add some PPAs to have the latest apache and PHP versions
+sudo add-apt-repository ppa:ondrej/apache2
+sudo add-apt-repository ppa:ondrej/php
+sudo apt update
+sudo apt upgrade
+
+# Install PHP, MySQL and apache
+sudo apt install mod-php7.2 \
+        php7.2 \
+        php7.2-curl \
+        php7.2-mbstring \
+        php7.2-gd \
+        php7.2-gettext \
+        php7.2-pdo \
+        php7.2-pdo-mysql \
+        php7.2-simplexml \
+        php7.2-zip
 sudo apt-get install mysql-server apache2
+
+# Install composer
+curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
+composer global require "hirak/prestissimo:^0.3" --no-suggest --no-progress
 ```
 
 PHP dependencies are handled by [composer](https://getcomposer.org/) (install it if you do not have it already).

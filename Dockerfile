@@ -1,35 +1,38 @@
-FROM ubuntu
+FROM ubuntu:18.04
 
 RUN export DEBIAN_FRONTEND=noninteractive && ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime
 
-RUN apt-get update && apt-get -y install software-properties-common && add-apt-repository -y ppa:ondrej/php
-RUN apt-get update && apt-get -y install \
+RUN apt update && \
+    apt -y install software-properties-common apt-utils curl gnupg cron git-core && \
+    add-apt-repository -y ppa:ondrej/php && \
+    add-apt-repository -y ppa:ondrej/apache2
+RUN apt update && apt -y install \
         apache2 \
-        mod-php7.1 \
-        php7.1-curl \
-        php7.1-mbstring \
-        php7.1-gd \
-        php7.1-gettext \
-        php7.1-pdo \
-        php7.1-pdo-mysql \
-        php7.1-zip
+        php7.2 \
+        mod-php7.2 \
+        php7.2-curl \
+        php7.2-mbstring \
+        php7.2-gd \
+        php7.2-gettext \
+        php7.2-pdo \
+        php7.2-pdo-mysql \
+        php7.2-simplexml \
+        php7.2-zip
 
 # install npm + bower
-RUN apt-get -y install curl gnupg && \
-    curl -sL https://deb.nodesource.com/setup_9.x | bash - && \
-    apt-get -y install nodejs git-core && npm install -g bower
+RUN curl -sL https://deb.nodesource.com/setup_9.x | bash - && \
+    apt update && apt -y install nodejs && npm install -g bower
 
 # install composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
-    composer global require "hirak/prestissimo:^0.3" --no-suggest --no-progress
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN composer global require "hirak/prestissimo:^0.3" --no-suggest --no-progress
 
 # install cron
-RUN apt-get -y install cron && \
-\
+RUN \
     # configure cron tasks
-    echo '0 * * * * php /var/www/stk_addons/hourly.php >/dev/null 2>&1' > /etc/cron.d/hourly && \
-    echo '0 2 * * * php /var/www/stk_addons/hourly.php >/dev/null 2>&1' > /etc/cron.d/daily && \
-    echo '0 2 */7 * * php /var/www/stk_addons/hourly.php >/dev/null 2>&1' > /etc/cron.d/weekly
+    echo '0 * * * * php /var/www/stk-addons/cron/hourly.php >/dev/null 2>&1' > /etc/cron.d/hourly && \
+    echo '0 2 * * * php /var/www/stk-addons/cron/daily.php >/dev/null 2>&1' > /etc/cron.d/daily && \
+    echo '0 2 */7 * * php /var/www/stk-addons/cron/weekly.php >/dev/null 2>&1' > /etc/cron.d/weekly
 
 # move configuration from install directory to specific directories
 COPY ./install/apache.EXAMPLE.conf /etc/apache2/sites-enabled/stk-addons.conf
@@ -46,20 +49,21 @@ WORKDIR /var/www/stk-addons
 COPY ./ ./
 
 # owner of document root is apache user
-RUN chown -R www-data . && \
-    # install composer packages
-    composer install --no-suggest --no-progress --no-dev && \
-\
-    # install bower packages
-    bower install --allow-root && \
-\
-    # remove install directory
-    rm -rf install && \
-\
-    # remove unnecesary directories
-    rm -rf docker_tools .bowerrc .dockerignore .gitattributes .gitignore .travis.yml bower.json composer.* docker-compose.* Dockerfile* phpunit.xml
+RUN chown -R www-data .
+
+# install composer packages
+RUN composer install --no-suggest --no-progress
+
+
+# install bower packages
+RUN bower install --allow-root
+
+# remove unnecesary directories
+RUN rm -rf install
+RUN rm -rf docker_tools .bowerrc .dockerignore .gitattributes .gitignore .travis.yml bower.json composer.* docker-compose.* Dockerfile* phpunit.xml
 
 EXPOSE 80
 
-CMD ["service", "cron", "start"]
+CMD ["systemctl", "start", "cron"]
+CMD ["a2enmod", "rewrite"]
 CMD ["apachectl", "-DFOREGROUND"]

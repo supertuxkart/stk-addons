@@ -1,12 +1,12 @@
 language: php
 
 php:
-  - 7.1
   - 7.2
 
 script:
   - ./vendor/bin/phpunit --configuration phpunit.xml
-  - composer phpstan
+# TODO enable this
+#  - composer phpstan
   - composer phpcs
 
 before_script:

@@ -1,5 +1,13 @@
 .git
+*.patch
+*.diff
 assets/libs
 phpstan
 tests
 vendor
+node_modules/
+locale/file-list.txt
+
+# STK client files
+*.spm
+*.b3d

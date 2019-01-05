@@ -1,6 +1,7 @@
 version: '3'
 
+# Mount stk-addons so that we don't need to restart anymore?
 services:
   www:
     volumes:
-      - ./:/var/www/stk_addons
+      - ./:/var/www/stk-addons
