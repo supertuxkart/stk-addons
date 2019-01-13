@@ -598,7 +598,7 @@ CREATE TABLE IF NOT EXISTS `v3_bugs` (
     COMMENT 'Close date',
     `title`        VARCHAR(64)   NOT NULL
     COMMENT 'Bug title',
-    `description`  VARCHAR(1024) NOT NULL
+    `description`  VARCHAR(4096) NOT NULL
     COMMENT 'Bug description',
     `is_report`    BOOL          NOT NULL DEFAULT '0'
     COMMENT 'Flag to indicate if the bug is a feedback',
