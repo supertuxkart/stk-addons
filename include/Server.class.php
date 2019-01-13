@@ -119,14 +119,14 @@ class Server implements IAsXML
      * List of players in server with name and connected since time
      * @var array
      */
-    private $player_info;
+    private $players_info;
 
     /**
      *
      * @param array $data An associative array retrieved from the database
-     * @param array $pi Player list in server if exists
+     * @param array $player_info Player list in server if exists
      */
-    private function __construct(array $data, array $pi = [])
+    private function __construct(array $data, array $player_info = [])
     {
         $this->id = (int)$data["id"];
         $this->host_id = (int)$data["host_id"];
@@ -144,7 +144,7 @@ class Server implements IAsXML
         $this->latitude = $data["latitude"];
         $this->longitude = $data["longitude"];
         $this->current_track = $data["current_track"];
-        $this->player_info = $pi;
+        $this->players_info = $player_info;
     }
 
     /**
@@ -293,19 +293,19 @@ class Server implements IAsXML
                 $server_xml->writeAttribute("official", in_array(AccessControl::PERM_OFFICIAL_SERVERS, $permission) ? 1 : 0);
             $server_xml->endElement();
             $server_xml->startElement('players');
-                foreach ($this->player_info as $pi)
+                foreach ($this->players_info as $player)
                 {
                     $server_xml->startElement('player-info');
-                    $server_xml->writeAttribute("user-id", $pi["user_id"]);
-                    $server_xml->writeAttribute("username", $pi["username"]);
-                    $time_played = (float)(time() - (int)$pi["connected_since"]) / 60.0;
+                    $server_xml->writeAttribute("user-id", $player["user_id"]);
+                    $server_xml->writeAttribute("username", $player["username"]);
+                    $time_played = (float)(time() - (int)$player["connected_since"]) / 60.0;
                     $server_xml->writeAttribute("time-played", $time_played);
-                    if ($pi["rank"] !== null)
+                    if ($player["rank"] !== null)
                     {
-                        $server_xml->writeAttribute("rank", $pi["rank"]);
-                        $server_xml->writeAttribute("scores", $pi["scores"]);
-                        $server_xml->writeAttribute("max-scores", $pi["max_scores"]);
-                        $server_xml->writeAttribute("num-races-done", $pi["num_races_done"]);
+                        $server_xml->writeAttribute("rank", $player["rank"]);
+                        $server_xml->writeAttribute("scores", $player["scores"]);
+                        $server_xml->writeAttribute("max-scores", $player["max_scores"]);
+                        $server_xml->writeAttribute("num-races-done", $player["num_races_done"]);
                     }
                     $server_xml->endElement();
                 }
@@ -317,12 +317,13 @@ class Server implements IAsXML
 
     /**
      * Cleans all old servers
+     *
+     * @param int $since_seconds Clean non-polled servers < $since_seconds seconds before
      * @throws DBException
      */
-    public static function cleanOldServers()
+    public static function cleanOldServers(int $since_seconds = 15)
     {
-        // Clean non-polled servers < 15 seconds before
-        $timeout = time() - 15;
+        $timeout = time() - $since_seconds;
         DBConnection::get()->query(
             "DELETE FROM `{DB_VERSION}_servers`
                 WHERE `last_poll_time` < :time",
@@ -510,18 +511,17 @@ class Server implements IAsXML
     }
 
     /**
-     * Get all servers as xml output
+     * Get all servers connections with users as an array of key value pairs
      *
      * @throws ServerException
-     * @return string
+     * @return array
      */
-    public static function getServersAsXML()
+    public static function getAllServerConnectionsWithUsers(): array
     {
-        $servers_with_users = [];
         try
         {
             static::cleanOldServers();
-            $servers_with_users = DBConnection::get()->query(
+            return DBConnection::get()->query(
                 "SELECT `{DB_VERSION}_servers`.id, `{DB_VERSION}_servers`.host_id, `{DB_VERSION}_servers`.name,
                 `{DB_VERSION}_servers`.ip, `{DB_VERSION}_servers`.port, `{DB_VERSION}_servers`.private_port,
                 `{DB_VERSION}_servers`.max_players, `{DB_VERSION}_servers`.difficulty, `{DB_VERSION}_servers`.game_mode,
@@ -552,26 +552,42 @@ class Server implements IAsXML
         {
             throw new ServerException($e);
         }
+    }
 
-        $client_coordinates = Server::getIPCoordinatesFromString(Util::getClientIp());
+    /**
+     * Get all servers as xml output
+     *
+     * @param int $skip_non_polled_clients_seconds Skip non polled player after $skip_non_polled_clients_seconds seconds
+     *                                             Currently 3 minutes by default
+     *
+     * @throws ServerException
+     * @return string
+     */
+    public static function getServersAsXML(int $skip_non_polled_clients_seconds = 180): string
+    {
+        $servers_with_users = static::getAllServerConnectionsWithUsers();
+        $client_coordinates = static::getIPCoordinatesFromString(Util::getClientIp());
+
         $servers = [];
         $users = [[]];
-        $current_id = -1;
+        $current_server_id = -1;
         $current_user_id = -1;
         foreach ($servers_with_users as $server_user)
         {
-            if ($current_id !== (int)$server_user["id"])
+            // Skip over duplicate servers
+            if ($current_server_id !== (int)$server_user["id"])
             {
-                $current_id = (int)$server_user["id"];
+                $current_server_id = (int)$server_user["id"];
                 $current_user_id++;
                 $users[] = [];
                 $servers[] = $server_user;
             }
+
             if ($server_user["username"] !== null && $server_user["connected_since"] !== null)
             {
                 // Skip non-polled player after 3 minutes
                 if ($server_user["online_since"] !== null &&
-                    $server_user["online_since"] + 180 > time())
+                    $server_user["online_since"] + $skip_non_polled_clients_seconds > time())
                 {
                     $users[$current_user_id][] = $server_user;
                 }

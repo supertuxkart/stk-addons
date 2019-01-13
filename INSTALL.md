@@ -14,7 +14,7 @@ usage. However, you can manually install all dependencies, database tables and
 settings.
 
 ## Dependencies
-You need a the apache webserver with PHP `7.2+` (only version tested and supported) and MySQL server `v5.5.3+`.
+You need a the apache webserver with PHP `7.2+` (only version tested and supported) and MariaDB server `10.3+`.
 Most features will also work with other webservers, but there is no support for them.
 
 To get a list of the additional PHP packages needed, point your web browser to the `install/` directory.
@@ -28,25 +28,38 @@ sudo apt install apt-transport-https ca-certificates curl software-properties-co
 # First we add some PPAs to have the latest apache and PHP versions
 sudo add-apt-repository ppa:ondrej/apache2
 sudo add-apt-repository ppa:ondrej/php
-sudo apt update
-sudo apt upgrade
+# Add the MariaDB version for your distribution https://downloads.mariadb.org/mariadb/repositories/#mirror=nxtHost&distro=Ubuntu
+sudo apt-get update
+sudo apt-get upgrade
 
-# Install PHP, MySQL and apache
-sudo apt install mod-php7.2 \
+# Install PHP, MariaDB and apache
+sudo apt-get install mod-php7.2 \
         php7.2 \
         php7.2-curl \
         php7.2-mbstring \
         php7.2-gd \
         php7.2-gettext \
         php7.2-pdo \
-        php7.2-pdo-mysql \
-        php7.2-simplexml \
+        php7.2-mysql \
+        php7.2-xml \
         php7.2-zip
-sudo apt-get install mysql-server apache2
+sudo apt-get install mariadb-server apache2
 
 # Install composer
 curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
-composer global require "hirak/prestissimo:^0.3" --no-suggest --no-progress
+sudo composer global require "hirak/prestissimo:^0.3" --no-suggest --no-progress
+
+# Install nodejs
+curl -sL https://deb.nodesource.com/setup_10.x | sudo bash -
+sudo apt-get update && sudo apt-get install -y nodejs
+
+# Install bower (TODO REMOVE THIS)
+sudo npm install -g bower
+
+# Install yarn
+curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+sudo apt-get update && sudo apt-get install yarn
 ```
 
 PHP dependencies are handled by [composer](https://getcomposer.org/) (install it if you do not have it already).
@@ -89,7 +102,7 @@ If you are running in a production environment, just append the `--production` o
 
 
 ## Database
-Currently we only support MySQL as a database backend. A newer version `v5.5.3+` is required to have proper unicode support.
+Currently we only support MariaDB as a database backend. A newer version `v10.3+` is required to have proper unicode support.
 
 You can generate the database (name it as you wish) using a tool like [phpMyAdmin](http://www.phpmyadmin.net/home_page/index.php) or with the mysql shell.
 Import the [install.sql](install/install.sql) file found in the repository (in the `install` directory).

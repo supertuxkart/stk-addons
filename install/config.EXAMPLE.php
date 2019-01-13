@@ -34,6 +34,9 @@ define('MAINTENANCE_MODE', false);
 // Indicate if the certificate is signed by an authority
 const IS_SSL_CERTIFICATE_VALID = false;
 
+// Do you prefer https?
+const PREFER_SSL = true;
+
 // set default values
 ini_set('html_errors', 'On');
 if (DEBUG_MODE)
@@ -85,7 +88,7 @@ const ASSETS_XML_PATH = UP_PATH . 'xml' . DS . 'assets.xml';
 const ASSETS2_XML_PATH = UP_PATH . 'xml' . DS . 'assets2.xml';
 
 // Location urls
-if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')
+if ((PREFER_SSL && IS_SSL_CERTIFICATE_VALID) || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on'))
 {
     define('ROOT_LOCATION', 'https://' . $DOMAIN_NAME . '/');
 }
@@ -117,7 +120,7 @@ const CAPTCHA_SECRET = null;
 const DB_USER = 'stk_addons';
 const DB_PASSWORD = 'your super secret password';
 const DB_NAME = 'stk_addons';
-const DB_HOST = 'database';
+const DB_HOST = 'localhost';
 // should not be modified
 const DB_VERSION = 'v3';
 

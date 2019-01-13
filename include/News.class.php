@@ -49,6 +49,9 @@ class News
         }
 
         $newest_addons = Statistic::newestAddons();
+
+        // NOTE: if we modify the message here we also have to delete IT manually from the database
+        // otherwise we will have duplicates.
         $dynamic_news = [
             [
                 "new"     => $newest_addons[Addon::KART],
@@ -134,7 +137,6 @@ class News
      * This method will silently fail
      *
      * @return string|null
-     * @throws NewsException
      */
     private static function getLatestBlogPost()
     {

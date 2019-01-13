@@ -393,6 +393,44 @@ class Statistic
     }
 
     /**
+     * Return the newest addon of the specified type
+     *
+     *  @param int $addon_type
+     *
+     * @return string addon name
+     * @throws StatisticException
+     */
+    public static function getNewestAddonOfType(int $addon_type): string
+    {
+        if (!Addon::isAllowedType($addon_type))
+        {
+            throw new StatisticException(sprintf("Addon of type = %d is not allowed", $addon_type));
+        }
+
+        try
+        {
+            $data = DBConnection::get()->query(
+                "SELECT A.name AS name
+                FROM `{DB_VERSION}_addons` A
+                LEFT JOIN `{DB_VERSION}_addon_revisions` R
+                    ON A.id = R.addon_id
+                WHERE R.status & " . F_APPROVED . " AND A.type = :addon_type
+                ORDER BY A.creation_date DESC 
+                LIMIT 1",
+                DBConnection::FETCH_FIRST,
+                [':addon_type' => $addon_type],
+                [':addon_type' => DBConnection::PARAM_INT]
+            );
+
+            return $data['name'];
+        }
+        catch (DBException $e)
+        {
+            throw new StatisticException(exception_message_db(_('get the newest addon')));
+        }
+    }
+
+    /**
      * Return the newest addon of all types
      *
      * @return array with the key the addon type and the value is addon name
@@ -400,33 +438,13 @@ class Statistic
      */
     public static function newestAddons()
     {
-        try
-        {
-            $addons = DBConnection::get()->query(
-                'SELECT `a`.`name`, `a`.type
-                FROM `{DB_VERSION}_addons` `a`
-                LEFT JOIN `{DB_VERSION}_addon_revisions` `r`
-                    ON `a`.`id` = `r`.`addon_id`
-                WHERE `r`.`status` & ' . F_APPROVED . '
-                ORDER BY `a`.`creation_date` DESC
-                LIMIT 1',
-                DBConnection::FETCH_ALL
-            );
-        }
-        catch (DBException $e)
-        {
-            throw new StatisticException(exception_message_db(_('get the newest addons')));
-        }
-
+        // TODO this is very inefficient, instead of doing 3 queries do just one
+        // but this is called so rarely it does not even matter
         $return = [
-            Addon::TRACK => "",
-            Addon::ARENA => "",
-            Addon::KART  => ""
+            Addon::TRACK => static::getNewestAddonOfType(Addon::TRACK),
+            Addon::ARENA => static::getNewestAddonOfType(Addon::ARENA),
+            Addon::KART  => static::getNewestAddonOfType(Addon::KART),
         ];
-        foreach ($addons as $addon)
-        {
-            $return[$addon["type"]] = $addon["name"];
-        }
 
         return $return;
     }

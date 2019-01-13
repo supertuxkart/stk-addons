@@ -326,9 +326,8 @@ CREATE TABLE IF NOT EXISTS `v3_servers` (
     `version`         INT UNSIGNED      NOT NULL DEFAULT '1',
     `game_started`    TINYINT UNSIGNED  NOT NULL DEFAULT '0',
     `latitude`        FLOAT             NOT NULL DEFAULT '0.0',
-    `longitude`       FLOAT             NOT NULL DEFAULT '0.0'
-    `current_track`   VARCHAR(64)       NOT NULL DEFAULT ''
-    COMMENT 'Isn''t exact. Just to show in the server-list, where it doesn''t need to be exact.',
+    `longitude`       FLOAT             NOT NULL DEFAULT '0.0',
+    `current_track`   VARCHAR(64)       NOT NULL DEFAULT '',
     PRIMARY KEY (`id`),
     KEY `key_hostid` (`host_id`),
     CONSTRAINT `v3_servers_ibfk_1` FOREIGN KEY (`host_id`) REFERENCES `v3_users` (`id`)
