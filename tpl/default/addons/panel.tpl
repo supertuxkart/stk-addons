@@ -299,7 +299,7 @@
                         <th>{$addon.config.status.beta_img}</th>
                         <th>{$addon.config.status.rc_img}</th>
                         <th>{$addon.config.status.latest_img}</th>
-                        <th>{$addon.config.status.invalid_img}</th>
+                        {*<th>{$addon.config.status.invalid_img}</th>*}
                     </tr>
                     </thead>
                     <tbody>
@@ -329,13 +329,13 @@
                             {if $revision.is_beta} {$beta=" checked"} {/if}
                             {if $revision.is_rc} {$rc=" checked"} {/if}
                             {if $revision.is_latest} {$latest=" checked"} {/if}
-                            {if $revision.is_invalid} {$invalid=" checked"} {/if}
+                            {*{if $revision.is_invalid} {$invalid=" checked"} {/if}*}
 
                             <td><input type="checkbox" name="alpha-{$rev_n}"{$alpha}></td>
                             <td><input type="checkbox" name="beta-{$rev_n}"{$beta}></td>
                             <td><input type="checkbox" name="rc-{$rev_n}"{$rc}></td>
                             <td><input type="radio" value="{$rev_n}" name="latest"{$latest}></td>
-                            <td><input type="checkbox" disabled name="texpower-{$rev_n}"{$invalid}></td>
+                            {*<td><input type="checkbox" disabled name="texpower-{$rev_n}"{$invalid}></td>*}
                             {$fields[] = "alpha-$rev_n"} {$fields[] = "beta-$rev_n"} {$fields[] = "rc-$rev_n"}
 
                             {*Delete revision button*}

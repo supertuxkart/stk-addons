@@ -163,13 +163,6 @@ class AddonViewer
             'link'            => URL::rewriteFromConfig($this->addon->getLink())
         ];
         $tpl['info'] = $info;
-        if (Addon::isTextureInvalid($latestRev['status']))
-        {
-            $template->assign(
-                "warnings",
-                'Warning: This addon may not display correctly on some systems. It uses textures that may not be compatible with all video cards.'
-            );
-        }
 
         // Download button, TODO use this in some way
         $file_path = $this->addon->getFile((int)$this->latestRev['revision']);
@@ -287,8 +280,8 @@ class AddonViewer
                     "alpha_img"   => StkImage::getImageLabel(_h('Alpha')),
                     "beta_img"    => StkImage::getImageLabel(_h('Beta')),
                     "rc_img"      => StkImage::getImageLabel(_h('Release-Candidate')),
-                    "latest_img"  => StkImage::getImageLabel(_h('Latest')),
-                    "invalid_img" => StkImage::getImageLabel(_h('Invalid Textures'))
+                    "latest_img"  => StkImage::getImageLabel(_h('Latest'))
+//                    "invalid_img" => StkImage::getImageLabel(_h('Invalid Textures'))
                 ]
             ];
 
