@@ -30,8 +30,8 @@ if (!defined('DOWNLOAD_MODE')) define('DOWNLOAD_MODE', false);
 
 // Redirect access from web browser to secure server
 // NOTE: Do not redirect API requests or download requests as Old STK versions can't handle proper certificates
-const REDIRECT_TO_HTTPS_SERVER_NAME = true;
-const STK_HTTPS_SERVER_NAME = "https://online.supertuxkart.net/";
+const REDIRECT_TO_HTTPS_SERVER_NAME = false;
+const STK_HTTPS_SERVER_NAME = "https://online.supertuxkart.net";
 if (!API_MODE && !DOWNLOAD_MODE && REDIRECT_TO_HTTPS_SERVER_NAME)
 {
     header("Location: " . STK_HTTPS_SERVER_NAME . $_SERVER['REQUEST_URI'], true, 307);
