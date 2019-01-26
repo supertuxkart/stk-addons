@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with stk-addons. If not, see <http://www.gnu.org/licenses/>.
  */
+define('DOWNLOAD_MODE', true);
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
 
 $file = isset($_GET['file']) ? $_GET['file'] : null;

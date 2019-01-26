@@ -19,6 +19,25 @@
  */
 declare(strict_types=1);
 
+// useful for phpunit testing
+if (!defined('TEST_MODE')) define('TEST_MODE', false);
+// useful for cron jobs
+if (!defined('CRON_MODE')) define('CRON_MODE', false);
+// useful for the API
+if (!defined('API_MODE')) define('API_MODE', false);
+// useful for to know if downloading file
+if (!defined('DOWNLOAD_MODE')) define('DOWNLOAD_MODE', false);
+
+// Redirect access from web browser to secure server
+// NOTE: Do not redirect API requests or download requests as Old STK versions can't handle proper certificates
+const REDIRECT_TO_HTTPS_SERVER_NAME = true;
+const STK_HTTPS_SERVER_NAME = "https://online.supertuxkart.net/";
+if (!API_MODE && !DOWNLOAD_MODE && REDIRECT_TO_HTTPS_SERVER_NAME)
+{
+    header("Location: " . STK_HTTPS_SERVER_NAME . $_SERVER['REQUEST_URI'], true, 307);
+    exit;
+}
+
 // WARNING!!!! turn OFF in the production server.
 // Enable this when you want detailed debugging output.
 // WARNING!!!! turn OFF in the production server.
@@ -51,13 +70,6 @@ else
     ini_set('display_errors', "false");
 }
 
-// useful for phpunit testing
-if (!defined('TEST_MODE')) define('TEST_MODE', false);
-// useful for cron jobs
-if (!defined('CRON_MODE')) define('CRON_MODE', false);
-// useful for the API
-if (!defined('API_MODE')) define('API_MODE', false);
-
 if (empty($_SERVER['SERVER_NAME']) || empty($_SERVER['SERVER_PORT']))
 {
     // NOTE: We can't access the server name variable in cron mode
@@ -88,21 +100,26 @@ const ASSETS_XML_PATH = UP_PATH . 'xml' . DS . 'assets.xml';
 const ASSETS2_XML_PATH = UP_PATH . 'xml' . DS . 'assets2.xml';
 
 // Location urls
+define('ROOT_LOCATION_UNSECURE', 'http://' . $DOMAIN_NAME . '/');
 if ((PREFER_SSL && IS_SSL_CERTIFICATE_VALID) || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on'))
 {
     define('ROOT_LOCATION', 'https://' . $DOMAIN_NAME . '/');
 }
 else
 {
-    define('ROOT_LOCATION', 'http://' . $DOMAIN_NAME . '/');
+    define('ROOT_LOCATION', ROOT_LOCATION_UNSECURE);
 }
 
-const DOWNLOAD_LOCATION = ROOT_LOCATION . 'dl/';
+// Change this if you want downloads to be from another server
+const DOWNLOAD_LOCATION_ROOT_SERVER = ROOT_LOCATION;
+
+const DOWNLOAD_LOCATION = DOWNLOAD_LOCATION_ROOT_SERVER . 'dl/';
 const DOWNLOAD_XML_LOCATION = DOWNLOAD_LOCATION . 'xml/';
-const DOWNLOAD_ASSETS_LOCATION = DOWNLOAD_LOCATION;
 const NEWS_XM_LOCATION = DOWNLOAD_XML_LOCATION . 'news.xml';
+
 const ASSETS_XML_LOCATION = DOWNLOAD_XML_LOCATION . 'assets.xml';
 const ASSETS2_XML_LOCATION = DOWNLOAD_XML_LOCATION . 'assets.xml';
+
 const BUGS_LOCATION = ROOT_LOCATION . 'bugs/';
 const STATS_LOCATION = ROOT_LOCATION . 'stats/';
 const ASSETS_LOCATION = ROOT_LOCATION . 'assets/';
