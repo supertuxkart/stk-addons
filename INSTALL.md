@@ -45,6 +45,10 @@ sudo apt-get install mod-php7.2 \
         php7.2-zip
 sudo apt-get install mariadb-server apache2
 
+# For email to work
+# https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-postfix-as-a-send-only-smtp-server-on-ubuntu-14-04
+sudo apt-get install mailutils
+
 # Install composer
 curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
 sudo composer global require "hirak/prestissimo:^0.3" --no-suggest --no-progress

@@ -81,6 +81,11 @@ else
     $DOMAIN_NAME = $_SERVER['SERVER_NAME'] . (!in_array($_SERVER['SERVER_PORT'], ['80', '443'], true) ? ':' . $_SERVER['SERVER_PORT'] : '');
 }
 
+// Cron constants
+
+// After how many days should we delete the verification emails
+const CRON_DAILY_VERIFICATION_DAYS = 1;
+
 // Paths on the local filesystem
 const DS = DIRECTORY_SEPARATOR;
 const ROOT_PATH = __DIR__ . DS;
