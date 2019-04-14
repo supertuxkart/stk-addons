@@ -20,7 +20,7 @@
 declare(strict_types=1);
 
 // Make sure that this does not end with a trailing slash, and does not have a prefix in front
-const DOMAIN_NAME = 'addons.supertuxkart.net';
+const DOMAIN_NAME = 'online.supertuxkart.net';
 
 // WARNING!!!! turn OFF in the production server.
 // Enable this when you want detailed debugging output.
@@ -140,7 +140,7 @@ const F_TEX_NOT_POWER_OF_2 = 512;
 
 // API
 // this should be changed depending where you have the api, for api.supertuxkart.net is should be empty string
-// for addons.supertuxkart.net/api, this is the default location
+// for online.supertuxkart.net/api, this is the default location
 const API_LOCATION = '/api';
 const API_VERSION = 'v2';
 

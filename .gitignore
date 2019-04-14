@@ -11,6 +11,9 @@ vendor/
 node_modules/
 locale/file-list.txt
 
+
+yarn-error.log
+
 # STK client files
 *.spm
 *.b3d

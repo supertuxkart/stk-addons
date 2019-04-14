@@ -53,14 +53,11 @@ sudo apt-get install mailutils
 curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
 sudo composer global require "hirak/prestissimo:^0.3" --no-suggest --no-progress
 
-# Install nodejs
-curl -sL https://deb.nodesource.com/setup_10.x | sudo bash -
+# Install nodejs https://github.com/nodesource/distributions/blob/master/README.md#debinstall
+curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
 sudo apt-get update && sudo apt-get install -y nodejs
 
-# Install bower (TODO REMOVE THIS)
-sudo npm install -g bower
-
-# Install yarn
+# Install yarn https://yarnpkg.com/lang/en/docs/install/#debian-stable
 curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
 echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
 sudo apt-get update && sudo apt-get install yarn
@@ -96,13 +93,12 @@ To install dependencies with yarn:
 
 To update the dependencies:
 
-    yarn update
+    yarn update latest
 
 If you are running in a production environment, just append the `--production` option:
 
     yarn install --production
-    or
-    yarn update --production
+
 
 
 ## Database
@@ -125,7 +121,7 @@ Copy the `install/config.EXAMPLE.php` to the root of the project and rename it t
 Se the `DOMAIN_NAME` constant to match the location of your website, otherwise JavaScript and CSS will not work.
 
 Setting `DEBUG_MODE` to `true` can help you debugging by showing additional information. You should disable it in the production
-environment. 
+environment.
 
 Change the database settings according to your configuration, then go the project root and check if it works.
 
