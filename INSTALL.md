@@ -88,21 +88,21 @@ just append the `--no-dev --optimize-autoloader` options:
     composer update --no-dev --optimize-autoloader
 
 
-JavaScript/CSS dependencies are managed by [bower](http://bower.io/) (install it if you do not have it already).
+JavaScript/CSS dependencies are managed by [yarn](https://yarnpkg.com/) (install it if you do not have it already).
 
-To install dependencies with bower:
+To install dependencies with yarn:
 
-    bower install
+    yarn install
 
 To update the dependencies:
 
-    bower update
+    yarn update
 
 If you are running in a production environment, just append the `--production` option:
 
-    bower install --production
+    yarn install --production
     or
-    bower update --production
+    yarn update --production
 
 
 ## Database

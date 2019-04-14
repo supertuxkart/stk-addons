@@ -1,0 +1,28 @@
+{
+  "dependencies": {
+    "@bower_components/bootbox": "makeusabrew/bootbox#~4.3",
+    "@bower_components/bootstrap": "twbs/bootstrap#~3.3",
+    "@bower_components/bootstrap-fileinput": "kartik-v/bootstrap-fileinput#~2.8",
+    "@bower_components/bootstrap-hover-dropdown": "CWSpear/twitter-bootstrap-hover-dropdown#~2.0",
+    "@bower_components/bootstrap-multiselect": "davidstutz/bootstrap-multiselect#~0.9",
+    "@bower_components/bootstrap-select": "snapappointments/bootstrap-select#~1.6",
+    "@bower_components/bootstrap.growl": "mouse0270/bootstrap-growl#~1.0",
+    "@bower_components/bootstrap3-wysihtml5-bower": "Waxolunist/bootstrap3-wysihtml5-bower#~0.3",
+    "@bower_components/bootstrapValidator": "nghuuphuoc/bootstrapvalidator#~0.5",
+    "@bower_components/components-font-awesome": "components/font-awesome#~4.1.0",
+    "@bower_components/datatables": "DataTables/DataTables#>= 1.9.4",
+    "@bower_components/datatables-bootstrap3": "Jowin/Datatables-Bootstrap3#*",
+    "@bower_components/flot": "flot/flot#~0.8",
+    "@bower_components/flot.tooltip": "krzysu/flot.tooltip#~0.8",
+    "@bower_components/handlebars": "components/handlebars.js#~1.3.0",
+    "@bower_components/history.js": "browserstate/history.js#~1.8",
+    "@bower_components/jquery": "jquery/jquery-dist#~1.11",
+    "@bower_components/rangy-1.3": "noap/rangy-1.3#master",
+    "@bower_components/typeahead.js": "twitter/typeahead.js#~0.10",
+    "@bower_components/underscore": "jashkenas/underscore#~1.7",
+    "@bower_components/wysihtml5x": "Edicy/wysihtml5#0.4.13"
+  },
+  "engines": {
+    "yarn": ">= 1.0.0"
+  }
+}
