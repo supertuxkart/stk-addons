@@ -6,8 +6,7 @@ php:
 
 script:
   - ./vendor/bin/phpunit --configuration phpunit.xml
-# TODO enable this
-#  - composer phpstan
+  - composer phpstan
   - composer phpcs
 
 before_script:

@@ -36,6 +36,13 @@
         <!-- function declaration with opening brace on next line -->
         <exclude name="Squiz.Functions.MultiLineFunctionDeclaration.BraceOnNewLine" />
 
+        <!-- BEGIN multiline calls, python style -->
+        <exclude name="PSR2.Methods.FunctionCallSignature.ContentAfterOpenBracket" />
+        <exclude name="PSR2.Methods.FunctionCallSignature.Indent" />
+        <exclude name="PSR2.Methods.FunctionCallSignature.MultipleArguments" />
+        <exclude name="PSR2.Methods.FunctionCallSignature.CloseBracketLine" />
+        <!-- END multiline calls -->
+
         <!-- space in control structures -->
         <exclude name="Squiz.ControlStructures.ControlSignature.SpaceAfterCloseParenthesis" />
         <exclude name="Squiz.ControlStructures.ControlSignature.SpaceAfterCloseBrace" />
