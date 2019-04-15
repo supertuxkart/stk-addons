@@ -28,6 +28,8 @@ require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . "config.php");
 
 // Prevent against disaster!!!
 error_reporting(E_ALL);
+ini_set('display_errors', "On");
+ini_set('html_errors', "Off");
 function exception_error_handler($severity, $message, $file, $line)
 {
     throw new ErrorException($message, 0, $severity, $file, $line);

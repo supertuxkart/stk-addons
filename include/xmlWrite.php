@@ -18,7 +18,7 @@
  * along with stk-addons. If not, see <http://www.gnu.org/licenses/>.
  */
 
-function generateNewsXML()
+function generateNewsXML($assets_xml_location, $assets_xml_path)
 {
     $writer = new XMLWriter();
 
@@ -45,8 +45,17 @@ function generateNewsXML()
 
     // Reference assets.xml
     $writer->startElement('include');
-    $writer->writeAttribute('file', ASSETS_XML_LOCATION);
-    $writer->writeAttribute('mtime', FileSystem::fileModificationTime(ASSETS_XML_PATH, false));
+    $writer->writeAttribute('file', $assets_xml_location);
+
+    try
+    {
+        $modification_time = FileSystem::fileModificationTime($assets_xml_path, false);
+    }
+    catch (FileSystemException $e)
+    {
+        $modification_time = 0;
+    }
+    $writer->writeAttribute('mtime', $modification_time);
     $writer->endElement();
 
     // Refresh dynamic news entries
@@ -80,7 +89,7 @@ function generateNewsXML()
     return $return;
 }
 
-function generateAssetXML()
+function generateAssetXML($download_location)
 {
     // Define addon types
     $addon_types = ['kart', 'track', 'arena'];
@@ -168,7 +177,7 @@ function generateAssetXML()
                 $writer->startElement($type);
                 $writer->writeAttribute('id', $addon['id']);
                 $writer->writeAttribute('name', $addon['name']);
-                $writer->writeAttribute('file', DOWNLOAD_LOCATION . $relative_path);
+                $writer->writeAttribute('file', $download_location . $relative_path);
                 $writer->writeAttribute('date', strtotime($addon['date']));
                 $writer->writeAttribute('uploader', $addon['username']);
                 $writer->writeAttribute('designer', $addon['designer']);
@@ -182,7 +191,7 @@ function generateAssetXML()
                         $image_path = File::getFromID($addon['image_id'])->getPath();
                         if (FileSystem::exists(UP_PATH . $image_path))
                         {
-                            $writer->writeAttribute('image', DOWNLOAD_LOCATION . $image_path);
+                            $writer->writeAttribute('image', $download_location . $image_path);
                         }
                     }
                     catch (FileException $e)
@@ -200,7 +209,7 @@ function generateAssetXML()
                         $icon_path = File::getFromID($icon_id)->getPath();
                         if (FileSystem::exists(UP_PATH . $icon_path))
                         {
-                            $writer->writeAttribute('icon', DOWNLOAD_LOCATION . $icon_path);
+                            $writer->writeAttribute('icon', $download_location . $icon_path);
                         }
                     }
                     catch (FileException $e)
@@ -477,18 +486,29 @@ function generateAssetXML()
 
 function writeNewsXML()
 {
-    $newsxml = generateNewsXML();
-    FileSystem::filePutContents(NEWS_XML_PATH, str_replace("http://addons.supertuxkart.net/dl/", "https://online.supertuxkart.net/dl/", $newsxml));
-    return FileSystem::filePutContents(OLD_NEWS_XML_PATH, $newsxml);
+    $news_xml = generateNewsXML(OLD_ASSETS_XML_LOCATION, OLD_NEWS_XML_LOCATION);
+
+    // Write  new xml file
+    FileSystem::filePutContents(
+        NEWS_XML_PATH,
+        str_replace(OLD_DOWNLOAD_LOCATION, DOWNLOAD_LOCATION, $news_xml)
+    );
+
+
+    return FileSystem::filePutContents(OLD_NEWS_XML_PATH, $news_xml);
 }
 
 function writeAssetXML()
 {
-    $assetxml = generateAssetXML();
-    FileSystem::filePutContents(ASSETS_XML_PATH, str_replace("http://addons.supertuxkart.net/dl/", "https://online.supertuxkart.net/dl/", $assetxml));
-    $count = FileSystem::filePutContents(OLD_ASSETS_XML_PATH, $assetxml);
-    //$count += File::write(ASSETS2_XML_PATH, generateAssetXML2());
-    return $count;
+    $asset_xml = generateAssetXML(OLD_DOWNLOAD_LOCATION);
+
+    // Write  new xml file
+    FileSystem::filePutContents(
+        ASSETS_XML_PATH,
+        str_replace(OLD_DOWNLOAD_LOCATION, DOWNLOAD_LOCATION, $asset_xml)
+    );
+
+    return FileSystem::filePutContents(OLD_ASSETS_XML_PATH, $asset_xml);
 }
 
 function writeXML()
