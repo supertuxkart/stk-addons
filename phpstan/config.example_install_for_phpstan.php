@@ -73,7 +73,9 @@ const CACHE_PATH = ASSETS_PATH . 'cache' . DS; // cache for images/html/template
 const FONTS_PATH = ASSETS_PATH . 'fonts' . DS;
 
 const NEWS_XML_PATH = UP_PATH . 'xml' . DS . 'news.xml';
+const NEWS_V2_XML_PATH = UP_PATH . 'xml' . DS . 'news_v2.xml';
 const ASSETS_XML_PATH = UP_PATH . 'xml' . DS . 'assets.xml';
+const ASSETS_V2_XML_PATH = UP_PATH . 'xml' . DS . 'assets_v2.xml';
 const ASSETS2_XML_PATH = UP_PATH . 'xml' . DS . 'assets2.xml';
 
 // Location urls
