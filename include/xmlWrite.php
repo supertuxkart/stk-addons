@@ -477,12 +477,16 @@ function generateAssetXML()
 
 function writeNewsXML()
 {
-    return FileSystem::filePutContents(NEWS_XML_PATH, generateNewsXML());
+    $newsxml = generateNewsXML();
+    FileSystem::filePutContents(NEWS_V2_XML_PATH, str_replace("http://addons.supertuxkart.net/dl/", "https://online.supertuxkart.net/dl/", $newsxml));
+    return FileSystem::filePutContents(NEWS_XML_PATH, $newsxml);
 }
 
 function writeAssetXML()
 {
-    $count = FileSystem::filePutContents(ASSETS_XML_PATH, generateAssetXML());
+    $assetxml = generateAssetXML();
+    FileSystem::filePutContents(ASSETS_V2_XML_PATH, str_replace("http://addons.supertuxkart.net/dl/", "https://online.supertuxkart.net/dl/", $assetxml));
+    $count = FileSystem::filePutContents(ASSETS_XML_PATH, $assetxml);
     //$count += File::write(ASSETS2_XML_PATH, generateAssetXML2());
     return $count;
 }
