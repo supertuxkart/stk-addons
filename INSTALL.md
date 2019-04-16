@@ -45,18 +45,19 @@ sudo apt-get install mod-php7.2 \
         php7.2-zip
 sudo apt-get install mariadb-server apache2
 
+# For email to work
+# https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-postfix-as-a-send-only-smtp-server-on-ubuntu-14-04
+sudo apt-get install mailutils
+
 # Install composer
 curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
 sudo composer global require "hirak/prestissimo:^0.3" --no-suggest --no-progress
 
-# Install nodejs
-curl -sL https://deb.nodesource.com/setup_10.x | sudo bash -
+# Install nodejs https://github.com/nodesource/distributions/blob/master/README.md#debinstall
+curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
 sudo apt-get update && sudo apt-get install -y nodejs
 
-# Install bower (TODO REMOVE THIS)
-sudo npm install -g bower
-
-# Install yarn
+# Install yarn https://yarnpkg.com/lang/en/docs/install/#debian-stable
 curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
 echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
 sudo apt-get update && sudo apt-get install yarn
@@ -84,21 +85,20 @@ just append the `--no-dev --optimize-autoloader` options:
     composer update --no-dev --optimize-autoloader
 
 
-JavaScript/CSS dependencies are managed by [bower](http://bower.io/) (install it if you do not have it already).
+JavaScript/CSS dependencies are managed by [yarn](https://yarnpkg.com/) (install it if you do not have it already).
 
-To install dependencies with bower:
+To install dependencies with yarn:
 
-    bower install
+    yarn install
 
 To update the dependencies:
 
-    bower update
+    yarn update latest
 
 If you are running in a production environment, just append the `--production` option:
 
-    bower install --production
-    or
-    bower update --production
+    yarn install --production
+
 
 
 ## Database
@@ -121,7 +121,7 @@ Copy the `install/config.EXAMPLE.php` to the root of the project and rename it t
 Se the `DOMAIN_NAME` constant to match the location of your website, otherwise JavaScript and CSS will not work.
 
 Setting `DEBUG_MODE` to `true` can help you debugging by showing additional information. You should disable it in the production
-environment. 
+environment.
 
 Change the database settings according to your configuration, then go the project root and check if it works.
 

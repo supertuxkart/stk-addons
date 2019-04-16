@@ -150,6 +150,10 @@ EMAIL;
             {
                 throw new StkMailException("The admin email is not set. Could not send email.");
             }
+            if (!Util::isEmail($admin_email))
+            {
+                throw new StkMailException(sprintf("The admin email = %s is NOT an email!!!!. Could not send email.", $admin_email));
+            }
 
             $this->mail->setFrom($admin_email, "STK-Addons Administrator");
         }
@@ -192,11 +196,13 @@ EMAIL;
     public function newAccountNotification($email, $user_id, $username, $ver_code, $ver_page)
     {
         $subject = "New SuperTuxKart Account";
+
+        $days_str = sprintf("%d %s", CRON_DAILY_VERIFICATION_DAYS, CRON_DAILY_VERIFICATION_DAYS == 1 ? "day" : "days");
         $tpl_data = [
             "username"  => $username,
             "url_href"  => $this->base_url . "$ver_page?action=valid&num=$ver_code&user=$user_id",
             "url_label" => "Confirm email address",
-            "warning"   => "The activation link will expire in 7 days.\nIf you did not request an account for SuperTuxKart, please just ignore this email.",
+            "warning"   => sprintf("The activation link will expire in %s.\nIf you did not request an account for SuperTuxKart, please just ignore this email.", $days_str),
             "subject"   => $subject,
             "message"   => "Thank you for registering an account on the SuperTuxKart server. Please click on the button/link below to confirm your email.",
         ];

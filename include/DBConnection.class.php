@@ -67,8 +67,12 @@ class DBConnection
                 PDO::MYSQL_ATTR_LOCAL_INFILE => false
             ];
 
-            $this->connection = new PDO(sprintf("mysql:host=%s;dbname=%s;charset=utf8mb4", DB_HOST, DB_NAME),
-                DB_USER, DB_PASSWORD, $options);
+            $this->connection = new PDO(
+                sprintf("mysql:host=%s;dbname=%s;charset=utf8mb4", DB_HOST, DB_NAME),
+                DB_USER,
+                DB_PASSWORD,
+                $options
+            );
 
             // add database PDO collector
             if (Debug::isToolbarEnabled())

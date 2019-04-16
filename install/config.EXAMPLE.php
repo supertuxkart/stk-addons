@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2009 - 2017 SuperTuxKart-Team
+ * Copyright 2009 - 2019 SuperTuxKart-Team
  *
  * This file is part of stk-addons.
  *
@@ -28,15 +28,8 @@ if (!defined('API_MODE')) define('API_MODE', false);
 // useful for to know if downloading file
 if (!defined('DOWNLOAD_MODE')) define('DOWNLOAD_MODE', false);
 
-// Redirect access from web browser to secure server
-// NOTE: Do not redirect API requests or download requests as Old STK versions can't handle proper certificates
-const REDIRECT_TO_HTTPS_SERVER_NAME = false;
-const STK_HTTPS_SERVER_NAME = "https://online.supertuxkart.net";
-if (!API_MODE && !DOWNLOAD_MODE && REDIRECT_TO_HTTPS_SERVER_NAME)
-{
-    header("Location: " . STK_HTTPS_SERVER_NAME . $_SERVER['REQUEST_URI'], true, 307);
-    exit;
-}
+// Check if we are in CLI mode
+define('CLI_MODE', php_sapi_name() == "cli");
 
 // WARNING!!!! turn OFF in the production server.
 // Enable this when you want detailed debugging output.
@@ -55,6 +48,18 @@ const IS_SSL_CERTIFICATE_VALID = false;
 
 // Do you prefer https?
 const PREFER_SSL = true;
+
+
+// Redirect access from web browser to secure server
+// NOTE: Do not redirect API requests or download requests as Old STK versions can't handle proper certificates
+const REDIRECT_TO_HTTPS_SERVER_NAME = false;
+const STK_HTTPS_SERVER_NAME = "https://online.supertuxkart.net";
+if (!API_MODE && !DOWNLOAD_MODE && REDIRECT_TO_HTTPS_SERVER_NAME)
+{
+    header("Location: " . STK_HTTPS_SERVER_NAME . $_SERVER['REQUEST_URI'], true, 307);
+    exit;
+}
+
 
 // set default values
 ini_set('html_errors', 'On');
@@ -81,7 +86,18 @@ else
     $DOMAIN_NAME = $_SERVER['SERVER_NAME'] . (!in_array($_SERVER['SERVER_PORT'], ['80', '443'], true) ? ':' . $_SERVER['SERVER_PORT'] : '');
 }
 
+
+//
+// Cron constants
+//
+
+// After how many days should we delete the verification emails
+const CRON_DAILY_VERIFICATION_DAYS = 1;
+
+
+//
 // Paths on the local filesystem
+//
 const DS = DIRECTORY_SEPARATOR;
 const ROOT_PATH = __DIR__ . DS;
 const INCLUDE_PATH = ROOT_PATH . 'include' . DS;
@@ -95,11 +111,17 @@ const ASSETS_PATH = ROOT_PATH . 'assets' . DS;
 const CACHE_PATH = ASSETS_PATH . 'cache' . DS; // cache for images/html/template
 const FONTS_PATH = ASSETS_PATH . 'fonts' . DS;
 
-const NEWS_XML_PATH = UP_PATH . 'xml' . DS . 'news.xml';
-const ASSETS_XML_PATH = UP_PATH . 'xml' . DS . 'assets.xml';
-const ASSETS2_XML_PATH = UP_PATH . 'xml' . DS . 'assets2.xml';
+// For old server, http only
+const OLD_NEWS_XML_PATH = UP_PATH . 'xml' . DS . 'news.xml';
+const OLD_ASSETS_XML_PATH = UP_PATH . 'xml' . DS . 'assets.xml';
 
+// For new online server, https only
+const NEWS_XML_PATH = UP_PATH . 'xml' . DS . 'online_news.xml';
+const ASSETS_XML_PATH = UP_PATH . 'xml' . DS . 'online_assets.xml';
+
+//
 // Location urls
+//
 define('ROOT_LOCATION_UNSECURE', 'http://' . $DOMAIN_NAME . '/');
 if ((PREFER_SSL && IS_SSL_CERTIFICATE_VALID) || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on'))
 {
@@ -111,20 +133,26 @@ else
 }
 
 // Change this if you want downloads to be from another server
+const OLD_DOWNLOAD_LOCATION_ROOT_SERVER = "http://addons.supertuxkart.net/";
 const DOWNLOAD_LOCATION_ROOT_SERVER = ROOT_LOCATION;
 
+// Old version, http only
+const OLD_DOWNLOAD_LOCATION = OLD_DOWNLOAD_LOCATION_ROOT_SERVER . 'dl/';
+const OLD_DOWNLOAD_XML_LOCATION = OLD_DOWNLOAD_LOCATION . 'xml/';
+const OLD_ASSETS_XML_LOCATION = OLD_DOWNLOAD_XML_LOCATION . 'assets.xml';
+const OLD_NEWS_XML_LOCATION = OLD_DOWNLOAD_XML_LOCATION . 'news.xml';
+
+// New version, https only
 const DOWNLOAD_LOCATION = DOWNLOAD_LOCATION_ROOT_SERVER . 'dl/';
 const DOWNLOAD_XML_LOCATION = DOWNLOAD_LOCATION . 'xml/';
-const NEWS_XM_LOCATION = DOWNLOAD_XML_LOCATION . 'news.xml';
-
-const ASSETS_XML_LOCATION = DOWNLOAD_XML_LOCATION . 'assets.xml';
-const ASSETS2_XML_LOCATION = DOWNLOAD_XML_LOCATION . 'assets.xml';
+const ASSETS_XML_LOCATION = DOWNLOAD_XML_LOCATION . 'online_assets.xml';
+const NEWS_XML_LOCATION = DOWNLOAD_XML_LOCATION . 'online_news.xml';
 
 const BUGS_LOCATION = ROOT_LOCATION . 'bugs/';
 const STATS_LOCATION = ROOT_LOCATION . 'stats/';
 const ASSETS_LOCATION = ROOT_LOCATION . 'assets/';
 const CACHE_LOCATION = ASSETS_LOCATION . 'cache/';
-const LIBS_LOCATION = ASSETS_LOCATION . 'libs/';
+const LIBS_LOCATION = ASSETS_LOCATION . 'libs/@bower_components/';
 const IMG_LOCATION = ASSETS_LOCATION . 'img/';
 const JS_LOCATION = ASSETS_LOCATION . 'js/';
 const CSS_LOCATION = ASSETS_LOCATION . 'css/';
@@ -168,7 +196,7 @@ const F_TEX_NOT_POWER_OF_2 = 512;
 
 // API
 // this should be changed depending where you have the api, for api.supertuxkart.net is should be empty string
-// for addons.supertuxkart.net/api, this is the default location
+// for online.supertuxkart.net/api, this is the default location
 const API_LOCATION = '/api';
 const API_VERSION = 'v2';
 
@@ -203,7 +231,7 @@ if (!TEST_MODE)
         require_once(ROOT_PATH . 'vendor' . DS . 'autoload.php');
 
         // add nice error handling https://filp.github.io/whoops/
-        if (DEBUG_MODE)
+        if (DEBUG_MODE && !CLI_MODE)
         {
             $whoops = new \Whoops\Run;
             $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);

@@ -9,7 +9,7 @@
 {/foreach}
 
 <div>
-    <p>Play official servers to have your name in!</p>
+    <p>Play ranked servers to have your name in the list!</p>
     <p>Visit <a href="https://supertuxkart.net/About_player_rankings">here</a> for details about player rankings.</p>
 </div>
 {include file=$tpl_config.footer}

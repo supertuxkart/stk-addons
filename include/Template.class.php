@@ -262,7 +262,9 @@ class Template
             // minify html
             if (!DEBUG_MODE && $this->minify)
             {
-                $this->smarty->registerFilter("output", "minify_html");
+                $this->smarty->registerFilter("output", function ($tpl_output, Smarty_Internal_Template $template) {
+                    return minify_html($tpl_output, $template);
+                });
             }
 
             ob_start();

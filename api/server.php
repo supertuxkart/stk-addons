@@ -35,10 +35,10 @@ try
             {
                 $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
                 $token = isset($_POST['token']) ? $_POST['token'] : "";
-                $address = isset($_POST['address']) ? utf8_encode($_POST['address']) : null;
+                $address = isset($_POST['address']) ? (int)utf8_encode($_POST['address']) : null;
                 $port = isset($_POST['port']) ? (int)utf8_encode($_POST['port']) : null;
                 $private_port = isset($_POST['private_port']) ? (int)utf8_encode($_POST['private_port']) : null;
-                $server_name = isset($_POST['name']) ? utf8_encode($_POST['name']) : "";
+                $server_name = isset($_POST['name']) ? $_POST['name'] : "";
                 $max_players = isset($_POST['max_players']) ? (int)$_POST['max_players'] : 0;
                 $difficulty = isset($_POST['difficulty']) ? (int)$_POST['difficulty'] : 0;
                 $game_mode = isset($_POST['game_mode']) ? (int)$_POST['game_mode'] : 0;

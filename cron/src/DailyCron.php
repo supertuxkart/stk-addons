@@ -17,7 +17,7 @@ final class DailyCron
 
         try
         {
-            Verification::cron(7);
+            Verification::cron(CRON_DAILY_VERIFICATION_DAYS);
             echo "SUCCESS: Verification::cron \n";
         }
         catch (VerificationException $e)

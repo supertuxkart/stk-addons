@@ -1,6 +1,6 @@
 # STK Addons Website
 This is the source code for the SuperTuxKart asset sharing and distribution
-platform. The official location of the production website is http://addons.supertuxkart.net/.
+platform. The official location of the production website is https://online.supertuxkart.net/.
 
 ## Build Status
 [![Build Status](https://travis-ci.org/leyyin/stk-addons.svg?branch=master)](https://travis-ci.org/leyyin/stk-addons)
@@ -22,10 +22,6 @@ There are several ways to solve this problem:
 * Add yourself to the owner group of these directories and give the group read & write access, or change the owner of those directories
 to the user under which your webserver is running (usually www-data). The latter can be achieved using:
 ```sudo chown -R www-data:www-data <directory>```
-
-### Bower doesn't work
-If ```bower --version``` doesn't give any output, it hasn't found the nodejs installation. You can fix that with
-```ln -s /usr/bin/nodejs /usr/bin/node```
 
 ### Class not found after creating a new class
 Example:
@@ -61,7 +57,7 @@ All contributions are welcome: ideas, patches, documentation, bug reports, compl
 Some messages include the prefix `[tag]` at the beginning of the commit message, if present these mean
 that you need to make manual modifications to your code/infrastructure for it to work with that commit.
 - `[C]` - modified the config file, update your `config.php` file accordingly
-- `[D]` - updated the composer/bower dependencies, run the appropriate bower/composer update commands
+- `[D]` - updated the composer/yarn dependencies, run the appropriate yarn/composer update commands
 - `[S]` - updated the SQL schema, modify your SQL schema accordingly
 
 
@@ -96,4 +92,3 @@ STK Addons Website is licensed under GPL version 3. See [COPYING](COPYING) for t
 * Forum: [at FreeGameDev Forums](http://forum.freegamedev.net/viewforum.php?f=16)
 * IRC: [#supertuxkart on Freenode](https://webchat.freenode.net/?channels=#supertuxkart)
 * Twitter: [@supertuxkart](https://twitter.com/supertuxkart)
-

@@ -19,9 +19,15 @@ RUN apt update && apt -y install \
         php7.2-simplexml \
         php7.2-zip
 
-# install npm + bower
-RUN curl -sL https://deb.nodesource.com/setup_9.x | bash - && \
-    apt update && apt -y install nodejs && npm install -g bower
+# install nodejs
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - &&
+RUN apt update && apt -y install nodejs
+
+# install yarn
+RUN curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+RUN apt update && apt -y install yarn
+
 
 # install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
@@ -54,13 +60,12 @@ RUN chown -R www-data .
 # install composer packages
 RUN composer install --no-suggest --no-progress
 
-
 # install bower packages
-RUN bower install --allow-root
+RUN yarn install --allow-root
 
 # remove unnecesary directories
 RUN rm -rf install
-RUN rm -rf docker_tools .bowerrc .dockerignore .gitattributes .gitignore .travis.yml bower.json composer.* docker-compose.* Dockerfile* phpunit.xml
+RUN rm -rf packages.json yarn.lock .yarnrc .dockerignore .gitattributes .gitignore .travis.yml composer.* docker-compose.* Dockerfile* phpunit.xml
 
 EXPOSE 80
 
