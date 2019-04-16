@@ -486,28 +486,31 @@ function generateAssetXML($download_location)
 
 function writeNewsXML()
 {
-    $news_xml = generateNewsXML(OLD_ASSETS_XML_LOCATION, OLD_NEWS_XML_LOCATION);
+    // Base is old
+    $news_xml = generateNewsXML(OLD_ASSETS_XML_LOCATION, OLD_NEWS_XML_PATH);
 
-    // Write  new xml file
+    // Write new xml file
     FileSystem::filePutContents(
         NEWS_XML_PATH,
         str_replace(OLD_DOWNLOAD_LOCATION, DOWNLOAD_LOCATION, $news_xml)
     );
 
-
+    // Write old
     return FileSystem::filePutContents(OLD_NEWS_XML_PATH, $news_xml);
 }
 
 function writeAssetXML()
 {
+    // Base is old
     $asset_xml = generateAssetXML(OLD_DOWNLOAD_LOCATION);
 
-    // Write  new xml file
+    // Write new xml file
     FileSystem::filePutContents(
         ASSETS_XML_PATH,
         str_replace(OLD_DOWNLOAD_LOCATION, DOWNLOAD_LOCATION, $asset_xml)
     );
 
+    // Write old
     return FileSystem::filePutContents(OLD_ASSETS_XML_PATH, $asset_xml);
 }
 

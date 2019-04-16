@@ -17,6 +17,7 @@
         "ext-gettext": "*",
         "ext-mbstring": "*",
         "ext-simplexml": "*",
+        "ext-json": "*",
         "ext-xml": "*",
         "myclabs/php-enum": "^1.5",
         "webmozart/assert": "^1.2",
