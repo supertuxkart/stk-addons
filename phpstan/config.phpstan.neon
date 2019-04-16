@@ -16,15 +16,15 @@ parameters:
         - upload.php
 
     ignoreErrors:
-        -
-            message: '~^If condition is always true\.$~'
-            path: 'include/ClientSession.class.php'
-        -
-            message: '~^If condition is always true\.$~'
-            path: 'include/Statistic.class.php'
-        -
-            message: '~^Offset int does not exist on array\(\)\|array\(int\)\.$~'
-            path: 'include/StkImage.class.php'
+#        -
+#            message: '~^If condition is always true\.$~'
+#            path: 'include/ClientSession.class.php'
+#        -
+#            message: '~^If condition is always true\.$~'
+#            path: 'include/Statistic.class.php'
+#        -
+#            message: '~^Offset int does not exist on array\(\)\|array\(int\)\.$~'
+#            path: 'include/StkImage.class.php'
         - '~^Parameter \#2 \$value of method XMLWriter::writeAttribute\(\) expects string, (?:int|float) given\.$~'
         - '~^Parameter \#2 \$value of method XMLWriter::writeAttribute\(\) expects string, \(int\|false\) given\.$~'
 
