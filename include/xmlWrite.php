@@ -486,6 +486,9 @@ function generateAssetXML($download_location)
 
 function writeNewsXML()
 {
+    echo "DISABLED writeNewsXML" . PHP_EOL;
+    return 0;
+    
     // Base is old
     $news_xml = generateNewsXML(OLD_ASSETS_XML_LOCATION, OLD_NEWS_XML_PATH);
 
@@ -501,6 +504,9 @@ function writeNewsXML()
 
 function writeAssetXML()
 {
+    echo "DISABLED writeAssetXML" . PHP_EOL;
+    return 0;
+
     // Base is old
     $asset_xml = generateAssetXML(OLD_DOWNLOAD_LOCATION);
 
