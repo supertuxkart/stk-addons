@@ -492,7 +492,7 @@ function writeNewsXML()
     // Write new xml file
     FileSystem::filePutContents(
         NEWS_XML_PATH,
-        str_replace(OLD_DOWNLOAD_LOCATION, DOWNLOAD_LOCATION, $news_xml)
+        str_replace(OLD_ASSETS_XML_LOCATION, ASSETS_XML_LOCATION, $news_xml)
     );
 
     // Write old
