@@ -725,10 +725,11 @@ CREATE TABLE IF NOT EXISTS `v3_stats` (
 -- see tools/generate-ip-mappings.py for generation
 --
 CREATE TABLE IF NOT EXISTS `v3_ipv4_mapping` (
-    `ip_start`  INT UNSIGNED NOT NULL,
-    `ip_end`    INT UNSIGNED NOT NULL,
-    `latitude`  FLOAT        NOT NULL DEFAULT '0.0',
-    `longitude` FLOAT        NOT NULL DEFAULT '0.0',
+    `ip_start`     INT UNSIGNED NOT NULL,
+    `ip_end`       INT UNSIGNED NOT NULL,
+    `latitude`     FLOAT        NOT NULL DEFAULT '0.0',
+    `longitude`    FLOAT        NOT NULL DEFAULT '0.0',
+    `country_code` VARCHAR(2)   NOT NULL DEFAULT '',
     PRIMARY KEY (`ip_start`),
     UNIQUE KEY `ip_start` (`ip_start`),
     UNIQUE KEY `ip_end` (`ip_end`)

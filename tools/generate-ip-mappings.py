@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # Download from https://dev.maxmind.com/geoip/geoip2/geolite2/
-# You only need GeoLite2-City-Blocks-IPv4.csv from GeoLite2 City
+# You need GeoLite2-City-Blocks-IPv4.csv and GeoLite2-City-Locations-en.csv from GeoLite2 City
 # license of the DB is CC-BY-SA 4.0
 #
 # This product includes GeoLite2 data created by MaxMind, available from
@@ -25,7 +25,19 @@ import sys
 
 CSV_WEB_LINK = 'http://geolite.maxmind.com/download/geoip/database/GeoLite2-City-CSV.zip'
 CSV_FILE = 'GeoLite2-City-Blocks-IPv4.csv'
+CSV_LOCATION = 'GeoLite2-City-Locations-en.csv'
 
+if not os.path.exists(CSV_LOCATION):
+    print("File = {} does not exist. Download it from = {} ".format(CSV_FILE, CSV_WEB_LINK))
+    sys.exit(1)
+
+COUNTRY_DICT = {}
+with open(CSV_LOCATION, 'r') as csvfile:
+    locationlist = csv.reader(csvfile, delimiter=',', quotechar='"')
+    # Skip header
+    next(locationlist)
+    for row in locationlist:
+        COUNTRY_DICT[row[0]] = row[4]
 
 if not os.path.exists(CSV_FILE):
     print("File = {} does not exist. Download it from = {} ".format(CSV_FILE, CSV_WEB_LINK))
@@ -47,4 +59,5 @@ with open(CSV_FILE, 'r') as csvfile:
         
         latitude = float(row[7])
         longitude = float(row[8])
-        print('%d,%d,%f,%f' % (ip_start, ip_end, latitude, longitude))
+        country = COUNTRY_DICT.get(row[1], "")
+        print('%d,%d,%f,%f,%s' % (ip_start, ip_end, latitude, longitude, country))
