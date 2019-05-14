@@ -56,6 +56,7 @@ try
                 $session = ClientSession::create($username, $password, $save_session === "true");
                 // Clear previous joined server if any
                 $session->clearUserJoinedServer();
+                $session->updateUserGeolocation();
                 $achievements_string = $session->getAchievements();
 
                 $output->startElement('connect');
@@ -87,6 +88,7 @@ try
                 // Clear previous joined server if any
                 $session->clearUserJoinedServer();
                 $session->setOnline();
+                $session->updateUserGeolocation();
                 User::updateLoginTime($session->getUser()->getId());
 
                 $output->startElement('saved-session');

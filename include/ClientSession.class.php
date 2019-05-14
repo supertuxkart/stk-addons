@@ -854,4 +854,39 @@ class ClientSession
             throw new ServerException(_h("Failed to update server config."));
         }
     }
+    /**
+     * Update the geolocation of user based on his IP, called when the user login.
+     */
+    public function updateUserGeolocation()
+    {
+        $user_geolocation = Util::getIPGeolocationFromString(Util::getClientIp());
+        try
+        {
+            DBConnection::get()->query(
+                "UPDATE `{DB_VERSION}_client_sessions`
+                SET `latitude` = :latitude, `longitude` = :longitude, `country_code` = :country_code
+                WHERE `uid`= :uid AND `cid` = :cid",
+                DBConnection::NOTHING,
+                [
+                    ':latitude'     => $user_geolocation[0],
+                    ':longitude'    => $user_geolocation[1],
+                    ':country_code' => $user_geolocation[2],
+                    ':uid'          => $this->user->getId(),
+                    ':cid'          => $this->getSessionID()
+                ],
+                [
+                    ':latitude'      => DBConnection::PARAM_STR,
+                    ':longitude'     => DBConnection::PARAM_STR,
+                    ':country_code'  => DBConnection::PARAM_STR,
+                    ':uid'           => DBConnection::PARAM_STR,
+                    ':cid'           => DBConnection::PARAM_STR
+                ]
+            );
+        }
+        catch (DBException $e)
+        {
+            throw new ClientSessionException($e->getMessage());
+        }
+    }
+
 }
