@@ -180,81 +180,14 @@ class Server implements IAsXML
     }
 
     /**
-     * Get the latitude and longitude of an IP
-     * @return array of latitude and longitude.
-     *         If location does not exist it returns coordinates [0, 0] (null island)
-     *
-     * @param int $ip
-     */
-    public static function getIPCoordinates($ip)
-    {
-        try
-        {
-            $result = DBConnection::get()->query(
-                "SELECT * FROM `{DB_VERSION}_ipv4_mapping`
-                WHERE `ip_start` <= :ip AND `ip_end` >= :ip ORDER BY `ip_start` DESC LIMIT 1;",
-                DBConnection::FETCH_FIRST,
-                [':ip' => $ip],
-                [":ip" => DBConnection::PARAM_INT]
-            );
-        }
-        catch (DBException $e)
-        {
-            Debug::addException($e);
-            return [0.0, 0.0];
-        }
-
-        if (!$result)
-        {
-            return [0.0, 0.0];
-        }
-
-        return [$result["latitude"], $result["longitude"]];
-    }
-
-    /**
-     * Get the latitude and longitude of an IP represented as a string
-     * @return float[] of latitude and longitude in string.
-     *         If location does not exist it returns coordinates [0, 0] (null island)
-     *
-     * @param string $ip_string eg: 127.0.0.1
-     */
-    public static function getIPCoordinatesFromString($ip_string)
-    {
-        try
-        {
-            $result = DBConnection::get()->query(
-                "SELECT * FROM `{DB_VERSION}_ipv4_mapping`
-                WHERE `ip_start` <= INET_ATON(:ip) AND `ip_end` >= INET_ATON(:ip)
-                ORDER BY `ip_start` DESC LIMIT 1;",
-                DBConnection::FETCH_FIRST,
-                [':ip' => $ip_string],
-                [":ip" => DBConnection::PARAM_STR]
-            );
-        }
-        catch (DBException $e)
-        {
-            Debug::addException($e);
-            return [0.0, 0.0];
-        }
-
-        if (!$result)
-        {
-            return [0.0, 0.0];
-        }
-
-        return [$result["latitude"], $result["longitude"]];
-    }
-
-    /**
      * Get server as xml output
      *
      * @return string
      */
     public function asXML()
     {
-        $client_coordinates = Server::getIPCoordinatesFromString(Util::getClientIp());
-        return $this->asXMLFromClientLocation($client_coordinates[0], $client_coordinates[1]);
+        $client_geolocation = Util::getIPGeolocationFromString(Util::getClientIp());
+        return $this->asXMLFromClientLocation($client_geolocation[0], $client_geolocation[1]);
     }
 
     /**
@@ -375,7 +308,7 @@ class Server implements IAsXML
                 throw new ServerException(_('Specified server already exists.'));
             }
 
-            $server_coordinates = Server::getIPCoordinates($ip);
+            $server_geolocation = Util::getIPGeolocation($ip);
             $result = DBConnection::get()->query(
                 "INSERT INTO `{DB_VERSION}_servers` (host_id, name,
                 last_poll_time, ip, port, private_port, max_players,
@@ -397,8 +330,8 @@ class Server implements IAsXML
                     ':game_mode'      => $game_mode,
                     ':password'       => $password,
                     ':version'        => $version,
-                    ':latitude'       => $server_coordinates[0],
-                    ':longitude'      => $server_coordinates[1]
+                    ':latitude'       => $server_geolocation[0],
+                    ':longitude'      => $server_geolocation[1]
                 ],
                 [
                     ':host_id'        => DBConnection::PARAM_INT,
@@ -566,7 +499,7 @@ class Server implements IAsXML
     public static function getServersAsXML(int $skip_non_polled_clients_seconds = 180): string
     {
         $servers_with_users = static::getAllServerConnectionsWithUsers();
-        $client_coordinates = static::getIPCoordinatesFromString(Util::getClientIp());
+        $client_geolocation = Util::getIPGeolocationFromString(Util::getClientIp());
 
         $servers = [];
         $users = [[]];
@@ -602,7 +535,7 @@ class Server implements IAsXML
         {
             $server = new self($server_result, $users[$user_index]);
             $user_index++;
-            $partial_output->insert($server->asXMLFromClientLocation($client_coordinates[0], $client_coordinates[1]));
+            $partial_output->insert($server->asXMLFromClientLocation($client_geolocation[0], $client_geolocation[1]));
         }
         $partial_output->endElement();
 

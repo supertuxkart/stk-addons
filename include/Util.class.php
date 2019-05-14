@@ -821,4 +821,72 @@ MSG;
 
         return $angle * $earth_radius;
     }
+
+    /**
+     * Get the latitude, longitude and 2-letter country code of an IP
+     * @return array of latitude, longitude and 2-letter country code.
+     *         If location does not exist it returns coordinates [0, 0, ""] (null island)
+     *
+     * @param int $ip
+     */
+    public static function getIPGeolocation($ip)
+    {
+        try
+        {
+            $result = DBConnection::get()->query(
+                "SELECT * FROM `{DB_VERSION}_ipv4_mapping`
+                WHERE `ip_start` <= :ip AND `ip_end` >= :ip ORDER BY `ip_start` DESC LIMIT 1;",
+                DBConnection::FETCH_FIRST,
+                [':ip' => $ip],
+                [":ip" => DBConnection::PARAM_INT]
+            );
+        }
+        catch (DBException $e)
+        {
+            Debug::addException($e);
+            return [0.0, 0.0, ""];
+        }
+
+        if (!$result)
+        {
+            return [0.0, 0.0, ""];
+        }
+
+        return [$result["latitude"], $result["longitude"], $result["country_code"]];
+    }
+
+    /**
+     * Get the latitude, longitude and 2-letter country code of an IP represented as a string
+     * @return array of latitude, longitude and 2-letter country code.
+     *         If location does not exist it returns coordinates [0, 0, ""] (null island)
+     *
+     * @param string $ip_string eg: 127.0.0.1
+     */
+    public static function getIPGeolocationFromString($ip_string)
+    {
+        try
+        {
+            $result = DBConnection::get()->query(
+                "SELECT * FROM `{DB_VERSION}_ipv4_mapping`
+                WHERE `ip_start` <= INET_ATON(:ip) AND `ip_end` >= INET_ATON(:ip)
+                ORDER BY `ip_start` DESC LIMIT 1;",
+                DBConnection::FETCH_FIRST,
+                [':ip' => $ip_string],
+                [":ip" => DBConnection::PARAM_STR]
+            );
+        }
+        catch (DBException $e)
+        {
+            Debug::addException($e);
+            return [0.0, 0.0, ""];
+        }
+
+        if (!$result)
+        {
+            return [0.0, 0.0, ""];
+        }
+
+        return [$result["latitude"], $result["longitude"], $result["country_code"]];
+    }
+
 }
