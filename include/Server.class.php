@@ -241,6 +241,7 @@ class Server implements IAsXML
                     $server_xml->writeAttribute("username", $player["username"]);
                     $time_played = (float)(time() - (int)$player["connected_since"]) / 60.0;
                     $server_xml->writeAttribute("time-played", $time_played);
+                    $server_xml->writeAttribute("country-code", $player["player_country_code"]);
                     if ($player["rank"] !== null)
                     {
                         $server_xml->writeAttribute("rank", $player["rank"]);
@@ -473,7 +474,8 @@ class Server implements IAsXML
                 `{DB_VERSION}_servers`.country_code,
                 `{DB_VERSION}_servers`.current_track, `{DB_VERSION}_server_conn`.user_id, `{DB_VERSION}_server_conn`.connected_since,
                 `{DB_VERSION}_users`.username, rank, scores, max_scores, num_races_done,
-                UNIX_TIMESTAMP(`{DB_VERSION}_client_sessions`.`last-online`) AS online_since
+                UNIX_TIMESTAMP(`{DB_VERSION}_client_sessions`.`last-online`) AS online_since,
+                `{DB_VERSION}_client_sessions`.country_code AS player_country_code
                 FROM `{DB_VERSION}_servers`
                 LEFT JOIN `{DB_VERSION}_server_conn` ON `{DB_VERSION}_servers`.id = `{DB_VERSION}_server_conn`.server_id
                 LEFT JOIN `{DB_VERSION}_users` ON `{DB_VERSION}_users`.id = `{DB_VERSION}_server_conn`.user_id

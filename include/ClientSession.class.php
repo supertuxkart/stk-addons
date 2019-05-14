@@ -346,10 +346,12 @@ class ClientSession
             // Get all connection requests 45 seconds before
             $timeout = time() - 45;
             $connection_requests = DBConnection::get()->query(
-                "SELECT `user_id`, `server_id`, `ip`, `port`, `aes_key`, `aes_iv`, `username`
+                "SELECT `user_id`, `server_id`, `ip`, `port`, `aes_key`, `aes_iv`, `username`, `country_code`
                 FROM `{DB_VERSION}_server_conn`
                 INNER JOIN `{DB_VERSION}_users`
                 ON `{DB_VERSION}_server_conn`.user_id = `{DB_VERSION}_users`.id
+                INNER JOIN `{DB_VERSION}_client_sessions`
+                ON `{DB_VERSION}_server_conn`.user_id = `{DB_VERSION}_client_sessions`.uid
                 WHERE `server_id` = :server_id AND `connected_since` > :timeout",
                 DBConnection::FETCH_ALL,
                 [
