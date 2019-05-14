@@ -109,6 +109,12 @@ class Server implements IAsXML
     private $longitude;
 
     /**
+     * 2-letter country code of server location
+     * @var string
+     */
+    private $country_code;
+
+    /**
      * Current track playing in server
      * @var string
      */
@@ -143,6 +149,7 @@ class Server implements IAsXML
         $this->game_started = (int)$data["game_started"];
         $this->latitude = $data["latitude"];
         $this->longitude = $data["longitude"];
+        $this->country_code = $data["country_code"];
         $this->current_track = $data["current_track"];
         $this->players_info = $player_info;
     }
@@ -216,6 +223,7 @@ class Server implements IAsXML
                 $server_xml->writeAttribute("password", $this->password);
                 $server_xml->writeAttribute("version", $this->version);
                 $server_xml->writeAttribute("game_started", $this->game_started);
+                $server_xml->writeAttribute("country_code", $this->country_code);
                 $server_xml->writeAttribute("current_track", $this->current_track);
                 $server_xml->writeAttribute(
                     "distance",
@@ -312,10 +320,10 @@ class Server implements IAsXML
             $result = DBConnection::get()->query(
                 "INSERT INTO `{DB_VERSION}_servers` (host_id, name,
                 last_poll_time, ip, port, private_port, max_players,
-                difficulty, game_mode, password, version, latitude, longitude)
+                difficulty, game_mode, password, version, latitude, longitude, country_code)
                 VALUES (:host_id, :name, :last_poll_time, :ip, :port,
                 :private_port, :max_players, :difficulty, :game_mode,
-                :password, :version, :latitude, :longitude)",
+                :password, :version, :latitude, :longitude, :country_code)",
                 DBConnection::ROW_COUNT,
                 [
                     ':host_id'        => $user_id,
@@ -331,7 +339,8 @@ class Server implements IAsXML
                     ':password'       => $password,
                     ':version'        => $version,
                     ':latitude'       => $server_geolocation[0],
-                    ':longitude'      => $server_geolocation[1]
+                    ':longitude'      => $server_geolocation[1],
+                    ':country_code'   => $server_geolocation[2]
                 ],
                 [
                     ':host_id'        => DBConnection::PARAM_INT,
@@ -346,7 +355,8 @@ class Server implements IAsXML
                     ':password'       => DBConnection::PARAM_INT,
                     ':version'        => DBConnection::PARAM_INT,
                     ':latitude'       => DBConnection::PARAM_STR,
-                    ':longitude'      => DBConnection::PARAM_STR
+                    ':longitude'      => DBConnection::PARAM_STR,
+                    ':country_code'   => DBConnection::PARAM_STR
                 ]
             );
         }
@@ -460,6 +470,7 @@ class Server implements IAsXML
                 `{DB_VERSION}_servers`.max_players, `{DB_VERSION}_servers`.difficulty, `{DB_VERSION}_servers`.game_mode,
                 `{DB_VERSION}_servers`.current_players, `{DB_VERSION}_servers`.password, `{DB_VERSION}_servers`.version,
                 `{DB_VERSION}_servers`.game_started, `{DB_VERSION}_servers`.latitude, `{DB_VERSION}_servers`.longitude,
+                `{DB_VERSION}_servers`.country_code,
                 `{DB_VERSION}_servers`.current_track, `{DB_VERSION}_server_conn`.user_id, `{DB_VERSION}_server_conn`.connected_since,
                 `{DB_VERSION}_users`.username, rank, scores, max_scores, num_races_done,
                 UNIX_TIMESTAMP(`{DB_VERSION}_client_sessions`.`last-online`) AS online_since
