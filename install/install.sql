@@ -299,6 +299,9 @@ CREATE TABLE IF NOT EXISTS `v3_client_sessions` (
     `is_online`    BOOL              NOT NULL DEFAULT '1',
     `is_save`      BOOL              NOT NULL DEFAULT '0',
     `last-online`  TIMESTAMP         NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `latitude`     FLOAT             NOT NULL DEFAULT '0.0',
+    `longitude`    FLOAT             NOT NULL DEFAULT '0.0',
+    `country_code` VARCHAR(2)        NOT NULL DEFAULT '',
     PRIMARY KEY (`uid`),
     UNIQUE KEY `key_session` (`uid`, `cid`)
 )
@@ -327,6 +330,7 @@ CREATE TABLE IF NOT EXISTS `v3_servers` (
     `game_started`    TINYINT UNSIGNED  NOT NULL DEFAULT '0',
     `latitude`        FLOAT             NOT NULL DEFAULT '0.0',
     `longitude`       FLOAT             NOT NULL DEFAULT '0.0',
+    `country_code`    VARCHAR(2)        NOT NULL DEFAULT '',
     `current_track`   VARCHAR(64)       NOT NULL DEFAULT '',
     PRIMARY KEY (`id`),
     KEY `key_hostid` (`host_id`),
