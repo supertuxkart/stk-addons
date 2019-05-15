@@ -159,6 +159,7 @@ try
                                 $output->writeAttribute("port", $request['port']);
                                 $output->writeAttribute("aes-key", $request['aes_key']);
                                 $output->writeAttribute("aes-iv", $request['aes_iv']);
+                                $output->writeAttribute("country-code", $request['country_code']);
                             $output->endElement();
                         }
                     $output->endElement();
