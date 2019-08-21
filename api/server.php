@@ -36,6 +36,7 @@ try
                 $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
                 $token = isset($_POST['token']) ? $_POST['token'] : "";
                 $address = isset($_POST['address']) ? (int)utf8_encode($_POST['address']) : null;
+                $address_ipv6 = isset($_POST['address_ipv6']) ? $_POST['address_ipv6'] : "";
                 $port = isset($_POST['port']) ? (int)utf8_encode($_POST['port']) : null;
                 $private_port = isset($_POST['private_port']) ? (int)utf8_encode($_POST['private_port']) : null;
                 $server_name = isset($_POST['name']) ? $_POST['name'] : "";
@@ -46,6 +47,7 @@ try
                 $version = isset($_POST['version']) ? (int)$_POST['version'] : 1;
                 $server = ClientSession::get($token, $userid)->createServer(
                     $address,
+                    $address_ipv6,
                     $port,
                     $private_port,
                     $server_name,

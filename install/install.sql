@@ -319,6 +319,7 @@ CREATE TABLE IF NOT EXISTS `v3_servers` (
     `name`            VARCHAR(256)      NOT NULL,
     `last_poll_time`  INT               NOT NULL,
     `ip`              INT UNSIGNED      NOT NULL DEFAULT '0',
+    `ipv6`            VARCHAR(45)       NOT NULL DEFAULT '',
     `port`            SMALLINT UNSIGNED NOT NULL DEFAULT '0',
     `private_port`    SMALLINT UNSIGNED NOT NULL DEFAULT '0',
     `max_players`     TINYINT UNSIGNED  NOT NULL DEFAULT '0',

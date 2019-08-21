@@ -77,6 +77,7 @@ class ClientSession
      * Create a server instance
      *
      * @param int       $ip
+     * @param string    $ipv6
      * @param int       $port
      * @param int       $private_port
      * @param string    $server_name
@@ -91,6 +92,7 @@ class ClientSession
      */
     public function createServer(
         $ip,
+        $ipv6,
         int $port,
         int $private_port,
         $server_name,
@@ -102,6 +104,7 @@ class ClientSession
     ) {
         return Server::create(
             $ip,
+            $ipv6,
             $port,
             $private_port,
             $this->user->getId(),

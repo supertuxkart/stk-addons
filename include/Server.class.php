@@ -53,6 +53,12 @@ class Server implements IAsXML
     private $ip;
 
     /**
+     * IPV6 address of server if supported
+     * @var string
+     */
+    private $ipv6;
+
+    /**
      * The server's public port
      * @var int
      */
@@ -139,6 +145,7 @@ class Server implements IAsXML
         $this->name = $data["name"];
         $this->max_players = (int)$data["max_players"];
         $this->ip = $data["ip"];
+        $this->ipv6 = $data["ipv6"];
         $this->port = (int)$data["port"];
         $this->private_port = (int)$data["private_port"];
         $this->difficulty = (int)$data["difficulty"];
@@ -215,6 +222,7 @@ class Server implements IAsXML
                 $server_xml->writeAttribute("name", $this->name);
                 $server_xml->writeAttribute("max_players", $this->max_players);
                 $server_xml->writeAttribute("ip", $this->ip);
+                $server_xml->writeAttribute("ipv6", $this->ipv6);
                 $server_xml->writeAttribute("port", $this->port);
                 $server_xml->writeAttribute("private_port", $this->private_port);
                 $server_xml->writeAttribute("difficulty", $this->difficulty);
@@ -279,6 +287,7 @@ class Server implements IAsXML
      * Create server
      *
      * @param int    $ip
+     * @param string $ipv6
      * @param int    $port
      * @param int    $private_port
      * @param int    $user_id
@@ -294,6 +303,7 @@ class Server implements IAsXML
      */
     public static function create(
         $ip,
+        $ipv6,
         int $port,
         int $private_port,
         int $user_id,
@@ -320,9 +330,9 @@ class Server implements IAsXML
             $server_geolocation = Util::getIPGeolocation($ip);
             $result = DBConnection::get()->query(
                 "INSERT INTO `{DB_VERSION}_servers` (host_id, name,
-                last_poll_time, ip, port, private_port, max_players,
+                last_poll_time, ip, ipv6, port, private_port, max_players,
                 difficulty, game_mode, password, version, latitude, longitude, country_code)
-                VALUES (:host_id, :name, :last_poll_time, :ip, :port,
+                VALUES (:host_id, :name, :last_poll_time, :ip, :ipv6, :port,
                 :private_port, :max_players, :difficulty, :game_mode,
                 :password, :version, :latitude, :longitude, :country_code)",
                 DBConnection::ROW_COUNT,
@@ -332,6 +342,7 @@ class Server implements IAsXML
                     ':last_poll_time' => time(),
                     // Do not use (int) or it truncates to 127.255.255.255
                     ':ip'             => $ip,
+                    ':ipv6'           => $ipv6,
                     ':port'           => $port,
                     ':private_port'   => $private_port,
                     ':max_players'    => $max_players,
@@ -348,6 +359,7 @@ class Server implements IAsXML
                     ':name'           => DBConnection::PARAM_STR,
                     ':last_poll_time' => DBConnection::PARAM_INT,
                     ':ip'             => DBConnection::PARAM_INT,
+                    ':ipv6'           => DBConnection::PARAM_STR,
                     ':port'           => DBConnection::PARAM_INT,
                     ':private_port'   => DBConnection::PARAM_INT,
                     ':max_players'    => DBConnection::PARAM_INT,
@@ -467,7 +479,7 @@ class Server implements IAsXML
             static::cleanOldServers();
             return DBConnection::get()->query(
                 "SELECT `{DB_VERSION}_servers`.id, `{DB_VERSION}_servers`.host_id, `{DB_VERSION}_servers`.name,
-                `{DB_VERSION}_servers`.ip, `{DB_VERSION}_servers`.port, `{DB_VERSION}_servers`.private_port,
+                `{DB_VERSION}_servers`.ip, `{DB_VERSION}_servers`.ipv6, `{DB_VERSION}_servers`.port, `{DB_VERSION}_servers`.private_port,
                 `{DB_VERSION}_servers`.max_players, `{DB_VERSION}_servers`.difficulty, `{DB_VERSION}_servers`.game_mode,
                 `{DB_VERSION}_servers`.current_players, `{DB_VERSION}_servers`.password, `{DB_VERSION}_servers`.version,
                 `{DB_VERSION}_servers`.game_started, `{DB_VERSION}_servers`.latitude, `{DB_VERSION}_servers`.longitude,
