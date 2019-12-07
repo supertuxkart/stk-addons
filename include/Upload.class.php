@@ -669,6 +669,46 @@ class Upload
         $this->upload_file_name = $file_id . "." . $file_ext;
     }
 
+
+    /**
+     * Parse the b3d or spm in $path recursively and put their textures used into $textures
+     * @param string $path
+     * @param array $textures
+     */
+    private static function parseModelsRecursively($path, &$textures)
+    {
+        foreach (FileSystem::ls($path) as $file)
+        {
+            if (FileSystem::isDirectory($path . $file))
+            {
+                static::parseModelsRecursively($path . $file . DS, $textures);
+                continue;
+            }
+            try
+            {
+                // Parse any B3D models
+                if (preg_match('/\.b3d$/i', $file))
+                {
+                    $b3d_parse = new B3DParser();
+                    $b3d_parse->loadFile($path . $file);
+                    $textures = array_merge($b3d_parse->listTextures(), $textures);
+                }
+
+                // Parse any SPM models
+                if (preg_match('/\.spm$/i', $file))
+                {
+                    $spm_parse = new SPMParser();
+                    $spm_parse->loadFile($path . $file);
+                    $textures = array_merge($spm_parse->listTextures(), $textures);
+                }
+            }
+            catch (ParserException $e)
+            {
+                throw new UploadException($e);
+            }
+        }
+    }
+
     /**
      * Parse the b3d, spm, xml, license.txt file
      * Will modify the following keys from the properties:
@@ -682,30 +722,12 @@ class Upload
         $textures = [];
 
         // Loop through all files
+        static::parseModelsRecursively($this->working_dir, $textures);
         foreach (FileSystem::ls($this->working_dir) as $file)
         {
-            try
-            {
-                // Parse any B3D models
-                if (preg_match('/\.b3d$/i', $file))
-                {
-                    $b3d_parse = new B3DParser();
-                    $b3d_parse->loadFile($this->working_dir . $file);
-                    $textures = array_merge($b3d_parse->listTextures(), $textures);
-                }
-
-                // Parse any SPM models
-                if (preg_match('/\.spm$/i', $file))
-                {
-                    $spm_parse = new SPMParser();
-                    $spm_parse->loadFile($this->working_dir . $file);
-                    $textures = array_merge($spm_parse->listTextures(), $textures);
-                }
-            }
-            catch (ParserException $e)
-            {
-                throw new UploadException($e);
-            }
+            // We only look for xml files only in working_dir atm, where kart or track xml mostly exists
+            if (FileSystem::isDirectory($this->working_dir . $file))
+                continue;
 
             // Parse any XML files
             if (preg_match('/\.xml/i', $file))
@@ -784,7 +806,7 @@ class Upload
         $missing_textures = [];
         foreach ($textures as $tex)
         {
-            if (!FileSystem::exists($this->working_dir . $tex))
+            if (!FileSystem::findFileRecursively($this->working_dir, $tex))
             {
                 $missing_textures[] = $tex;
             }

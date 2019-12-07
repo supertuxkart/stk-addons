@@ -135,6 +135,36 @@ class FileSystem
     }
 
     /**
+     * Find if $filename exists in $path including sub-folders recursively
+     *
+     * @param string $path
+     * @param string $filename
+     */
+    public static function findFileRecursively($path, $filename)
+    {
+        if (static::exists($path . $filename))
+            return true;
+
+        $sub_dir = [];
+        foreach (static::ls($path) as $file)
+        {
+            if (static::isDirectory($path . $file))
+            {
+                $sub_dir[] = $path . $file . DS;
+            }
+        }
+        foreach ($sub_dir as $dir)
+        {
+            $result = static::findFileRecursively($dir, $filename);
+            if ($result === true)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Recursively delete a directory.
      *
      * @param string      $directory       the directory to delete
