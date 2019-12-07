@@ -549,6 +549,33 @@ class FileSystem
     }
 
     /**
+    * Add files or sub-folders to zip file recursively
+    * @param ZipArchive $zip
+    * @param string $in input files
+    * @param string $out output location in zip file
+    */
+    private static function zipAdd($zip, $in, $out)
+    {
+        if (static::isDirectory($in))
+        {
+            $zip->addEmptyDir($out);
+            foreach (static::ls($in) as $file)
+            {
+                static::zipAdd($zip, $in . DS . $file, $out . DS . $file);
+            }
+            return;
+        }
+        if (!$zip->addFile($in, $out))
+        {
+            throw new FileSystemException("Can't add this file = '$out' to the archive");
+        }
+        if (!static::exists($in))
+        {
+            throw new FileSystemException("Can't add this file = '$out' as it doesn't exist");
+        }
+    }
+
+    /**
      * Add a directory to a zip archive
      *
      * @param string $directory
@@ -573,19 +600,7 @@ class FileSystem
         // Find files to add to archive
         foreach (static::ls($directory) as $file)
         {
-            if (static::isDirectory($directory . $file))
-            {
-                continue;
-            }
-
-            if (!$zip->addFile($directory . $file, $file))
-            {
-                throw new FileSystemException("Can't add this file = '$file' to the archive");
-            }
-            if (!static::exists($directory . $file))
-            {
-                throw new FileSystemException("Can't add this file = '$file' as it doesn't exist");
-            }
+            static::zipAdd($zip, $directory . $file, $file);
         }
 
         if (!$zip->close())
