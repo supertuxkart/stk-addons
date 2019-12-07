@@ -102,6 +102,38 @@ class FileSystem
         static::clearStatCache($file_name);
     }
 
+
+    /**
+     * Delete a file if $check_remove function returns true
+     *
+     * @param string $path
+     * @param array $removed the file name removed will be put here
+     * @param function $check_remove
+     */
+    public static function removeFileMatchesRecursively($path, &$removed, $check_remove)
+    {
+        $sub_dir = [];
+        foreach (static::ls($path) as $file)
+        {
+            $cur_ctx = $path . $file;
+            if (static::isDirectory($cur_ctx))
+            {
+                $sub_dir[] = $cur_ctx . DS;
+            }
+            else if ($check_remove($cur_ctx))
+            {
+                static::removeFile($cur_ctx);
+                $removed[] = $file;
+            }
+        }
+        foreach ($sub_dir as $dir)
+        {
+            static::removeFileMatchesRecursively($dir, $removed, $check_remove);
+            if (static::isEmptyDir($dir))
+                static::removeDirectory($dir);
+        }
+    }
+
     /**
      * Recursively delete a directory.
      *
@@ -423,6 +455,30 @@ class FileSystem
         }
 
         return $has_dots ? $files : array_diff($files, ['..', '.']);
+    }
+
+    /**
+     * Check whether $dir is empty
+     *
+     * @param string $dir
+     *
+     * @return true if empty directory
+     */
+    public static function isEmptyDir($dir)
+    {
+        if (!static::isDirectory($dir))
+            return false;
+        $handle = opendir($dir);
+        while (false !== ($entry = readdir($handle)))
+        {
+            if ($entry != "." && $entry != "..")
+            {
+                closedir($handle);
+                return false;
+            }
+        }
+        closedir($handle);
+        return true;
     }
 
     /**

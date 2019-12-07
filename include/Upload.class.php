@@ -639,24 +639,11 @@ class Upload
             }
 
             $approved_types = Util::commaStringToArray($approved_types);
-            foreach (FileSystem::ls($path) as $file)
-            {
-                // Don't check current and parent directory
-                if (FileSystem::isDirectory($path . $file))
+            FileSystem::removeFileMatchesRecursively($path, $invalid_files,
+                function($filename) use ($approved_types)
                 {
-                    continue;
-                }
-
-                // Make sure the whole path is there
-                $file = $path . $file;
-
-                // Remove files with unapproved extensions
-                if (!preg_match('/\.(' . implode('|', $approved_types) . ')$/i', $file))
-                {
-                    $invalid_files[] = basename($file);
-                    FileSystem::removeFile($file);
-                }
-            }
+                    return !preg_match('/\.(' . implode('|', $approved_types) . ')$/i', $filename);
+                });
         }
 
         // Remove invalid files from the path that are not allowed extensions
