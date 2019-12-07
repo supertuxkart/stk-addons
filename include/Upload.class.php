@@ -92,6 +92,12 @@ class Upload
     private $temp_file_fullpath;
 
     /**
+     * The (sub-)directory from $temp_file_dir which stk-addons should work with
+     * @var string
+     */
+    private $working_dir;
+
+    /**
      * Hold the data from the zip archive. b3d files, spm_files, license, texture etc
      * @var array
      */
@@ -168,6 +174,7 @@ class Upload
         $STK_UPLOADS_PATH = TMP_PATH . 'stk-uploads';
         $this->temp_file_dir = $STK_UPLOADS_PATH . DS . time() . '-' . $this->file_name . DS;
         $this->temp_file_fullpath = $this->temp_file_dir . $this->file_name;
+        $this->working_dir = null;
 
         try
         {
@@ -275,6 +282,34 @@ class Upload
         }
     }
 
+    /** Move $full_path to the first sub-folder if it contains any files (non-directoy)
+     * @param string $full_path
+     * @param string $result
+     */
+    private function getAnyFiles($full_path)
+    {
+        $sub_dir = [];
+        foreach (FileSystem::ls($full_path) as $file)
+        {
+            $cur_ctx = $full_path . $file;
+            if (FileSystem::isDirectory($cur_ctx))
+            {
+                $sub_dir[] = $cur_ctx . DS;
+            }
+            else
+            {
+                $this->working_dir = $full_path;
+                return;
+            }
+        }
+        foreach ($sub_dir as $dir)
+        {
+            $this->getAnyFiles($dir);
+            if ($this->working_dir !== null)
+                return;
+        }
+    }
+
     /**
      * Relocate uploaded files to a 'scratch' directory.
      * If the uploaded file is compressed, decompress it.
@@ -297,20 +332,12 @@ class Upload
             // unarchive it first
             FileSystem::extractFromArchive($this->temp_file_fullpath, $this->temp_file_dir, $this->file_ext);
 
-            // Flatten directories
-            // TODO check if we want this :/
-            try
+            // Get working directory
+            $this->getAnyFiles($this->temp_file_dir);
+            if ($this->working_dir === null)
             {
-                FileSystem::flattenDirectory($this->temp_file_dir);
-            }
-            catch (FileSystemException $e)
-            {
-                throw new FileSystemException(
-                    sprintf(
-                        "Error while trying to flatten the archive. 
-                This might happen because files from subdirectories have the same name as files from the root directory. Error = `%s`",
-                        $e->getMessage()
-                    )
+                throw new UploadException(
+                    _h('Uploaded archive contains no files to be processed.')
                 );
             }
 
@@ -498,7 +525,7 @@ class Upload
         {
             $image_file = $this->properties['xml_attributes']['screenshot'];
         }
-        $image_file = $this->temp_file_dir . $image_file;
+        $image_file = $this->working_dir . $image_file;
 
         if (!FileSystem::exists($image_file))
         {
@@ -561,7 +588,7 @@ class Upload
         // Pack zip file
         try
         {
-            FileSystem::compressToArchive($this->temp_file_dir, $this->upload_file_dir . $this->upload_file_name);
+            FileSystem::compressToArchive($this->working_dir, $this->upload_file_dir . $this->upload_file_name);
         }
         catch (FileSystemException $e)
         {
@@ -593,7 +620,7 @@ class Upload
     private function removeInvalidFiles()
     {
         // Check for invalid files
-        $path = $this->temp_file_dir;
+        $path = $this->working_dir;
 
         $invalid_files = [];
         if (!FileSystem::exists($path) || !FileSystem::isDirectory($path))
@@ -668,7 +695,7 @@ class Upload
         $textures = [];
 
         // Loop through all files
-        foreach (FileSystem::ls($this->temp_file_dir) as $file)
+        foreach (FileSystem::ls($this->working_dir) as $file)
         {
             try
             {
@@ -676,7 +703,7 @@ class Upload
                 if (preg_match('/\.b3d$/i', $file))
                 {
                     $b3d_parse = new B3DParser();
-                    $b3d_parse->loadFile($this->temp_file_dir . $file);
+                    $b3d_parse->loadFile($this->working_dir . $file);
                     $textures = array_merge($b3d_parse->listTextures(), $textures);
                 }
 
@@ -684,7 +711,7 @@ class Upload
                 if (preg_match('/\.spm$/i', $file))
                 {
                     $spm_parse = new SPMParser();
-                    $spm_parse->loadFile($this->temp_file_dir . $file);
+                    $spm_parse->loadFile($this->working_dir . $file);
                     $textures = array_merge($spm_parse->listTextures(), $textures);
                 }
             }
@@ -699,7 +726,7 @@ class Upload
                 $xml_parse = new AddonXMLParser();
                 try
                 {
-                    $xml_parse->loadFile($this->temp_file_dir . $file);
+                    $xml_parse->loadFile($this->working_dir . $file);
                 }
                 catch (ParserException $e)
                 {
@@ -738,19 +765,19 @@ class Upload
                         $this->addon_type = Addon::KART;
                     }
 
-                    $this->properties['addon_file'] = $this->temp_file_dir . $file;
+                    $this->properties['addon_file'] = $this->working_dir . $file;
                 }
 
                 if ($xml_type === 'QUADS')
                 {
-                    $this->properties['quad_file'] = $this->temp_file_dir . $file;
+                    $this->properties['quad_file'] = $this->working_dir . $file;
                 }
             }
 
             // Mark an existing license file
             if (preg_match('/^license\.txt$/i', $file))
             {
-                $this->properties['license_file'] = $this->temp_file_dir . $file;
+                $this->properties['license_file'] = $this->working_dir . $file;
             }
         }
 
@@ -758,7 +785,7 @@ class Upload
         $this->properties['status'] = 0;
 
         // Check to make sure all image dimensions are powers of 2
-        if (!FileSystem::checkImagesAreValid($this->temp_file_dir))
+        if (!FileSystem::checkImagesAreValid($this->working_dir))
         {
             $this->warnings[] = _h('Some images in this add-on do not have dimensions that are a power of two.') . ' ' .
                                 _h('This may cause display errors on some video cards.');
@@ -770,7 +797,7 @@ class Upload
         $missing_textures = [];
         foreach ($textures as $tex)
         {
-            if (!FileSystem::exists($this->temp_file_dir . $tex))
+            if (!FileSystem::exists($this->working_dir . $tex))
             {
                 $missing_textures[] = $tex;
             }
