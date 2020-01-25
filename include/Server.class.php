@@ -327,7 +327,17 @@ class Server implements IAsXML
                 throw new ServerException(_('Specified server already exists.'));
             }
 
-            $server_geolocation = Util::getIPGeolocation($ip);
+            if ($ip !== 0)
+            {
+                $server_geolocation = Util::getIPGeolocation($ip);
+            }
+            else
+            {
+                // Get from HTTP client IP instead (stk addons currently only has IPv4 address,
+                // and IPv6 only client will connect through NAT64 which Util::getClientIp()
+                // will give IPv4 address of client), this can happen for IPv6 only server which ip is zero
+                $server_geolocation = Util::getIPGeolocationFromString(Util::getClientIp());
+            }
             $result = DBConnection::get()->query(
                 "INSERT INTO `{DB_VERSION}_servers` (host_id, name,
                 last_poll_time, ip, ipv6, port, private_port, max_players,
