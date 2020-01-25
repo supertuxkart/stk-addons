@@ -115,12 +115,13 @@ try
                 $token = isset($_POST['token']) ? utf8_encode($_POST['token']) : null;
                 $server_id = isset($_POST['server-id']) ? (int)utf8_encode($_POST['server-id']) : 0;
                 $address = isset($_POST['address']) ? utf8_encode($_POST['address']) : 0;
+                $ipv6 = isset($_POST['address-ipv6']) ? $_POST['address-ipv6'] : "";
                 $port = isset($_POST['port']) ? (int)utf8_encode($_POST['port']) : 0;
                 $aes_key = isset($_POST['aes-key']) ? utf8_encode($_POST['aes-key']) : null;
                 $aes_iv = isset($_POST['aes-iv']) ? utf8_encode($_POST['aes-iv']) : null;
 
                 ClientSession::get($token, $userid)
-                    ->setJoinServerKey($server_id, $address, $port, $aes_key, $aes_iv);
+                    ->setJoinServerKey($server_id, $address, $ipv6, $port, $aes_key, $aes_iv);
 
                 $output->startElement('join-server-key');
                     $output->writeAttribute('success', 'yes');
@@ -158,6 +159,7 @@ try
                                 $output->writeAttribute("id", $request['user_id']);
                                 $output->writeAttribute("username", $request['username']);
                                 $output->writeAttribute("ip", $request['ip']);
+                                $output->writeAttribute("ipv6", $request['ipv6']);
                                 $output->writeAttribute("port", $request['port']);
                                 $output->writeAttribute("aes-key", $request['aes_key']);
                                 $output->writeAttribute("aes-iv", $request['aes_iv']);

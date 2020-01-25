@@ -351,6 +351,7 @@ CREATE TABLE IF NOT EXISTS `v3_server_conn` (
     `user_id`    INT UNSIGNED      NOT NULL,
     `server_id`  INT UNSIGNED      NOT NULL,
     `ip`         INT UNSIGNED      NOT NULL,
+    `ipv6`       VARCHAR(45)       NOT NULL DEFAULT '',
     `port`       SMALLINT UNSIGNED NOT NULL,
     `aes_key`    CHAR(24)          NOT NULL,
     `aes_iv`     CHAR(24)          NOT NULL,

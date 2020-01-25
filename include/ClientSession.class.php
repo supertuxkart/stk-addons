@@ -227,29 +227,31 @@ class ClientSession
      * Set the key to join server with client ip and port
      *
      * @param int $server_id id of the server
-     * @param int $address ip of client
+     * @param int $address IPv4 of client
+     * @param string $ipv6 IPv6 of client
      * @param int $port port of client
      * @param string $aes_key aes 128 bit key of client in base64
      * @param string $aes_iv initialization vector of the aes key in base64
      *
      * @throws ClientSessionException if setting join key fails
      */
-    public function setJoinServerKey(int $server_id, $address, int $port, string $aes_key, string $aes_iv)
+    public function setJoinServerKey(int $server_id, $address, $ipv6, int $port, string $aes_key, string $aes_iv)
     {
         try
         {
             Server::cleanOldServers();
             DBConnection::get()->query(
                 "INSERT INTO `{DB_VERSION}_server_conn`
-                (`user_id`, `server_id`, `ip`, `port`, `aes_key`, `aes_iv`, `connected_since`) VALUES
-                (:user_id, :server_id, :ip, :port, :aes_key, :aes_iv, :connected_since)
-                ON DUPLICATE KEY UPDATE `server_id` = :server_id, `ip` = :ip, `port`= :port,
+                (`user_id`, `server_id`, `ip`, `ipv6`, `port`, `aes_key`, `aes_iv`, `connected_since`) VALUES
+                (:user_id, :server_id, :ip, :ipv6, :port, :aes_key, :aes_iv, :connected_since)
+                ON DUPLICATE KEY UPDATE `server_id` = :server_id, `ip` = :ip, `ipv6` = :ipv6, `port`= :port,
                 `aes_key` = :aes_key, `aes_iv` = :aes_iv, `connected_since` = :connected_since",
                 DBConnection::NOTHING,
                 [
                     ':user_id'         => $this->user->getId(),
                     ':server_id'       => $server_id,
                     ':ip'              => $address,
+                    ':ipv6'            => $ipv6,
                     ':port'            => $port,
                     ':aes_key'         => $aes_key,
                     ':aes_iv'          => $aes_iv,
@@ -259,6 +261,7 @@ class ClientSession
                     ':user_id'         => DBConnection::PARAM_INT,
                     ':server_id'       => DBConnection::PARAM_INT,
                     ':ip'              => DBConnection::PARAM_INT,
+                    ':aes_key'         => DBConnection::PARAM_STR,
                     ':port'            => DBConnection::PARAM_INT,
                     ':aes_key'         => DBConnection::PARAM_STR,
                     ':aes_iv'          => DBConnection::PARAM_STR,
@@ -349,7 +352,7 @@ class ClientSession
             // Get all connection requests 45 seconds before
             $timeout = time() - 45;
             $connection_requests = DBConnection::get()->query(
-                "SELECT `user_id`, `server_id`, `ip`, `port`, `aes_key`, `aes_iv`, `username`, `country_code`
+                "SELECT `user_id`, `server_id`, `ip`, `ipv6`, `port`, `aes_key`, `aes_iv`, `username`, `country_code`
                 FROM `{DB_VERSION}_server_conn`
                 INNER JOIN `{DB_VERSION}_users`
                 ON `{DB_VERSION}_server_conn`.user_id = `{DB_VERSION}_users`.id
