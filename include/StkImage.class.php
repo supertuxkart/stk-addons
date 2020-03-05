@@ -489,15 +489,18 @@ class StkImage
 
             if (isset($val['attributes']))
             {
+                $visible = True;
                 if (isset($val['attributes']['INVISIBLE']) && $val['attributes']['INVISIBLE'] === 'yes')
                 {
-                    continue;
+                    $visible = False;
                 }
-                if (isset($val['attributes']['DIRECTION']))
+                if (!isset($val['attributes']['P0']) || !isset($val['attributes']['P1']) ||
+                    !isset($val['attributes']['P2']) || !isset($val['attributes']['P3']))
                 {
-                    unset($val['attributes']['DIRECTION']);
+                    throw new FileSystemException('Invalid quad.');
                 }
-                $quads[] = array_values($val['attributes']);
+                $quads[] = array($val['attributes']['P0'], $val['attributes']['P1'],
+                    $val['attributes']['P2'], $val['attributes']['P3'], $visible);
             }
         }
         $quads_count = count($quads);
@@ -523,6 +526,9 @@ class StkImage
         $z_max = null;
         for ($i = 0; $i < $quads_count; $i++)
         {
+            // Skip invisible quad
+            if (!$quads[$i][4])
+                continue;
             for ($j = 0; $j <= 3; $j++)
             {
                 $quads[$i][$j] = explode(' ', $quads[$i][$j]);
@@ -569,6 +575,9 @@ class StkImage
         $z_range = $z_max - $z_min + 1;
         for ($i = 0; $i < $quads_count; $i++)
         {
+            // Skip invisible quad
+            if (!$quads[$i][4])
+                continue;
             for ($j = 0; $j <= 3; $j++)
             {
                 $y = $quads[$i][$j][1] - $y_min;
@@ -597,6 +606,9 @@ class StkImage
         // Paint quads
         for ($i = 0; $i < $quads_count; $i++)
         {
+            // Skip invisible quad
+            if (!$quads[$i][4])
+                continue;
             $color_index = (int)(($quads[$i][0][1] + $quads[$i][1][1] + $quads[$i][2][1] + $quads[$i][3][1]) / 4);
             imagefilledpolygon(
                 $image, // image
