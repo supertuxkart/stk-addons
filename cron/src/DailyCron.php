@@ -24,5 +24,16 @@ final class DailyCron
         {
             echo "ERROR: Verification::cron \n" . $e->getMessage();
         }
+
+        try
+        {
+            Ranking::cron();
+            echo "SUCCESS: Ranking::cron \n";
+        }
+        catch (RankingException $e)
+        {
+            echo "ERROR: RankingException::cron \n" . $e->getMessage();
+        }
+
     }
 }

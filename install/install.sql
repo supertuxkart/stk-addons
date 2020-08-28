@@ -749,10 +749,13 @@ CREATE TABLE IF NOT EXISTS `v3_ipv4_mapping` (
 -- Table structure for player ranking scores `v3_rankings`
 --
 CREATE TABLE IF NOT EXISTS `v3_rankings` (
-    `user_id`        INT UNSIGNED NOT NULL,
-    `scores`         DOUBLE NOT NULL,
-    `max_scores`     DOUBLE NOT NULL,
-    `num_races_done` INT UNSIGNED NOT NULL,
+    `user_id`          INT UNSIGNED NOT NULL,
+    `scores`           DOUBLE NOT NULL,
+    `max_scores`       DOUBLE NOT NULL,
+    `num_races_done`   INT UNSIGNED NOT NULL,
+    `raw_scores`       DOUBLE NOT NULL,
+    `rating_deviation` DOUBLE NOT NULL,
+    `disconnects`      BIGINT UNSIGNED NOT NULL,
     PRIMARY KEY (`user_id`),
     KEY `scores` (`scores`),
     CONSTRAINT `v3_rankings_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `v3_users` (`id`)

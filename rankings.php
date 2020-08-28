@@ -25,6 +25,8 @@ $tpl = StkTemplate::get('rankings.tpl')
 
 $tpl->assignTitle(_h('Player Rankings'));
 
+// disconnects is a 64bit bitflag,
+// divide it with min(num_races_done, 64) for races done < 64 to have correct value
 $query_rankings = <<<SQL
     SELECT
         IF (@score=s.scores, @rank:=@rank, @rank:=@rank+1)
@@ -32,7 +34,10 @@ $query_rankings = <<<SQL
         username `Username`,
         ROUND(@score:=s.scores,2) `Scores`,
         ROUND(max_scores, 2) `Maximum scores obtained`,
-        num_races_done `Races done`
+        num_races_done `Races done`,
+        ROUND(rating_deviation, 2) `Rating Deviation`,
+        concat(ROUND(BIT_COUNT(disconnects) /
+        CAST(LEAST(num_races_done, 64) AS DOUBLE) * 100.0 , 2), '%') `Disconnection rate`
     FROM `{DB_VERSION}_rankings` s
     INNER JOIN `{DB_VERSION}_users` ON user_id = `{DB_VERSION}_users`.id,
     (SELECT @score:=0, @rank:=0) r

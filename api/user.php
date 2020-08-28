@@ -513,6 +513,9 @@ try
                     $output->writeAttribute('scores', $ranking['scores']);
                     $output->writeAttribute('max-scores', $ranking['max_scores']);
                     $output->writeAttribute('num-races-done', $ranking['num_races_done']);
+                    $output->writeAttribute('raw-scores', $ranking['raw_scores']);
+                    $output->writeAttribute('rating-deviation', $ranking['rating_deviation']);
+                    $output->writeAttribute('disconnects', $ranking['disconnects']);
                     $output->writeAttribute('rank', $ranking['rank']);
                 $output->endElement();
             }
@@ -552,6 +555,9 @@ try
                                     $output->writeAttribute('scores', $player['scores']);
                                     $output->writeAttribute('max-scores', $player['max_scores']);
                                     $output->writeAttribute('num-races-done', $player['num_races_done']);
+                                    $output->writeAttribute('raw-scores', $player['raw_scores']);
+                                    $output->writeAttribute('rating-deviation', $player['rating_deviation']);
+                                    $output->writeAttribute('disconnects', $player['disconnects']);
                                     $output->writeAttribute('rank', $player['rank']);
                                 $output->endElement();
                             }
@@ -584,7 +590,10 @@ try
                 $new_scores = isset($_POST['scores']) ? $_POST['scores'] : null;
                 $new_max_scores = isset($_POST['max-scores']) ? $_POST['max-scores'] : null;
                 $new_num_races_done = isset($_POST['num-races-done']) ? (int)$_POST['num-races-done'] : null;
-                Ranking::submitRanking($permission, $id_for_ranked, $new_scores, $new_max_scores, $new_num_races_done);
+                $new_raw_scores = isset($_POST['raw-scores']) ? $_POST['raw-scores'] : null;
+                $new_rating_deviation = isset($_POST['rating-deviation']) ? $_POST['rating-deviation'] : null;
+                $new_disconnects = isset($_POST['disconnects']) ? $_POST['disconnects'] : null;
+                Ranking::submitRanking($permission, $id_for_ranked, $new_scores, $new_max_scores, $new_num_races_done, $new_raw_scores, $new_rating_deviation, $new_disconnects);
 
                 $output->startElement('submit-ranking');
                     $output->writeAttribute('success', 'yes');

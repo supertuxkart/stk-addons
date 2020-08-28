@@ -39,7 +39,10 @@ class Ranking
                     user_id,
                     username,
                     @score:=s.scores scores, max_scores,
-                    num_races_done
+                    num_races_done,
+                    raw_scores,
+                    rating_deviation,
+                    disconnects
                 FROM `{DB_VERSION}_rankings` s
                 INNER JOIN `{DB_VERSION}_users` ON user_id = `{DB_VERSION}_users`.id,
                 (SELECT @score:=0, @rank:=0) r
@@ -70,9 +73,12 @@ class Ranking
         return
             [
                 'rank' => -1,
-                'scores' => 2000.0,
-                'max_scores' => 2000.0,
-                'num_races_done' => 0
+                'scores' => 1300.0,
+                'max_scores' => 1300.0,
+                'num_races_done' => 0,
+                'raw_scores' => 4000.0,
+                'rating_deviation' => 1000.0,
+                'disconnects' => 0
             ];
     }
 
@@ -93,6 +99,9 @@ class Ranking
                     a.scores,
                     a.max_scores,
                     a.num_races_done,
+                    a.raw_scores,
+                    a.rating_deviation,
+                    a.disconnects,
                     (SELECT
                         COUNT(DISTINCT scores)
                     FROM `{DB_VERSION}_rankings` b
@@ -146,6 +155,9 @@ class Ranking
      * @param double $new_scores
      * @param double $new_max_scores
      * @param int $new_num_races_done
+     * @param double $new_raw_scores
+     * @param double $new_rating_deviation
+     * @param $new_disconnects
      *
      * @throws RankingException
      */
@@ -154,7 +166,10 @@ class Ranking
         $id_for_ranked,
         $new_scores,
         $new_max_scores,
-        $new_num_races_done
+        $new_num_races_done,
+        $new_raw_scores,
+        $new_rating_deviation,
+        $new_disconnects
     ) {
         if (!in_array(AccessControl::PERM_SUMBIT_RANKINGS, $user_permissions))
         {
@@ -164,27 +179,59 @@ class Ranking
         {
             DBConnection::get()->query(
                 "INSERT INTO `{DB_VERSION}_rankings` (user_id, scores,
-                max_scores, num_races_done) VALUES (:user_id, :scores, :max_scores, :num_races_done)
+                max_scores, num_races_done, raw_scores, rating_deviation, disconnects)
+                VALUES (:user_id, :scores, :max_scores, :num_races_done, :raw_scores, :rating_deviation, :disconnects)
                 ON DUPLICATE KEY UPDATE `scores` = :scores,
-                `max_scores` = :max_scores, `num_races_done`= :num_races_done",
+                `max_scores` = :max_scores, `num_races_done`= :num_races_done,
+                `raw_scores` = :raw_scores, `rating_deviation` = :rating_deviation, `disconnects`= :disconnects",
                 DBConnection::NOTHING,
                 [
                     ':user_id' => $id_for_ranked,
                     ':scores' => $new_scores,
                     ':max_scores' => $new_max_scores,
-                    ':num_races_done' => $new_num_races_done
+                    ':num_races_done' => $new_num_races_done,
+                    ':raw_scores' => $new_raw_scores,
+                    ':rating_deviation' => $new_rating_deviation,
+                    ':disconnects' => $new_disconnects,
                 ],
                 [
                     ':user_id' => DBConnection::PARAM_INT,
                     ':scores' => DBConnection::PARAM_STR,
                     ':max_scores' => DBConnection::PARAM_STR,
-                    ':num_races_done' => DBConnection::PARAM_INT
+                    ':num_races_done' => DBConnection::PARAM_INT,
+                    ':raw_scores' => DBConnection::PARAM_STR,
+                    ':rating_deviation' => DBConnection::PARAM_STR,
+                    ':disconnects' => DBConnection::PARAM_STR, // Do not use PARAM_INT for 64bit unsigned integer
                 ]
             );
         }
         catch (DBException $e)
         {
             throw new RankingException(exception_message_db(_('sumbit ranking')));
+        }
+    }
+
+    /**
+     * Increase rating deviation of all records daily.
+     * Accounts playing ranked rarely will have a rising rating uncertainty
+     * Reduce the score accordingly to keep the scores in sync with raw scores and rating deviation
+     * (300 is 3 times the minimum rating deviation, we can't fetch the C++ code constant here).
+     * The formula increases a rating deviation of 100 to 400 in 500 days and from 400 to 1000 in 500 more days.
+     *
+     * @throws RankingException
+     */
+    public static function cron()
+    {
+        try
+        {
+            DBConnection::get()->query(
+                "UPDATE `{DB_VERSION}_rankings`
+                SET rating_deviation = LEAST(1000.0, (rating_deviation + 0.277) * 1.001388),
+                scores = raw_scores - 3.0 * rating_deviation + 300.0");
+        }
+        catch (DBException $e)
+        {
+            throw new RankingException(exception_message_db('cron'));
         }
     }
 }
