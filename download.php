@@ -33,7 +33,9 @@ $assets_path = filter_var($file, FILTER_SANITIZE_URL);
 // Check user-agent
 $user_agent = $_SERVER['HTTP_USER_AGENT'];
 $matches = [];
-if (preg_match('#^(SuperTuxKart/[a-z0-9\\.\\-_]+)( \\(.*\\))?$#', $user_agent, $matches))
+$uri = $_SERVER['REQUEST_URI'];
+if (Util::str_contains($uri, 'news.xml') &&
+    preg_match('#^(SuperTuxKart/[a-z0-9\\.\\-_]+)( \\(.*\\))?$#', $user_agent, $matches))
 {
     try
     {
