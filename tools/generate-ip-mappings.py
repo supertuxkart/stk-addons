@@ -38,7 +38,7 @@ with open(CSV_FILE, 'r') as csvfile, open('ipv4.csv', 'w') as ipv4, open('ipv6.c
         if row[3] == "ZZ":
             continue
         # Skip empty latitude and longitude
-        if row[6] is "" or row[7] is "":
+        if row[6] == "" or row[7] == "":
             continue
 
         if row[0].find(':') == -1:
