@@ -74,7 +74,7 @@
        the United States, we only require an email with an accompanying digital
        signature from a parent/legal guardian to either grant or deny us permission to
        collect this personal information. This can be sent to
-       <code>stkaddons@tuxfamily.org</code>.
+       <code>supertuxkart.official@gmail.com</code>.
     </p>
 
     <h2>Cookies</h2>
@@ -125,12 +125,12 @@
     <p>
         If you have any questions or concerns about the content of this document,
        feel free to contact the website administrators by email at
-       <code>stkaddons@tuxfamily.org</code>> with any inquiries that you may have.
+       <code>supertuxkart.official@gmail.com</code>> with any inquiries that you may have.
     </p>
 
     <p>Administrators:</p>
     <ul>
-        <li>Stephen Just &lt;stephenjust@users.sf.net&gt;</li>
+        <li>SuperTuxKart Team &lt;supertuxkart.official@gmail.com&gt;</li>
     </ul>
 </div>
 {include file=$tpl_config.footer}
