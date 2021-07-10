@@ -115,31 +115,38 @@
                         <textarea rows="20" cols="70" readonly id="reg_terms">
 === {t}STK Addons Terms and Conditions{/t} ===
 
-{t}You must agree to these terms in order to upload content to the STK Addons site.{/t}
+{t}You must agree to these terms in order to create an account on the STK Addons site.{/t}
 
-{t}The STK Addons service is designed to be a repository exclusively for SuperTux Kart addon content. All uploaded content must be intended for this purpose. When you upload your content, it will be available publicly on the internet, and will be made available in-game for download.{/t}
+{t}The STK Addons service is designed to be a repository exclusively for SuperTuxKart addon content. All uploaded content must be intended for this purpose. When you upload your content, it will be available publicly on the internet, and will be made available in-game for download.{/t}
 
-{t}Super Tux Kart aims to comply with the Debian Free Software Guidelines (DFSG). TuxFamily.org also requires that content they host comply with open licenses. You may not upload content which is locked down with a restrictive license. Licenses such as CC-BY-SA 3.0, or other DFSG-compliant licenses are required. All content taken from third-party sources must be attributed properly, and must also be available under an open license. Licenses and attribution should be included in a "license.txt" file in each uploaded archive. Uploads without proper licenses or attribution may be deleted without warning.{/t}
+{t}SuperTuxKart aims to comply with the Debian Free Software Guidelines (DFSG). TuxFamily.org also requires that content they host comply with open licenses. You may not upload content which is locked down with a restrictive license. Licenses such as CC-BY-SA 3.0, or other DFSG-compliant licenses are required. All content taken from third-party sources must be attributed properly, and must also be available under an open license. Licenses and attribution should be included in a "license.txt" file in each uploaded archive. Uploads without proper licenses or attribution may be deleted without warning.{/t}
 
-{t}Even with valid licenses and attribution, content may not contain any of the following:{/t}
-1. {t}Profanity{/t}
-2. {t}Explicit images{/t}
-3. {t}Hateful messages and/or images{/t}
-4. {t}Any other content that may be unsuitable for children{/t}
-{t}If any of your uploads are found to contain any of the above, your upload will be removed, your account may be removed, and any other content you uploaded may be removed.{/t}
+{t}Even with valid licenses and attribution, neither addon content, nor usernames, nor any other content, shall contain any of the following:{/t}
 
-{t}By checking the box below, you are confirming that you understand these terms. If you have any questions or comments regarding these terms, one of the members of the development team would gladly assist you.{/t}
+{t} - Profanity{/t}
+
+{t}- Explicit content{/t}
+
+{t} - Hateful messages and/or content{/t}
+
+{t} - Any other content that may be considered unsuitable for children{/t}
+
+{t}If any of your content is found to violate these terms, any of your uploads, and/or your account, may be removed at any time.{/t}
+
+{t}Moderators hold the right to change, add, or remove any content at any time, with or without notice. These conditions may change at any time, with or without notice. In the event of a change of these terms, continuing to use your account indicates your acceptance of the new/revised terms.
+
+{t}By checking the box below, you are confirming that you understand these terms. If you have any questions or comments regarding these terms, please reach out to one of the members of the development team.{/t}
                         </textarea>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        <label for="reg_check">{t}I agree to the above terms{/t}</label>
+                        <label for="reg_check">{t}I agree to the above terms and conditions.{/t}</label>
                     </div>
                     <div class="col-md-7">
                         <input type="checkbox" class="input-lg" name="terms" id="reg_check"
                                data-bv-notempty="true"
-                               data-bv-notempty-message="{t}You must agree to the above terms{/t}">
+                               data-bv-notempty-message="{t}You must agree to the above terms and conditions to create an account{/t}">
                     </div>
                 </div>
                 <div class="form-group">
