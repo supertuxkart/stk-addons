@@ -639,6 +639,33 @@ try
             }
             break;
 
+        case 'change-email':
+            $userid = isset($_POST['userid']) ? (int)$_POST['userid'] : 0;
+            $token = isset($_POST['token']) ? $_POST['token'] : "";
+            $new_email = isset($_POST['new-email']) ? $_POST['new-email'] : "";
+
+            try
+            {
+                $session = ClientSession::get($token, $userid);
+                $session->getUser()->changeEmail($new_email);
+
+                $output->startElement('change-email');
+                    $output->writeAttribute('success', 'yes');
+                    $output->writeAttribute('info', '');
+                $output->endElement();
+            }
+            catch(Exception $e)
+            {
+                $output->startElement('change-email');
+                    $output->writeAttribute('success', 'no');
+                    $output->writeAttribute(
+                        'info',
+                        h($e->getMessage())
+                    );
+                $output->endElement();
+            }
+            break;
+
         default:
             $output->addErrorElement('request', 'Invalid action. Action = ' . h($_POST['action']));
             break;

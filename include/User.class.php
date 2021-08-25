@@ -291,6 +291,66 @@ final class User extends Base implements IAsXML
     }
 
     /**
+     * Change the email of an existing user
+     *
+     * @param string $new_email Must be unique
+     *
+     * @throws UserException
+     */
+    public function changeEmail($new_email)
+    {
+        // validate
+        static::validateEmail($new_email);
+
+        $db = DBConnection::get();
+        $db->beginTransaction();
+        // Make sure the email address is unique
+        try
+        {
+            $result = $db->query(
+                "SELECT `email`
+                FROM `{DB_VERSION}_users`
+                WHERE `email` LIKE :new_email",
+                DBConnection::FETCH_FIRST,
+                [':new_email' => $new_email]
+            );
+        }
+        catch (DBException $e)
+        {
+            throw new UserException(
+                exception_message_db(_('validate your email address')),
+                ErrorType::VALIDATE_EMAIL_NOT_EXISTS
+            );
+        }
+        if ($result)
+        {
+            throw new UserException(_h('This email address is already taken.'), ErrorType::VALIDATE_EMAIL_TAKEN);
+        }
+
+        // No exception occurred - continue with changing email
+        try
+        {
+            DBConnection::get()->update(
+                "users",
+                "`id` = :id",
+                [
+                    ":id"    => $this->getID(),
+                    ":email" => $new_email,
+                ],
+                [
+                    ":id"    => DBConnection::PARAM_INT,
+                    ":email" => DBConnection::PARAM_STR
+                ]
+            );
+            $db->commit();
+        }
+        catch (DBException $e)
+        {
+            throw new UserException(exception_message_db(_('change your email')), ErrorType::USER_DB_EXCEPTION);
+        }
+    }
+
+    /**
      * @return UserException
      */
     public static function getException()
