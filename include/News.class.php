@@ -71,7 +71,7 @@ class News
             [
                 "new"     => News::getLatestBlogPost(),
                 "exists"  => false,
-                "message" => "Latest post on blog.supertuxkart.net: "
+                "message" => "Latest post on https://blog.supertuxkart.net: "
             ],
         ];
 
@@ -81,10 +81,10 @@ class News
             foreach ($dynamic_news as $key => $value)
             {
                 $news = $dynamic_news[$key];
-                $pattern = sprintf("/^%s(.*)$/i", $news["message"]);
-                if (preg_match($pattern, $entry["content"], $matches))
+                if (Util::str_starts_with($entry["content"], $news["message"]))
                 {
-                    if ($matches[1] !== $news["new"])
+                    $cur_news = mb_substr($entry["content"], mb_strlen($news["message"]));
+                    if ($cur_news !== $news["new"])
                     {
                         // pattern matches but our value differs, so delete it, and create it below
                         static::delete($entry["id"]);
