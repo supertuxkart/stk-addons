@@ -14,11 +14,11 @@
   version "0.0.0"
   resolved "https://codeload.github.com/CWSpear/twitter-bootstrap-hover-dropdown/tar.gz/ace10bf06c3a81447625faa4937733d2ff12163c"
 
-"@bower_components/bootstrap-multiselect@davidstutz/bootstrap-multiselect#~0.9":
-  version "0.9.15"
-  resolved "https://codeload.github.com/davidstutz/bootstrap-multiselect/tar.gz/4749da211e6d39644ef164cd709cfeae5ccba579"
+"@bower_components/bootstrap-multiselect@Benau/bootstrap-multiselect#~0.9":
+  version "0.9.17"
+  resolved "https://codeload.github.com/Benau/bootstrap-multiselect/tar.gz/a3dfaa27d883f97088076caba5014afd72f407ca"
   dependencies:
-    jquery "~2.1.3"
+    jquery "~3.5"
 
 "@bower_components/bootstrap-select@snapappointments/bootstrap-select#~1.6":
   version "1.6.5"
@@ -342,13 +342,10 @@ inherits@2:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/inherits/-/inherits-2.0.3.tgz#633c2c83e3da42a502f52466022480f4208261de"
 
-jquery@>=1.7, jquery@>=1.8:
-  version "3.3.1"
-  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.3.1.tgz#958ce29e81c9790f31be7792df5d4d95fc57fbca"
-
-jquery@~2.1.3:
-  version "2.1.4"
-  resolved "https://registry.yarnpkg.com/jquery/-/jquery-2.1.4.tgz#228bde698a0c61431dc2630a6a154f15890d2317"
+"jquery@>= 3.5.0", jquery@>=1.7, jquery@>=1.8:
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.6.0.tgz#c72a09f15c1bdce142f49dbf1170bdf8adac2470"
+  integrity sha512-JVzAR/AjBvVt2BmYhxRCSYysDsPcssdmTFnzyLEts9qNwmjmu4JTAMYubEfwVOSwpQ1I1sKKFcxhZCI2buerfw==
 
 jshint@0.9.x:
   version "0.9.1"
