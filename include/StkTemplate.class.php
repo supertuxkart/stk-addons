@@ -148,7 +148,7 @@ class StkTemplate extends Template
             ['src' => LIBS_LOCATION . "bootstrap/dist/js/bootstrap.min.js"],
             ['src' => LIBS_LOCATION . "history.js/scripts/bundled/html4+html5/jquery.history.js"],
             ['src' => LIBS_LOCATION . "bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js"],
-            ['src' => LIBS_LOCATION . "bootstrap.growl/bootstrap-growl.min.js"],
+            ['src' => LIBS_LOCATION . "bootstrap.notify/bootstrap-notify.min.js"],
             ['src' => LIBS_LOCATION . "bootbox/bootbox.js"],
             ['src' => JS_LOCATION . 'main.js']
         );

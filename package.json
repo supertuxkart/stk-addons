@@ -6,7 +6,7 @@
     "@bower_components/bootstrap-hover-dropdown": "CWSpear/twitter-bootstrap-hover-dropdown#~2.0",
     "@bower_components/bootstrap-multiselect": "davidstutz/bootstrap-multiselect#~0.9",
     "@bower_components/bootstrap-select": "snapappointments/bootstrap-select#~1.6",
-    "@bower_components/bootstrap.growl": "mouse0270/bootstrap-growl#~1.0",
+    "@bower_components/bootstrap.notify": "mouse0270/bootstrap-notify#~3.1",
     "@bower_components/bootstrap3-wysihtml5-bower": "Waxolunist/bootstrap3-wysihtml5-bower#~0.3",
     "@bower_components/bootstrapValidator": "nghuuphuoc/bootstrapvalidator#~0.5",
     "@bower_components/components-font-awesome": "components/font-awesome#~4.1.0",

@@ -261,16 +261,17 @@ function parseJSON(raw_string_or_object) {
  * @param {string} message the message to the user
  */
 function growlError(message) {
-    $.growl({
-        title   : "Error",
-        icon    : "glyphicon glyphicon-warning-sign",
-        position: {
+    $.notify({
+        icon     : "glyphicon glyphicon-warning-sign",
+        title    : "Error",
+        message  : message
+    },{
+        placement: {
             from : "top",
             align: "center"
         },
-        z_index : 9999,
-        type    : "danger",
-        message : message
+        z_index  : 9999,
+        type     : "danger"
     });
 }
 
@@ -280,16 +281,17 @@ function growlError(message) {
  * @param {string} message the message to the user
  */
 function growlSuccess(message) {
-    $.growl({
-        title   : "Success",
-        icon    : "glyphicon glyphicon-ok-sign",
-        position: {
+    $.notify({
+        icon     : "glyphicon glyphicon-ok-sign",
+        title    : "Success",
+        message  : message
+    },{
+        placement: {
             from : "top",
             align: "center"
         },
-        z_index : 9999,
-        type    : "success",
-        message : message
+        z_index  : 9999,
+        type     : "success"
     });
 }
 
