@@ -21,6 +21,7 @@
 /**
  * Class StkMail
  */
+use PHPMailer\PHPMailer\PHPMailer;
 class StkMail
 {
     /**
@@ -50,7 +51,7 @@ class StkMail
                 throw new StkMailException($this->mail->ErrorInfo);
             }
         }
-        catch (phpmailerException $e)
+        catch (PHPMailer\PHPMailer\Exception $e)
         {
             throw new StkMailException($e->getMessage());
         }
@@ -73,7 +74,7 @@ class StkMail
                 throw new StkMailException(sprintf("Address '%s' is already used.", h($address)));
             }
         }
-        catch (phpmailerException $e)
+        catch (PHPMailer\PHPMailer\Exception $e)
         {
             throw new StkMailException($e->getMessage());
         }
@@ -157,7 +158,7 @@ EMAIL;
 
             $this->mail->setFrom($admin_email, "STK-Addons Administrator");
         }
-        catch (phpmailerException $e)
+        catch (PHPMailer\PHPMailer\Exception $e)
         {
             throw new StkMailException($e->getMessage());
         }
