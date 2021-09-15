@@ -65,7 +65,7 @@
 
     // left panel user clicked
     $user_main.on("click", 'a.user-list', function() {
-        History.pushState(null, '', this.href);
+        history.pushState(null, '', this.href);
         var user = getUrlVars(this.href)['user'];
         loadContent($user_body, ROOT_LOCATION + 'users-panel.php', {user: user});
 

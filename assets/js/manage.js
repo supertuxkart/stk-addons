@@ -44,7 +44,7 @@
 
     // left panel item clicked
     $('a.manage-list').click(function() {
-        History.pushState(null, '', this.href);
+        history.pushState(null, '', this.href);
 
         loadManageMainContent(this.href);
 

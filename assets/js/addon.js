@@ -92,7 +92,7 @@
 
     // left panel user addon clicked
     $addon_menu.on("click", "a.addon-list", function() {
-        History.pushState(null, '', this.href);
+        history.pushState(null, '', this.href);
         var $this = $(this),
             addon_id = $this.data("id");
 

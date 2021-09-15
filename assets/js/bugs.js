@@ -103,21 +103,21 @@
 
     var NavigateTo = {
         index: function() {
-            History.back();
+            history.back();
             loadContent($bugs_body, BUGS_LOCATION + 'all.php', {}, function() {
                 btnToggle();
                 onPageIndex();
             });
         },
         add  : function() {
-            History.pushState({state: "add"}, '', "?add");
+            history.pushState({state: "add"}, '', "?add");
             loadContent($bugs_body, BUGS_LOCATION + 'add.php', {}, function() {
                 btnToggle();
                 onPageAdd();
             });
         },
         view : function(bug_id) {
-            History.pushState({state: "view"}, '', "?bug_id=" + bug_id);
+            history.pushState({state: "view"}, '', "?bug_id=" + bug_id);
             loadContent($bugs_body, BUGS_LOCATION + 'view.php', {bug_id: bug_id}, function() {
                 btnToggle();
                 onPageView();
@@ -142,7 +142,7 @@
 
     // search clicked
     onFormSubmit("#bug-search-form", function(data) {
-        History.pushState({state: "search"}, '', "?search");
+        history.pushState({state: "search"}, '', "?search");
 
         jsonCallback(data, function(jData) {
             // update view
@@ -300,13 +300,6 @@
         NavigateTo.view($(this).parent().data("id"));
 
         return false;
-    });
-
-    // Bind to StateChange Event
-    // TODO fix browser back button
-    History.Adapter.bind(window, 'statechange', function() {
-        var state = History.getState();
-        console.log(state);
     });
 
     onPageAdd();
