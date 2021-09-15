@@ -20,7 +20,7 @@
     "@bower_components/typeahead.js": "twitter/typeahead.js#~0.10",
     "@bower_components/underscore": "jashkenas/underscore#~1.7",
     "@bower_components/wysihtml5x": "Edicy/wysihtml5#0.4.13",
-    "yarn-upgrade-all": "^0.5.0"
+    "yarn-upgrade-all": "^0.5.4"
   },
   "private": true,
   "engines": {
