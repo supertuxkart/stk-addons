@@ -115,6 +115,12 @@
                 "throwable",
                 "whoops"
             ],
+            "funding": [
+                {
+                    "url": "https://github.com/denis-sokolov",
+                    "type": "github"
+                }
+            ],
             "time": "2021-08-29T12:00:00+00:00"
         },
         {
@@ -315,6 +321,16 @@
             "keywords": [
                 "enum"
             ],
+            "funding": [
+                {
+                    "url": "https://github.com/mnapoli",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/myclabs/php-enum",
+                    "type": "tidelift"
+                }
+            ],
             "time": "2020-11-14T18:14:52+00:00"
         },
         {
@@ -426,6 +442,16 @@
             "keywords": [
                 "archive",
                 "tar"
+            ],
+            "funding": [
+                {
+                    "url": "https://github.com/mrook",
+                    "type": "github"
+                },
+                {
+                    "url": "https://www.patreon.com/michielrook",
+                    "type": "patreon"
+                }
             ],
             "time": "2021-07-20T13:53:39+00:00"
         },
@@ -641,6 +667,12 @@
                 }
             ],
             "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
+            "funding": [
+                {
+                    "url": "https://github.com/Synchro",
+                    "type": "github"
+                }
+            ],
             "time": "2021-08-18T09:14:16+00:00"
         },
         {
@@ -747,16 +779,16 @@
         },
         {
             "name": "smarty/smarty",
-            "version": "v3.1.39",
+            "version": "v3.1.43",
             "source": {
                 "type": "git",
                 "url": "https://github.com/smarty-php/smarty.git",
-                "reference": "e27da524f7bcd7361e3ea5cdfa99c4378a7b5419"
+                "reference": "273f7e00fec034f6d61112552e9caf08d19565b7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/smarty-php/smarty/zipball/e27da524f7bcd7361e3ea5cdfa99c4378a7b5419",
-                "reference": "e27da524f7bcd7361e3ea5cdfa99c4378a7b5419",
+                "url": "https://api.github.com/repos/smarty-php/smarty/zipball/273f7e00fec034f6d61112552e9caf08d19565b7",
+                "reference": "273f7e00fec034f6d61112552e9caf08d19565b7",
                 "shasum": ""
             },
             "require": {
@@ -800,7 +832,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2021-02-17T21:57:51+00:00"
+            "time": "2022-01-10T09:52:40+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -862,6 +894,20 @@
                 "polyfill",
                 "portable"
             ],
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
             "time": "2021-02-19T12:13:01+00:00"
         },
         {
@@ -910,6 +956,12 @@
                 "valid",
                 "validation",
                 "validator"
+            ],
+            "funding": [
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/vlucas/valitron",
+                    "type": "tidelift"
+                }
             ],
             "time": "2021-07-08T16:18:03+00:00"
         },
@@ -3626,7 +3678,6 @@
                     "type": "github"
                 }
             ],
-            "abandoned": true,
             "time": "2020-11-30T07:30:19+00:00"
         },
         {
