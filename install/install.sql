@@ -326,6 +326,7 @@ CREATE TABLE IF NOT EXISTS `v3_servers` (
     `difficulty`      TINYINT UNSIGNED  NOT NULL DEFAULT '0',
     `game_mode`       TINYINT UNSIGNED  NOT NULL DEFAULT '0',
     `current_players` TINYINT UNSIGNED  NOT NULL DEFAULT '0',
+    `current_ai`      TINYINT UNSIGNED  NOT NULL DEFAULT '0',
     `password`        TINYINT UNSIGNED  NOT NULL DEFAULT '0',
     `version`         INT UNSIGNED      NOT NULL DEFAULT '1',
     `game_started`    TINYINT UNSIGNED  NOT NULL DEFAULT '0',

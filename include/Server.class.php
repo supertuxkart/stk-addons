@@ -90,6 +90,11 @@ class Server implements IAsXML
     /**
      * @var int
      */
+    private $current_ai;
+
+    /**
+     * @var int
+     */
     private $password;
 
     /**
@@ -151,6 +156,7 @@ class Server implements IAsXML
         $this->difficulty = (int)$data["difficulty"];
         $this->game_mode = (int)$data["game_mode"];
         $this->current_players = (int)$data["current_players"];
+        $this->current_ai = (int)$data["current_ai"];
         $this->password = (int)$data["password"];
         $this->version = (int)$data["version"];
         $this->game_started = (int)$data["game_started"];
@@ -228,6 +234,7 @@ class Server implements IAsXML
                 $server_xml->writeAttribute("difficulty", $this->difficulty);
                 $server_xml->writeAttribute("game_mode", $this->game_mode);
                 $server_xml->writeAttribute("current_players", $this->current_players);
+                $server_xml->writeAttribute("current_ai", $this->current_ai);
                 $server_xml->writeAttribute("password", $this->password);
                 $server_xml->writeAttribute("version", $this->version);
                 $server_xml->writeAttribute("game_started", $this->game_started);
@@ -491,7 +498,8 @@ class Server implements IAsXML
                 "SELECT `{DB_VERSION}_servers`.id, `{DB_VERSION}_servers`.host_id, `{DB_VERSION}_servers`.name,
                 `{DB_VERSION}_servers`.ip, `{DB_VERSION}_servers`.ipv6, `{DB_VERSION}_servers`.port, `{DB_VERSION}_servers`.private_port,
                 `{DB_VERSION}_servers`.max_players, `{DB_VERSION}_servers`.difficulty, `{DB_VERSION}_servers`.game_mode,
-                `{DB_VERSION}_servers`.current_players, `{DB_VERSION}_servers`.password, `{DB_VERSION}_servers`.version,
+                `{DB_VERSION}_servers`.current_players, `{DB_VERSION}_servers`.current_ai, `{DB_VERSION}_servers`.password,
+                `{DB_VERSION}_servers`.version,
                 `{DB_VERSION}_servers`.game_started, `{DB_VERSION}_servers`.latitude, `{DB_VERSION}_servers`.longitude,
                 `{DB_VERSION}_servers`.country_code,
                 `{DB_VERSION}_servers`.current_track, `{DB_VERSION}_server_conn`.user_id, `{DB_VERSION}_server_conn`.connected_since,
