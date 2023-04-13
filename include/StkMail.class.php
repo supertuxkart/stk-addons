@@ -268,6 +268,36 @@ EMAIL;
     }
 
     /**
+     * Send email when a new addon bug report is created/updated
+     *
+     * @param string $email
+     * @param string $addon_name
+     * @param string $notes
+     *
+     * @throws StkMailException
+     */
+    public function addonBugNotification($email, $user_id, $addon_name, $content, $comment)
+    {
+        if ($comment)
+        {
+            $subject = "New bug report for add-on '$addon_name'";
+            $message =
+                "$user_id has made a bug report concerning your add-on, '$addon_name.' The report is shown below.\n\n";
+        } else {
+            $subject = "New reply to bug report for add-on '$addon_name'";
+            $message =
+                "$user_id has commented on a bug report concerning your add-on, '$addon_name.' The reply is shown below.\n\n";
+        }
+        $message .= $content;
+
+        $this->addAddress($email);
+        $this->mail->Subject = $subject;
+        $this->mail->Body = $this->mail->AltBody = $message;
+
+        $this->send();
+    }
+
+    /**
      * Send a new mail to the moderator list mail
      *
      * @param string $subject

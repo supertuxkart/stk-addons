@@ -527,7 +527,47 @@ class Bug extends Base
             throw new BugException(exception_message_db(_("create a bug")));
         }
 
-        return DBConnection::get()->lastInsertId();
+        $ret = DBConnection::get()->lastInsertId();
+
+        // TODO maybe move refactor
+        // Get uploader email address
+        try
+        {
+            $uploader = DBConnection::get()->query(
+                'SELECT `uploader`
+                FROM `{DB_VERSION}_addons`
+                WHERE `id` = :addon_id
+                LIMIT 1',
+                DBConnection::FETCH_FIRST,
+                [':addon_id' => $addon_id],
+                [':addon_id' => DBConnection::PARAM_STR]
+            );
+            $user = DBConnection::get()->query(
+                'SELECT `username`, `email`
+                FROM `{DB_VERSION}_users`
+                WHERE `id` = :uploader_id
+                LIMIT 1',
+                DBConnection::FETCH_FIRST,
+                [':uploader_id' => $uploader['uploader']],
+                [':uploader_id' => DBConnection::PARAM_INT]
+            );
+        }
+        catch (DBException $e)
+        {
+            throw new AddonException(exception_message_db(_('find addon uploader email record')));
+        }
+
+        $content = $bug_title . "\n" . $bug_description;
+        try
+        {
+            StkMail::get()->addonBugNotification($user['email'], $user_id, $addon_id, $content, false);
+        }
+        catch (StkMailException $e)
+        {
+            throw new AddonException('Failed to send email to user. ' . $e->getMessage());
+        }
+
+        return $ret;
     }
 
     /**
@@ -569,8 +609,52 @@ class Bug extends Base
         {
             throw new BugException(exception_message_db(_("create a bug comment")));
         }
+        
+        $ret = DBConnection::get()->lastInsertId();
 
-        return DBConnection::get()->lastInsertId();
+        // TODO maybe move refactor
+        // Get uploader email address
+        try
+        {
+            $addon = DBConnection::get()->query(
+                'SELECT `uploader`
+                FROM `{DB_VERSION}_addons`
+                WHERE `id` = :addon_id
+                LIMIT 1',
+                DBConnection::FETCH_FIRST,
+                [':addon_id' => $addon_id],
+                [':addon_id' => DBConnection::PARAM_STR]
+            );
+            $user = DBConnection::get()->query(
+                'SELECT `username`, `email`
+                FROM `{DB_VERSION}_users`
+                WHERE `id` = :uploader_id
+                LIMIT 1',
+                DBConnection::FETCH_FIRST,
+                [':uploader_id' => $addon['uploader']],
+                [':uploader_id' => DBConnection::PARAM_INT]
+            );
+        }
+        catch (DBException $e)
+        {
+            throw new AddonException(exception_message_db(_('find addon uploader email record')));
+        }
+
+        // Don't send email if commenting on own addon
+        if ($user_id != $addon['uploader']) {
+
+            $content = $bug_title . "\n" . $bug_description;
+            try
+            {
+                StkMail::get()->addonBugNotification($user['email'], $user_id, $addon_id, $content, true);
+            }
+            catch (StkMailException $e)
+            {
+                throw new AddonException('Failed to send email to user. ' . $e->getMessage());
+            }
+        }
+
+        return $ret;
     }
 
     /**
