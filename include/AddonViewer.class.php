@@ -312,6 +312,10 @@ class AddonViewer
     private static function badges($status)
     {
         $string = '';
+        if (!Addon::isApproved($status))
+        {
+            $string .= '<span class="badge f_pending">' . _h('Pending Approval') . '</span>';
+        }
         if (Addon::isFeatured($status))
         {
             $string .= '<span class="badge f_featured">' . _h('Featured') . '</span>';
