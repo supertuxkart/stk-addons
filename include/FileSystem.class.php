@@ -429,7 +429,7 @@ class FileSystem
             throw new FileSystemException("Trying to get file contents of a file that does not exist, file = '$filename'");
         }
 
-        $read_data = @file_get_contents($filename, $use_include_path);
+        $read_data = mb_convert_encoding(@file_get_contents($filename, $use_include_path), 'UTF-8');
         if ($read_data === false)
         {
             throw new FileSystemException(
