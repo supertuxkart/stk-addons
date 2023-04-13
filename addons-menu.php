@@ -35,7 +35,7 @@ try
 
     $pagination = PaginationTemplate::get()
         ->setItemsPerPage($limit)
-        ->setTotalItems(Addon::count($type))
+        ->setTotalItems(count(Addon::getAll($type)))
         ->setCurrentPage($current_page);
 
     $tpl = StkTemplate::get("addons/menu.tpl")

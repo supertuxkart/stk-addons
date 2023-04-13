@@ -1726,6 +1726,14 @@ class Addon extends Base
         ];
         $db_types = [];
 
+        // if user does not have permissions to view all, add nested query to find which addons have an approved revision
+        if (!User::hasPermission(AccessControl::PERM_EDIT_ADDONS))
+        {
+            $query .= 'AND (`a`.`uploader` = :user OR `a`.`id` IN (SELECT DISTINCT `addon_id` FROM `{DB_VERSION}_addon_revisions` WHERE `status` & :approved_bit))';
+            $db_params[':user'] = User::getLoggedId();
+            $db_params[':approved_bit'] = F_APPROVED; // retrieve only addons with any revision approved
+        }
+
         // apply sorting
         switch ($sort_order)
         {
@@ -1999,30 +2007,6 @@ class Addon extends Base
         }
 
         return static::existsField("addons", "id", static::cleanId($id), DBConnection::PARAM_STR);
-    }
-
-    /**
-     * Get the total number of addons of a type
-     *
-     * @param int $type the addon type
-     *
-     * @return int
-     * @throws AddonException
-     */
-    public static function count($type)
-    {
-        Assert::true(static::isAllowedType($type));
-
-        try
-        {
-            $count = DBConnection::get()->count("addons", "`type` = :type", [":type" => $type]);
-        }
-        catch (DBException $e)
-        {
-            throw new AddonException(exception_message_db(_("count the number of addons")));
-        }
-
-        return $count;
     }
 
     /**
