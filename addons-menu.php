@@ -33,9 +33,10 @@ try
     $addons = Addon::getAll($type, $limit, $current_page, $sort, $order);
     $template_addons = Addon::filterMenuTemplate($addons, $addon_name);
 
+    $pagination_addons = Addon::filterMenuTemplate(Addon::getAll($type));
     $pagination = PaginationTemplate::get()
         ->setItemsPerPage($limit)
-        ->setTotalItems(Addon::count($type))
+        ->setTotalItems(count($pagination_addons))
         ->setCurrentPage($current_page);
 
     $tpl = StkTemplate::get("addons/menu.tpl")

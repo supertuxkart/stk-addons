@@ -2002,30 +2002,6 @@ class Addon extends Base
     }
 
     /**
-     * Get the total number of addons of a type
-     *
-     * @param int $type the addon type
-     *
-     * @return int
-     * @throws AddonException
-     */
-    public static function count($type)
-    {
-        Assert::true(static::isAllowedType($type));
-
-        try
-        {
-            $count = DBConnection::get()->count("addons", "`type` = :type", [":type" => $type]);
-        }
-        catch (DBException $e)
-        {
-            throw new AddonException(exception_message_db(_("count the number of addons")));
-        }
-
-        return $count;
-    }
-
-    /**
      * Checks if the current logged in user can modify the addon
      *
      * @throw AddonException
