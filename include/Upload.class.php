@@ -409,8 +409,17 @@ class Upload
         {
             throw new UploadException(_h("The archive does not contain any addon information"));
         }
-        $this->properties['xml_attributes']['license'] =
-            h(FileSystem::fileGetContents($this->properties['license_file'], false));
+
+        $license_text = FileSystem::fileGetContents($this->properties['license_file'], false);
+        if ($license_text == "")
+        {
+            throw new UploadException(_h("The license file is empty"));
+        }
+        if (!mb_detect_encoding($license_text, 'UTF-8', true))
+        {
+            throw new UploadException(_h("The license file was not saved with UTF-8 text encoding. Select the UTF-8 option when saving the license file"));
+        }
+        $this->properties['xml_attributes']['license'] = h($license_text);
 
         // new revision
         $addon = null;
