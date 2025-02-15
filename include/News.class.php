@@ -50,30 +50,151 @@ class News
 
         $newest_addons = Statistic::newestAddons();
 
+        // TODO cache result, maybe add to cron job
+        $feed_url = Config::get(Config::FEED_BLOG);
+        if (!$feed_url)
+        {
+            return null;
+        }
+
+        // TODO log on failure
+        $xml_content = @file_get_contents($feed_url);
+        if (!$xml_content)
+        {
+            return null;
+        }
+
+        $reader = xml_parser_create();
+        if (!xml_parse_into_struct($reader, $xml_content, $values, $index))
+        {
+            StkLog::newEvent(
+                'Failed to get feed. XML Error: ' . xml_error_string(xml_get_error_code($reader)),
+                LogLevel::ERROR
+            );
+
+            return null;
+        }
+        xml_parser_free($reader);
+
+        $start_search = -1;
+        $values_count = count($values);
+        for ($i = 0; $i < $values_count; $i++)
+        {
+            if ($values[$i]['tag'] === 'ITEM' || $values[$i]['tag'] === 'ENTRY')
+            {
+                $start_search = $i;
+                break;
+            }
+        }
+
+        $article_title = null;
+
+        if ($start_search !== -1)
+        {
+            for ($i = $start_search; $i < $values_count; $i++)
+            {
+                if ($values[$i]['tag'] === 'TITLE')
+                {
+                    $article_title = $values[$i]['value'];
+                    break;
+                }
+            }
+        }
+
         // NOTE: if we modify the message here we also have to delete IT manually from the database
         // otherwise we will have duplicates.
         $dynamic_news = [
             [
-                "new"     => $newest_addons[Addon::KART],
-                "exists"  => false,
-                "message" => "Newest add-on kart: "
+                "new"       => $newest_addons[Addon::KART],
+                "exists"    => false,
+                "important" => false,
+                "message"   => "Newest add-on kart: "
             ],
             [
-                "new"     => $newest_addons[Addon::TRACK],
-                "exists"  => false,
-                "message" => "Newest add-on track: "
+                "new"       => $newest_addons[Addon::TRACK],
+                "exists"    => false,
+                "important" => false,
+                "message"   => "Newest add-on track: "
             ],
             [
-                "new"     => $newest_addons[Addon::ARENA],
-                "exists"  => false,
-                "message" => "Newest add-on arena: "
+                "new"       => $newest_addons[Addon::ARENA],
+                "exists"    => false,
+                "important" => false,
+                "message"   => "Newest add-on arena: "
             ],
             [
-                "new"     => News::getLatestBlogPost(),
-                "exists"  => false,
-                "message" => "Latest post on https://blog.supertuxkart.net: "
+                "new"       => $article_title,
+                "exists"    => false,
+                "important" => false,
+                "message"   => "Latest post on https://blog.supertuxkart.net: "
             ],
         ];
+
+        $news_list_message = "";
+        $news_list_link = "";
+        $is_in_entry = false;
+        $is_tagged = false;
+        $is_important = false;
+
+        for ($i = 0; $i < $values_count; $i++)
+        {
+            if ($values[$i]['tag'] === 'ITEM' || $values[$i]['tag'] === 'ENTRY')
+            {
+                if ($values[$i]['type'] === 'open')
+                {
+                    $is_in_entry = true;
+                }
+                elseif ($values[$i]['type'] === 'close')
+                {
+                    if ($is_tagged)
+                    {
+                        array_push($dynamic_news, [
+                            "new" => $news_list_link,
+                            "exists" => false,
+                            "important" => $is_important,
+                            "message" => $news_list_message
+                        ]);
+                    }
+
+                    $is_in_entry = false;
+                    $is_tagged = false;
+                    $is_important = false;
+                }
+            }
+            if ($is_in_entry)
+            {
+                if ($values[$i]['tag'] === 'CATEGORY')
+                {
+                    if (isset($values[$i]['attributes']['term']))
+                    {
+                        if (Util::str_contains($values[$i]['attributes']['term'], "stk_news_list"))
+                        {
+                            $is_tagged = true;
+                            $is_important = false;
+                        }
+                        elseif (Util::str_contains($values[$i]['attributes']['term'], "stk_important_news_list"))
+                        {
+                            $is_tagged = true;
+                            $is_important = true;
+                        }
+                    }
+                }
+                elseif ($values[$i]['tag'] === 'LINK')
+                {
+                    if (isset($values[$i]['attributes']['rel']) && $values[$i]['attributes']['rel'] === 'alternate')
+                    {
+                        if (isset($values[$i]['attributes']['href']))
+                        {
+                            $news_list_link = $values[$i]['attributes']['href'];
+                        }
+                        if (isset($values[$i]['attributes']['title']))
+                        {
+                            $news_list_message = $values[$i]['attributes']['title'] . "%%%STKNEWSLIST%%%";
+                        }
+                    }
+                }
+            }
+        }
 
         // replace/delete old entries
         foreach ($dynamic_entries as $entry)
@@ -117,11 +238,13 @@ class News
                     [
                         ":content"       => $news["message"] . $news["new"],
                         "is_web_display" => 1,
-                        "is_dynamic"     => 1
+                        "is_dynamic"     => 1,
+                        "is_important"   => $news["important"]
                     ],
                     [
                         ':is_web_display' => DBConnection::PARAM_BOOL,
-                        ':is_dynamic'     => DBConnection::PARAM_BOOL
+                        ':is_dynamic'     => DBConnection::PARAM_BOOL,
+                        ':is_important'   => DBConnection::PARAM_BOOL
                     ]
                 );
             }
@@ -130,69 +253,6 @@ class News
                 throw new NewsException(exception_message_db(_("create dynamic news entry")));
             }
         }
-    }
-
-    /**
-     * Get the last article title
-     * This method will silently fail
-     *
-     * @return string|null
-     */
-    private static function getLatestBlogPost()
-    {
-        // TODO cache result, maybe add to cron job
-        $feed_url = Config::get(Config::FEED_BLOG);
-        if (!$feed_url)
-        {
-            return null;
-        }
-
-        // TODO log on failure
-        $xml_content = @file_get_contents($feed_url);
-        if (!$xml_content)
-        {
-            return null;
-        }
-
-        $reader = xml_parser_create();
-        if (!xml_parse_into_struct($reader, $xml_content, $values, $index))
-        {
-            StkLog::newEvent(
-                'Failed to get feed. XML Error: ' . xml_error_string(xml_get_error_code($reader)),
-                LogLevel::ERROR
-            );
-
-            return null;
-        }
-        xml_parser_free($reader);
-
-        $start_search = -1;
-        $values_count = count($values);
-        for ($i = 0; $i < $values_count; $i++)
-        {
-            if ($values[$i]['tag'] === 'ITEM' || $values[$i]['tag'] === 'ENTRY')
-            {
-                $start_search = $i;
-                break;
-            }
-        }
-
-        if ($start_search === -1)
-        {
-            return null;
-        }
-
-        $article_title = null;
-        for ($i = $start_search; $i < $values_count; $i++)
-        {
-            if ($values[$i]['tag'] === 'TITLE')
-            {
-                $article_title = $values[$i]['value'];
-                break;
-            }
-        }
-
-        return $article_title;
     }
 
     /**
