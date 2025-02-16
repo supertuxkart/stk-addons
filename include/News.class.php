@@ -199,6 +199,7 @@ class News
         // replace/delete old entries
         foreach ($dynamic_entries as $entry)
         {
+            $news_list_delete_flag = Util::str_contains($entry["content"], "%%%STKNEWSLIST%%%");
             foreach ($dynamic_news as $key => $value)
             {
                 $news = $dynamic_news[$key];
@@ -214,10 +215,14 @@ class News
                     {
                         $dynamic_news[$key]["exists"] = true;
                     }
-
+                    $news_list_delete_flag = false;
                     // this assumes only one match per pattern, multiple news entry can not match the same pattern
                     break;
                 }
+            }
+            if ($news_list_delete_flag)
+            {
+                static::delete($entry["id"]);
             }
         }
 
