@@ -165,14 +165,14 @@ class News
             {
                 if ($values[$i]['tag'] === 'CATEGORY')
                 {
-                    if (isset($values[$i]['attributes']['term']))
+                    if (isset($values[$i]['attributes']['TERM']))
                     {
-                        if (Util::str_contains($values[$i]['attributes']['term'], "stk_news_list"))
+                        if (Util::str_contains($values[$i]['attributes']['TERM'], "stk_news_list"))
                         {
                             $is_tagged = true;
                             $is_important = false;
                         }
-                        elseif (Util::str_contains($values[$i]['attributes']['term'], "stk_important_news_list"))
+                        elseif (Util::str_contains($values[$i]['attributes']['TERM'], "stk_important_news_list"))
                         {
                             $is_tagged = true;
                             $is_important = true;
@@ -181,15 +181,15 @@ class News
                 }
                 elseif ($values[$i]['tag'] === 'LINK')
                 {
-                    if (isset($values[$i]['attributes']['rel']) && $values[$i]['attributes']['rel'] === 'alternate')
+                    if (isset($values[$i]['attributes']['REL']) && $values[$i]['attributes']['REL'] === 'alternate')
                     {
-                        if (isset($values[$i]['attributes']['href']))
+                        if (isset($values[$i]['attributes']['HREF']))
                         {
-                            $news_list_link = $values[$i]['attributes']['href'];
+                            $news_list_link = $values[$i]['attributes']['HREF'];
                         }
-                        if (isset($values[$i]['attributes']['title']))
+                        if (isset($values[$i]['attributes']['TITLE']))
                         {
-                            $news_list_message = $values[$i]['attributes']['title'] . "%%%STKNEWSLIST%%%";
+                            $news_list_message = $values[$i]['attributes']['TITLE'] . "%%%STKNEWSLIST%%%";
                         }
                     }
                 }
