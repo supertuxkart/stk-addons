@@ -50,18 +50,22 @@ class News
 
         $newest_addons = Statistic::newestAddons();
 
+        $article_title = null;
+
+        $blog_error = false;
+
         // TODO cache result, maybe add to cron job
         $feed_url = Config::get(Config::FEED_BLOG);
         if (!$feed_url)
         {
-            return null;
+            $blog_error = true;
         }
 
         // TODO log on failure
         $xml_content = @file_get_contents($feed_url);
         if (!$xml_content)
         {
-            return null;
+            $blog_error = true;
         }
 
         $reader = xml_parser_create();
@@ -72,12 +76,18 @@ class News
                 LogLevel::ERROR
             );
 
-            return null;
+            $blog_error = true;
         }
         xml_parser_free($reader);
 
         $start_search = -1;
         $values_count = count($values);
+
+        if ($blog_error !== false)
+        {
+            $values_count = 0;
+        }
+
         for ($i = 0; $i < $values_count; $i++)
         {
             if ($values[$i]['tag'] === 'ITEM' || $values[$i]['tag'] === 'ENTRY')
@@ -86,8 +96,6 @@ class News
                 break;
             }
         }
-
-        $article_title = null;
 
         if ($start_search !== -1)
         {
@@ -100,35 +108,6 @@ class News
                 }
             }
         }
-
-        // NOTE: if we modify the message here we also have to delete IT manually from the database
-        // otherwise we will have duplicates.
-        $dynamic_news = [
-            [
-                "new"       => $newest_addons[Addon::KART],
-                "exists"    => false,
-                "important" => false,
-                "message"   => "Newest add-on kart: "
-            ],
-            [
-                "new"       => $newest_addons[Addon::TRACK],
-                "exists"    => false,
-                "important" => false,
-                "message"   => "Newest add-on track: "
-            ],
-            [
-                "new"       => $newest_addons[Addon::ARENA],
-                "exists"    => false,
-                "important" => false,
-                "message"   => "Newest add-on arena: "
-            ],
-            [
-                "new"       => $article_title,
-                "exists"    => false,
-                "important" => false,
-                "message"   => "Latest post on https://blog.supertuxkart.net: "
-            ],
-        ];
 
         $news_list_message = "";
         $news_list_link = "";
@@ -167,12 +146,12 @@ class News
                 {
                     if (isset($values[$i]['attributes']['TERM']))
                     {
-                        if (Util::str_contains($values[$i]['attributes']['TERM'], "stk_news_list"))
+                        if (Util::str_contains($values[$i]['attributes']['TERM'], 'stk_news_list'))
                         {
                             $is_tagged = true;
                             $is_important = false;
                         }
-                        elseif (Util::str_contains($values[$i]['attributes']['TERM'], "stk_important_news_list"))
+                        elseif (Util::str_contains($values[$i]['attributes']['TERM'], 'stk_important_news_list'))
                         {
                             $is_tagged = true;
                             $is_important = true;
@@ -189,12 +168,41 @@ class News
                         }
                         if (isset($values[$i]['attributes']['TITLE']))
                         {
-                            $news_list_message = $values[$i]['attributes']['TITLE'] . "%%%STKNEWSLIST%%%";
+                            $news_list_message = $values[$i]['attributes']['TITLE'] . '%%%STKNEWSLIST%%%';
                         }
                     }
                 }
             }
         }
+
+        // NOTE: if we modify the message here we also have to delete IT manually from the database
+        // otherwise we will have duplicates.
+        $dynamic_news = [
+            [
+                "new"       => $newest_addons[Addon::KART],
+                "exists"    => false,
+                "important" => false,
+                "message"   => "Newest add-on kart: "
+            ],
+            [
+                "new"       => $newest_addons[Addon::TRACK],
+                "exists"    => false,
+                "important" => false,
+                "message"   => "Newest add-on track: "
+            ],
+            [
+                "new"       => $newest_addons[Addon::ARENA],
+                "exists"    => false,
+                "important" => false,
+                "message"   => "Newest add-on arena: "
+            ],
+            [
+                "new"       => $article_title,
+                "exists"    => false,
+                "important" => false,
+                "message"   => "Latest post on https://blog.supertuxkart.net: "
+            ],
+        ];
 
         // replace/delete old entries
         foreach ($dynamic_entries as $entry)

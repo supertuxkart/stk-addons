@@ -63,7 +63,7 @@ function generateNewsXML($assets_xml_location, $assets_xml_path)
     $news_entries = News::getActive();
     foreach ($news_entries as $result)
     {
-        $splitstr = "%%%STKNEWSLIST%%%";
+        $splitstr = '%%%STKNEWSLIST%%%';
         $partone = mb_strpos($result['content'], $splitstr);
         if ($partone !== false)
         {
