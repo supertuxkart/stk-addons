@@ -63,20 +63,43 @@ function generateNewsXML($assets_xml_location, $assets_xml_path)
     $news_entries = News::getActive();
     foreach ($news_entries as $result)
     {
-        $writer->startElement('message');
-        $writer->writeAttribute('id', $result['id']);
-        $writer->writeAttribute('date', $result['date']);
-        $writer->writeAttribute('author', $result['author']);
-        $writer->writeAttribute('content', $result['content']);
-        if (mb_strlen($result['condition']) > 0)
+        $splitstr = '%%%STKNEWSLIST%%%';
+        $partone = mb_strpos($result['content'], $splitstr);
+        if ($partone !== false)
         {
-            $writer->writeAttribute('condition', $result['condition']);
+            $writer->startElement('list');
+            $writer->writeAttribute('id', $result['id']);
+            $writer->writeAttribute('date', $result['date']);
+            $writer->writeAttribute('author', $result['author']);
+            $writer->writeAttribute('content', substr($result['content'], 0, $partone));
+            $writer->writeAttribute('link', substr($result['content'], $partone + strlen($splitstr)));
+            if (mb_strlen($result['condition']) > 0)
+            {
+                $writer->writeAttribute('condition', $result['condition']);
+            }
+            if ($result['is_important'])
+            {
+                $writer->writeAttribute('important', 'true');
+            }
+            $writer->endElement();
         }
-        if ($result['is_important'])
+        else
         {
-            $writer->writeAttribute('important', 'true');
+            $writer->startElement('message');
+            $writer->writeAttribute('id', $result['id']);
+            $writer->writeAttribute('date', $result['date']);
+            $writer->writeAttribute('author', $result['author']);
+            $writer->writeAttribute('content', $result['content']);
+            if (mb_strlen($result['condition']) > 0)
+            {
+                $writer->writeAttribute('condition', $result['condition']);
+            }
+            if ($result['is_important'])
+            {
+                $writer->writeAttribute('important', 'true');
+            }
+            $writer->endElement();
         }
-        $writer->endElement();
     }
 
     // End document tag
@@ -486,16 +509,13 @@ function generateAssetXML($download_location)
 
 function writeNewsXML()
 {
-    echo "DISABLED writeNewsXML" . PHP_EOL;
-    return 0;
-    
     // Base is old
     $news_xml = generateNewsXML(OLD_ASSETS_XML_LOCATION, OLD_NEWS_XML_PATH);
 
     // Write new xml file
     FileSystem::filePutContents(
         NEWS_XML_PATH,
-        str_replace(OLD_DOWNLOAD_LOCATION, DOWNLOAD_LOCATION, $news_xml)
+        str_replace(OLD_ASSETS_XML_LOCATION, ASSETS_XML_LOCATION, $news_xml)
     );
 
     // Write old
@@ -504,9 +524,6 @@ function writeNewsXML()
 
 function writeAssetXML()
 {
-    echo "DISABLED writeAssetXML" . PHP_EOL;
-    return 0;
-
     // Base is old
     $asset_xml = generateAssetXML(OLD_DOWNLOAD_LOCATION);
 
