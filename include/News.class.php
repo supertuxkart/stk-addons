@@ -113,7 +113,36 @@ class News
         $news_list_link = "";
         $is_in_entry = false;
         $is_tagged = false;
-        $is_important = false;
+        $is_important = 0;
+
+        // NOTE: if we modify the message here we also have to delete IT manually from the database
+        // otherwise we will have duplicates.
+        $dynamic_news = [
+            [
+                "new"       => $newest_addons[Addon::KART],
+                "exists"    => false,
+                "important" => 0,
+                "message"   => "Newest add-on kart: "
+            ],
+            [
+                "new"       => $newest_addons[Addon::TRACK],
+                "exists"    => false,
+                "important" => 0,
+                "message"   => "Newest add-on track: "
+            ],
+            [
+                "new"       => $newest_addons[Addon::ARENA],
+                "exists"    => false,
+                "important" => 0,
+                "message"   => "Newest add-on arena: "
+            ],
+            [
+                "new"       => $article_title,
+                "exists"    => false,
+                "important" => 0,
+                "message"   => "Latest post on https://blog.supertuxkart.net: "
+            ],
+        ];
 
         for ($i = 0; $i < $values_count; $i++)
         {
@@ -137,7 +166,7 @@ class News
 
                     $is_in_entry = false;
                     $is_tagged = false;
-                    $is_important = false;
+                    $is_important = 0;
                 }
             }
             if ($is_in_entry)
@@ -149,12 +178,12 @@ class News
                         if (Util::str_contains($values[$i]['attributes']['TERM'], 'stk_news_list'))
                         {
                             $is_tagged = true;
-                            $is_important = false;
+                            $is_important = 0;
                         }
                         elseif (Util::str_contains($values[$i]['attributes']['TERM'], 'stk_important_news_list'))
                         {
                             $is_tagged = true;
-                            $is_important = true;
+                            $is_important = 1;
                         }
                     }
                 }
@@ -174,35 +203,6 @@ class News
                 }
             }
         }
-
-        // NOTE: if we modify the message here we also have to delete IT manually from the database
-        // otherwise we will have duplicates.
-        $dynamic_news = [
-            [
-                "new"       => $newest_addons[Addon::KART],
-                "exists"    => false,
-                "important" => false,
-                "message"   => "Newest add-on kart: "
-            ],
-            [
-                "new"       => $newest_addons[Addon::TRACK],
-                "exists"    => false,
-                "important" => false,
-                "message"   => "Newest add-on track: "
-            ],
-            [
-                "new"       => $newest_addons[Addon::ARENA],
-                "exists"    => false,
-                "important" => false,
-                "message"   => "Newest add-on arena: "
-            ],
-            [
-                "new"       => $article_title,
-                "exists"    => false,
-                "important" => false,
-                "message"   => "Latest post on https://blog.supertuxkart.net: "
-            ],
-        ];
 
         // replace/delete old entries
         foreach ($dynamic_entries as $entry)
