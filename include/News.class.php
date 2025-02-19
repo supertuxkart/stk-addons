@@ -207,7 +207,7 @@ class News
         // replace/delete old entries
         foreach ($dynamic_entries as $entry)
         {
-            $news_list_delete_flag = Util::str_contains($entry["content"], "%%%STKNEWSLIST%%%");
+            $news_list_delete_flag = Util::str_contains($entry["content"], '%%%STKNEWSLIST%%%');
             foreach ($dynamic_news as $key => $value)
             {
                 $news = $dynamic_news[$key];
@@ -249,14 +249,12 @@ class News
                 DBConnection::get()->insert(
                     'news',
                     [
-                        ":content"       => $news["message"] . $news["new"],
-                        "is_web_display" => 1,
-                        "is_dynamic"     => 1,
-                        "is_important"   => $news["important"]
+                        ':content'       => $news["message"] . $news["new"],
+                        ':is_important'  => $news["important"],
+                        'is_web_display' => 1,
+                        'is_dynamic'     => 1
                     ],
                     [
-                        ':is_web_display' => DBConnection::PARAM_BOOL,
-                        ':is_dynamic'     => DBConnection::PARAM_BOOL,
                         ':is_important'   => DBConnection::PARAM_BOOL
                     ]
                 );
