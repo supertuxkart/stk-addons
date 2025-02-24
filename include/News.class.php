@@ -122,24 +122,28 @@ class News
                 "new"       => $newest_addons[Addon::KART],
                 "exists"    => false,
                 "important" => 0,
+                "web"       => 1,
                 "message"   => "Newest add-on kart: "
             ],
             [
                 "new"       => $newest_addons[Addon::TRACK],
                 "exists"    => false,
                 "important" => 0,
+                "web"       => 1,
                 "message"   => "Newest add-on track: "
             ],
             [
                 "new"       => $newest_addons[Addon::ARENA],
                 "exists"    => false,
                 "important" => 0,
+                "web"       => 1,
                 "message"   => "Newest add-on arena: "
             ],
             [
                 "new"       => $article_title,
                 "exists"    => false,
                 "important" => 0,
+                "web"       => 1,
                 "message"   => "Latest post on https://blog.supertuxkart.net: "
             ],
         ];
@@ -157,10 +161,11 @@ class News
                     if ($is_tagged)
                     {
                         array_push($dynamic_news, [
-                            "new" => $news_list_link,
-                            "exists" => false,
+                            "new"       => $news_list_link,
+                            "exists"    => false,
                             "important" => $is_important,
-                            "message" => $news_list_message
+                            "web"       => 0,
+                            "message"   => $news_list_message
                         ]);
                     }
 
@@ -249,13 +254,14 @@ class News
                 DBConnection::get()->insert(
                     'news',
                     [
-                        ':content'       => $news["message"] . $news["new"],
-                        ':is_important'  => $news["important"],
-                        'is_web_display' => 1,
-                        'is_dynamic'     => 1
+                        ':content'        => $news["message"] . $news["new"],
+                        ':is_important'   => $news["important"],
+                        ':is_web_display' => $news["web"],
+                        'is_dynamic'      => 1
                     ],
                     [
-                        ':is_important'   => DBConnection::PARAM_BOOL
+                        ':is_important'   => DBConnection::PARAM_BOOL,
+                        ':is_web_display' => DBConnection::PARAM_BOOL
                     ]
                 );
             }
