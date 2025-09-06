@@ -334,6 +334,7 @@ CREATE TABLE IF NOT EXISTS `v3_servers` (
     `longitude`       FLOAT             NOT NULL DEFAULT '0.0',
     `country_code`    VARCHAR(2)        NOT NULL DEFAULT '',
     `current_track`   VARCHAR(64)       NOT NULL DEFAULT '',
+    `aes_gcm_128bit_tag` TINYINT UNSIGNED  NOT NULL DEFAULT '0',
     PRIMARY KEY (`id`),
     KEY `key_hostid` (`host_id`),
     CONSTRAINT `v3_servers_ibfk_1` FOREIGN KEY (`host_id`) REFERENCES `v3_users` (`id`)
