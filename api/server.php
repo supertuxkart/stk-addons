@@ -45,6 +45,7 @@ try
                 $game_mode = isset($_POST['game_mode']) ? (int)$_POST['game_mode'] : 0;
                 $password = isset($_POST['password']) ? (int)$_POST['password'] : 0;
                 $version = isset($_POST['version']) ? (int)$_POST['version'] : 1;
+                $aes_gcm_128bit_tag = isset($_POST['aes_gcm_128bit_tag']) ? (int)$_POST['aes_gcm_128bit_tag'] : 0;
                 $server = ClientSession::get($token, $userid)->createServer(
                     $address,
                     $address_ipv6,
@@ -55,7 +56,8 @@ try
                     $difficulty,
                     $game_mode,
                     $password,
-                    $version
+                    $version,
+                    $aes_gcm_128bit_tag
                 );
 
                 $output->startElement('create');
