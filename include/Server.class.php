@@ -139,6 +139,11 @@ class Server implements IAsXML
     private $players_info;
 
     /**
+     * @var int
+     */
+    private $aes_gcm_128bit_tag;
+
+    /**
      *
      * @param array $data An associative array retrieved from the database
      * @param array $player_info Player list in server if exists
@@ -165,6 +170,7 @@ class Server implements IAsXML
         $this->country_code = $data["country_code"];
         $this->current_track = $data["current_track"];
         $this->players_info = $player_info;
+        $this->aes_gcm_128bit_tag = $data["aes_gcm_128bit_tag"];
     }
 
     /**
@@ -247,6 +253,7 @@ class Server implements IAsXML
                 $user = User::getFromID($this->host_id);
                 $permission = AccessControl::getPermissions($user->getRole());
                 $server_xml->writeAttribute("official", in_array(AccessControl::PERM_OFFICIAL_SERVERS, $permission) ? 1 : 0);
+                $server_xml->writeAttribute("aes_gcm_128bit_tag", $this->aes_gcm_128bit_tag);
             $server_xml->endElement();
             $server_xml->startElement('players');
                 foreach ($this->players_info as $player)
@@ -304,6 +311,7 @@ class Server implements IAsXML
      * @param int    $game_mode
      * @param int    $password
      * @param int    $version
+     * @param int    $aes_gcm_128bit_tag
      *
      * @return Server
      * @throws ServerException
@@ -319,7 +327,8 @@ class Server implements IAsXML
         int $difficulty,
         int $game_mode,
         int $password,
-        int $version
+        int $version,
+        int $aes_gcm_128bit_tag
     ) {
         try
         {
@@ -348,10 +357,10 @@ class Server implements IAsXML
             $result = DBConnection::get()->query(
                 "INSERT INTO `{DB_VERSION}_servers` (host_id, name,
                 last_poll_time, ip, ipv6, port, private_port, max_players,
-                difficulty, game_mode, password, version, latitude, longitude, country_code)
+                difficulty, game_mode, password, version, latitude, longitude, country_code, aes_gcm_128bit_tag)
                 VALUES (:host_id, :name, :last_poll_time, :ip, :ipv6, :port,
                 :private_port, :max_players, :difficulty, :game_mode,
-                :password, :version, :latitude, :longitude, :country_code)",
+                :password, :version, :latitude, :longitude, :country_code, :aes_gcm_128bit_tag)",
                 DBConnection::ROW_COUNT,
                 [
                     ':host_id'        => $user_id,
@@ -369,7 +378,8 @@ class Server implements IAsXML
                     ':version'        => $version,
                     ':latitude'       => $server_geolocation[0],
                     ':longitude'      => $server_geolocation[1],
-                    ':country_code'   => $server_geolocation[2]
+                    ':country_code'   => $server_geolocation[2],
+                    ':aes_gcm_128bit_tag' => $aes_gcm_128bit_tag
                 ],
                 [
                     ':host_id'        => DBConnection::PARAM_INT,
@@ -386,7 +396,8 @@ class Server implements IAsXML
                     ':version'        => DBConnection::PARAM_INT,
                     ':latitude'       => DBConnection::PARAM_STR,
                     ':longitude'      => DBConnection::PARAM_STR,
-                    ':country_code'   => DBConnection::PARAM_STR
+                    ':country_code'   => DBConnection::PARAM_STR,
+                    ':aes_gcm_128bit_tag' => DBConnection::PARAM_INT
                 ]
             );
         }
@@ -501,7 +512,7 @@ class Server implements IAsXML
                 `{DB_VERSION}_servers`.current_players, `{DB_VERSION}_servers`.current_ai, `{DB_VERSION}_servers`.password,
                 `{DB_VERSION}_servers`.version,
                 `{DB_VERSION}_servers`.game_started, `{DB_VERSION}_servers`.latitude, `{DB_VERSION}_servers`.longitude,
-                `{DB_VERSION}_servers`.country_code,
+                `{DB_VERSION}_servers`.country_code, {DB_VERSION}_servers`.aes_gcm_128bit_tag,
                 `{DB_VERSION}_servers`.current_track, `{DB_VERSION}_server_conn`.user_id, `{DB_VERSION}_server_conn`.connected_since,
                 `{DB_VERSION}_users`.username, rank, scores, max_scores, num_races_done,
                 UNIX_TIMESTAMP(`{DB_VERSION}_client_sessions`.`last-online`) AS online_since,

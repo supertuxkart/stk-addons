@@ -86,6 +86,7 @@ class ClientSession
      * @param int       $game_mode
      * @param int       $password
      * @param int       $version
+     * @param int       $aes_gcm_128bit_tag
      *
      * @throws ServerException
      * @return Server
@@ -100,7 +101,8 @@ class ClientSession
         int $difficulty,
         int $game_mode,
         int $password,
-        int $version
+        int $version,
+        int $aes_gcm_128bit_tag
     ) {
         return Server::create(
             $ip,
@@ -113,7 +115,8 @@ class ClientSession
             $difficulty,
             $game_mode,
             $password,
-            $version
+            $version,
+            $aes_gcm_128bit_tag
         );
     }
 
@@ -261,7 +264,7 @@ class ClientSession
                     ':user_id'         => DBConnection::PARAM_INT,
                     ':server_id'       => DBConnection::PARAM_INT,
                     ':ip'              => DBConnection::PARAM_INT,
-                    ':aes_key'         => DBConnection::PARAM_STR,
+                    ':ipv6'            => DBConnection::PARAM_STR,
                     ':port'            => DBConnection::PARAM_INT,
                     ':aes_key'         => DBConnection::PARAM_STR,
                     ':aes_iv'          => DBConnection::PARAM_STR,
