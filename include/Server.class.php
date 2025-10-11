@@ -512,7 +512,7 @@ class Server implements IAsXML
                 `{DB_VERSION}_servers`.current_players, `{DB_VERSION}_servers`.current_ai, `{DB_VERSION}_servers`.password,
                 `{DB_VERSION}_servers`.version,
                 `{DB_VERSION}_servers`.game_started, `{DB_VERSION}_servers`.latitude, `{DB_VERSION}_servers`.longitude,
-                `{DB_VERSION}_servers`.country_code, {DB_VERSION}_servers`.aes_gcm_128bit_tag,
+                `{DB_VERSION}_servers`.country_code, `{DB_VERSION}_servers`.aes_gcm_128bit_tag,
                 `{DB_VERSION}_servers`.current_track, `{DB_VERSION}_server_conn`.user_id, `{DB_VERSION}_server_conn`.connected_since,
                 `{DB_VERSION}_users`.username, rank, scores, max_scores, num_races_done,
                 UNIX_TIMESTAMP(`{DB_VERSION}_client_sessions`.`last-online`) AS online_since,
