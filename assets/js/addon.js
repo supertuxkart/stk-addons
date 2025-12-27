@@ -35,6 +35,10 @@
         onFormSubmit(form_identifier, callback_success, $addon_body, json_url, {}, "POST");
     }
 
+    if(window.location.href.indexOf("type=")===-1){
+        window.history.pushState({}, "", window.location.href + "&type=" + addon_type);
+    } // add addon type to current url if absent
+
     registerPagination($addon_menu, "addons-menu.php");
 
     $('.multiselect').multiselect({});
