@@ -453,11 +453,11 @@ class Bug extends Base
                 break;
 
             case "open":
-                $query .= " AND `close_id` is NULL";
+                $query .= " AND `close_id` = 0";
                 break;
 
             case "closed":
-                $query .= " AND `close_id` is NOT NULL";
+                $query .= " AND `close_id` <> 0";
                 break;
 
             default:
