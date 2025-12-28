@@ -86,7 +86,7 @@
     </tr>
     <tr>
         <td class="col-md-2">{t}Addon{/t}:</td>
-        <td class="col-md-10"><a href="{$root_location}addons.php?name={$bug.addon}">{$bug.addon}</a></td>
+        <td class="col-md-10"><a href="{$root_location}addons.php?type={$bug.addon_type}&name={$bug.addon}">{$bug.addon}</a></td>
     </tr>
     <tr>
         <td class="col-md-2">{t}Date edit{/t}:</td>
