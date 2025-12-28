@@ -47,6 +47,7 @@ $tpl_data = [
     "user_id"      => $bug->getUserId(),
     "user_name"    => h($bug->getUserName()),
     "addon"        => $bug->getAddonId(),
+    "addon_type"   => $bug->getAddonType(),
     "date_report"  => $bug->getDateReport(),
     "date_edit"    => $bug->getDateEdit(),
 

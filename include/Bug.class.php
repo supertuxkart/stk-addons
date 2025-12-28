@@ -64,6 +64,12 @@ class Bug extends Base
     private $addon_id;
 
     /**
+     * The type of the addon
+     * @var string
+     */
+    private $addon_type;
+
+    /**
      * The user who closed the bug report
      * @var int
      */
@@ -162,6 +168,7 @@ class Bug extends Base
         $this->user_id = $bug_data["user_id"];
         $this->user_username = $bug_data["user_username"];
         $this->addon_id = $bug_data["addon_id"];
+        $this->addon_type = Addon::typeToString(Addon::getTypeByID($this->addon_id));
         $this->close_id = $bug_data["close_id"];
         $this->close_username = $bug_data["close_username"];
         $this->close_reason = $bug_data["close_reason"];
@@ -209,6 +216,14 @@ class Bug extends Base
     public function getAddonId()
     {
         return $this->addon_id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddonType()
+    {
+        return $this->addon_type;
     }
 
     /**
@@ -340,7 +355,11 @@ class Bug extends Base
     public static function getAll($limit = -1, $current_page = 1)
     {
         return static::getAllFromTable(
-            "SELECT * FROM `{DB_VERSION}_bugs` ORDER BY `date_edit` DESC, `id` ASC",
+            "SELECT `bugs`.*, `addon_types`.`name_plural` AS `addon_type`
+            FROM `{DB_VERSION}_bugs` AS `bugs`
+            JOIN `{DB_VERSION}_addons` AS `addons` ON `bugs`.`addon_id` = `addons`.`id`
+            JOIN `{DB_VERSION}_addon_types` AS `addon_types` ON `addons`.`type` = `addon_types`.`type`
+            ORDER BY `bugs`.`date_edit` DESC, `bugs`.`id` ASC",
             $limit,
             $current_page
         );
@@ -435,16 +454,20 @@ class Bug extends Base
             throw new BugException(_h("The search term is empty"));
         }
 
-        $query = "SELECT id, addon_id, title, date_edit, date_close, close_id, close_reason FROM `{DB_VERSION}_bugs`";
+        $query = "SELECT `bugs`.*, `addon_types`.`name_plural` AS `addon_type`
+            FROM `{DB_VERSION}_bugs` AS `bugs`
+            JOIN `{DB_VERSION}_addons` AS `addons` ON `bugs`.`addon_id` = `addons`.`id`
+            JOIN `{DB_VERSION}_addon_types` AS `addon_types` ON `addons`.`type` = `addon_types`.`type`";
 
         // search in description
         if ($search_description)
         {
-            $query .= " WHERE (`addon_id` LIKE :search_term OR `title` LIKE :search_term OR `description` LIKE :search_term)";
+            $query .= " WHERE (`bugs`.`addon_id` LIKE :search_term OR `bugs`.`title` LIKE :search_term
+                OR `bugs`.`description` LIKE :search_term)";
         }
         else
         {
-            $query .= " WHERE (`addon_id` LIKE :search_term OR `title` LIKE :search_term)";
+            $query .= " WHERE (`bugs`.`addon_id` LIKE :search_term OR `bugs`.`title` LIKE :search_term)";
         }
 
         switch ($status)
