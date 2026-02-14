@@ -5,13 +5,7 @@
     {if $pass_reset.reset_form.display == true}
         <form id="reset_pw" action="?action=reset" class="form-horizontal" method="POST">
             <div class="form-group col-md-12">
-                {t}In order to reset your password, please enter your username and your email address. A password reset link will be emailed to you. Your old password will become inactive until your password is reset.{/t}
-            </div>
-            <div class="form-group">
-                <label for="reg_user" class="col-md-2">{t}Username:{/t}</label>
-                <div class="col-md-4">
-                    <input type="text" name="user" class="form-control" id="reg_user">
-                </div>
+                {t}In order to reset your password, please enter your account's email address. A password reset link will be emailed to you.{/t}
             </div>
             <div class="form-group">
                 <label for="reg_email" class="col-md-2">{t}Email Address:{/t}</label>

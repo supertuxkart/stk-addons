@@ -620,6 +620,28 @@ final class User extends Base implements IAsXML
         return new User($data);
     }
 
+	/**
+     * Get a user instance by the email address
+     *
+     * @param string $email
+     *
+     * @return User
+     * @throws UserException
+     */
+    public static function getFromEmail($email)
+    {
+        $data = static::getFromField(
+            static::getSQLAll(),
+            "U.email",
+            $email,
+            DBConnection::PARAM_STR,
+            _h("Email does not exist"),
+            ":email"
+        );
+
+        return new User($data);
+    }
+
     /**
      * Filter an array of users of the template menu view
      *
@@ -1274,15 +1296,24 @@ final class User extends Base implements IAsXML
      *
      * @throws UserException
      */
-    public static function recover($username, $email)
+    public static function recover($email)
     {
         // validate
-        static::validateUserName($username);
         static::validateEmail($email);
 
-        $user_id = static::validateUsernameEmail($username, $email);
-        $verification_code = Verification::generate($user_id);
+        $user_id; $username;
+        try
+        {
+            $user = User::getFromEmail($email);
+            $user_id = $user->id;
+            $username = $user->username;
+        }
+        catch (UserException $e)
+        {
+            return; // silently fail
+        }
 
+        $verification_code = Verification::generate($user_id);
         try
         {
             // Send verification email
@@ -1298,7 +1329,7 @@ final class User extends Base implements IAsXML
             }
             catch (StkMailException $e)
             {
-                StkLog::newEvent('Password reset email for "' . $username . '" could not be sent.', LogLevel::ERROR);
+                StkLog::newEvent('Password reset email for "' . $email . '" could not be sent.', LogLevel::ERROR);
                 throw new UserException(
                     $e->getMessage() . ' ' . _h('Please contact a website administrator.'),
                     ErrorType::USER_SENDING_RECOVER_EMAIL
@@ -1308,7 +1339,7 @@ final class User extends Base implements IAsXML
         catch (DBException $e)
         {
             throw new UserException(
-                exception_message_db(_('validate your username and email address for password reset')),
+                exception_message_db(_('validate your email address for password reset')),
                 ErrorType::USER_SENDING_RECOVER_EMAIL
             );
         }

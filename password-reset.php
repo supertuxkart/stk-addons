@@ -63,8 +63,8 @@ switch ($_GET['action'])
                 throw new UserException(_h("The reCAPTCHA wasn't entered correctly. Go back and try it again."));
             }
 
-            User::recover($_POST['user'], $_POST['mail']);
-            $tpl->assign("success", _h("Password reset link sent. Please reset your password using the link emailed to you."));
+            User::recover($_POST['mail']);
+            $tpl->assign("success", _h("If an account exists with your email address, a password reset link has been sent. Please reset your password using the link emailed to you."));
         }
         catch(UserException $e)
         {
