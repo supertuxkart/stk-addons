@@ -457,12 +457,11 @@ try
             break;
 
         case 'recover':
-            $username = isset($_POST['username']) ? utf8_encode($_POST['username']) : "";
             $email = isset($_POST['email']) ? utf8_encode($_POST['email']) : "";
 
             try
             {
-                User::recover($username, $email);
+                User::recover($email);
 
                 $output->startElement('recover');
                     $output->writeAttribute('success', 'yes');
